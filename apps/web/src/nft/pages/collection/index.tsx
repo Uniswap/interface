@@ -18,7 +18,8 @@ import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
-import { Suspense, useEffect } from 'react'
+import { useMetatags } from 'pages/metatags'
+import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
@@ -102,7 +103,7 @@ const MobileFilterHeader = styled(Row)`
   justify-content: space-between;
 `
 
-// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the the edges of the navbar.
+// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the edges of the navbar.
 // As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
 // See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
@@ -155,6 +156,15 @@ const Collection = () => {
     },
   })
 
+  const metaTags = useMemo(() => {
+    return {
+      title: collectionStats.name + ' on Uniswap',
+      image: window.location.origin + '/api/image/nfts/collection/' + contractAddress,
+      url: window.location.href,
+    }
+  }, [collectionStats.name, contractAddress])
+  const metaTagProperties = useMetatags(metaTags)
+
   useEffect(() => {
     const marketCount: Record<string, number> = {}
     collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
@@ -189,6 +199,9 @@ const Collection = () => {
             name: collectionStats.name,
           })}
         </title>
+        {metaTagProperties.map((tag) => (
+          <meta key={tag.property} {...tag} />
+        ))}
       </Helmet>
       <Trace
         page={InterfacePageName.NFT_COLLECTION_PAGE}

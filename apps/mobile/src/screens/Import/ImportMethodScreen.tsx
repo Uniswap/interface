@@ -10,8 +10,9 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { OSDynamicCloudIcon, PaperStack } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
@@ -37,7 +38,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: AppTFunction) => t('onboarding.import.method.import.title'),
     blurb: (t: AppTFunction) => t('onboarding.import.method.import.message'),
-    icon: <Icons.PaperStack color="$accent1" size={18} strokeWidth={1.5} />,
+    icon: <PaperStack color="$accent1" size={18} strokeWidth={1.5} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -48,7 +49,7 @@ const options: ImportMethodOption[] = [
       isAndroid
         ? t(`onboarding.import.method.restore.message.android`)
         : t(`onboarding.import.method.restore.message.ios`),
-    icon: <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
+    icon: <OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.RestoreFromCloud,

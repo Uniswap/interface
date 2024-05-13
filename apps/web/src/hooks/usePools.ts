@@ -6,7 +6,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
 import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 
@@ -159,7 +159,7 @@ export function usePoolMultichain(
   fee: number | undefined,
   chainId: ChainId
 ): [PoolState, Pool | null] {
-  const [poolData, setPoolData] = useState<[PoolState, Pool | null]>([PoolState.LOADING, null])
+  const poolData = useRef<[PoolState, Pool | null]>([PoolState.LOADING, null])
   const poolAddress =
     tokenA && tokenB && fee
       ? PoolCache.getPoolAddress(V3_CORE_FACTORY_ADDRESSES[chainId], tokenA, tokenB, fee)
@@ -172,21 +172,21 @@ export function usePoolMultichain(
     async function getPool() {
       try {
         if (!tokenA || !tokenB || !fee || !poolAddress || !contract) {
-          setPoolData([PoolState.INVALID, null])
+          poolData.current = [PoolState.INVALID, null]
           return
         }
 
         const slot0 = await contract.slot0()
         const liquidity = await contract.liquidity()
-        setPoolData([PoolState.NOT_EXISTS, null])
+        poolData.current = [PoolState.NOT_EXISTS, null]
 
         const pool = new Pool(tokenA, tokenB, fee, slot0.sqrtPriceX96.toString(), liquidity.toString(), slot0.tick)
-        setPoolData([PoolState.EXISTS, pool])
+        poolData.current = [PoolState.EXISTS, pool]
       } catch (e) {
-        setPoolData([PoolState.INVALID, null])
+        poolData.current = [PoolState.INVALID, null]
       }
     }
     getPool()
   }, [contract, fee, poolAddress, tokenA, tokenB])
-  return poolData
+  return poolData.current
 }

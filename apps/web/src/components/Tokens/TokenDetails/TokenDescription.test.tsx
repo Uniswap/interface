@@ -9,13 +9,8 @@ import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TokenDescription } from './TokenDescription'
 
-jest.mock('hooks/Tokens', () => {
-  const originalModule = jest.requireActual('hooks/Tokens')
-  return {
-    ...originalModule,
-    useCurrency: jest.fn(),
-  }
-})
+jest.mock('hooks/Tokens')
+
 jest.mock('pages/TokenDetails/TDPContext', () => ({
   useTDPContext: jest.fn(),
 }))

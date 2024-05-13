@@ -5,7 +5,6 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/h
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { getChainInfo } from 'constants/chainInfo'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -16,6 +15,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { useIsSmartContractAddress } from 'utils/transfer'
 
 import { Trace } from 'analytics'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
@@ -87,8 +87,9 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
   const { chainId } = useSwapAndLimitContext()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { setSendState, derivedSendInfo } = useSendContext()
-  const { inputError, parsedTokenAmount, recipientData, transaction } = derivedSendInfo
+  const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address
@@ -107,6 +108,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     currencyAmount: parsedTokenAmount,
     recipient: recipientData?.address,
     transactionRequest: transaction,
+    gasFee,
   })
 
   const handleModalState = useCallback((newState?: SendFormModalState) => {
@@ -216,7 +218,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
               }
             }}
           >
-            <Trans>Connect to {{ label: getChainInfo(chainId)?.label }}</Trans>
+            <Trans>Connect to {{ label: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}</Trans>
           </ButtonPrimary>
         ) : (
           <ButtonPrimary

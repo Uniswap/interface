@@ -1,3 +1,4 @@
+import { styled as tamaguiStyled } from '@tamagui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
@@ -7,6 +8,7 @@ import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 
 import { Input as NumericalInput } from '../NumericalInput'
 
@@ -54,11 +56,11 @@ const InputColumn = styled(AutoColumn)`
   width: 100%;
 `
 
-const InputTitle = styled(ThemedText.DeprecatedSmall)`
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 12px;
-  font-weight: 535;
-`
+const InputTitle = tamaguiStyled(Text, {
+  fontSize: 12,
+  fontWeight: '$medium',
+  color: '$neutral2',
+})
 
 const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.neutral2 : theme.neutral1)} !important;

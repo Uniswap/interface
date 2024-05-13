@@ -1,9 +1,16 @@
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
+import {
+  AlertTriangle,
+  Approve,
+  ArrowDownInCircle,
+  ArrowUpInCircle,
+  QuestionInCircle,
+} from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -34,7 +41,7 @@ interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
   chainId: ChainId | null
-  dappImageUrl: string | null
+  dappImageUrl: Maybe<string>
   dappName: string
 }
 
@@ -109,17 +116,17 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     switch (txType) {
       case TransactionType.Approve:
       case TransactionType.NFTApprove:
-        Icon = Icons.Approve
+        Icon = Approve
         break
       case TransactionType.Send:
-        Icon = Icons.ArrowUpInCircle
+        Icon = ArrowUpInCircle
         break
       case TransactionType.NFTTrade:
         if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
           if (props.nftTradeType === NFTTradeType.SELL) {
-            Icon = Icons.ArrowUpInCircle
+            Icon = ArrowUpInCircle
           } else {
-            Icon = Icons.ArrowDownInCircle
+            Icon = ArrowDownInCircle
           }
         }
         break
@@ -127,10 +134,10 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
       case TransactionType.FiatPurchase:
       case TransactionType.Receive:
       case TransactionType.NFTMint:
-        Icon = Icons.ArrowDownInCircle
+        Icon = ArrowDownInCircle
         break
       case TransactionType.Unknown:
-        Icon = Icons.QuestionInCircle
+        Icon = QuestionInCircle
         break
     }
     if (Icon) {
@@ -184,9 +191,9 @@ export function DappLogoWithTxStatus({
           <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} />
         ) : undefined
       case WalletConnectEvent.TransactionConfirmed:
-        return <Icons.Approve color={green} fill={fill} size={statusSize} />
+        return <Approve color={green} fill={fill} size={statusSize} />
       case WalletConnectEvent.TransactionFailed:
-        return <Icons.AlertTriangle color={yellow} fill={fill} size={statusSize} />
+        return <AlertTriangle color={yellow} fill={fill} size={statusSize} />
     }
   }
 
@@ -242,7 +249,7 @@ export function DappLogoWithWCBadge({
   size,
   chainId,
 }: {
-  dappImageUrl: string | null
+  dappImageUrl: Maybe<string>
   dappName: string
   size: number
   chainId: ChainId | null

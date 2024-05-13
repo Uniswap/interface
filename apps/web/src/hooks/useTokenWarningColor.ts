@@ -1,27 +1,31 @@
-import { WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTheme } from 'styled-components'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-export const useTokenWarningTextColor = (level: WARNING_LEVEL) => {
+export const useTokenWarningTextColor = (level: SafetyLevel) => {
   const theme = useTheme()
 
   switch (level) {
-    case WARNING_LEVEL.MEDIUM:
+    case SafetyLevel.MediumWarning:
       return theme.deprecated_accentWarning
-    case WARNING_LEVEL.UNKNOWN:
+    case SafetyLevel.StrongWarning:
       return theme.critical
-    case WARNING_LEVEL.BLOCKED:
+    case SafetyLevel.Blocked:
       return theme.neutral2
+    default:
+      return 'inherit'
   }
 }
 
-export const useTokenWarningColor = (level: WARNING_LEVEL) => {
+export const useTokenWarningColor = (level: SafetyLevel) => {
   const theme = useTheme()
 
   switch (level) {
-    case WARNING_LEVEL.MEDIUM:
-    case WARNING_LEVEL.BLOCKED:
+    case SafetyLevel.MediumWarning:
+    case SafetyLevel.Blocked:
       return theme.surface3
-    case WARNING_LEVEL.UNKNOWN:
+    case SafetyLevel.StrongWarning:
       return theme.deprecated_accentFailureSoft
+    default:
+      return 'inherit'
   }
 }

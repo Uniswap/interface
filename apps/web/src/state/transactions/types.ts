@@ -1,6 +1,12 @@
 import { TradeType } from '@uniswap/sdk-core'
 
+import {
+  AssetActivityPartsFragment,
+  TransactionDetailsPartsFragment,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { VoteOption } from '../governance/types'
+
+export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 
 export interface SerializableTransactionReceipt {
   to: string

@@ -14,16 +14,14 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 import {
   Button,
   Flex,
-  Icons,
   Text,
   TouchableArea,
   useDeviceDimensions,
   useDeviceInsets,
   useSporeColors,
 } from 'ui/src'
+import { Plus } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
@@ -76,7 +74,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const onCompleteOnboarding = useCompleteOnboardingCallback({
     entryPoint: OnboardingEntryPoint.Sidebar,
     importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
@@ -132,25 +129,15 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
       dispatch(createAccountActions.trigger())
 
-      if (unitagsFeatureFlagEnabled) {
-        if (hasImportedSeedPhrase) {
-          setCreatedAdditionalAccount(true)
-        } else {
-          // create pending account and place into welcome flow
-          navigate(Screens.OnboardingStack, {
-            screen: OnboardingScreens.WelcomeWallet,
-            params: {
-              importType: ImportType.CreateNew,
-              entryPoint: OnboardingEntryPoint.Sidebar,
-            },
-          })
-        }
+      if (hasImportedSeedPhrase) {
+        setCreatedAdditionalAccount(true)
       } else {
+        // create pending account and place into welcome flow
         navigate(Screens.OnboardingStack, {
-          screen: OnboardingScreens.EditName,
+          screen: OnboardingScreens.WelcomeWallet,
           params: {
+            importType: ImportType.CreateNew,
             entryPoint: OnboardingEntryPoint.Sidebar,
-            importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
           },
         })
       }
@@ -267,7 +254,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t, unitagsFeatureFlagEnabled])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
@@ -311,7 +298,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
           <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
-            <Icons.Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
+            <Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
           </Flex>
           <Text color="$neutral2" variant="buttonLabel3">
             {t('account.wallet.button.add')}

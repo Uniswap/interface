@@ -1,18 +1,6 @@
+import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import { AssetDocument, AssetQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import client from '../client'
-
-function formatTitleName(name: string | undefined, collectionName: string | undefined, tokenId: string) {
-  if (name) {
-    return name
-  }
-  if (collectionName && tokenId) {
-    return collectionName + ' #' + tokenId
-  }
-  if (tokenId) {
-    return 'Asset #' + tokenId
-  }
-  return 'View NFT on Uniswap'
-}
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
   const origin = new URL(url).origin
@@ -30,7 +18,7 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
   if (!asset) {
     return undefined
   }
-  const title = formatTitleName(asset.name, asset.collection?.name, asset.tokenId)
+  const title = formatNFTAssetMetatagTitleName(asset.name, asset.collection?.name, asset.tokenId)
   const formattedAsset = {
     title,
     image,

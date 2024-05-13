@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -32,7 +33,7 @@ export function SelectTokenButton({
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
           {isWeb && (
-            <Icons.RotatableChevron
+            <RotatableChevron
               color="$neutral3"
               direction="down"
               height={iconSizes.icon20}
@@ -52,7 +53,7 @@ export function SelectTokenButton({
             {t('tokens.selector.button.choose')}
           </Text>
           {isWeb && (
-            <Icons.RotatableChevron
+            <RotatableChevron
               color="$white"
               direction="down"
               height={iconSizes.icon20}

@@ -90,7 +90,7 @@ describe('LimitPriceInputPanel', () => {
         </LimitContext.Provider>
       </SwapAndLimitContext.Provider>
     )
-    expect(screen.getByText('DAI')).toBeVisible() // subheader
+    expect(screen.getByText('DAI')).toBeVisible()
     expect(container.querySelector('.token-symbol-container')).toHaveTextContent('USDC')
     expect(screen.getByPlaceholderText('0')).toBeVisible()
   })

@@ -9,7 +9,6 @@ import {
   addAccounts,
   restoreMnemonicComplete,
   setAccountAsActive,
-  unlockWallet,
 } from 'wallet/src/features/wallet/slice'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
@@ -190,7 +189,6 @@ function* onAccountImport(account: Account, ignoreActivate?: boolean) {
   if (!ignoreActivate) {
     yield* put(setAccountAsActive(account.address))
   }
-  yield* put(unlockWallet())
   logger.debug('importAccount', '', `New ${account.type} account imported: ${account.address}`)
 }
 

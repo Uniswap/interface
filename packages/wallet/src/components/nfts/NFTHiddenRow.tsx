@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {
@@ -67,7 +68,7 @@ export function HiddenNftsRowRight({
             {isExpanded ? t('common.button.hide') : t('common.button.show')}
           </Text>
           <AnimatedFlex style={chevronAnimatedStyle}>
-            <Icons.RotatableChevron
+            <RotatableChevron
               color="$neutral2"
               direction="down"
               height={iconSizes.icon20}

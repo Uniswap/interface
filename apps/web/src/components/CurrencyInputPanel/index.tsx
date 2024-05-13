@@ -4,7 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -14,12 +14,12 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
-import DoubleCurrencyLogo from '../DoubleLogo'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
@@ -215,6 +215,7 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
+  const chainAllowed = useIsSupportedChainId(chainId)
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
   const { formatCurrencyAmount } = useFormatter()
@@ -222,8 +223,6 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
-
-  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -260,10 +259,10 @@ export default function CurrencyInputPanel({
                     <RowFixed>
                       {pair ? (
                         <span style={{ marginRight: '0.5rem' }}>
-                          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                          <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
                         </span>
                       ) : (
-                        currency && <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size="24px" />
+                        currency && <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={24} />
                       )}
                       {pair ? (
                         <StyledTokenName className="pair-name-container">

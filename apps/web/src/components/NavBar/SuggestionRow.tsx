@@ -1,10 +1,10 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { VerifiedIcon } from 'nft/components/icons'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
@@ -18,6 +18,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { useTokenWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { Trans } from 'i18n'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
@@ -101,6 +102,10 @@ export const SuggestionRow = ({
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
+  const warning = useTokenWarning(
+    isToken ? suggestion.address : undefined,
+    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : ChainId.MAINNET
+  )
 
   const handleClick = useCallback(() => {
     const address =
@@ -144,7 +149,7 @@ export const SuggestionRow = ({
           <QueryTokenLogo
             token={suggestion}
             symbol={suggestion.symbol}
-            size="36px"
+            size={36}
             primaryImg={suggestion.project?.logoUrl}
           />
         ) : brokenCollectionImage ? (
@@ -159,11 +164,7 @@ export const SuggestionRow = ({
         <PrimaryContainer>
           <Row gap="xs">
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? (
-              <TokenSafetyIcon warning={checkSearchTokenWarning(suggestion)} />
-            ) : (
-              suggestion.isVerified && <VerifiedIcon />
-            )}
+            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <VerifiedIcon />}
           </Row>
           <ThemedText.SubHeaderSmall lineHeight="20px">
             {isToken ? (

@@ -6,13 +6,13 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { DynamicConfigs, getConfigName } from 'uniswap/src/features/experiments/configs'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/configs'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -224,19 +224,19 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FlagsColumn>
-        <FeatureFlagOption flag={FeatureFlags.SendEnabled} label="Send on swap component" />
         <FeatureFlagOption
           flag={FeatureFlags.Eip6936Enabled}
           label="Enable EIP-6963: Multi Injected Provider Discovery"
         />
-        <FeatureFlagOption flag={FeatureFlags.LimitsEnabled} label="Enable Limits" />
         <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
         <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
         <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
         <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
         <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
+        <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
         <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
-        <FeatureFlagOption flag={FeatureFlags.GqlTokenLists} label="Enable GQL Token Lists" />
+        <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
+        <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
           <DynamicConfigDropdown

@@ -4,7 +4,7 @@ import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
 import { useCallback, useState } from 'react'
@@ -17,8 +17,9 @@ import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DoubleTokenAndChainLogo } from './PoolDetailsHeader'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
@@ -80,7 +81,7 @@ const ButtonsRow = styled(Row)`
 
 interface PoolDetailsLinkProps {
   address?: string
-  chainId?: number
+  chainId?: SupportedInterfaceChainId
   tokens: (Token | undefined)[]
   loading?: boolean
 }
@@ -96,6 +97,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   }, [address, setCopied])
 
   const isPool = tokens.length === 2
+  const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const explorerUrl =
     address &&
     chainId &&
@@ -106,7 +108,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     )
 
   const navigate = useNavigate()
-  const chainName = chainIdToBackendName(chainId)
+  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
       navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))
@@ -149,9 +151,9 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ref={onTextRender}
       >
         {isPool ? (
-          <DoubleTokenAndChainLogo chainId={chainId} tokens={tokens} size={20} />
+          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
         ) : (
-          <CurrencyLogo currency={currency} size="20px" />
+          <CurrencyLogo currency={currency} size={20} />
         )}
         <TokenName>{isPool ? <Trans>Pool</Trans> : tokens[0]?.name}</TokenName>
         <SymbolText>

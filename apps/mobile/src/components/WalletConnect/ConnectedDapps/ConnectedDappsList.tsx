@@ -11,7 +11,8 @@ import {
   WalletConnectSession,
   removePendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { Edit, Scan } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -60,14 +61,14 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
                   setIsEditing(!isEditing)
                 }}>
                 {isEditing ? (
-                  <Icons.Edit color="$accent1" size="$icon.20" />
+                  <Edit color="$accent1" size="$icon.20" />
                 ) : (
-                  <Icons.Edit color="$neutral2" size="$icon.20" />
+                  <Edit color="$neutral2" size="$icon.20" />
                 )}
               </TouchableArea>
             ) : (
               <TouchableArea onPress={onPressScan}>
-                <Icons.Scan color="$neutral2" size="$icon.20" />
+                <Scan color="$neutral2" size="$icon.20" />
               </TouchableArea>
             )}
           </Flex>

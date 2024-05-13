@@ -115,8 +115,8 @@ const NetInfoStateType = {
 
 jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfoStateType }))
 
-jest.mock('statsig-react-native', () => {
-  const real = jest.requireActual('statsig-react-native')
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
+  const real = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
   const StatsigMock = {
     ...real,
     useGate: () => {

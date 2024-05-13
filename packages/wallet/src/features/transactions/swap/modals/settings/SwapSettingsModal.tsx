@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
@@ -97,7 +98,7 @@ export function SwapSettingsModal({
         py={isWeb ? '$spacing4' : '$spacing12'}>
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
-            <Icons.RotatableChevron
+            <RotatableChevron
               color={view === SwapSettingsModalView.Options ? '$transparent' : '$neutral3'}
               height={iconSizes.icon24}
               width={iconSizes.icon24}
@@ -182,7 +183,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
                 <Text color="$neutral1" variant="subheading2">
                   {t('swap.settings.protection.title')}
                 </Text>
-                <Icons.InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
+                <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
               </Flex>
               <Text color="$neutral2" variant="body3">
                 {subText}

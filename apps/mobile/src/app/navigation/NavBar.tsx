@@ -21,7 +21,6 @@ import {
   Flex,
   FlexProps,
   HapticFeedback,
-  Icons,
   LinearGradient,
   Text,
   TouchableArea,
@@ -29,6 +28,7 @@ import {
   useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
+import { Search } from 'ui/src/components/icons'
 import { borderRadii, fonts } from 'ui/src/theme'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
@@ -250,7 +250,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
               shadowRadius={borderRadii.rounded20}>
-              <Icons.Search color="$neutral2" size="$icon.24" />
+              <Search color="$neutral2" size="$icon.24" />
               <Text
                 allowFontScaling={false}
                 color="$neutral2"

@@ -13,7 +13,8 @@ import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Loader } from 'ui/src'
+import { Flex, Loader } from 'ui/src'
+import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
@@ -139,7 +140,7 @@ export function RestoreCloudBackupLoadingScreen({
       <Flex alignSelf="center" px="$spacing16">
         <BaseCard.ErrorState
           description={t('account.cloud.error.backup.message')}
-          icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
+          icon={<OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
           retryButtonLabel={t('common.button.retry')}
           title={t('account.cloud.error.backup.title')}
           onRetry={fetchCloudStorageBackups}
@@ -162,7 +163,7 @@ export function RestoreCloudBackupLoadingScreen({
             description={t('account.cloud.empty.description', {
               cloudProviderName: getCloudProviderName(),
             })}
-            icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
+            icon={<OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
             retryButtonLabel={t('common.button.retry')}
             title={t('account.cloud.empty.title')}
             onRetry={fetchCloudStorageBackups}

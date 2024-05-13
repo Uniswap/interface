@@ -1,4 +1,5 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
@@ -51,8 +52,12 @@ describe('Token details', () => {
   })
 
   it('token with warning and low trading volume should have all information populated', () => {
+    cy.interceptGraphqlOperation('SimpleToken', 'simple_token_warning.json')
+
     // Null token created for this test, 0 trading volume and has warning modal
-    cy.visit('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
+    cy.visit('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681', {
+      featureFlags: [{ flag: FeatureFlags.GqlTokenLists, value: true }],
+    })
 
     // Should have missing price view when price unavailable (expected for this token)
     cy.get('[data-cy="chart-error-view"]').should('exist')

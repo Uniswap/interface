@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
-import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MIN_AUTO_SLIPPAGE_TOLERANCE,

@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
+import { DiamondExclamation } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useDebounce } from 'utilities/src/time/timing'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -118,7 +119,7 @@ export function CloudBackupPasswordForm({
         </Flex>
         {!isConfirmation && (
           <Flex centered row gap="$spacing12" px="$spacing16">
-            <Icons.DiamondExclamation color="$neutral2" size={iconSizes.icon20} />
+            <DiamondExclamation color="$neutral2" size={iconSizes.icon20} />
             <Text color="$neutral2" variant="body3">
               {t('settings.setting.backup.password.disclaimer')}
             </Text>

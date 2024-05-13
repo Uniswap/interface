@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Icons } from 'ui/src'
+import { Button } from 'ui/src'
+import { InfoCircleFilled } from 'ui/src/components/icons'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 
 interface FiatOnRampCtaButtonProps {
@@ -31,7 +32,7 @@ export function FiatOnRampCtaButton({
         isLoading ? (
           <SpinningLoader color="$sporeWhite" />
         ) : !eligible ? (
-          <Icons.InfoCircleFilled color="$neutral3" />
+          <InfoCircleFilled color="$neutral3" />
         ) : undefined
       }
       size="large"

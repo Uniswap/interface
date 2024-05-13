@@ -79,7 +79,7 @@ const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: B
         currencies={currencies}
         chainId={chainId}
         images={[gqlBalance?.tokenProjectMarket?.tokenProject.logoUrl]}
-        size="2rem"
+        size={32}
       />
       <BalanceAmountsContainer>
         <BalanceItem>

@@ -2,7 +2,8 @@ import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { logger } from 'utilities/src/logger/logger'
@@ -90,7 +91,7 @@ export function DeleteUnitagModal({
           height="$spacing48"
           mb="$spacing8"
           minWidth="$spacing48">
-          <Icons.AlertTriangle color="$statusCritical" size="$icon.24" />
+          <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
           {t('unitags.delete.confirm.title')}

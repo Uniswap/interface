@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 
+import { useSupportedChainId } from 'constants/chains'
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent, PopupType } from '../../state/application/reducer'
 import { FailedNetworkSwitchPopup, TransactionPopupContent, UniswapXOrderPopupContent } from './PopupContent'
@@ -30,10 +31,13 @@ export default function PopupItem({
   }, [popKey, removeAfterMs, removePopup])
 
   const { chainId } = useWeb3React()
+  const supportedChainId = useSupportedChainId(chainId)
 
   switch (content.type) {
     case PopupType.Transaction: {
-      return chainId ? <TransactionPopupContent hash={content.hash} chainId={chainId} onClose={onClose} /> : null
+      return supportedChainId ? (
+        <TransactionPopupContent hash={content.hash} chainId={supportedChainId} onClose={onClose} />
+      ) : null
     }
     case PopupType.Order: {
       return <UniswapXOrderPopupContent orderHash={content.orderHash} onClose={onClose} />

@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import { I18nManager } from 'react-native'
 import { ColorTokens } from 'tamagui'
-import * as Icons from 'ui/src/components/icons/allIcons'
+import { Chevron } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 
 type Props = {
@@ -44,7 +44,7 @@ function _RotatableChevron({
   return (
     <Flex centered borderRadius="$roundedFull" rotate={degree} {...rest}>
       {/* @ts-expect-error TODO(MOB-1570) this works but we should migrate to size prop */}
-      <Icons.Chevron color={color} height={height} width={width} />
+      <Chevron color={color} height={height} width={width} />
     </Flex>
   )
 }

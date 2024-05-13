@@ -16,7 +16,7 @@ export function* telemetrySaga() {
     new ApplicationTransport(
       uniswapUrls.amplitudeProxyUrl,
       OriginApplication.MOBILE,
-      uniswapUrls.apiBaseUrl,
+      uniswapUrls.apiOrigin,
       DeviceInfo.getBundleId()
     ),
     allowAnalytics

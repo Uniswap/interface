@@ -9,7 +9,7 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -17,7 +17,7 @@ import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
 import { Break } from 'components/earn/styled'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -26,16 +26,15 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
 
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
+import { Text } from 'ui/src'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
@@ -49,6 +48,7 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -63,7 +63,7 @@ export default function RemoveLiquidityV3() {
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }
-  if (isSupportedChain(chainId) && (loading || position)) {
+  if (isSupportedChain && (loading || position)) {
     return <Remove tokenId={parsedTokenId} />
   } else {
     return <PositionPageUnsupportedContent />
@@ -71,7 +71,6 @@ export default function RemoveLiquidityV3() {
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
-  const theme = useTheme()
   const { account, chainId, provider } = useWeb3React()
   const trace = useTrace()
   const { formatCurrencyAmount } = useFormatter()
@@ -221,52 +220,52 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     return (
       <AutoColumn gap="sm" style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
-          <Text fontSize={16} fontWeight={535}>
+          <Text fontSize={16} fontWeight="$medium">
             <Trans>Pooled {{ sym: liquidityValue0?.currency?.symbol }}:</Trans>
           </Text>
           <RowFixed>
-            <Text fontSize={16} fontWeight={535} marginLeft="6px">
+            <Text fontSize={16} fontWeight="$medium" ml={6}>
               {liquidityValue0 && formatCurrencyAmount({ amount: liquidityValue0 })}
             </Text>
-            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
+            <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
           </RowFixed>
         </RowBetween>
         <RowBetween align="flex-end">
-          <Text fontSize={16} fontWeight={535}>
+          <Text fontSize={16} fontWeight="$medium">
             <Trans>Pooled {{ sym: liquidityValue1?.currency?.symbol }}:</Trans>
           </Text>
           <RowFixed>
-            <Text fontSize={16} fontWeight={535} marginLeft="6px">
+            <Text fontSize={16} fontWeight="$medium" ml={6}>
               {liquidityValue1 && formatCurrencyAmount({ amount: liquidityValue1 })}
             </Text>
-            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
+            <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
           </RowFixed>
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <ThemedText.DeprecatedItalic fontSize={12} color={theme.neutral2} textAlign="left" padding="8px 0 0 0">
+            <Text fontSize={12} color="$neutral2" textAlign="left" pt={8}>
               <Trans>You will also collect fees earned from this position.</Trans>
-            </ThemedText.DeprecatedItalic>
+            </Text>
             <RowBetween>
-              <Text fontSize={16} fontWeight={535}>
+              <Text fontSize={16} fontWeight="$medium">
                 <Trans>{{ sym: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
               </Text>
               <RowFixed>
-                <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                <Text fontSize={16} fontWeight="$medium" ml={6}>
                   {feeValue0 && formatCurrencyAmount({ amount: feeValue0 })}
                 </Text>
-                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
+                <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
               </RowFixed>
             </RowBetween>
             <RowBetween>
-              <Text fontSize={16} fontWeight={535}>
+              <Text fontSize={16} fontWeight="$medium">
                 <Trans>{{ sym: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
               </Text>
               <RowFixed>
-                <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                <Text fontSize={16} fontWeight="$medium" ml={6}>
                   {feeValue1 && formatCurrencyAmount({ amount: feeValue1 })}
                 </Text>
-                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
+                <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
               </RowFixed>
             </RowBetween>
           </>
@@ -309,12 +308,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             <AutoColumn gap="lg">
               <RowBetween>
                 <RowFixed>
-                  <DoubleCurrencyLogo
-                    currency0={liquidityValue0?.currency}
-                    currency1={liquidityValue1?.currency}
-                    size={20}
-                    margin={true}
-                  />
+                  <DoubleCurrencyLogo currencies={[liquidityValue0?.currency, liquidityValue1?.currency]} size={20} />
                   <ThemedText.DeprecatedLabel
                     ml="10px"
                     fontSize="20px"
@@ -353,50 +347,50 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokena-symbol">
+                    <Text fontSize={16} fontWeight="$medium" id="remove-pooled-tokena-symbol">
                       <Trans>Pooled {{ symbol: liquidityValue0?.currency?.symbol }}:</Trans>
                     </Text>
                     <RowFixed>
-                      <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                      <Text fontSize={16} fontWeight="$medium" ml={6}>
                         {liquidityValue0 && formatCurrencyAmount({ amount: liquidityValue0 })}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
+                      <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
-                    <Text fontSize={16} fontWeight={535} id="remove-pooled-tokenb-symbol">
+                    <Text fontSize={16} fontWeight="$medium" id="remove-pooled-tokenb-symbol">
                       <Trans>Pooled {{ symbol: liquidityValue1?.currency?.symbol }}:</Trans>
                     </Text>
                     <RowFixed>
-                      <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                      <Text fontSize={16} fontWeight="$medium" ml={6}>
                         {liquidityValue1 && formatCurrencyAmount({ amount: liquidityValue1 })}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
+                      <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
                     </RowFixed>
                   </RowBetween>
                   {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
                     <>
                       <Break />
                       <RowBetween>
-                        <Text fontSize={16} fontWeight={535}>
+                        <Text fontSize={16} fontWeight="$medium">
                           <Trans>{{ symbol: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
                         </Text>
                         <RowFixed>
-                          <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                          <Text fontSize={16} fontWeight="$medium" ml={6}>
                             {feeValue0 && formatCurrencyAmount({ amount: feeValue0 })}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
+                          <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
                         </RowFixed>
                       </RowBetween>
                       <RowBetween>
-                        <Text fontSize={16} fontWeight={535}>
+                        <Text fontSize={16} fontWeight="$medium">
                           <Trans>{{ symbol: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
                         </Text>
                         <RowFixed>
-                          <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                          <Text fontSize={16} fontWeight="$medium" ml={6}>
                             {feeValue1 && formatCurrencyAmount({ amount: feeValue1 })}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
+                          <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
                         </RowFixed>
                       </RowBetween>
                     </>

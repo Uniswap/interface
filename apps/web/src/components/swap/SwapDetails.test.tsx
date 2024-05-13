@@ -1,3 +1,4 @@
+import { Percent } from '@uniswap/sdk-core'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
@@ -18,6 +19,7 @@ describe('SwapDetails.tsx', () => {
         onConfirm={jest.fn()}
         swapErrorMessage={undefined}
         disabledConfirm={false}
+        priceImpact={new Percent(5, 100)}
         fiatValueInput={{
           data: undefined,
           isLoading: false,

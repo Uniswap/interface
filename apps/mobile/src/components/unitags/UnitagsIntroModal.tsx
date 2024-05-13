@@ -8,8 +8,9 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
-import { Button, Flex, GeneratedIcon, Icons, Image, Text, useIsDarkMode } from 'ui/src'
+import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
+import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/slice'
@@ -64,9 +65,9 @@ export function UnitagsIntroModal(): JSX.Element {
           />
         </Flex>
         <Flex gap="$spacing16" px="$spacing20">
-          <BodyItem Icon={Icons.UserSquare} title={t('unitags.intro.features.profile')} />
-          <BodyItem Icon={Icons.Ticket} title={t('unitags.intro.features.free')} />
-          <BodyItem Icon={Icons.Lightning} title={t('unitags.intro.features.ens')} />
+          <BodyItem Icon={UserSquare} title={t('unitags.intro.features.profile')} />
+          <BodyItem Icon={Ticket} title={t('unitags.intro.features.free')} />
+          <BodyItem Icon={Lightning} title={t('unitags.intro.features.ens')} />
         </Flex>
         <Flex gap="$spacing8">
           <Button size="medium" theme="primary" onPress={onPressClaimOneNow}>

@@ -3,9 +3,9 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useState } from 'react'
-import { Text } from 'rebass'
 import styled from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
+import { Text } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -105,14 +105,14 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <ThemedText.DeprecatedWhite fontWeight={535}>
+                <Text color="$white" fontWeight="$medium">
                   <Trans>Claim UNI token</Trans>
-                </ThemedText.DeprecatedWhite>
+                </Text>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <ThemedText.DeprecatedWhite fontWeight={535} fontSize={36}>
+              <Text color="$white" fontWeight="$medium" fontSize={36}>
                 <Trans>{{ amount }} UNI</Trans>
-              </ThemedText.DeprecatedWhite>
+              </Text>
             </CardSection>
             <Break />
           </ModalUpper>
@@ -125,9 +125,9 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             </ThemedText.DeprecatedSubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <ThemedText.DeprecatedError error={true}>
+              <Text color="$statusCritical">
                 <Trans>Address has no available claim</Trans>
-              </ThemedText.DeprecatedError>
+              </Text>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -163,7 +163,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color="#ff007a" fontWeight={535}>
+                <Text fontSize={36} color="#ff007a" fontWeight="$medium">
                   <Trans>{{ unclaimedUni }} UNI</Trans>
                 </Text>
               )}

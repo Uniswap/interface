@@ -209,6 +209,7 @@
       "notNow": "Tidak sekarang",
       "ok": "OKE",
       "paste": "Tempel",
+      "pay": "Membayar",
       "receive": "Menerima",
       "remove": "Menghapus",
       "restore": "Memulihkan",
@@ -266,8 +267,9 @@
       "systemSettings": "Pengaturan"
     },
     "text": {
+      "connected": "Terhubung",
+      "disconnected": "Terputus",
       "error": "Kesalahan",
-      "loading": "Memuat",
       "notAvailable": "T/A",
       "unknown": "Tidak dikenal"
     }
@@ -505,6 +507,7 @@
       "load": "Tidak dapat memuat token untuk dibeli",
       "max": "Maksimum {{amount}}",
       "min": "Minimal {{amount}}",
+      "unavailable": "Layanan ini tidak tersedia di wilayah Anda",
       "unsupported": "Tidak didukung di wilayah",
       "usd": "Hanya tersedia untuk dibeli dalam USD"
     },
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Tautkan akun",
+        "cta": "Dari sebuah akun",
         "description": "Danai dompet Anda dengan mentransfer kripto dari dompet atau akun lain",
         "title": "Terima kripto"
       }
@@ -786,15 +789,6 @@
         "title": "Sematkan Dompet Uniswap"
       },
       "title": "Anda sudah siap"
-    },
-    "editName": {
-      "button": {
-        "create": "Buat dompet"
-      },
-      "label": "Nama panggilan",
-      "subtitle": "Beri nama panggilan pada dompet Anda",
-      "title": "Nama panggilan ini hanya dapat dilihat oleh Anda",
-      "walletAddress": "Alamat publik Anda adalah <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Keamanan",
       "support": "Mendukung",
       "wallet": {
-        "action": {
-          "hide": "Sembunyikan dompet",
-          "showAll_one": "Tunjukkan satu dompet",
-          "showAll_other": "Tampilkan semua {{count}} dompet"
-        },
         "button": {
           "viewAll": "Lihat semua",
           "viewLess": "Lihat lebih sedikit"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Label tidak bersifat publik. Mereka disimpan secara lokal dan hanya dapat dilihat oleh Anda.",
-          "disclaimer": "Nama panggilan ini hanya dapat dilihat oleh Anda.",
-          "save": "Simpan perubahan",
-          "title": "Edit nama panggilan"
+          "save": "Simpan perubahan"
         },
         "label": "Nama panggilan",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Likuiditas tidak cukup"
       },
       "networkFee": {
+        "highRelativeToValue": "Biaya jaringan melebihi 10% dari total nilai transaksi Anda.",
         "message": "Ini adalah biaya untuk memproses transaksi Anda di blockchain. Uniswap tidak menerima bagian apa pun dari biaya ini."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Biaya diterapkan pada beberapa token pilihan untuk memastikan pengalaman terbaik dengan Uniswap. Tidak ada biaya yang terkait dengan pertukaran ini.",
-          "included": "Biaya diterapkan pada beberapa token pilihan untuk memastikan pengalaman terbaik dengan Uniswap, dan telah diperhitungkan dalam penawaran ini."
+          "default": "Biaya dikenakan untuk memastikan pengalaman terbaik dengan Uniswap. Tidak ada biaya yang terkait dengan pertukaran ini.",
+          "included": "Biaya diterapkan untuk memastikan pengalaman terbaik dengan Uniswap, dan telah diperhitungkan dalam penawaran ini."
         },
         "title": "Biaya pertukaran"
       },
@@ -2057,6 +2045,11 @@
         "min": "Nama pengguna setidaknya harus berisi {{number}} karakter",
         "uppercase": "Nama pengguna hanya boleh berisi huruf kecil dan angka"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Tidak cukup {{tokenSymbol}} pada {{chain}}"
     }
   },
   "walletConnect": {

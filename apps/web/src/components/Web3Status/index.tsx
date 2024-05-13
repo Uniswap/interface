@@ -5,7 +5,7 @@ import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import { IconWrapper } from 'components/Identicon/StatusIcon'
+import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getRecentConnectionMeta } from 'connection/meta'
@@ -23,10 +23,9 @@ import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utilities/src/addresses'
 
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { Unitag } from 'ui/src/components/icons/Unitag'
-import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
+import { Unitag } from 'ui/src/components/icons'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ButtonSecondary } from '../Button'
-import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
 
 // https://stackoverflow.com/a/31617326
@@ -142,7 +141,7 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
-  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
+  const { unitag } = useUnitagByAddress(account)
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
   const dispatch = useAppDispatch()

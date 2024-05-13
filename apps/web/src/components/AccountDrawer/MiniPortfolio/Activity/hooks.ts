@@ -3,13 +3,10 @@ import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
-import {
-  TransactionStatus,
-  useActivityWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
+import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
@@ -62,16 +59,12 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 
 export function useAllActivities(account: string) {
   const { formatNumberOrString } = useFormatter()
-  const { data, loading, refetch } = useActivityWebQuery({
-    variables: { account, chains: GQL_MAINNET_CHAINS_MUTABLE },
-    errorPolicy: 'all',
-    fetchPolicy: 'cache-first',
-  })
+  const { activities, loading } = useAssetActivity()
 
   const localMap = useLocalActivities(account)
   const remoteMap = useMemo(
-    () => parseRemoteActivities(data?.portfolios?.[0]?.assetActivities, account, formatNumberOrString),
-    [account, data?.portfolios, formatNumberOrString]
+    () => parseRemoteActivities(activities, account, formatNumberOrString),
+    [account, activities, formatNumberOrString]
   )
   const updateCancelledTx = useTransactionCanceller()
 
@@ -90,11 +83,11 @@ export function useAllActivities(account: string) {
 
   const combinedActivities = useMemo(() => combineActivities(localMap, remoteMap ?? {}), [localMap, remoteMap])
 
-  return { loading, activities: combinedActivities, refetch }
+  return { loading, activities: combinedActivities }
 }
 
 export function useOpenLimitOrders(account: string) {
-  const { activities, loading, refetch } = useAllActivities(account)
+  const { activities, loading } = useAllActivities(account)
   const openLimitOrders =
     activities?.filter(
       (activity) =>
@@ -104,7 +97,6 @@ export function useOpenLimitOrders(account: string) {
   return {
     openLimitOrders,
     loading,
-    refetch,
   }
 }
 

@@ -1,0 +1,27 @@
+{
+  "data": {
+    "token": {
+      "id": "VG9rZW46RVRIRVJFVU1fbnVsbA==",
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "chain": "ETHEREUM",
+      "symbol": "USDC",
+      "name": "USD Coin",
+      "decimals": 6,
+      "standard": "ERC20",
+      "project": {
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNX251bGxfRXRoZXJldW0=",
+        "name": "Circle: USDC",
+        "logo": {
+          "id": "SW1hZ2U6aHR0cHM6Ly90b2tlbi1pY29ucy5zMy5hbWF6b25hd3MuY29tL2V0aC5wbmc=",
+          "url": "https://etherscan.io/token/images/centre-usdc_28.png",
+          "__typename": "Image"
+        },
+        "safetyLevel": "VERIFIED",
+        "logoUrl": "https://etherscan.io/token/images/centre-usdc_28.png",
+        "isSpam": false,
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

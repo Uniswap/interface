@@ -209,6 +209,7 @@
       "notNow": "Niet nu",
       "ok": "OK",
       "paste": "Plakken",
+      "pay": "Betalen",
       "receive": "Ontvangen",
       "remove": "Verwijderen",
       "restore": "Herstellen",
@@ -266,8 +267,9 @@
       "systemSettings": "Instellingen"
     },
     "text": {
+      "connected": "Gekoppeld",
+      "disconnected": "Ontkoppeld",
       "error": "Fout",
-      "loading": "Bezig met laden",
       "notAvailable": "N.v.t",
       "unknown": "Onbekend"
     }
@@ -505,6 +507,7 @@
       "load": "Kan tokens niet laden om te kopen",
       "max": "Maximaal {{amount}}",
       "min": "Minimaal {{amount}}",
+      "unavailable": "Deze service is niet beschikbaar in uw regio",
       "unsupported": "Niet ondersteund in de regio",
       "usd": "Alleen verkrijgbaar in USD"
     },
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Account koppelen",
+        "cta": "Van een rekening",
         "description": "Stort op uw portemonnee door de overdracht van crypto van een andere portemonnee of account",
         "title": "Crypto ontvangen"
       }
@@ -786,15 +789,6 @@
         "title": "Uniswap-portemonnee vastzetten"
       },
       "title": "Je bent klaar"
-    },
-    "editName": {
-      "button": {
-        "create": "Portemonnee maken"
-      },
-      "label": "Bijnaam",
-      "subtitle": "Geef je portemonnee een bijnaam",
-      "title": "Deze bijnaam is alleen voor jou zichtbaar",
-      "walletAddress": "Je openbare adres is <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Beveiliging",
       "support": "Steun",
       "wallet": {
-        "action": {
-          "hide": "Portefeuilles verbergen",
-          "showAll_one": "Laat één portemonnee zien",
-          "showAll_other": "Toon alle {{count}} portemonnees"
-        },
         "button": {
           "viewAll": "Bekijk alles",
           "viewLess": "Bekijk minder"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Etiketten zijn niet openbaar. Ze worden lokaal opgeslagen en zijn alleen voor jou zichtbaar.",
-          "disclaimer": "Deze bijnaam is alleen voor jou zichtbaar.",
-          "save": "Wijzigingen opslaan",
-          "title": "Wijzig bijnaam"
+          "save": "Wijzigingen opslaan"
         },
         "label": "Bijnaam",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Niet genoeg liquiditeit"
       },
       "networkFee": {
+        "highRelativeToValue": "De netwerkkosten bedragen meer dan 10% van uw totale transactiewaarde.",
         "message": "Dit zijn de kosten om uw transactie op de blockchain te verwerken. Uniswap ontvangt geen enkel deel van deze vergoedingen."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Er worden kosten in rekening gebracht op een aantal geselecteerde tokens om de beste ervaring met Uniswap te garanderen. Aan deze ruil zijn geen kosten verbonden.",
-          "included": "Er worden kosten in rekening gebracht op een aantal geselecteerde tokens om de beste ervaring met Uniswap te garanderen, en deze zijn al in deze prijsopgave verwerkt."
+          "default": "Er worden kosten in rekening gebracht om de beste ervaring met Uniswap te garanderen. Aan deze ruil zijn geen kosten verbonden.",
+          "included": "Er worden kosten in rekening gebracht om de beste ervaring met Uniswap te garanderen, en deze zijn al in deze offerte verwerkt."
         },
         "title": "Wisselkosten"
       },
@@ -2057,6 +2045,11 @@
         "min": "Gebruikersnamen moeten minimaal {{number}} tekens bevatten",
         "uppercase": "Gebruikersnamen mogen alleen kleine letters en cijfers bevatten"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Niet genoeg {{tokenSymbol}} op {{chain}}"
     }
   },
   "walletConnect": {

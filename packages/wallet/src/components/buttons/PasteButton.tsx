@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { ClipboardPaste, StickyNoteSquare } from 'ui/src/components/icons'
 import { getClipboard } from 'wallet/src/utils/clipboard'
 
 export default function PasteButton({
@@ -30,7 +31,7 @@ export default function PasteButton({
     return (
       <TouchableArea p="$spacing8" onPress={onPressButton} onPressIn={beforePress}>
         <Flex centered row gap="$spacing4">
-          <Icons.ClipboardPaste color="$neutral2" size="$icon.16" />
+          <ClipboardPaste color="$neutral2" size="$icon.16" />
           <Text color="$neutral2" variant="buttonLabel4">
             {label}
           </Text>
@@ -50,7 +51,7 @@ export default function PasteButton({
         <Text color="$accent1" variant="buttonLabel4">
           {label}
         </Text>
-        <Icons.StickyNoteSquare color="$accent1" size="$icon.16" />
+        <StickyNoteSquare color="$accent1" size="$icon.16" />
       </Flex>
     </TouchableArea>
   )

@@ -1,50 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
-import useHttpLocations from 'hooks/useHttpLocations'
-import { useMemo } from 'react'
-import { isAddress } from 'utilities/src/addresses'
+import { getChainInfo, isSupportedChainId } from 'constants/chains'
+import { isSameAddress } from 'utilities/src/addresses'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import AvaxLogo from '../../assets/svg/avax_logo.svg'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { NATIVE_CHAIN_ID, isCelo, nativeOnChain } from '../../constants/tokens'
-
-type Network =
-  | 'ethereum'
-  | 'arbitrum'
-  | 'optimism'
-  | 'polygon'
-  | 'smartchain'
-  | 'celo'
-  | 'avalanchec'
-  | 'base'
-  | 'blast'
-
-export function chainIdToNetworkName(networkId: ChainId): Network {
-  switch (networkId) {
-    case ChainId.MAINNET:
-      return 'ethereum'
-    case ChainId.ARBITRUM_ONE:
-      return 'arbitrum'
-    case ChainId.OPTIMISM:
-      return 'optimism'
-    case ChainId.POLYGON:
-      return 'polygon'
-    case ChainId.BNB:
-      return 'smartchain'
-    case ChainId.CELO:
-      return 'celo'
-    case ChainId.AVALANCHE:
-      return 'avalanchec'
-    case ChainId.BASE:
-      return 'base'
-    case ChainId.BLAST:
-      return 'blast'
-    default:
-      return 'ethereum'
-  }
-}
+import { PORTAL_ETH_CELO, isCelo, nativeOnChain } from '../../constants/tokens'
 
 export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   switch (chainId) {
@@ -63,51 +26,17 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   }
 }
 
-function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
-  const networkName = chainIdToNetworkName(chainId)
-  const networksWithUrls = [
-    ChainId.ARBITRUM_ONE,
-    ChainId.MAINNET,
-    ChainId.OPTIMISM,
-    ChainId.BNB,
-    ChainId.AVALANCHE,
-    ChainId.BASE,
-  ]
-  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
+export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
+  const networkName = isSupportedChainId(chainId) ? getChainInfo({ chainId }).assetRepoNetworkName : undefined
+
+  if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CeloLogo
   }
+  if (isCelo(chainId) && isSameAddress(address, PORTAL_ETH_CELO.address)) {
+    return EthereumLogo
+  }
 
-  if (networksWithUrls.includes(chainId)) {
+  if (networkName) {
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
   }
-}
-
-export default function useCurrencyLogoURIs(
-  currency:
-    | {
-        isNative?: boolean
-        isToken?: boolean
-        address?: string
-        chainId: number
-        logoURI?: string | null
-      }
-    | null
-    | undefined
-): string[] {
-  const locations = useHttpLocations(currency?.logoURI)
-  return useMemo(() => {
-    const logoURIs = [...locations]
-    if (currency) {
-      if (currency.isNative || currency.address === NATIVE_CHAIN_ID) {
-        logoURIs.push(getNativeLogoURI(currency.chainId))
-      } else if (currency.isToken || currency.address) {
-        const checksummedAddress = isAddress(currency.address)
-        const logoURI = checksummedAddress && getTokenLogoURI(checksummedAddress, currency.chainId)
-        if (logoURI) {
-          logoURIs.push(logoURI)
-        }
-      }
-    }
-    return logoURIs
-  }, [currency, locations])
 }

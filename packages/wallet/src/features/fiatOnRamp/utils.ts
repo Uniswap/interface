@@ -55,6 +55,18 @@ export function isInvalidRequestAmountTooHigh(
   )
 }
 
+export interface NoQuotesError extends FORApiError {
+  data: FORApiError['data'] & {
+    statusCode: 400
+    errorName: 'NoQuotes'
+  }
+}
+
+export function isNoQuotesError(error: FORApiError): error is InvalidRequestAmountTooHigh {
+  const e = error as NoQuotesError
+  return e.data.statusCode === 400 && e.data.errorName === 'NoQuotes'
+}
+
 export function getCountryFlagSvgUrl(countryCode: string): string {
   return `https://images-country.meld.io/${countryCode}/flag.svg`
 }
@@ -66,21 +78,20 @@ export function isFiatOnRampApiError(error: unknown): error is FORApiError {
       typeof e.data === 'object' &&
       e.data !== null &&
       typeof e.data.statusCode === 'number' &&
-      typeof e.data.errorName === 'string' &&
-      typeof e.data.message === 'string'
+      typeof e.data.errorName === 'string'
     )
   }
   return false
 }
 
-export function getServiceProviderLogo(
+export function getOptionalServiceProviderLogo(
   logos: FORLogo | undefined,
   isDarkMode: boolean
 ): string | undefined {
-  if (!logos) {
-    return
-  }
+  return isDarkMode ? logos?.darkLogo : logos?.lightLogo
+}
 
+export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): string {
   return isDarkMode ? logos.darkLogo : logos.lightLogo
 }
 

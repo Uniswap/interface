@@ -1,4 +1,5 @@
-import { isDevelopmentEnv, isProductionEnv, isStagingEnv, isTestEnv } from './env'
+import { isBetaEnv, isDevEnv, isProdEnv } from 'uniswap/src/utils/env'
+import { isTestEnv } from './env'
 
 describe('env', () => {
   const ENV = process.env
@@ -14,9 +15,9 @@ describe('env', () => {
     }
   }
 
-  it('isDevelopmentEnv is true if NODE_ENV=development', () => {
+  it('isDevEnv is true if NODE_ENV=development', () => {
     setEnv({ NODE_ENV: 'development' })
-    expect(isDevelopmentEnv()).toBe(true)
+    expect(isDevEnv()).toBe(true)
   })
 
   it('isTestEnv is true if NODE_ENV=test', () => {
@@ -24,20 +25,20 @@ describe('env', () => {
     expect(isTestEnv()).toBe(true)
   })
 
-  it('isStagingEnv is true REACT_APP_STAGING=1', () => {
+  it('isBetaEnv is true REACT_APP_STAGING=1', () => {
     setEnv({ REACT_APP_STAGING: 1 })
-    expect(isStagingEnv()).toBe(true)
+    expect(isBetaEnv()).toBe(true)
   })
 
-  describe('isProductionEnv', () => {
+  describe('isProdEnv', () => {
     it('is true if NODE_ENV=production', () => {
       setEnv({ NODE_ENV: 'production' })
-      expect(isProductionEnv()).toBe(true)
+      expect(isProdEnv()).toBe(true)
     })
 
     it('is false if NODE_ENV=production and REACT_APP_STAGING=1', () => {
       setEnv({ NODE_ENV: 'production', REACT_APP_STAGING: 1 })
-      expect(isProductionEnv()).toBe(false)
+      expect(isProdEnv()).toBe(false)
     })
   })
 })

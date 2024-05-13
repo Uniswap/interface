@@ -1,4 +1,5 @@
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { Check } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -47,9 +48,7 @@ export default function WalletPreviewCard({
               {balanceFormatted}
             </Text>
           )}
-          {!hideSelectionCircle && selected && (
-            <Icons.Check color="$accent1" size={iconSizes.icon20} />
-          )}
+          {!hideSelectionCircle && selected && <Check color="$accent1" size={iconSizes.icon20} />}
         </Flex>
       </Flex>
     </TouchableArea>

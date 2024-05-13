@@ -1,5 +1,4 @@
-import { INFURA_PREFIX_TO_CHAIN_ID } from 'constants/networks'
-import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
+import { INFURA_PREFIX_TO_CHAIN_ID, chainIdToBackendChain } from 'constants/chains'
 import { isTracing, trace } from 'tracing/trace'
 import { TraceContext } from 'tracing/types'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -97,7 +96,7 @@ export function getTraceContext(url: URL, init?: RequestInit, force = false): Tr
       const body = JSON.parse(Buffer.from(init?.body as Uint8Array).toString())
       method = body.method
       const chainId = INFURA_PREFIX_TO_CHAIN_ID[url.host.split('.')[0]]
-      chain = chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
+      chain = chainId && chainIdToBackendChain({ chainId })
     } catch {
       // ignore the error
     }

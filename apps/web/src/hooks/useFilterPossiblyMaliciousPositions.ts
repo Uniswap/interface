@@ -1,10 +1,19 @@
-import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { hasURL } from 'utils/urlChecks'
 
-import { useDefaultActiveTokens } from './Tokens'
+import { useQueries } from '@tanstack/react-query'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { apolloClient } from 'graphql/data/apollo/client'
+import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { apolloQueryOptions } from 'graphql/data/util'
+import {
+  SafetyLevel,
+  SimpleTokenDocument,
+  SimpleTokenQuery,
+  Token,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTokenContractsConstant } from './useTokenContractsConstant'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -12,6 +21,39 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
     new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
   )
 }
+
+function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId?: SupportedInterfaceChainId) {
+  return apolloQueryOptions({
+    queryKey: ['positionCurrencyInfo', position],
+    queryFn: async () => {
+      const queries = [
+        apolloClient.query<SimpleTokenQuery>({
+          query: SimpleTokenDocument,
+          variables: {
+            address: position.token0,
+            chain: chainIdToBackendChain({ chainId }),
+          },
+          fetchPolicy: 'cache-first',
+        }),
+        apolloClient.query<SimpleTokenQuery>({
+          query: SimpleTokenDocument,
+          variables: {
+            address: position.token1,
+            chain: chainIdToBackendChain({ chainId }),
+          },
+          fetchPolicy: 'cache-first',
+        }),
+      ]
+      const [currency0, currency1] = await Promise.all(queries)
+      return {
+        position,
+        currency0Info: gqlTokenToCurrencyInfo(currency0.data.token as Token),
+        currency1Info: gqlTokenToCurrencyInfo(currency1.data.token as Token),
+      }
+    },
+  })
+}
+
 /**
  * This function is an attempt to filter out an observed phishing attack from LP list UIs.
  * Attackers would airdrop valueless LP positions with urls in the symbol to render phishing sites into users' LP position list view.
@@ -25,19 +67,17 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
  */
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
   const { chainId } = useWeb3React()
-  const activeTokensList = useDefaultActiveTokens(chainId)
+  const nonListPositionTokenAddresses = useMemo(() => getUniqueAddressesFromPositions(positions), [positions])
 
-  const nonListPositionTokenAddresses = useMemo(
-    () => getUniqueAddressesFromPositions(positions).filter((address) => !activeTokensList[address]),
-    [positions, activeTokensList]
-  )
-
+  const positionCurrencyInfos = useQueries({
+    queries: positions.map((position) => getPositionCurrencyInfosQueryOptions(position, chainId)),
+  })
   const symbolCallStates = useTokenContractsConstant(nonListPositionTokenAddresses, 'symbol')
 
   const addressesToSymbol: Record<string, string> = useMemo(() => {
     const result: Record<string, string> = {}
     for (let i = 0; i < nonListPositionTokenAddresses.length; i++) {
-      const callResult = symbolCallStates[i].result
+      const callResult = symbolCallStates[i]?.result
       if (!callResult) continue
       const address = nonListPositionTokenAddresses[i]
       result[address] = callResult as unknown as string
@@ -45,29 +85,30 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
     return result
   }, [nonListPositionTokenAddresses, symbolCallStates])
 
-  return useMemo(
-    () =>
-      positions.filter((position) => {
+  return useMemo(() => {
+    return positionCurrencyInfos
+      .map((result) => {
+        if (!result.data) return undefined
+
+        const { currency0Info, currency1Info, position } = result.data
         let tokensInListCount = 0
-        const token0FromList = activeTokensList[position.token0] as Token | undefined
-        const token1FromList = activeTokensList[position.token1] as Token | undefined
-        if (token0FromList) tokensInListCount++
-        if (token1FromList) tokensInListCount++
+        if (!currency0Info?.isSpam && currency0Info?.safetyLevel === SafetyLevel.Verified) tokensInListCount++
+        if (!currency1Info?.isSpam && currency1Info?.safetyLevel === SafetyLevel.Verified) tokensInListCount++
         // if both tokens are in the list, then we let both have url symbols (so we don't check)
-        if (tokensInListCount === 2) return true
+        if (tokensInListCount === 2) return position
 
         // check the token symbols to see if they contain a url
         // prioritize the token entity from the list if it exists
         // if the token isn't in the list, then use the data returned from chain calls
         let urlSymbolCount = 0
-        if (hasURL(token0FromList?.symbol ?? addressesToSymbol[position.token0])) urlSymbolCount++
-        if (hasURL(token1FromList?.symbol ?? addressesToSymbol[position.token1])) urlSymbolCount++
+        if (hasURL(currency0Info?.currency?.symbol ?? addressesToSymbol[position.token0])) urlSymbolCount++
+        if (hasURL(currency1Info?.currency?.symbol ?? addressesToSymbol[position.token1])) urlSymbolCount++
         // if one token is in the list, then one token can have a url symbol
-        if (tokensInListCount === 1 && urlSymbolCount < 2) return true
+        if (tokensInListCount === 1 && urlSymbolCount < 2) return position
 
         // if neither token is in the list, then neither can have a url symbol
-        return urlSymbolCount === 0
-      }),
-    [addressesToSymbol, positions, activeTokensList]
-  )
+        return urlSymbolCount === 0 ? position : undefined
+      })
+      .filter((position): position is PositionDetails => !!position)
+  }, [addressesToSymbol, positionCurrencyInfos])
 }

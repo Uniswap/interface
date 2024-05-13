@@ -2,7 +2,8 @@ import React from 'react'
 import { useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { Flex, Icons, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { AnimatedCaretChange } from 'ui/src/components/icons'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -65,7 +66,7 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
       alignItems={isAndroid ? 'center' : 'flex-end'}
       gap="$spacing2"
       mt={isAndroid ? '$none' : '$spacing2'}>
-      <Icons.AnimatedCaretChange
+      <AnimatedCaretChange
         size="$icon.16"
         strokeWidth={2}
         style={[

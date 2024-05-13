@@ -6,14 +6,14 @@ import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
 import { networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
 import { Trans } from 'i18n'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Text } from 'ui/src/components/text/Text'
+import { Text } from 'ui/src'
 import ConnectionErrorView from './ConnectionErrorView'
 import { DeprecatedInjectorMessage } from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
@@ -52,15 +52,16 @@ const Line = styled.div`
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const { connector, chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const showMoonpayText = useShowMoonpayText()
 
   const { activationState } = useActivationState()
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
-    if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
+    if (chainId && isSupportedChain && connector !== networkConnection.connector) {
       networkConnection.connector.activate(chainId)
     }
-  }, [chainId, connector])
+  }, [chainId, connector, isSupportedChain])
 
   const showUniswapWalletOptions = useUniswapWalletOptions()
   const { orderedConnections, showDeprecatedMessage } = useOrderedConnections(!!showUniswapWalletOptions)

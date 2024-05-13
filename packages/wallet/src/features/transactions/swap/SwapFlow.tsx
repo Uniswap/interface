@@ -1,7 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import {

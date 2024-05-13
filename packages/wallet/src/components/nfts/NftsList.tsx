@@ -8,10 +8,10 @@ import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
   Flex,
-  Icons,
   Loader,
   useDeviceDimensions,
 } from 'ui/src'
+import { NoNfts } from 'ui/src/components/icons'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -187,7 +187,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
               }
               icon={
                 <Flex pb="$spacing12">
-                  <Icons.NoNfts color="$neutral3" size="$icon.70" />
+                  <NoNfts color="$neutral3" size="$icon.70" />
                 </Flex>
               }
               title={t('tokens.nfts.list.none.title')}

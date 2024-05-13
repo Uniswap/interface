@@ -92,7 +92,6 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
-  [OnboardingScreens.EditName]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
   [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams

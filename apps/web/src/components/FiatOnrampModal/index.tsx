@@ -74,7 +74,7 @@ export default function FiatOnrampModal() {
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
-  const { network, tokenAddress } = parsePathParts(location.pathname)
+  const { chain, tokenAddress } = parsePathParts(location.pathname)
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -100,7 +100,7 @@ export default function FiatOnrampModal() {
         body: JSON.stringify({
           theme: isDarkMode ? 'dark' : 'light',
           colorCode: theme.accent1,
-          defaultCurrencyCode: getDefaultCurrencyCode(tokenAddress, network),
+          defaultCurrencyCode: getDefaultCurrencyCode(tokenAddress, chain?.backendChain.chain),
           redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
             MOONPAY_SUPPORTED_CURRENCY_CODES.reduce(
@@ -121,7 +121,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, network, swapUrl, theme.accent1, tokenAddress])
+  }, [account, chain, isDarkMode, swapUrl, theme.accent1, tokenAddress])
 
   useEffect(() => {
     fetchSignedIframeUrl()

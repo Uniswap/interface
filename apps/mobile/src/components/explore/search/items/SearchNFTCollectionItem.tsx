@@ -4,7 +4,8 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -94,7 +95,7 @@ export function SearchNFTCollectionItem({
           </Text>
         </Flex>
         <Flex grow alignItems="flex-start" width="$spacing36">
-          {isVerified ? <Icons.Verified color="$accent1" size="$icon.16" /> : null}
+          {isVerified ? <Verified color="$accent1" size="$icon.16" /> : null}
         </Flex>
       </Flex>
     </TouchableArea>

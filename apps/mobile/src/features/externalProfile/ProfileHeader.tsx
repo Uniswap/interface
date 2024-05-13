@@ -13,7 +13,6 @@ import { openModal } from 'src/features/modals/modalSlice'
 import {
   AnimatedFlex,
   Flex,
-  Icons,
   Image,
   LinearGradient,
   ScrollView,
@@ -26,9 +25,10 @@ import {
   useUniconColors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
+import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { iconSizes, imageSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
@@ -221,7 +221,7 @@ export const ProfileHeader = memo(function ProfileHeader({
                 {twitter ? (
                   <TouchableArea onPress={onPressTwitter}>
                     <Flex centered row gap="$spacing4">
-                      <Icons.XTwitter color={colors.neutral1.val} size={iconSizes.icon16} />
+                      <XTwitter color={colors.neutral1.val} size={iconSizes.icon16} />
                       <Text color="$neutral1" variant="buttonLabel3">
                         {twitter}
                       </Text>
@@ -277,7 +277,7 @@ export const ProfileHeader = memo(function ProfileHeader({
               testID={ElementName.Send}
               onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">
-                <Icons.SendAction color="$neutral2" size="$icon.20" />
+                <SendAction color="$neutral2" size="$icon.20" />
                 <Text
                   allowFontScaling={true}
                   color="$neutral2"

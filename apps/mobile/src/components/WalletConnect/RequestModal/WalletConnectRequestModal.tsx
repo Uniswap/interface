@@ -18,21 +18,26 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
 import {
-  SignRequest,
-  TransactionRequest,
+  WalletConnectRequest,
   isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
+import {
+  EthMethod,
+  UwULinkMethod,
+  WCEventType,
+  WCRequestOutcome,
+} from 'wallet/src/features/walletConnect/types'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import { UwULinkErc20SendModal } from './UwULinkErc20SendModal'
 
 interface Props {
   onClose: () => void
-  request: SignRequest | TransactionRequest
+  request: WalletConnectRequest
 }
 
 const VALID_REQUEST_TYPES = [
@@ -41,6 +46,7 @@ const VALID_REQUEST_TYPES = [
   EthMethod.SignTypedDataV4,
   EthMethod.EthSign,
   EthMethod.EthSendTransaction,
+  UwULinkMethod.Erc20Send,
 ]
 
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
@@ -62,6 +68,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     areAddressesEqual(account.address, request.account)
   )
   const gasFee = useTransactionGasFee(tx, GasSpeed.Urgent)
+
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
     chainId,
@@ -145,7 +152,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     if (!confirmEnabled || !signerAccount) {
       return
     }
-    if (request.type === EthMethod.EthSendTransaction) {
+    if (request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send) {
       if (!gasFee.params) {
         return
       } // appeasing typescript
@@ -153,7 +160,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
           requestInternalId: request.internalId,
-          method: request.type,
+          method: EthMethod.EthSendTransaction,
           transaction: { ...tx, ...gasFee.params },
           account: signerAccount,
           dapp: request.dapp,
@@ -198,6 +205,14 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const { trigger: actionButtonTrigger } = useBiometricPrompt(onConfirm)
   const { requiredForTransactions } = useBiometricAppSettings()
 
+  const onConfirmPress = async (): Promise<void> => {
+    if (requiredForTransactions) {
+      await actionButtonTrigger()
+    } else {
+      await onConfirm()
+    }
+  }
+
   if (!VALID_REQUEST_TYPES.includes(request.type)) {
     return null
   }
@@ -210,6 +225,18 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     }
   }
 
+  if (request.type === UwULinkMethod.Erc20Send) {
+    return (
+      <UwULinkErc20SendModal
+        hasSufficientGasFunds={hasSufficientFunds}
+        request={request}
+        onClose={handleClose}
+        onConfirm={onConfirmPress}
+        onReject={onReject}
+      />
+    )
+  }
+
   return (
     <ModalWithOverlay
       confirmationButtonText={
@@ -217,16 +244,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           ? t('common.button.accept')
           : t('walletConnect.request.button.sign')
       }
+      disableConfirm={!hasSufficientFunds || Boolean(gasFee.error)}
       name={ModalName.WCSignRequest}
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
       onClose={handleClose}
-      onConfirm={async (): Promise<void> => {
-        if (requiredForTransactions) {
-          await actionButtonTrigger()
-        } else {
-          await onConfirm()
-        }
-      }}
+      onConfirm={onConfirmPress}
       onReject={onReject}>
       <WalletConnectRequestModalContent
         gasFee={gasFee}

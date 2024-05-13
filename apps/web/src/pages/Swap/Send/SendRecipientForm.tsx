@@ -2,29 +2,22 @@ import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
 import Row from 'components/Row'
-import { Unicon } from 'components/Unicon'
-import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { Plural, t, Trans } from 'i18n'
-import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, useCallback, useRef, useState } from 'react'
+import { Plural, Trans, t } from 'i18n'
+import { ChangeEvent, ForwardedRef, KeyboardEvent, forwardRef, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
-import { RecipientData } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
+import { RecipientData } from 'state/send/hooks'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { Unitag } from 'ui/src/components/icons/Unitag'
-import { Text } from 'ui/src/components/text/Text'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import {
-  useUnitagByAddressWithoutFlag,
-  useUnitagByNameWithoutFlag,
-} from 'uniswap/src/features/unitags/hooksWithoutFlags'
+import { Text } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
@@ -125,11 +118,11 @@ const AutocompleteRow = ({
   selectRecipient: (recipient: RecipientData) => void
 }) => {
   const { account } = useWeb3React()
-  const { unitag } = useUnitagByAddressWithoutFlag(address, Boolean(address))
+  const { unitag } = useUnitagByAddress(address)
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
-  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+  const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(
     () =>
@@ -144,24 +137,24 @@ const AutocompleteRow = ({
   return (
     <StyledAutocompleteRow justify="space-between" padding="8px 0px" onClick={boundSelectRecipient}>
       <Row gap="sm">
-        {unitag?.metadata?.avatar ? (
-          <UniTagProfilePicture account={address} size={36} />
-        ) : cachedEnsName ? (
-          <Identicon account={address} size={36} />
-        ) : uniconsV2Enabled ? (
-          <UniconV2 address={address} size={36} />
-        ) : (
-          <Unicon address={address} size={36} />
-        )}
+        <Identicon account={address} size={36} />
         <Column>
           <Row gap="xs">
-            <ThemedText.BodyPrimary lineHeight="24px">
-              {unitag?.username ?? cachedEnsName ?? formattedAddress}
-            </ThemedText.BodyPrimary>
+            {shouldShowAddress ? (
+              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
+                <ThemedText.BodyPrimary lineHeight="24px">{formattedAddress}</ThemedText.BodyPrimary>
+              </MouseoverTooltip>
+            ) : (
+              <ThemedText.BodyPrimary lineHeight="24px">{unitag?.username ?? cachedEnsName}</ThemedText.BodyPrimary>
+            )}
             {unitag?.username && <Unitag size={18} />}
           </Row>
-          {(unitag || cachedEnsName) && (
-            <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>
+          {!shouldShowAddress && (
+            <ThemedText.LabelSmall lineHeight="20px">
+              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
+                {formattedAddress}
+              </MouseoverTooltip>
+            </ThemedText.LabelSmall>
           )}
         </Column>
       </Row>
@@ -226,10 +219,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
-  const unicodeV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
-  const unitagMetadata = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag)).unitag
-    ?.metadata
   const { transfers: recentTransfers } = useGroupedRecentTransfers(account)
 
   const [[isFocusing, isForcingFocus], setFocus] = useState([false, false])
@@ -345,15 +335,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       ) : (
         <StyledConfirmedRecipientRow>
           <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
-            {unitagMetadata?.avatar ? (
-              <UniTagProfilePicture account={recipientData.address} size={36} />
-            ) : recipientData.ensName ? (
-              <Identicon account={recipientData.address} size={36} />
-            ) : unicodeV2Enabled ? (
-              <UniconV2 address={recipientData.address} size={36} />
-            ) : (
-              <Unicon address={recipientData.address} size={36} />
-            )}
+            <Identicon account={recipientData.address} size={36} />
             <Column>
               <Row gap="xs">
                 <ThemedText.BodyPrimary lineHeight="24px">

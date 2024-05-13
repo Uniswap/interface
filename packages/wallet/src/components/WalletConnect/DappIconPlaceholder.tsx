@@ -5,7 +5,7 @@ export function DappIconPlaceholder({
   name,
   iconSize,
 }: {
-  name: string
+  name?: string
   iconSize: number
 }): JSX.Element {
   return (
@@ -21,7 +21,7 @@ export function DappIconPlaceholder({
         color="$neutral2"
         textAlign="center"
         variant={iconSize >= iconSizes.icon40 ? 'subheading1' : 'body2'}>
-        {name.length > 0 ? name.charAt(0) : ' '}
+        {name && name.length > 0 ? name.charAt(0) : ' '}
       </Text>
     </Flex>
   )

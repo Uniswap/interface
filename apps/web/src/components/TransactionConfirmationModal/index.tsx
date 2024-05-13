@@ -2,10 +2,8 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { getChainInfo } from 'constants/chainInfo'
-import { SupportedL2ChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedL2ChainId, useIsSupportedChainId } from 'constants/chains'
 import { Trans, t } from 'i18n'
-import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
@@ -14,6 +12,7 @@ import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/c
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { useCurrencyInfo } from 'hooks/Tokens'
 import Circle from '../../assets/images/blue-loader.svg'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -97,7 +96,7 @@ function TransactionSubmittedContent({
   const { connector } = useWeb3React()
 
   const token = currencyToAdd?.wrapped
-  const logoURL = useCurrencyLogoURIs(token)[0]
+  const logoURL = useCurrencyInfo(token)?.logoUrl ?? ''
 
   const [success, setSuccess] = useState<boolean | undefined>()
 
@@ -221,7 +220,7 @@ function L2Content({
     ? (transaction.confirmedTime - transaction.addedTime) / 1000
     : undefined
 
-  const info = getChainInfo(chainId)
+  const info = CHAIN_INFO[chainId]
 
   return (
     <Wrapper>
@@ -314,8 +313,9 @@ export default function TransactionConfirmationModal({
   currencyToAdd,
 }: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
 
-  if (!chainId) return null
+  if (!chainId || !isSupportedChain) return null
 
   // confirmation screen
   return (

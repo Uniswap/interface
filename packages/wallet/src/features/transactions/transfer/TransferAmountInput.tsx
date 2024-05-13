@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useEffect } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
-import { Flex, FlexProps, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
+import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -147,7 +148,7 @@ export function TransferAmountInput({
           <Text color={subTextValueColor} textAlign="center" variant="subheading2">
             {subTextValue}
           </Text>
-          {!warning && <Icons.ArrowUpDown color="$neutral3" size="$icon.16" />}
+          {!warning && <ArrowUpDown color="$neutral3" size="$icon.16" />}
         </Flex>
       </TouchableArea>
     </Flex>

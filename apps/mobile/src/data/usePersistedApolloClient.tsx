@@ -7,9 +7,6 @@ import { initAndPersistCache } from 'src/data/cache'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -72,7 +69,6 @@ if (isNonJestDev) {
 export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
-  const cloudflareGatewayEnabled = useFeatureFlag(FeatureFlags.GatewayDNSUpdateMobile)
 
   const apolloLink = customEndpoint
     ? getCustomGraphqlHttpLink(customEndpoint)
@@ -90,9 +86,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
       )
     }
 
-    const restLink = cloudflareGatewayEnabled
-      ? getRestLink(uniswapUrls.apiBaseUrlCloudflare)
-      : getRestLink()
+    const restLink = getRestLink()
 
     const newClient = new ApolloClient({
       assumeImmutableResults: true,

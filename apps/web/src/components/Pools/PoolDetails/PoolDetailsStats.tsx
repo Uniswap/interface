@@ -4,7 +4,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { chainIdToBackendName, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
@@ -17,6 +17,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { DetailBubble } from './shared'
@@ -124,7 +125,7 @@ type TokenFullData = Token & {
   currency?: Currency
 }
 
-const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: number }) => {
+const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: SupportedInterfaceChainId }) => {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
@@ -133,7 +134,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
   return (
     <PoolBalanceTokenNamesContainer>
-      {!screenIsNotLarge && <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '8px' }} />}
+      {!screenIsNotLarge && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
       {formatNumber({
         input: token.tvl,
         type: NumberType.TokenQuantityStats,
@@ -142,11 +143,11 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
       <StyledLink
         to={getTokenDetailsURL({
           address: unwrappedToken.address,
-          chain: chainIdToBackendName(chainId),
+          chain: chainIdToBackendChain({ chainId, withFallback: true }),
         })}
       >
         {screenIsNotLarge && (
-          <CurrencyLogo currency={currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
+          <CurrencyLogo currency={currency} size={16} style={{ marginRight: '4px', marginLeft: '4px' }} />
         )}
         {unwrappedToken.symbol}
       </StyledLink>

@@ -170,6 +170,11 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
           >
             Limit
           </button>
+          <button
+            class="c6 c8"
+          >
+            Send
+          </button>
           <div
             class="c9"
           >

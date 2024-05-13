@@ -14,8 +14,7 @@ const ETH_TRADEABLE_ASSET: TradeableAsset = {
   type: AssetType.Currency,
 }
 
-// instead of defaulting to mainnet eth
-export const initialState: Readonly<TransactionState> = {
+export const INITIAL_TRANSACTION_STATE: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
@@ -31,7 +30,7 @@ export const initialState: Readonly<TransactionState> = {
 // using `createSlice` for convenience -- slice is not added to root reducer
 const slice = createSlice({
   name: 'TransactionState',
-  initialState,
+  initialState: INITIAL_TRANSACTION_STATE,
   reducers: {
     /**
      * Sets currency at `field` to the given currency

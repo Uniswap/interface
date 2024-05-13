@@ -1,9 +1,10 @@
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useMemo } from 'react'
 import { useTrendingTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { chainIdToBackendName, unwrapToken } from './util'
+import { unwrapToken } from './util'
 
-export default function useTrendingTokens(chainId?: number) {
-  const chain = chainIdToBackendName(chainId)
+export default function useTrendingTokens(chainId?: SupportedInterfaceChainId) {
+  const chain = chainIdToBackendChain({ chainId, withFallback: true })
   const { data, loading } = useTrendingTokensQuery({ variables: { chain } })
 
   return useMemo(

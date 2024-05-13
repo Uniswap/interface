@@ -4,7 +4,8 @@ import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Check } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -80,7 +81,7 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
             {code}
           </Text>
         </Flex>
-        {active && <Icons.Check color={colors.accent1.val} size="$icon.24" />}
+        {active && <Check color={colors.accent1.val} size="$icon.24" />}
       </Flex>
     </TouchableArea>
   )

@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
 
 /**

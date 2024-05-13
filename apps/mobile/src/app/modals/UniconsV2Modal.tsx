@@ -5,7 +5,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import {
   Button,
   Flex,
-  Icons,
   Text,
   Unicon,
   UniconV2,
@@ -13,6 +12,7 @@ import {
   useIsDarkMode,
   useUniconColors,
 } from 'ui/src'
+import { RightArrow } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { UniconGradient } from 'wallet/src/components/accounts/AccountIcon'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -47,7 +47,7 @@ export function UniconsV2Modal({ address }: UniconsV2ModalProps): JSX.Element {
               <Unicon address={address} size={UNICON_SIZE - UNICON_PADDING} />
               <UniconGradient color={uniconColor} size={UNICON_SIZE} />
             </Flex>
-            <Icons.RightArrow color="$neutral3" size="$icon.16" />
+            <RightArrow color="$neutral3" size="$icon.16" />
             <UniconV2 address={address} size={UNICON_SIZE} />
           </Flex>
           <Flex alignItems="center" gap="$spacing12">

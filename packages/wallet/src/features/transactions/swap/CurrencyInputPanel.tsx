@@ -19,13 +19,13 @@ import {
   AnimatedFlex,
   Flex,
   FlexProps,
-  Icons,
   Text,
   TouchableArea,
   isWeb,
   useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
+import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { isDetoxBuild } from 'utilities/src/environment'
@@ -304,7 +304,7 @@ export const CurrencyInputPanel = memo(
                     {inputPanelFormattedValue}
                   </Text>
                   {Boolean(inputPanelFormattedValue && fiatModeFeatureEnabled) && (
-                    <Icons.ArrowUpDown color="$neutral3" size="$icon.12" />
+                    <ArrowUpDown color="$neutral3" size="$icon.12" />
                   )}
                 </Flex>
               </TouchableArea>

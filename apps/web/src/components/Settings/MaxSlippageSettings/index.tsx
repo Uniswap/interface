@@ -105,13 +105,14 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
   return (
     <Expand
       testId="max-slippage-settings"
+      padding="6px 0px"
       isOpen={isOpen}
       onToggle={() => setIsOpen(!isOpen)}
       header={
         <Row width="auto">
-          <ThemedText.BodySecondary>
+          <ThemedText.BodyPrimary>
             <Trans>Max. slippage</Trans>
-          </ThemedText.BodySecondary>
+          </ThemedText.BodyPrimary>
           <QuestionHelper
             text={
               <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>

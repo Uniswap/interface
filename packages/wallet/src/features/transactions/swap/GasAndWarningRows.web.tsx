@@ -2,7 +2,8 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { Gas } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
@@ -15,8 +16,10 @@ import { BuyNativeTokenCtaRow } from 'wallet/src/features/transactions/swap/BuyN
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
+import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { PriceImpactWarning } from 'wallet/src/features/transactions/swap/modals/PriceImpactWarning'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -29,7 +32,8 @@ export function GasAndWarningRows({
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
 
-  const { chainId, trade } = derivedSwapInfo
+  const { chainId, trade, currencyAmountsUSDValue } = derivedSwapInfo
+  const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
   const priceImpact = trade.trade ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -54,6 +58,8 @@ export function GasAndWarningRows({
     Keyboard.dismiss()
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
+
+  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
 
   return (
     <>
@@ -92,13 +98,19 @@ export function GasAndWarningRows({
               </Flex>
               {showGasFee && (
                 <NetworkFeeWarning
+                  gasFeeHighRelativeToValue={gasFeeHighRelativeToSwapValue}
                   placement="bottom"
                   tooltipTrigger={
                     <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                      <Text color="$neutral2" variant="body4">
+                      <Gas
+                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
+                        size="$icon.16"
+                      />
+                      <Text
+                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
+                        variant="body4">
                         {gasFeeFormatted}
                       </Text>
-                      <Icons.Gas color="$neutral2" size="$icon.16" />
                     </AnimatedFlex>
                   }
                 />

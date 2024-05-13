@@ -61,12 +61,13 @@ export default function TransactionDeadlineSettings() {
     <Expand
       isOpen={isOpen}
       onToggle={() => setIsOpen(!isOpen)}
+      padding="6px 0px"
       testId="transaction-deadline-settings"
       header={
         <Row width="auto">
-          <ThemedText.BodySecondary>
+          <ThemedText.BodyPrimary>
             <Trans>Transaction deadline</Trans>
-          </ThemedText.BodySecondary>
+          </ThemedText.BodyPrimary>
           <QuestionHelper
             text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
           />

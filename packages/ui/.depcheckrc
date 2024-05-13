@@ -8,4 +8,6 @@ ignores: [
     "utilities",
     "tsconfig",
     "utilities",
+    # used in package.json
+    "esbuild-register",
   ]

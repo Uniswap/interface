@@ -9,7 +9,6 @@ import {
   AnimatedFlex,
   Button,
   Flex,
-  Icons,
   Text,
   TouchableArea,
   isWeb,
@@ -17,15 +16,16 @@ import {
   useSporeColors,
 } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
+import { AlertCircle } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
@@ -229,7 +229,7 @@ export function TransferTokenForm({
   const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
   const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12
   const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
-  const SendWarningIcon = transferWarning?.icon ?? Icons.AlertCircle
+  const SendWarningIcon = transferWarning?.icon ?? AlertCircle
 
   return (
     <>

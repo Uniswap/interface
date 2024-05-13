@@ -5,8 +5,9 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { setUserProperty } from 'src/features/telemetry'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { isDevBuild } from 'src/utils/version'
-import { Flex, HapticFeedback, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { CopyAlt, Settings } from 'ui/src/components/icons'
+import { isDevEnv } from 'uniswap/src/utils/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -87,7 +88,7 @@ export function AccountHeader(): JSX.Element {
               hitSlop={20}
               testID={ElementName.Manage}
               onLongPress={async (): Promise<void> => {
-                if (isDevBuild()) {
+                if (isDevEnv()) {
                   await HapticFeedback.selection()
                   dispatch(openModal({ name: ModalName.Experiments }))
                 }
@@ -106,7 +107,7 @@ export function AccountHeader(): JSX.Element {
               hitSlop={20}
               testID="account-header/settings-button"
               onPress={onPressSettings}>
-              <Icons.Settings color="$neutral2" opacity={0.8} size="$icon.24" />
+              <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
             </TouchableArea>
           </Flex>
           {walletHasName ? (
@@ -138,7 +139,7 @@ export function AccountHeader(): JSX.Element {
                   variant="subheading2">
                   {sanitizeAddressText(shortenAddress(activeAddress))}
                 </Text>
-                <Icons.CopyAlt color="$neutral1" size="$icon.16" />
+                <CopyAlt color="$neutral1" size="$icon.16" />
               </Flex>
             </TouchableArea>
           )}

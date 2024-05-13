@@ -8,19 +8,13 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
-import { Unicon } from 'components/Unicon'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { Unitag } from 'ui/src/components/icons/Unitag'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
+import { Unitag } from 'ui/src/components/icons'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -75,7 +69,6 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
   } = useSendContext()
-  const { unitag: recipientUnitag } = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag))
 
   const { formatConvertedFiatNumberOrString, formatCurrencyAmount } = useFormatter()
   const formattedInputAmount = formatCurrencyAmount({
@@ -99,8 +92,6 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     ? [formattedFiatInputAmount, currencySymbolAmount]
     : [currencySymbolAmount, formattedFiatInputAmount]
 
-  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight={90}>
       <ModalWrapper data-testid="send-review-modal" gap="md">
@@ -121,7 +112,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               label={<Trans>You&apos;re sending</Trans>}
               header={primaryInputView}
               subheader={secondaryInputView}
-              image={<PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />}
+              image={<PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />}
             />
             <SendModalHeader
               label={<Trans>To</Trans>}
@@ -136,17 +127,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
                 )
               }
               subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
-              image={
-                recipientUnitag?.metadata?.avatar ? (
-                  <UniTagProfilePicture account={recipientData?.address ?? ''} size={36} />
-                ) : recipientData?.ensName ? (
-                  <Identicon account={recipientData.address} size={36} />
-                ) : uniconsV2Enabled ? (
-                  <UniconV2 address={recipientData?.address ?? ''} size={36} />
-                ) : (
-                  <Unicon address={recipientData?.address ?? ''} size={36} />
-                )
-              }
+              image={<Identicon account={recipientData?.address} size={36} />}
             />
           </Column>
           <Separator />

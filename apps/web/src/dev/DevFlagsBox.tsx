@@ -5,11 +5,11 @@ import { useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 
 const Box = styled.div`
   position: fixed;
@@ -47,7 +47,9 @@ const SettingsContainer = styled(ColumnCenter)`
 `
 
 export default function DevFlagsBox() {
-  const statsigOverrides = Statsig.getAllOverrides()
+  const statsigOverrides = Statsig.initializeCalled()
+    ? Statsig.getAllOverrides()
+    : { gates: {}, configs: {}, layers: {} }
   const configOverrides = Object.entries(statsigOverrides.configs)
   const gateOverrides = Object.entries(statsigOverrides.gates)
 
@@ -70,8 +72,8 @@ export default function DevFlagsBox() {
       {isOpen ? (
         <RowBetween>
           <ThemedText.SubHeader>
-            {isDevelopmentEnv() && 'Local Overrides'}
-            {isStagingEnv() && 'Staging Overrides'}
+            {isDevEnv() && 'Local Overrides'}
+            {isBetaEnv() && 'Staging Overrides'}
           </ThemedText.SubHeader>
           <MouseoverTooltip
             size={TooltipSize.Small}

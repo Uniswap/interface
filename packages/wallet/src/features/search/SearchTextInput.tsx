@@ -12,7 +12,6 @@ import {
   AnimatePresence,
   Button,
   Flex,
-  Icons,
   Input,
   InputProps,
   SpaceTokens,
@@ -22,6 +21,7 @@ import {
   useComposedRefs,
   useDeviceDimensions,
 } from 'ui/src'
+import { RotatableChevron, Search, X } from 'ui/src/components/icons'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
@@ -86,6 +86,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     )
 
     const onPressCancel = (): void => {
+      inputRef.current?.clear()
       setIsFocus(false)
       setShowClearButton(false)
       Keyboard.dismiss()
@@ -149,7 +150,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           })}>
           {!hideIcon && (
             <Flex py="$spacing4">
-              <Icons.Search color="$neutral2" size="$icon.20" />
+              <Search color="$neutral2" size="$icon.20" />
             </Flex>
           )}
 
@@ -203,7 +204,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 borderRadius="$roundedFull"
                 enterStyle={{ opacity: 0, scale: 0 }}
                 exitStyle={{ opacity: 0, scale: 0 }}
-                icon={clearIcon ?? <Icons.X color="$neutral3" size="$icon.16" />}
+                icon={clearIcon ?? <X color="$neutral3" size="$icon.16" />}
                 p="$spacing4"
                 theme="secondary"
                 onPress={onClear}
@@ -225,7 +226,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 enterStyle={{ opacity: 0, scale: 0 }}
                 exitStyle={{ opacity: 0, scale: 0 }}
                 icon={
-                  <Icons.RotatableChevron
+                  <RotatableChevron
                     color="$neutral3"
                     direction="up"
                     height={iconSizes.icon20}
@@ -244,6 +245,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <Flex
             animation="200ms"
             opacity={isFocus ? 1 : 0}
+            pointerEvents={isFocus ? 'auto' : 'none'}
             position="absolute"
             right={0}
             scale={isFocus ? 1 : 0}

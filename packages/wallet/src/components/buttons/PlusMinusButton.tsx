@@ -1,4 +1,5 @@
-import { Flex, Icons, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
+import { Plus as PlusIcon } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 
 export enum PlusMinusButtonType {
@@ -27,7 +28,7 @@ export default function PlusMinusButton({
       width={iconSizes.icon28}
       onPress={(): void => onPress(type)}>
       {type === PlusMinusButtonType.Plus ? (
-        <Icons.Plus color="$surface1" size="$icon.12" strokeWidth={2.5} />
+        <PlusIcon color="$surface1" size="$icon.12" strokeWidth={2.5} />
       ) : (
         <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
       )}

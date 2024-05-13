@@ -1,11 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
 
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import {
   ClassicTrade,
@@ -27,6 +28,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
   account?: string,
+  protocolPreferences?: Protocol[],
   inputTax?: Percent,
   outputTax?: Percent
 ): {
@@ -43,6 +45,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference,
   account?: string,
+  protocolPreferences?: Protocol[],
   inputTax?: Percent,
   outputTax?: Percent
 ): {
@@ -64,7 +67,8 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
-  account?: string
+  account?: string,
+  protocolPreferences?: Protocol[]
 ): {
   state: TradeState
   trade?: SubmittableTrade
@@ -87,6 +91,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     amount: amountSpecified,
     tradeType,
     routerPreference,
+    protocolPreferences,
   })
   // skip all pricing and quote requests if the window is not focused
   const isWindowVisible = useIsWindowVisible()

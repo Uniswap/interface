@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
@@ -12,7 +12,9 @@ import styled from 'styled-components'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { useUnsupportedTokens } from '../../hooks/Tokens'
+import { useCurrencyInfo } from 'hooks/Tokens'
+import { Text } from 'ui/src'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -38,7 +40,8 @@ const StyledButtonEmpty = styled(ButtonEmpty)`
   text-decoration: none;
 `
 
-const AddressText = styled(ThemedText.DeprecatedBlue)`
+const AddressText = styled(Text)`
+  color: ${({ theme }) => theme.accent1};
   font-size: 12px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -63,8 +66,6 @@ export default function UnsupportedCurrencyFooter({
         })
       : []
 
-  const unsupportedTokens = useUnsupportedTokens()
-
   return (
     <DetailsFooter show={show}>
       <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
@@ -78,23 +79,7 @@ export default function UnsupportedCurrencyFooter({
             </RowBetween>
             {tokens.map((token) => {
               return (
-                token &&
-                unsupportedTokens &&
-                Object.keys(unsupportedTokens).includes(token.address) && (
-                  <OutlineCard key={token.address?.concat('not-supported')} data-testid="unsupported-token-card">
-                    <AutoColumn gap="10px">
-                      <AutoRow gap="5px" align="center">
-                        <CurrencyLogo currency={token} size="24px" />
-                        <ThemedText.DeprecatedBody fontWeight={535}>{token.symbol}</ThemedText.DeprecatedBody>
-                      </AutoRow>
-                      {chainId && (
-                        <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-                          <AddressText>{token.address}</AddressText>
-                        </ExternalLink>
-                      )}
-                    </AutoColumn>
-                  </OutlineCard>
-                )
+                <UnsupportedTokenCard key={token?.address?.concat('not-supported')} token={token} chainId={chainId} />
               )
             })}
             <AutoColumn gap="lg">
@@ -109,10 +94,34 @@ export default function UnsupportedCurrencyFooter({
         </Card>
       </Modal>
       <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
-        <ThemedText.DeprecatedBlue>
+        <Text color="$accent1">
           <Trans>Read more about unsupported assets</Trans>
-        </ThemedText.DeprecatedBlue>
+        </Text>
       </StyledButtonEmpty>
     </DetailsFooter>
+  )
+}
+
+function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: ChainId }) {
+  const currencyInfo = useCurrencyInfo(token)
+
+  if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyLevel === SafetyLevel.Verified)) {
+    return null
+  }
+
+  return (
+    <OutlineCard key={token?.address?.concat('not-supported')} data-testid="unsupported-token-card">
+      <AutoColumn gap="10px">
+        <AutoRow gap="5px" align="center">
+          <CurrencyLogo currency={token} size={24} />
+          <ThemedText.DeprecatedBody fontWeight={535}>{token.symbol}</ThemedText.DeprecatedBody>
+        </AutoRow>
+        {chainId && (
+          <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
+            <AddressText>{token.address}</AddressText>
+          </ExternalLink>
+        )}
+      </AutoColumn>
+    </OutlineCard>
   )
 }

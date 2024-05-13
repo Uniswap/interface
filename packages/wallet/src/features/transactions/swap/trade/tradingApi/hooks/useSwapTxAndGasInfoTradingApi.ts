@@ -39,6 +39,7 @@ export function useSwapTxAndGasInfoTradingApi({
     derivedSwapInfo,
     // Dont send transaction request if invalid or missing approval data
     skip: !tokenApprovalInfo?.action || tokenApprovalInfo.action === ApprovalAction.Unknown,
+    tokenApprovalInfo,
   })
 
   const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown

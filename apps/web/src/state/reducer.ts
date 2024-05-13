@@ -2,14 +2,14 @@ import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
 import localForage from 'localforage'
 import { PersistConfig, persistReducer } from 'redux-persist'
-import { isDevelopmentEnv } from 'utils/env'
+import { isDevEnv } from 'uniswap/src/utils/env'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import lists from './lists/reducer'
 import logs from './logs/slice'
-import { customCreateMigrate, migrations } from './migrations'
+import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from './migrations'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import { quickRouteApi } from './routing/quickRouteSlice'
@@ -44,9 +44,10 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 8, // see migrations.ts for more details about this version
+  version: 9, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
-    name: 'redux',
+    name: INDEXED_DB_REDUX_TABLE_NAME,
+    driver: localForage.LOCALSTORAGE,
   }),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),
@@ -56,7 +57,7 @@ const persistConfig: PersistConfig<AppState> = {
   // We need unserialized storage for inspectable db entries for debugging.
   // @ts-ignore
   deserialize: false,
-  debug: isDevelopmentEnv(),
+  debug: isDevEnv(),
 }
 
 const persistedReducer = persistReducer(persistConfig, appReducer)

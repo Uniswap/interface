@@ -9,15 +9,19 @@ import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
-import { chainIdToBackendName, getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
+import {
+  chainIdToBackendChain,
+  SupportedInterfaceChainId,
+  useIsSupportedChainId,
+  useSupportedChainId,
+} from 'constants/chains'
+import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -40,6 +44,8 @@ import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { Text } from 'ui/src'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -216,8 +222,8 @@ const TokenLink = ({
   children,
   chainId,
   address,
-}: PropsWithChildren<{ chainId: keyof typeof CHAIN_IDS_TO_NAMES; address: string }>) => {
-  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendName(chainId) })
+}: PropsWithChildren<{ chainId: SupportedInterfaceChainId; address: string }>) => {
+  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
 
@@ -227,12 +233,13 @@ const ExternalTokenLink = ({ children, chainId, address }: PropsWithChildren<{ c
 
 function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Currency }) {
   const address = (currency as Token)?.address
+  const supportedChain = useSupportedChainId(chainId)
 
-  const Link = isGqlSupportedChain(chainId) ? TokenLink : ExternalTokenLink
+  const Link = isGqlSupportedChain(supportedChain) ? TokenLink : ExternalTokenLink
   return (
     <Link chainId={chainId} address={address}>
       <RowFixed>
-        <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
+        <CurrencyLogo currency={currency} size={20} style={{ marginRight: '0.5rem' }} />
         <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
       </RowFixed>
     </Link>
@@ -372,7 +379,8 @@ export function PositionPageUnsupportedContent() {
 
 export default function PositionPage() {
   const { chainId } = useWeb3React()
-  if (isSupportedChain(chainId)) {
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  if (isSupportedChain) {
     return <PositionPageContent />
   } else {
     return <PositionPageUnsupportedContent />
@@ -396,6 +404,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
+  const supportedChain = useSupportedChainId(chainId)
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
@@ -607,7 +616,7 @@ function PositionPageContent() {
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueUpper?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueUpper?.currency} size={20} style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueUpper ? formatCurrencyAmount({ amount: feeValueUpper }) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -616,7 +625,7 @@ function PositionPageContent() {
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueLower?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueLower?.currency} size={20} style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueLower ? formatCurrencyAmount({ amount: feeValueLower }) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -625,9 +634,9 @@ function PositionPageContent() {
             </RowBetween>
           </AutoColumn>
         </LightCard>
-        <ThemedText.DeprecatedItalic>
+        <Text fontSize={12} fontStyle="italic" color="$neutral2">
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
-        </ThemedText.DeprecatedItalic>
+        </Text>
         <ButtonPrimary data-testid="modal-collect-fees-button" onClick={collect}>
           <Trans>Collect</Trans>
         </ButtonPrimary>
@@ -702,8 +711,17 @@ function PositionPageContent() {
               </Link>
               <ResponsiveRow>
                 <PositionLabelRow>
-                  <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <StyledPoolLink to={poolAddress ? getPoolDetailsURL(poolAddress, chainIdToBackendName(chainId)) : ''}>
+                  <DoubleCurrencyLogo currencies={[currencyBase, currencyQuote]} size={24} />
+                  <StyledPoolLink
+                    to={
+                      poolAddress
+                        ? getPoolDetailsURL(
+                            poolAddress,
+                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+                          )
+                        : ''
+                    }
+                  >
                     <PairHeader>
                       &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                     </PairHeader>
@@ -895,7 +913,7 @@ function PositionPageContent() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueUpper?.currency}
-                              size="20px"
+                              size={20}
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -910,7 +928,7 @@ function PositionPageContent() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueLower?.currency}
-                              size="20px"
+                              size={20}
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -988,9 +1006,9 @@ function PositionPageContent() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.neutral3}>
+                        <Text fontSize={11} color="$neutral3">
                           <Trans>Your position will be 100% {{ symbol: currencyBase?.symbol }} at this price.</Trans>
-                        </ThemedText.DeprecatedSmall>
+                        </Text>
                       )}
                     </AutoColumn>
                   </LightCard>
@@ -1017,9 +1035,9 @@ function PositionPageContent() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.neutral3}>
+                        <Text fontSize={11} color="$neutral3">
                           <Trans>Your position will be 100% {{ symbol: currencyQuote?.symbol }} at this price.</Trans>
-                        </ThemedText.DeprecatedSmall>
+                        </Text>
                       )}
                     </AutoColumn>
                   </LightCard>

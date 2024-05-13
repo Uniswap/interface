@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
-import { isStablecoin, nativeOnChain } from 'constants/tokens'
+import { isStablecoin } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -12,8 +13,8 @@ import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapI
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { expiryToDeadlineSeconds } from './expiryToDeadlineSeconds'
 
 export type LimitInfo = {

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
+import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -25,7 +26,7 @@ export function ViewOnlyRecipientModal({
           height={iconSizes.icon48}
           mb="$spacing8"
           width={iconSizes.icon48}>
-          <Icons.Eye color="$neutral2" size={iconSizes.icon24} />
+          <Eye color="$neutral2" size={iconSizes.icon24} />
         </Flex>
 
         <Text textAlign="center" variant="body1">

@@ -8,7 +8,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   min-width: 0;
 }
 
-.c15 {
+.c16 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -35,7 +35,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   justify-content: flex-start;
 }
 
-.c16 {
+.c17 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -77,6 +77,29 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   justify-content: flex-start;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c11 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c12 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c10 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -91,12 +114,6 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   left: 0;
 }
 
-.c11 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c9 {
   position: relative;
   display: -webkit-box;
@@ -105,7 +122,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   display: flex;
 }
 
-.c17 {
+.c18 {
   color: #FF5F52;
 }
 
@@ -149,7 +166,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   width: max-content;
 }
 
-.c12 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -166,15 +183,15 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   transition-duration: 125ms;
 }
 
-.c12:hover {
+.c13:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c13:active {
   opacity: 0.4;
 }
 
-.c13 {
+.c14 {
   gap: 4px;
   width: 100%;
   -webkit-align-items: flex-end;
@@ -183,7 +200,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   align-items: flex-end;
 }
 
-.c14 {
+.c15 {
   color: #222222;
   font-size: 36px;
   font-weight: 485;
@@ -237,7 +254,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 }
 
 @media (max-width:1024px) {
-  .c13 {
+  .c14 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -250,7 +267,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 }
 
 @media (max-width:1024px) {
-  .c14 {
+  .c15 {
     font-size: 20px;
     line-height: 28px;
   }
@@ -291,15 +308,22 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 <div
                   class="c10"
                 >
-                  <img
+                  <div
                     class="c11"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                  />
+                    size="20"
+                  >
+                     
+                    <img
+                      class="c12"
+                      size="20"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
               90.9M 
               <a
-                class="c12"
+                class="c13"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               >
                 USDC
@@ -315,15 +339,22 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 <div
                   class="c10"
                 >
-                  <img
+                  <div
                     class="c11"
-                    src="ethereum-logo.png"
-                  />
+                    size="20"
+                  >
+                     
+                    <img
+                      class="c12"
+                      size="20"
+                      src="ethereum-logo.png"
+                    />
+                  </div>
                 </div>
               </div>
               82.5K 
               <a
-                class="c12"
+                class="c13"
                 href="/explore/tokens/ethereum/NATIVE"
               >
                 ETH
@@ -340,20 +371,20 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
             TVL
           </div>
           <div
-            class="c5 c6 c13"
+            class="c5 c6 c14"
           >
             <div
-              class="c14 css-vurnku"
+              class="c15 css-vurnku"
             >
               $223.2M
             </div>
             <div
-              class="c15 c16"
+              class="c16 c17"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c17"
+                class="c18"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -382,20 +413,20 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
             24H volume
           </div>
           <div
-            class="c5 c6 c13"
+            class="c5 c6 c14"
           >
             <div
-              class="c14 css-vurnku"
+              class="c15 css-vurnku"
             >
               $194.3M
             </div>
             <div
-              class="c15 c16"
+              class="c16 c17"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c17"
+                class="c18"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -424,10 +455,10 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
             24H fees
           </div>
           <div
-            class="c5 c6 c13"
+            class="c5 c6 c14"
           >
             <div
-              class="c14 css-vurnku"
+              class="c15 css-vurnku"
             >
               $97.1K
             </div>
@@ -447,7 +478,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   min-width: 0;
 }
 
-.c17 {
+.c18 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -474,7 +505,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -516,6 +547,29 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
 .c11 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -530,12 +584,6 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   left: 0;
 }
 
-.c12 {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
 .c10 {
   position: relative;
   display: -webkit-box;
@@ -544,7 +592,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   display: flex;
 }
 
-.c19 {
+.c20 {
   color: #FF5F52;
 }
 
@@ -613,7 +661,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   opacity: 0.4;
 }
 
-.c13 {
+.c14 {
   height: 8px;
   width: 99.99999996483845%;
   background: #FC72FF;
@@ -622,7 +670,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   border-right: 1px solid #F9F9F9;
 }
 
-.c14 {
+.c15 {
   height: 8px;
   width: 3.5161546763980574e-8%;
   background: #4C82FB;
@@ -631,7 +679,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   border-left: 1px solid #F9F9F9;
 }
 
-.c15 {
+.c16 {
   gap: 4px;
   width: 100%;
   -webkit-align-items: flex-end;
@@ -640,7 +688,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   align-items: flex-end;
 }
 
-.c16 {
+.c17 {
   color: #222222;
   font-size: 36px;
   font-weight: 485;
@@ -694,7 +742,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 }
 
 @media (max-width:1024px) {
-  .c15 {
+  .c16 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -707,7 +755,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 }
 
 @media (max-width:1024px) {
-  .c16 {
+  .c17 {
     font-size: 20px;
     line-height: 28px;
   }
@@ -753,10 +801,17 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                   <div
                     class="c11"
                   >
-                    <img
+                    <div
                       class="c12"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                    />
+                      size="16"
+                    >
+                       
+                      <img
+                        class="c13"
+                        size="16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      />
+                    </div>
                   </div>
                 </div>
                 USDC
@@ -777,10 +832,17 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                   <div
                     class="c11"
                   >
-                    <img
+                    <div
                       class="c12"
-                      src="ethereum-logo.png"
-                    />
+                      size="16"
+                    >
+                       
+                      <img
+                        class="c13"
+                        size="16"
+                        src="ethereum-logo.png"
+                      />
+                    </div>
                   </div>
                 </div>
                 ETH
@@ -792,10 +854,10 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             data-testid="pool-balance-chart"
           >
             <div
-              class="c13"
+              class="c14"
             />
             <div
-              class="c14"
+              class="c15"
             />
           </div>
         </div>
@@ -808,20 +870,20 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             TVL
           </div>
           <div
-            class="c5 c6 c15"
+            class="c5 c6 c16"
           >
             <div
-              class="c16 css-vurnku"
+              class="c17 css-vurnku"
             >
               $223.2M
             </div>
             <div
-              class="c17 c18"
+              class="c18 c19"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c19"
+                class="c20"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -850,20 +912,20 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             24H volume
           </div>
           <div
-            class="c5 c6 c15"
+            class="c5 c6 c16"
           >
             <div
-              class="c16 css-vurnku"
+              class="c17 css-vurnku"
             >
               $194.3M
             </div>
             <div
-              class="c17 c18"
+              class="c18 c19"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c19"
+                class="c20"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -892,10 +954,10 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             24H fees
           </div>
           <div
-            class="c5 c6 c15"
+            class="c5 c6 c16"
           >
             <div
-              class="c16 css-vurnku"
+              class="c17 css-vurnku"
             >
               $97.1K
             </div>

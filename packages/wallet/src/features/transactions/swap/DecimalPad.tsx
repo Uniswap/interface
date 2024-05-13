@@ -1,6 +1,7 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { I18nManager, LayoutChangeEvent } from 'react-native'
-import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useMedia } from 'ui/src'
+import { LeftArrow, RightArrow } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
@@ -221,9 +222,9 @@ const KeyButton = memo(function KeyButton({
       onPress={handlePress}>
       {label === 'backspace' ? (
         I18nManager.isRTL ? (
-          <Icons.RightArrow color={color} size={24 * sizeMultiplier.icon} />
+          <RightArrow color={color} size={24 * sizeMultiplier.icon} />
         ) : (
-          <Icons.LeftArrow color={color} size={24 * sizeMultiplier.icon} />
+          <LeftArrow color={color} size={24 * sizeMultiplier.icon} />
         )
       ) : (
         <Text

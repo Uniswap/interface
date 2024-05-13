@@ -1,4 +1,4 @@
-import { getValidUrlChainName } from 'graphql/data/util'
+import { ChainSlug, isChainUrlParam } from 'constants/chains'
 import { t } from 'i18n'
 import { capitalize } from 'tsafe/capitalize'
 
@@ -9,7 +9,7 @@ export const getExploreTitle = (path?: string) => {
   const tabsToFind: string[] = [ExploreTab.Pools, ExploreTab.Tokens, ExploreTab.Transactions]
   const tab = parts?.find((part) => tabsToFind.includes(part)) ?? ExploreTab.Tokens
 
-  const network = parts?.find((part) => getValidUrlChainName(part)) ?? 'ethereum'
+  const network: ChainSlug = parts?.find(isChainUrlParam) ?? 'ethereum'
 
   return t(`Explore top {{tab}} on {{network}} on Uniswap`, {
     tab,

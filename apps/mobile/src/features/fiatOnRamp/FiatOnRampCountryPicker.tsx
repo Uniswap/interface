@@ -1,7 +1,8 @@
 import React from 'react'
 import { SvgUri } from 'react-native-svg'
 import Trace from 'src/components/Trace/Trace'
-import { Flex, Icons, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -36,7 +37,7 @@ export function FiatOnRampCountryPicker({
           <Flex borderRadius="$roundedFull" overflow="hidden">
             <SvgUri height={ICON_SIZE} uri={countryFlagUrl} width={ICON_SIZE} />
           </Flex>
-          <Icons.RotatableChevron color="$neutral3" direction="down" width={iconSizes.icon20} />
+          <RotatableChevron color="$neutral3" direction="down" width={iconSizes.icon20} />
         </Flex>
       </TouchableArea>
     </Trace>

@@ -9,13 +9,15 @@ import {
   WBTC,
   WETH_POLYGON,
 } from 'constants/tokens'
-import { validateUrlChainParam } from 'graphql/data/util'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
+import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import { MoonpaySupportedCurrencyCode } from './constants'
 
 type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism
 const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism]
+const isMoonpaySupportedChain = (chain?: Chain): chain is MoonpaySupportedChain =>
+  !!chain && moonPaySupportedChains.includes(chain)
 
 const CURRENCY_CODES: {
   [K in MoonpaySupportedChain]: {
@@ -48,12 +50,11 @@ const CURRENCY_CODES: {
 
 export function getDefaultCurrencyCode(
   address: string | undefined,
-  chainName: string | undefined
+  gqlChain?: InterfaceGqlChain
 ): MoonpaySupportedCurrencyCode {
-  const chain = validateUrlChainParam(chainName)
-  if (!address || !chain) return 'eth'
-  if (moonPaySupportedChains.includes(chain)) {
-    const code = CURRENCY_CODES[chain as MoonpaySupportedChain]?.[address.toLowerCase()]
+  if (!address || !gqlChain) return 'eth'
+  if (isMoonpaySupportedChain(gqlChain)) {
+    const code = CURRENCY_CODES[gqlChain]?.[address.toLowerCase()]
     return code ?? 'eth'
   }
   return 'eth'
@@ -63,10 +64,11 @@ export function getDefaultCurrencyCode(
  * You should use useParams() from react-router-dom instead of this function if possible.
  * This function is only used in the case where we need to parse the path outside the scope of the router.
  */
-export function parsePathParts(pathname: string): { network?: string; tokenAddress?: string } {
+export function parsePathParts(pathname: string) {
   const pathParts = pathname.split('/')
   // Matches the /tokens/<network>/<tokenAddress> path.
-  const network = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
+  const chainSlug = getChainUrlParam(pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined)
+  const chain = getChainFromChainUrlParam(chainSlug)
   const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
-  return { network, tokenAddress }
+  return { chain, tokenAddress }
 }

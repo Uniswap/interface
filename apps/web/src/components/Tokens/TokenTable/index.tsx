@@ -1,5 +1,4 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import { ChainId } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
@@ -7,13 +6,7 @@ import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
-import {
-  OrderDirection,
-  chainIdToBackendName,
-  getTokenDetailsURL,
-  supportedChainIdFromGQLChain,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { ReactElement, ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
@@ -33,9 +26,9 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
-import { useExploreParams } from 'pages/Explore/redirects'
 import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
 const TableWrapper = styled.div`
@@ -72,7 +65,7 @@ interface TokenTableValue {
 function TokenDescription({ token }: { token: TopToken }) {
   return (
     <Row gap="sm">
-      <QueryTokenLogo token={token} size="28px" />
+      <QueryTokenLogo token={token} size={28} />
       <NameText data-testid="token-name">{token?.name}</NameText>
       <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
     </Row>
@@ -80,9 +73,8 @@ function TokenDescription({ token }: { token: TopToken }) {
 }
 
 export function TopTokensTable() {
-  const chainName = validateUrlChainParam(useExploreParams().chainName)
-  const chainId = supportedChainIdFromGQLChain(chainName)
-  const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chainName)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+  const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chain.backendChain.chain)
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
@@ -92,7 +84,7 @@ export function TopTokensTable() {
         sparklines={sparklines}
         loading={loadingTokens}
         error={error}
-        chainId={chainId}
+        chainId={chain.id}
       />
     </TableWrapper>
   )
@@ -156,7 +148,7 @@ function TokenTable({
   loading: boolean
   error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  chainId: ChainId
+  chainId: SupportedInterfaceChainId
 }) {
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -210,7 +202,7 @@ function TokenTable({
           ),
           link: getTokenDetailsURL({
             address: token?.address,
-            chain: chainIdToBackendName(chainId),
+            chain: chainIdToBackendChain({ chainId, withFallback: true }),
           }),
           analytics: {
             elementName: InterfaceElementName.TOKENS_TABLE_ROW,

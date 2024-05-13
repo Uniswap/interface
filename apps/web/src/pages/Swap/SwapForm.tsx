@@ -13,7 +13,7 @@ import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
@@ -24,10 +24,7 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { getChainInfo } from 'constants/chainInfo'
-import { asSupportedChain, isSupportedChain } from 'constants/chains'
-import { TOKEN_SHORTHANDS } from 'constants/tokens'
-import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -54,17 +51,21 @@ import {
   useSwapContext,
 } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { isEmptyObject } from 'utils/isEmpty'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+import Error from 'components/Icons/Error'
+import Row from 'components/Row'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { CurrencyState } from 'state/swap/types'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
@@ -83,6 +84,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const trace = useTrace()
 
   const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
   const { typedValue, independentField } = swapState
 
@@ -91,48 +93,28 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const prefilledCurrencies = useMemo(() => {
     return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
-  const prefilledInputCurrency = useCurrency(prefilledCurrencies?.inputCurrencyId, chainId)
-  const prefilledOutputCurrency = useCurrency(prefilledCurrencies?.outputCurrencyId, chainId)
 
-  const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
-  const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
-
-  useEffect(() => {
-    setLoadedInputCurrency(prefilledInputCurrency)
-    setLoadedOutputCurrency(prefilledOutputCurrency)
-  }, [prefilledInputCurrency, prefilledOutputCurrency])
+  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.inputCurrencyId, chainId)
+  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.outputCurrencyId, chainId)
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
 
-  const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
-  )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
-  const defaultTokens = useDefaultActiveTokens(chainId)
   const urlTokensNotInDefault = useMemo(
     () =>
-      urlLoadedTokens && !isEmptyObject(defaultTokens)
-        ? urlLoadedTokens
-            .filter((token: Token) => {
-              return !(token.address in defaultTokens)
+      prefilledInputCurrencyInfo && prefilledOutputCurrencyInfo
+        ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
+            .filter((token: CurrencyInfo) => {
+              return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
             })
-            .filter((token: Token) => {
-              // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-              const supported = asSupportedChain(chainId)
-              if (!supported) return true
-              return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
-                const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
-                return shorthandTokenAddress && shorthandTokenAddress === token.address
-              })
-            })
+            .map((token: CurrencyInfo) => token.currency as Token)
         : [],
-    [chainId, defaultTokens, urlLoadedTokens]
+    [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
   )
 
   const theme = useTheme()
@@ -321,7 +303,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
     trade?.fillType
   )
 
@@ -482,6 +464,32 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const targetChain = switchingChain ? switchingChain : undefined
+  const switchingChainIsSupported = useIsSupportedChainId(targetChain)
+
+  const [showBannedExtension, setShowBannedExtension] = useState<boolean>(false)
+  useEffect(() => {
+    const isBannedExtension = async () => {
+      let blocked = false
+      const webAccessibleResources = [
+        'chrome-extension://gacgndbocaddlemdiaadajmlggabdeod/ccip.08a1ffae.js', // pocket universe extension
+      ]
+      for (let i = 0; i < webAccessibleResources.length; i++) {
+        if (blocked) {
+          break
+        }
+        try {
+          await fetch(webAccessibleResources[i])
+          // if anything comes back, then the extension is active
+          blocked = true
+        } catch (error) {
+          console.error(error)
+        }
+      }
+      setShowBannedExtension(blocked)
+    }
+    if (window.chrome) isBannedExtension().catch(console.error)
+  }, [])
 
   return (
     <>
@@ -496,6 +504,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
+          priceImpact={largerPriceImpact}
           inputCurrency={inputCurrency}
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
@@ -542,7 +551,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             />
           </Trace>
         </SwapSection>
-        <ArrowWrapper clickable={isSupportedChain(chainId)}>
+        <ArrowWrapper clickable={isSupportedChain}>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
@@ -610,7 +619,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             </ButtonPrimary>
           ) : switchingChain ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
-              <Trans>Connecting to {{ label: getChainInfo(switchingChain)?.label }}</Trans>
+              <Trans>Connecting to {{ label: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '' }}</Trans>
             </ButtonPrimary>
           ) : connectionReady && !account ? (
             <TraceEvent
@@ -639,7 +648,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }
               }}
             >
-              Connect to {getChainInfo(chainId)?.label}
+              Connect to {isSupportedChain ? CHAIN_INFO[chainId].label : ''}
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary
@@ -675,7 +684,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={!getIsReviewableQuote(trade, tradeState, swapInputError)}
+                disabled={showBannedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>
@@ -698,10 +707,42 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               syncing={routeIsSyncing}
               loading={routeIsLoading}
               allowedSlippage={allowedSlippage}
+              priceImpact={largerPriceImpact}
             />
           )}
+          {showBannedExtension && <SwapNotice />}
         </div>
       </AutoColumn>
     </>
+  )
+}
+
+function SwapNotice() {
+  const theme = useTheme()
+  return (
+    <Row
+      align="flex-start"
+      gap="md"
+      backgroundColor={theme.surface2}
+      marginTop="12px"
+      borderRadius="12px"
+      padding="16px"
+    >
+      <Row width="auto" borderRadius="16px" backgroundColor={theme.critical2} padding="8px">
+        <Error />
+      </Row>
+
+      <Column flex="10" gap="sm">
+        <ThemedText.SubHeader>Blocked Extension</ThemedText.SubHeader>
+        <ThemedText.BodySecondary lineHeight="22px">
+          <Trans>
+            The Pocket Universe extension violates our{' '}
+            <ExternalLink href="https://uniswap.org/terms-of-service">Terms&nbsp;of&nbsp;Service</ExternalLink> by
+            modifying our product in a way that is misleading and could harm users. Please disable the extension and
+            reload&nbsp;the&nbsp;page.
+          </Trans>
+        </ThemedText.BodySecondary>
+      </Column>
+    </Row>
   )
 }

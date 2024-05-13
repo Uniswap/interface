@@ -16,8 +16,6 @@ import {
   getOnChainBalancesFetch,
 } from 'wallet/src/features/portfolio/api'
 
-const REST_API_URL = uniswapUrls.apiBaseUrl
-
 // mapping from endpoint to custom fetcher, when needed
 function getCustomFetcherMap(
   restUri: string
@@ -34,8 +32,8 @@ function getCustomFetcherMap(
 
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache
-export const getRestLink = (customRestUri?: string): ApolloLink => {
-  const restUri = customRestUri ?? REST_API_URL
+export const getRestLink = (): ApolloLink => {
+  const restUri = uniswapUrls.apiBaseUrl
 
   // On-chain balances are fetched with ethers.provider
   // When we detect a request to the balances endpoint, we provide a custom fetcher.
@@ -59,7 +57,7 @@ export const getRestLink = (customRestUri?: string): ApolloLink => {
       'X-API-KEY': config.uniswapApiKey,
       'x-request-source': REQUEST_SOURCE,
       'x-app-version': getVersionHeader(),
-      Origin: config.uniswapAppUrl,
+      Origin: uniswapUrls.requestOriginUrl,
     },
   })
 }
@@ -78,7 +76,7 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
       'x-request-source': REQUEST_SOURCE,
       'x-app-version': getVersionHeader(),
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
-      Origin: uniswapUrls.apiBaseUrl,
+      Origin: uniswapUrls.apiOrigin,
     },
   })
 
@@ -91,7 +89,7 @@ export const getGraphqlHttpLink = (): ApolloLink =>
       'x-request-source': REQUEST_SOURCE,
       'x-app-version': getVersionHeader(),
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
-      Origin: uniswapUrls.apiBaseUrl,
+      Origin: uniswapUrls.apiOrigin,
     },
   })
 

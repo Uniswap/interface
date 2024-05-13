@@ -82,7 +82,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ method: 'eth_sendTransaction', response: signature }),
+        body: JSON.stringify({ method: params.method, response: signature, chainId }),
         // TODO: consider adding analytics to track UwuLink usage
       }).catch((error) =>
         logger.error(error, {
@@ -107,7 +107,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         type: AppNotificationType.WalletConnect,
         event: WalletConnectEvent.TransactionFailed,
         dappName: params.dapp.name,
-        imageUrl: params.dapp.icon,
+        imageUrl: params.dapp.icon ?? null,
         chainId,
         address: account.address,
       })

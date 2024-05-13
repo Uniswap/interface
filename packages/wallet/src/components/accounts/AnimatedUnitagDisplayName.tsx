@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { AnimatePresence, Flex, HapticFeedback, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
+import { CopyAlt, Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -67,7 +68,7 @@ export function AnimatedUnitagDisplayName({
           </Flex>
           {isUnitag ? (
             <Flex animation="semiBouncy" pl="$spacing4">
-              <Icons.Unitag size={unitagIconSize} />
+              <Unitag size={unitagIconSize} />
             </Flex>
           ) : null}
           {address && (
@@ -76,7 +77,7 @@ export function AnimatedUnitagDisplayName({
                 <Text color="$neutral3" numberOfLines={1} variant="body2">
                   {sanitizeAddressText(shortenAddress(address))}
                 </Text>
-                <Icons.CopyAlt color="$neutral3" size="$icon.16" />
+                <CopyAlt color="$neutral3" size="$icon.16" />
               </Flex>
             </TouchableArea>
           )}

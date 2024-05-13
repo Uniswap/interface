@@ -8,8 +8,9 @@ import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Row from 'components/Row'
+import { useChainFromUrlParam } from 'constants/chains'
 import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { getValidUrlChainName, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
+import { getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import { Trans } from 'i18n'
 import NotFound from 'pages/NotFound'
@@ -107,15 +108,11 @@ function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
 }
 
 export default function PoolDetailsPage() {
-  const { poolAddress, chainName } = useParams<{
-    poolAddress: string
-    chainName: string
-  }>()
-  const chain = getValidUrlChainName(chainName)
-  const chainId = chain && supportedChainIdFromGQLChain(chain)
-  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainId)
+  const { poolAddress } = useParams<{ poolAddress: string }>()
+  const chainInfo = getSupportedGraphQlChain(useChainFromUrlParam())
+  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
-  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainId)
+  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
   const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
 
   const { darkMode, surface2, accent1 } = useTheme()
@@ -128,7 +125,7 @@ export default function PoolDetailsPage() {
     darkMode,
   })
 
-  const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
+  const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
   if (poolNotFound) return <NotFound />
@@ -141,7 +138,7 @@ export default function PoolDetailsPage() {
         page={InterfacePageName.POOL_DETAILS_PAGE}
         properties={{
           poolAddress,
-          chainId,
+          chainId: chainInfo?.id,
           feeTier: poolData?.feeTier,
           token0Address: poolData?.token0.address,
           token1Address: poolData?.token1.address,
@@ -157,14 +154,14 @@ export default function PoolDetailsPage() {
             <Column gap="20px">
               <Column>
                 <PoolDetailsBreadcrumb
-                  chainId={chainId}
+                  chainId={chainInfo?.id}
                   poolAddress={poolAddress}
                   token0={token0}
                   token1={token1}
                   loading={loading}
                 />
                 <PoolDetailsHeader
-                  chainId={chainId}
+                  chainId={chainInfo?.id}
                   poolAddress={poolAddress}
                   token0={token0}
                   token1={token1}
@@ -174,7 +171,12 @@ export default function PoolDetailsPage() {
                   loading={loading}
                 />
               </Column>
-              <ChartSection poolData={poolData} loading={loading} isReversed={isReversed} chain={chain} />
+              <ChartSection
+                poolData={poolData}
+                loading={loading}
+                isReversed={isReversed}
+                chain={chainInfo?.backendChain.chain}
+              />
             </Column>
             <HR />
             <PoolDetailsTableTab
@@ -186,21 +188,36 @@ export default function PoolDetailsPage() {
           </LeftColumn>
           <RightColumn>
             <PoolDetailsStatsButtons
-              chainId={chainId}
+              chainId={chainInfo?.id}
               token0={token0}
               token1={token1}
               feeTier={poolData?.feeTier}
               loading={loading}
             />
-            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>
                 <Trans>Links</Trans>
               </TokenDetailsHeader>
               <LinksContainer>
-                <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
-                <PoolDetailsLink address={token0?.address} chainId={chainId} tokens={[token0]} loading={loading} />
-                <PoolDetailsLink address={token1?.address} chainId={chainId} tokens={[token1]} loading={loading} />
+                <PoolDetailsLink
+                  address={poolAddress}
+                  chainId={chainInfo?.id}
+                  tokens={[token0, token1]}
+                  loading={loading}
+                />
+                <PoolDetailsLink
+                  address={token0?.address}
+                  chainId={chainInfo?.id}
+                  tokens={[token0]}
+                  loading={loading}
+                />
+                <PoolDetailsLink
+                  address={token1?.address}
+                  chainId={chainInfo?.id}
+                  tokens={[token1]}
+                  loading={loading}
+                />
               </LinksContainer>
             </TokenDetailsWrapper>
           </RightColumn>

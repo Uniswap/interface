@@ -8,6 +8,7 @@ import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
 import { ApolloProvider } from '@apollo/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { getDeviceId } from 'analytics'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
@@ -18,14 +19,13 @@ import { MulticallUpdater } from 'lib/state/multicall'
 import { PropsWithChildren, StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { ActivityStateUpdater } from 'state/activity/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { STATSIG_DUMMY_KEY } from 'tracing'
+import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
@@ -85,7 +85,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
   return (
     <BaseStatsigProvider
       user={statsigUser}
-      sdkKey={STATSIG_DUMMY_KEY}
+      sdkKey={DUMMY_STATSIG_SDK_KEY}
       waitForInitialization={false}
       options={{
         environment: { tier: getEnvName() },
@@ -99,7 +99,13 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 20, // 20 seconds
+    },
+  },
+})
 
 const container = document.getElementById('root') as HTMLElement
 
