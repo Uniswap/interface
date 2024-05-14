@@ -2,8 +2,12 @@ import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('mini-portfolio activity history', () => {
-  beforeEach(() => {
-    cy.hardhat()
+  // Turn off automine so that intermediate screens are available to assert on.
+  before(() => cy.hardhat({ automine: false }))
+
+  beforeEach(() =>
+    cy
+      .hardhat()
       .then((hardhat) => hardhat.wallet.getTransactionCount())
       .then((nonce) => {
         // Mock graphql response to include specific nonces.
@@ -91,10 +95,10 @@ describe('mini-portfolio activity history', () => {
           }
         ).as('graphql')
       })
-  })
+  )
 
   it('should deduplicate activity history by nonce', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`).hardhat({ automine: false })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
     // Input swap info.
     cy.get('#swap-currency-input .token-amount-input').clear().type('1').should('have.value', '1')

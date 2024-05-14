@@ -1,8 +1,8 @@
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink } from '../../theme/components'
@@ -41,7 +41,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
 
 export function SubmittedView({ children, onDismiss, hash }: { children: any; onDismiss: () => void; hash?: string }) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   return (
     <ConfirmOrLoadingWrapper>

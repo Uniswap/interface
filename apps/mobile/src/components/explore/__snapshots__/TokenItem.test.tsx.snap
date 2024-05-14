@@ -33,12 +33,12 @@ exports[`TokenItem renders without error 1`] = `
     testID="token-item-cum"
   >
     <View
-      animatedStyle={
+      collapsable={false}
+      jestAnimatedStyle={
         {
           "value": {},
         }
       }
-      collapsable={false}
       style={
         {
           "flexDirection": "row",
@@ -99,6 +99,7 @@ exports[`TokenItem renders without error 1`] = `
           }
         >
           <Image
+            resizeMode="contain"
             source={
               {
                 "uri": "https://loremflickr.com/640/480",
@@ -106,9 +107,6 @@ exports[`TokenItem renders without error 1`] = `
             }
             style={
               [
-                {
-                  "resizeMode": "contain",
-                },
                 {
                   "backgroundColor": "#2222220D",
                   "borderColor": "#2222220D",

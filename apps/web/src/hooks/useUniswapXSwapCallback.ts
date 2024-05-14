@@ -1,24 +1,40 @@
+import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
+import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
-import { DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
+import { DutchOrder, DutchOrderBuilder, UnsignedV2DutchOrder, V2DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { getConnection } from 'connection'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { DutchOrderTrade, LimitOrderTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
+
+import {
+  DutchOrderTrade,
+  LimitOrderTrade,
+  OffchainOrderType,
+  TradeFillType,
+  V2DutchOrderTrade,
+} from 'state/routing/types'
 import { trace } from 'tracing/trace'
-import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
+import { SignatureExpiredError, UniswapXv2HardQuoteError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
+import { useAccount } from 'wagmi'
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
-type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSuccess
+type V2DutchAuctionOrderSuccess = {
+  orderHash: string
+}
+type DutchAuctionOrderResponse = DutchAuctionOrderError | DutchAuctionOrderSuccess | V2DutchAuctionOrderSuccess
+
+function isV2DutchAuctionOrderSuccess(response: any): response is V2DutchAuctionOrderSuccess {
+  return (response as V2DutchAuctionOrderSuccess).orderHash !== undefined
+}
 
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
@@ -54,11 +70,13 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade | LimitOrderTrade
+  trade?: DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
-  const { account, provider, connector } = useWeb3React()
+  const { account, provider } = useWeb3React()
+  const connectorName = useAccount().connector?.name
+
   const analyticsContext = useTrace()
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -80,27 +98,48 @@ export function useUniswapXSwapCallback({
         })
 
         try {
-          const updatedNonce = await getUpdatedNonce(account, trade.inputAmount.currency.chainId)
           // TODO(limits): WEB-3434 - add error state for missing nonce
-          if (!updatedNonce) throw new Error('missing nonce')
+          const updatedNonce = await getUpdatedNonce(account, trade.inputAmount.currency.chainId)
 
-          const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
-          const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
-          const endTime = startTime + trade.auctionPeriodSecs
-          const deadline = endTime + trade.deadlineBufferSecs
-          trace.setData('startTime', startTime)
-          trace.setData('endTime', endTime)
+          const now = Math.floor(Date.now() / 1000)
+          let deadline: number
+          let domain: TypedDataDomain
+          let types: Record<string, TypedDataField[]>
+          let values: PermitTransferFrom
+          let updatedOrder: DutchOrder | UnsignedV2DutchOrder
+
+          if (trade instanceof V2DutchOrderTrade) {
+            deadline = now + trade.deadlineBufferSecs
+
+            const order: UnsignedV2DutchOrder = trade.order
+            updatedOrder = V2DutchOrderBuilder.fromOrder(order)
+              .deadline(deadline)
+              .nonFeeRecipient(account, trade.swapFee?.recipient)
+              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
+              .nonce(updatedNonce ?? order.info.nonce)
+              .buildPartial()
+            ;({ domain, types, values } = updatedOrder.permitData())
+          } else {
+            const startTime = now + trade.startTimeBufferSecs
+            const endTime = startTime + trade.auctionPeriodSecs
+            deadline = endTime + trade.deadlineBufferSecs
+
+            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
+            updatedOrder = DutchOrderBuilder.fromOrder(order)
+              .decayStartTime(startTime)
+              .decayEndTime(endTime)
+              .deadline(deadline)
+              .nonFeeRecipient(account, trade.swapFee?.recipient)
+              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
+              .nonce(updatedNonce ?? order.info.nonce)
+              .build()
+            ;({ domain, types, values } = updatedOrder.permitData())
+
+            trace.setData('startTime', startTime)
+            trace.setData('endTime', endTime)
+          }
+
           trace.setData('deadline', deadline)
-          const updatedOrder = DutchOrderBuilder.fromOrder(order)
-            .decayStartTime(startTime)
-            .decayEndTime(endTime)
-            .deadline(deadline)
-            .swapper(account)
-            .nonFeeRecipient(account, trade.swapFee?.recipient)
-            // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
-            .nonce(updatedNonce ?? order.info.nonce)
-            .build()
-          const { domain, types, values } = updatedOrder.permitData()
 
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
@@ -128,26 +167,44 @@ export function useUniswapXSwapCallback({
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account,
-            [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
+            [CustomUserProperties.WALLET_TYPE]: connectorName,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
 
-          const endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
           const encodedOrder = updatedOrder.serialize()
-          const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}`, {
-            method: 'POST',
-            body: JSON.stringify({
+          let endpoint: string
+          let body: Record<string, any>
+          // X v2 orders are posted to GPA; X v1 orders are posted to order-service. Their payloads are different.
+          if (trade.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION) {
+            endpoint = 'rfq'
+            // Should follow HardQuoteRequestBody schema type: https://github.com/Uniswap/uniswapx-parameterization-api/blob/main/lib/handlers/hard-quote/schema.ts
+            body = {
+              encodedInnerOrder: encodedOrder,
+              innerSig: signature,
+              tokenInChainId: updatedOrder.chainId,
+              tokenOutChainId: updatedOrder.chainId,
+              requestId: trade.requestId,
+            }
+          } else {
+            endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
+            body = {
               encodedOrder,
               orderType: trade.offchainOrderType,
               signature,
               chainId: updatedOrder.chainId,
               quoteId: trade.quoteId,
-            }),
+            }
+          }
+
+          const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}`, {
+            method: 'POST',
+            body: JSON.stringify(body),
           })
-          const body = (await res.json()) as DutchAuctionOrderResponse
+          const responseBody = (await res.json()) as DutchAuctionOrderResponse
+
           // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
           // check for status code and perform this type narrowing.
-          if (isErrorResponse(res, body)) {
+          if (isErrorResponse(res, responseBody)) {
             sendAnalyticsEvent('UniswapX Order Post Error', {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
@@ -156,12 +213,18 @@ export function useUniswapXSwapCallback({
                 portfolioBalanceUsd,
               }),
               ...analyticsContext,
-              errorCode: body.errorCode,
-              detail: body.detail,
+              errorCode: responseBody.errorCode,
+              detail: responseBody.detail,
             })
+
+            // Always retry UniswapX v2 order errors from the UniswapX Parameterization API with classic swap
+            if (trade?.fillType === TradeFillType.UniswapXv2) {
+              throw new UniswapXv2HardQuoteError()
+            }
+
             // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
             // backend team provides a list of error codes and potential messages
-            throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
+            throw new Error(`${responseBody.errorCode ?? responseBody.detail ?? 'Unknown error'}`)
           }
           sendAnalyticsEvent('UniswapX Order Submitted', {
             ...formatSwapSignedAnalyticsEventProperties({
@@ -173,14 +236,21 @@ export function useUniswapXSwapCallback({
           })
 
           return {
-            type: TradeFillType.UniswapX as const,
-            response: { orderHash: body.hash, deadline: updatedOrder.info.deadline, encodedOrder },
+            type:
+              trade.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION
+                ? (TradeFillType.UniswapXv2 as const)
+                : (TradeFillType.UniswapX as const),
+            response: {
+              orderHash: isV2DutchAuctionOrderSuccess(responseBody) ? responseBody.orderHash : responseBody.hash,
+              deadline: updatedOrder.info.deadline,
+              encodedOrder,
+            },
           }
         } catch (error) {
           if (error instanceof UserRejectedRequestError) {
             trace.setStatus('cancelled')
             throw error
-          } else if (error instanceof SignatureExpiredError) {
+          } else if (error instanceof SignatureExpiredError || error instanceof UniswapXv2HardQuoteError) {
             trace.setStatus('unknown_error')
             throw error
           } else {
@@ -189,6 +259,6 @@ export function useUniswapXSwapCallback({
           }
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector]
+    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connectorName]
   )
 }

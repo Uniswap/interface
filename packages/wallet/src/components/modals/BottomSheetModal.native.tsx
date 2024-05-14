@@ -67,7 +67,18 @@ const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   )
 }
 
-export function BottomSheetModal({
+export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element | null {
+  // on web we use isModalOpen internally in the sheet, but on mobile we didn't
+  // have any logic at all for isModalOpen. But mobile assumes that if
+  // isModalOpen is undefined it should default to open, so checking here only
+  // if strictly === false
+  if (props.isModalOpen === false) {
+    return null
+  }
+  return <BottomSheetModalContents {...props} />
+}
+
+function BottomSheetModalContents({
   children,
   name,
   onClose,

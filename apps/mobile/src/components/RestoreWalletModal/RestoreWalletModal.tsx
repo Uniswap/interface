@@ -7,8 +7,8 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 export function RestoreWalletModal(): JSX.Element | null {

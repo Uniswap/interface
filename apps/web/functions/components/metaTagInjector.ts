@@ -9,37 +9,45 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
 
   constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
-  append(element: Element, property: string, content: string) {
+  append(element: Element, attribute: string, content: string) {
     // without adding data-rh="true", react-helmet-async doesn't overwrite existing metatags
-    element.append(`<meta property="${property}" content="${content}" data-rh="true">`, { html: true })
+    element.append(`<meta ${attribute} content="${content}" data-rh="true">`, { html: true })
+  }
+
+  appendProperty(element: Element, property: string, content: string) {
+    this.append(element, `property="${property}"`, content)
   }
 
   element(element: Element) {
-    //Open Graph Tags
-    this.append(element, 'og:title', this.input.title)
     if (this.input.description) {
-      this.append(element, 'og:description', this.input.description)
+      this.append(element, `name="description"`, this.input.description)
+    }
+
+    //Open Graph Tags
+    this.appendProperty(element, 'og:title', this.input.title)
+    if (this.input.description) {
+      this.appendProperty(element, 'og:description', this.input.description)
     }
     if (this.input.image) {
-      this.append(element, 'og:image', this.input.image)
-      this.append(element, 'og:image:width', '1200')
-      this.append(element, 'og:image:height', '630')
-      this.append(element, 'og:image:alt', this.input.title)
+      this.appendProperty(element, 'og:image', this.input.image)
+      this.appendProperty(element, 'og:image:width', '1200')
+      this.appendProperty(element, 'og:image:height', '630')
+      this.appendProperty(element, 'og:image:alt', this.input.title)
     }
-    this.append(element, 'og:type', 'website')
-    this.append(element, 'og:url', this.input.url)
+    this.appendProperty(element, 'og:type', 'website')
+    this.appendProperty(element, 'og:url', this.input.url)
 
     //Twitter Tags
-    this.append(element, 'twitter:card', 'summary_large_image')
-    this.append(element, 'twitter:title', this.input.title)
+    this.appendProperty(element, 'twitter:card', 'summary_large_image')
+    this.appendProperty(element, 'twitter:title', this.input.title)
     if (this.input.image) {
-      this.append(element, 'twitter:image', this.input.image)
-      this.append(element, 'twitter:image:alt', this.input.title)
+      this.appendProperty(element, 'twitter:image', this.input.image)
+      this.appendProperty(element, 'twitter:image:alt', this.input.title)
     }
 
     const blockedPaths = this.request.headers.get('x-blocked-paths')
     if (blockedPaths) {
-      this.append(element, 'x:blocked-paths', blockedPaths)
+      this.appendProperty(element, 'x:blocked-paths', blockedPaths)
     }
   }
 }

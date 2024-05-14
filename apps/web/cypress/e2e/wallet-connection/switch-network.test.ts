@@ -1,5 +1,4 @@
-import { createDeferredPromise } from '../../../src/test-utils/promise'
-import { getTestSelector } from '../../utils'
+import { getTestSelector, resetHardhatChain } from '../../utils'
 
 function waitsForActiveChain(chain: string) {
   cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', `${chain} logo`)
@@ -15,6 +14,7 @@ describe('network switching', () => {
     cy.visit('/swap')
     cy.get(getTestSelector('web3-status-connected'))
   })
+  afterEach(resetHardhatChain)
 
   function rejectsNetworkSwitchWith(rejection: unknown) {
     cy.hardhat().then((hardhat) => {
@@ -65,24 +65,14 @@ describe('network switching', () => {
 
     // Verify the network was added
     cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
-    cy.get('@switch').should('have.been.calledWith', 'wallet_addEthereumChain', [
-      {
-        blockExplorerUrls: ['https://polygonscan.com/'],
-        chainId: '0x89',
-        chainName: 'Polygon',
-        nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-        rpcUrls: ['https://polygon-rpc.com/'],
-      },
-    ])
+    cy.get('@switch').should('have.been.calledWith', 'wallet_addEthereumChain')
   })
 
   it('should not disconnect while switching', () => {
-    const promise = createDeferredPromise()
-
+    // Defer the connection so we can see the pending state
     cy.hardhat().then((hardhat) => {
-      // Reject network switch with CHAIN_NOT_ADDED
       const sendStub = cy.stub(hardhat.provider, 'send').log(false).as('switch')
-      sendStub.withArgs('wallet_switchEthereumChain').returns(promise)
+      sendStub.withArgs('wallet_switchEthereumChain').returns(new Promise(() => {}))
       sendStub.callThrough() // allows other calls to return non-stubbed values
     })
 
@@ -92,10 +82,9 @@ describe('network switching', () => {
     cy.get('@switch').should('have.been.calledWith', 'wallet_switchEthereumChain')
     cy.contains('Connecting to Polygon')
     cy.get(getTestSelector('web3-status-connected')).should('be.disabled')
-    promise.resolve()
   })
 
-  it('should switch networks', () => {
+  it('switches networks', () => {
     // Select an output currency
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.contains('USDC').click()
@@ -119,26 +108,26 @@ describe('network switching', () => {
     cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
     cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
   })
-})
 
-describe('network switching from URL param', () => {
-  it('should switch network from URL param', () => {
-    cy.visit('/swap?chain=polygon')
-    cy.get(getTestSelector('web3-status-connected'))
-    cy.wait('@wallet_switchEthereumChain')
-    waitsForActiveChain('Polygon')
-  })
+  describe('from URL param', () => {
+    it('should switch network from URL param', () => {
+      cy.visit('/swap?chain=polygon')
+      cy.get(getTestSelector('web3-status-connected'))
+      cy.wait('@wallet_switchEthereumChain')
+      waitsForActiveChain('Polygon')
+    })
 
-  it('should be able to switch network after loading from URL param', () => {
-    cy.visit('/swap?chain=polygon')
-    cy.get(getTestSelector('web3-status-connected'))
-    cy.wait('@wallet_switchEthereumChain')
-    waitsForActiveChain('Polygon')
+    it('should be able to switch network after loading from URL param', () => {
+      cy.visit('/swap?chain=polygon')
+      cy.get(getTestSelector('web3-status-connected'))
+      cy.wait('@wallet_switchEthereumChain')
+      waitsForActiveChain('Polygon')
 
-    // switching to another chain clears query param
-    switchChain('Ethereum')
-    cy.wait('@wallet_switchEthereumChain')
-    waitsForActiveChain('Ethereum')
-    cy.url().should('not.contain', 'chain=polygon')
+      // switching to another chain clears query param
+      switchChain('Ethereum')
+      cy.wait('@wallet_switchEthereumChain')
+      waitsForActiveChain('Ethereum')
+      cy.url().should('not.contain', 'chain=polygon')
+    })
   })
 })

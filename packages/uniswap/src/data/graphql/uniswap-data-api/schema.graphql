@@ -1,5 +1,22 @@
-"""This directive allows results to be deferred during execution"""
+"""
+This directive allows results to be deferred during execution
+"""
 directive @defer on FIELD
+
+"""
+Directs the schema to enforce authorization on a field
+"""
+directive @aws_auth(
+  """
+  List of cognito user pool groups which have access on this field
+  """
+  cognito_groups: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -16,16 +33,20 @@ directive @aws_publish(
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
+  """
+  List of cognito user pool groups which have access on this field
+  """
   cognito_groups: [String]
 ) on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
-"""Tells the service which mutation triggers this subscription."""
+"""
+Tells the service which mutation triggers this subscription.
+"""
 directive @aws_subscribe(
   """
   List of mutations which will trigger this subscription when they are called.
@@ -33,9 +54,13 @@ directive @aws_subscribe(
   mutations: [String]
 ) on FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
+"""
+Directs the schema to enforce authorization on a field
+"""
 directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
+  """
+  List of cognito user pool groups which have access on this field
+  """
   cognito_groups: [String]
 ) on FIELD_DEFINITION
 
@@ -55,8 +80,8 @@ Tells the service this field/object has access authorized by sigv4 signing.
 directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
-  Types, unions, and inputs (alphabetized):
- These are colocated to highlight the relationship between some types and their inputs.
+ Types, unions, and inputs (alphabetized):
+These are colocated to highlight the relationship between some types and their inputs.
 """
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
@@ -66,8 +91,8 @@ input ActivityDetailsInput {
 }
 
 """
-  Enums (alphabetized):
- deprecated and replaced with TransactionType, please do not use this
+ Enums (alphabetized):
+deprecated and replaced with TransactionType, please do not use this
 """
 enum ActivityType {
   APPROVE
@@ -132,7 +157,8 @@ type AssetActivity {
   chain: Chain!
   gasUsed: Float @deprecated(reason: "not required, remove usage")
   transaction: Transaction! @deprecated(reason: "use fields from details")
-  assetChanges: [AssetChange]! @deprecated(reason: "use assetChanges field in details")
+  assetChanges: [AssetChange]!
+    @deprecated(reason: "use assetChanges field in details")
   details: ActivityDetails!
   addresses: [String!]
 }
@@ -148,7 +174,12 @@ enum AssetActivitySwitch {
   LEGACY
 }
 
-union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
+union AssetChange =
+    TokenTransfer
+  | NftTransfer
+  | TokenApproval
+  | NftApproval
+  | NftApproveForAll
 
 input AssetChangeInput {
   tokenTransfer: TokenTransferInput
@@ -267,7 +298,9 @@ enum HighLow {
   LOW
 }
 
-"""  FIVE_MINUTE is only supported for TokenMarket.pricePercentChange"""
+"""
+FIVE_MINUTE is only supported for TokenMarket.pricePercentChange
+"""
 enum HistoryDuration {
   FIVE_MINUTE
   HOUR
@@ -278,7 +311,9 @@ enum HistoryDuration {
   MAX
 }
 
-"""  Interfaces (alphabetized):"""
+"""
+Interfaces (alphabetized):
+"""
 interface IAmount {
   currency: Currency
   value: Float!
@@ -376,7 +411,9 @@ type NftApproval {
   id: ID!
   nftStandard: NftStandard!
 
-  """  can be erc721, erc1155, noncompliant"""
+  """
+  can be erc721, erc1155, noncompliant
+  """
   asset: NftAsset!
   approvedAddress: String!
 }
@@ -391,7 +428,9 @@ type NftApproveForAll {
   id: ID!
   nftStandard: NftStandard!
 
-  """  can be erc721, erc1155, noncompliant"""
+  """
+  can be erc721, erc1155, noncompliant
+  """
   asset: NftAsset!
   operatorAddress: String!
   approved: Boolean!
@@ -419,13 +458,21 @@ type NftAsset {
   name: String
   nftContract: NftContract
 
-  """  TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
+  """
+  TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
   """
   ownerAddress: String
   tokenId: String!
   traits: [NftAssetTrait!]
   rarities: [NftAssetRarity!]
-  listings(chain: Chain, asc: Boolean, first: Int, last: Int, after: String, before: String): NftOrderConnection
+  listings(
+    chain: Chain
+    asc: Boolean
+    first: Int
+    last: Int
+    after: String
+    before: String
+  ): NftOrderConnection
   suspiciousFlag: Boolean
   flaggedBy: String
   metadataUrl: String
@@ -528,8 +575,8 @@ type NftCollection {
   collectionId: String!
 
   """
-    TODO: support querying for collection assets here
-   assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
+   TODO: support querying for collection assets here
+  assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
   """
   bannerImageUrl: String @deprecated
   bannerImage: Image
@@ -729,10 +776,13 @@ type NftTrade {
   marketplace: NftMarketplace!
   amount: Int!
 
-  """  quotePrice represents the last quoted price of the NFT"""
+  """
+  quotePrice represents the last quoted price of the NFT
+  """
   quotePrice: TokenAmount
 
-  """  price represents the current price of the NFT, which can be different from quotePrice
+  """
+  price represents the current price of the NFT, which can be different from quotePrice
   """
   price: TokenAmount!
 }
@@ -783,7 +833,8 @@ type PageInfo {
   endCursor: String
 }
 
-"""  v2 pool parameters as defined by https://github.com/Uniswap/v2-sdk/blob/main/src/entities/pair.ts
+"""
+v2 pool parameters as defined by https://github.com/Uniswap/v2-sdk/blob/main/src/entities/pair.ts
 """
 input PairInput {
   tokenAmountA: TokenAmountInput!
@@ -804,7 +855,8 @@ input PermitInput {
   sigDeadline: String!
 }
 
-"""  v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts
+"""
+v3 pool parameters as defined by https://github.com/Uniswap/v3-sdk/blob/main/src/entities/pool.ts
 """
 input PoolInput {
   tokenA: TokenInput!
@@ -843,12 +895,21 @@ type Portfolio {
   tokensTotalDenominatedValueChange(duration: HistoryDuration): AmountChange
   tokenBalances: [TokenBalance]
 
-  """  TODO: (michael.zhang) replace with paginated query"""
+  """
+  TODO: (michael.zhang) replace with paginated query
+  """
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, chains: [Chain!], _fs: AssetActivitySwitch): [AssetActivity]
+  assetActivities(
+    page: Int
+    pageSize: Int
+    includeOffChain: Boolean
+    chains: [Chain!]
+    _fs: AssetActivitySwitch
+  ): [AssetActivity]
 }
 
-"""  Specify how the portfolio value should be calculated for each `ownerAddress`.
+"""
+Specify how the portfolio value should be calculated for each `ownerAddress`.
 """
 input PortfolioValueModifier {
   ownerAddress: String!
@@ -877,39 +938,130 @@ type PushNotification {
 }
 
 type Query {
-  historicalProtocolVolume(chain: Chain!, version: ProtocolVersion!, duration: HistoryDuration!): [TimestampedAmount!]
-  dailyProtocolTvl(chain: Chain!, version: ProtocolVersion!): [TimestampedAmount!]
+  historicalProtocolVolume(
+    chain: Chain!
+    version: ProtocolVersion!
+    duration: HistoryDuration!
+  ): [TimestampedAmount!]
+  dailyProtocolTvl(
+    chain: Chain!
+    version: ProtocolVersion!
+  ): [TimestampedAmount!]
 
-  """  returns top v3 pools sorted by total value locked in desc order"""
-  topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
+  """
+  returns top v3 pools sorted by total value locked in desc order
+  """
+  topV3Pools(
+    chain: Chain!
+    first: Int!
+    tvlCursor: Float
+    tokenFilter: String
+  ): [V3Pool!]
   v3Pool(chain: Chain!, address: String!): V3Pool
-  v3Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
+  v3Transactions(
+    chain: Chain!
+    first: Int!
+    timestampCursor: Int
+  ): [PoolTransaction!]
 
-  """  returns top v2 pairs sorted by total value locked in desc order"""
-  topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V2Pair!]
+  """
+  returns top v2 pairs sorted by total value locked in desc order
+  """
+  topV2Pairs(
+    chain: Chain!
+    first: Int!
+    tvlCursor: Float
+    tokenFilter: String
+  ): [V2Pair!]
   v2Pair(chain: Chain!, address: String!): V2Pair
-  v2Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction]
+  v2Transactions(
+    chain: Chain!
+    first: Int!
+    timestampCursor: Int
+  ): [PoolTransaction]
   convert(fromAmount: CurrencyAmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
 
   """
-    token consumes chain and address instead of contract because the apollo client request cache can only use
-   keys from the response, and the token response does not contain a contract, but does contain an unwrapped
-   contract: chain and address.
+   token consumes chain and address instead of contract because the apollo client request cache can only use
+  keys from the response, and the token response does not contain a contract, but does contain an unwrapped
+  contract: chain and address.
   """
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
-  topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
-  topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
-  nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
-  nftCollections(chain: Chain, filter: NftCollectionsFilterInput, after: String, first: Int): NftCollectionConnection
-  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int): NftBalanceConnection
-  nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
-  nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
-  nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
-  transactionNotification(chain: Chain!, address: String!, transactionHash: String!): TransactionNotification
+  portfolios(
+    ownerAddresses: [String!]!
+    chains: [Chain!]
+    lookupTokens: [ContractInput!]
+    valueModifiers: [PortfolioValueModifier!]
+  ): [Portfolio]
+  topTokens(
+    chain: Chain
+    page: Int
+    pageSize: Int
+    orderBy: TokenSortableField
+  ): [Token]
+  topCollections(
+    chains: [Chain!]
+    orderBy: CollectionSortableField
+    duration: HistoryDuration
+    after: String
+    first: Int
+    cursor: String
+    limit: Int
+  ): NftCollectionConnection
+  nftAssets(
+    chain: Chain
+    address: String!
+    orderBy: NftAssetSortableField
+    asc: Boolean
+    filter: NftAssetsFilterInput
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): NftAssetConnection
+  nftCollections(
+    chain: Chain
+    filter: NftCollectionsFilterInput
+    after: String
+    first: Int
+  ): NftCollectionConnection
+  nftBalances(
+    chain: Chain
+    ownerAddress: String!
+    filter: NftBalancesFilterInput
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): NftBalanceConnection
+  nftRoute(
+    chain: Chain
+    senderAddress: String!
+    nftTrades: [NftTradeInput!]!
+    tokenTrades: [TokenTradeInput!]
+  ): NftRouteResponse
+  nftActivity(
+    chain: Chain
+    filter: NftActivityFilterInput
+    after: String
+    first: Int
+  ): NftActivityConnection
+  nftCollectionBalances(
+    chain: Chain
+    ownerAddress: String!
+    after: String
+    first: Int
+    before: String
+    last: Int
+  ): NftCollectionBalanceConnection
+  transactionNotification(
+    chain: Chain!
+    address: String!
+    transactionHash: String!
+  ): TransactionNotification
 }
 
 enum SafetyLevel {
@@ -935,7 +1087,10 @@ type SwapOrderDetails {
   id: ID!
   offerer: String!
   hash: String!
-  status: SwapOrderStatus! @deprecated(reason: "use swapOrderStatus to disambiguate from transactionStatus")
+  status: SwapOrderStatus!
+    @deprecated(
+      reason: "use swapOrderStatus to disambiguate from transactionStatus"
+    )
   swapOrderStatus: SwapOrderStatus!
   inputToken: Token!
   inputTokenQuantity: String!
@@ -1028,7 +1183,9 @@ type TokenApproval {
   id: ID!
   tokenStandard: TokenStandard!
 
-  """  can be erc20 or native"""
+  """
+  can be erc20 or native
+  """
   asset: Token!
   approvedAddress: String!
   quantity: String!
@@ -1081,7 +1238,9 @@ type TokenMarket {
   priceHistory(duration: HistoryDuration!): [TimestampedAmount]
   ohlc(duration: HistoryDuration!): [TimestampedOhlc]
 
-  """  this volume is cumulative volume over the specified duration"""
+  """
+  this volume is cumulative volume over the specified duration
+  """
   volume(duration: HistoryDuration!): Amount
   pricePercentChange(duration: HistoryDuration!): Amount
   priceHighLow(duration: HistoryDuration!, highLow: HighLow!): Amount
@@ -1201,7 +1360,10 @@ type TransactionDetails {
   from: String!
   to: String!
   hash: String!
-  status: TransactionStatus! @deprecated(reason: "use transactionStatus to disambiguate from swapOrderStatus")
+  status: TransactionStatus!
+    @deprecated(
+      reason: "use transactionStatus to disambiguate from swapOrderStatus"
+    )
   transactionStatus: TransactionStatus!
   nonce: Int!
   application: ApplicationContract
@@ -1302,4 +1464,3 @@ type V3PoolTick {
   liquidityGross: String
   liquidityNet: String
 }
-

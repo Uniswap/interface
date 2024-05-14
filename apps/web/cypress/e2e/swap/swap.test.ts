@@ -7,6 +7,9 @@ import { getBalance, getTestSelector } from '../../utils'
 const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 describe('Swap', () => {
+  // Turn off automine so that intermediate screens are available to assert on.
+  before(() => cy.hardhat({ automine: false }))
+
   describe('Swap on main page', () => {
     it('starts with ETH selected by default', () => {
       cy.visit('/swap')
@@ -56,7 +59,6 @@ describe('Swap', () => {
       cy.interceptGraphqlOperation('Activity', 'mini-portfolio/empty_activity.json')
       cy.interceptQuoteRequest('swap_eth_usdc_classic.json')
       cy.visit('/swap')
-      cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {
         cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
 

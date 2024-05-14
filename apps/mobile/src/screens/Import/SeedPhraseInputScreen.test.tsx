@@ -6,7 +6,7 @@ import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { render } from 'src/test/test-utils'
-import { ImportType } from 'wallet/src/features/onboarding/types'
+import { ImportType } from 'uniswap/src/types/onboarding'
 
 jest.mock('src/utils/useAddBackButton', () => ({
   useAddBackButton: (): jest.Mock => jest.fn(),

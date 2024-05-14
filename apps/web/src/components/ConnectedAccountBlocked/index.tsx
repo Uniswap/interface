@@ -4,6 +4,7 @@ import { Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 
+import { Text } from 'ui/src'
 import Modal from '../Modal'
 
 const ContentWrapper = styled(Column)`
@@ -26,9 +27,9 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans>Blocked address</Trans>
         </ThemedText.DeprecatedLargeHeader>
-        <ThemedText.DeprecatedDarkGray fontSize={12} marginBottom={12}>
+        <Text color="$neutral2" fontSize={12} mb={12}>
           {props.account}
-        </ThemedText.DeprecatedDarkGray>
+        </Text>
         <ThemedText.DeprecatedMain fontSize={14} marginBottom={12}>
           <Trans>This address is blocked on the Uniswap Labs interface because it is associated with one or more</Trans>{' '}
           <ExternalLink href="https://help.uniswap.org/en/articles/6149816">

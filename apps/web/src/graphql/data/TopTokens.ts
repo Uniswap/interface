@@ -6,9 +6,9 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-
 import {
   Chain,
   TopTokens100Query,
@@ -85,10 +85,12 @@ interface UseTopTokensReturnValue {
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const chainId = supportedChainIdFromGQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
+  const isWindowVisible = useIsWindowVisible()
 
   const { data: sparklineQuery } = usePollQueryWhileMounted(
     useTopTokensSparklineQuery({
       variables: { duration, chain },
+      skip: !isWindowVisible,
     }),
     PollingInterval.Slow
   )
@@ -111,6 +113,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   } = usePollQueryWhileMounted(
     useTopTokens100Query({
       variables: { duration, chain },
+      skip: !isWindowVisible,
     }),
     PollingInterval.Fast
   )

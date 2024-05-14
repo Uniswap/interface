@@ -115,10 +115,4 @@ export const ThemedText = {
   DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={14} {...props} />
   },
-  DeprecatedDarkGray(props: TextProps) {
-    return <TextWrapper fontWeight={485} color="neutral2" {...props} />
-  },
-  DeprecatedGray(props: TextProps) {
-    return <TextWrapper fontWeight={485} color="surface2" {...props} />
-  },
 }

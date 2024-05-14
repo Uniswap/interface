@@ -1,7 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
+import {
+  DutchOrderInfo,
+  DutchOrderInfoJSON,
+  DutchOutputJSON,
+  UnsignedV2DutchOrderInfo,
+  UnsignedV2DutchOrderInfoJSON,
+} from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
@@ -31,8 +37,10 @@ import {
   TradeFillType,
   TradeResult,
   URADutchOrderQuoteData,
+  URADutchOrderV2QuoteData,
   URAQuoteResponse,
   URAQuoteType,
+  V2DutchOrderTrade,
   V2PoolInRoute,
   V3PoolInRoute,
   isClassicQuoteResponse,
@@ -114,6 +122,24 @@ function toDutchOrderInfo(orderInfoJSON: DutchOrderInfoJSON): DutchOrderInfo {
   }
 }
 
+function toUnsignedV2DutchOrderInfo(orderInfoJSON: UnsignedV2DutchOrderInfoJSON): UnsignedV2DutchOrderInfo {
+  const { nonce, input, outputs } = orderInfoJSON
+  return {
+    ...orderInfoJSON,
+    nonce: BigNumber.from(nonce),
+    input: {
+      ...input,
+      startAmount: BigNumber.from(input.startAmount),
+      endAmount: BigNumber.from(input.endAmount),
+    },
+    outputs: outputs.map((output: DutchOutputJSON) => ({
+      ...output,
+      startAmount: BigNumber.from(output.startAmount),
+      endAmount: BigNumber.from(output.endAmount),
+    })),
+  }
+}
+
 // Prepares the currencies used for the actual Swap (either UniswapX or Universal Router)
 // May not match `currencyIn` that the user selected because for ETH inputs in UniswapX, the actual
 // swap will use WETH.
@@ -167,7 +193,9 @@ function getTradeCurrencies(
   return [currencyIn.isNative ? currencyIn.wrapped : currencyIn, currencyOut]
 }
 
-function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInfo | undefined {
+function getSwapFee(
+  data: ClassicQuoteData | URADutchOrderQuoteData | URADutchOrderV2QuoteData
+): SwapFeeInfo | undefined {
   const { portionAmount, portionBips, portionRecipient } = data
 
   if (!portionAmount || !portionBips || !portionRecipient) return undefined
@@ -227,9 +255,11 @@ export async function transformQuoteToTrade(
   data: URAQuoteResponse,
   quoteMethod: QuoteMethod
 ): Promise<TradeResult> {
-  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
+  const { tradeType, needsWrapIfUniswapX, isXv2, routerPreference, account, amount } = args
 
-  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_LIMIT && routerPreference === RouterPreference.X
+  const showUniswapXTrade =
+    (isXv2 ? data.routing === URAQuoteType.DUTCH_V2 : data.routing === URAQuoteType.DUTCH_V1) &&
+    routerPreference === RouterPreference.X
 
   const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
 
@@ -276,33 +306,56 @@ export async function transformQuoteToTrade(
     swapFee,
   })
 
-  // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
-  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_LIMIT
+  // If the top-level URA quote type is DUTCH_V1 or DUTCH_V2, then UniswapX is better for the user
+  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_V1 || data.routing === URAQuoteType.DUTCH_V2
   if (isUniswapXBetter) {
-    const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
     const swapFee = getSwapFee(data.quote)
     const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
 
-    const uniswapXTrade = new DutchOrderTrade({
-      currencyIn,
-      currenciesOut: [currencyOut],
-      orderInfo,
-      tradeType,
-      quoteId: data.quote.quoteId,
-      requestId: data.quote.requestId,
-      classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
-      wrapInfo,
-      approveInfo,
-      auctionPeriodSecs: data.quote.auctionPeriodSecs,
-      startTimeBufferSecs: data.quote.startTimeBufferSecs,
-      deadlineBufferSecs: data.quote.deadlineBufferSecs,
-      slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
-      swapFee,
-    })
+    if (data.routing === URAQuoteType.DUTCH_V2) {
+      const orderInfo = toUnsignedV2DutchOrderInfo(data.quote.orderInfo)
+      const uniswapXv2Trade = new V2DutchOrderTrade({
+        currencyIn,
+        currenciesOut: [currencyOut],
+        orderInfo,
+        tradeType,
+        quoteId: data.quote.quoteId,
+        requestId: data.quote.requestId,
+        classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
+        wrapInfo,
+        approveInfo,
+        deadlineBufferSecs: data.quote.deadlineBufferSecs,
+        slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+        swapFee,
+      })
 
-    return {
-      state: QuoteState.SUCCESS,
-      trade: uniswapXTrade,
+      return {
+        state: QuoteState.SUCCESS,
+        trade: uniswapXv2Trade,
+      }
+    } else if (data.routing === URAQuoteType.DUTCH_V1) {
+      const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
+      const uniswapXTrade = new DutchOrderTrade({
+        currencyIn,
+        currenciesOut: [currencyOut],
+        orderInfo,
+        tradeType,
+        quoteId: data.quote.quoteId,
+        requestId: data.quote.requestId,
+        classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
+        wrapInfo,
+        approveInfo,
+        auctionPeriodSecs: data.quote.auctionPeriodSecs,
+        startTimeBufferSecs: data.quote.startTimeBufferSecs,
+        deadlineBufferSecs: data.quote.deadlineBufferSecs,
+        slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+        swapFee,
+      })
+
+      return {
+        state: QuoteState.SUCCESS,
+        trade: uniswapXTrade,
+      }
     }
   }
 
@@ -357,13 +410,31 @@ export function isPreviewTrade(trade?: InterfaceTrade): trade is PreviewTrade {
 }
 
 export function isSubmittableTrade(trade?: InterfaceTrade): trade is SubmittableTrade {
-  return trade?.fillType === TradeFillType.Classic || trade?.fillType === TradeFillType.UniswapX
+  return isClassicTrade(trade) || isUniswapXTrade(trade)
 }
 
-export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade | LimitOrderTrade {
-  return trade?.fillType === TradeFillType.UniswapX
+/* Returns true if trade uses UniswapX protocol. Includes both X swaps and limit orders. */
+export function isUniswapXTradeType(
+  tradeType?: TradeFillType
+): tradeType is TradeFillType.UniswapX | TradeFillType.UniswapXv2 {
+  return tradeType === TradeFillType.UniswapX || tradeType === TradeFillType.UniswapXv2
+}
+
+export function isUniswapXTrade(
+  trade?: InterfaceTrade
+): trade is DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade {
+  return isUniswapXTradeType(trade?.fillType)
+}
+
+/* Returns true if trade is a SWAP on UniswapX, not a limit order */
+export function isUniswapXSwapTrade(trade?: InterfaceTrade): trade is DutchOrderTrade | V2DutchOrderTrade {
+  return (
+    isUniswapXTrade(trade) &&
+    (trade?.offchainOrderType === OffchainOrderType.DUTCH_AUCTION ||
+      trade?.offchainOrderType === OffchainOrderType.DUTCH_V2_AUCTION)
+  )
 }
 
 export function isLimitTrade(trade?: InterfaceTrade): trade is LimitOrderTrade {
-  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === OffchainOrderType.LIMIT_ORDER
+  return isUniswapXTrade(trade) && trade?.offchainOrderType === OffchainOrderType.LIMIT_ORDER
 }

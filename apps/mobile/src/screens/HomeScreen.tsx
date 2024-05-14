@@ -552,7 +552,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
-      const style = { width: 'auto' }
+      const style: ViewStyle = { width: 'auto' }
       return (
         <>
           <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>

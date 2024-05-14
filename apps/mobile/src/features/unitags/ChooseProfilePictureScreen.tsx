@@ -13,9 +13,9 @@ import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { useENSName } from 'wallet/src/features/ens/api'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
@@ -138,7 +138,9 @@ export function ChooseProfilePictureScreen({
             </Flex>
           </Flex>
         </Flex>
-        <UnitagName fontSize={unitagFontSize} name={unitag} />
+        <Flex row>
+          <UnitagName fontSize={unitagFontSize} name={unitag} />
+        </Flex>
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}

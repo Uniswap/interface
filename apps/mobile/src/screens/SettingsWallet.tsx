@@ -35,9 +35,9 @@ import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { ChainId } from 'uniswap/src/types/chains'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import {
   EditAccountAction,

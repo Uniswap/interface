@@ -1,4 +1,4 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 
 export type TradeableAsset = CurrencyAsset | NFTAsset
 

@@ -11,7 +11,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 export function useBiometricCheck(): void {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const { setIsLockScreenVisible } = useLockScreenContext()
-  const { authenticationStatus } = useBiometricContext()
+  const { authenticationStatus, setAuthenticationStatus } = useBiometricContext()
   const successCallback = (): void => {
     setIsLockScreenVisible(false)
   }
@@ -28,19 +28,24 @@ export function useBiometricCheck(): void {
   useAsyncData(triggerBiometricCheck)
 
   useAppStateTrigger('background', 'active', async () => {
-    if (requiredForAppAccess) {
+    if (
+      requiredForAppAccess &&
+      authenticationStatus !== BiometricAuthenticationStatus.Authenticated
+    ) {
       await trigger()
     }
   })
 
   useAppStateTrigger('inactive', 'background', () => {
     if (requiredForAppAccess) {
+      setAuthenticationStatus(BiometricAuthenticationStatus.Invalid)
       setIsLockScreenVisible(true)
     }
   })
 
   useAppStateTrigger('active', 'background', () => {
     if (requiredForAppAccess) {
+      setAuthenticationStatus(BiometricAuthenticationStatus.Invalid)
       setIsLockScreenVisible(true)
     }
   })

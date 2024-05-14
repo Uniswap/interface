@@ -8,7 +8,7 @@ import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
 

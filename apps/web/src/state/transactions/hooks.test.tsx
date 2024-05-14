@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 
+import { useAccount } from 'wagmi'
 import {
   useHasPendingApproval,
   useHasPendingRevocation,
@@ -44,9 +44,18 @@ const mockRevocationTransactionInfo: TransactionInfo = {
   amount: '0',
 }
 
+jest.mock('wagmi', () => ({
+  ...jest.requireActual('wagmi'),
+  useAccount: jest.fn(),
+}))
+
 describe('Transactions hooks', () => {
   beforeEach(() => {
-    mocked(useWeb3React).mockReturnValue({ chainId: 1, account: '0x123' } as ReturnType<typeof useWeb3React>)
+    mocked(useAccount).mockReturnValue({
+      chainId: ChainId.MAINNET,
+      address: '0x123',
+      status: 'connected',
+    } as unknown as ReturnType<typeof useAccount>)
 
     jest.useFakeTimers()
     store.dispatch(clearAllTransactions({ chainId: ChainId.MAINNET }))
@@ -120,7 +129,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending approval but it is not for the current chain', () => {
-      mocked(useWeb3React).mockReturnValue({ chainId: 2 } as ReturnType<typeof useWeb3React>)
+      mocked(useAccount).mockReturnValue({ chainId: 2 } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockApprovalTransactionInfo)
       const { result } = renderHook(() => useHasPendingApproval(USDC_MAINNET, PERMIT2_ADDRESS))
       expect(result.current).toBe(false)
@@ -160,7 +169,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending revocation but it is not for the current chain', () => {
-      mocked(useWeb3React).mockReturnValue({ chainId: 2 } as ReturnType<typeof useWeb3React>)
+      mocked(useAccount).mockReturnValue({ chainId: 2 } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockRevocationTransactionInfo)
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS))
       expect(result.current).toBe(false)

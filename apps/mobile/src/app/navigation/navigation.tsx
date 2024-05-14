@@ -66,7 +66,7 @@ import { RotatableChevron } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 

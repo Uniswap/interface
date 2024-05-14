@@ -13,6 +13,7 @@ exports[`renders a currency logo with network logo 1`] = `
   }
 >
   <Image
+    resizeMode="contain"
     source={
       {
         "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
@@ -20,9 +21,6 @@ exports[`renders a currency logo with network logo 1`] = `
     }
     style={
       [
-        {
-          "resizeMode": "contain",
-        },
         {
           "backgroundColor": "#2222220D",
           "borderColor": "#2222220D",
@@ -73,6 +71,7 @@ exports[`renders a currency logo without network logo 1`] = `
   }
 >
   <Image
+    resizeMode="contain"
     source={
       {
         "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
@@ -80,9 +79,6 @@ exports[`renders a currency logo without network logo 1`] = `
     }
     style={
       [
-        {
-          "resizeMode": "contain",
-        },
         {
           "backgroundColor": "#2222220D",
           "borderColor": "#2222220D",

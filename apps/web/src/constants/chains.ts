@@ -26,7 +26,7 @@ import {
   nativeOnChain,
 } from 'constants/tokens'
 import ms from 'ms'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { RetryOptions } from 'state/activity/polling/retry'
 import { darkTheme } from 'theme/colors'
@@ -82,7 +82,7 @@ export function isSupportedChainId(chainId?: number | ChainId | null): chainId i
 function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, boolean>> {
   // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
-  return {}
+  return useMemo(() => ({}), [])
 }
 
 export function useIsSupportedChainId(chainId?: number | ChainId): chainId is SupportedInterfaceChainId {
@@ -165,15 +165,19 @@ interface BackendChain {
 interface RPCUrls {
   /**
    * Public JSON-RPC endpoints.
-   * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.
+   * These are used if an integrator does not provide an endpoint, or if the endpoint does not work.
+   *
+   * ONLY ADD URLS WHICH ARE ON THE METAMASK "Safe" LIST: https://chainid.network/chains.json.
+   * You should select the first valid (not API-key guarded) URL from the list.
+   * You must also add it to our CSP: public/csp.json.
    *
    * MetaMask allows switching to any URL, but displays a warning if it is not on the "Safe" list:
    * https://github.com/MetaMask/metamask-mobile/blob/bdb7f37c90e4fc923881a07fca38d4e77c73a579/app/core/RPCMethods/wallet_addEthereumChain.js#L228-L235
-   * https://chainid.network/chains.json
-   *
-   * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
    */
   safe: string[]
+  /**
+   * Fallback JSON-RPC endpoints, taken from chainlist.org.
+   */
   fallback?: string[]
   /**
    * Application-specific JSON-RPC endpoints.
@@ -201,6 +205,9 @@ interface BaseChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly label: string
+  // The label for this chain, derived from the MetaMask "Safe" list.
+  // This is only needed if the default label does not match MetaMask's.
+  readonly safeLabel?: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
     name: string // e.g. 'Goerli ETH',
@@ -257,7 +264,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: true,
     },
     rpcUrls: {
-      safe: ['https://api.mycryptoapi.com/eth', 'https://cloudflare-eth.com'],
+      safe: ['https://cloudflare-eth.com'],
       fallback: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
       appOnly: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_MAINNET_RPC_URL],
       infuraPrefix: 'mainnet',
@@ -315,7 +322,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: true,
     },
     rpcUrls: {
-      safe: ['https://rpc.sepolia.dev/'],
+      safe: ['https://rpc.sepolia.org/'],
       fallback: [
         'https://rpc.sepolia.org/',
         'https://rpc2.sepolia.org/',
@@ -478,6 +485,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
+    safeLabel: 'Polygon Mainnet',
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: darkTheme.chain_137,
     backgroundColor: darkTheme.chain_137_background,
@@ -490,14 +498,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       nativeTokenBackendAddress: MATIC_POLYGON.address,
     },
     rpcUrls: {
-      safe: [
-        'https://polygon-rpc.com/',
-        'https://rpc-mainnet.matic.network',
-        'https://matic-mainnet.chainstacklabs.com',
-        'https://rpc-mainnet.maticvigil.com',
-        'https://rpc-mainnet.matic.quiknode.pro',
-        'https://matic-mainnet-full-rpc.bwarelabs.com',
-      ],
+      safe: ['https://polygon-rpc.com/'],
       appOnly: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`],
       infuraPrefix: 'polygon-mainnet',
     },
@@ -529,11 +530,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       nativeTokenBackendAddress: MATIC_POLYGON.address,
     },
     rpcUrls: {
-      safe: [
-        'https://matic-mumbai.chainstacklabs.com',
-        'https://rpc-mumbai.maticvigil.com',
-        'https://matic-testnet-archive-rpc.bwarelabs.com',
-      ],
+      safe: ['https://rpc-mumbai.maticvigil.com'],
       appOnly: [`https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`],
       infuraPrefix: 'polygon-mumbai',
     },
@@ -552,6 +549,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo',
+    safeLabel: 'Celo Mainnet',
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     chainPriority: 7,
     supportsClientSideRouting: true,
@@ -613,6 +611,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://bscscan.com/',
     infoLink: 'https://info.uniswap.org/#/bnb/',
     label: 'BNB Chain',
+    safeLabel: 'BNB Smart Chain Mainnet',
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
@@ -624,17 +623,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: true,
     },
     rpcUrls: {
-      safe: [
-        'https://endpoints.omniatech.io/v1/bsc/mainnet/public',
-        'https://bsc-mainnet.gateway.pokt.network/v1/lb/6136201a7bad1500343e248d',
-        'https://1rpc.io/bnb',
-        'https://bsc-dataseed3.binance.org',
-        'https://bsc-dataseed2.defibit.io',
-        'https://bsc-dataseed1.ninicoin.io',
-        'https://binance.nodereal.io',
-        'https://bsc-dataseed4.defibit.io',
-        'https://rpc.ankr.com/bsc',
-      ],
+      safe: ['https://bsc-dataseed1.bnbchain.org'],
       appOnly: [QUICKNODE_BNB_RPC_URL],
     },
     subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc?source=uniswap',
@@ -654,6 +643,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://snowtrace.io/',
     infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
     label: 'Avalanche',
+    safeLabel: 'Avalanche C-Chain',
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
     color: darkTheme.chain_43114,
     backgroundColor: darkTheme.chain_43114_background,
@@ -665,7 +655,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: false,
     },
     rpcUrls: {
-      safe: ['https://api.avax.network/ext/bc/C/rpc', 'https://avalanche-c-chain.publicnode.com'],
+      safe: ['https://api.avax.network/ext/bc/C/rpc'],
       appOnly: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`],
       infuraPrefix: 'avalanche-mainnet',
     },
@@ -698,12 +688,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: true,
     },
     rpcUrls: {
-      safe: [
-        'https://mainnet.base.org/',
-        'https://developer-access-mainnet.base.org/',
-        'https://base.gateway.tenderly.co',
-        'https://base.publicnode.com',
-      ],
+      safe: ['https://mainnet.base.org/'],
       fallback: ['https://1rpc.io/base', 'https://base.meowrpc.com'],
       appOnly: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`],
       infuraPrefix: 'base-mainnet',
@@ -735,13 +720,7 @@ export const CHAIN_INFO: ChainInfoMap = {
       backendSupported: true,
     },
     rpcUrls: {
-      safe: [
-        'https://rpc.blast.io/',
-        'https://rpc.ankr.com/blast',
-        'https://blast.din.dev/rpc',
-        'https://blastl2-mainnet.public.blastapi.io',
-        'https://blast.blockpi.network/v1/rpc/public',
-      ],
+      safe: ['https://rpc.blast.io/'],
       appOnly: [`https://blast-mainnet.infura.io/v3/${INFURA_KEY}`],
       infuraPrefix: 'blast-mainnet',
     },
@@ -861,17 +840,6 @@ export const BACKEND_SUPPORTED_CHAINS = Object.keys(CHAIN_INFO)
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = GQL_MAINNET_CHAINS.filter(
   (chain) => !BACKEND_SUPPORTED_CHAINS.includes(chain)
 ).map((chain) => CHAIN_NAME_TO_CHAIN_ID[chain]) as [SupportedInterfaceChainId]
-
-export const APP_RPC_URLS = Object.fromEntries(
-  Object.entries(CHAIN_INFO).map(([key, value]) => [parseInt(key) as SupportedInterfaceChainId, value.rpcUrls.appOnly])
-) as Record<SupportedInterfaceChainId, string[]>
-
-export const PUBLIC_RPC_URLS = Object.fromEntries(
-  Object.entries(CHAIN_INFO).map(([key, value]) => [
-    parseInt(key) as SupportedInterfaceChainId,
-    [...value.rpcUrls.safe, ...(value.rpcUrls.fallback ?? [])],
-  ])
-) as Record<SupportedInterfaceChainId, string[]>
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: SupportedInterfaceChainId } = Object.fromEntries(
   Object.entries(CHAIN_INFO)

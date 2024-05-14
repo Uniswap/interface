@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
@@ -15,6 +14,7 @@ import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { TitleRow } from '../shared'
 
@@ -79,7 +79,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
   const theme = useTheme()
   const { formatNumberOrString } = useFormatter()
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const nativeCurrency = useNativeCurrency(chainId)
   const { formatCurrencyAmount } = useFormatter()
 

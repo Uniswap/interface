@@ -5,11 +5,11 @@ import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analy
 import { Protocol } from '@uniswap/router-sdk'
 import { providers } from 'ethers'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { ImportType } from 'uniswap/src/types/onboarding'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
-import { ChainId } from 'wallet/src/constants/chains'
-import { ImportType } from 'wallet/src/features/onboarding/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 import {
   ExtensionOnboardingEventName,
   FiatOnRampEventName,
@@ -82,11 +82,11 @@ export type WalletEventProperties = {
   [InstitutionTransferEventName.InstitutionTransferTransactionUpdated]: {
     status: string
     externalTransactionId: string
-    institutionName: string
+    serviceProvider: string
   }
   [InstitutionTransferEventName.InstitutionTransferWidgetOpened]: TraceProps & {
     externalTransactionId: string
-    institutionName: string
+    serviceProvider: string
   }
   [FiatOnRampEventName.FiatOnRampAmountEntered]: TraceProps & { source: 'chip' | 'textInput' }
   [FiatOnRampEventName.FiatOnRampTokenSelected]: TraceProps & { token: string }

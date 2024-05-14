@@ -4,7 +4,7 @@
 /* eslint-disable max-lines */
 
 import dayjs from 'dayjs'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'

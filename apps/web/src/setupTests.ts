@@ -31,9 +31,12 @@ globalThis.origin = 'https://app.uniswap.org'
 
   globalThis.matchMedia =
     globalThis.matchMedia ||
-    (() => {
+    ((query) => {
+      const reducedMotion = query.match(/prefers-reduced-motion: ([a-zA-Z0-9-]+)/)
+
       return {
-        matches: false,
+        // Needed for reanimated to disable reduced motion warning in tests
+        matches: reducedMotion ? reducedMotion[1] === 'no-preference' : false,
         addListener: jest.fn(),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
@@ -85,12 +88,6 @@ jest.mock('@web3-react/core', () => {
   }
 })
 
-jest.mock('connection/eagerlyConnect', () => {
-  return {
-    useConnectionReady: () => true,
-  }
-})
-
 jest.mock('state/routing/slice', () => {
   const routingSlice = jest.requireActual('state/routing/slice')
   return {
@@ -119,30 +116,6 @@ jest.mock('state/routing/quickRouteSlice', () => {
   }
 })
 
-jest.mock('uniswap/src/features/gating/hooks')
-
-// Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
-beforeEach(() => {
-  // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
-  // Not mocking this results in multi-second tests when using popper.js.
-  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
-
-  // Mock useWeb3React to return a chainId of 1 by default.
-  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
-
-  // Disable network connections by default.
-  disableNetConnect()
-
-  // Mock feature flags
-  mocked(useFeatureFlag).mockReturnValue(false)
-})
-
-afterEach(() => {
-  // Without this, nock causes a memory leak and the tests will fail on CI.
-  // https://github.com/nock/nock/issues/1817
-  restoreNetConnect()
-})
-
 /**
  * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
  * If something should log to the console, it should be stubbed and asserted:
@@ -160,6 +133,36 @@ failOnConsole({
   shouldFailOnInfo: true,
   shouldFailOnLog: true,
   shouldFailOnWarn: true,
+})
+
+jest.mock('uniswap/src/features/gating/hooks')
+const originalConsoleDebug = console.debug
+// Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
+beforeEach(() => {
+  // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
+  // Not mocking this results in multi-second tests when using popper.js.
+  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
+
+  // Mock useWeb3React to return a chainId of 1 by default.
+  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+
+  // Disable network connections by default.
+  disableNetConnect()
+
+  // Mock feature flags
+  mocked(useFeatureFlag).mockReturnValue(false)
+
+  // Prevent amplitude debugs from triggering failOnConsole
+  console.debug = jest.fn((...args) => {
+    if (typeof args[0] === 'string' && args[0].includes('[amplitude(Identify)')) return
+    originalConsoleDebug(...args)
+  })
+})
+
+afterEach(() => {
+  // Without this, nock causes a memory leak and the tests will fail on CI.
+  // https://github.com/nock/nock/issues/1817
+  restoreNetConnect()
 })
 
 expect.extend({

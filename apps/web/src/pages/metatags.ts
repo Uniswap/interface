@@ -17,29 +17,32 @@ const DEFAULT_METATAGS: MetaTagInjectorInput = {
  *
  * See `functions/README.md` for more info.
  */
-export function useMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
-  const [metaTagProperties, setMetaTagProperties] = useState<{ property: string; content: string }[]>([])
+export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
+  const [metaTagAttributes, setMetaTagAttributes] = useState<{ attribute: string; content: string }[]>([])
   const location = useLocation()
   useEffect(() => {
     metaTags.url = window.location.href
-    const properties = [
-      { property: 'og:title', content: metaTags.title },
-      { property: 'og:url', content: metaTags.url },
-      { property: 'twitter:title', content: metaTags.title },
+    const attributes = [
+      { attribute: 'property="og:title"', content: metaTags.title },
+      { attribute: 'property="og:url"', content: metaTags.url },
+      { attribute: 'property="twitter:title"', content: metaTags.title },
     ]
     if (metaTags.description) {
-      properties.push({ property: 'og:description', content: metaTags.description })
-    }
-    if (metaTags.image) {
-      properties.push(
-        { property: 'og:image', content: metaTags.image },
-        { property: 'og:image:alt', content: metaTags.title },
-        { property: 'twitter:image', content: metaTags.image },
-        { property: 'twitter:image:alt', content: metaTags.title }
+      attributes.push(
+        { attribute: 'property="og:description"', content: metaTags.description },
+        { attribute: 'name="description"', content: metaTags.description }
       )
     }
-    setMetaTagProperties(properties)
+    if (metaTags.image) {
+      attributes.push(
+        { attribute: 'property="og:image"', content: metaTags.image },
+        { attribute: 'property="og:image:alt"', content: metaTags.title },
+        { attribute: 'property="twitter:image"', content: metaTags.image },
+        { attribute: 'property="twitter:image:alt"', content: metaTags.title }
+      )
+    }
+    setMetaTagAttributes(attributes)
   }, [metaTags, location])
 
-  return metaTagProperties
+  return metaTagAttributes
 }

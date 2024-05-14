@@ -15,8 +15,8 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import i18n from 'uniswap/src/i18n/i18n'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { isIOS } from 'uniswap/src/utils/platform'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
   editAccountActions,
@@ -146,6 +146,7 @@ const NotificationsBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   return (
     <Image
+      resizeMode="contain"
       source={
         isDarkMode
           ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK)
@@ -159,7 +160,6 @@ const NotificationsBackgroundImage = (): JSX.Element => {
 const styles = StyleSheet.create({
   image: {
     height: '100%',
-    resizeMode: 'contain',
     width: '100%',
   },
 })

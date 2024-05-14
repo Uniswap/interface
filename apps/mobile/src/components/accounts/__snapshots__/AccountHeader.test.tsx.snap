@@ -477,7 +477,9 @@ exports[`AccountHeader renders correctly 1`] = `
             Test Account
           </Text>
           <View
-            animatedStyle={
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
               {
                 "value": {
                   "transform": [
@@ -488,8 +490,6 @@ exports[`AccountHeader renders correctly 1`] = `
                 },
               }
             }
-            collapsable={false}
-            forwardedRef={[Function]}
             style={
               {
                 "flexDirection": "row",
@@ -512,7 +512,9 @@ exports[`AccountHeader renders correctly 1`] = `
             >
               <Text
                 allowFontScaling={true}
-                animatedStyle={
+                collapsable={false}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
                   {
                     "value": {
                       "color": "#CECECE",
@@ -521,8 +523,6 @@ exports[`AccountHeader renders correctly 1`] = `
                     },
                   }
                 }
-                collapsable={false}
-                forwardedRef={[Function]}
                 maxFontSizeMultiplier={1.4}
                 style={
                   {

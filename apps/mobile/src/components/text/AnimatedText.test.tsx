@@ -7,18 +7,18 @@ import { renderWithProviders } from 'src/test/render'
 
 describe(AnimatedText, () => {
   it('renders without error', () => {
-    const tree = render(<AnimatedText text={{ value: 'Rendered' }} />)
+    const tree = render(<AnimatedText text={makeMutable('Rendered')} />)
 
     expect(tree).toMatchInlineSnapshot(`
       <TextInput
         allowFontScaling={true}
-        animatedStyle={
+        collapsable={false}
+        editable={false}
+        jestAnimatedStyle={
           {
             "value": {},
           }
         }
-        collapsable={false}
-        editable={false}
         maxFontSizeMultiplier={1.4}
         style={
           {

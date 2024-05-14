@@ -51,13 +51,13 @@ export function FavoriteWalletsGrid({
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
-    ({ item: address, isTouched, dragActivationProgress }): JSX.Element => (
+    ({ item: address, pressProgress, dragActivationProgress }): JSX.Element => (
       <FavoriteWalletCard
         key={address}
         address={address}
         dragActivationProgress={dragActivationProgress}
         isEditing={isEditing}
-        isTouched={isTouched}
+        pressProgress={pressProgress}
         setIsEditing={setIsEditing}
       />
     ),
@@ -82,16 +82,17 @@ export function FavoriteWalletsGrid({
         <SortableGrid
           {...rest}
           activeItemOpacity={1}
+          animateContainerHeight={false}
           data={watchedWalletsList}
           editable={isEditing}
           numColumns={NUM_COLUMNS}
           renderItem={renderItem}
           onChange={handleOrderChange}
-          onDragEnd={(): void => {
-            isTokenDragged.value = false
-          }}
           onDragStart={(): void => {
             isTokenDragged.value = true
+          }}
+          onDrop={(): void => {
+            isTokenDragged.value = false
           }}
         />
       )}

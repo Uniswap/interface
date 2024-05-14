@@ -1,6 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
+import { chainIdToBackendChain } from 'constants/chains'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -14,11 +16,10 @@ import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppB
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useChainId } from 'wagmi'
+
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
@@ -58,9 +59,8 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-  const { chainId: connectedChainId } = useWeb3React()
-  const supportedChain = useSupportedChainId(connectedChainId)
-  const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+  const chainId = useChainId()
+  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
@@ -141,6 +141,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
             </Row>
           </Box>
           <Box
+            data-cy="center-search-container"
             className={styles.searchContainer}
             {...(isNavSearchInputVisible && {
               display: 'flex',
@@ -150,7 +151,11 @@ const Navbar = ({ blur }: { blur: boolean }) => {
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>
+              <Box
+                data-cy="right-search-container"
+                position="relative"
+                display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}
+              >
                 <SearchBar />
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}

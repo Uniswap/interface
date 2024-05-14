@@ -4,6 +4,7 @@ import { ParsedQs } from 'qs'
 import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
+import { useAccount } from 'wagmi'
 import useParsedQueryString from './useParsedQueryString'
 import useSelectChain from './useSelectChain'
 
@@ -21,7 +22,8 @@ function getParsedChainId(parsedQs?: ParsedQs) {
 }
 
 export default function useSyncChainQuery() {
-  const { chainId, isActive, account } = useWeb3React()
+  const { chainId, account } = useWeb3React()
+  const { isConnected } = useAccount()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const parsedQs = useParsedQueryString()
   const chainIdRef = useRef(chainId)
@@ -43,7 +45,7 @@ export default function useSyncChainQuery() {
 
   useEffect(() => {
     // Change a user's chain on pageload if the connected chainId does not match the query param chain
-    if (isActive && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
+    if (isConnected && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
       selectChain(urlChainId)
     }
     // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported
@@ -57,8 +59,8 @@ export default function useSyncChainQuery() {
       }
     }
     // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
-    else if (isActive && chainId === urlChainId) {
+    else if (isConnected && chainId === urlChainId) {
       chainIdRef.current = urlChainId
     }
-  }, [urlChainId, selectChain, searchParams, isActive, chainId, account, setSearchParams, isSupportedChain])
+  }, [urlChainId, selectChain, searchParams, isConnected, chainId, account, setSearchParams, isSupportedChain])
 }

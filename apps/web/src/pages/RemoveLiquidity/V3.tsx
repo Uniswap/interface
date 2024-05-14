@@ -32,6 +32,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { Text } from 'ui/src'
@@ -47,7 +48,7 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()

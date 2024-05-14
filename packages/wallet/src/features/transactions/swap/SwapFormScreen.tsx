@@ -282,16 +282,32 @@ function SwapFormContent(): JSX.Element {
   const onSetExactAmountInput = useCallback(
     (amount: string): void =>
       isFiatMode
-        ? updateSwapForm({ exactAmountFiat: amount, exactCurrencyField: CurrencyField.INPUT })
-        : updateSwapForm({ exactAmountToken: amount, exactCurrencyField: CurrencyField.INPUT }),
+        ? updateSwapForm({
+            exactAmountFiat: amount,
+            exactAmountToken: undefined,
+            exactCurrencyField: CurrencyField.INPUT,
+          })
+        : updateSwapForm({
+            exactAmountFiat: undefined,
+            exactAmountToken: amount,
+            exactCurrencyField: CurrencyField.INPUT,
+          }),
     [isFiatMode, updateSwapForm]
   )
 
   const onSetExactAmountOutput = useCallback(
     (amount: string): void =>
       isFiatMode
-        ? updateSwapForm({ exactAmountFiat: amount, exactCurrencyField: CurrencyField.OUTPUT })
-        : updateSwapForm({ exactAmountToken: amount, exactCurrencyField: CurrencyField.OUTPUT }),
+        ? updateSwapForm({
+            exactAmountFiat: amount,
+            exactAmountToken: undefined,
+            exactCurrencyField: CurrencyField.OUTPUT,
+          })
+        : updateSwapForm({
+            exactAmountFiat: undefined,
+            exactAmountToken: amount,
+            exactCurrencyField: CurrencyField.OUTPUT,
+          }),
     [isFiatMode, updateSwapForm]
   )
 

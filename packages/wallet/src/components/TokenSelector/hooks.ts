@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { filter } from 'wallet/src/components/TokenSelector/filter'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'wallet/src/constants/tokens'
 import {
   sortPortfolioBalances,

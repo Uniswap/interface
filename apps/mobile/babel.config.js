@@ -16,6 +16,14 @@ module.exports = function (api) {
     //       },
     //     ],
     [
+      'module-resolver',
+      {
+        alias: {
+          'src': './src',
+        }
+      }
+    ],
+    [
       'module:react-native-dotenv',
       {
         // ideally use envName here to add a mobile namespace but this doesn't work when sharing with dotenv-webpack
@@ -38,8 +46,6 @@ module.exports = function (api) {
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these
     '@babel/plugin-proposal-numeric-separator',
-    // automatically require React when using JSX
-    'react-require',
   ].filter(Boolean)
 
   if (inProduction) {
@@ -52,7 +58,7 @@ module.exports = function (api) {
       // speeds up compile
       '**/@tamagui/**/dist/**',
     ],
-    presets: ['module:metro-react-native-babel-preset'],
+    presets: ['module:@react-native/babel-preset'],
     plugins,
   }
 }

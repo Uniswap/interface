@@ -2,8 +2,8 @@ import { RenderPassReport } from '@shopify/react-native-performance'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
+import { ImportType } from 'uniswap/src/types/onboarding'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
-import { ImportType } from 'wallet/src/features/onboarding/types'
 import {
   EthMethod,
   UwULinkMethod,

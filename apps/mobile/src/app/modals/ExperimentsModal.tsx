@@ -53,7 +53,8 @@ export function ExperimentsModal(): JSX.Element {
           paddingRight: spacing.spacing24,
           paddingLeft: spacing.spacing24,
         }}>
-        <Accordion type="single">
+        <Text variant="heading3">Server</Text>
+        <Accordion collapsible type="single">
           <Accordion.Item value="graphql-endpoint">
             <AccordionHeader title="⚙️ Custom GraphQL Endpoint" />
 

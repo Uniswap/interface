@@ -6,6 +6,7 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   setHasSkippedUnitagPrompt,
@@ -13,7 +14,6 @@ import {
 } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {

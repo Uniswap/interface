@@ -6,8 +6,8 @@ import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import i18n from 'uniswap/src/i18n/i18n'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   fetchFiatOnRampTransaction,
@@ -102,15 +102,20 @@ export function* transactionWatcher({
   }
 }
 
-export function* fetchUpdatedFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
+export function* fetchUpdatedFiatOnRampTransaction(
+  transaction: FiatOnRampTransactionDetails,
+  forceFetch: boolean
+) {
   const activeAccount = yield* select(selectActiveAccount)
   if (!activeAccount) {
     return
   }
   const signerManager = yield* call(getSignerManager)
+
   return yield* call(
     fetchFiatOnRampTransaction,
     /** previousTransactionDetails= */ transaction,
+    forceFetch,
     activeAccount,
     signerManager
   )
@@ -139,14 +144,16 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
   )
 
   let latestStatus = transaction.status
-  let syncWithBackend = transaction.typeInfo.syncedWithBackend
+  let syncedWithBackend = transaction.typeInfo.syncedWithBackend
+  let forceFetch = false
 
   try {
     while (true) {
       const updatedTransaction = yield* useOldMoonpayIntegration
         ? fetchUpdatedMoonpayTransaction(transaction)
-        : fetchUpdatedFiatOnRampTransaction(transaction)
+        : fetchUpdatedFiatOnRampTransaction(transaction, forceFetch)
 
+      forceFetch = false
       // We've got an invalid response from backend
       if (!updatedTransaction) {
         return
@@ -154,7 +161,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       // Transaction has been updated
       if (
         latestStatus !== updatedTransaction.status ||
-        (!syncWithBackend && updatedTransaction.typeInfo.syncedWithBackend)
+        (!syncedWithBackend && updatedTransaction.typeInfo.syncedWithBackend)
       ) {
         logger.debug(
           'transactionWatcherSaga',
@@ -164,27 +171,23 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
 
         const isTransfer =
           updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
-        if (isTransfer && updatedTransaction.typeInfo.institution) {
+        if (updatedTransaction.typeInfo.serviceProvider) {
           yield* call(
             sendWalletAnalyticsEvent,
-            InstitutionTransferEventName.InstitutionTransferTransactionUpdated,
+            isTransfer
+              ? InstitutionTransferEventName.InstitutionTransferTransactionUpdated
+              : FiatOnRampEventName.FiatOnRampTransactionUpdated,
             {
               externalTransactionId: updatedTransaction.id,
               status: updatedTransaction.status,
-              institutionName: updatedTransaction.typeInfo.institution,
+              serviceProvider: updatedTransaction.typeInfo.serviceProvider,
             }
           )
-        } else if (updatedTransaction.typeInfo.serviceProvider) {
-          yield* call(sendWalletAnalyticsEvent, FiatOnRampEventName.FiatOnRampTransactionUpdated, {
-            externalTransactionId: updatedTransaction.id,
-            status: updatedTransaction.status,
-            serviceProvider: updatedTransaction.typeInfo.serviceProvider,
-          })
         }
       }
 
       latestStatus = updatedTransaction.status
-      syncWithBackend = updatedTransaction.typeInfo.syncedWithBackend
+      syncedWithBackend = updatedTransaction.typeInfo.syncedWithBackend
 
       // Stale transaction
       if (updatedTransaction.status === TransactionStatus.Unknown) {
@@ -208,10 +211,14 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       // at this point, we received a response from backend
       // however, we didn't have enough information to act
       // try again after a waiting period or when we've come back WebView
-      yield* race({
+      const raceResult = yield* race({
         forceFetch: take(forceFetchFiatOnRampTransactions),
         timeout: delay(useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.Fast),
       })
+
+      if (raceResult.forceFetch) {
+        forceFetch = true
+      }
     }
   } catch (error) {
     logger.error(error, {

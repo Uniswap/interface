@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GqlResult } from 'uniswap/src/data/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   usePopularTokensOptions,
@@ -15,7 +16,6 @@ import {
   getTokenOptionsSection,
   tokenOptionDifference,
 } from 'wallet/src/components/TokenSelector/utils'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapInput(

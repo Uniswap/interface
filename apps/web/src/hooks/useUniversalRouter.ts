@@ -6,7 +6,6 @@ import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/u
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { getConnection } from 'connection'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
@@ -21,6 +20,7 @@ import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
+import { useAccount } from 'wagmi'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -54,7 +54,9 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions
 ) {
-  const { account, chainId, provider, connector } = useWeb3React()
+  const { account, chainId, provider } = useWeb3React()
+  const connectorName = useAccount().connector?.name
+
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
   const getDeadline = useGetTransactionDeadline()
@@ -134,12 +136,14 @@ export function useUniversalRouterSwapCallback(
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account,
-            [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
+            [CustomUserProperties.WALLET_TYPE]: connectorName,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
           if (tx.data !== response.data) {
             sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
               txHash: response.hash,
+              expected: tx.data,
+              actual: response.data,
               ...analyticsContext,
             })
             if (!response.data || response.data.length === 0 || response.data === '0x') {
@@ -175,7 +179,7 @@ export function useUniversalRouterSwapCallback(
       fiatValues,
       portfolioBalanceUsd,
       analyticsContext,
-      connector,
+      connectorName,
       blockNumber,
       isAutoSlippage,
     ]

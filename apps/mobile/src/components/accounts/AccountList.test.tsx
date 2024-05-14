@@ -19,8 +19,6 @@ const { resolvers } = queryResolvers({
 })
 
 describe(AccountList, () => {
-  afterEach(cleanup)
-
   it('renders without error', async () => {
     const tree = render(<AccountList accounts={[ACCOUNT]} onPress={jest.fn()} />, { resolvers })
 
@@ -103,7 +101,7 @@ describe(AccountList, () => {
       })
 
       expect(screen.queryByText('View only wallets')).toBeFalsy()
-      // cleanup()
+      cleanup()
     })
   })
 })

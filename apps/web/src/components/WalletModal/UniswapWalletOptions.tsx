@@ -1,16 +1,13 @@
-import { useWeb3React } from '@web3-react/core'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { uniwalletWCV2ConnectConnection } from 'connection'
-import { useActivationState } from 'connection/activate'
-import { Connection } from 'connection/types'
+import { CONNECTION } from 'components/Web3Provider/constants'
+import { useConnectWithLogs } from 'connection/activate'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { Text } from 'ui/src'
 import { Mobile, QrCode } from 'ui/src/components/icons'
-import { useEIP6963Connections } from './useOrderedConnections'
+import { useConnectorWithId } from './useOrderedConnections'
 
 const OptionContainer = styled(Row)`
   padding: 16px;
@@ -37,21 +34,22 @@ const TagContainer = styled.div`
     display: none;
   }
 `
-export function UniswapWalletOptions() {
-  const { tryActivation } = useActivationState()
-  const toggleAccountDrawer = useToggleAccountDrawer()
-  const { chainId } = useWeb3React()
-
-  const uniswapWalletBrowserExtension = useEIP6963Connections().eip6963Connections.find(
-    (connection: Connection) => connection.getProviderInfo().rdns === 'org.uniswap.app'
-  )
+export function UniswapWalletOptions({
+  connectWithLogs: { connect },
+}: {
+  connectWithLogs: ReturnType<typeof useConnectWithLogs>
+}) {
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
+    shouldThrow: true,
+  })
 
   return (
     <Column gap="16px">
       <Column gap="md">
         {/* TODO(WEB-3931): If extension is not installed, show onboarding option instead */}
-        {uniswapWalletBrowserExtension && (
-          <OptionContainer onClick={() => tryActivation(uniswapWalletBrowserExtension, toggleAccountDrawer, chainId)}>
+        {uniswapExtensionConnector && (
+          <OptionContainer onClick={() => connect(uniswapExtensionConnector)}>
             <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
             <Row gap="xs">
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
@@ -65,10 +63,7 @@ export function UniswapWalletOptions() {
             </TagContainer>
           </OptionContainer>
         )}
-        <OptionContainer
-          gap="md"
-          onClick={() => tryActivation(uniwalletWCV2ConnectConnection, toggleAccountDrawer, chainId)}
-        >
+        <OptionContainer gap="md" onClick={() => connect(uniswapWalletConnectConnector)}>
           <Mobile size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
           <Row gap="xs">
             <Column>

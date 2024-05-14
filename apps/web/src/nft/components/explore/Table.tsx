@@ -1,5 +1,4 @@
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
@@ -11,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
@@ -103,7 +103,7 @@ export function Table<D extends Record<string, unknown>>({
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { width } = useWindowSize()
   const isMobile = useIsMobile()
 

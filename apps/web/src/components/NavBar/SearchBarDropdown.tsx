@@ -5,6 +5,7 @@ import { useTrace } from 'analytics'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
@@ -16,12 +17,12 @@ import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useChainId } from 'wagmi'
 
-import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { useLocation } from 'react-router-dom'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
@@ -113,7 +114,7 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
 
   return (

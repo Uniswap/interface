@@ -23,10 +23,10 @@ import {
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
-import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {

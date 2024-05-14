@@ -15,12 +15,21 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
 
-// Linting and type checking are only necessary as part of development and testing.
-// Omit them from production builds, as they slow down the feedback loop.
-const shouldLintOrTypeCheck = !isProduction
+// Static analyses (linting and type check) are only necessary as part of local development.
+const enableStaticAnalysis = !process.env.CI && !isProduction
 
 // Our .swcrc wasn't being picked up in the monorepo, so we load it directly.
 const swcrc = JSON.parse(readFileSync('./.swcrc', 'utf-8'))
+
+// Add all node modules that have to be compiled
+const compileNodeModules = [
+  // These libraries export JSX code from files with .js extension, which aren't transpiled
+  // in the library to code that doesn't use JSX syntax. This file extension is not automatically
+  // recognized as extension for files containing JSX, so we have to manually add them to
+  // the build proess (to the appropriate loader) and don't exclude them with other node_modules
+  'expo-clipboard',
+  'expo-linear-gradient',
+]
 
 function getCacheDirectory(cacheName) {
   // Include the trailing slash to denote that this is a directory.
@@ -29,7 +38,7 @@ function getCacheDirectory(cacheName) {
 
 module.exports = {
   eslint: {
-    enable: shouldLintOrTypeCheck,
+    enable: enableStaticAnalysis,
     pluginOptions(eslintConfig) {
       return Object.assign(eslintConfig, {
         cache: true,
@@ -44,7 +53,7 @@ module.exports = {
     },
   },
   typescript: {
-    enableTypeChecking: shouldLintOrTypeCheck,
+    enableTypeChecking: enableStaticAnalysis,
   },
   jest: {
     configure(jestConfig) {
@@ -70,6 +79,7 @@ module.exports = {
           '^react-native$': 'react-native-web',
           'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
         },
+        setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
       })
     },
   },
@@ -115,6 +125,7 @@ module.exports = {
           // This ensures that `yarn start` and `yarn typecheck` share one cache.
           if (plugin.constructor.name == 'ForkTsCheckerWebpackPlugin') {
             delete plugin.options.typescript.configOverwrite
+            plugin.options.typescript.build = true
           }
 
           return plugin
@@ -134,6 +145,8 @@ module.exports = {
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
         alias: {
           ...webpackConfig.resolve.alias,
+          '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
+          crypto: require.resolve('expo-crypto'),
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
           'react-native$': 'react-native-web',
@@ -168,8 +181,12 @@ module.exports = {
           rule.options = swcrc
 
           rule.include = (inPath) => {
-            // if not a node_module we parse with SWC (so other packages in monorepo are importable)
-            return inPath.indexOf('node_modules') === -1
+            // if not a node_module (except for the ones we want to compile)
+            // we parse with SWC (so other packages in monorepo are importable)
+            if (inPath.match(/node_modules/)) {
+              return compileNodeModules.some((nodeModule) => inPath.includes(nodeModule))
+            }
+            return true
           }
         }
         return rule
@@ -181,7 +198,7 @@ module.exports = {
         loader: 'babel-loader',
         include: (path) => /uniswap\/src.*\.(js|ts)x?$/.test(path),
         options: {
-          presets: ['module:metro-react-native-babel-preset'],
+          presets: ['module:@react-native/babel-preset'],
           plugins: [
             [
               'module:react-native-dotenv',

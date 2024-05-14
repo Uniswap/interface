@@ -206,7 +206,7 @@ export default function TransactionActionsModal({
   return (
     <BottomSheetModal
       hideHandlebar
-      backgroundColor="statusCritical"
+      backgroundColor="$transparent"
       name={ModalName.TransactionActions}
       onClose={handleClose}
       {...(isWeb && { alignment: 'top' })}>

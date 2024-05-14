@@ -5,6 +5,8 @@ import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/select
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
+import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -26,8 +28,8 @@ export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     // count successful swaps
 
-    // TODO(MOB-1814): Remove once Android goes live
-    if (isAndroid) {
+    const shouldSkip = yield* call(shouldSkipRatingPrompt)
+    if (shouldSkip) {
       return
     }
 
@@ -195,4 +197,11 @@ async function openNativeReviewModal() {
   } catch (e) {
     logger.error(e, { tags: { file: 'appRating/saga', function: 'useAppRating' } })
   }
+}
+
+function shouldSkipRatingPrompt(): boolean {
+  const isPlaystoreRatingPromptEnabled = Statsig.checkGate(
+    WALLET_FEATURE_FLAG_NAMES.get(FeatureFlags.PlaystoreAppRating) ?? ''
+  )
+  return isAndroid && !isPlaystoreRatingPromptEnabled
 }

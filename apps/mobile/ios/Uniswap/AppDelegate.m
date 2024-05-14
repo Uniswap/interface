@@ -7,7 +7,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
-#import <React/RCTAppSetupUtils.h>
+#import <RCTAppSetupUtils.h>
 #import "RNSplashScreen.h"
 
 @implementation AppDelegate

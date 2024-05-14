@@ -7,9 +7,9 @@ import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
-import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import {
   FeeOnTransferFeeGroup,

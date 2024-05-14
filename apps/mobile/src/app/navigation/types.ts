@@ -9,8 +9,8 @@ import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 
 type NFTItemScreenParams = {
   owner?: Address

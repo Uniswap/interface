@@ -178,7 +178,7 @@ export const TokenBalanceListInner = forwardRef<
 
   const getItemLayout = useCallback(
     (
-      _: Maybe<TokenBalanceListRow[]>,
+      _: Maybe<ArrayLike<string>>,
       index: number
     ): { length: number; offset: number; index: number } => ({
       length: ESTIMATED_TOKEN_ITEM_HEIGHT,

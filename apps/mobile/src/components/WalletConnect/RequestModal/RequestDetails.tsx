@@ -3,18 +3,18 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { LinkButton } from 'src/components/buttons/LinkButton'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import {
-  isTransactionRequest,
   SignRequest,
   WalletConnectRequest,
+  isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, iconSizes } from 'ui/src/theme'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'wallet/src/features/walletConnect/types'

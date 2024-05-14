@@ -1,6 +1,5 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
@@ -11,7 +10,6 @@ import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { getConnection } from 'connection'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
@@ -20,13 +18,12 @@ import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hoo
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from 'state/hooks'
-import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useDisconnect } from 'wagmi'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
@@ -96,9 +93,8 @@ const PortfolioDrawerContainer = styled(Column)`
 `
 
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { connector } = useWeb3React()
+  const { disconnect } = useDisconnect()
   const { ENSName } = useENSName(account)
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const closeModal = useCloseModal()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -111,13 +107,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
-  const connection = getConnection(connector)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const disconnect = useCallback(() => {
-    connector.deactivate?.()
-    connector.resetState()
-    dispatch(setRecentConnectionDisconnected())
-  }, [connector, dispatch])
 
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
@@ -169,7 +159,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   return (
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
-        <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} connection={connection} />
+        <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} />
         <IconContainer>
           <IconButton
             hideHorizontal={showDisconnectConfirm}

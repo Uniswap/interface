@@ -195,6 +195,14 @@ module.exports = {
             message:
               "This hook should only be used once at the App level. You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'src/data/usePersistedApolloClient'`.",
           },
+          {
+            name: 'statsig-react',
+            message: 'Import from internal module uniswap/src/features/gating instead',
+          },
+          {
+            name: 'statsig-react-native',
+            message: 'Import from internal module uniswap/src/features/gating instead',
+          },
         ],
       },
     ],
@@ -208,15 +216,27 @@ module.exports = {
       },
       {
         selector:
+          "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='tabs'][callee.object.object.name='chrome']",
+        message:
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.tabs.sendMessage.',
+      },
+      {
+        selector:
+          "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='runtime'][callee.object.object.name='chrome']",
+        message:
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.sendMessage.',
+      },
+      {
+        selector:
           "CallExpression[callee.property.name='addListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use addMessageListener from apps/stretch/src/background/messagePassing/messageUtils.ts instead of chrome.runtime.onMessage.addListener.',
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.addListener.',
       },
       {
         selector:
           "CallExpression[callee.property.name='removeListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use removeMessageListener from apps/stretch/src/background/messagePassing/messageUtils.ts instead of chrome.runtime.onMessage.removeListener.',
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.removeListener.',
       },
       {
         selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",

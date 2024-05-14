@@ -95,7 +95,7 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountFiat: swapFeeFiatFormatted,
+        formattedAmountFiat: swapFeeUsd ? swapFeeFiatFormatted : undefined,
       }
     : undefined
 

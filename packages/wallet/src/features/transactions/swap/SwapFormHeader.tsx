@@ -122,13 +122,13 @@ export function SwapFormHeader(): JSX.Element {
         </Flex>
       </Flex>
 
-      {showSwapSettingsModal && (
-        <SwapSettingsModal
-          derivedSwapInfo={derivedSwapInfo}
-          setCustomSlippageTolerance={setCustomSlippageTolerance}
-          onClose={onCloseSettingsModal}
-        />
-      )}
+      <SwapSettingsModal
+        derivedSwapInfo={derivedSwapInfo}
+        isOpen={showSwapSettingsModal}
+        setCustomSlippageTolerance={setCustomSlippageTolerance}
+        onClose={onCloseSettingsModal}
+      />
+
       {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </>
   )

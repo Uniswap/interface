@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
@@ -58,6 +57,7 @@ import {
   NftMarketplace,
   NftStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useChainId } from 'wagmi'
 
 import { LoadingAssets } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
@@ -224,7 +224,7 @@ export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasR
 }
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)

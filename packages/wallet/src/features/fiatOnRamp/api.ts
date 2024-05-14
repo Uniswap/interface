@@ -19,8 +19,8 @@ import {
   FORSupportedFiatCurrenciesResponse,
   FORSupportedTokensRequest,
   FORSupportedTokensResponse,
-  FORTransactionsRequest,
-  FORTransactionsResponse,
+  FORTransactionRequest,
+  FORTransactionResponse,
   FORTransferWidgetUrlRequest,
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
@@ -293,10 +293,7 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
     }),
-    fiatOnRampAggregatorTransactions: builder.query<
-      FORTransactionsResponse,
-      FORTransactionsRequest
-    >({
+    fiatOnRampAggregatorTransaction: builder.query<FORTransactionResponse, FORTransactionRequest>({
       async queryFn(args, { getState }, _extraOptions, baseQuery) {
         try {
           const account = selectActiveAccount(getState() as RootState)
@@ -311,7 +308,7 @@ export const fiatOnRampAggregatorApi = createApi({
             signerManager
           )
           const result = await baseQuery({
-            url: `/transactions?${objectToQueryString(requestParams)}`,
+            url: `/transaction?${objectToQueryString(requestParams)}`,
             method: 'GET',
             headers: {
               'x-uni-sig': signature,
@@ -320,7 +317,7 @@ export const fiatOnRampAggregatorApi = createApi({
           if (result.error) {
             return { error: result.error }
           }
-          return { data: result.data as FORTransactionsResponse }
+          return { data: result.data as FORTransactionResponse }
         } catch (error) {
           return { error: { status: 'FETCH_ERROR', error: String(error) } }
         }
@@ -338,7 +335,7 @@ export const {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,
-  useFiatOnRampAggregatorTransactionsQuery,
+  useFiatOnRampAggregatorTransactionQuery,
   useFiatOnRampAggregatorGetCountryQuery,
 } = fiatOnRampAggregatorApi
 
@@ -403,16 +400,17 @@ export function fetchMoonpayTransaction(
  */
 export async function fetchFiatOnRampTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
+  forceFetch: boolean,
   account: Account,
   signerManager: SignerManager
 ): Promise<FiatOnRampTransactionDetails | undefined> {
-  const { requestParams, signature } = await createSignedRequestParams(
-    { externalSessionId: previousTransactionDetails.id },
+  const { requestParams, signature } = await createSignedRequestParams<FORTransactionRequest>(
+    { sessionId: previousTransactionDetails.id, forceFetch },
     account,
     signerManager
   )
   const res = await fetch(
-    `${uniswapUrls.fiatOnRampApiUrl}/transactions?${objectToQueryString(requestParams)}`,
+    `${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`,
     {
       headers: {
         'x-uni-sig': signature,
@@ -420,10 +418,7 @@ export async function fetchFiatOnRampTransaction(
       },
     }
   )
-  const { transactions }: FORTransactionsResponse = await res.json()
-  const transaction = transactions.sort((a, b) =>
-    dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1
-  )?.[0]
+  const { transaction }: FORTransactionResponse = await res.json()
   if (!transaction) {
     const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
       dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')

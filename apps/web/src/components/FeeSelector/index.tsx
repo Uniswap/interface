@@ -1,7 +1,6 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
@@ -17,6 +16,7 @@ import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { FeeOption } from './FeeOption'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
@@ -61,7 +61,7 @@ export default function FeeSelector({
   currencyA?: Currency
   currencyB?: Currency
 }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const trace = useTrace()
   const { formatDelta } = useFormatter()
 

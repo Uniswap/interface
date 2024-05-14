@@ -12,11 +12,11 @@ import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedFlex, AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
@@ -30,16 +30,16 @@ export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
 export type FavoriteTokenCardProps = {
   currencyId: string
-  isEditing?: boolean
-  isTouched: SharedValue<boolean>
+  pressProgress: SharedValue<number>
   dragActivationProgress: SharedValue<number>
+  isEditing?: boolean
   setIsEditing: (update: boolean) => void
 } & ViewProps
 
 function FavoriteTokenCard({
   currencyId,
   isEditing,
-  isTouched,
+  pressProgress,
   dragActivationProgress,
   setIsEditing,
   ...rest
@@ -93,7 +93,7 @@ function FavoriteTokenCard({
     tokenDetailsNavigation.navigate(currencyId)
   }
 
-  const animatedDragStyle = useAnimatedCardDragStyle(isTouched, dragActivationProgress)
+  const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
 
   if (isNonPollingRequestInFlight(networkStatus)) {
     return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />

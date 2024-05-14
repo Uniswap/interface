@@ -59,6 +59,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -67,7 +68,6 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   AccountType,
   BackupType,

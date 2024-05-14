@@ -34,14 +34,14 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
     }
   >
     <View
-      animatedStyle={
+      collapsable={false}
+      entering={[Function]}
+      exiting={[Function]}
+      jestAnimatedStyle={
         {
           "value": {},
         }
       }
-      collapsable={false}
-      entering={[Function]}
-      exiting={[Function]}
       style={
         {
           "flexDirection": "column",

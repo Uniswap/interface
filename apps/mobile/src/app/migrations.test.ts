@@ -76,8 +76,8 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   ExtensionOnboardingState,
   initialBehaviorHistoryState,

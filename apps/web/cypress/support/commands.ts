@@ -1,16 +1,15 @@
 import 'cypress-hardhat/lib/browser'
 
-import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
-
+import { Eip1193 } from 'cypress-hardhat/lib/browser/eip1193'
 import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { UserState, initialState } from '../../src/state/user/reducer'
-import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
+import { setInitialUserState } from '../utils/user-state'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface ApplicationWindow {
-      ethereum: Eip1193Bridge
+      ethereum: Eip1193
     }
     interface Chainable<Subject> {
       /**
@@ -33,6 +32,9 @@ declare global {
        */
       interceptQuoteRequest(fixturePath: string): Chainable<Subject>
     }
+    interface Cypress {
+      eagerlyConnect?: boolean
+    }
     interface VisitOptions {
       featureFlags?: Array<{ flag: FeatureFlags; value: boolean }>
       /**
@@ -40,6 +42,11 @@ declare global {
        * @default {@type import('../utils/user-state').CONNECTED_WALLET_USER_STATE}
        */
       userState?: Partial<UserState>
+      /**
+       * If false, prevents the app from eagerly connecting to the injected provider.
+       * @default true
+       */
+      eagerlyConnect?: false
     }
   }
 }
@@ -91,12 +98,11 @@ Cypress.Commands.overwrite(
 
           setInitialUserState(win, {
             ...initialState,
-            ...CONNECTED_WALLET_USER_STATE,
             ...(options?.userState ?? {}),
           })
 
-          // Inject the mock ethereum provider.
           win.ethereum = provider
+          win.Cypress.eagerlyConnect = options?.eagerlyConnect ?? true
         },
       })
     )

@@ -143,6 +143,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       }
     >
       <Image
+        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -151,14 +152,14 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         style={
           {
             "height": 16,
-            "resizeMode": "contain",
             "width": 16,
           }
         }
       />
     </View>
     <View
-      animatedStyle={
+      collapsable={false}
+      jestAnimatedStyle={
         {
           "value": {
             "transform": [
@@ -169,7 +170,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
           },
         }
       }
-      collapsable={false}
       sentry-label="SpinningLoader"
       style={
         {
@@ -397,6 +397,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       }
     >
       <Image
+        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -405,7 +406,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         style={
           {
             "height": 16,
-            "resizeMode": "contain",
             "width": 16,
           }
         }
@@ -573,6 +573,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
     >
       <Image
+        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -581,7 +582,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         style={
           {
             "height": 16,
-            "resizeMode": "contain",
             "width": 16,
           }
         }

@@ -20,7 +20,7 @@ import { DisplayNameType } from 'wallet/src/features/wallet/types'
 export type FavoriteWalletCardProps = {
   address: Address
   isEditing?: boolean
-  isTouched: SharedValue<boolean>
+  pressProgress: SharedValue<number>
   dragActivationProgress: SharedValue<number>
   setIsEditing: (update: boolean) => void
 } & ViewProps
@@ -28,7 +28,7 @@ export type FavoriteWalletCardProps = {
 function FavoriteWalletCard({
   address,
   isEditing,
-  isTouched,
+  pressProgress,
   dragActivationProgress,
   setIsEditing,
   ...rest
@@ -56,7 +56,7 @@ function FavoriteWalletCard({
     ]
   }, [t])
 
-  const animatedDragStyle = useAnimatedCardDragStyle(isTouched, dragActivationProgress)
+  const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
 
   return (
     <AnimatedFlex style={animatedDragStyle}>

@@ -22,6 +22,7 @@ function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<a
 }
 
 jest.mock('react-native/Libraries/Utilities/useColorScheme')
+jest.mock('wallet/src/features/gating/userPropertyHooks')
 
 const address1 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BF'
 const address2 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BD'

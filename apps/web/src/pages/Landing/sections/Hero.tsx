@@ -125,7 +125,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         transition={transition}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
       >
-        <Box maxWidth="920px" direction="column" align="center">
+        <Box maxWidth="920px" direction="column" align="center" style={{ pointerEvents: 'none' }}>
           <StyledH1>
             <RiseInText delay={0.0}>
               <Trans>Swap</Trans>

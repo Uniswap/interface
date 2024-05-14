@@ -8,6 +8,7 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
@@ -15,7 +16,6 @@ import {
   useCurrencies,
 } from 'wallet/src/components/TokenSelector/hooks'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import {
   useFiatOnRampAggregatorSupportedTokensQuery,

@@ -52,13 +52,13 @@ export function FavoriteTokensGrid({
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
-    ({ item: currencyId, isTouched, dragActivationProgress }): JSX.Element => (
+    ({ item: currencyId, pressProgress, dragActivationProgress }): JSX.Element => (
       <FavoriteTokenCard
         key={currencyId}
         currencyId={currencyId}
         dragActivationProgress={dragActivationProgress}
         isEditing={isEditing}
-        isTouched={isTouched}
+        pressProgress={pressProgress}
         setIsEditing={setIsEditing}
       />
     ),
@@ -83,16 +83,17 @@ export function FavoriteTokensGrid({
         <SortableGrid
           {...rest}
           activeItemOpacity={1}
+          animateContainerHeight={false}
           data={favoriteCurrencyIds}
           editable={isEditing}
           numColumns={NUM_COLUMNS}
           renderItem={renderItem}
           onChange={handleOrderChange}
-          onDragEnd={(): void => {
-            isTokenDragged.value = false
-          }}
           onDragStart={(): void => {
             isTokenDragged.value = true
+          }}
+          onDrop={(): void => {
+            isTokenDragged.value = false
           }}
         />
       )}

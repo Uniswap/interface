@@ -89,16 +89,16 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
     useCurrency(positionInfo.details.token0, positionInfo.chainId),
     useCurrency(positionInfo.details.token1, positionInfo.chainId),
   ]
-  const { chainId: walletChainId, connector } = useWeb3React()
+  const { chainId: walletChainId } = useWeb3React()
   const navigate = useNavigate()
   const switchChain = useSwitchChain()
   const theme = useTheme()
   const { formatTickPrice } = useFormatter()
 
   const onClick = useCallback(async () => {
-    if (walletChainId !== positionInfo.chainId) await switchChain(connector, positionInfo.chainId)
+    if (walletChainId !== positionInfo.chainId) await switchChain(positionInfo.chainId)
     navigate('/pool/' + positionInfo.details.tokenId)
-  }, [connector, navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, walletChainId])
+  }, [navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, walletChainId])
 
   const status = positionInfo.inRange
     ? PositionStatus.IN_RANGE

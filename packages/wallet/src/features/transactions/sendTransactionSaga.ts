@@ -1,7 +1,8 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {

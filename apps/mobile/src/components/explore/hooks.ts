@@ -1,22 +1,15 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, ViewStyle } from 'react-native'
+import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import {
-  AnimateStyle,
-  SharedValue,
-  interpolate,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+import { SharedValue, StyleProps, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -147,42 +140,13 @@ export function useExploreTokenContextMenu({
 }
 
 export function useAnimatedCardDragStyle(
-  isTouched: SharedValue<boolean>,
+  pressProgress: SharedValue<number>,
   dragActivationProgress: SharedValue<number>
-): AnimateStyle<ViewStyle> {
-  const wasTouched = useSharedValue(false)
-  const dragAnimationProgress = useSharedValue(0)
-
-  useAnimatedReaction(
-    () => dragActivationProgress.value,
-    (activationProgress, prev) => {
-      const prevActivationProgress = prev ?? 0
-      // If the activation progress is increasing (the user is touching one of the cards)
-      if (activationProgress > prevActivationProgress) {
-        if (isTouched.value) {
-          // If the current card is the one being touched, reset the animation progress
-          wasTouched.value = true
-          dragAnimationProgress.value = 0
-        } else {
-          // Otherwise, animate the card
-          wasTouched.value = false
-          dragAnimationProgress.value = activationProgress
-        }
-      }
-      // If the activation progress is decreasing (the user is no longer touching one of the cards)
-      else {
-        if (isTouched.value || wasTouched.value) {
-          // If the current card is the one that was being touched, reset the animation progress
-          dragAnimationProgress.value = 0
-        } else {
-          // Otherwise, animate the card
-          dragAnimationProgress.value = activationProgress
-        }
-      }
-    }
-  )
-
+): StyleProps {
   return useAnimatedStyle(() => ({
-    opacity: interpolate(dragAnimationProgress.value, [0, 1], [1, 0.5]),
+    opacity:
+      pressProgress.value >= dragActivationProgress.value
+        ? 1
+        : interpolate(dragActivationProgress.value, [0, 1], [1, 0.5]),
   }))
 }

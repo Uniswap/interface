@@ -1,286 +1,260 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { MeasureLayoutOnSuccessCallback, StyleSheet } from 'react-native'
+import { memo, useCallback, useEffect, useMemo } from 'react'
+import { LayoutChangeEvent } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
-  runOnJS,
+  interpolate,
+  interpolateColor,
   runOnUI,
-  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  useWorkletCallback,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import ActiveItemDecoration from './ActiveItemDecoration'
-import { useSortableGridContext } from './SortableGridProvider'
-import { TIME_TO_ACTIVATE_PAN } from './constants'
-import { useAnimatedZIndex, useItemOrderUpdater } from './hooks'
+import { getItemZIndex } from 'src/components/sortableGrid/utils'
+import {
+  ACTIVATE_PAN_ANIMATION_DELAY,
+  ITEM_ANIMATION_DURATION,
+  OFFSET_EPS,
+  TIME_TO_ACTIVATE_PAN,
+} from './constants'
+import { useAutoScrollContext, useDragContext, useLayoutContext } from './contexts'
+import { useItemPosition } from './hooks'
+import { GridItemExiting } from './layoutAnimations'
 import { SortableGridRenderItem } from './types'
 
 type SortableGridItemProps<I> = {
   item: I
-  index: number
+  itemKey: string
   renderItem: SortableGridRenderItem<I>
   numColumns: number
 }
 
 function SortableGridItem<I>({
   item,
-  index: renderIndex,
+  itemKey,
   renderItem,
   numColumns,
 }: SortableGridItemProps<I>): JSX.Element {
-  const viewRef = useRef<Animated.View>(null)
-
-  // Current state
   const {
-    gridContainerRef,
-    activeIndex,
-    activeTranslation: activeTranslationValue,
-    itemAtIndexMeasurements: itemAtIndexMeasurementsValue,
-    renderIndexToDisplayIndex,
-    touchedIndex,
+    measuredItemsCount,
+    targetContainerHeight,
+    initialRenderCompleted,
+    appliedContainerHeight,
+    itemDimensions,
+    itemPositions,
+    columnWidth,
+  } = useLayoutContext()
+  const {
+    activeItemScale,
+    activeItemOpacity,
+    activeItemShadowOpacity,
+    activeItemPosition,
+    activationProgress,
+    activeItemDropped,
+    activeItemKey,
     editable,
-    dragActivationProgress,
-    setActiveIndex,
-    previousActiveIndex,
-    scrollOffsetDiff,
-  } = useSortableGridContext()
+  } = useDragContext()
+  const { scrollY, startScrollOffset } = useAutoScrollContext()
 
-  const isActive = activeIndex === renderIndex
-  const isActiveValue = useSharedValue(isActive)
-  const isTouched = useDerivedValue(() => touchedIndex.value === renderIndex)
+  const isTouched = useSharedValue(false)
+  const isActive = useDerivedValue(() => activeItemKey.value === itemKey)
+  const itemHeight = useDerivedValue(() => itemDimensions.value[itemKey]?.height ?? 0)
+  const pressProgress = useSharedValue(0)
+
+  const position = useItemPosition(itemKey)
+  const dragStartPosition = useSharedValue({ x: 0, y: 0 })
+  const targetItemPosition = useDerivedValue(() => itemPositions.value[itemKey])
 
   useEffect(() => {
-    isActiveValue.value = isActive
-  }, [isActive, isActiveValue])
-
-  // Cell animations
-  const displayIndexValue = useDerivedValue(
-    () => renderIndexToDisplayIndex.value[renderIndex] ?? renderIndex
-  )
-  const contentHeight = useSharedValue(0)
-  // Translation based on cells reordering
-  // (e.g when the item is swapped with the active item)
-  const orderTranslateX = useSharedValue(0)
-  const orderTranslateY = useSharedValue(0)
-  // Reset order translation on re-render
-  orderTranslateX.value = 0
-  orderTranslateY.value = 0
-  // Translation based on the user dragging the item
-  // (we keep it separate to animate the dropped item to the target
-  // position without flickering when items are re-rendered in
-  // the new order and the drop animation has not finished yet)
-  const dragTranslateX = useSharedValue(0)
-  const dragTranslateY = useSharedValue(0)
-
-  const zIndex = useAnimatedZIndex(renderIndex)
-  useItemOrderUpdater(renderIndex, activeIndex, displayIndexValue, numColumns)
-
-  const updateCellMeasurements = useCallback(() => {
-    const onSuccess: MeasureLayoutOnSuccessCallback = (x, y, w, h) => {
-      runOnUI(() => {
-        const currentMeasurements = itemAtIndexMeasurementsValue.value
-        currentMeasurements[renderIndex] = { x, y, width: w, height: h }
-        itemAtIndexMeasurementsValue.value = [...currentMeasurements]
-        contentHeight.value = h
-      })()
+    return (): void => {
+      // Remove item dimensions when the item is unmounted
+      runOnUI((key: string) => {
+        delete itemDimensions.value[key]
+        measuredItemsCount.value -= 1
+        // If was active, reset active item key
+        if (activeItemKey.value === key) {
+          activeItemKey.value = null
+        }
+      })(itemKey)
     }
+  }, [itemKey, activeItemKey, itemDimensions, measuredItemsCount])
 
-    const listContainerNode = gridContainerRef.current
-    const listItemNode = viewRef.current
-
-    if (listItemNode && listContainerNode) {
-      listItemNode.measureLayout(listContainerNode, onSuccess)
-    }
-  }, [gridContainerRef, itemAtIndexMeasurementsValue, renderIndex, contentHeight])
-
-  const getItemOrderTranslation = useWorkletCallback(() => {
-    const itemAtIndexMeasurements = itemAtIndexMeasurementsValue.value
-    const displayIndex = displayIndexValue.value
-    const renderMeasurements = itemAtIndexMeasurements[renderIndex]
-    const displayMeasurements = itemAtIndexMeasurements[displayIndex]
-
-    if (!renderMeasurements || !displayMeasurements) {
-      return { x: 0, y: 0 }
-    }
-
-    return {
-      x: displayMeasurements.x - renderMeasurements.x,
-      y: displayMeasurements.y - renderMeasurements.y,
-    }
-  }, [renderIndex])
-
-  const handleDragEnd = useWorkletCallback(() => {
-    dragActivationProgress.value = withTiming(0, { duration: TIME_TO_ACTIVATE_PAN })
-    touchedIndex.value = null
-    if (!isActiveValue.value) {
-      return
-    }
-    // Reset the active item
-    previousActiveIndex.value = renderIndex
-    // Reset this before state is updated to disable animated reactions
-    // earlier (the state is always updated with a delay)
-    isActiveValue.value = false
-
-    // Translate the previously active item to its target position
-    const orderTranslation = getItemOrderTranslation()
-    // Update the current order translation and modify the drag translation
-    // at the same time (this prevents flickering when items are re-rendered)
-    dragTranslateX.value = dragTranslateX.value - orderTranslation.x
-    dragTranslateY.value = dragTranslateY.value + scrollOffsetDiff.value - orderTranslation.y
-    orderTranslateX.value = orderTranslation.x
-    orderTranslateY.value = orderTranslation.y
-    // Animate the remaining translation
-    dragTranslateX.value = withTiming(0)
-    dragTranslateY.value = withTiming(0)
-
-    // Reset the active item index
-    runOnJS(setActiveIndex)(null)
-  }, [renderIndex, getItemOrderTranslation])
-
-  // Translates the currently active (dragged) item
-  useAnimatedReaction(
-    () => ({
-      activeTranslation: activeTranslationValue.value,
-      active: isActiveValue.value,
-    }),
-    ({ active, activeTranslation }) => {
-      if (!active || touchedIndex.value === null) {
-        return
-      }
-      dragTranslateX.value = activeTranslation.x
-      dragTranslateY.value = activeTranslation.y
-    }
-  )
-
-  // Translates the item when it's not active and is swapped with the active item
-  useAnimatedReaction(
-    () => ({
-      displayIndex: displayIndexValue.value,
-      itemAtIndexMeasurements: itemAtIndexMeasurementsValue.value,
-      active: isActiveValue.value,
-    }),
-    ({ displayIndex, active, itemAtIndexMeasurements }) => {
-      if (active) {
-        return
-      }
-
-      const renderMeasurements = itemAtIndexMeasurements[renderIndex]
-      const displayMeasurements = itemAtIndexMeasurements[displayIndex]
-      if (!renderMeasurements || !displayMeasurements) {
-        return
-      }
-
-      if (activeIndex !== null && touchedIndex.value !== null) {
-        // If the order changes as a result of the user dragging an item,
-        // translate the item to its new position with animation
-        orderTranslateX.value = withTiming(displayMeasurements.x - renderMeasurements.x)
-        orderTranslateY.value = withTiming(displayMeasurements.y - renderMeasurements.y)
-      } else if (renderIndex !== previousActiveIndex.value) {
-        // If the order changes as a result of the data change, reset
-        // the item position without animation (it re-renders in the new position,
-        // so the previously applied translation is no longer valid)
-        orderTranslateX.value = 0
-        orderTranslateY.value = 0
-      }
+  const measureItem = useCallback(
+    ({
+      nativeEvent: {
+        layout: { width, height },
+      },
+    }: LayoutChangeEvent) => {
+      runOnUI((key: string) => {
+        // Store item dimensions without re-creating the dimensions object
+        if (!itemDimensions.value[key]) {
+          measuredItemsCount.value += 1
+        }
+        itemDimensions.value[key] = { width, height }
+      })(itemKey)
     },
-    [renderIndex, activeIndex]
+    [itemKey, itemDimensions, measuredItemsCount]
   )
+
+  const handleDragEnd = useCallback(() => {
+    'worklet'
+    isTouched.value = false
+    activeItemKey.value = null
+    pressProgress.value = withTiming(0, { duration: TIME_TO_ACTIVATE_PAN })
+    activationProgress.value = withTiming(0, { duration: TIME_TO_ACTIVATE_PAN }, () => {
+      activeItemDropped.value = true
+    })
+  }, [activationProgress, activeItemDropped, activeItemKey, isTouched, pressProgress])
 
   const panGesture = useMemo(
     () =>
       Gesture.Pan()
         .activateAfterLongPress(TIME_TO_ACTIVATE_PAN)
         .onTouchesDown(() => {
-          touchedIndex.value = renderIndex
-          previousActiveIndex.value = null
-          dragActivationProgress.value = withTiming(1, { duration: TIME_TO_ACTIVATE_PAN })
+          isTouched.value = true
+          const progress = withDelay(
+            ACTIVATE_PAN_ANIMATION_DELAY,
+            withTiming(1, { duration: TIME_TO_ACTIVATE_PAN - ACTIVATE_PAN_ANIMATION_DELAY })
+          )
+          pressProgress.value = progress
+          activationProgress.value = progress
         })
         .onStart(() => {
-          if (touchedIndex.value !== renderIndex) {
+          if (!isTouched.value) {
             return
           }
-          activeTranslationValue.value = { x: 0, y: 0 }
-          dragActivationProgress.value = withTiming(1, { duration: TIME_TO_ACTIVATE_PAN })
-          runOnJS(setActiveIndex)(renderIndex)
+          dragStartPosition.value = activeItemPosition.value = {
+            x: position.x.value ?? 0,
+            y: position.y.value ?? 0,
+          }
+          activeItemKey.value = itemKey
+          startScrollOffset.value = scrollY.value
+          activeItemDropped.value = false
         })
         .onUpdate((e) => {
-          if (!isActiveValue.value) {
+          if (!isActive.value) {
             return
           }
-          activeTranslationValue.value = { x: e.translationX, y: e.translationY }
+          activeItemPosition.value = {
+            x: dragStartPosition.value.x + e.translationX,
+            y: dragStartPosition.value.y + e.translationY,
+          }
         })
-        .onTouchesCancelled(handleDragEnd)
-        .onEnd(handleDragEnd)
-        .onTouchesUp(handleDragEnd)
+        .onFinalize(handleDragEnd)
         .enabled(editable),
     [
-      activeTranslationValue,
-      dragActivationProgress,
-      isActiveValue,
-      handleDragEnd,
-      previousActiveIndex,
-      touchedIndex,
-      renderIndex,
-      setActiveIndex,
       editable,
+      activationProgress,
+      activeItemDropped,
+      activeItemKey,
+      activeItemPosition,
+      dragStartPosition,
+      handleDragEnd,
+      isActive,
+      isTouched,
+      itemKey,
+      position,
+      pressProgress,
+      scrollY,
+      startScrollOffset,
     ]
   )
 
-  const animatedCellStyle = useAnimatedStyle(() => ({
-    zIndex: zIndex.value,
-    height: contentHeight.value > 0 ? contentHeight.value : undefined,
-  }))
+  // ITEM POSITIONING AND ANIMATION
+  const animatedItemStyle = useAnimatedStyle(() => {
+    // INITIAL RENDER
+    // (relative placements - no absolute positioning yet)
+    // This ensures there is no blank space when grid items are being measured
+    if (
+      !initialRenderCompleted.value ||
+      appliedContainerHeight.value === -1 ||
+      columnWidth.value === -1
+    ) {
+      return {
+        width: `${100 / numColumns}%`,
+      }
+    }
 
-  const animatedOrderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: orderTranslateX.value }, { translateY: orderTranslateY.value }],
-  }))
+    const x = position.x.value
+    const y = position.y.value
 
-  const animatedDragStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: dragTranslateX.value },
-      { translateY: dragTranslateY.value + (isActiveValue.value ? scrollOffsetDiff.value : 0) },
-    ],
+    // ADDED ITEM AFTER INITIAL RENDER
+    // (item is not yet measured -> don't render it)
+    // This ensures the item is not misplaced when it is added to the grid
+    if (
+      x === null ||
+      y === null ||
+      // If the item bottom edge is rendered below the container bottom edge
+      (y + itemHeight.value - appliedContainerHeight.value > OFFSET_EPS &&
+        // And the container height is lower than the target height
+        targetContainerHeight.value - appliedContainerHeight.value > OFFSET_EPS &&
+        // And the item is not being dragged
+        !isActive.value)
+    ) {
+      return {
+        pointerEvents: 'none',
+        position: 'absolute',
+        transform: [{ scale: 0.5 }],
+        opacity: 0,
+        width: columnWidth.value,
+      }
+    }
+
+    // ABSOLUTE POSITIONING
+    // (item is measured and rendered)
+    // This ensures the item is rendered in the correct position and responds
+    // to grid items order changes and drag events
+    return {
+      pointerEvents: 'auto',
+      position: 'absolute',
+      opacity: withTiming(1, { duration: ITEM_ANIMATION_DURATION }),
+      transform: [{ scale: withTiming(1, { duration: ITEM_ANIMATION_DURATION }) }],
+      top: y,
+      left: x,
+      width: columnWidth.value,
+      zIndex: getItemZIndex(
+        isActive.value,
+        pressProgress.value,
+        { x, y },
+        targetItemPosition.value
+      ),
+    }
+  })
+
+  // ITEM DECORATION
+  // (only for the active item being dragged)
+  const animatedItemDecorationStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(pressProgress.value, [0, 1], [1, activeItemScale.value]) }],
+    opacity: interpolate(pressProgress.value, [0, 1], [1, activeItemOpacity.value]),
+    shadowColor: interpolateColor(
+      pressProgress.value,
+      [0, 1],
+      ['transparent', `rgba(0, 0, 0, ${activeItemShadowOpacity.value})`]
+    ),
   }))
 
   const content = useMemo(
     () =>
       renderItem({
-        index: renderIndex,
         item,
-        dragActivationProgress,
-        isTouched,
+        pressProgress,
+        dragActivationProgress: activationProgress,
       }),
-    [renderIndex, dragActivationProgress, item, renderItem, isTouched]
+    [item, renderItem, activationProgress, pressProgress]
   )
 
-  const cellStyle = {
-    width: `${100 / numColumns}%`,
-  }
-
   return (
-    // The outer view is used to resize the cell to the size of the new item
-    // in case the new item height is different than the height of the previous one
-    <Animated.View pointerEvents="box-none" style={[cellStyle, animatedCellStyle]}>
+    <Animated.View
+      exiting={GridItemExiting}
+      pointerEvents="box-none"
+      style={animatedItemStyle}
+      onLayout={measureItem}>
       <GestureDetector gesture={panGesture}>
-        {/* The inner view will be translated during grid items reordering */}
-        <Animated.View
-          ref={viewRef}
-          style={activeIndex !== null ? animatedOrderStyle : styles.noTranslation}>
-          <Animated.View style={animatedDragStyle} onLayout={updateCellMeasurements}>
-            <ActiveItemDecoration renderIndex={renderIndex}>{content}</ActiveItemDecoration>
-          </Animated.View>
-        </Animated.View>
+        <Animated.View style={animatedItemDecorationStyle}>{content}</Animated.View>
       </GestureDetector>
     </Animated.View>
   )
 }
 
-const styles = StyleSheet.create({
-  noTranslation: {
-    transform: [{ translateX: 0 }, { translateY: 0 }],
-  },
-})
-
-export default memo(SortableGridItem) as <I>(props: SortableGridItemProps<I>) => JSX.Element
+export default memo(SortableGridItem) as typeof SortableGridItem

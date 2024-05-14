@@ -1,6 +1,7 @@
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Trans } from 'i18n'
 import { useMemo } from 'react'
+import { useUserLocaleManager } from 'state/user/hooks'
 import { StyledInternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
@@ -22,6 +23,7 @@ const useTargetLocale = (activeLocale: SupportedLocale) => {
 export function SwitchLocaleLink() {
   const activeLocale = useActiveLocale()
   const targetLocale = useTargetLocale(activeLocale)
+  const [, setUserLocale] = useUserLocaleManager()
 
   const { to, onClick } = useLocationLinkProps(targetLocale)
 
@@ -30,7 +32,13 @@ export function SwitchLocaleLink() {
   return (
     <Text fontSize={11} opacity={0.6} hoverStyle={{ opacity: 1 }} mt="1rem">
       <Trans>Uniswap available in: </Trans>
-      <StyledInternalLink onClick={onClick} to={to}>
+      <StyledInternalLink
+        onClick={() => {
+          onClick?.()
+          setUserLocale(targetLocale)
+        }}
+        to={to}
+      >
         {LOCALE_LABEL[targetLocale]}
       </StyledInternalLink>
     </Text>

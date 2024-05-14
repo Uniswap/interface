@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { GqlResult } from 'uniswap/src/data/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   useCommonTokensOptions,
@@ -13,7 +14,6 @@ import {
   TokenSelectorListSections,
 } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapOutput(

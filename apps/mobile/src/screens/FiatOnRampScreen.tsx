@@ -30,7 +30,7 @@ import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import {
   useFiatOnRampAggregatorGetCountryQuery,
   useFiatOnRampAggregatorServiceProvidersQuery,
-  useFiatOnRampAggregatorTransactionsQuery,
+  useFiatOnRampAggregatorTransactionQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/features/fiatOnRamp/types'
 import {
@@ -164,14 +164,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }, [serviceProvidersResponse, quotes, isDarkMode])
 
-  const { currentData: transactionsResponse } = useFiatOnRampAggregatorTransactionsQuery({
-    limit: 1,
-  })
+  const { currentData: transactionResponse } = useFiatOnRampAggregatorTransactionQuery({})
 
   const prevQuotes = usePrevious(quotes)
   useEffect(() => {
     if (quotes && (!selectedQuote || prevQuotes !== quotes)) {
-      const { quote, type } = selectInitialQuote(quotes, transactionsResponse?.transactions[0])
+      const { quote, type } = selectInitialQuote(quotes, transactionResponse?.transaction)
       if (!quote) {
         return
       }
@@ -193,7 +191,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setQuotesSections,
     setSelectedQuote,
     t,
-    transactionsResponse?.transactions,
+    transactionResponse,
   ])
 
   useEffect(() => {

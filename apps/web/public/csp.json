@@ -12,8 +12,7 @@
   ],
   "styleSrc": [
     "'self'",
-    "'unsafe-inline'",
-    "'unsafe-eval'"
+    "'unsafe-inline'"
   ],
   "imgSrc": [
     "*",
@@ -50,7 +49,6 @@
     "https://alfajores-forno.celo-testnet.org",
     "https://api.avax.network/ext/bc/C/rpc",
     "https://api.moonpay.com/",
-    "https://api.mycryptoapi.com/eth",
     "https://api.opensea.io",
     "https://api.studio.thegraph.com/",
     "https://api.thegraph.com/",
@@ -60,6 +58,7 @@
     "https://cdn.center.app/",
     "https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm",
     "https://celo-org.github.io",
+    "https://cloudflare-eth.com",
     "https://cloudflare-ipfs.com",
     "https://ethereum-optimism.github.io/",
     "https://forno.celo.org/",

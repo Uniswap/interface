@@ -26,13 +26,13 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { Pill } from 'wallet/src/components/text/Pill'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   UNITAG_SUFFIX,
   UNITAG_SUFFIX_NO_LEADING_DOT,

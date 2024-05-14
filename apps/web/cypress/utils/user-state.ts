@@ -1,12 +1,4 @@
-import { connectionMetaKey } from '../../src/connection/meta'
-import { ConnectionType } from '../../src/connection/types'
 import { UserState } from '../../src/state/user/reducer'
-
-export const CONNECTED_WALLET_USER_STATE: Partial<UserState> = {
-  recentConnectionMeta: { type: ConnectionType.INJECTED },
-}
-
-export const DISCONNECTED_WALLET_USER_STATE: Partial<UserState> = { recentConnectionMeta: undefined }
 
 /**
  * This sets the initial value of the "user" slice in IndexedDB.
@@ -14,11 +6,6 @@ export const DISCONNECTED_WALLET_USER_STATE: Partial<UserState> = { recentConnec
  * when the app runs.
  */
 export function setInitialUserState(win: Cypress.AUTWindow, state: UserState) {
-  // Selected wallet should also be reflected in localStorage, so that eager connections work.
-  if (state.recentConnectionMeta) {
-    win.localStorage.setItem(connectionMetaKey, JSON.stringify(state.recentConnectionMeta))
-  }
-
   win.indexedDB.deleteDatabase('redux')
   const dbRequest = win.indexedDB.open('redux')
   dbRequest.onsuccess = function () {

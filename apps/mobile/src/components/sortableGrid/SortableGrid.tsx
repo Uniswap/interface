@@ -1,136 +1,165 @@
-import { memo, useRef } from 'react'
-import { LayoutChangeEvent, MeasureLayoutOnSuccessCallback, View } from 'react-native'
-import { Flex, FlexProps } from 'ui/src'
+import { LayoutChangeEvent, MeasureLayoutOnSuccessCallback, StyleSheet } from 'react-native'
+import Animated, { LayoutAnimationConfig, useAnimatedStyle } from 'react-native-reanimated'
+import { SortableGridProvider } from './SortableGirdProvider'
 import SortableGridItem from './SortableGridItem'
-import SortableGridProvider, { useSortableGridContext } from './SortableGridProvider'
-import { useStableCallback } from './hooks'
-import { AutoScrollProps, SortableGridChangeEvent, SortableGridRenderItem } from './types'
+import { useAutoScrollContext, useLayoutContext } from './contexts'
+import { useItemOrderUpdater, useStableCallback } from './hooks'
+import {
+  ActiveItemDecorationSettings,
+  AutoScrollProps,
+  SortableGridChangeEvent,
+  SortableGridDragStartEvent,
+  SortableGridDropEvent,
+  SortableGridRenderItem,
+} from './types'
 import { defaultKeyExtractor } from './utils'
 
-type SortableGridProps<I> = Omit<SortableGridInnerProps<I>, 'keyExtractor'> &
-  AutoScrollProps & {
-    onChange: (e: SortableGridChangeEvent<I>) => void
-    onDragStart?: () => void
-    onDragEnd?: () => void
-    keyExtractor?: (item: I, index: number) => string
+type SortableGridProps<I> = AutoScrollProps &
+  Partial<ActiveItemDecorationSettings> & {
+    data: I[]
+    renderItem: SortableGridRenderItem<I>
+    numColumns?: number
     editable?: boolean
-    activeItemScale?: number
-    activeItemOpacity?: number
-    activeItemShadowOpacity?: number
+    animateContainerHeight?: boolean
+    hapticFeedback?: boolean
+    keyExtractor?: (item: I, index: number) => string
+    onChange?: (e: SortableGridChangeEvent<I>) => void
+    onDragStart?: (e: SortableGridDragStartEvent<I>) => void
+    onDrop?: (e: SortableGridDropEvent<I>) => void
   }
 
 function SortableGrid<I>({
   data,
-  onDragStart,
-  onDragEnd,
-  keyExtractor: keyExtractorProp,
-  activeItemScale,
-  activeItemOpacity,
-  activeItemShadowOpacity,
-  onChange: onChangeProp,
-  scrollableRef,
-  scrollY,
-  visibleHeight,
-  editable,
+  renderItem,
   numColumns = 1,
+  hapticFeedback,
+  keyExtractor = defaultKeyExtractor,
+  containerRef,
   ...rest
 }: SortableGridProps<I>): JSX.Element {
-  const keyExtractor = useStableCallback(keyExtractorProp ?? defaultKeyExtractor)
-  const onChange = useStableCallback(onChangeProp)
+  const stableKeyExtractor = useStableCallback(keyExtractor)
 
-  const providerProps = {
-    activeItemScale,
-    activeItemOpacity,
-    activeItemShadowOpacity,
+  const sharedProps = {
     data,
-    editable,
-    onChange,
-    scrollY,
-    scrollableRef,
-    visibleHeight,
-    onDragStart,
-    onDragEnd,
-  }
-
-  const gridProps = {
-    data,
-    keyExtractor,
     numColumns,
-    scrollableRef,
-    ...rest,
+    hapticFeedback,
+    keyExtractor: stableKeyExtractor,
   }
 
   return (
-    <SortableGridProvider {...providerProps}>
-      <MemoSortableGridInner {...gridProps} />
+    <SortableGridProvider {...sharedProps} {...rest}>
+      <SortableGridInner {...sharedProps} containerRef={containerRef} renderItem={renderItem} />
     </SortableGridProvider>
   )
 }
 
-type SortableGridInnerProps<I> = FlexProps & {
-  keyExtractor: (item: I, index: number) => string
-  numColumns?: number
-  data: I[]
-  renderItem: SortableGridRenderItem<I>
-  containerRef?: React.RefObject<View>
-}
+type SortableGridInnerProps<I> = Pick<
+  SortableGridProps<I>,
+  'data' | 'renderItem' | 'numColumns' | 'keyExtractor' | 'hapticFeedback' | 'containerRef'
+>
 
 function SortableGridInner<I>({
   data,
   renderItem,
-  numColumns = 1,
-  keyExtractor,
   containerRef,
-  ...flexProps
+  numColumns = 1,
+  hapticFeedback = true,
+  keyExtractor = defaultKeyExtractor,
 }: SortableGridInnerProps<I>): JSX.Element {
-  const { gridContainerRef, containerStartOffset, containerEndOffset, touchedIndex } =
-    useSortableGridContext()
-  const internalDataRef = useRef(data)
+  const { containerHeight, containerWidth, appliedContainerHeight } = useLayoutContext()
+  const { gridContainerRef, containerStartOffset } = useAutoScrollContext()
 
-  const measureContainer = useStableCallback((e: LayoutChangeEvent) => {
-    // If there is no parent element, assume the grid is the first child
-    // in the scrollable container
-    if (!containerRef?.current) {
-      containerEndOffset.value = e.nativeEvent.layout.height
+  useItemOrderUpdater(numColumns, hapticFeedback)
+
+  const handleGridMeasurement = ({
+    nativeEvent: {
+      layout: { height, width },
+    },
+  }: LayoutChangeEvent): void => {
+    if (containerHeight.value !== -1) {
       return
     }
-
-    // Otherwise, measure its offset relative to the scrollable container
-    const onSuccess: MeasureLayoutOnSuccessCallback = (x, y, w, h) => {
-      containerStartOffset.value = y
-      containerEndOffset.value = y + h
+    // Measure container using onLayout only once, on the initial render
+    // (container dimensions will be updated from the context provider
+    // when data changes, so we don't want to re-measure the container)
+    if (containerHeight.value === -1) {
+      containerHeight.value = height
+      containerWidth.value = width
     }
 
-    const parentNode = containerRef.current
+    // Measure offset relative to the specifiec container (if containerRef
+    // is provided, otherwise assume that the grid component is the first
+    // child of the the parent container)
+    const onSuccess: MeasureLayoutOnSuccessCallback = (_, y) => {
+      containerStartOffset.value = y
+    }
+
+    const parentNode = containerRef?.current
     const gridNode = gridContainerRef.current
 
-    if (gridNode) {
+    if (parentNode && gridNode) {
       gridNode.measureLayout(parentNode, onSuccess)
     }
-  })
-
-  // Update only if the user doesn't interact with the grid
-  // (we don't want to reorder items based on the input data
-  // while the user is dragging an item)
-  if (touchedIndex.value === null) {
-    internalDataRef.current = data
   }
 
+  const handleHelperMeasurement = ({
+    nativeEvent: {
+      layout: { height },
+    },
+  }: LayoutChangeEvent): void => {
+    if (appliedContainerHeight.value === -1 && height === 0) {
+      return
+    }
+    appliedContainerHeight.value = height
+  }
+
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    width: containerWidth.value === -1 ? 'auto' : containerWidth.value,
+    height: containerHeight.value === -1 ? 'auto' : containerHeight.value,
+  }))
+
   return (
-    <Flex ref={gridContainerRef} row flexWrap="wrap" onLayout={measureContainer} {...flexProps}>
-      {internalDataRef.current.map((item, index) => (
-        <SortableGridItem
-          key={keyExtractor(item, index)}
-          index={index}
-          item={item}
-          numColumns={numColumns}
-          renderItem={renderItem}
-        />
-      ))}
-    </Flex>
+    <LayoutAnimationConfig skipExiting>
+      <Animated.View
+        ref={gridContainerRef}
+        style={[styles.gridContainer, animatedContainerStyle]}
+        onLayout={handleGridMeasurement}>
+        {data.map((item, index) => {
+          const key = keyExtractor(item, index)
+          return (
+            <SortableGridItem
+              key={key}
+              item={item}
+              itemKey={key}
+              numColumns={numColumns}
+              renderItem={renderItem}
+            />
+          )
+        })}
+      </Animated.View>
+
+      {/* This dummy Animated.View is used only to determine if the containerHeight
+      from the animated style was applied. We can't use onLayout on the grid items wrapper component because it already has the same height as containerHeight
+      value, thus the onLayout callback won't be called again, because the size
+      of the component doesn't change. */}
+      <Animated.View
+        style={[styles.helperView, animatedContainerStyle]}
+        onLayout={handleHelperMeasurement}
+      />
+    </LayoutAnimationConfig>
   )
 }
 
-const MemoSortableGridInner = memo(SortableGridInner) as typeof SortableGridInner
+const styles = StyleSheet.create({
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  helperView: {
+    opacity: 0,
+    pointerEvents: 'none',
+    position: 'absolute',
+  },
+})
 
 export default SortableGrid

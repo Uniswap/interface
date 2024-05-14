@@ -1,3 +1,4 @@
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
@@ -27,7 +28,9 @@ export function useAllTransactions(
   chain: Chain,
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
 ) {
+  const isWindowVisible = useIsWindowVisible()
   const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
+
   const {
     data: dataV3,
     loading: loadingV3,
@@ -35,6 +38,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV3,
   } = useV3TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
+    skip: !isWindowVisible,
   })
   const {
     data: dataV2,
@@ -43,7 +47,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV2,
   } = useV2TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: chain !== Chain.Ethereum && !v2ExploreEnabled,
+    skip: !isWindowVisible || (chain !== Chain.Ethereum && !v2ExploreEnabled),
   })
 
   const loadingMoreV3 = useRef(false)

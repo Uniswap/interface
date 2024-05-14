@@ -1,7 +1,7 @@
 import type { Filter } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
+import { useChainId } from 'wagmi'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
@@ -31,7 +31,7 @@ interface UseLogsResult {
  * The filter parameter should _always_ be memoized, or else will trigger constant refetching
  */
 export function useLogs(filter: Filter | undefined): UseLogsResult {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const blockNumber = useBlockNumber()
 
   const logs = useAppSelector((state) => state.logs)

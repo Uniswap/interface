@@ -16,11 +16,11 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Loader } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
+import { ImportType } from 'uniswap/src/types/onboarding'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<

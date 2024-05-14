@@ -1,19 +1,19 @@
-import { useWeb3React } from '@web3-react/core'
-import { useMemo } from 'react'
-import { PositionDetails } from 'types/position'
-import { hasURL } from 'utils/urlChecks'
-
 import { useQueries } from '@tanstack/react-query'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { apolloQueryOptions } from 'graphql/data/util'
+import { useMemo } from 'react'
+import { PositionDetails } from 'types/position'
 import {
   SafetyLevel,
   SimpleTokenDocument,
   SimpleTokenQuery,
   Token,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { hasURL } from 'utils/urlChecks'
+import { useChainId } from 'wagmi'
+
 import { useTokenContractsConstant } from './useTokenContractsConstant'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -66,7 +66,7 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
  * The hope is that this approach removes the cheapest version of the attack without punishing non-malicious url symbols
  */
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const nonListPositionTokenAddresses = useMemo(() => getUniqueAddressesFromPositions(positions), [positions])
 
   const positionCurrencyInfos = useQueries({

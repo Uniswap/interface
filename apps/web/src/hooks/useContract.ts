@@ -40,6 +40,7 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { useChainId } from 'wagmi'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
@@ -71,7 +72,7 @@ export function useContract<T extends Contract = Contract>(
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isMainnet = chainId === ChainId.MAINNET
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
 
@@ -97,7 +98,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
@@ -138,7 +139,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   return useContract(chainId ? V2_ROUTER_ADDRESSES[chainId] : undefined, IUniswapV2Router02ABI, true)
 }
 

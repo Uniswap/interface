@@ -6,7 +6,6 @@ import { getTestSelector } from '../../utils'
 describe('swap flow logging', () => {
   it('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
-    cy.hardhat()
 
     // First swap in the session:
     // Enter amount to swap

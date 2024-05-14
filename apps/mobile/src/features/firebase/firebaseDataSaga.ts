@@ -49,11 +49,28 @@ function* initFirebase() {
 
 export function* firebaseDataWatcher() {
   yield* call(initFirebase)
+  yield* call(syncNotificationsWithFirebase)
 
   // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
   yield* takeLatest(setCurrentLanguage, syncLanguageWithFirebase)
   yield* takeEvery(setAccountsNonPending, syncAccountWithFirebase)
+}
+
+function* syncNotificationsWithFirebase() {
+  const accounts = yield* select(selectNonPendingAccounts)
+  const addresses = Object.keys(accounts)
+
+  for (const address of addresses) {
+    const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
+
+    if (notificationsEnabled) {
+      yield* call(mapFirebaseUidToAddresses, [address])
+    } else {
+      yield* call(deleteFirebaseMetadata, address)
+      yield* call(disassociateFirebaseUidFromAddresses, [address])
+    }
+  }
 }
 
 function* syncLanguageWithFirebase(actionData: ReturnType<typeof setCurrentLanguage>) {
@@ -213,6 +230,9 @@ function* maybeUpdateFirebaseMetadata(address: Address, metadata: AccountMetadat
   if (!notificationsEnabled) {
     return
   }
+
+  // syncs firebase mapping with the local state to avoid errors during metadata changes
+  yield* call(syncNotificationsWithFirebase)
 
   yield* call(updateFirebaseMetadata, address, metadata)
 }

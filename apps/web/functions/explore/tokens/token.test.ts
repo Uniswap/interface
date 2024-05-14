@@ -33,6 +33,7 @@ test.each(tokens)('should inject metadata for valid tokens', async (token) => {
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="Get ${token.symbol} on Uniswap" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
+  expect(body).not.toContain(`<meta name="description"`)
   expect(body).toContain(`<meta property="og:image" content="${token.image}" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:width" content="1200" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)

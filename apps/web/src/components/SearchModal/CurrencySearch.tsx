@@ -1,6 +1,5 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
@@ -19,6 +18,8 @@ import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { isAddress } from 'utilities/src/addresses'
+import { useChainId } from 'wagmi'
+
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
@@ -74,7 +75,7 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const theme = useTheme()
 
   // refs for fixed size lists

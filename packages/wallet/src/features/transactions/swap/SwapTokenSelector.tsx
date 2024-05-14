@@ -22,7 +22,7 @@ import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function SwapTokenSelector(): JSX.Element {
   const swapContext = useSwapFormContext()
-  const { updateSwapForm, selectingCurrencyField, output, input } = swapContext
+  const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input } = swapContext
 
   if (!selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -51,8 +51,12 @@ export function SwapTokenSelector(): JSX.Element {
 
       // swap order if tokens are the same
       if (chainsAreEqual && addressesAreEqual) {
-        newState.exactCurrencyField = field
-        newState[otherField] = otherFieldTradeableAsset
+        const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? input : output
+        // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
+        newState.exactCurrencyField =
+          exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+        newState.focusOnCurrencyField = newState.exactCurrencyField
+        newState[otherField] = previouslySelectedTradableAsset
       }
 
       // reset the other field if network changed
@@ -80,7 +84,7 @@ export function SwapTokenSelector(): JSX.Element {
       // Hide screen when done selecting.
       onHideTokenSelector()
     },
-    [input, onHideTokenSelector, output, updateSwapForm]
+    [exactCurrencyField, input, onHideTokenSelector, output, updateSwapForm]
   )
 
   const props: TokenSelectorProps = {

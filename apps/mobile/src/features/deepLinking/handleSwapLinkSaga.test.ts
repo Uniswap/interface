@@ -2,7 +2,7 @@ import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { DAI, UNI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
 import {

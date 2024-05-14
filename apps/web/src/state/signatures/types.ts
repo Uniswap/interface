@@ -1,4 +1,5 @@
 import { SupportedInterfaceChainId } from 'constants/chains'
+import { OffchainOrderType } from 'state/routing/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   AssetActivityPartsFragment,
@@ -12,6 +13,12 @@ export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
   SIGN_UNISWAPX_V2_ORDER = 'signUniswapXV2Order',
   SIGN_LIMIT = 'signLimit',
+}
+
+export const OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE: Partial<Record<OffchainOrderType, SignatureType>> = {
+  [OffchainOrderType.DUTCH_AUCTION]: SignatureType.SIGN_UNISWAPX_ORDER,
+  [OffchainOrderType.DUTCH_V2_AUCTION]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  [OffchainOrderType.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
 }
 
 interface BaseSignatureFields {

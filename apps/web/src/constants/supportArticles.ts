@@ -11,4 +11,5 @@ export enum SupportArticleURL {
   LEARN_ABOUT_LIMITS = 'https://support.uniswap.org/hc/en-us/sections/24372644881293',
   LIMIT_FAILURE = 'https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute',
   IMPERMANENT_LOSS = 'https://support.uniswap.org/hc/en-us/articles/20904453751693-What-is-Impermanent-Loss',
+  TOKEN_FEE_ON_TRANSFER = 'https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee',
 }

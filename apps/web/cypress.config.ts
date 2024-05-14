@@ -1,9 +1,12 @@
 import { defineConfig } from 'cypress'
 import { setupHardhatEvents } from 'cypress-hardhat'
 
+const TIMEOUT = 24000 // 2x average block time
+
 export default defineConfig({
   projectId: 'fabfoi',
-  defaultCommandTimeout: 24000, // 2x average block time
+  defaultCommandTimeout: TIMEOUT,
+  requestTimeout: TIMEOUT,
   chromeWebSecurity: false,
   experimentalMemoryManagement: true, // better memory management, see https://github.com/cypress-io/cypress/pull/25462
   retries: { runMode: process.env.CYPRESS_RETRIES ? +process.env.CYPRESS_RETRIES : 1 },

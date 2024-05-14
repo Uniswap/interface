@@ -9,7 +9,7 @@ import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
-import { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
+import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
@@ -26,7 +26,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
+import { LimitOrderTextTable, MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
@@ -451,6 +451,10 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details
+  const { title, status } =
+    signature.type === SignatureType.SIGN_LIMIT
+      ? LimitOrderTextTable[signature.status]
+      : OrderTextTable[signature.status]
   return {
     hash: signature.orderHash,
     chainId: signature.chainId,
@@ -466,7 +470,8 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
     }),
     from: signature.offerer,
     prefixIconSrc: UniswapXBolt,
-    ...OrderTextTable[signature.status],
+    title,
+    status,
   }
 }
 

@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   TransactionDetails,
   TransactionStatus,

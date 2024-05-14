@@ -45,7 +45,7 @@ const touchableId = `token-box-${favoriteToken.symbol}`
 
 const defaultProps: FavoriteTokenCardProps = {
   currencyId: SAMPLE_CURRENCY_ID_1,
-  isTouched: makeMutable(false),
+  pressProgress: makeMutable(0),
   dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
   isEditing: false,
@@ -113,7 +113,9 @@ describe('FavoriteTokenCard', () => {
 
       const removeButton = await findByTestId('explore/remove-button')
 
-      expect(removeButton).toHaveAnimatedStyle({ opacity: 0 })
+      await waitFor(() => {
+        expect(removeButton).toHaveAnimatedStyle({ opacity: 0 })
+      })
     })
   })
 
@@ -125,7 +127,9 @@ describe('FavoriteTokenCard', () => {
 
       const removeButton = await findByTestId('explore/remove-button')
 
-      expect(removeButton).toHaveAnimatedStyle({ opacity: 1 })
+      await waitFor(() => {
+        expect(removeButton).toHaveAnimatedStyle({ opacity: 1 })
+      })
     })
 
     it('dispatches removeFavoriteToken action when remove button is pressed', async () => {

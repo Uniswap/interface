@@ -1,13 +1,14 @@
 import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 
-import { getBalance, getTestSelector } from '../../utils'
+import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 
 const WETH = WETH9[ChainId.MAINNET]
 
 describe('Swap wrap', () => {
-  beforeEach(() => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`).hardhat({ automine: false })
-  })
+  // Turn off automine so that intermediate screens are available to assert on.
+  before(() => cy.hardhat({ automine: false }))
+
+  beforeEach(() => cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`))
 
   it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
     cy.get('#swap-currency-input .token-amount-input').type('0.01').should('have.value', '0.01')
@@ -44,7 +45,7 @@ describe('Swap wrap', () => {
   })
 
   it('should be able to unwrap WETH', () => {
-    cy.hardhat().then(async (hardhat) => {
+    cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(WETH, 1e18))
       await hardhat.mine()
     })

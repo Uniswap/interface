@@ -1,7 +1,7 @@
 import { CommonActions } from '@react-navigation/core'
 import { dispatchNavigationAction } from 'src/app/navigation/rootNavigation'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 
 // This fast-forwards user to the same app state as if
 // they have pressed "Get Started" on Landing and should now see import method view

@@ -9,8 +9,8 @@ import {
   useRef,
   useState,
 } from 'react'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'

@@ -1,13 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
 import { Trans } from 'i18n'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { ReactComponent as EyeIcon } from '../../../assets/svg/eye.svg'
 
 const InvalidDetailsContainer = styled.div`
@@ -46,7 +46,7 @@ export default function InvalidTokenDetails({
   pageChainId: ChainId
   isInvalidAddress?: boolean
 }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const pageChainIsSupported = useIsSupportedChainId(pageChainId)
   const navigate = useNavigate()

@@ -7,13 +7,10 @@ import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import Trace from 'src/components/Trace/Trace'
-import {
-  BiometricAuthenticationStatus,
-  enroll,
-  tryLocalAuthenticate,
-} from 'src/features/biometrics'
+import { enroll, tryLocalAuthenticate } from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
+  checkOsBiometricAuthEnabled,
   useBiometricName,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
@@ -26,8 +23,8 @@ import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } fro
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import { borderRadii, imageSizes } from 'ui/src/theme'
+import { ImportType } from 'uniswap/src/types/onboarding'
 import { isIOS } from 'uniswap/src/utils/platform'
-import { ImportType } from 'wallet/src/features/onboarding/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
 import { openSettings } from 'wallet/src/utils/linking'
@@ -64,12 +61,9 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   }, [onPressNext, params?.importType])
 
   const onPressEnableSecurity = useCallback(async () => {
-    const authStatus = await tryLocalAuthenticate()
+    const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()
 
-    if (
-      authStatus === BiometricAuthenticationStatus.Unsupported ||
-      authStatus === BiometricAuthenticationStatus.MissingEnrollment
-    ) {
+    if (!isOSBiometricAuthEnabled) {
       isIOS
         ? Alert.alert(
             t('onboarding.security.alert.biometrics.title.ios', { biometricsMethod }),
@@ -89,7 +83,10 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
               { text: t('common.button.notNow') },
             ]
           )
+      return
     }
+
+    const authStatus = await tryLocalAuthenticate()
 
     if (biometricAuthenticationSuccessful(authStatus)) {
       dispatch(setRequiredForTransactions(true))
@@ -189,6 +186,7 @@ const SecurityBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   return (
     <Image
+      resizeMode="contain"
       source={
         isDarkMode
           ? Platform.select(SECURITY_SCREEN_BACKGROUND_DARK)
@@ -206,6 +204,5 @@ const styles = StyleSheet.create({
   },
   image: {
     height: '100%',
-    resizeMode: 'contain',
   },
 })

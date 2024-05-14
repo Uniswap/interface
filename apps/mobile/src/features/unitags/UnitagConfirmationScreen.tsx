@@ -2,12 +2,11 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
-import { AnimateInOrder } from 'src/components/animation/AnimateInOrder'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
 import {
-  EmojiElement,
   ENSElement,
+  EmojiElement,
   FroggyElement,
   HeartElement,
   OpenseaElement,
@@ -15,9 +14,10 @@ import {
   SendElement,
   SwapElement,
   TextElement,
-} from 'src/features/unitags/ConfirmationElements'
+} from 'src/screens/Onboarding/OnboardingElements'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { AnimatePresence, Button, Flex, Text, useDeviceDimensions, useDeviceInsets } from 'ui/src'
+import { AnimateInOrder } from 'ui/src/animations'
 import { spacing } from 'ui/src/theme'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 

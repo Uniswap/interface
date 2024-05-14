@@ -2,13 +2,13 @@ import { Interface } from '@ethersproject/abi'
 import { BigintIsh, ChainId, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useRef } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
 import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
+import { useChainId } from 'wagmi'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 
@@ -85,7 +85,7 @@ export enum PoolState {
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][]
 ): [PoolState, Pool | null][] {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) return new Array(poolKeys.length)

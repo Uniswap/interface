@@ -8,14 +8,15 @@ import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { useIsSupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
-import { Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Helmet } from 'react-helmet-async/lib/index'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
   useRangeHopCallbacks,
@@ -29,8 +30,10 @@ import { Text } from 'ui/src'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
+import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
@@ -87,7 +90,7 @@ const BLAST_REBASING_TOKENS = [
 ]
 
 export default function AddLiquidityWrapper() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   if (isSupportedChain) {
     return <AddLiquidity />
@@ -160,6 +163,7 @@ function AddLiquidity() {
     depositBDisabled,
     invertPrice,
     ticksAtLimit,
+    isTaxed,
   } = useV3DerivedMintInfo(
     baseCurrency ?? undefined,
     quoteCurrency ?? undefined,
@@ -599,6 +603,14 @@ function AddLiquidity() {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t(`Add liquidity to {{token pair}} ({{chain}}) on Uniswap`, {
+            tokenPair: `${quoteCurrency?.symbol}/${baseCurrency?.symbol}`,
+            chain: CHAIN_INFO[isSupportedChainId(chainId) ? chainId : ChainId.MAINNET].label,
+          })}
+        </title>
+      </Helmet>
       <ScrollablePage>
         <TransactionConfirmationModal
           isOpen={showConfirm}
@@ -659,6 +671,11 @@ function AddLiquidity() {
                       {outOfSync && (
                         <RowBetween paddingBottom="20px">
                           <OutOfSyncWarning />
+                        </RowBetween>
+                      )}
+                      {isTaxed && (
+                        <RowBetween paddingBottom="20px">
+                          <TokenTaxV3Warning />
                         </RowBetween>
                       )}
                       <RowBetween paddingBottom="20px">

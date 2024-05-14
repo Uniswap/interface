@@ -253,9 +253,9 @@ export const LimitOrderTextTable: {
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
-    title: LimitTitleTable.FAILED,
-    statusMessage: t`Your account had insufficient funds to complete this swap.`,
-    status: TransactionStatus.Failed,
+    title: LimitTitleTable.PENDING,
+    statusMessage: t`Your account has insufficient funds to complete this swap.`,
+    status: TransactionStatus.Pending,
   },
   [UniswapXOrderStatus.PENDING_CANCELLATION]: {
     title: t`Pending cancellation`,

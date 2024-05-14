@@ -8,9 +8,9 @@ import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorTransferWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
@@ -83,7 +83,7 @@ export function ExchangeTransferConnecting({
       onClose()
       sendWalletAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
         externalTransactionId,
-        institutionName: serviceProvider.name,
+        serviceProvider: serviceProvider.serviceProvider,
       })
 
       await openUri(widgetUrl).catch(onError)
@@ -101,7 +101,7 @@ export function ExchangeTransferConnecting({
     widgetLoading,
     widgetError,
     externalTransactionId,
-    serviceProvider?.name,
+    serviceProvider,
   ])
 
   const isDarkMode = useIsDarkMode()

@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { CHAIN_INFO, SupportedL2ChainId, useIsSupportedChainId } from 'constants/chains'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { Trans, t } from 'i18n'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -11,8 +12,8 @@ import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { useChainId } from 'wagmi'
 
-import { useCurrencyInfo } from 'hooks/Tokens'
 import Circle from '../../assets/images/blue-loader.svg'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -312,7 +313,7 @@ export default function TransactionConfirmationModal({
   reviewContent,
   currencyToAdd,
 }: ConfirmationModalProps) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   if (!chainId || !isSupportedChain) return null

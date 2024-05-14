@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -19,6 +18,8 @@ import { isPreviewTrade } from 'state/routing/utils'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { queryParametersToCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
+import { useChainId } from 'wagmi'
+
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { LimitFormWrapper } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
@@ -38,8 +39,7 @@ export function getIsReviewableQuote(
 export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
-  const { chainId: connectedChainId } = useWeb3React()
-  const supportedChainId = useSupportedChainId(connectedChainId)
+  const supportedChainId = useSupportedChainId(useChainId())
   const chainId = supportedChainId || ChainId.MAINNET
 
   const parsedQs = useParsedQueryString()

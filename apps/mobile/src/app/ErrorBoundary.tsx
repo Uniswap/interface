@@ -70,7 +70,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
       px="$spacing16"
       py="$spacing48">
       <Flex centered grow gap="$spacing36">
-        <Image source={DEAD_LUNI} style={styles.errorImage} />
+        <Image resizeMode="contain" source={DEAD_LUNI} style={styles.errorImage} />
         <Flex centered gap="$spacing8">
           <Text variant="subheading1">{t('errors.crash.title')}</Text>
           <Text variant="body2">{t('errors.crash.message')}</Text>
@@ -92,7 +92,6 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
 const styles = StyleSheet.create({
   errorImage: {
     height: 150,
-    resizeMode: 'contain',
     width: 150,
   },
 })

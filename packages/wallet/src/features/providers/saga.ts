@@ -1,6 +1,7 @@
 import { call, fork, join } from 'typed-redux-saga'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
 

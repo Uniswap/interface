@@ -13,6 +13,7 @@ const forkingConfig = {
 const forks = {
   [ChainId.MAINNET]: {
     url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+    blockNumber: 19834654,
     ...forkingConfig,
   },
   [ChainId.POLYGON]: {
@@ -26,6 +27,7 @@ module.exports = {
   forks,
   networks: {
     hardhat: {
+      loggingEnabled: !process.env.CI,
       chainId: ChainId.MAINNET,
       forking: forks[ChainId.MAINNET],
       accounts: {

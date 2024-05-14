@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
@@ -20,6 +19,7 @@ import {
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isSameAddress } from 'utilities/src/addresses'
+import { useChainId } from 'wagmi'
 
 interface CurrencySearchParams {
   searchQuery?: string
@@ -51,7 +51,7 @@ export function useCurrencySearchResults({
   selectedCurrency,
   otherSelectedCurrency,
 }: CurrencySearchParams): CurrencySearchResults {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const supportedChain = useSupportedChainId(chainId)
 
   /**

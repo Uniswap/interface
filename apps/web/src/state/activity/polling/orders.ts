@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
+import { OffchainOrderType } from 'state/routing/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
@@ -43,7 +44,7 @@ async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`
+    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`
   )
 }
 
@@ -63,7 +64,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       if (!account || pendingOrders.length === 0) return
 
       // Stop polling if all orders in our queue have "finalized" states
-      if (pendingOrders.every((order) => isFinalizedOrder(order.status))) {
+      if (pendingOrders.every((order) => isFinalizedOrder(order))) {
         clearTimeout(timeout)
         return
       }
@@ -78,7 +79,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
 
           const swapInfo = { ...pendingOrder.swapInfo }
           let receipt = undefined
-          if (updatedOrder?.orderStatus === UniswapXOrderStatus.FILLED) {
+          if (updatedOrder?.orderStatus === UniswapXOrderStatus.FILLED && updatedOrder.txHash) {
             // Update the order to contain the settled/on-chain output amount
             if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
               const exactInputSwapInfo = swapInfo as ExactInputSwapTransactionInfo

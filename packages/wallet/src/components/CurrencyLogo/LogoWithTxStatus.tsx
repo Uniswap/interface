@@ -13,11 +13,11 @@ import {
 } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
-import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -142,6 +142,10 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     }
     if (Icon) {
       icon = <Icon color={color.val} fill={fill.val} size={statusSize} />
+      // If logo is missing, we render the icon instead
+      if (!logo) {
+        icon = <Icon color={color.val} fill={fill.val} size={size} />
+      }
     }
   }
 
@@ -158,8 +162,8 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
 
   return (
     <Flex centered height={size} width={size}>
-      {logo}
-      {icon && (
+      {logo ?? icon}
+      {logo && icon && (
         <Flex bottom={-4} position="absolute" right={-4}>
           {icon}
         </Flex>

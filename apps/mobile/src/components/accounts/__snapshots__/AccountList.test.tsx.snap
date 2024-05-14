@@ -26,16 +26,16 @@ exports[`AccountList renders without error 1`] = `
         </React.Fragment>
       </React.Fragment>
     }
-    animatedStyle={
-      {
-        "value": {},
-      }
-    }
     bounces={false}
     collapsable={false}
     data={[]}
     getItem={[Function]}
     getItemCount={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
     keyExtractor={[Function]}
     keyboardShouldPersistTaps="always"
     onContentSizeChange={[Function]}
@@ -57,6 +57,7 @@ exports[`AccountList renders without error 1`] = `
   >
     <View>
       <View
+        collapsable={false}
         onLayout={[Function]}
       >
         <View

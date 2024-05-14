@@ -5,9 +5,10 @@ import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ChainId } from 'uniswap/src/types/chains'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
 import { SlippageSettingsRow } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRow'
@@ -27,6 +28,7 @@ export type SwapSettingsModalProps = {
   derivedSwapInfo: DerivedSwapInfo
   setCustomSlippageTolerance: (customSlippageTolerance: number | undefined) => void
   onClose?: () => void
+  isOpen: boolean
 }
 
 // NOTE: This modal is shared between the old and new swap flows!
@@ -35,6 +37,7 @@ export function SwapSettingsModal({
   derivedSwapInfo,
   setCustomSlippageTolerance,
   onClose,
+  isOpen,
 }: SwapSettingsModalProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -90,6 +93,7 @@ export function SwapSettingsModal({
     <BottomSheetModal
       alignment={isWeb ? 'top' : undefined}
       backgroundColor={colors.surface1.get()}
+      isModalOpen={isOpen}
       name={ModalName.SwapSettings}
       onClose={onSettingsClose}>
       <Flex

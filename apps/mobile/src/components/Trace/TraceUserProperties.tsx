@@ -13,6 +13,7 @@ import { useIsDarkMode } from 'ui/src'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
+import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
@@ -40,6 +41,8 @@ export function TraceUserProperties(): null {
 
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
   const allowAnalytics = useAppSelector(selectAllowAnalytics)
+
+  useGatingUserPropertyUsernames()
 
   useEffect(() => {
     setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())

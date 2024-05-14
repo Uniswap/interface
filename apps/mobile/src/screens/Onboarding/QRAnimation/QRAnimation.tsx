@@ -1,21 +1,12 @@
-import {
-  Blur,
-  Canvas,
-  Group,
-  Oval,
-  RoundedRect,
-  SkiaValue,
-  useSharedValueEffect,
-  useValue,
-} from '@shopify/react-native-skia'
+import { Blur, Canvas, Group, Oval, RoundedRect } from '@shopify/react-native-skia'
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {
-  AnimateStyle,
   Easing,
   EntryExitAnimationFunction,
+  StyleProps,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -90,7 +81,7 @@ export function QRAnimation({
   // the config for this animation is defined in the animations.ts file in the same folder as this component, but because of the callback it made more sense to leave the actual animation definition in this file
   const qrSlideUpAndFadeIn: EntryExitAnimationFunction = () => {
     'worklet'
-    const animations: AnimateStyle<StyleProp<ViewStyle>> = {
+    const animations: StyleProps = {
       opacity: withDelay(
         qrSlideUpAndFadeInConfig.opacity.delay,
         withTiming(qrSlideUpAndFadeInConfig.opacity.endValue, {
@@ -111,8 +102,7 @@ export function QRAnimation({
       ],
     }
     // <StyleProp<ViewStyle>> doesn't quite work because of translateY
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initialValues: AnimateStyle<any> = {
+    const initialValues: StyleProps = {
       opacity: qrSlideUpAndFadeInConfig.opacity.startValue,
       transform: [{ translateY: qrSlideUpAndFadeInConfig.translateY.startValue }],
     }
@@ -130,10 +120,7 @@ export function QRAnimation({
 
   // 4. QR code inner glow animation
   const reOpacity = useSharedValue(qrInnerBlurConfig.opacity.startValue)
-  const preglowBlurOpacity = useValue(qrInnerBlurConfig.opacity.startValue)
-
   const reSize = useSharedValue(qrInnerBlurConfig.size.startValue)
-  const preglowBlurSize = useValue(qrInnerBlurConfig.size.startValue)
 
   useEffect(() => {
     reOpacity.value = withDelay(
@@ -150,15 +137,6 @@ export function QRAnimation({
       withTiming(qrInnerBlurConfig.size.endValue, { duration: qrInnerBlurConfig.size.duration })
     )
   }, [reSize])
-
-  // in order to animate React Native Skia values, we need to bind the Reanimated values to the React Native Skia values ("ra" = "reanimated")
-  useSharedValueEffect(() => {
-    preglowBlurOpacity.current = reOpacity.value
-  }, reOpacity)
-
-  useSharedValueEffect(() => {
-    preglowBlurSize.current = reSize.value
-  }, reSize)
 
   const videoAnimatedStyle = useAnimatedStyle(() => ({
     opacity: isPlayingVideo.value ? 1 : 0,
@@ -206,7 +184,7 @@ export function QRAnimation({
                         x={0}
                         y={0}
                       />
-                      <Blur blur={25 as unknown as SkiaValue} />
+                      <Blur blur={25} />
                     </Group>
                   </Canvas>
                 </AnimatedFlex>
@@ -257,10 +235,10 @@ export function QRAnimation({
                         <Oval
                           color={uniconColors.glow}
                           height={80}
-                          opacity={preglowBlurOpacity}
+                          opacity={reOpacity}
                           width={80}
                         />
-                        <Blur blur={preglowBlurSize as unknown as SkiaValue} />
+                        <Blur blur={reSize} />
                       </Group>
                     </Canvas>
                   </AnimatedFlex>

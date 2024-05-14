@@ -16,8 +16,8 @@ import { OSDynamicCloudIcon, PaperStack } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { isAndroid } from 'uniswap/src/utils/platform'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   PendingAccountActions,
   pendingAccountActions,

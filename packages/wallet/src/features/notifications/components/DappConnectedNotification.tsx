@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { Image } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
-import { DappConnectedNotification } from 'wallet/src/features/notifications/types'
+import { DappConnectedNotification as DappConnectedNotificationType } from 'wallet/src/features/notifications/types'
 
 export function DappConnectedNotification({
   notification: { hideDelay = 2000, dappIconUrl },
 }: {
-  notification: DappConnectedNotification
+  notification: DappConnectedNotificationType
 }): JSX.Element | null {
   const { t } = useTranslation()
 

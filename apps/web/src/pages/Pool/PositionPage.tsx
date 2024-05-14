@@ -4,7 +4,7 @@ import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, Trace } from 'analytics'
+import { Trace, sendAnalyticsEvent } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
@@ -12,12 +12,12 @@ import { AutoColumn } from 'components/Column'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
-import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { Dots } from 'components/swap/styled'
 import {
-  chainIdToBackendChain,
   SupportedInterfaceChainId,
+  chainIdToBackendChain,
   useIsSupportedChainId,
   useSupportedChainId,
 } from 'constants/chains'
@@ -29,7 +29,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
@@ -43,6 +43,7 @@ import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { useChainId } from 'wagmi'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { Text } from 'ui/src'
@@ -378,7 +379,7 @@ export function PositionPageUnsupportedContent() {
 }
 
 export default function PositionPage() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   if (isSupportedChain) {
     return <PositionPageContent />

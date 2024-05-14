@@ -6,7 +6,8 @@ import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import {
   currencyIdToAddress,

@@ -17,6 +17,7 @@ import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { Text } from 'ui/src'
@@ -51,7 +52,7 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function RemoveLiquidityWrapper() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]

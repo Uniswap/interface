@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
-import { useConnectionReady } from 'connection/eagerlyConnect'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
@@ -15,6 +14,8 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
+import { useAccount } from 'wagmi'
 import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
 import {
   CurrencyState,
@@ -143,11 +144,15 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     [inputCurrency, isExactIn, outputCurrency, typedValue]
   )
 
-  const trade = useDebouncedTrade(
+  const trade: {
+    state: TradeState
+    trade?: InterfaceTrade
+    swapQuoteLatency?: number
+  } = useDebouncedTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
-    undefined,
+    state.routerPreferenceOverride as RouterPreference.API | undefined,
     account
   )
 
@@ -193,12 +198,12 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const insufficientGas =
     isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
-  const connectionReady = useConnectionReady()
+  const { isDisconnected } = useAccount()
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account) {
-      inputError = connectionReady ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
+      inputError = isDisconnected ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -228,7 +233,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     currencyBalances,
     trade?.trade,
     allowedSlippage,
-    connectionReady,
+    isDisconnected,
     insufficientGas,
     nativeCurrency.symbol,
   ])

@@ -45,14 +45,14 @@ import {
   getSentryTracesSamplingRate,
   getStatsigEnvironmentTier,
 } from 'src/utils/version'
-import { StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { WALLET_EXPERIMENTS } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
+import { Statsig, StatsigProvider } from 'uniswap/src/features/gating/sdk/statsig'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -138,6 +138,7 @@ function App(): JSX.Element | null {
       api: uniswapUrls.statsigProxyUrl,
       disableAutoMetricsLogging: true,
       disableErrorLogging: true,
+      initCompletionCallback: loadStatsigOverrides,
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
     user: deviceId ? { userID: deviceId } : {},

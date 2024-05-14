@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useMemo } from 'react'
@@ -10,6 +9,7 @@ import { TradeFillType } from 'state/routing/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
+import { useAccount } from 'wagmi'
 import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
@@ -19,36 +19,34 @@ export function useTransactionAdder(): (
   info: TransactionInfo,
   deadline?: number
 ) => void {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
-      if (!account) return
-      if (!chainId) return
+      if (account.status !== 'connected') return
 
       const { hash, nonce } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, info, chainId, nonce, deadline }))
+      dispatch(addTransaction({ hash, from: account.address, info, chainId: account.chainId, nonce, deadline }))
     },
-    [account, chainId, dispatch]
+    [account.address, account.chainId, account.status, dispatch]
   )
 }
 
 export function useTransactionRemover() {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   return useCallback(
     (hash: string) => {
-      if (!account) return
-      if (!chainId) return
+      if (account.status !== 'connected') return
 
-      dispatch(removeTransaction({ hash, chainId }))
+      dispatch(removeTransaction({ hash, chainId: account.chainId }))
     },
-    [account, chainId, dispatch]
+    [account.chainId, account.status, dispatch]
   )
 }
 
@@ -74,11 +72,11 @@ export function useMultichainTransactions(): [TransactionDetails, SupportedInter
 
 // returns all the transactions for the current chain
 function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   const state = useAppSelector((state) => state.transactions)
 
-  return chainId ? state[chainId] ?? {} : {}
+  return account.status === 'connected' ? state[account.chainId] ?? {} : {}
 }
 
 export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
@@ -153,10 +151,10 @@ export function isPendingTx(tx: TransactionDetails): boolean {
 
 export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   return useMemo(
-    () => Object.values(allTransactions).filter((tx) => tx.from === account && isPendingTx(tx)),
-    [account, allTransactions]
+    () => Object.values(allTransactions).filter((tx) => tx.from === account.address && isPendingTx(tx)),
+    [account.address, allTransactions]
   )
 }

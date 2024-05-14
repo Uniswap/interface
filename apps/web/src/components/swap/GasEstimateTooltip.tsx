@@ -1,5 +1,4 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -12,6 +11,7 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
@@ -25,7 +25,7 @@ const StyledGasIcon = styled(Gas)`
 `
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { formatNumber } = useFormatter()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {

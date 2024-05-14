@@ -22,11 +22,11 @@ import {
 } from 'ui/src'
 import { Plus } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   createAccountActions,

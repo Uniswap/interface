@@ -4,9 +4,12 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
-import { getBalance, getTestSelector } from '../../utils'
+import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
+  // Turn off automine so that intermediate screens are available to assert on.
+  before(() => cy.hardhat({ automine: false }))
+
   it('wallet rejection', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat().then((hardhat) => {
@@ -30,7 +33,6 @@ describe('Swap errors', () => {
 
   it('transaction past deadline', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
-    cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Enter amount to swap
       cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
@@ -45,7 +47,7 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('web3-status-connected')).should('contain', '1 Pending')
 
       // Mine transaction
-      cy.hardhat().then(async (hardhat) => {
+      cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
         // Remove the transaction from the mempool, so that it doesn't fail but it is past the deadline.
         // This should result in it being removed from pending transactions, without a failure notificiation.
         const transactions = await hardhat.send('eth_pendingTransactions', [])
@@ -64,9 +66,12 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.hardhat({ automine: false }).then(async (hardhat) => {
+    cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
+    })
+
+    cy.hardhat().then({ timeout: HARDHAT_TIMEOUT }, async (hardhat) => {
       await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDC_MAINNET })
       await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDC_MAINNET })
       await hardhat.mine()

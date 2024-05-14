@@ -9,10 +9,11 @@ import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
+import { ChainId } from 'uniswap/src/types/chains'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
-import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
@@ -43,7 +44,6 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
@@ -264,7 +264,8 @@ function useSwapTransactionRequest(
       !tokenApprovalInfo ||
       (!simulatedGasLimit && simulatedGasLimitLoading) ||
       permit2InfoLoading ||
-      !trade
+      !trade ||
+      isNaN(trade.slippageTolerance)
     ) {
       return { transactionRequest: undefined }
     }

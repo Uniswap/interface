@@ -12,10 +12,10 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { ChainId } from 'wallet/src/constants/chains'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
 import {
