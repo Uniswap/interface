@@ -5,6 +5,7 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/h
 import Loader from 'components/Icons/LoadingSpinner'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components/text'
 
 import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
@@ -17,7 +18,6 @@ import { RowBetween, RowFixed } from '../../components/Row'
 import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useAllPoolsData } from '../../state/pool/hooks'
-import { ThemedText } from 'theme/components/text'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

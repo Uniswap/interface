@@ -6,6 +6,7 @@ import { darken } from 'polished'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components/text'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
@@ -13,7 +14,6 @@ import { GRG } from '../../constants/tokens'
 //import { useTokenBalance } from '../../state/connection/hooks'
 import { useCreateCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { ThemedText } from 'theme/components/text'
 import { ButtonGray, ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../Logo/CurrencyLogo'
@@ -61,8 +61,7 @@ const CurrencySelect = styled(ButtonGray)<{
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) =>
-      selected ? theme.surface2 : darken(0.05, theme.accent1)};
+    background-color: ${({ selected, theme }) => (selected ? theme.surface2 : darken(0.05, theme.accent1))};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `

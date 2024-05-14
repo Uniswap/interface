@@ -10,6 +10,7 @@ import JSBI from 'jsbi'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components/text'
 
 import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
@@ -24,7 +25,6 @@ import { RowBetween, RowFixed } from '../../components/Row'
 import { Center } from '../../nft/components/Flex'
 import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from '../../state/pool/hooks'
 import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from '../../state/stake/hooks'
-import { ThemedText } from 'theme/components/text'
 //import { PoolPositionDetails } from '../../types/position'
 
 //export interface PoolEventResponse {

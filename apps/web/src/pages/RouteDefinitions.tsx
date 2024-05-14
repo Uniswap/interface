@@ -9,7 +9,9 @@ import { isBrowserRouterEnabled } from 'utils/env'
 import { getDefaultTokensTitle } from './getDefaultTokensTitle'
 import { getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
+import CreatePool from './CreatePool'
 import Landing from './Landing'
+import Stake from './Stake'
 import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -27,6 +29,7 @@ const PositionPage = lazy(() => import('pages/Pool/PositionPage'))
 const PoolV2 = lazy(() => import('pages/Pool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
+const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
@@ -294,6 +297,29 @@ export const routes: RouteDefinition[] = [
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
     getTitle: () => t`Explore NFTs on Uniswap`,
+  }),
+  createRouteDefinition({
+    path: '/mint',
+    getElement: () => <CreatePool />,
+    getTitle: () => t`Buy smart pools on Rigoblock`,
+  }),
+  createRouteDefinition({
+    path: '/stake',
+    getElement: () => <Stake />,
+    getTitle: () => t`Find the best pools on Rigoblock`,
+  }),
+  createRouteDefinition({
+    path: '/smart-pool',
+    nestedPaths: [
+      ':poolAddress',
+      ':poolAddress/:returnPage',
+      ':poolAddress/:returnPage/:poolStake',
+      ':poolAddress/:returnPage/:poolStake/:apr',
+      ':poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake',
+      ':poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake/:irr',
+    ],
+    getElement: () => <PoolPositionPage />,
+    getTitle: () => t`Provide liquidity to pools on Uniswap`,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

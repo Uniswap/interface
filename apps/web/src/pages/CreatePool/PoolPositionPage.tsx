@@ -227,7 +227,7 @@ function AddressCard({
   )
 }
 
-export function PoolPositionPage() {
+export default function PoolPositionPage() {
   const {
     poolAddress: poolAddressFromUrl,
     returnPage: originFromUrl,
