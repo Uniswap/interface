@@ -722,10 +722,10 @@ function PositionPageContent() {
                   <StyledPoolLink
                     to={
                       poolAddress
-                        ? getPoolDetailsURL(
-                            poolAddress,
-                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
-                          )
+                        ? getPoolDetailsURL({
+                            address: poolAddress,
+                            chain: chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+                          })
                         : ''
                     }
                   >

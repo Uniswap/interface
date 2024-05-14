@@ -15,8 +15,8 @@ export function isAppRigoblockStagingCom({ hostname }: { hostname: string }): bo
 export function isBrowserRouterEnabled(): boolean {
   if (isProdEnv()) {
     if (
-      isAppUniswapOrg(window.location) ||
-      isAppUniswapStagingOrg(window.location) ||
+      isAppRigoblockCom(window.location) ||
+      isAppRigoblockStagingCom(window.location) ||
       isLocalhost(window.location) // cypress tests
     ) {
       return true

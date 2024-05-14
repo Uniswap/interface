@@ -2,7 +2,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader from 'components/Icons/LoadingSpinner'
 import { GRG } from 'constants/tokens'
 import { Trans } from 'i18n'
@@ -61,8 +61,8 @@ const TopSection = styled(AutoColumn)`
 //`
 
 const MainContentWrapper = styled.main`
-  background-color: ${({ theme }) => theme.deprecated_bg1};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
   padding: 0;
   border-radius: 16px;
   display: flex;

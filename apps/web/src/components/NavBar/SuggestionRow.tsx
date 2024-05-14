@@ -109,7 +109,7 @@ export const SuggestionRow = ({
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
   const warning = useTokenWarning(
-    isPool? undefined : isToken ? suggestion.address : undefined,
+    isPool ? undefined : isToken ? suggestion.address : undefined,
     isToken ? supportedChainIdFromGQLChain(suggestion.chain) : ChainId.MAINNET
   )
 
@@ -127,7 +127,9 @@ export const SuggestionRow = ({
 
   const path = isPool
     ? getPoolDetailsURL({ address: suggestion.address, chain: suggestion.chain })
-    : isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
+    : isToken
+      ? getTokenDetailsURL({ ...suggestion })
+      : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

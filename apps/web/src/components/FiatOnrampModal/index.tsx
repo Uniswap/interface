@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
-import { useHref } from 'react-router-dom'
+//import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
@@ -10,8 +10,8 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
-import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
-import { getDefaultCurrencyCode, parsePathParts } from './utils'
+//import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
+//import { getDefaultCurrencyCode, parsePathParts } from './utils'
 
 const MOONPAY_DARK_BACKGROUND = '#054186'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -59,7 +59,7 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
-const MoonpayTextWrapper = styled.div`
+/*const MoonpayTextWrapper = styled.div`
   position: absolute;
   bottom: 20px;
   margin: auto;
@@ -67,7 +67,7 @@ const MoonpayTextWrapper = styled.div`
   right: 0;
   width: 100%;
   text-align: center;
-`
+`*/
 
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
@@ -76,13 +76,13 @@ export default function FiatOnrampModal() {
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
-  const { chain, tokenAddress } = parsePathParts(location.pathname)
+  //const { chain, tokenAddress } = parsePathParts(location.pathname)
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const swapUrl = useHref('/swap')
+  //const swapUrl = useHref('/swap')
 
   const fetchSignedIframeUrl = useCallback(async () => {
     if (!account) {

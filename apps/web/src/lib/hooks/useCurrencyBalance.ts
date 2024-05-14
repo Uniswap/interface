@@ -1,15 +1,14 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { nativeOnChain } from 'constants/tokens'
+import { useInterfaceMulticall, useTokenContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-
 import { isAddress } from 'utilities/src/addresses'
-import { nativeOnChain } from '../../constants/tokens'
-import { useInterfaceMulticall } from '../../hooks/useContract'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.

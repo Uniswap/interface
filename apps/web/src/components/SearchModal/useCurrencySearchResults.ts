@@ -210,6 +210,8 @@ export function useCurrencySearchResults({
     sortedPopularTokens,
     filters?.onlyShowCurrenciesWithBalance,
     filters?.disableNonToken,
+    filters?.onlyDisplaySmartPools,
+    operatedPools,
     selectedCurrency,
     otherSelectedCurrency,
   ])

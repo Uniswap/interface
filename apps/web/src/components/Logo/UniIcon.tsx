@@ -1,3 +1,4 @@
+import { GrgIcon } from 'nft/components/icons'
 import styled from 'styled-components'
 
 import HolidayUniIcon from './HolidayUniIcon'
@@ -13,7 +14,7 @@ export type SVGProps = React.SVGProps<SVGSVGElement> & {
 
 export const UniIcon = ({ clickable, ...props }: SVGProps) => (
   <Container clickable={clickable}>
-    {HolidayUniIcon(props) !== null ? (
+    {/*{HolidayUniIcon(props) !== null ? (
       <HolidayUniIcon {...props} />
     ) : (
       <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +25,8 @@ export const UniIcon = ({ clickable, ...props }: SVGProps) => (
           fill="currentColor"
         />
       </svg>
-    )}
+    )}*/}
+    <GrgIcon />
   </Container>
 )
 

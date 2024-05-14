@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Trans } from 'i18n'
@@ -33,7 +34,6 @@ import {
   COMMON_CONTRACT_NAMES,
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from '../../constants/governance'
-import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
 import {
   useModalIsOpen,

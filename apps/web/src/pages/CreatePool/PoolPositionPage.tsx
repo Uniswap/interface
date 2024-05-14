@@ -151,7 +151,7 @@ const IconContainer = styled.div`
 `
 
 //const DoubleArrow = styled.span`
-//  color: ${({ theme }) => theme.textTertiary};
+//  color: ${({ theme }) => theme.neutral2};
 //  margin: 0 1rem;
 //`
 

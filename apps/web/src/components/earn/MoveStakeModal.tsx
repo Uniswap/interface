@@ -1,22 +1,22 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
+import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from '../../components/vote/DelegateModal'
-import { ZERO_ADDRESS } from '../../constants/misc'
 import { GRG } from '../../constants/tokens'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
 import {
   StakeData,
   useDeactivateStakeCallback,
@@ -242,9 +242,9 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
             </ButtonPrimary>
             {isDeactivate && poolInfo?.owner === account && (
               <TextButton onClick={() => setIsPoolMoving(!isPoolMoving)}>
-                <ThemedText.DeprecatedBlue>
+                <ThemedText.DeprecatedMediumHeader>
                   {isPoolMoving ? <Trans>Deactivate Stake</Trans> : <Trans>Deactivate Pool Stake</Trans>}
-                </ThemedText.DeprecatedBlue>
+                </ThemedText.DeprecatedMediumHeader>
               </TextButton>
             )}
           </AutoColumn>

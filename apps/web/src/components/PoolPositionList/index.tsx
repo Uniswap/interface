@@ -2,7 +2,6 @@ import { Interface } from '@ethersproject/abi'
 import { useWeb3React } from '@web3-react/core'
 import PoolPositionListItem from 'components/PoolPositionListItem'
 import { RowFixed } from 'components/Row'
-import { InfoIconContainer } from 'components/Tokens/TokenTable/TokenRow'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
@@ -19,7 +18,7 @@ const DesktopHeader = styled.div`
   font-size: 14px;
   font-weight: 500;
   padding: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     align-items: center;
@@ -41,7 +40,7 @@ const MobileHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.surface3};
 
   @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     display: none;
@@ -52,6 +51,13 @@ const MobileHeader = styled.div`
     flex-direction: row;
     justify-content: space-between;
   }
+`
+
+const InfoIconContainer = styled.div`
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+  cursor: help;
 `
 
 type PoolPositionListProps = React.PropsWithChildren<{

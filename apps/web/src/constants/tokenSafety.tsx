@@ -98,8 +98,6 @@ export const BlockedWarning: Warning = {
 export function useTokenWarning(tokenAddress?: string, chainId?: ChainId | number): Warning | undefined {
   const currencyInfo = useCurrencyInfo(tokenAddress, chainId)
   switch (currencyInfo?.safetyLevel) {
-    case TOKEN_LIST_TYPES.RB_DEFAULT:
-      return undefined
     case SafetyLevel.MediumWarning:
       return MediumWarning
     case SafetyLevel.StrongWarning:

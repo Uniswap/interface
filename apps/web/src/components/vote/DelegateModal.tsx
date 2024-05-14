@@ -5,6 +5,7 @@ import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
+import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -18,7 +19,6 @@ import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { PoolInfo /*,useDerivedPoolInfo*/ } from '../../state/buy/hooks'
 import { useTokenBalance } from '../../state/connection/hooks'
 import {
   useDelegateCallback,
@@ -267,9 +267,9 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
             </ButtonPrimary>
             {poolInfo?.owner === account && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-                <ThemedText.DeprecatedBlue>
+                <ThemedText.DeprecatedMediumHeader>
                   {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
-                </ThemedText.DeprecatedBlue>
+                </ThemedText.DeprecatedMediumHeader>
               </TextButton>
             )}
           </AutoColumn>

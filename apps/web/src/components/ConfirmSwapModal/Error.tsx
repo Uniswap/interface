@@ -88,8 +88,8 @@ function getErrorContent({
         title: <Trans>Token not whitelisted</Trans>,
         message: (
           <Trans>
-            Rigoblock provides an extra security feature that allows only whitelisted tokens to be swapped. Request
-            the addition of a new token.
+            Rigoblock provides an extra security feature that allows only whitelisted tokens to be swapped. Request the
+            addition of a new token.
           </Trans>
         ),
         supportArticleURL: SupportArticleURL.TOKEN_ADDITION_FORM,

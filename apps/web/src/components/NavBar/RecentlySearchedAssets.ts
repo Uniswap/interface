@@ -93,14 +93,14 @@ export function useRecentlySearchedAssets() {
       [queryCollections]
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
-    queryData.tokens?.filter(Boolean).forEach((token) => {
+    queryData?.tokens?.filter(Boolean).forEach((token) => {
       if (token) {
         resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
       }
     })
 
     const data: (SearchToken | GenieCollection)[] = []
-    shortenedHistory.forEach((asset) => {
+    shortenedHistory.forEach((asset, i) => {
       if (asset.address === NATIVE_CHAIN_ID) {
         // Handles special case where wMATIC data needs to be used for MATIC
         const chain = supportedChainIdFromGQLChain(asset.chain)
@@ -114,11 +114,13 @@ export function useRecentlySearchedAssets() {
         const native = nativeOnChain(chain)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
+        if (result) data.push({ ...result, address: NATIVE_CHAIN_ID, ...native })
       } else if (!asset.isPool) {
         const result = resultsMap[asset.address]
         if (result) data.push(result)
       } else {
         const result = pools[i]
+        // TODO: check why we do not store result for pool and console log instead
         //data.push(result)
         console.log(result, asset.address)
       }

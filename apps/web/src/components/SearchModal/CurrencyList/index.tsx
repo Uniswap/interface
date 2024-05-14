@@ -348,7 +348,6 @@ export default function CurrencyList({
           <CurrencyRow
             style={style}
             currency={currency}
-            isSelected={isSelected}
             isSmartPool={isSmartPool}
             onSelect={handleSelect}
             otherSelected={otherSelected}

@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
@@ -7,7 +8,6 @@ import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { GrgIcon } from 'nft/components/icons'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
@@ -16,9 +16,9 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import styled from 'styled-components'
 
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
+//import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+//import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
@@ -58,9 +58,9 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-  const { chainId: connectedChainId } = useWeb3React()
-  const supportedChain = useSupportedChainId(connectedChainId)
-  const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+  //const { chainId: connectedChainId } = useWeb3React()
+  //const supportedChain = useSupportedChainId(connectedChainId)
+  //const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()
@@ -76,8 +76,11 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       {/*
-      <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
-        <Trans>Tokens</Trans>
+      <MenuItem
+        href={'/explore' + (chainName !== Chain.Ethereum ? `/${chainName.toLowerCase()}` : '')}
+        isActive={pathname.startsWith('/explore')}
+      >
+        <Trans>Explore</Trans>
       </MenuItem>
       */}
       {!shouldDisableNFTRoutes && (
@@ -102,11 +105,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
   const sellPageState = useProfilePageState((state) => state.state)
+  const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   const { account } = useWeb3React()
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
-  const handleUniIconClick = useCallback(() => {
+  const handleGrgIconClick = useCallback(() => {
     if (account) {
       return
     }
@@ -126,7 +130,14 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box as="a" href="#/mint" className={styles.logoContainer}>
-              <GrgIcon width="48" height="48" className={styles.logo} />
+              <UniIcon
+                width="48"
+                height="48"
+                data-testid="rigoblock.logo"
+                className={styles.logo}
+                clickable={!account}
+                onClick={handleGrgIconClick}
+              />
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

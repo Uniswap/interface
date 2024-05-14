@@ -19,6 +19,7 @@ import { sendAnalyticsEvent } from 'analytics'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useEffect, useMemo } from 'react'
+import AUNISWAP_ABI from 'uniswap/src/abis/aUniswap.json'
 import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
 import EIP_2612 from 'uniswap/src/abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'uniswap/src/abis/ens-public-resolver.json'
@@ -28,6 +29,7 @@ import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import {
+  AUniswap,
   ArgentWalletDetector,
   EnsPublicResolver,
   EnsRegistrar,

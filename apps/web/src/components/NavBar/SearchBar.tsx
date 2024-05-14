@@ -5,7 +5,9 @@ import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { Search } from 'components/Icons/Search'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { chainIdToBackendChain } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -22,6 +24,7 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useSt
 import { useLocation } from 'react-router-dom'
 import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { useTranslation } from 'i18n'
 import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
@@ -92,7 +95,7 @@ export const SearchBar = () => {
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
-  const chain = chainId ? chainIdToBackendName(chainId) : undefined
+  const chain = chainIdToBackendChain({ chainId })
   // TODO: check using a different struct for pools
   const searchPools: SearchToken[] | undefined = useMemo(() => {
     if (!chain) return

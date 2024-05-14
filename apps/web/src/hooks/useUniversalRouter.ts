@@ -170,7 +170,6 @@ export function useUniversalRouterSwapCallback(
       trade,
       getDeadline,
       options.slippageTolerance,
-      options.permit,
       options.feeOptions,
       options.smartPoolAddress,
       fiatValues,
