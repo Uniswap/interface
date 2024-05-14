@@ -5,7 +5,7 @@ import { Trans } from 'i18n'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UbeTokenAnimated } from 'theme/components'
 import { shortenAddress } from 'utilities/src/addresses'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -154,7 +154,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size="90px" />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
+              <UbeTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify="center">

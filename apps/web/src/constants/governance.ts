@@ -4,12 +4,12 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
   TIMELOCK_ADDRESSES,
-  UNI_ADDRESSES,
+  UBE_ADDRESSES,
 } from '@ubeswap/sdk-core'
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
   [ChainId.MAINNET]: {
-    [UNI_ADDRESSES[ChainId.MAINNET]]: 'UNI',
+    [UBE_ADDRESSES[ChainId.CELO]]: 'UBE',
     [TIMELOCK_ADDRESSES[ChainId.MAINNET]]: 'Timelock',
     [GOVERNANCE_ALPHA_V0_ADDRESSES[ChainId.MAINNET]]: 'Governance (V0)',
     [GOVERNANCE_ALPHA_V1_ADDRESSES[ChainId.MAINNET]]: 'Governance (V1)',

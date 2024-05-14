@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 
-import { DAI, UNI, USDC_MAINNET } from '../constants/tokens'
+import { DAI, UBE, USDC_MAINNET } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
 
@@ -34,13 +34,12 @@ const PERMITTABLE_TOKENS: {
   [ChainId.MAINNET]: {
     [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [ChainId.GOERLI]: {
-    [UNI[ChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.CELO]: {
+    [UBE[ChainId.CELO].address]: { type: PermitType.AMOUNT, name: 'Ubeswap' },
   },
-  [ChainId.SEPOLIA]: {
-    [UNI[ChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [ChainId.CELO_ALFAJORES]: {
+    [UBE[ChainId.CELO_ALFAJORES].address]: { type: PermitType.AMOUNT, name: 'Ubeswap' },
   },
 }
 

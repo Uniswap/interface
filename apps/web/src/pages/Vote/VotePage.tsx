@@ -34,7 +34,7 @@ import {
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
+import { UBE } from '../../constants/tokens'
 import {
   useModalIsOpen,
   useToggleDelegateModal,
@@ -246,7 +246,7 @@ export default function VotePage() {
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    chainId ? UBE[chainId] : undefined
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 

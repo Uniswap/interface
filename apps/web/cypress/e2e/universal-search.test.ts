@@ -1,9 +1,9 @@
 import { ChainId } from '@ubeswap/sdk-core'
-import { UNI } from 'constants/tokens'
+import { UBE } from 'constants/tokens'
 
 import { getTestSelector } from '../utils'
 
-const UNI_ADDRESS = UNI[ChainId.MAINNET].address.toLowerCase()
+const UBE_ADDRESS = UBE[ChainId.CELO].address.toLowerCase()
 
 describe('Universal search bar', () => {
   function openSearch() {
@@ -20,22 +20,22 @@ describe('Universal search bar', () => {
   }
 
   it('should yield clickable result that is then added to recent searches', () => {
-    // Search for UNI token by name.
+    // Search for UBE token by name.
     openSearch()
-    getSearchBar().clear().type('uni')
+    getSearchBar().clear().type('ube')
 
-    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
-      .should('contain.text', 'Uniswap')
-      .and('contain.text', 'UNI')
+    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UBE_ADDRESS}`))
+      .should('contain.text', 'Ubeswap')
+      .and('contain.text', 'UBE')
       .and('contain.text', '$')
       .and('contain.text', '%')
       .click()
-    cy.location('pathname').should('equal', '/explore/tokens/ethereum/0x1f9840a85d5af5bf1d1762f925bdaddc4201f984')
+    cy.location('pathname').should('equal', '/explore/tokens/celo/0x71e26d0E519D14591b9dE9a0fE9513A398101490')
 
     openSearch()
     cy.get(getTestSelector('searchbar-dropdown'))
       .contains(getTestSelector('searchbar-dropdown'), 'Recent searches')
-      .find(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
+      .find(getTestSelector(`searchbar-token-row-ETHEREUM-${UBE_ADDRESS}`))
       .should('exist')
   })
 
@@ -53,10 +53,10 @@ describe('Universal search bar', () => {
       },
     },
     () => {
-      // Seed recent results with UNI.
+      // Seed recent results with UBE.
       openSearch()
-      getSearchBar().type('uni')
-      cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
+      getSearchBar().type('ube')
+      cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UBE_ADDRESS}`))
       getSearchBar().clear().type('{esc}')
 
       // Search a different token by name.
@@ -66,7 +66,7 @@ describe('Universal search bar', () => {
 
       // Validate that we go to the searched/selected result.
       cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE')).click()
-      cy.url().should('contain', '/explore/tokens/ethereum/NATIVE')
+      cy.url().should('contain', '/explore/tokens/celo/NATIVE')
     }
   )
 })

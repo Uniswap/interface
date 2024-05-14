@@ -22,9 +22,10 @@ function constructSameAddressMap(address: string, additionalNetworks: ChainId[] 
   }, {})
 }
 
-export const UNI_ADDRESSES: AddressMap = constructSameAddressMap('0x71e26d0E519D14591b9dE9a0fE9513A398101490', [
-  ChainId.CELO,
-])
+export const UBE_ADDRESSES: AddressMap = {
+  [ChainId.CELO]: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
+  [ChainId.CELO_ALFAJORES]: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
+}
 
 /**
  * @deprecated use V2_FACTORY_ADDRESSES instead

@@ -33,7 +33,7 @@ import {
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
 } from '../../constants/proposals'
-import { UNI } from '../../constants/tokens'
+import { UBE } from '../../constants/tokens'
 import { useLogs } from '../logs/hooks'
 import { useTransactionAdder } from '../transactions/hooks'
 import { TransactionType } from '../transactions/types'
@@ -55,7 +55,7 @@ const useLatestGovernanceContract = useGovernanceBravoContract
 
 function useUniContract() {
   const { chainId } = useWeb3React()
-  const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
+  const uniAddress = useMemo(() => (chainId ? UBE[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
 
@@ -264,7 +264,7 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov1, gov1ProposalIndexes, 12686656, 13059343)
   const formattedLogsV2 = useFormattedProposalCreatedLogs(gov2, gov2ProposalIndexes, 13538153)
 
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const uni = useMemo(() => (chainId ? UBE[chainId] : undefined), [chainId])
 
   // early return until events are fetched
   return useMemo(() => {
@@ -340,7 +340,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
   const { chainId } = useWeb3React()
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const uni = useMemo(() => (chainId ? UBE[chainId] : undefined), [chainId])
 
   if (
     !latestGovernanceContract ||
@@ -370,7 +370,7 @@ export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token
   // check for available votes
   const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])
   return useMemo(() => {
-    const uni = chainId ? UNI[chainId] : undefined
+    const uni = chainId ? UBE[chainId] : undefined
     return { loading, votes: uni && result ? CurrencyAmount.fromRawAmount(uni, result?.[0]) : undefined }
   }, [chainId, loading, result])
 }
@@ -381,7 +381,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   const uniContract = useUniContract()
 
   // check for available votes
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const uni = useMemo(() => (chainId ? UBE[chainId] : undefined), [chainId])
   const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
     ?.result?.[0]
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
@@ -542,7 +542,7 @@ export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
+  const uni = useMemo(() => (chainId ? UBE[chainId] : undefined), [chainId])
 
   if (res?.result?.[0] && uni) {
     return CurrencyAmount.fromRawAmount(uni, res.result[0])

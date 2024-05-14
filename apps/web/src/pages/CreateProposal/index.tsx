@@ -27,7 +27,7 @@ import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
-import { UNI } from '../../constants/tokens'
+import { UBE } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
 import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
@@ -130,7 +130,7 @@ export default function CreateProposal() {
   const [attempting, setAttempting] = useState(false)
   const [proposalAction, setProposalAction] = useState(ProposalAction.TRANSFER_TOKEN)
   const [toAddressValue, setToAddressValue] = useState('')
-  const [currencyValue, setCurrencyValue] = useState<Currency>(UNI[chainId ?? 1])
+  const [currencyValue, setCurrencyValue] = useState<Currency>(UBE[chainId ?? 1])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')

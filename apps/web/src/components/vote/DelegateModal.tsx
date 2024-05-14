@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { UNI } from '../../constants/tokens'
+import { UBE } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { useDelegateCallback } from '../../state/governance/hooks'
@@ -57,7 +57,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // get the number of votes available to delegate
-  const uniBalance = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const uniBalance = useTokenBalance(account ?? undefined, chainId ? UBE[chainId] : undefined)
 
   const delegateCallback = useDelegateCallback()
 
