@@ -163,8 +163,8 @@ async function parseMigrateCreateV3(
   chainId: SupportedInterfaceChainId
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
-    getCurrency(lp.baseCurrencyId, chainId),
-    getCurrency(lp.quoteCurrencyId, chainId),
+    getCurrency(lp.baseCurrencyId ?? 'native', chainId),
+    getCurrency(lp.quoteCurrencyId ?? 'native', chainId),
   ])
   const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
   const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
