@@ -1,21 +1,19 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { parseUnits } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
-//import JSBI from 'jsbi'
-import { ReactNode, useState } from 'react'
+import JSBI from 'jsbi'
+import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { GRG } from '../../constants/tokens'
-import { useHarvestCallback } from '../../state/stake/hooks'
+import { useSetLockupCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from 'theme/components/text'
-import { ButtonPrimary } from '../Button'
-import { LightCard } from '../Card'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import NameInputPanel from '../NameInputPanel'
 import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -29,27 +27,27 @@ const StyledClosed = styled(X)`
   }
 `
 
-interface HarvestYieldModalProps {
+interface SetLockupModalProps {
   isOpen: boolean
-  isPool?: boolean
-  poolIds?: string[]
-  yieldAmount?: CurrencyAmount<Token>
+  currentLockup: string
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function HarvestYieldModal({
-  isOpen,
-  isPool,
-  yieldAmount,
-  poolIds,
-  onDismiss,
-  title,
-}: HarvestYieldModalProps) {
-  const { chainId } = useWeb3React()
+export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title }: SetLockupModalProps) {
+  const { account, chainId } = useWeb3React()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
-  const harvestCallback = useHarvestCallback()
+  const [typed, setTyped] = useState('')
+
+  // wrapped onUserInput to clear signatures
+  const onUserInput = useCallback((typed: string) => {
+    const numberRegEx = RegExp(`^[0-9]*$`)
+    if (numberRegEx.test(String(typed))) {
+      setTyped(typed)
+    }
+  }, [])
+
+  const setLockupCallback = useSetLockupCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -59,8 +57,6 @@ export default function HarvestYieldModal({
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
 
-  const [farmAmount, setFarmAmount] = useState<CurrencyAmount<Token>>()
-
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
     setHash(undefined)
@@ -68,14 +64,26 @@ export default function HarvestYieldModal({
     onDismiss()
   }
 
-  async function onHarvest() {
-    // if callback not returned properly ignore
-    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) return
-    setAttempting(true)
-    setFarmAmount(yieldAmount)
+  let parsedLockup = ''
+  try {
+    parsedLockup = (Number(parseUnits(typed, 0)) * 86400).toString()
+  } catch (error) {
+    console.debug(`Failed to parse input amount: "${typed}"`, error)
+  }
 
-    // try delegation and store hash
-    const hash = await harvestCallback(poolIds, isPool)?.catch((error) => {
+  async function onSetLockup() {
+    setAttempting(true)
+
+    // if callback not returned properly ignore
+    if (!account || !chainId || !setLockupCallback || !parsedLockup) return
+
+    // the minimum acceptable value is 2 seconds
+    if (parsedLockup === '0') {
+      parsedLockup = '2'
+    }
+
+    // try set lockup and store hash
+    const hash = await setLockupCallback(parsedLockup)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -84,6 +92,9 @@ export default function HarvestYieldModal({
       setHash(hash)
     }
   }
+
+  const isSameAsCurrent: boolean = (parsedLockup !== '0' ? parsedLockup : '2').toString() === currentLockup
+  const isLockupTooBig: boolean = JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
@@ -94,27 +105,30 @@ export default function HarvestYieldModal({
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <RowBetween>
-              {isPool ? (
-                <Trans>Harvesting your pool&apos;s staker yield.</Trans>
-              ) : (
-                <Trans>Harvesting your staker yield.</Trans>
-              )}
-            </RowBetween>
-            <LightCard>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
-                    <Trans>Harvesting {formatCurrencyAmount(yieldAmount, 4)} GRG</Trans>
-                  </ThemedText.DeprecatedBody>
-                </RowBetween>
-              </AutoColumn>
-            </LightCard>
-            <ButtonPrimary disabled={formatCurrencyAmount(yieldAmount, 4) === '0'} onClick={onHarvest}>
+            <ThemedText.DeprecatedBody>
+              <Trans>The minimum holder lockup.</Trans>
+            </ThemedText.DeprecatedBody>
+            <NameInputPanel
+              value={(typed ? Number(parsedLockup) / 86400 : '').toString()}
+              onChange={onUserInput}
+              label="Lockup (days)"
+              placeholder="max 30 days"
+            />
+            <ButtonError
+              disabled={parsedLockup === '' || isSameAsCurrent || isLockupTooBig}
+              error={isSameAsCurrent || isLockupTooBig}
+              onClick={onSetLockup}
+            >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Harvest</Trans>{' '}
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : isLockupTooBig ? (
+                  <Trans>max lockup 30 days</Trans>
+                ) : (
+                  <Trans>Set Lockup</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}
@@ -122,9 +136,8 @@ export default function HarvestYieldModal({
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Harvesting Yield</Trans>
+              <Trans>Setting New Lockup</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(yieldAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
@@ -136,18 +149,18 @@ export default function HarvestYieldModal({
                 <ThemedText.DeprecatedLargeHeader>
                   <Trans>Transaction Submitted</Trans>
                 </ThemedText.DeprecatedLargeHeader>
-                <ThemedText.DeprecatedMain fontSize={36}>
-                  Claiming {formatCurrencyAmount(farmAmount, 4)} GRG
-                </ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Setting lockup to {(Number(parsedLockup) / 86400).toFixed(0)} days</Trans>
+                </ThemedText.DeprecatedBody>
               </>
             ) : transactionSuccess ? (
               <>
                 <ThemedText.DeprecatedLargeHeader>
                   <Trans>Transaction Success</Trans>
                 </ThemedText.DeprecatedLargeHeader>
-                <ThemedText.DeprecatedMain fontSize={36}>
-                  Claimed {formatCurrencyAmount(farmAmount, 4)} GRG
-                </ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Lockup set to {(Number(parsedLockup) / 86400).toFixed(0)} days</Trans>
+                </ThemedText.DeprecatedBody>
               </>
             ) : (
               <ThemedText.DeprecatedLargeHeader>

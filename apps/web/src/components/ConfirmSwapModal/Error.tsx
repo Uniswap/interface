@@ -17,6 +17,7 @@ export enum PendingModalError {
   PERMIT_ERROR,
   CONFIRMATION_ERROR,
   WRAP_ERROR,
+  TOKEN_WHITELIST_ERROR,
 }
 
 interface ErrorModalContentProps {
@@ -81,6 +82,17 @@ function getErrorContent({
           </Trans>
         ),
         supportArticleURL: SupportArticleURL.WETH_EXPLAINER,
+      }
+    case PendingModalError.TOKEN_WHITELIST_ERROR:
+      return {
+        title: <Trans>Token not whitelisted</Trans>,
+        message: (
+          <Trans>
+            Rigoblock provides an extra security feature that allows only whitelisted tokens to be swapped. Request
+            the addition of a new token.
+          </Trans>
+        ),
+        supportArticleURL: SupportArticleURL.TOKEN_ADDITION_FORM,
       }
     default:
       return {

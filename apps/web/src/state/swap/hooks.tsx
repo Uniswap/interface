@@ -7,9 +7,11 @@ import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
+import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { usePoolExtendedContract } from 'state/pool/hooks'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
@@ -288,4 +290,14 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
     inputCurrencyId: inputCurrency === '' ? undefined : inputCurrency ?? undefined,
     outputCurrencyId: outputCurrency === '' ? undefined : outputCurrency ?? undefined,
   }
+}
+
+export function useIsWhitelistedToken(poolAddress?: string, token?: Currency): boolean | undefined {
+  const contract = usePoolExtendedContract(poolAddress)
+
+  const isWhitelistedToken: boolean | undefined = useSingleCallResult(contract, 'isWhitelistedToken', [
+    token?.isToken ? token.address : undefined,
+  ])?.result?.[0]
+
+  return useMemo(() => (token?.isToken ? isWhitelistedToken : true), [token, isWhitelistedToken])
 }

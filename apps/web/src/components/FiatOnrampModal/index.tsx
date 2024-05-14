@@ -101,7 +101,7 @@ export default function FiatOnrampModal() {
       //  method: 'POST',
       //  body: JSON.stringify({
       //    theme: isDarkMode ? 'dark' : 'light',
-      //    colorCode: theme.accentAction,
+      //    colorCode: theme.accent1,
       //    defaultCurrencyCode: 'eth',
       //    redirectUrl: 'https://app.rigoblock.com/#/swap',
       //    walletAddresses: JSON.stringify(
@@ -132,7 +132,7 @@ export default function FiatOnrampModal() {
     } finally {
       setLoading(false)
     }
-  }, [account, isDarkMode, /*theme.accentAction,*/ theme.white])
+  }, [account, isDarkMode, /*theme.accent1,*/ theme.white])
 
   useEffect(() => {
     fetchSignedIframeUrl()

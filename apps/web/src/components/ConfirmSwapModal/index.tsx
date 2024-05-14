@@ -49,6 +49,7 @@ export function ConfirmSwapModal({
   trade,
   originalTrade,
   inputCurrency,
+  selectedPool,
   allowance,
   allowedSlippage,
   fiatValueInput,
@@ -65,7 +66,8 @@ export function ConfirmSwapModal({
   trade: InterfaceTrade
   originalTrade?: InterfaceTrade
   inputCurrency?: Currency
-  allowance: Allowance
+  selectedPool?: Currency
+  allowance?: Allowance
   allowedSlippage: Percent
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
@@ -84,6 +86,7 @@ export function ConfirmSwapModal({
     priceUpdate,
     doesTradeDiffer,
     approvalError,
+    tokenError,
     wrapTxHash,
     startSwapFlow,
     onCancel,
@@ -92,6 +95,7 @@ export function ConfirmSwapModal({
     originalTrade,
     allowance,
     allowedSlippage,
+    selectedPool,
     onCurrencySelection,
     onSwap: () => {
       clearSwapState()
@@ -116,10 +120,11 @@ export function ConfirmSwapModal({
   const swapFailed = localSwapFailure || swapReverted
   const errorType = useMemo(() => {
     if (approvalError) return approvalError
+    if (tokenError) return tokenError
     if (swapError instanceof SignatureExpiredError) return
     if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
     return
-  }, [approvalError, swapError])
+  }, [approvalError, swapError, tokenError])
 
   // Determine which view to show based on confirm modal state and other conditions
   const { showPreview, showDetails, showProgressIndicator, showAcceptChanges, showConfirming, showSuccess, showError } =
@@ -214,7 +219,7 @@ export function ConfirmSwapModal({
                   allowedSlippage={allowedSlippage}
                   isLoading={isPreviewTrade(trade)}
                   disabledConfirm={
-                    showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING
+                    showAcceptChanges || isPreviewTrade(trade) || allowance?.state === AllowanceState.LOADING
                   }
                   fiatValueInput={fiatValueInput}
                   fiatValueOutput={fiatValueOutput}
@@ -237,8 +242,8 @@ export function ConfirmSwapModal({
                 trade={trade}
                 swapResult={swapResult}
                 wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+                tokenApprovalPending={allowance?.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+                revocationPending={allowance?.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
                 swapError={swapError}
                 onRetryUniswapXSignature={onConfirm}
               />
@@ -253,8 +258,8 @@ export function ConfirmSwapModal({
                 trade={trade}
                 swapResult={swapResult}
                 wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+                tokenApprovalPending={allowance?.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+                revocationPending={allowance?.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
               />
             </FadePresence>
           </Container>

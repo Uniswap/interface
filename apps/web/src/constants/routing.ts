@@ -12,6 +12,7 @@ import {
   CUSD_CELO_ALFAJORES,
   DAI,
   DAI_AVALANCHE,
+  DAI_BSC,
   ETH_BSC,
   GRG,
   OP,

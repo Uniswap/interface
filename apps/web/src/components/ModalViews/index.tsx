@@ -61,9 +61,9 @@ export function SubmittedView({
       </RowBetween>
       <ConfirmedIcon>
         {!transactionSuccess ? (
-          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accentAction} />
+          <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.accent1} />
         ) : (
-          <CheckCircle strokeWidth={0.5} size={90} color={theme.accentSuccess} />
+          <CheckCircle strokeWidth={0.5} size={90} color={theme.success} />
         )}
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify="center">

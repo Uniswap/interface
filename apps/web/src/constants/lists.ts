@@ -4,3 +4,4 @@ export const RB_POOLS_LIST = 'https://cloudflare-ipfs.com/ipns/pools.rigoblock.c
 const COINGECKO_AVAX_LIST = 'https://tokens.coingecko.com/avalanche/all.json'
 
 export const DEFAULT_INACTIVE_LIST_URLS: string[] = [COINGECKO_AVAX_LIST]
+export const POOLS_LIST: string[] = [RB_POOLS_LIST]

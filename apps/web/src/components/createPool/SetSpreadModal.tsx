@@ -1,21 +1,19 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { parseUnits } from '@ethersproject/units'
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
-//import JSBI from 'jsbi'
-import { ReactNode, useState } from 'react'
+import JSBI from 'jsbi'
+import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { GRG } from '../../constants/tokens'
-import { useHarvestCallback } from '../../state/stake/hooks'
+import { useSetSpreadCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from 'theme/components/text'
-import { ButtonPrimary } from '../Button'
-import { LightCard } from '../Card'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import NameInputPanel from '../NameInputPanel'
 import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -29,27 +27,36 @@ const StyledClosed = styled(X)`
   }
 `
 
-interface HarvestYieldModalProps {
+interface SetSpreadModalProps {
   isOpen: boolean
-  isPool?: boolean
-  poolIds?: string[]
-  yieldAmount?: CurrencyAmount<Token>
+  currentSpread: number
   onDismiss: () => void
   title: ReactNode
 }
 
-export default function HarvestYieldModal({
-  isOpen,
-  isPool,
-  yieldAmount,
-  poolIds,
-  onDismiss,
-  title,
-}: HarvestYieldModalProps) {
-  const { chainId } = useWeb3React()
+export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title }: SetSpreadModalProps) {
+  const { account, chainId } = useWeb3React()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
-  const harvestCallback = useHarvestCallback()
+  // state for create input
+  const [typed, setTyped] = useState('')
+
+  // wrapped onUserInput to clear signatures
+  const onUserInput = useCallback((typed: string) => {
+    const numberRegEx = RegExp(`^[0-9]*[.,]?[0-9]*$`)
+    if (numberRegEx.test(String(typed))) {
+      setTyped(typed)
+    }
+  }, [])
+
+  let parsedSpread = ''
+  try {
+    parsedSpread = typed !== '' ? parseUnits(typed, 2).toString() : typed
+  } catch (error) {
+    console.debug(`Failed to parse spread: "${typed}"`, error)
+  }
+  const isSameAsCurrent: boolean = currentSpread === Number(parsedSpread)
+
+  const setSpreadCallback = useSetSpreadCallback()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()
@@ -59,8 +66,6 @@ export default function HarvestYieldModal({
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.receipt?.status === 1
 
-  const [farmAmount, setFarmAmount] = useState<CurrencyAmount<Token>>()
-
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
     setHash(undefined)
@@ -68,14 +73,14 @@ export default function HarvestYieldModal({
     onDismiss()
   }
 
-  async function onHarvest() {
-    // if callback not returned properly ignore
-    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) return
+  async function onSetSpread() {
     setAttempting(true)
-    setFarmAmount(yieldAmount)
 
-    // try delegation and store hash
-    const hash = await harvestCallback(poolIds, isPool)?.catch((error) => {
+    // if callback not returned properly ignore
+    if (!account || !chainId || !setSpreadCallback || !parsedSpread) return
+
+    // try set spread and store hash
+    const hash = await setSpreadCallback(parsedSpread)?.catch((error) => {
       setAttempting(false)
       console.log(error)
     })
@@ -94,27 +99,28 @@ export default function HarvestYieldModal({
               <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <RowBetween>
-              {isPool ? (
-                <Trans>Harvesting your pool&apos;s staker yield.</Trans>
-              ) : (
-                <Trans>Harvesting your staker yield.</Trans>
-              )}
-            </RowBetween>
-            <LightCard>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <ThemedText.DeprecatedBody fontSize={16} fontWeight={500}>
-                    <Trans>Harvesting {formatCurrencyAmount(yieldAmount, 4)} GRG</Trans>
-                  </ThemedText.DeprecatedBody>
-                </RowBetween>
-              </AutoColumn>
-            </LightCard>
-            <ButtonPrimary disabled={formatCurrencyAmount(yieldAmount, 4) === '0'} onClick={onHarvest}>
+            <NameInputPanel value={typed} onChange={onUserInput} label="Pool Spread (%)" placeholder="max 10%" />
+            <ButtonError
+              disabled={
+                typed === '' ||
+                typed.length > 4 ||
+                isSameAsCurrent ||
+                JSBI.lessThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1)) ||
+                JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))
+              }
+              error={isSameAsCurrent || JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000))}
+              onClick={onSetSpread}
+            >
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Harvest</Trans>{' '}
+                {isSameAsCurrent ? (
+                  <Trans>Same as current</Trans>
+                ) : JSBI.greaterThan(JSBI.BigInt(parsedSpread), JSBI.BigInt(1000)) ? (
+                  <Trans>max spread 10%</Trans>
+                ) : (
+                  <Trans>Update Spread</Trans>
+                )}
               </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
+            </ButtonError>
           </AutoColumn>
         </ContentWrapper>
       )}
@@ -122,9 +128,8 @@ export default function HarvestYieldModal({
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Harvesting Yield</Trans>
+              <Trans>Updating Spread</Trans>
             </ThemedText.DeprecatedLargeHeader>
-            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(yieldAmount, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
@@ -136,18 +141,18 @@ export default function HarvestYieldModal({
                 <ThemedText.DeprecatedLargeHeader>
                   <Trans>Transaction Submitted</Trans>
                 </ThemedText.DeprecatedLargeHeader>
-                <ThemedText.DeprecatedMain fontSize={36}>
-                  Claiming {formatCurrencyAmount(farmAmount, 4)} GRG
-                </ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Setting spread to {Number(parsedSpread) / 100}%</Trans>
+                </ThemedText.DeprecatedBody>
               </>
             ) : transactionSuccess ? (
               <>
                 <ThemedText.DeprecatedLargeHeader>
                   <Trans>Transaction Success</Trans>
                 </ThemedText.DeprecatedLargeHeader>
-                <ThemedText.DeprecatedMain fontSize={36}>
-                  Claimed {formatCurrencyAmount(farmAmount, 4)} GRG
-                </ThemedText.DeprecatedMain>
+                <ThemedText.DeprecatedBody fontSize={20}>
+                  <Trans>Spread set to {Number(parsedSpread) / 100}%</Trans>
+                </ThemedText.DeprecatedBody>
               </>
             ) : (
               <ThemedText.DeprecatedLargeHeader>

@@ -80,7 +80,7 @@ export function useConfirmModalState({
       allowance?.state === AllowanceState.REQUIRED &&
       allowance?.needsSetupApproval &&
       RESET_APPROVAL_TOKENS.some((token) => token.equals(allowance?.token)) &&
-      allowance?.allowedAmount.greaterThan(0)
+      allowance?.allowedAmount?.greaterThan(0)
     ) {
       steps.push(ConfirmModalState.RESETTING_TOKEN_ALLOWANCE)
     }
@@ -261,6 +261,7 @@ export function useConfirmModalState({
     confirmModalState,
     doesTradeDiffer,
     approvalError,
+    tokenError,
     pendingModalSteps,
     priceUpdate,
     wrapTxHash,

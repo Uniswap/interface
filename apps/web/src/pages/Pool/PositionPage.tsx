@@ -410,7 +410,7 @@ function PositionPageContent() {
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
   // we query pool address from application state
-  const { address: poolAddress } = useActiveSmartPool()
+  const { address: smartPoolAddress } = useActiveSmartPool()
 
   const parsedTokenId = parseTokenId(tokenIdFromUrl)
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -527,7 +527,7 @@ function PositionPageContent() {
       !chainId ||
       !positionManager ||
       !account ||
-      !poolAddress ||
+      !smartPoolAddress ||
       !tokenId ||
       !provider
     )
@@ -541,11 +541,11 @@ function PositionPageContent() {
       tokenId: tokenId.toString(),
       expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
       expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
-      recipient: poolAddress,
+      recipient: smartPoolAddress,
     })
 
     const txn = {
-      to: poolAddress, //positionManager.address,
+      to: smartPoolAddress, //positionManager.address,
       data: calldata,
       value,
     }
@@ -599,14 +599,14 @@ function PositionPageContent() {
     currency1ForFeeCollectionPurposes,
     positionManager,
     account,
-    poolAddress,
+    smartPoolAddress,
     tokenId,
     addTransaction,
     provider,
   ])
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
-  const ownsNFT = owner === poolAddress || positionDetails?.operator === poolAddress
+  const ownsNFT = owner === smartPoolAddress || positionDetails?.operator === smartPoolAddress
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0

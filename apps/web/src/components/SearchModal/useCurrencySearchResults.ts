@@ -26,6 +26,7 @@ interface CurrencySearchParams {
   filters?: CurrencySearchFilters
   selectedCurrency?: Currency | null
   otherSelectedCurrency?: Currency | null
+  operatedPools?: Currency[]
 }
 
 interface CurrencySearchResults {
@@ -50,6 +51,7 @@ export function useCurrencySearchResults({
   filters,
   selectedCurrency,
   otherSelectedCurrency,
+  operatedPools,
 }: CurrencySearchParams): CurrencySearchResults {
   const { chainId } = useWeb3React()
   const supportedChain = useSupportedChainId(chainId)
@@ -161,6 +163,10 @@ export function useCurrencySearchResults({
     // This is where we apply extra filtering based on the callsite's
     // customization, on top of the basic searchQuery filtering.
     const currencyFilter = (currency: Currency) => {
+      if (filters?.onlyDisplaySmartPools) {
+        return !currency.isNative && operatedPools && currency.address?.toLowerCase() in operatedPools
+      }
+
       if (filters?.onlyShowCurrenciesWithBalance) {
         if (currency.isNative) {
           return balanceMap[currency.symbol ?? 'ETH']?.usdValue > 0

@@ -9,7 +9,6 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 //import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import POOL_EXTENDED_ABI from 'abis/pool-extended.json'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -17,6 +16,8 @@ import { GrayCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
@@ -26,7 +27,9 @@ import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { Interface } from 'ethers/lib/utils'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
+import { useCurrency } from 'hooks/Tokens'
 //import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { /*usePermit2Allowance,*/ AllowanceState } from 'hooks/usePermit2Allowance'
@@ -56,6 +59,7 @@ import {
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
+import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -65,14 +69,14 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { RowFixed } from '../../components/Row'
-import SmartPoolSearchModal from '../../components/SearchModal/SmartPoolSearchModal'
 import { useScreenSize } from '../../hooks/useScreenSize'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
 import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
-import { useAllPoolsData /*, useRegisteredPools*/ } from '../../state/pool/hooks'
 import Error from 'components/Icons/Error'
 import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useAllPoolsData /*, useRegisteredPools*/ } from 'state/pool/hooks'
+import styled from 'styled-components'
 import { CurrencyState } from 'state/swap/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -90,11 +94,11 @@ const PoolSelect = styled(ButtonGray)<{
   disabled?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
@@ -110,7 +114,7 @@ const PoolSelect = styled(ButtonGray)<{
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.backgroundInteractive : theme.accentAction)};
+    background-color: ${({ selected, theme }) => (selected ? theme.surface2 : theme.accent1)};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
@@ -120,27 +124,22 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.textPrimary : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
     stroke-width: 1.5px;
   }
 `
+
+const StyledTokenName = styled.span<{ active?: boolean }>`
+  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  font-size: 20px;
+`
+
 const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
 `
-
-export const ArrowContainer = styled.div`
-  display: inline-block;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: 100%;
-`
-
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
@@ -168,6 +167,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -235,8 +235,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     return operatedPools[0]
   }, [operatedPools])
 
-  const smartPool = useCurrency(smartPoolAddress)
   const { address: smartPoolAddress, name: smartPoolName } = useActiveSmartPool()
+  const smartPool = smartPoolAddress && useCurrency(smartPoolAddress)
   const {
     trade: { state: tradeState, trade, swapQuoteLatency },
     allowedSlippage,
@@ -325,7 +325,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade, showWrap]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers(dispatch)
+  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const onPoolSelect = useSelectActiveSmartPool()
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -441,8 +441,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     trade,
     swapFiatValues,
     allowedSlippage,
-    smartPoolAddress ?? undefined,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
+    smartPoolAddress ?? undefined
   )
 
   const handleContinueToReview = useCallback(() => {
@@ -617,6 +617,10 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     if (window.chrome) isBannedExtension().catch(console.error)
   }, [])
 
+  const DISPLAY_POOLS_SEARCH_FILTERS: CurrencySearchFilters = {
+    showCommonBases: true,
+  }
+
   return (
     <>
       <TokenSafetyModal
@@ -628,7 +632,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         showCancel={true}
       />
       <PoolSelect
-        disabled={!isSupportedChain(chainId)}
+        disabled={false}
         visible={true}
         selected={true}
         hideInput={false}
@@ -648,7 +652,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           <StyledDropDown selected={!!smartPoolAddress} />
         </Aligner>
       </PoolSelect>
-      {trade && showConfirm && (
+      {trade && showConfirm && smartPool && (
         <ConfirmSwapModal
           trade={trade}
           priceImpact={largerPriceImpact}
@@ -668,16 +672,15 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           fiatValueOutput={fiatValueTradeOutput}
         />
       )}
-      {operatedPools && smartPoolName && (
-        <SmartPoolSearchModal
+      {operatedPools && smartPoolName && smartPool && (
+        <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onPoolSelect}
           selectedCurrency={smartPool}
           operatedPools={operatedPools}
-          showCommonBases={false}
           showCurrencyAmount={false}
-          disableNonToken={false}
+          currencySearchFilters={DISPLAY_POOLS_SEARCH_FILTERS}
         />
       )}
       {showPriceImpactModal && showPriceImpactWarning && (

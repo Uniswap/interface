@@ -41,8 +41,8 @@ export function useSwapCallback(
   trade: InterfaceTrade | undefined, // trade to execute, required
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }, // usd values for amount in and out, and the fee value, logged for analytics
   allowedSlippage: Percent, // in bips
-  smartPoolAddress: string | undefined,
-  permitSignature: PermitSignature | undefined
+  permitSignature: PermitSignature | undefined,
+  smartPoolAddress?: string,
 ) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()
@@ -60,7 +60,6 @@ export function useSwapCallback(
     fiatValues,
     {
       slippageTolerance: allowedSlippage,
-      deadline,
       smartPoolAddress,
       permit: permitSignature,
       ...getUniversalRouterFeeFields(trade),

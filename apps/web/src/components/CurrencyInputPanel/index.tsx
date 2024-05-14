@@ -188,6 +188,7 @@ interface CurrencyInputPanelProps {
   fiatValue?: { data?: number; isLoading: boolean }
   id: string
   showCurrencyAmount?: boolean
+  isAccount?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
@@ -205,6 +206,7 @@ export default function CurrencyInputPanel({
   id,
   currencySearchFilters,
   showCurrencyAmount,
+  isAccount,
   renderBalance,
   fiatValue,
   hideBalance = false,

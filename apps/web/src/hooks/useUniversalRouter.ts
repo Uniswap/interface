@@ -1,8 +1,9 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
+import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
-import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { FlatFeeOptions /*, SwapRouter, UNIVERSAL_ROUTER_ADDRESS*/ } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
@@ -10,6 +11,7 @@ import { getConnection } from 'connection'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
+import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
@@ -47,6 +49,7 @@ interface SwapOptions {
   permit?: PermitSignature
   feeOptions?: FeeOptions
   flatFeeOptions?: FlatFeeOptions
+  smartPoolAddress?: string
 }
 
 export function useUniversalRouterSwapCallback(
@@ -75,19 +78,17 @@ export function useUniversalRouterSwapCallback(
           const deadline = await getDeadline()
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
+          const { calldata: data, value } = SwapRouter.swapCallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
-            inputTokenPermit: options.permit,
             fee: options.feeOptions,
-            flatFee: options.flatFeeOptions,
+            recipient: account,
           })
           const tx = {
             from: account,
-            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
-            data,
-            // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
-            ...(value && !isZero(value) ? { value: toHex(value) } : {}),
+            to: options.smartPoolAddress,
+            data: MulticallExtended.encodeMulticall([PaymentsExtended.encodeWrapETH(JSBI.BigInt(value)), data]),
+            value: '0x0',
           }
 
           let gasLimit: BigNumber
@@ -171,7 +172,7 @@ export function useUniversalRouterSwapCallback(
       options.slippageTolerance,
       options.permit,
       options.feeOptions,
-      options.flatFeeOptions,
+      options.smartPoolAddress,
       fiatValues,
       portfolioBalanceUsd,
       analyticsContext,

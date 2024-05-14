@@ -27,7 +27,6 @@ import {
   usePoolIdByAddress,
 } from '../../state/governance/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { ThemedText } from '../../theme'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonConfirmed, ButtonPrimary } from '../Button'
 //import { ButtonError } from '../Button'

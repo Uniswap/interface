@@ -16,6 +16,7 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencySearchFilters?: CurrencySearchFilters
+  operatedPools?: Token[]
 }
 
 enum CurrencyModalView {
@@ -32,6 +33,7 @@ export default memo(function CurrencySearchModal({
   otherSelectedCurrency,
   showCurrencyAmount = true,
   currencySearchFilters,
+  operatedPools,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
@@ -81,6 +83,7 @@ export default memo(function CurrencySearchModal({
           otherSelectedCurrency={otherSelectedCurrency}
           showCurrencyAmount={showCurrencyAmount}
           filters={currencySearchFilters}
+          operatedPools={operatedPools}
         />
       )
       break

@@ -5,7 +5,7 @@ import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.j
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import POP_ABI from 'abis/pop.json'
+import POP_ABI from 'uniswap/src/abis/pop.json'
 import { POP_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
