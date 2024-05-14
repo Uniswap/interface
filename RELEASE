@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZirSDi4Fvdxc9L8veeJwpU38XLuBHQYFKR2avBuyXUqA`
-- CIDv1: `bafybeifjecl3zl5tsaxhooqwfibjzteb3w4ckaag5oos2oqnkadkpovumu`
+- CIDv0: `QmUx8BPyhu12b6EshRYs7nmfAWACqUAgSeEySx7zbbtZ74`
+- CIDv1: `bafybeidchsbmucfvakacsrez3n2p4r7p2xysz75e4q3vidh5ydlztofto4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,59 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifjecl3zl5tsaxhooqwfibjzteb3w4ckaag5oos2oqnkadkpovumu.ipfs.dweb.link/
-- https://bafybeifjecl3zl5tsaxhooqwfibjzteb3w4ckaag5oos2oqnkadkpovumu.ipfs.cf-ipfs.com/
-- [ipfs://QmZirSDi4Fvdxc9L8veeJwpU38XLuBHQYFKR2avBuyXUqA/](ipfs://QmZirSDi4Fvdxc9L8veeJwpU38XLuBHQYFKR2avBuyXUqA/)
+- https://bafybeidchsbmucfvakacsrez3n2p4r7p2xysz75e4q3vidh5ydlztofto4.ipfs.dweb.link/
+- https://bafybeidchsbmucfvakacsrez3n2p4r7p2xysz75e4q3vidh5ydlztofto4.ipfs.cf-ipfs.com/
+- [ipfs://QmUx8BPyhu12b6EshRYs7nmfAWACqUAgSeEySx7zbbtZ74/](ipfs://QmUx8BPyhu12b6EshRYs7nmfAWACqUAgSeEySx7zbbtZ74/)
 
-## 5.27.0 (2024-05-14)
-
-
-### Features
-
-* **web:** add "name='description'" tags for SEO (#7782) 75b57c7
-* **web:** add retry with classic in xv2 GPA error (#7375) 92ccc68
-* **web:** add uniswapX v2 (#7072) 25c0827
-* **web:** fix token explore filter test (#8103) 348cd70
-* **web:** refactor Send flow to use wagmi signer (#7596) baa4e5e
-* **web:** send connection meta to Sentry (#7650) a576fc1
-* **web:** update/add SEO descriptions to all pages (#7984) f0a5c71
-* **web:** wagmi connection (#7558) 80dd479
+### 5.27.1 (2024-05-14)
 
 
 ### Bug Fixes
 
-* **web:** add build = true to craco fork ts checker to avoid output file ts errors (#7980) c513191
-* **web:** add info to swap modified event (#8044) 31d52d1
-* **web:** adding vercels unique inline script (#7918) 9622186
-* **web:** block v3 pool creation for FOT tokens (#7735) f4f22e9
-* **web:** hotfix warning modified extensions (#8071) 065cd16
-* **web:** hover animation behind Hero title (#8055) e740bb8
-* **web:** landing page gap staging (#8177) e3870f3
-* **web:** limits insufficient-balance behaviors (#7977) b18f808
-* **web:** multi routing copy is wrong (#7923) ccaecac
-* **web:** set locale in state when clicking SwitchLocaleLink (#7968) 931c7cb
-* **web:** try hardcoded block number from 24hrs ago (#8119) 7b1e92b
-* **web:** update favicon (#7976) 4396120
-
-
-### Build Systems
-
-* **web:** static ip runner (#8109) 42159c2
-
-
-### Tests
-
-* **web:** annotate proxy fetch flakiness workaround (#7998) 1589c7e
-* **web:** reset between suites, revert within suites (#8012) 746b2cb
-* **web:** revert chain after liquidity test (#8065) 6adbb1a
-* **web:** skip duplicate static analysis in CI (#7996) 9e07b63
-* **web:** use stable CSP for cloud-tests (#7997) e885436
-
-
-### Code Refactoring
-
-* **web:** block infringing collection (#7915) 7aa7d29
-* **web:** update transactions hooks to use wagmi directly (#7584) 4ec79a3
-* **web:** use wagmi for chainId (#7953) a43c588
+* **web:** Show unsupported network in navbar - prod (#8182) 937a6a4
 
 

@@ -60,7 +60,9 @@ function useWalletSupportedChains(): ChainId[] {
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const chainId = useChainId()
+  const disconnectedChainId = useChainId()
+  const account = useAccount()
+  const chainId = account?.chainId ?? disconnectedChainId
   const isSupportedChain = useIsSupportedChainId(chainId)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
