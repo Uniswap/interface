@@ -19,12 +19,12 @@ import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { useTokenBalance } from 'state/connection/hooks'
+//import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+//import { shortenAddress } from 'utilities/src/addresses'
+//import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ProposalStatus } from './styled'
 
@@ -91,27 +91,6 @@ const WrapSmall = styled(RowBetween)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
   `};
-`
-
-const TextButton = styled(ThemedText.DeprecatedMain)`
-  color: ${({ theme }) => theme.accent1};
-  :hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-`
-
-const AddressButton = styled.div`
-  padding: 2px 4px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: ${({ theme }) => theme.accent1};
-`
-
-const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.neutral1};
 `
 
 const Header = styled(ThemedText.H1Small)`

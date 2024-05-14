@@ -1,7 +1,7 @@
 import { GrgIcon } from 'nft/components/icons'
 import styled from 'styled-components'
 
-import HolidayUniIcon from './HolidayUniIcon'
+//import HolidayUniIcon from './HolidayUniIcon'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
 export type SVGProps = React.SVGProps<SVGSVGElement> & {
@@ -12,7 +12,7 @@ export type SVGProps = React.SVGProps<SVGSVGElement> & {
   clickable?: boolean
 }
 
-export const UniIcon = ({ clickable, ...props }: SVGProps) => (
+export const UniIcon = ({ clickable /*, ...props*/ }: SVGProps) => (
   <Container clickable={clickable}>
     {/*{HolidayUniIcon(props) !== null ? (
       <HolidayUniIcon {...props} />

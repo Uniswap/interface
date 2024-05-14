@@ -120,8 +120,8 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(ChainId.BASE),
     WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token,
     USDC_BASE,
-    GRG[ChainId.BASE]
-    ].map(buildCurrencyInfo),
+    GRG[ChainId.BASE],
+  ].map(buildCurrencyInfo),
   [ChainId.BLAST]: [nativeOnChain(ChainId.BLAST), WRAPPED_NATIVE_CURRENCY[ChainId.BLAST] as Token].map(
     buildCurrencyInfo
   ),
@@ -149,9 +149,16 @@ export const COMMON_BASES: ChainCurrencyList = {
     buildCurrencyInfo
   ),
 
-  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), GRG[ChainId.BNB], DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC].map(
-    buildCurrencyInfo
-  ),
+  [ChainId.BNB]: [
+    nativeOnChain(ChainId.BNB),
+    GRG[ChainId.BNB],
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    ETH_BSC,
+    BTC_BSC,
+    BUSD_BSC,
+  ].map(buildCurrencyInfo),
 
   [ChainId.AVALANCHE]: [
     nativeOnChain(ChainId.AVALANCHE),

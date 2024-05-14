@@ -171,10 +171,7 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-export function getPoolDetailsURL({
-  address,
-  chain, 
-}: {address?: string, chain: Chain}) {
+export function getPoolDetailsURL({ address, chain }: { address?: string; chain: Chain }) {
   const chainName = chain.toLowerCase()
   return `/explore/pools/${chainName}/${address}`
 }

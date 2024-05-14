@@ -5,7 +5,6 @@ import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.j
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import POP_ABI from 'uniswap/src/abis/pop.json'
 import { POP_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
@@ -23,6 +22,7 @@ import { StakeStatus, useStakingContract, useStakingProxyContract } from 'state/
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import POP_ABI from 'uniswap/src/abis/pop.json'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'

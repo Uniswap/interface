@@ -128,8 +128,8 @@ export const SuggestionRow = ({
   const path = isPool
     ? getPoolDetailsURL({ address: suggestion.address, chain: suggestion.chain })
     : isToken
-      ? getTokenDetailsURL({ ...suggestion })
-      : `/nfts/collection/${suggestion.address}`
+    ? getTokenDetailsURL({ ...suggestion })
+    : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {

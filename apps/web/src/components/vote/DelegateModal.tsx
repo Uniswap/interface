@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { Text } from 'ui/src'
+//import { Text } from 'ui/src'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
 import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'

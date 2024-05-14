@@ -59,16 +59,6 @@ const StyledSpinner = styled(CustomLightSpinner)`
   top: 0;
 `
 
-/*const MoonpayTextWrapper = styled.div`
-  position: absolute;
-  bottom: 20px;
-  margin: auto;
-  left: 0;
-  right: 0;
-  width: 100%;
-  text-align: center;
-`*/
-
 export default function FiatOnrampModal() {
   const { account } = useWeb3React()
   const theme = useTheme()

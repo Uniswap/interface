@@ -42,7 +42,7 @@ export function useSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }, // usd values for amount in and out, and the fee value, logged for analytics
   allowedSlippage: Percent, // in bips
   permitSignature: PermitSignature | undefined,
-  smartPoolAddress?: string,
+  smartPoolAddress?: string
 ) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()

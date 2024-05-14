@@ -28,8 +28,8 @@ import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'co
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { Interface } from 'ethers/lib/utils'
-import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useCurrency } from 'hooks/Tokens'
+import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 //import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { /*usePermit2Allowance,*/ AllowanceState } from 'hooks/usePermit2Allowance'
@@ -40,6 +40,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -51,7 +52,7 @@ import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import {
   queryParametersToCurrencyState,
-  useDerivedSwapInfo,
+  //useDerivedSwapInfo,
   useSwapActionHandlers,
   useSwapAndLimitContext,
   useSwapContext,
@@ -69,15 +70,13 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { RowFixed } from '../../components/Row'
-import { useScreenSize } from '../../hooks/useScreenSize'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
-import { useMultipleContractSingleData } from '../../lib/hooks/multicall'
 import Error from 'components/Icons/Error'
 import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAllPoolsData /*, useRegisteredPools*/ } from 'state/pool/hooks'
-import styled from 'styled-components'
 import { CurrencyState } from 'state/swap/types'
+import styled from 'styled-components'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getIsReviewableQuote } from '.'
@@ -219,7 +218,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
         if (loading || !pools || !pools?.[0] || !poolAddress) return mockToken
         //const parsed: PoolInitParams[] | undefined = pools?.[0]
-        const { name, symbol, decimals, owner } = pools?.[0]
+        const { name, symbol, decimals, owner } = pools[0]
         if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
         //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
         const isPoolOperator = owner === account
@@ -236,7 +235,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   }, [operatedPools])
 
   const { address: smartPoolAddress, name: smartPoolName } = useActiveSmartPool()
-  const smartPool = smartPoolAddress && useCurrency(smartPoolAddress)
+  const smartPool = useCurrency(smartPoolAddress ?? undefined)
   const {
     trade: { state: tradeState, trade, swapQuoteLatency },
     allowedSlippage,
@@ -581,7 +580,17 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, outputFeeFiatValue),
       ...trace,
     })
-  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, outputFeeFiatValue, onPoolSelect, defaultPool, smartPoolAddress])
+  }, [
+    prevTrade,
+    trade,
+    trace,
+    allowedSlippage,
+    swapQuoteLatency,
+    outputFeeFiatValue,
+    onPoolSelect,
+    defaultPool,
+    smartPoolAddress,
+  ])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
