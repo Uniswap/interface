@@ -43,14 +43,14 @@ export function useTokenTransactions(
       address: address.toLowerCase(),
       first: TokenTransactionDefaultQuerySize,
     },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.CELO,
   })
   const loadingMoreV3 = useRef(false)
   const loadingMoreV2 = useRef(false)
   const querySizeRef = useRef(TokenTransactionDefaultQuerySize)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || (loadingMoreV2.current && chainId === ChainId.MAINNET)) {
+      if (loadingMoreV3.current || (loadingMoreV2.current && chainId === ChainId.CELO)) {
         return
       }
       loadingMoreV3.current = true
@@ -64,7 +64,7 @@ export function useTokenTransactions(
           if (!fetchMoreResult) {
             return prev
           }
-          if (!loadingMoreV2.current || chainId !== ChainId.MAINNET) onComplete?.()
+          if (!loadingMoreV2.current || chainId !== ChainId.CELO) onComplete?.()
           const mergedData = {
             token: {
               ...prev.token,
@@ -77,7 +77,7 @@ export function useTokenTransactions(
           return mergedData
         },
       })
-      chainId == ChainId.MAINNET &&
+      chainId == ChainId.CELO &&
         fetchMoreV2({
           variables: {
             cursor: dataV2?.token?.v2Transactions?.[dataV2.token?.v2Transactions.length - 1]?.timestamp,

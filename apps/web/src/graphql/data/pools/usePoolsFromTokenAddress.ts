@@ -33,7 +33,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
     },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.CELO,
   })
   const loading = loadingV3 || loadingV2
 
@@ -42,7 +42,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
   const sizeRef = useRef(DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || (loadingMoreV2.current && chainId === ChainId.MAINNET)) {
+      if (loadingMoreV3.current || (loadingMoreV2.current && chainId === ChainId.CELO)) {
         return
       }
       loadingMoreV3.current = true
@@ -54,7 +54,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult || !prev || !Object.keys(prev).length) return prev
-          if (!loadingMoreV2.current || chainId !== ChainId.MAINNET) onComplete?.()
+          if (!loadingMoreV2.current || chainId !== ChainId.CELO) onComplete?.()
           const mergedData = {
             topV3Pools: [...(prev.topV3Pools ?? []).slice(), ...(fetchMoreResult.topV3Pools ?? []).slice()],
           }
@@ -62,7 +62,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           return mergedData
         },
       })
-      chainId === ChainId.MAINNET &&
+      chainId === ChainId.CELO &&
         fetchMoreV2({
           variables: {
             cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,

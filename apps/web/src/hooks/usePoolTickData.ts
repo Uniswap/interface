@@ -98,7 +98,7 @@ export function usePoolActiveLiquidity(
   sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
-  const defaultChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const defaultChainId = useWeb3React().chainId ?? ChainId.CELO
   const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96

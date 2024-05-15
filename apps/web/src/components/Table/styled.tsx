@@ -240,7 +240,7 @@ const TokenSymbolText = styled(ThemedText.BodyPrimary)`
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
-  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET
+  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.CELO
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
   const nativeCurrency = nativeOnChain(chainId)

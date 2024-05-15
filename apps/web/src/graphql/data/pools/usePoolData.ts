@@ -88,13 +88,13 @@ export function usePoolData(
     data: dataV2,
   } = useV2PairQuery({
     variables: { address: poolAddress },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.CELO,
     errorPolicy: 'all',
   })
 
   return useMemo(() => {
-    const anyError = Boolean(errorV3 || (errorV2 && chainId === ChainId.MAINNET))
-    const anyLoading = Boolean(loadingV3 || (loadingV2 && chainId === ChainId.MAINNET))
+    const anyError = Boolean(errorV3 || (errorV2 && chainId === ChainId.CELO))
+    const anyLoading = Boolean(loadingV3 || (loadingV2 && chainId === ChainId.CELO))
 
     const pool = dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier = dataV3?.v3Pool?.feeTier ?? V2_BIPS

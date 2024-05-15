@@ -60,7 +60,7 @@ interface BalanceProps {
   gqlBalance?: PortfolioTokenBalancePartsFragment
   onClick?: () => void
 }
-const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: BalanceProps) => {
+const Balance = ({ currency, chainId = ChainId.CELO, gqlBalance, onClick }: BalanceProps) => {
   const { formatNumber } = useFormatter()
   const currencies = useMemo(() => [currency], [currency])
 
@@ -129,7 +129,7 @@ const OtherChainsBalanceSummary = ({
       )}
       {otherChainBalances.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
-        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.MAINNET
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.CELO
         return (
           <Balance
             key={balance.id}

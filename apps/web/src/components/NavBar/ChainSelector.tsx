@@ -6,7 +6,7 @@ import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
-import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
+import { getChainPriority, TESTNET_CHAIN_IDS } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { t } from 'i18n'
@@ -19,7 +19,7 @@ import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupported
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import ChainSelectorRow from './ChainSelectorRow'
 
-const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
+const NETWORK_SELECTOR_CHAINS = [ChainId.CELO, ChainId.CELO_ALFAJORES]
 
 const StyledDropdownButton = css`
   display: flex;

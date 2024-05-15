@@ -70,7 +70,7 @@ export function usePoolTransactions(
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
     variables: { first, address },
-    skip: protocolVersion !== ProtocolVersion.V2 || chainId !== ChainId.MAINNET,
+    skip: protocolVersion !== ProtocolVersion.V2 || chainId !== ChainId.CELO,
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

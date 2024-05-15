@@ -104,7 +104,7 @@ export const gnosisSafeConnection: Connection = {
 }
 
 export const walletConnectV2Connection: Connection = new (class implements Connection {
-  private initializer = (actions: Actions, defaultChainId = ChainId.MAINNET) =>
+  private initializer = (actions: Actions, defaultChainId = ChainId.CELO) =>
     new WalletConnectV2({ actions, defaultChainId, onError })
 
   type = ConnectionType.WALLET_CONNECT_V2

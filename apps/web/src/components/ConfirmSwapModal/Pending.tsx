@@ -132,7 +132,7 @@ export function Pending({
     } else {
       return
     }
-    return getExplorerLink(chainId || ChainId.MAINNET, txHash, ExplorerDataType.TRANSACTION)
+    return getExplorerLink(chainId || ChainId.CELO, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])
 
   // Handle special statuses for UniswapX orders

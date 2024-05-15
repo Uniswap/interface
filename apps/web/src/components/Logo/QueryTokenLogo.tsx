@@ -13,8 +13,7 @@ export default function QueryTokenLogo(
     token?: TopToken | TokenQueryData | SearchToken
   }
 ) {
-  const chainId =
-    (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.MAINNET) ?? ChainId.MAINNET
+  const chainId = (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.CELO) ?? ChainId.CELO
   const currency = props.token ? gqlToCurrency(props.token) : undefined
   const logoUrl = props.token?.project?.logoUrl
 

@@ -101,7 +101,7 @@ export function Footer() {
           <Box direction="column" height="100%" gap="64px">
             <Box direction="column" gap="10px">
               <H3>© 2024</H3>
-              <H3>Uniswap Labs</H3>
+              <H3>Ubeswap Labs</H3>
             </Box>
             <HideWhenSmall>
               <Socials />

@@ -92,7 +92,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     inputCurrency: undefined,
     outputCurrency: undefined,
   },
-  chainId: ChainId.MAINNET,
+  chainId: ChainId.CELO,
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
 })

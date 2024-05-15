@@ -111,7 +111,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET]
+    : CHAIN_ID_TO_BACKEND_NAME[ChainId.CELO]
 }
 
 const GQL_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO] as const

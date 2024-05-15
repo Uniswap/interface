@@ -16,7 +16,7 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
     'https://gateway-arbitrum.network.thegraph.com/api/0ae45f0bf40ae2e73119b44ccd755967/subgraphs/id/2LHovKznvo8YmKC9ZprPjsYAZDCc4K5q4AYz8s3cnQn1',
 }
 
-const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET] })
+const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.CELO] })
 
 // This middleware will allow us to dynamically update the uri for the requests based off chainId
 // For more information: https://www.apollographql.com/docs/react/networking/advanced-http-networking/
@@ -25,7 +25,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   const chainId = store.getState().application.chainId
 
   operation.setContext(() => ({
-    uri: chainId && CHAIN_SUBGRAPH_URL[chainId] ? CHAIN_SUBGRAPH_URL[chainId] : CHAIN_SUBGRAPH_URL[ChainId.MAINNET],
+    uri: chainId && CHAIN_SUBGRAPH_URL[chainId] ? CHAIN_SUBGRAPH_URL[chainId] : CHAIN_SUBGRAPH_URL[ChainId.CELO],
   }))
 
   return forward(operation)

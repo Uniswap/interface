@@ -21,7 +21,7 @@ export function Banners() {
       const validatedChainId = getValidUrlChainId(maybeChainName)
       return validatedChainId !== undefined
     })
-    return chainName ? getValidUrlChainId(chainName) : ChainId.MAINNET
+    return chainName ? getValidUrlChainId(chainName) : ChainId.CELO
   }, [pathname])
   const currentPageHasManualOutage = manualOutage?.chainId === pageChainId
 
