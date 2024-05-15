@@ -434,7 +434,7 @@ function PositionPageContent() {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
-  const nativeCurrency = useNativeCurrency(chainId)
+  const nativeCurrency = useNativeCurrency(supportedChain)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // get pool address from details returned
