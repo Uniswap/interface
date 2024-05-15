@@ -198,7 +198,7 @@ export default function MultipleRoutingOptions() {
         isActive={routePreferenceOptions[RoutePreferenceOption.Optimal]}
         text={
           <Trans>
-            The Uniswap client selects the cheapest trade option factoring price and network costs factoring price and
+            The Rigoblock client selects the cheapest trade option factoring price and network costs factoring price and
             network costs.
           </Trans>
         }

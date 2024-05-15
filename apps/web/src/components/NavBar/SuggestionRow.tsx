@@ -126,7 +126,7 @@ export const SuggestionRow = ({
   }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
 
   const path = isPool
-    ? getPoolDetailsURL({ address: suggestion.address, chain: suggestion.chain })
+    ? getPoolDetailsURL({ address: suggestion.address })
     : isToken
     ? getTokenDetailsURL({ ...suggestion })
     : `/nfts/collection/${suggestion.address}`

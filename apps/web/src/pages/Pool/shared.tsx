@@ -77,20 +77,20 @@ const menuItems = {
 
 const titles = {
   [ProtocolVersion.V3]: t`v3`,
-  [ProtocolVersion.V2]: t`v2`,
 }
 
 export function PoolVersionMenu({ protocolVersion }: { protocolVersion: ProtocolVersion }) {
   const isOpen = useModalIsOpen(ApplicationModal.POOL_VERSION)
+  if (protocolVersion !== ProtocolVersion.V3) return
 
   return (
     <Menu
       modal={ApplicationModal.POOL_VERSION}
-      menuItems={[menuItems[protocolVersion === ProtocolVersion.V3 ? ProtocolVersion.V2 : ProtocolVersion.V3]]}
+      menuItems={[menuItems[ProtocolVersion.V3]]}
       flyoutAlignment={FlyoutAlignment.LEFT}
       ToggleUI={(props: any) => (
         <PoolOptionsButton {...props} $isOpen={isOpen}>
-          <ThemedText.BodyPrimary color="neutral2">{titles[protocolVersion]}</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral2">{titles[ProtocolVersion.V3]}</ThemedText.BodyPrimary>
           <StyledChevron $isOpen={isOpen} />
         </PoolOptionsButton>
       )}

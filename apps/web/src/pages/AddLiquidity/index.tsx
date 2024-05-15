@@ -651,7 +651,7 @@ function AddLiquidity() {
               <Row justify="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
-                    <Text color="$accent1" fontSize="12px">
+                    <Text color={theme.accent1} fontSize="12px">
                       <Trans>Clear all</Trans>
                     </Text>
                   </ButtonText>

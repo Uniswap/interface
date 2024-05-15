@@ -171,9 +171,9 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-export function getPoolDetailsURL({ address, chain }: { address?: string; chain: Chain }) {
-  const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
+// TODO: add chain name to url, update PoolPositionListItem, PoolPositionPage, RouteDefinitions
+export function getPoolDetailsURL({ address }: { address?: string }) {
+  return `/smart-pool/${address}`
 }
 
 export function unwrapToken<

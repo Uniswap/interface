@@ -308,6 +308,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onMax={handleMaxInput}
             currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+            isAccount={true}
           />
         </Trace>
       </SwapSection>
@@ -334,6 +335,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             otherCurrency={inputCurrency}
             currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+            isAccount={true}
           />
         </Trace>
       </SwapSection>

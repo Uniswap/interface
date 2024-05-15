@@ -405,7 +405,6 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
-  const supportedChain = useSupportedChainId(chainId)
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
@@ -719,16 +718,7 @@ function PositionPageContent() {
               <ResponsiveRow>
                 <PositionLabelRow>
                   <DoubleCurrencyLogo currencies={[currencyBase, currencyQuote]} size={24} />
-                  <StyledPoolLink
-                    to={
-                      poolAddress
-                        ? getPoolDetailsURL({
-                            address: poolAddress,
-                            chain: chainIdToBackendChain({ chainId: supportedChain, withFallback: true }),
-                          })
-                        : ''
-                    }
-                  >
+                  <StyledPoolLink to={poolAddress ? getPoolDetailsURL({ address: poolAddress }) : ''}>
                     <PairHeader>
                       &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                     </PairHeader>

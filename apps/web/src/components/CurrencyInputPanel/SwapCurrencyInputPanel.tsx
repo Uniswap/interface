@@ -14,6 +14,7 @@ import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
@@ -228,6 +229,7 @@ interface SwapCurrencyInputPanelProps {
   fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
+  isAccount?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
@@ -251,6 +253,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       currency,
       otherCurrency,
       id,
+      isAccount,
       renderBalance,
       fiatValue,
       priceImpact,
@@ -270,7 +273,12 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const [modalOpen, setModalOpen] = useState(false)
     const { account, chainId } = useWeb3React()
     const chainAllowed = useIsSupportedChainId(chainId)
-    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+    const { address: smartPoolAddress } = useActiveSmartPool()
+    // TODO: check if should invert definition and modify swap currency input panel
+    const selectedCurrencyBalance = useCurrencyBalance(
+      !isAccount ? smartPoolAddress ?? undefined : account,
+      currency ?? undefined
+    )
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
 

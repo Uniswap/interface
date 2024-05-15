@@ -21,30 +21,24 @@ export const useMenuContent = (): MenuSection[] => {
       title: t('App'),
       items: [
         { label: t('Pool'), href: '/pool', internal: true, overflow: true },
-        { label: t('Vote'), href: 'https://vote.uniswapfoundation.org/' },
-        { label: t('Analytics'), href: 'https://info.uniswap.org/' },
+        { label: t('Vote'), href: '/vote' },
+        { label: t('Analytics'), href: 'https://defillama.com/protocol/rigoblock' },
       ],
     },
     {
       title: t('Company'),
-      items: [
-        { label: t('Careers'), href: 'https://boards.greenhouse.io/uniswaplabs' },
-        { label: t('Blog'), href: 'https://blog.uniswap.org/' },
-      ],
+      items: [{ label: t('Website'), href: 'https://rigoblock.com' }],
     },
     {
       title: t('Protocol'),
       items: [
-        { label: t('Governance'), href: 'https://uniswap.org/governance' },
-        { label: t('Developers'), href: 'https://uniswap.org/developers' },
+        { label: t('Governance'), href: 'https://docs.rigoblock.com/governance' },
+        { label: t('Developers'), href: 'https://docs.rigoblock.com/introduction-to-rigoblock' },
       ],
     },
     {
       title: t('Need help?'),
-      items: [
-        { label: t('Contact us'), href: 'https://support.uniswap.org/hc/en-us/requests/new' },
-        { label: t('Help Center'), href: 'https://support.uniswap.org/hc/en-us' },
-      ],
+      items: [{ label: t('Get in touch'), href: 'https://discord.gg/FXd8EU8' }],
     },
   ]
 }

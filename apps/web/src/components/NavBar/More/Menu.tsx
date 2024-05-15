@@ -12,7 +12,7 @@ import { BREAKPOINTS } from 'theme'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 import { MenuItem, MenuSection, useMenuContent } from './menuContent'
-import { MobileAppLogo } from './MobileAppLogo'
+//import { MobileAppLogo } from './MobileAppLogo'
 
 const Container = styled.div`
   width: 295px;
@@ -121,14 +121,14 @@ export function Menu({ close }: { close: () => void }) {
             openGetTheAppModal()
           }}
         >
-          <MobileAppLogo />
+          {/*<MobileAppLogo />*/}
           <Column gap="xs">
             <Text lineHeight="20px">
-              <Trans>Download Uniswap</Trans>
+              <Trans>Social</Trans>
             </Text>
-            <ThemedText.LabelSmall lineHeight="18px">
-              <Trans>Available on iOS and Android</Trans>
-            </ThemedText.LabelSmall>
+            {/*<ThemedText.LabelSmall lineHeight="18px">
+              <Trans>Social</Trans>
+            </ThemedText.LabelSmall>*/}
           </Column>
         </StyledRow>
         <StyledSocials iconSize="25px" />

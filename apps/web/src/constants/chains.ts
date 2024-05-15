@@ -56,19 +56,19 @@ if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
 export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.MAINNET,
   ChainId.GOERLI,
-  ChainId.SEPOLIA,
+  //ChainId.SEPOLIA,
   ChainId.POLYGON,
-  ChainId.POLYGON_MUMBAI,
-  ChainId.CELO,
-  ChainId.CELO_ALFAJORES,
+  //ChainId.POLYGON_MUMBAI,
+  //ChainId.CELO,
+  //ChainId.CELO_ALFAJORES,
   ChainId.ARBITRUM_ONE,
-  ChainId.ARBITRUM_GOERLI,
+  //ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM,
-  ChainId.OPTIMISM_GOERLI,
+  //ChainId.OPTIMISM_GOERLI,
   ChainId.BNB,
-  ChainId.AVALANCHE,
+  //ChainId.AVALANCHE,
   ChainId.BASE,
-  ChainId.BLAST,
+  //ChainId.BLAST,
 ] as const
 
 export type SupportedInterfaceChainId = (typeof SUPPORTED_INTERFACE_CHAIN_IDS)[number]
