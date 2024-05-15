@@ -104,11 +104,12 @@ export default function App() {
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
-    }
+    // if (searchParams.get('disableNFTs') === 'true') {
+    // setShouldDisableNFTRoutes(true)
+    // } else if (searchParams.get('disableNFTs') === 'false') {
+    // setShouldDisableNFTRoutes(false)
+    // }
+    setShouldDisableNFTRoutes(true)
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagURLOverrides()

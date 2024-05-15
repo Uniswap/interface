@@ -1,17 +1,17 @@
-import { ColumnCenter } from 'components/Column'
+// import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useEffect, useState } from 'react'
-import { ChevronDown } from 'react-feather'
+// import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
 
-import { BREAKPOINTS } from 'theme'
+// import { BREAKPOINTS } from 'theme'
 import { Text } from 'ui/src/components/text/Text'
-import { heightBreakpoints } from 'ui/src/theme'
+// import { heightBreakpoints } from 'ui/src/theme'
 import { Box, H1 } from '../components/Generics'
-import { TokenCloud } from '../components/TokenCloud/index'
-import { Hover, RiseIn, RiseInText } from '../components/animations'
+// import { TokenCloud } from '../components/TokenCloud/index'
+import { /*Hover,*/ RiseIn, RiseInText } from '../components/animations'
 
 const Container = styled(Box)`
   min-width: 100%;
@@ -75,23 +75,23 @@ const Center = styled(Box)<{ transition?: boolean }>`
       animation: ${shrinkAndFade} 1s ease-in-out forwards;
     `};
 `
-const LearnMoreContainer = styled(Box)`
-  bottom: 48px;
-  @media (max-width: ${BREAKPOINTS.md}px) {
-    bottom: 64px;
-  }
-
-  @media (max-height: ${heightBreakpoints.short}px) {
-    display: none;
-  }
-`
+// const LearnMoreContainer = styled(Box)`
+//   bottom: 48px;
+//   @media (max-width: ${BREAKPOINTS.md}px) {
+//     bottom: 64px;
+//   }
+//
+//   @media (max-height: ${heightBreakpoints.short}px) {
+//     display: none;
+//   }
+// `
 
 interface HeroProps {
   scrollToRef: () => void
   transition?: boolean
 }
 
-export function Hero({ scrollToRef, transition }: HeroProps) {
+export function Hero({ transition }: HeroProps) {
   const [scrollPosition, setScrollPosition] = useState(0)
   const handleScroll = () => {
     const position = window.scrollY
@@ -117,7 +117,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       justify="center"
       style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
     >
-      <TokenCloud transition={transition} />
+      {/*<TokenCloud transition={transition} />*/}
       <Center
         direction="column"
         align="center"
@@ -131,12 +131,12 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               <Trans>Swap</Trans>
             </RiseInText>{' '}
             <RiseInText delay={0.1}>
-              <Trans>anytime,</Trans>
+              <Trans>safely,</Trans>
             </RiseInText>
           </StyledH1>
           <RiseIn delay={0.2}>
             <StyledH1>
-              <Trans>anywhere.</Trans>
+              <Trans>on Celo.</Trans>
             </StyledH1>
           </RiseIn>
         </Box>
@@ -157,11 +157,11 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               variant: 'body2',
             }}
           >
-            <Trans>The largest onchain marketplace. Buy and sell crypto on Ethereum and 7+ other chains.</Trans>
+            <Trans>The native DeFi platform on Celo.</Trans>
           </Text>
         </RiseIn>
       </Center>
-      <LearnMoreContainer
+      {/*<LearnMoreContainer
         position="absolute"
         width="100%"
         align="center"
@@ -188,7 +188,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             </Hover>
           </Box>
         </RiseIn>
-      </LearnMoreContainer>
+      </LearnMoreContainer>*/}
     </Container>
   )
 }

@@ -25,7 +25,7 @@ import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
-import { isPathBlocked } from 'utils/blockedPaths'
+// import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -103,7 +103,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
+  // const shouldShowBuyFiatButton = !isPathBlocked('/buy')
+  const shouldShowBuyFiatButton = false
   const { formatNumber, formatDelta } = useFormatter()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()

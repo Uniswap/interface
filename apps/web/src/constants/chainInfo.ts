@@ -184,7 +184,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [ChainId.CELO]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://www.portalbridge.com/#/transfer',
+    // bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo/',
@@ -195,7 +195,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [ChainId.CELO_ALFAJORES]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://www.portalbridge.com/#/transfer',
+    // bridge: 'https://www.portalbridge.com/#/transfer',
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
     infoLink: 'https://info.uniswap.org/#/celo/',

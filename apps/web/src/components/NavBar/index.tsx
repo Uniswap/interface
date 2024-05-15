@@ -3,7 +3,7 @@ import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
+// import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Trans } from 'i18n'
@@ -11,7 +11,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
+// import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -94,7 +94,7 @@ export const PageTabs = () => {
 
 const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
-  const isLandingPage = useIsLandingPage()
+  // const isLandingPage = useIsLandingPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
@@ -158,7 +158,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
-              {isLandingPage && <GetTheAppButton />}
+              {/* isLandingPage && <GetTheAppButton /> */}
               <Web3Status />
             </Row>
           </Box>
