@@ -11,6 +11,7 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
+import { Text } from 'rebass'
 // import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
@@ -122,13 +123,16 @@ const Navbar = ({ blur }: { blur: boolean }) => {
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <UniIcon
-                width="48"
-                height="48"
+                width="28"
+                height="28"
                 data-testid="uniswap-logo"
                 className={styles.logo}
                 clickable={!account}
                 onClick={handleUniIconClick}
               />
+              <Text fontSize={24} marginTop={-1}>
+                Ubeswap
+              </Text>
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

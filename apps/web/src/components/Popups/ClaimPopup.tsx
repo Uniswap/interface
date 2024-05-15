@@ -6,7 +6,7 @@ import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
-import tokenLogo from '../../assets/images/token-logo.png'
+import tokenLogo from '../../assets/images/token-logo-small.png'
 import {
   useModalIsOpen,
   useShowClaimPopup,

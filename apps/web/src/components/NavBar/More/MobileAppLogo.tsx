@@ -63,7 +63,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -74,7 +74,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -85,7 +85,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -96,7 +96,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -107,7 +107,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -118,7 +118,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -129,7 +129,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -140,7 +140,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
           <linearGradient
@@ -151,7 +151,7 @@ export function MobileAppLogo() {
             y2="11.0335"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#FC72FF" />
+            <stop stopColor="#8878c3" />
             <stop offset="1" stopColor="#FF41F4" />
           </linearGradient>
         </defs>

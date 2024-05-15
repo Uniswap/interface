@@ -119,7 +119,7 @@ export const colors = {
   magenta700: '#550D56',
   magenta800: '#330733',
   magenta900: '#250225',
-  magentaVibrant: '#FC72FF',
+  magentaVibrant: '#8878c3',
   violet50: '#F1EFFE',
   violet100: '#E2DEFD',
   violet200: '#BDB8FA',
@@ -182,10 +182,10 @@ const sporeLight = {
   neutral2: '#7D7D7D',
   neutral3: '#CECECE',
 
-  accent1: '#FC72FF',
-  accent2: '#FFEFFF',
+  accent1: '#8878c3',
+  accent2: '#E3DFF3',
 
-  accentSoft: '#FC72FF33', //33 = 20%
+  accentSoft: '#8878c333', //33 = 20%
 
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',
@@ -209,10 +209,10 @@ const sporeDark = {
   neutral2: '#9B9B9B',
   neutral3: '#5E5E5E',
 
-  accent1: '#FC72FF',
+  accent1: '#8878c3',
   accent2: '#311C31',
 
-  accentSoft: '#FC72FF33', //33 = 20%
+  accentSoft: '#8878c333', //33 = 20%
 
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',

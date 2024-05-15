@@ -66,8 +66,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -149,7 +149,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -453,8 +453,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -536,7 +536,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -840,8 +840,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -923,7 +923,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1227,8 +1227,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1310,7 +1310,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1614,8 +1614,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1697,7 +1697,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1999,8 +1999,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -2082,7 +2082,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;

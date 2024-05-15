@@ -9,7 +9,7 @@ import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UbeTokenAnimat
 import { shortenAddress } from 'utilities/src/addresses'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import tokenLogo from '../../assets/images/token-logo.png'
+import tokenLogo from '../../assets/images/token-logo-small.png'
 import useENS from '../../hooks/useENS'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useIsTransactionPending } from '../../state/transactions/hooks'

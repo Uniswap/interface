@@ -84,7 +84,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c29 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -158,13 +158,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c28 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -708,7 +708,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 <svg
                   class="c29 c30"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -811,7 +811,7 @@ exports[`TDPPoolTable renders error state 1`] = `
 }
 
 .c25 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -915,13 +915,13 @@ exports[`TDPPoolTable renders error state 1`] = `
 }
 
 .c24 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -1878,7 +1878,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                 <svg
                   class="c25 c26"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -1973,7 +1973,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
 }
 
 .c23 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -2047,13 +2047,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
 }
 
 .c22 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -2961,7 +2961,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 <svg
                   class="c23 c24"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >

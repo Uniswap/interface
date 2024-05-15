@@ -122,8 +122,8 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -403,7 +403,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                       >
                         UniswapX
                       </div>
-                       aggregates liquidity sources for better prices and gas free swaps. 
+                       aggregates liquidity sources for better prices and gas free swaps.
                       <a
                         class="c16"
                         href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
@@ -440,7 +440,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                   >
                     UniswapX
                   </div>
-                   aggregates liquidity sources for better prices and gas free swaps. 
+                   aggregates liquidity sources for better prices and gas free swaps.
                   <a
                     class="c16"
                     href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
@@ -518,7 +518,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                     class="c20"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c16"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -546,7 +546,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -569,7 +569,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -711,7 +711,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                   >
                     UniswapX
                   </div>
-                   aggregates liquidity sources for better prices and gas free swaps. 
+                   aggregates liquidity sources for better prices and gas free swaps.
                   <a
                     class="c16"
                     href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
@@ -875,8 +875,8 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1319,7 +1319,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     <div
                       class="c11 css-1m65e73"
                     >
-                      Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                      Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
                         href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -1351,7 +1351,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 <div
                   class="c11 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -1474,7 +1474,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     class="c19"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -1502,7 +1502,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -1525,7 +1525,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -1925,8 +1925,8 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -2369,7 +2369,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     <div
                       class="c11 css-1m65e73"
                     >
-                      Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                      Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
                         href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -2401,7 +2401,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 <div
                   class="c11 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -2524,7 +2524,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     class="c19"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -2552,7 +2552,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -2575,7 +2575,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -2975,8 +2975,8 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -3419,7 +3419,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     <div
                       class="c11 css-1m65e73"
                     >
-                      Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                      Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
                         href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -3451,7 +3451,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 <div
                   class="c11 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -3574,7 +3574,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     class="c19"
                   />
                   <div>
-                    If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay. 
+                    If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay.
                     <a
                       class="c15"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -3602,7 +3602,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -3625,7 +3625,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -4025,8 +4025,8 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -4469,7 +4469,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     <div
                       class="c11 css-1m65e73"
                     >
-                      Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                      Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
                         href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -4501,7 +4501,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 <div
                   class="c11 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -4555,7 +4555,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
@@ -4677,7 +4677,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     class="c19"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -4705,7 +4705,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -4728,7 +4728,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -5128,8 +5128,8 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -5572,7 +5572,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     <div
                       class="c11 css-1m65e73"
                     >
-                      Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                      Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
                         href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -5604,7 +5604,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 <div
                   class="c11 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -5658,7 +5658,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
@@ -5780,7 +5780,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     class="c19"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -5808,7 +5808,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"
@@ -5831,7 +5831,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -6163,8 +6163,8 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -6378,7 +6378,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
                 <div
                   class="c10 css-1m65e73"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
+                  Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c11"
                     href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
@@ -6502,7 +6502,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
                     class="c16"
                   />
                   <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
+                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c11"
                       href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
@@ -6756,7 +6756,7 @@ exports[`SwapLineItem.tsx syncing 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Fee 
+            Fee
           </div>
           <div
             class="c5"

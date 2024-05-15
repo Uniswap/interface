@@ -202,8 +202,8 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -299,7 +299,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 }
 
 .c29 {
-  background-color: #FC72FF;
+  background-color: #8878c3;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
@@ -923,8 +923,8 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1020,7 +1020,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 }
 
 .c29 {
-  background-color: #FC72FF;
+  background-color: #8878c3;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
