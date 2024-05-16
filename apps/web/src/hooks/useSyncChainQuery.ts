@@ -14,7 +14,7 @@ function getChainIdFromName(name: string) {
   return chainId ? parseInt(chainId) : undefined
 }
 
-function getParsedChainId(parsedQs?: ParsedQs) {
+export function getParsedChainId(parsedQs?: ParsedQs) {
   const chain = parsedQs?.chain
   if (!chain || typeof chain !== 'string') return
 
@@ -44,8 +44,8 @@ export default function useSyncChainQuery() {
   const [searchParams, setSearchParams] = useSearchParams()
 
   useEffect(() => {
-    // Change a user's chain on pageload if the connected chainId does not match the query param chain
-    if (isConnected && urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
+    // Change a page chain on pageload if the app chainId does not match the query param chain
+    if (urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
       selectChain(urlChainId)
     }
     // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported

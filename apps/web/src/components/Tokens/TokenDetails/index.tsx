@@ -148,7 +148,7 @@ function TDPSwapComponent() {
       {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
       <TokenSafetyModal
         isOpen={openTokenSafetyModal || !!continueSwap}
-        tokenAddress={address}
+        token0={currency.isToken ? currency : undefined}
         onContinue={() => onResolveSwap(true)}
         onBlocked={() => {
           setOpenTokenSafetyModal(false)

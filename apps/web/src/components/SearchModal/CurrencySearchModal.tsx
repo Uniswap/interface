@@ -89,7 +89,7 @@ export default memo(function CurrencySearchModal({
       if (warningToken) {
         content = (
           <TokenSafety
-            tokenAddress={warningToken.address}
+            token0={warningToken}
             onContinue={() => handleCurrencySelect(warningToken)}
             onCancel={() => setModalView(CurrencyModalView.search)}
             showCancel={true}

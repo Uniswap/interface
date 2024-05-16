@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qmba9yfwsUsVcbQA6CAkQCxqFCoLJapvjV7RQsp26zJvBh`
-- CIDv1: `bafybeigetwjqz26or3og65klvf2oefze44ct4oukkncojpcb5wocbc6x7a`
+- CIDv0: `QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC`
+- CIDv1: `bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,16 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigetwjqz26or3og65klvf2oefze44ct4oukkncojpcb5wocbc6x7a.ipfs.dweb.link/
-- https://bafybeigetwjqz26or3og65klvf2oefze44ct4oukkncojpcb5wocbc6x7a.ipfs.cf-ipfs.com/
-- [ipfs://Qmba9yfwsUsVcbQA6CAkQCxqFCoLJapvjV7RQsp26zJvBh/](ipfs://Qmba9yfwsUsVcbQA6CAkQCxqFCoLJapvjV7RQsp26zJvBh/)
+- https://bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m.ipfs.dweb.link/
+- https://bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m.ipfs.cf-ipfs.com/
+- [ipfs://QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC/](ipfs://QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC/)
 
-### 5.27.6 (2024-05-16)
+### 5.27.7 (2024-05-16)
 
 
 ### Bug Fixes
 
-* **web:** Allow viewing pool mgmt pages when disconnected - prod (#8248) f7cce8f
+* **web:** support multichain input params 272661d
+* **web:** support multichain input params 8620c6c
 
 

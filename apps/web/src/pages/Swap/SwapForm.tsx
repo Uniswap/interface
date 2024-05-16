@@ -25,11 +25,9 @@ import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'co
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
-import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
@@ -42,12 +40,7 @@ import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import {
-  queryParametersToCurrencyState,
-  useSwapActionHandlers,
-  useSwapAndLimitContext,
-  useSwapContext,
-} from 'state/swap/hooks'
+import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -61,6 +54,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import Error from 'components/Icons/Error'
 import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import useSelectChain from 'hooks/useSelectChain'
 import { CurrencyState } from 'state/swap/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -88,14 +82,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const { typedValue, independentField } = swapState
 
   // token warning stuff
-  const parsedQs = useParsedQueryString()
-  const prefilledCurrencies = useMemo(() => {
-    return queryParametersToCurrencyState(parsedQs)
-  }, [parsedQs])
-
-  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.inputCurrencyId, chainId)
-  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.outputCurrencyId, chainId)
-
+  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledState.inputCurrency)
+  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledState.outputCurrency)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
 
@@ -463,7 +451,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   )
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
-  const switchChain = useSwitchChain()
+  const selectChain = useSelectChain()
+
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)
@@ -474,8 +463,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     <>
       <TokenSafetyModal
         isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokenAddress={urlTokensNotInDefault[0]?.address}
-        secondTokenAddress={urlTokensNotInDefault[1]?.address}
+        token0={urlTokensNotInDefault[0]}
+        token1={urlTokensNotInDefault[1]}
         onContinue={handleConfirmTokenWarning}
         onCancel={handleDismissTokenWarning}
         showCancel={true}
@@ -624,7 +613,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               $borderRadius="16px"
               onClick={async () => {
                 try {
-                  await switchChain(chainId)
+                  await selectChain(chainId)
                 } catch (error) {
                   if (didUserReject(error)) {
                     // Ignore error, which keeps the user on the previous chain.

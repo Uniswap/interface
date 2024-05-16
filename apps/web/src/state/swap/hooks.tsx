@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
@@ -13,9 +13,13 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
+import { useSupportedChainId } from 'constants/chains'
+import { useCurrency } from 'hooks/Tokens'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { getParsedChainId } from 'hooks/useSyncChainQuery'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { useAccount } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
 import {
   CurrencyState,
@@ -280,6 +284,7 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
   const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
+  const chainId = getParsedChainId(parsedQs)
 
   if (inputCurrency === '' && outputCurrency === '' && independentField === Field.INPUT) {
     // Defaults to having the native currency selected
@@ -292,5 +297,25 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   return {
     inputCurrencyId: inputCurrency === '' ? undefined : inputCurrency ?? undefined,
     outputCurrencyId: outputCurrency === '' ? undefined : outputCurrency ?? undefined,
+    chainId,
   }
+}
+
+export function useInitialCurrencyState(): {
+  initialInputCurrency?: Currency
+  initialOutputCurrency?: Currency
+  chainId: ChainId
+} {
+  const parsedQs = useParsedQueryString()
+  const parsedCurrencyState = useMemo(() => {
+    return queryParametersToCurrencyState(parsedQs)
+  }, [parsedQs])
+
+  const connectedChainId = useChainId()
+  const chainId = useSupportedChainId(parsedCurrencyState.chainId ?? connectedChainId) ?? ChainId.MAINNET
+
+  const initialInputCurrency = useCurrency(parsedCurrencyState.inputCurrencyId, chainId)
+  const initialOutputCurrency = useCurrency(parsedCurrencyState.outputCurrencyId, chainId)
+
+  return { initialInputCurrency, initialOutputCurrency, chainId }
 }

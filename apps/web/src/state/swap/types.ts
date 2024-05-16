@@ -100,6 +100,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
 export interface SerializedCurrencyState {
   inputCurrencyId?: string
   outputCurrencyId?: string
+  chainId?: number
 }
 
 // shared state between Swap and Limit
