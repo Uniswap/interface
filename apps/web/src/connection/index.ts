@@ -212,7 +212,7 @@ const coinbaseWalletConnection: Connection = {
 
 export const connections = [
   gnosisSafeConnection,
-  uniwalletWCV2ConnectConnection,
+  // uniwalletWCV2ConnectConnection,
   deprecatedInjectedConnection,
   walletConnectV2Connection,
   coinbaseWalletConnection,
