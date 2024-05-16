@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC`
-- CIDv1: `bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m`
+- CIDv0: `QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr`
+- CIDv1: `bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,16 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m.ipfs.dweb.link/
-- https://bafybeiguflcfu2p2lxehliz5wutxlmqtjfeg7qk4pw2ifw24xbbhjhcf5m.ipfs.cf-ipfs.com/
-- [ipfs://QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC/](ipfs://QmccrxuuPdXnhgCm2377DmcpBZtS36JK2kHNhGcutyYCfC/)
+- https://bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou.ipfs.dweb.link/
+- https://bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou.ipfs.cf-ipfs.com/
+- [ipfs://QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr/](ipfs://QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr/)
 
-### 5.27.7 (2024-05-16)
+### 5.27.8 (2024-05-16)
 
 
 ### Bug Fixes
 
-* **web:** support multichain input params 272661d
-* **web:** support multichain input params 8620c6c
+* **web:** window.ethereum fallback on mobile [prod] (#8260) 929c164
 
 
