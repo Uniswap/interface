@@ -31,6 +31,9 @@ const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
+const Stake = lazy(() => import('pages/Stake'))
+const Farm = lazy(() => import('pages/Farm'))
+const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -294,6 +297,21 @@ export const routes: RouteDefinition[] = [
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
     getTitle: () => t`Explore NFTs on Uniswap`,
+  }),
+  createRouteDefinition({
+    path: '/stake',
+    getElement: () => <Stake />,
+    getTitle: () => t`Stake UBE`,
+  }),
+  createRouteDefinition({
+    path: '/farm',
+    getElement: () => <Farm />,
+    getTitle: () => t`Farm`,
+  }),
+  createRouteDefinition({
+    path: '/claim-new-ube',
+    getElement: () => <ClaimNewUbe />,
+    getTitle: () => t`Claim New UBE`,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),
