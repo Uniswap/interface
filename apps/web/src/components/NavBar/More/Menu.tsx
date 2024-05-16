@@ -5,8 +5,8 @@ import { Trans } from 'i18n'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
+//import { useOpenModal } from 'state/application/hooks'
+//import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -98,7 +98,6 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 export function Menu({ close }: { close: () => void }) {
-  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
   const menuContent = useMenuContent()
 
   return (
@@ -113,14 +112,7 @@ export function Menu({ close }: { close: () => void }) {
           />
         ))}
         <Separator />
-        <StyledRow
-          height="45px"
-          gap="md"
-          onClick={() => {
-            close()
-            openGetTheAppModal()
-          }}
-        >
+        <StyledRow height="45px" gap="md">
           {/*<MobileAppLogo />*/}
           <Column gap="xs">
             <Text lineHeight="20px">

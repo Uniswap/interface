@@ -11,6 +11,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
@@ -122,7 +123,9 @@ export function useSwapActionHandlers(): {
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const { account, chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
-  const balance = useCurrencyBalance(account ?? undefined, nativeCurrency)
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  // TODO: check we are correctly overwriting balance
+  const balance = useCurrencyBalance(smartPoolAddress ?? account ?? undefined, nativeCurrency)
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -135,7 +138,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   )
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
+    smartPoolAddress ?? account ?? undefined,
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 

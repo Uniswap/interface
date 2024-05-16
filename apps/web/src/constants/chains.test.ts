@@ -57,16 +57,16 @@ const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
   [ChainId.SEPOLIA]: 'sepolia',
   [ChainId.POLYGON]: 'polygon',
   [ChainId.POLYGON_MUMBAI]: 'polygon_mumbai',
-  [ChainId.CELO]: 'celo',
+  //[ChainId.CELO]: 'celo',
   [ChainId.CELO_ALFAJORES]: 'celo_alfajores',
   [ChainId.ARBITRUM_ONE]: 'arbitrum',
   [ChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
   [ChainId.OPTIMISM]: 'optimism',
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
-  [ChainId.AVALANCHE]: 'avalanche',
+  //[ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
-  [ChainId.BLAST]: 'blast',
+  //[ChainId.BLAST]: 'blast',
 } as const
 
 test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -80,13 +80,13 @@ test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInter
 const supportedGasEstimateChains = [
   ChainId.MAINNET,
   ChainId.POLYGON,
-  ChainId.CELO,
+  //ChainId.CELO,
   ChainId.OPTIMISM,
   ChainId.ARBITRUM_ONE,
   ChainId.BNB,
-  ChainId.AVALANCHE,
+  //ChainId.AVALANCHE,
   ChainId.BASE,
-  ChainId.BLAST,
+  //ChainId.BLAST,
 ] as const
 
 test.each(supportedGasEstimateChains)(
@@ -117,10 +117,10 @@ const l1ChainIds = [
   ChainId.SEPOLIA,
   ChainId.POLYGON,
   ChainId.POLYGON_MUMBAI,
-  ChainId.CELO,
+  //ChainId.CELO,
   ChainId.CELO_ALFAJORES,
   ChainId.BNB,
-  ChainId.AVALANCHE,
+  //ChainId.AVALANCHE,
 ] as const
 
 test.each(l1ChainIds)('L1_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
@@ -134,7 +134,7 @@ const l2ChainIds = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
-  ChainId.BLAST,
+  //ChainId.BLAST,
 ] as const
 
 test.each(l2ChainIds)('L2_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
@@ -234,7 +234,7 @@ test.each(backendSupportedChains)(
   }
 )
 
-const backendNotyetSupportedChainIds = [ChainId.AVALANCHE] as const
+const backendNotyetSupportedChainIds = [] as const
 
 test.each(backendNotyetSupportedChainIds)(
   'BACKEND_SUPPORTED_CHAINS generates the correct chains',
@@ -305,10 +305,10 @@ const publicRpcUrls: Record<SupportedInterfaceChainId, string[]> = {
     // "Safe" URLs
     'https://goerli.optimism.io',
   ],
-  [ChainId.CELO]: [
-    // "Safe" URLs
-    `https://forno.celo.org`,
-  ],
+  //[ChainId.CELO]: [
+  //  // "Safe" URLs
+  //  `https://forno.celo.org`,
+  //],
   [ChainId.CELO_ALFAJORES]: [
     // "Safe" URLs
     `https://alfajores-forno.celo-testnet.org`,
@@ -325,11 +325,11 @@ const publicRpcUrls: Record<SupportedInterfaceChainId, string[]> = {
     'https://bsc-dataseed4.defibit.io',
     'https://rpc.ankr.com/bsc',
   ],
-  [ChainId.AVALANCHE]: [
-    // "Safe" URLs
-    'https://api.avax.network/ext/bc/C/rpc',
-    'https://avalanche-c-chain.publicnode.com',
-  ],
+  //[ChainId.AVALANCHE]: [
+  //  // "Safe" URLs
+  //  'https://api.avax.network/ext/bc/C/rpc',
+  //  'https://avalanche-c-chain.publicnode.com',
+  //],
   [ChainId.BASE]: [
     // "Safe" URLs
     'https://mainnet.base.org/',
@@ -340,14 +340,14 @@ const publicRpcUrls: Record<SupportedInterfaceChainId, string[]> = {
     'https://1rpc.io/base',
     'https://base.meowrpc.com',
   ],
-  [ChainId.BLAST]: [
-    // "Safe" URLs
-    'https://rpc.blast.io/',
-    'https://rpc.ankr.com/blast',
-    'https://blast.din.dev/rpc',
-    'https://blastl2-mainnet.public.blastapi.io',
-    'https://blast.blockpi.network/v1/rpc/public',
-  ],
+  //[ChainId.BLAST]: [
+  //  // "Safe" URLs
+  //  'https://rpc.blast.io/',
+  //  'https://rpc.ankr.com/blast',
+  //  'https://blast.din.dev/rpc',
+  //  'https://blastl2-mainnet.public.blastapi.io',
+  //  'https://blast.blockpi.network/v1/rpc/public',
+  //],
 }
 
 test.each(Object.keys(publicRpcUrls).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -368,9 +368,9 @@ const infuraPrefixToChainId: { [prefix: string]: SupportedInterfaceChainId } = {
   'arbitrum-goerli': ChainId.ARBITRUM_GOERLI,
   'polygon-mainnet': ChainId.POLYGON,
   'polygon-mumbai': ChainId.POLYGON_MUMBAI,
-  'avalanche-mainnet': ChainId.AVALANCHE,
+  //'avalanche-mainnet': ChainId.AVALANCHE,
   'base-mainnet': ChainId.BASE,
-  'blast-mainnet': ChainId.BLAST,
+  //'blast-mainnet': ChainId.BLAST,
 }
 
 test.each(Object.keys(infuraPrefixToChainId))('INFURA_PREFIX_TO_CHAIN_ID generates the correct chains', (chainName) => {

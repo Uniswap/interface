@@ -164,6 +164,7 @@ export function CurrencyRow({
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
+  console.log(isSmartPool)
 
   // only show add or remove buttons if not on selected list
   return (
@@ -197,9 +198,11 @@ export function CurrencyRow({
           <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="xs">
             <Row>
               <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-              <WarningContainer>
-                <TokenSafetyIcon warning={warning} />
-              </WarningContainer>
+              {!isSmartPool && (
+                <WarningContainer>
+                  <TokenSafetyIcon warning={warning} />
+                </WarningContainer>
+              )}
             </Row>
             <Row gap="sm">
               <ThemedText.Caption ml="0px" color="neutral2">

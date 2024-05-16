@@ -169,12 +169,18 @@ export function CurrencySearch({
         shouldLogImpression
       >
         <PaddedColumn gap="16px">
-          <RowBetween>
+          {!filters?.onlyDisplaySmartPools ? (
+            <RowBetween>
+              <Text fontWeight={535} fontSize={16}>
+                <Trans>Select a token</Trans>
+              </Text>
+              <CloseIcon onClick={onDismiss} />
+            </RowBetween>
+          ) : (
             <Text fontWeight={535} fontSize={16}>
-              <Trans>Select a token</Trans>
+              <Trans>Select a smart pool</Trans>
             </Text>
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
+          )}
           <Row gap="4px">
             <SearchInput
               type="text"
@@ -191,7 +197,7 @@ export function CurrencySearch({
               <ChainSelector />
             </ChainSelectorWrapper>
           </Row>
-          {showCommonBases && (
+          {showCommonBases && !filters?.onlyDisplaySmartPools && (
             <CommonBases
               chainId={chainId}
               onSelect={handleCurrencySelect}
@@ -241,6 +247,7 @@ export function CurrencySearch({
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
                   showCurrencyAmount={showCurrencyAmount}
+                  isSmartPool={filters?.onlyDisplaySmartPools}
                   isLoading={currencySearchResultsLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}

@@ -95,7 +95,7 @@ export default function CreatePool() {
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Unleash the force of smart pools for your portfolio. No more token allowances hassle!</Trans>
+                  <Trans>Your smart interface with DeFi. Create, mint, swap, earn on your tokens.</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
             </AutoColumn>

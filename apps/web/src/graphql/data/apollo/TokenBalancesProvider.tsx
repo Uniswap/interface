@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import {
   OnAssetActivitySubscription,
   PortfolioBalancesWebQueryResult,
@@ -69,11 +70,13 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
   const { account } = useWeb3React()
   const hasAccountUpdate = useHasAccountUpdate()
+  // TODO: query default pool with hook and either conditionally set, or just use pool
+  const { address: smartPoolAddress } = useActiveSmartPool()
 
   const fetch = useCallback(() => {
     if (!account) return
-    lazyFetch({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS_MUTABLE } })
-  }, [account, lazyFetch])
+    lazyFetch({ variables: { ownerAddress: smartPoolAddress ?? account, chains: GQL_MAINNET_CHAINS_MUTABLE } })
+  }, [account, smartPoolAddress, lazyFetch])
 
   return (
     <AdaptiveTokenBalancesProvider query={query} fetch={fetch} stale={hasAccountUpdate}>

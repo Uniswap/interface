@@ -627,7 +627,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   }, [])
 
   const DISPLAY_POOLS_SEARCH_FILTERS: CurrencySearchFilters = {
-    showCommonBases: true,
+    onlyDisplaySmartPools: true,
   }
 
   return (

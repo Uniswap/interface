@@ -52,14 +52,19 @@ export default memo(function CurrencySearchModal({
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
-      if (hasWarning && currency.isToken && !userAddedTokens.find((token) => token.equals(currency))) {
+      if (
+        !currencySearchFilters?.onlyDisplaySmartPools &&
+        hasWarning &&
+        currency.isToken &&
+        !userAddedTokens.find((token) => token.equals(currency))
+      ) {
         showTokenSafetySpeedbump(currency)
       } else {
         onCurrencySelect(currency)
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens]
+    [onDismiss, onCurrencySelect, userAddedTokens, currencySearchFilters?.onlyDisplaySmartPools]
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()

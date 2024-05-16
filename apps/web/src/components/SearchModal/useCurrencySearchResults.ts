@@ -105,19 +105,33 @@ export function useCurrencySearchResults({
   /**
    * Results processing: sorting, filtering, and merging data sources into the final list.
    */
+  // TODO: must append operated pools here for when user wants to switch pool
   const { sortedCombinedTokens, portfolioTokens, sortedTokensWithoutPortfolio } = useMemo(() => {
     const fullBaseList = (() => {
-      if ((!isEmpty(searchQuery) && gqlSearchResultsEmpty) || (isEmpty(searchQuery) && gqlPopularTokensEmpty)) {
-        return Object.values(defaultAndUserAddedTokens)
+      if (filters?.onlyDisplaySmartPools) {
+        return [...(operatedPools ?? [])]
+      } else if ((!isEmpty(searchQuery) && gqlSearchResultsEmpty) || (isEmpty(searchQuery) && gqlPopularTokensEmpty)) {
+        return Object.values(defaultAndUserAddedTokens).filter((userAddedToken) => {
+          return operatedPools?.map(
+            (pool) => {
+              !pool.isNative && pool.address?.toLowerCase() !== userAddedToken.address.toLowerCase()
+            },
+            [operatedPools, userAddedToken]
+          )
+        })
       } else if (!isEmpty(searchQuery)) {
         return [
           ...((searchResults?.searchTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
-          ...userAddedTokens
-            .filter(getTokenFilter(searchQuery))
-            .filter(
-              (userAddedToken) =>
-                !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address))
-            ),
+          ...userAddedTokens.filter(getTokenFilter(searchQuery)).filter((userAddedToken) => {
+            return (
+              operatedPools?.map(
+                (pool) => {
+                  !pool.isNative && pool.address?.toLowerCase() !== userAddedToken.address.toLowerCase()
+                },
+                [operatedPools, userAddedToken]
+              ) && !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address))
+            )
+          }),
         ]
       } else {
         return [
@@ -158,13 +172,21 @@ export function useCurrencySearchResults({
       hideSmallBalances: false,
       hideSpam: true,
     })
-    const mergedTokens = [...(portfolioTokens ?? []), ...filteredListTokens]
+    const mergedTokens = [...(!filters?.onlyDisplaySmartPools ? portfolioTokens ?? [] : []), ...filteredListTokens]
 
     // This is where we apply extra filtering based on the callsite's
     // customization, on top of the basic searchQuery filtering.
     const currencyFilter = (currency: Currency) => {
       if (filters?.onlyDisplaySmartPools) {
-        return !currency.isNative && operatedPools && currency.address?.toLowerCase() in operatedPools
+        return (
+          !currency.isNative &&
+          operatedPools?.map(
+            (pool) => {
+              !pool.isNative && pool.address?.toLowerCase() === currency.address.toLowerCase()
+            },
+            [operatedPools, currency]
+          )
+        )
       }
 
       if (filters?.onlyShowCurrenciesWithBalance) {
@@ -217,7 +239,9 @@ export function useCurrencySearchResults({
   ])
 
   const finalCurrencyList: CurrencyListRow[] = useMemo(() => {
-    if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
+    if (filters?.onlyDisplaySmartPools) {
+      return [new CurrencyListSectionTitle(t`Your smart pools`), ...sortedCombinedTokens.map(currencyListRowMapper)]
+    } else if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
         new CurrencyListSectionTitle(searchQuery ? t`Search results` : t`Popular tokens`),
         ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
@@ -232,7 +256,7 @@ export function useCurrencySearchResults({
         ...sortedTokensWithoutPortfolio.map(currencyListRowMapper),
       ]
     }
-  }, [searchQuery, portfolioTokens, sortedTokensWithoutPortfolio, sortedCombinedTokens])
+  }, [searchQuery, portfolioTokens, sortedTokensWithoutPortfolio, sortedCombinedTokens, filters?.onlyDisplaySmartPools])
 
   return {
     loading: searchResultsLoading || popularTokensLoading || balancesLoading,
