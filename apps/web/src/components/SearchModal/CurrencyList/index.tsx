@@ -164,7 +164,6 @@ export function CurrencyRow({
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
-  console.log(isSmartPool)
 
   // only show add or remove buttons if not on selected list
   return (

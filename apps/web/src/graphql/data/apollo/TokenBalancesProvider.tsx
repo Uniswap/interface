@@ -57,13 +57,17 @@ function useHasAccountUpdate() {
   const { account } = useWeb3React()
   const prevAccount = usePrevious(account)
 
+  const { address: smartPool } = useActiveSmartPool()
+  const prevSmartPool = usePrevious(smartPool)
+
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
     const accountChanged = Boolean(prevAccount !== account && account)
+    const smartPoolChanged = Boolean(prevSmartPool !== smartPool && smartPool)
 
-    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged
-  }, [account, data, hasLocalStateUpdate, isRealtime, prevAccount, prevData])
+    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || smartPoolChanged
+  }, [account, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool])
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
