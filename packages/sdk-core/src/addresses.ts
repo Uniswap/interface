@@ -59,12 +59,14 @@ const MAINNET_ADDRESSES: ChainAddresses = {
 
 // celo addresses
 const CELO_ADDRESSES: ChainAddresses = {
-  v3CoreFactoryAddress: '0xAfE208a311B21f13EF87E33A90049fC17A7acDEc',
-  multicallAddress: '0x633987602DE5C4F337e3DbF265303A1080324204',
-  quoterAddress: '0x82825d0554fA07f7FC52Ab63c961F330fdEFa8E8',
-  v3MigratorAddress: '0x3cFd4d48EDfDCC53D3f173F596f621064614C582',
-  nonfungiblePositionManagerAddress: '0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A',
-  tickLensAddress: '0x5f115D9113F88e0a0Db1b5033D90D4a9690AcD3D',
+  v3CoreFactoryAddress: '0x67FEa58D5a5a4162cED847E13c2c81c73bf8aeC4',
+  multicallAddress: '0x4d446f092461A0bfDeBC72AbC831541ca949d63F',
+  quoterAddress: '0xA8864a18Fab1ED233Ce1921F329A6A92DBccA56f',
+  v3MigratorAddress: '0x65415d0bDe9249E185D433A08823fd7FA7ebec66',
+  nonfungiblePositionManagerAddress: '0x5C76245413c6C4cBe7A3fAe395a8F7AF06FDCd65',
+  tickLensAddress: '0x1D8C564cCE485C2f053EF32652E4dba00D4265C4',
+  swapRouter02Address: '0x5CDe4d414F27E331B6738F783BC84c5507d8ee7A',
+  // mixedRouteQuoterV1Address: '',
 }
 
 export const CHAIN_TO_ADDRESSES_MAP: Record<SupportedChainsType, ChainAddresses> = {
