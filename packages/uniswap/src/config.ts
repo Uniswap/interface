@@ -6,7 +6,6 @@ import {
   MOONPAY_API_URL,
   MOONPAY_WIDGET_API_URL,
   ONESIGNAL_APP_ID,
-  QUICKNODE_BNB_RPC_URL,
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
@@ -36,7 +35,6 @@ export interface Config {
   simpleHashApiUrl: string
   statSigProxyUrl: string
   walletConnectProjectId: string
-  quicknodeBnbRpcUrl: string
   unitagsApiUrl: string
   tradingApiKey: string
   tradingApiUrl: string
@@ -67,7 +65,6 @@ const _config: Config = {
     process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID ||
     process.env.WALLETCONNECT_PROJECT_ID ||
     WALLETCONNECT_PROJECT_ID,
-  quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   unitagsApiUrl:
     process.env.REACT_APP_UNITAGS_API_URL || process.env.UNITAGS_API_URL || UNITAGS_API_URL,
   tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,

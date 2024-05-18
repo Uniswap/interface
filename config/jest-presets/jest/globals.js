@@ -10,7 +10,6 @@ module.exports = {
     MOONPAY_WIDGET_API_URL: 'https://api.moonpay.com',
     INFURA_PROJECT_ID: 123,
     ONESIGNAL_APP_ID: 123,
-    QUICKNODE_BNB_RPC_URL: 'https://api.uniswap.org',
     SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,
     SHAKE_CLIENT_SECRET: 123,
