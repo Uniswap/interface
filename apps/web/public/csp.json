@@ -110,7 +110,8 @@
     "wss://relay.walletconnect.com",
     "wss://www.walletlink.org",
     "wss://ws-us3.pusher.com/",
-    "https://unpkg.com"
+    "https://unpkg.com",
+    "https://ipfs.io"
   ],
   "workerSrc": [
     "'self'",
