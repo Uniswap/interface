@@ -43,7 +43,7 @@ module.exports = {
                 message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
               },
               {
-                name: '@uniswap/smart-order-router',
+                name: '@ubeswap/smart-order-router',
                 message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
                 allowTypeImports: true,
               },

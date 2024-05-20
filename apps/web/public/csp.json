@@ -111,7 +111,8 @@
     "wss://www.walletlink.org",
     "wss://ws-us3.pusher.com/",
     "https://unpkg.com",
-    "https://ipfs.io"
+    "https://ipfs.io",
+    "https://gateway-arbitrum.network.thegraph.com"
   ],
   "workerSrc": [
     "'self'",

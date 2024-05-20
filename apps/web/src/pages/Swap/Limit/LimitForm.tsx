@@ -5,8 +5,7 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@ubeswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@ubeswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { Currency, CurrencyAmount, Token, UNIVERSAL_ROUTER_ADDRESS } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
 import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
