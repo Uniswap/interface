@@ -83,7 +83,7 @@ const GQL_MAINNET_CHAINS = [
 ] as const
 
 /** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
-export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
+export const GQL_MAINNET_CHAINS_MUTABLE = [Chain.Celo]
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
