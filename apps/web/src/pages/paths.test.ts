@@ -18,70 +18,70 @@ describe('Paths', () => {
 
 describe('getExploreTitle', () => {
   it('should return the correct title for /explore', () => {
-    expect(getExploreTitle('/explore')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/ethereum', () => {
-    expect(getExploreTitle('/explore/ethereum')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/ethereum')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/polygon', () => {
-    expect(getExploreTitle('/explore/polygon')).toBe('Explore top tokens on Polygon on Uniswap')
+    expect(getExploreTitle('/explore/polygon')).toBe('Explore top tokens on Polygon on Ubeswap')
   })
 
   it('should return the correct title for /explore/tokens', () => {
-    expect(getExploreTitle('/explore/tokens')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/tokens')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/pools', () => {
-    expect(getExploreTitle('/explore/pools')).toBe('Explore top pools on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/pools')).toBe('Explore top pools on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/transactions', () => {
-    expect(getExploreTitle('/explore/transactions')).toBe('Explore top transactions on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/transactions')).toBe('Explore top transactions on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/tokens/ethereum', () => {
-    expect(getExploreTitle('/explore/tokens/ethereum')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/tokens/ethereum')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/pools/ethereum', () => {
-    expect(getExploreTitle('/explore/pools/ethereum')).toBe('Explore top pools on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/pools/ethereum')).toBe('Explore top pools on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/transactions/ethereum', () => {
-    expect(getExploreTitle('/explore/transactions/ethereum')).toBe('Explore top transactions on Ethereum on Uniswap')
+    expect(getExploreTitle('/explore/transactions/ethereum')).toBe('Explore top transactions on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /explore/tokens/optimism', () => {
-    expect(getExploreTitle('/explore/tokens/optimism')).toBe('Explore top tokens on Optimism on Uniswap')
+    expect(getExploreTitle('/explore/tokens/optimism')).toBe('Explore top tokens on Optimism on Ubeswap')
   })
 
   it('should return the correct title for /explore/pools/optimism', () => {
-    expect(getExploreTitle('/explore/pools/optimism')).toBe('Explore top pools on Optimism on Uniswap')
+    expect(getExploreTitle('/explore/pools/optimism')).toBe('Explore top pools on Optimism on Ubeswap')
   })
 
   it('should return the correct title for /explore/transactions/optimism', () => {
-    expect(getExploreTitle('/explore/transactions/optimism')).toBe('Explore top transactions on Optimism on Uniswap')
+    expect(getExploreTitle('/explore/transactions/optimism')).toBe('Explore top transactions on Optimism on Ubeswap')
   })
 })
 
 describe('getDefaultTokensTitle', () => {
   it('should return the correct title for /tokens', () => {
-    expect(getDefaultTokensTitle('/tokens')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getDefaultTokensTitle('/tokens')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /tokens/ethereum', () => {
-    expect(getDefaultTokensTitle('/tokens/ethereum')).toBe('Explore top tokens on Ethereum on Uniswap')
+    expect(getDefaultTokensTitle('/tokens/ethereum')).toBe('Explore top tokens on Ethereum on Ubeswap')
   })
 
   it('should return the correct title for /tokens/optimism', () => {
-    expect(getDefaultTokensTitle('/tokens/optimism')).toBe('Explore top tokens on Optimism on Uniswap')
+    expect(getDefaultTokensTitle('/tokens/optimism')).toBe('Explore top tokens on Optimism on Ubeswap')
   })
 
   it('should return the correct title for /tokens/ethereum/<weth address>', () => {
     expect(getDefaultTokensTitle(`/tokens/ethereum/${WETH9[ChainId.MAINNET].address}`)).toBe(
-      'Explore top tokens on Ethereum on Uniswap'
+      'Explore top tokens on Ethereum on Ubeswap'
     )
   })
 })

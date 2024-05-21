@@ -82,7 +82,7 @@ export default function CTACards() {
             <Trans>Top pools</Trans> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody style={{ alignSelf: 'flex-start', fontWeight: 485 }}>
-            <Trans>Explore Uniswap Analytics.</Trans>
+            <Trans>Explore Ubeswap Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA>

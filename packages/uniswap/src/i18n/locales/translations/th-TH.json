@@ -418,7 +418,7 @@
           "marketCap": "มูลค่าตลาด",
           "priceDecrease": "ลดราคา (24H)",
           "priceIncrease": "ราคาเพิ่มขึ้น (24H)",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "ปริมาณ Uniswap (24H)"
         }
       },

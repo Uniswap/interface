@@ -418,7 +418,7 @@
           "marketCap": "Kapitalisasi pasar",
           "priceDecrease": "Penurunan harga (24 jam)",
           "priceIncrease": "Kenaikan harga (24 jam)",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "Volume Uniswap (24 jam)"
         }
       },

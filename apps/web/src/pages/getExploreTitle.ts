@@ -11,7 +11,7 @@ export const getExploreTitle = (path?: string) => {
 
   const network = parts?.find((part) => getValidUrlChainName(part)) ?? 'ethereum'
 
-  return t(`Explore top {{tab}} on {{network}} on Uniswap`, {
+  return t(`Explore top {{tab}} on {{network}} on Ubeswap`, {
     tab,
     network: capitalize(network),
   })

@@ -418,7 +418,7 @@
           "marketCap": "Vốn hóa thị trường",
           "priceDecrease": "Giảm giá (24H)",
           "priceIncrease": "Tăng giá (24H)",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "Khối lượng Uniswap (24H)"
         }
       },

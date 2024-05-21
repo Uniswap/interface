@@ -19,7 +19,7 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     title: 'Uniswap Interface',
     image: imageUri,
     url: request.url,
-    description: 'Swap or provide liquidity on the Uniswap Protocol',
+    description: 'Swap or provide liquidity on the Ubeswap Protocol',
   }
   const res = next()
   if (doesMatchPath(requestURL.pathname)) {

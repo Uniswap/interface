@@ -79,7 +79,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
           </ThemedText.SubHeader>
 
           <ThemedText.BodySmall color="neutral2">
-            <Trans>To use Uniswap on {{ label: chainInfo.label }}, switch the network in your wallet’s settings.</Trans>
+            <Trans>To use Ubeswap on {{ label: chainInfo.label }}, switch the network in your wallet’s settings.</Trans>
           </ThemedText.BodySmall>
         </ColumnContainer>
       </RowNoFlex>

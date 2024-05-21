@@ -1485,7 +1485,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
             <div
               class="c56"
             >
-              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading.
+              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Ubeswap. Always conduct your own research before trading.
               <a
                 class="c57 c58"
                 href="https://support.uniswap.org/hc/en-us/articles/8723118437133"

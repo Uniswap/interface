@@ -22,7 +22,7 @@
   ],
   "orientation": "portrait",
   "name": "Uniswap",
-  "description": "Swap or provide liquidity on the Uniswap Protocol",
+  "description": "Swap or provide liquidity on the Ubeswap Protocol",
   "iconPath": "./images/256x256_App_Icon_Pink.svg",
   "short_name": "Uniswap",
   "start_url": ".",

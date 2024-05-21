@@ -107,7 +107,7 @@ export default function ClaimPopup() {
             </ThemedText.DeprecatedWhite>
             <ThemedText.DeprecatedSubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
-                Thanks for being part of the Uniswap community <Heart size={12} />
+                Thanks for being part of the Ubeswap community <Heart size={12} />
               </Trans>
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>

@@ -294,7 +294,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
         <div
           class="c6 c7 css-1urox24"
         >
-          This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
+          This provides the Ubeswap protocol access to your token for trading. For security, it expires after 30 days.
         </div>
         <div
           class="c0 c1"
@@ -1455,7 +1455,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
         <div
           class="c6 c7 css-1urox24"
         >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+          Swaps on the Ubeswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
         </div>
         <div
           class="c0 c1"
@@ -2227,7 +2227,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
         <div
           class="c6 c7 css-1urox24"
         >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+          Swaps on the Ubeswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
         </div>
         <div
           class="c0 c1"

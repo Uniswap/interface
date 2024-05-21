@@ -418,8 +418,8 @@
           "marketCap": "Market cap",
           "priceDecrease": "Price decrease (24H)",
           "priceIncrease": "Price increase (24H)",
-          "totalValueLocked": "Uniswap TVL",
-          "volume": "Uniswap volume (24H)"
+          "totalValueLocked": "Ubeswap TVL",
+          "volume": "Ubeswap volume (24H)"
         }
       },
       "top": {
@@ -725,7 +725,7 @@
   },
   "notifications": {
     "scantastic": {
-      "subtitle": "Continue on Uniswap Extension",
+      "subtitle": "Continue on Ubeswap Extension",
       "title": "Success!"
     }
   },
@@ -1162,7 +1162,7 @@
       "blocked": {
         "default": "This wallet is blocked",
         "modal": {
-          "message": "This address is blocked on Uniswap Wallet because it is associated with one or more blocked activities. If you believe this is an error, please email compliance@uniswap.org.",
+          "message": "This address is blocked on Ubeswap Wallet because it is associated with one or more blocked activities. If you believe this is an error, please email compliance@uniswap.org.",
           "title": "Blocked address"
         },
         "recipient": "Recipient wallet is blocked"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "We use anonymous usage data to enhance your experience across Uniswap Labs products. When disabled, we only track errors and essential usage.",
+          "description": "We use anonymous usage data to enhance your experience across Ubeswap Labs products. When disabled, we only track errors and essential usage.",
           "title": "Allow analytics"
         },
         "title": "Privacy"
@@ -1653,7 +1653,7 @@
       },
       "strong": {
         "header": "Warning",
-        "message": "This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading."
+        "message": "This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Ubeswap. Always conduct your own research before trading."
       }
     },
     "selector": {
