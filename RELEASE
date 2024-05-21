@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr`
-- CIDv1: `bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou`
+- CIDv0: `QmR4otTaGReggG5cf37xRt4wh3XkeKPZT5jqT7YbuvQFRQ`
+- CIDv1: `bafybeibiqqsv6nojor2kdirpukl4h6f44erjheo2r7fzbq2wvpg5akvd44`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou.ipfs.dweb.link/
-- https://bafybeicezboop6s2zwdnk7izhxdkemytiecd3vub4x4564xc2gmio4e3ou.ipfs.cf-ipfs.com/
-- [ipfs://QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr/](ipfs://QmSy9dnGZafmGNzzJgdfu97LH9P9HsAZNUTtnfMfAJctRr/)
+- https://bafybeibiqqsv6nojor2kdirpukl4h6f44erjheo2r7fzbq2wvpg5akvd44.ipfs.dweb.link/
+- https://bafybeibiqqsv6nojor2kdirpukl4h6f44erjheo2r7fzbq2wvpg5akvd44.ipfs.cf-ipfs.com/
+- [ipfs://QmR4otTaGReggG5cf37xRt4wh3XkeKPZT5jqT7YbuvQFRQ/](ipfs://QmR4otTaGReggG5cf37xRt4wh3XkeKPZT5jqT7YbuvQFRQ/)
 
-### 5.27.8 (2024-05-16)
+## 5.28.0 (2024-05-21)
 
 
-### Bug Fixes
+### Features
 
-* **web:** window.ethereum fallback on mobile [prod] (#8260) 929c164
+* **web:** unicon v2 education label (#8339) e861024
 
 
