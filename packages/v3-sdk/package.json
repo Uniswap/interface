@@ -1,0 +1,36 @@
+{
+  "name": "@uniswap/v3-sdk",
+  "description": "⚒️ An SDK for building applications on top of Ubeswap V3",
+  "version": "0.0.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "check:deps:usage": "depcheck",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@ethersproject/abi": "^5.5.0",
+    "@ethersproject/solidity": "^5.0.9",
+    "@ubeswap/sdk-core": "workspace:^",
+    "@uniswap/swap-router-contracts": "^1.3.0",
+    "@uniswap/v3-periphery": "^1.1.1",
+    "@uniswap/v3-staker": "1.0.0",
+    "tiny-invariant": "1.3.1",
+    "tiny-warning": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.0",
+    "@ubeswap/eslint-config": "workspace:^",
+    "@uniswap/v3-core": "1.0.0",
+    "eslint": "8.44.0",
+    "tsdx": "^0.14.1",
+    "typescript": "5.3.3"
+  }
+}

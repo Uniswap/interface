@@ -271,9 +271,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                 <div
                   class="c9 css-142zc9n"
                 >
-                  1 DEF = 1.00 ABC 
+                  1 DEF = 1.00 ABC
                 </div>
-                 
+
               </button>
             </div>
           </div>
@@ -411,7 +411,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     class="c9 c19 css-142zc9n"
                     data-testid="swap-li-label"
                   >
-                    Fee 
+                    Fee
                   </div>
                   <div
                     class="c12"
@@ -508,7 +508,7 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                         <div
                           class="c22 css-142zc9n"
                         >
-                          Uniswap Client
+                          Ubeswap Client
                         </div>
                       </div>
                     </div>

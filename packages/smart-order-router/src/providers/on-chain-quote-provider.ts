@@ -520,6 +520,7 @@ export class OnChainQuoteProvider implements IOnChainQuoteProvider {
           retryAll = true
         }
 
+        console.log('failedQuoteStates', failedQuoteStates)
         const reasonForFailureStr = _.map(failedQuoteStates, (failedQuoteState) => failedQuoteState.reason.name).join(
           ', '
         )

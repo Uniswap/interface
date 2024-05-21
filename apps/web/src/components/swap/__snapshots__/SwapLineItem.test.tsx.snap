@@ -1604,7 +1604,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 <div
                   class="c20 css-142zc9n"
                 >
-                  Uniswap Client
+                  Ubeswap Client
                 </div>
               </div>
             </div>
@@ -2654,7 +2654,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 <div
                   class="c20 css-142zc9n"
                 >
-                  Uniswap API
+                  Ubeswap API
                 </div>
               </div>
             </div>
@@ -3704,7 +3704,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 <div
                   class="c20 css-142zc9n"
                 >
-                  Uniswap Client
+                  Ubeswap Client
                 </div>
               </div>
             </div>
@@ -4807,7 +4807,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 <div
                   class="c20 css-142zc9n"
                 >
-                  Uniswap API
+                  Ubeswap API
                 </div>
               </div>
             </div>
@@ -5910,7 +5910,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 <div
                   class="c20 css-142zc9n"
                 >
-                  Uniswap API
+                  Ubeswap API
                 </div>
               </div>
             </div>

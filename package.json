@@ -36,7 +36,6 @@
     "cypress": "12.12.0",
     "@babel/preset-env": "7.23.3",
     "immer": "9.0.21",
-    "@uniswap/v2-sdk": "4.3.0",
     "@apollo/client": "3.9.6",
     "@sideway/formula": "3.0.1",
     "@walletconnect/ethereum-provider": "2.10.1",

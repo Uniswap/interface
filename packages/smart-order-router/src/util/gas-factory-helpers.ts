@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, CurrencyAmount, Token, TradeType } from '@ubeswap/sdk-core'
 import { Protocol } from '@uniswap/router-sdk'
-import { Pair } from '@uniswap/v2-sdk/dist/entities'
+import { Pair } from '@uniswap/v2-sdk/'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import _ from 'lodash'

@@ -1,0 +1,14 @@
+{
+  "extends": "tsconfig/sdk.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.json",
+    "abis/**/*.json"
+ ],
+  "compilerOptions": {
+    "types": [
+      "jest"
+    ]
+  }
+}

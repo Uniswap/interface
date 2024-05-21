@@ -66,7 +66,7 @@ const CELO_ADDRESSES: ChainAddresses = {
   nonfungiblePositionManagerAddress: '0x5C76245413c6C4cBe7A3fAe395a8F7AF06FDCd65',
   tickLensAddress: '0x1D8C564cCE485C2f053EF32652E4dba00D4265C4',
   swapRouter02Address: '0x5CDe4d414F27E331B6738F783BC84c5507d8ee7A',
-  // mixedRouteQuoterV1Address: '',
+  mixedRouteQuoterV1Address: '0x1f34a843832044A085bB9cAe48cc7294D5478FAA',
 }
 
 export const CHAIN_TO_ADDRESSES_MAP: Record<SupportedChainsType, ChainAddresses> = {
