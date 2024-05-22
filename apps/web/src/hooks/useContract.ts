@@ -6,6 +6,7 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  UBE_CONVERT_ADDRESSES,
   V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
 } from '@ubeswap/sdk-core'
@@ -38,6 +39,7 @@ import {
 } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
+import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
 
@@ -174,4 +176,8 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
     }
   }, [account, chainId, contract, withSignerIfPossible])
   return contract
+}
+
+export function useUbeConvertContract() {
+  return useContract<V3Migrator>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
 }

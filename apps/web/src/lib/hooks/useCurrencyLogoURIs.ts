@@ -63,7 +63,7 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   }
 }
 
-function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
+function getTokenLogoURI(address: string, chainId: ChainId = ChainId.CELO): string | void {
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [
     ChainId.ARBITRUM_ONE,
@@ -105,6 +105,9 @@ export default function useCurrencyLogoURIs(
         const logoURI = checksummedAddress && getTokenLogoURI(checksummedAddress, currency.chainId)
         if (logoURI) {
           logoURIs.push(logoURI)
+        }
+        if (currency.address?.toLocaleLowerCase() == '0x71e26d0e519d14591b9de9a0fe9513a398101490') {
+          logoURIs.unshift('https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_UBE.png')
         }
       }
     }

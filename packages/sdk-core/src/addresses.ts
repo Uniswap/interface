@@ -185,3 +185,7 @@ export const UNIVERSAL_ROUTER_ADDRESS = (chainId: number) => {
   }
   return ''
 }
+
+export const UBE_CONVERT_ADDRESSES: AddressMap = {
+  [ChainId.CELO]: '0x9DFc135e0984Fe88aCd45d68e62a73E98Dbb7A36',
+}
