@@ -9,12 +9,10 @@ import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
@@ -45,9 +43,11 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
@@ -264,8 +264,7 @@ function useSwapTransactionRequest(
       !tokenApprovalInfo ||
       (!simulatedGasLimit && simulatedGasLimitLoading) ||
       permit2InfoLoading ||
-      !trade ||
-      isNaN(trade.slippageTolerance)
+      !trade
     ) {
       return { transactionRequest: undefined }
     }
@@ -410,7 +409,7 @@ export function useSwapTxAndGasInfoLegacy({
           ? new Error(UNKNOWN_SIM_ERROR)
           : simulatedGasEstimateError
 
-      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: simulationError.toString(),
         txRequest: transactionRequest,
@@ -435,7 +434,7 @@ export function useSwapTxAndGasInfoLegacy({
         tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
       })
 
-      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: swapGasFee.error.toString(),
         txRequest: transactionRequest,
@@ -512,12 +511,7 @@ export function useShowSwapNetworkNotification(chainId?: ChainId): void {
     }
 
     appDispatch(
-      pushNotification({
-        type: AppNotificationType.NetworkChanged,
-        chainId,
-        flow: 'swap',
-        hideDelay: 2000,
-      })
+      pushNotification({ type: AppNotificationType.SwapNetwork, chainId, hideDelay: 2000 })
     )
   }, [chainId, prevChainId, appDispatch])
 }

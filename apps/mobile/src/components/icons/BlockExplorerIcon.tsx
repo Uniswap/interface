@@ -2,8 +2,7 @@ import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useIsDarkMode } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 
 type IconComponentProps = SvgProps & { size?: IconSizeTokens | number }
 

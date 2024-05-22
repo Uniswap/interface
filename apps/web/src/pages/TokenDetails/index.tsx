@@ -11,7 +11,7 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
-import { useDynamicMetatags } from 'pages/metatags'
+import { useMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
@@ -23,7 +23,7 @@ import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 import { useChainId } from 'wagmi'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
-import { getTokenPageDescription, getTokenPageTitle } from './utils'
+import { getTokenPageTitle } from './utils'
 
 function useOnChainToken(address: string | undefined, chainId: ChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)
@@ -144,10 +144,10 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 export default function TokenDetailsPage() {
   const pageChainId = useWeb3React().chainId ?? ChainId.MAINNET
   const contextValue = useCreateTDPContext()
-  const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
+  const { tokenColor, address, currency, currencyChain, tokenQuery } = contextValue
 
   const tokenQueryData = tokenQuery.data?.token
-  const metatagProperties = useMemo(() => {
+  const metaTagProperties = useMemo(() => {
     return {
       title: formatTokenMetatagTitleName(tokenQueryData?.symbol, tokenQueryData?.name),
       image:
@@ -157,17 +157,16 @@ export default function TokenDetailsPage() {
         '/' +
         (currency?.isNative ? getNativeTokenDBAddress(currencyChain) : address),
       url: window.location.href,
-      description: getTokenPageDescription(currency, currencyChainId),
     }
-  }, [address, currency, currencyChain, currencyChainId, tokenQueryData?.name, tokenQueryData?.symbol])
-  const metatags = useDynamicMetatags(metatagProperties)
+  }, [address, currency?.isNative, currencyChain, tokenQueryData?.name, tokenQueryData?.symbol])
+  const metaTags = useMetatags(metaTagProperties)
 
   return (
     <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
-        <title>{getTokenPageTitle(currency, currencyChainId)}</title>
-        {metatags.map((tag, index) => (
-          <meta key={index} {...tag} />
+        <title>{getTokenPageTitle(currency)}</title>
+        {metaTags.map((tag) => (
+          <meta key={tag.attribute} {...tag} />
         ))}
       </Helmet>
       {(() => {

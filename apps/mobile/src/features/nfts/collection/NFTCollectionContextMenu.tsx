@@ -6,10 +6,9 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'wallet/src/utils/linking'
 import { NFTCollectionData } from './types'
 
@@ -60,7 +59,7 @@ export function NFTCollectionContextMenu({
       await Share.share({
         message: shareURL,
       })
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
         entity: ShareableEntity.NftCollection,
         url: shareURL,
       })

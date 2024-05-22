@@ -33,7 +33,7 @@ const StyledClose = styled(X)<{ $padding: number }>`
     cursor: pointer;
   }
 `
-export const PopupContainer = styled.div<{ padded?: boolean }>`
+const PopupContainer = styled.div<{ padded?: boolean }>`
   display: inline-block;
   width: 100%;
   background-color: ${({ theme }) => theme.surface1};

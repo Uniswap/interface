@@ -1,10 +1,9 @@
 import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { getBuildVariant } from 'src/utils/version'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { WidgetEvent } from 'uniswap/src/types/widgets'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
@@ -19,8 +18,18 @@ const KEY_WIDGETS_I18N = getBuildVariant() + '.widgets.i18n'
 
 const { RNWidgets } = NativeModules
 
+export const enum WidgetType {
+  TokenPrice = 'token-price',
+}
+
 type WidgetEventsData = {
   events: WidgetEvent[]
+}
+
+export type WidgetEvent = {
+  kind: string
+  family: string
+  change: 'added' | 'removed'
 }
 
 type WidgetCacheData = {
@@ -86,7 +95,7 @@ async function handleLastRemovalEvents(): Promise<void> {
     }
     const widgetCache: WidgetCacheData = JSON.parse(widgetCacheJSONString)
     widgetCache.configuration.forEach((widget) => {
-      sendAnalyticsEvent(MobileEventName.WidgetConfigurationUpdated, {
+      sendMobileAnalyticsEvent(MobileEventName.WidgetConfigurationUpdated, {
         kind: widget.kind,
         family: widget.family,
         change: 'removed',
@@ -106,7 +115,7 @@ export async function processWidgetEvents(): Promise<void> {
   }
   const widgetEvents: WidgetEventsData = JSON.parse(widgetEventsJSONString)
   widgetEvents.events.forEach((widget) => {
-    sendAnalyticsEvent(MobileEventName.WidgetConfigurationUpdated, widget)
+    sendMobileAnalyticsEvent(MobileEventName.WidgetConfigurationUpdated, widget)
   })
 
   if (widgetEvents.events.length > 0) {

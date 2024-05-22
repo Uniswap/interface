@@ -17,7 +17,7 @@ import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceIn
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { getChainInfo, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
+import { getChainInfo, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -31,11 +31,7 @@ import { LimitState } from 'state/limit/types'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers, useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
-import {
-  NumberType,
-  formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
-  useFormatter,
-} from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
@@ -46,7 +42,6 @@ import {
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { useAtom } from 'jotai'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
@@ -68,6 +63,7 @@ const StyledAlertIcon = styled(AlertTriangle)`
   align-self: flex-start;
   flex-shrink: 0;
   margin-right: 12px;
+  fill: ${({ theme }) => theme.neutral2};
 `
 
 const LimitDisclaimerContainer = styled(Row)`
@@ -120,7 +116,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   useEffect(() => {
     if (limitState.limitPriceEdited || !marketPrice || !inputCurrency || !outputCurrency) return
 
-    const marketPriceString = formatCurrencyAmountWithoutUserLocale({
+    const marketPriceString = formatCurrencyAmount({
       amount: (() => {
         if (limitState.limitPriceInverted) {
           return marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
@@ -130,7 +126,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       })(),
       type: NumberType.SwapTradeAmount,
       placeholder: '',
-      locale: 'en-US',
     })
 
     setLimitState((prev) => ({
@@ -303,7 +298,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       <SwapSection>
         <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
           <SwapCurrencyInputPanel
-            label={<Trans>Sell</Trans>}
+            label={<Trans>You pay</Trans>}
             value={formattedAmounts[Field.INPUT]}
             showMaxButton={showMaxButton}
             currency={inputCurrency ?? null}
@@ -330,7 +325,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       <SwapSection>
         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
           <SwapCurrencyInputPanel
-            label={<Trans>Buy</Trans>}
+            label={<Trans>You receive</Trans>}
             value={formattedAmounts[Field.OUTPUT]}
             showMaxButton={false}
             currency={outputCurrency ?? null}
@@ -371,23 +366,14 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         />
       )}
       <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
+        <StyledAlertIcon size={20} color={theme.neutral2} />
         <DisclaimerText>
-          {!isUniswapXSupportedChain(chainId) ? (
-            <Trans>
-              Only Ethereum mainnet tokens are available for limits.{' '}
-              <ExternalLink href={SupportArticleURL.LIMITS_SUPPORTED_NETWORKS}>
-                <Trans>Learn more</Trans>
-              </ExternalLink>
-            </Trans>
-          ) : (
-            <Trans>
-              Limits may not execute exactly when tokens reach the specified price.{' '}
-              <ExternalLink href={SupportArticleURL.LIMIT_FAILURE}>
-                <Trans>Learn more</Trans>
-              </ExternalLink>
-            </Trans>
-          )}
+          <Trans>
+            Limits may not execute exactly when tokens reach the specified price.{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </Trans>
         </DisclaimerText>
       </LimitDisclaimerContainer>
       {limitOrderTrade && showConfirm && (
@@ -432,15 +418,7 @@ function SubmitOrderButton({
   limitPriceError?: LimitPriceErrorType
 }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
-  const { account, chainId } = useWeb3React()
-
-  if (!isUniswapXSupportedChain(chainId)) {
-    return (
-      <ButtonError disabled>
-        <Trans>Select supported tokens</Trans>
-      </ButtonError>
-    )
-  }
+  const { account } = useWeb3React()
 
   if (!account) {
     return (

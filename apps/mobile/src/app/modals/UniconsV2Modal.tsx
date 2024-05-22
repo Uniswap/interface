@@ -14,10 +14,10 @@ import {
 } from 'ui/src'
 import { RightArrow } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniconGradient } from 'wallet/src/components/accounts/AccountIcon'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { setHasViewedUniconV2IntroModal } from 'wallet/src/features/behaviorHistory/slice'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 interface UniconsV2ModalProps {
   address: string

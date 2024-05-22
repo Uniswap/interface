@@ -7,8 +7,6 @@ export type PersistAppStateV10 = {
 
 /**
  * Migration to remove recentConnectionMeta from state after wagmi migration made it redundant.
- *
- * Note: an edgecase was missed in this migration, which is fixed in migration11.
  */
 export const migration10 = (state: PersistAppStateV10 | undefined) => {
   if (!state?.user?.recentConnectionMeta) return state

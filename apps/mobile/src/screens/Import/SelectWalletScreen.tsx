@@ -5,15 +5,14 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Loader } from 'ui/src'
 import { useSelectWalletScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { ImportType } from 'uniswap/src/types/onboarding'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
+import { ImportType } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
   editAccountActions,
@@ -26,6 +25,7 @@ import {
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 

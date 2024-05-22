@@ -1,5 +1,5 @@
 import { DAI, USDC } from 'wallet/src/constants/tokens'
-import { mockLocalizedFormatter, noOpFunction } from 'wallet/src/test/mocks/utils'
+import { mockLocalizedFormatter } from 'wallet/src/test/mocks/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from './currency'
 
 describe(getFormattedCurrencyAmount, () => {
@@ -16,7 +16,6 @@ describe(getFormattedCurrencyAmount, () => {
 
   it('handles error', () => {
     // invalid raw amount will throw error
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(getFormattedCurrencyAmount(USDC, '0.1', mockLocalizedFormatter)).toEqual('')
   })
 })

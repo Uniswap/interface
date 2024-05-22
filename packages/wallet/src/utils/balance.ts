@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_CURRENCY_DECIMALS = 18

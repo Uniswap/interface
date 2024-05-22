@@ -8,15 +8,15 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
+import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 
@@ -44,7 +44,7 @@ export const TokensTab = memo(
 
       const onPressToken = useCallback(
         (currencyId: CurrencyId): void => {
-          startProfilerTimer({ source: MobileScreens.Home })
+          startProfilerTimer({ source: Screens.Home })
           tokenDetailsNavigation.navigate(currencyId)
         },
         [startProfilerTimer, tokenDetailsNavigation]

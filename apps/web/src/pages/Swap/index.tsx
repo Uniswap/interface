@@ -7,16 +7,19 @@ import SwapHeader from 'components/swap/SwapHeader'
 import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
-import { useScreenSize } from 'hooks/screenSize'
+import { useCurrency } from 'hooks/Tokens'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { SendForm } from 'pages/Swap/Send/SendForm'
-import { ReactNode } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
-import { useInitialCurrencyState } from 'state/swap/hooks'
+import { queryParametersToCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useChainId } from 'wagmi'
+
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { LimitFormWrapper } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
@@ -36,8 +39,16 @@ export function getIsReviewableQuote(
 export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
-  const { initialInputCurrency, initialOutputCurrency, chainId } = useInitialCurrencyState()
-  const shouldDisableTokenInputs = useSupportedChainId(useChainId()) === undefined
+  const supportedChainId = useSupportedChainId(useChainId())
+  const chainId = supportedChainId || ChainId.MAINNET
+
+  const parsedQs = useParsedQueryString()
+  const parsedCurrencyState = useMemo(() => {
+    return queryParametersToCurrencyState(parsedQs)
+  }, [parsedQs])
+
+  const initialInputCurrency = useCurrency(parsedCurrencyState.inputCurrencyId, chainId)
+  const initialOutputCurrency = useCurrency(parsedCurrencyState.outputCurrencyId, chainId)
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
@@ -45,12 +56,12 @@ export default function SwapPage({ className }: { className?: string }) {
         <Swap
           className={className}
           chainId={chainId}
-          disableTokenInputs={shouldDisableTokenInputs}
+          disableTokenInputs={supportedChainId === undefined}
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
           syncTabToUrl={true}
         />
-        {location.pathname !== '/limit' && <NetworkAlert />}
+        <NetworkAlert />
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>

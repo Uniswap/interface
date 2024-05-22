@@ -3,9 +3,9 @@ import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
 import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
@@ -44,7 +44,7 @@ import {
 
 expect.extend({ toIncludeSameMembers })
 
-jest.mock('uniswap/src/features/telemetry/send')
+jest.mock('wallet/src/telemetry')
 
 const eth = ethToken()
 const dai = daiToken()

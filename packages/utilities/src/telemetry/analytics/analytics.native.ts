@@ -6,7 +6,6 @@ import {
   setDeviceId,
   track,
 } from '@amplitude/analytics-react-native'
-// eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { getUniqueId } from 'react-native-device-info'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'

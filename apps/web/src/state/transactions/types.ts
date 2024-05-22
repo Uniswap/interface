@@ -3,11 +3,21 @@ import { TradeType } from '@uniswap/sdk-core'
 import {
   AssetActivityPartsFragment,
   TransactionDetailsPartsFragment,
-  TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { VoteOption } from '../governance/types'
 
 export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
+
+export interface SerializableTransactionReceipt {
+  to: string
+  from: string
+  contractAddress: string
+  transactionIndex: number
+  blockHash: string
+  transactionHash: string
+  blockNumber: number
+  status?: number
+}
 
 /**
  * Be careful adding to this enum, always assign a unique value (typescript will not prevent duplicate values).
@@ -205,25 +215,15 @@ export type TransactionInfo =
   | SubmitProposalTransactionInfo
   | SendTransactionInfo
 
-interface BaseTransactionDetails {
-  status: TransactionStatus
+export interface TransactionDetails {
   hash: string
+  receipt?: SerializableTransactionReceipt
+  lastCheckedBlockNumber?: number
   addedTime: number
+  confirmedTime?: number
+  deadline?: number
   from: string
   info: TransactionInfo
   nonce?: number
-  cancelled?: true
+  cancelled?: boolean
 }
-
-export interface PendingTransactionDetails extends BaseTransactionDetails {
-  status: TransactionStatus.Pending
-  lastCheckedBlockNumber?: number
-  deadline?: number
-}
-
-export interface ConfirmedTransactionDetails extends BaseTransactionDetails {
-  status: TransactionStatus.Confirmed | TransactionStatus.Failed
-  confirmedTime: number
-}
-
-export type TransactionDetails = PendingTransactionDetails | ConfirmedTransactionDetails

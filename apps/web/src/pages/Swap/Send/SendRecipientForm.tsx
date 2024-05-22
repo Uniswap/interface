@@ -121,7 +121,7 @@ const AutocompleteRow = ({
   const { unitag } = useUnitagByAddress(address)
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
-  const formattedAddress = shortenAddress(address, 8, 8)
+  const formattedAddress = shortenAddress(address)
   const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(

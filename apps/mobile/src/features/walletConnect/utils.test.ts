@@ -3,7 +3,7 @@ import {
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
 } from 'src/features/walletConnect/utils'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'

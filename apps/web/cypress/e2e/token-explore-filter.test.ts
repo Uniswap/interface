@@ -2,7 +2,7 @@ import { getTestSelector } from '../utils'
 
 describe('Token explore filter', () => {
   beforeEach(() => {
-    cy.visit('/explore/tokens')
+    cy.visit('/tokens')
   })
 
   function aliasFilteredTokens(filter: string) {
@@ -19,9 +19,9 @@ describe('Token explore filter', () => {
     })
   }
 
-  it('should filter correctly by dai search term', () => {
-    aliasFilteredTokens('dai')
-    searchFor('dai')
+  it('should filter correctly by dao search term', () => {
+    aliasFilteredTokens('dao')
+    searchFor('dao')
 
     cy.get('@filteredTokens').then((filteredTokens) => {
       const filteredTokenTexts = Cypress.$(filteredTokens)

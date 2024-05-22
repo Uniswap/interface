@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import {

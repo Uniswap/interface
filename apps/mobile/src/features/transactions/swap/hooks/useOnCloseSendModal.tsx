@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function useOnCloseSendModal(): () => void {
   const appDispatch = useAppDispatch()

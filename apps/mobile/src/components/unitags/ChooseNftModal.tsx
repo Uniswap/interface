@@ -1,10 +1,10 @@
 import { NftView } from 'src/components/NFT/NftView'
 import { useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 type ChooseNftProps = {
   address: string

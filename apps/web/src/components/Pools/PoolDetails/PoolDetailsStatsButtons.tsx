@@ -13,7 +13,7 @@ import { chainIdToBackendChain, SupportedInterfaceChainId } from 'constants/chai
 import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/tokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'

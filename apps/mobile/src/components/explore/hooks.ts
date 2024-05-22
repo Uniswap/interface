@@ -6,11 +6,10 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { SharedValue, StyleProps, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -18,6 +17,7 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
+import { ElementName, ModalName, SectionNameType } from 'wallet/src/telemetry/constants'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
@@ -74,7 +74,7 @@ export function useExploreTokenContextMenu({
       },
     }
     dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+    sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.Swap,
       section: analyticsSection,
     })

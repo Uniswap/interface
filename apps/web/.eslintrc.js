@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const { crossPlatform: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+const { node: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
 require('@uniswap/eslint-config/load')
 
 const rulesDirPlugin = require('eslint-plugin-rulesdir')

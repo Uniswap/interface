@@ -12,10 +12,6 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { AnimatedFlex, Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
-import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { ChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
 import { TextInputProps } from 'wallet/src/components/input/TextInput'
@@ -24,9 +20,13 @@ import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetC
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { FiatOnRampEventName, ModalName } from 'wallet/src/telemetry/constants'
+import { WalletEventProperties } from 'wallet/src/telemetry/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { openUri } from 'wallet/src/utils/linking'
 import { FiatOnRampTokenSelectorModal } from './FiatOnRampTokenSelector'
@@ -130,7 +130,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     async () => {
       if (fiatOnRampHostUrl) {
         if (currency?.moonpayCurrencyCode) {
-          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
+          sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
             externalTransactionId,
             serviceProvider: 'MOONPAY',
             fiatCurrency: moonpaySupportedFiatCurrency.code.toLowerCase(),
@@ -150,9 +150,9 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
 
   const onChangeValue =
-    (source: UniverseEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
+    (source: WalletEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
         source,
       })
       setValue(newAmount)
@@ -185,7 +185,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     setCurrency(newCurrency)
     setShowTokenSelector(false)
     if (newCurrency.currencyInfo?.currency.symbol) {
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
         token: newCurrency.currencyInfo.currency.symbol.toLowerCase(),
       })
     }

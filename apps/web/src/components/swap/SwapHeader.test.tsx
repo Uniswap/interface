@@ -67,4 +67,14 @@ describe('SwapHeader.tsx', () => {
     })
     expect(onClickTab).toHaveBeenCalledWith(SwapTab.Limit)
   })
+
+  it('does not render when chain is not mainnet', () => {
+    const onClickTab = jest.fn()
+    render(
+      <Wrapper setCurrentTab={onClickTab} chainId={ChainId.ARBITRUM_GOERLI}>
+        <SwapHeader compact={false} syncTabToUrl={false} />
+      </Wrapper>
+    )
+    expect(screen.queryByText('Limit')).toBeNull()
+  })
 })

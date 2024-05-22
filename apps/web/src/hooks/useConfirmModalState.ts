@@ -7,7 +7,7 @@ import { Field, RESET_APPROVAL_TOKENS } from 'components/swap/constants'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
-import { InterfaceTrade } from 'state/routing/types'
+import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -15,7 +15,6 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 import { useChainId } from 'wagmi'
 
-import { isUniswapXTrade } from 'state/routing/utils'
 import { useMaxAmountIn } from './useMaxAmountIn'
 import { Allowance, AllowanceState } from './usePermit2Allowance'
 import usePrevious from './usePrevious'
@@ -55,7 +54,7 @@ export function useConfirmModalState({
   // at the bottom of the modal, even after they complete steps 1 and 2.
   const generateRequiredSteps = useCallback(() => {
     const steps: PendingConfirmModalState[] = []
-    if (isUniswapXTrade(trade) && trade.wrapInfo.needsWrap) {
+    if (trade.fillType === TradeFillType.UniswapX && trade.wrapInfo.needsWrap) {
       steps.push(ConfirmModalState.WRAPPING)
     }
     if (
@@ -223,10 +222,6 @@ export function useConfirmModalState({
     }
   }, [allowance, confirmModalState, doesTradeDiffer, performStep])
 
-  const resetToReviewScreen = () => {
-    setConfirmModalState(ConfirmModalState.REVIEWING)
-  }
-
   const onCancel = () => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
     setApprovalError(undefined)
@@ -243,7 +238,6 @@ export function useConfirmModalState({
 
   return {
     startSwapFlow,
-    resetToReviewScreen,
     onCancel,
     confirmModalState,
     doesTradeDiffer,

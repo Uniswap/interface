@@ -63,7 +63,7 @@
   "account.wallet.header.button.disabled.title": "Edit profile",
   "account.wallet.header.button.title": "Edit label",
   "account.wallet.header.other": "Your other wallets",
-  "account.wallet.header.viewOnly": "View-only wallets",
+  "account.wallet.header.viewOnly": "View only wallets",
   "account.wallet.menu.copy.title": "Copy wallet address",
   "account.wallet.menu.edit.title": "Edit label",
   "account.wallet.menu.remove.title": "Remove wallet",
@@ -353,7 +353,6 @@
   "notification.copied.transactionId": "Transaction ID copied",
   "notification.countryChange": "Switched to {{countryName}}",
   "notification.restore.success": "Wallet restored!",
-  "notification.send.network": "Sending on {{network}}",
   "notification.swap.network": "Swapping on {{network}}",
   "notification.swap.pending.swap": "Swap pending",
   "notification.swap.pending.unwrap": "Unwrap pending",
@@ -1047,5 +1046,5 @@
   "walletConnect.request.warning.general.message": "Be careful: this message may transfer assets",
   "walletConnect.request.warning.general.transaction": "Be careful: this transaction may transfer assets",
   "walletConnect.request.warning.message": "In order to sign messages or transactions, you’ll need to import the wallet’s recovery phrase.",
-  "walletConnect.request.warning.title": "This wallet is in view-only mode"
+  "walletConnect.request.warning.title": "This wallet is in view only mode"
 }

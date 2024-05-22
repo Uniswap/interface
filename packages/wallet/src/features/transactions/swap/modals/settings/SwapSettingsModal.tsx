@@ -5,11 +5,9 @@ import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
 import {
@@ -23,6 +21,7 @@ import { TradeProtocolPreference } from 'wallet/src/features/transactions/transa
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 enum SwapSettingsModalView {
   Options,

@@ -5,8 +5,8 @@ import {
   modalsReducer,
   openModal,
 } from 'src/features/modals/modalSlice'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { ModalsState } from './ModalsState'
 
 const initialState = { ...initialModalsState }

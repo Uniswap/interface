@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { render } from 'wallet/src/test/test-utils'
 import { InlineNetworkPill, NetworkPill } from './NetworkPill'
 

@@ -16,10 +16,11 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const tokenAddress = String(index[1])
 
     const cacheUrl = origin + '/tokens/' + networkName + '/' + tokenAddress
+
     const data = await getRequest(
       cacheUrl,
       () => getToken(networkName, tokenAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.tokenData?.symbol && data.name)
+      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.symbol && data.name)
     )
 
     if (!data) {
@@ -94,7 +95,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                       color: 'white',
                     }}
                   >
-                    {data.name?.slice(0, 3).toUpperCase()}
+                    {data.name.slice(0, 3).toUpperCase()}
                   </div>
                   {networkLogo != '' && (
                     <img
@@ -141,7 +142,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     width: '100%',
                   }}
                 >
-                  {data.tokenData?.symbol}
+                  {data.symbol}
                 </div>
                 <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>

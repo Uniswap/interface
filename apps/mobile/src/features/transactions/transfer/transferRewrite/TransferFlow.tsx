@@ -9,8 +9,7 @@ import {
   useTransferScreenContext,
 } from 'src/features/transactions/transfer/transferRewrite/TransferScreenContext'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   SwapFormContextProvider,
   SwapFormState,
@@ -18,6 +17,7 @@ import {
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 /**
  * @todo: The screens within this flow are not implemented.

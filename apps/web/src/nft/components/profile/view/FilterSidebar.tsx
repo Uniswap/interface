@@ -8,7 +8,7 @@ import { checkbox } from 'nft/components/layout/Checkbox.css'
 import { Input } from 'nft/components/layout/Input'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
+import { useFiltersExpanded, useIsMobile, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import {
   CSSProperties,
@@ -30,7 +30,6 @@ import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import noop from 'utilities/src/react/noop'
 
-import { useIsMobile } from 'hooks/screenSize'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
 import * as styles from './ProfilePage.css'
 

@@ -2,9 +2,9 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 export function SwapFeeWarning({

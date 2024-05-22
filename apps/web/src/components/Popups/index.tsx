@@ -3,8 +3,6 @@ import { useActivePopups } from 'state/application/hooks'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
-import UniconV2InfoPopup, { showUniconV2InfoPopupAtom } from 'components/Popups/UniconV2InfoPopup'
-import { useAtomValue } from 'jotai/utils'
 import { AutoColumn } from '../Column'
 import ClaimPopup from './ClaimPopup'
 import PopupItem from './PopupItem'
@@ -37,16 +35,9 @@ const MobilePopupInner = styled.div`
 
 const FixedPopupColumn = styled(AutoColumn)<{
   drawerOpen: boolean
-  showUniconV2InfoPopup: boolean
 }>`
   position: fixed;
-  top: ${({ drawerOpen, showUniconV2InfoPopup }) => {
-    if (showUniconV2InfoPopup) {
-      return drawerOpen ? '80px' : '64px'
-    } else {
-      return drawerOpen ? '14px' : '64px'
-    }
-  }};
+  top: ${({ drawerOpen }) => `${64 + (drawerOpen ? -50 : 0)}px`};
   right: 1rem;
   max-width: 348px !important;
   width: 100%;
@@ -63,28 +54,18 @@ export default function Popups() {
 
   // get all popups
   const activePopups = useActivePopups()
-  const showUniconV2InfoPopup = useAtomValue(showUniconV2InfoPopupAtom)
-
-  const hasPopups = showUniconV2InfoPopup || activePopups?.length > 0
 
   return (
     <>
-      <FixedPopupColumn
-        gap="20px"
-        drawerOpen={isAccountDrawerOpen}
-        showUniconV2InfoPopup={showUniconV2InfoPopup}
-        data-testid="popups"
-      >
+      <FixedPopupColumn gap="20px" drawerOpen={isAccountDrawerOpen} data-testid="popups">
         <ClaimPopup />
-        <UniconV2InfoPopup />
         {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
-      {hasPopups && (
+      {activePopups?.length > 0 && (
         <MobilePopupWrapper data-testid="popups">
           <MobilePopupInner>
-            <UniconV2InfoPopup />
             {activePopups // reverse so new items up front
               .slice(0)
               .reverse()

@@ -143,7 +143,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       }
     >
       <Image
-        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -152,6 +151,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         style={
           {
             "height": 16,
+            "resizeMode": "contain",
             "width": 16,
           }
         }
@@ -397,7 +397,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       }
     >
       <Image
-        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -406,6 +405,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         style={
           {
             "height": 16,
+            "resizeMode": "contain",
             "width": 16,
           }
         }
@@ -573,7 +573,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
     >
       <Image
-        resizeMode="contain"
         source={
           {
             "process": [Function],
@@ -582,6 +581,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         style={
           {
             "height": 16,
+            "resizeMode": "contain",
             "width": 16,
           }
         }

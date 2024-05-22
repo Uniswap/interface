@@ -28,7 +28,6 @@ import {
 import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
@@ -39,6 +38,7 @@ import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {

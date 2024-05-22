@@ -3,16 +3,17 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
+import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -33,7 +34,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
     if (searchContext) {
-      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name: name ?? '',
         chain: token.chainId,

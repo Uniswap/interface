@@ -11,6 +11,7 @@ import {
   useTokenWarning,
   Warning,
 } from 'constants/tokenSafety'
+import { useToken } from 'hooks/Tokens'
 import { Trans } from 'i18n'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
@@ -195,49 +196,58 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export interface TokenSafetyProps {
-  token0?: Token
-  token1?: Token
+  tokenAddress?: string
+  secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
   onBlocked?: () => void
   showCancel?: boolean
 }
 
-export default function TokenSafety({ token0, token1, onContinue, onCancel, onBlocked, showCancel }: TokenSafetyProps) {
+export default function TokenSafety({
+  tokenAddress,
+  secondTokenAddress,
+  onContinue,
+  onCancel,
+  onBlocked,
+  showCancel,
+}: TokenSafetyProps) {
   const logos = []
   const urls = []
 
-  const token0Warning = useTokenWarning(token0?.address, token0?.chainId)
-  const token1Warning = useTokenWarning(token1?.address, token1?.chainId)
+  const token1 = useToken(tokenAddress)
+  const token1Warning = useTokenWarning(tokenAddress, token1?.chainId)
+  const token2 = useToken(secondTokenAddress)
+  const token2Warning = useTokenWarning(secondTokenAddress, token2?.chainId)
 
-  const token0Unsupported = !token0Warning?.canProceed
   const token1Unsupported = !token1Warning?.canProceed
+  const token2Unsupported = !token2Warning?.canProceed
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
-  if (token0 && token0Warning && (token0Unsupported || !(token1Warning && token1Unsupported))) {
-    logos.push(<CurrencyLogo key={token0.address} currency={token0} size={48} />)
-    urls.push(<ExplorerView token={token0} />)
-  }
-  if (token1 && token1Warning && (token1Unsupported || !(token0Warning && token0Unsupported))) {
+  if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
     logos.push(<CurrencyLogo key={token1.address} currency={token1} size={48} />)
     urls.push(<ExplorerView token={token1} />)
+  }
+  if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
+    logos.push(<CurrencyLogo key={token2.address} currency={token2} size={48} />)
+    urls.push(<ExplorerView token={token2} />)
   }
 
   const plural = logos.length > 1
   // Show higher level warning if two are present
-  let displayWarning = token0Warning
-  if (!token0Warning || (token1Warning && token1Unsupported && !token0Unsupported)) {
-    displayWarning = token1Warning
+  let displayWarning = token1Warning
+  if (!token1Warning || (token2Warning && token2Unsupported && !token1Unsupported)) {
+    displayWarning = token2Warning
   }
 
   // If a warning is acknowledged, import these tokens
   const addToken = useAddUserToken()
   const acknowledge = () => {
-    if (token0) {
-      addToken(token0)
-    }
     if (token1) {
       addToken(token1)
+    }
+    if (token2) {
+      addToken(token2)
     }
     onContinue()
   }

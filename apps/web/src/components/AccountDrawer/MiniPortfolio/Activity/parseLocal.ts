@@ -5,7 +5,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { t } from 'i18n'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
-import { isConfirmedTx, useMultichainTransactions } from 'state/transactions/hooks'
+import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
@@ -194,6 +194,14 @@ async function parseSend(
   }
 }
 
+export function getTransactionStatus(details: TransactionDetails): TransactionStatus {
+  return !details.receipt
+    ? TransactionStatus.Pending
+    : details.receipt.status === 1 || details.receipt?.status === undefined
+    ? TransactionStatus.Confirmed
+    : TransactionStatus.Failed
+}
+
 export async function transactionToActivity(
   details: TransactionDetails | undefined,
   chainId: SupportedInterfaceChainId,
@@ -201,12 +209,14 @@ export async function transactionToActivity(
 ): Promise<Activity | undefined> {
   if (!details) return undefined
   try {
+    const status = getTransactionStatus(details)
+
     const defaultFields = {
       hash: details.hash,
       chainId,
-      title: getActivityTitle(details.info.type, details.status),
-      status: details.status,
-      timestamp: (isConfirmedTx(details) ? details.confirmedTime : details.addedTime) / 1000,
+      title: getActivityTitle(details.info.type, status),
+      status,
+      timestamp: (details.confirmedTime ?? details.addedTime) / 1000,
       from: details.from,
       nonce: details.nonce,
       cancelled: details.cancelled,
@@ -217,9 +227,9 @@ export async function transactionToActivity(
     if (info.type === TransactionType.SWAP) {
       additionalFields = await parseSwap(info, chainId, formatNumber)
     } else if (info.type === TransactionType.APPROVAL) {
-      additionalFields = await parseApproval(info, chainId, details.status)
+      additionalFields = await parseApproval(info, chainId, status)
     } else if (info.type === TransactionType.WRAP) {
-      additionalFields = parseWrap(info, chainId, details.status, formatNumber)
+      additionalFields = parseWrap(info, chainId, status, formatNumber)
     } else if (
       info.type === TransactionType.ADD_LIQUIDITY_V3_POOL ||
       info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
@@ -286,7 +296,6 @@ export async function signatureToActivity(
   if (!signature) return undefined
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER:
-    case SignatureType.SIGN_UNISWAPX_V2_ORDER:
     case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
       if (isOnChainOrder(signature.status)) return undefined
@@ -301,7 +310,19 @@ export async function signatureToActivity(
         chainId: signature.chainId,
         title,
         status,
-        offchainOrderDetails: signature,
+        offchainOrderDetails: {
+          orderHash: signature.orderHash,
+          id: signature.id,
+          offerer: signature.offerer,
+          txHash: signature.txHash,
+          chainId: signature.chainId,
+          type: signature.type,
+          status: signature.status,
+          swapInfo: signature.swapInfo,
+          addedTime: signature.addedTime,
+          encodedOrder: signature.encodedOrder,
+          expiry: signature.expiry,
+        },
         timestamp: convertToSecTimestamp(signature.addedTime),
         from: signature.offerer,
         statusMessage,

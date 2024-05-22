@@ -10,7 +10,6 @@ import {
 import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -18,6 +17,7 @@ import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {

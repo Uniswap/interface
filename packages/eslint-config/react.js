@@ -1,7 +1,7 @@
-let { crossPlatform: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+const { react: reactRestrictedImports } = require('./restrictedImports')
 
 module.exports = {
-  extends: [require.resolve('./base.js'), 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
+  extends: [require.resolve('./node.js'), 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
   env: {
     browser: true,
     node: false,
@@ -26,7 +26,7 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
-        '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
+        '@typescript-eslint/no-restricted-imports': ['error', reactRestrictedImports],
       },
     },
   ],

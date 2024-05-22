@@ -12,7 +12,6 @@ import {
 } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
@@ -45,6 +44,7 @@ import { CurrencyField } from 'wallet/src/features/transactions/transactionState
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {

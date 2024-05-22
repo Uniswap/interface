@@ -1,6 +1,6 @@
 import { by, element, expect } from 'detox'
 import { TestWallet } from 'e2e/utils/fixtures'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function CreateNewWallet(): void {
   it('creates a new wallet', async () => {

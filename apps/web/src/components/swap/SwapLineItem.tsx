@@ -10,7 +10,7 @@ import { Trans, t } from 'i18n'
 import React, { useEffect, useState } from 'react'
 import { SpringValue, animated } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } from 'state/routing/utils'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled, { DefaultTheme } from 'styled-components'
@@ -153,7 +153,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
     case SwapLineItemType.PRICE_IMPACT:
       // Hides price impact row if the current trade is UniswapX or we're expecting a preview trade to result in UniswapX
-      if (isUniswapX || !priceImpact || (isPreview && isUniswapXTradeType(lastSubmittableFillType))) return
+      if (isUniswapX || !priceImpact || (isPreview && lastSubmittableFillType === TradeFillType.UniswapX)) return
       return {
         Label: () => <Trans>Price impact</Trans>,
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,

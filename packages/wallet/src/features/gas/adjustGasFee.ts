@@ -5,54 +5,43 @@ import { BigNumberMax } from 'wallet/src/utils/number'
 export type FeeDetails =
   | { type: FeeType.Legacy; params: { gasPrice: string } }
   | { type: FeeType.Eip1559; params: { maxFeePerGas: string; maxPriorityFeePerGas: string } }
-
-/**
- * Returns gas prices params adjusted by provided factor.
- *
- * If the current gas param type doesn't match what was submitted on chain, transform the gas params to match.
- * Without this, cancelations would be blocked as no adjusted gas fee would be returned.
- *
- * This happens if gas service returns different gas param type than what ethers expects for the chain.
- */
+// Returns gas prices params adjusted by provided factor
 export function getAdjustedGasFeeDetails(
   request: providers.TransactionRequest,
   currentGasFeeParams: NonNullable<GasFeeResult['params']>,
   adjustmentFactor: number
 ): FeeDetails {
-  // Txn needs to be submitted with legacy gas params
-  if (request.gasPrice) {
-    const currentGasPrice =
-      'gasPrice' in currentGasFeeParams
-        ? currentGasFeeParams.gasPrice
-        : currentGasFeeParams.maxFeePerGas
-
+  // Legacy
+  if (request.gasPrice && 'gasPrice' in currentGasFeeParams) {
     return {
       type: FeeType.Legacy,
       params: {
-        gasPrice: multiplyByFactor(request.gasPrice, currentGasPrice, adjustmentFactor),
+        gasPrice: multiplyByFactor(
+          request.gasPrice,
+          currentGasFeeParams.gasPrice,
+          adjustmentFactor
+        ),
       },
     }
   }
 
-  // Txn needs to be submitted with EIP-1559 params
-  if (request.maxFeePerGas && request.maxPriorityFeePerGas) {
-    const currentMaxFeePerGas =
-      'maxFeePerGas' in currentGasFeeParams
-        ? currentGasFeeParams.maxFeePerGas
-        : currentGasFeeParams.gasPrice
-
-    const currentMaxPriorityFeePerGas =
-      'maxFeePerGas' in currentGasFeeParams
-        ? currentGasFeeParams.maxPriorityFeePerGas
-        : currentGasFeeParams.gasPrice
-
+  // EIP-1559
+  if (
+    request.maxFeePerGas &&
+    request.maxPriorityFeePerGas &&
+    'maxFeePerGas' in currentGasFeeParams
+  ) {
     return {
       type: FeeType.Eip1559,
       params: {
-        maxFeePerGas: multiplyByFactor(request.maxFeePerGas, currentMaxFeePerGas, adjustmentFactor),
+        maxFeePerGas: multiplyByFactor(
+          request.maxFeePerGas,
+          currentGasFeeParams.maxFeePerGas,
+          adjustmentFactor
+        ),
         maxPriorityFeePerGas: multiplyByFactor(
           request.maxPriorityFeePerGas,
-          currentMaxPriorityFeePerGas,
+          currentGasFeeParams.maxPriorityFeePerGas,
           adjustmentFactor
         ),
       },
@@ -68,10 +57,8 @@ function determineError(
 ): Error {
   const isEIP1559Transaction =
     request.maxFeePerGas !== undefined && request.maxPriorityFeePerGas !== undefined
-
   const isEIP1559Params =
     'maxFeePerGas' in currentGasFeeParams && 'maxPriorityFeePerGas' in currentGasFeeParams
-
   const isLegacyTransaction = request.gasPrice !== undefined
   const isLegacyParams = 'gasPrice' in currentGasFeeParams
 

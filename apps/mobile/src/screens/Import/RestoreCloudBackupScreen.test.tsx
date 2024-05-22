@@ -3,8 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
+import { OnboardingScreens } from 'src/screens/Screens'
 import { render } from 'src/test/test-utils'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 const setOptionsSpy = jest.fn()
 const routeProp = { params: {} } as RouteProp<

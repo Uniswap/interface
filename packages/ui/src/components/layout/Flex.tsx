@@ -1,11 +1,6 @@
 import { Insets } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { SizeTokens, View, ViewProps, styled } from 'tamagui'
-import {
-  animationsEnter,
-  animationsEnterExit,
-  animationsExit,
-} from 'ui/src/animations/animationPresets'
+import { SizeTokens, Stack, StackProps, styled } from 'tamagui'
 
 export const flexStyles = {
   fill: { flex: 1 },
@@ -13,7 +8,7 @@ export const flexStyles = {
   shrink: { flexShrink: 1 },
 }
 
-export type FlexProps = ViewProps & {
+export type FlexProps = StackProps & {
   row?: boolean
   shrink?: boolean
   grow?: boolean
@@ -37,7 +32,7 @@ const getInset = (val: SizeOrNumber): SizedInset => ({
   left: val,
 })
 
-export const Flex = styled(View, {
+export const Flex = styled(Stack, {
   flexDirection: 'column',
 
   variants: {
@@ -74,10 +69,6 @@ export const Flex = styled(View, {
         justifyContent: 'center',
       },
     },
-
-    animateEnter: animationsEnter,
-    animateExit: animationsExit,
-    animateEnterExit: animationsEnterExit,
   } as const,
 })
 

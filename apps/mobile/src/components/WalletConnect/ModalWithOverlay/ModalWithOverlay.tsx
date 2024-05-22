@@ -17,9 +17,9 @@ import { useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ScrollDownOverlay'
 import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 

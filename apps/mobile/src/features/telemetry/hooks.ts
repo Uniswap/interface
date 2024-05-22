@@ -1,5 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import {
   selectAllowAnalytics,
   selectLastBalancesReport,
@@ -13,13 +15,13 @@ import {
   recordWalletFunded,
   shouldReportBalances,
 } from 'src/features/telemetry/slice'
-import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { areSameDays } from 'utilities/src/time/date'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
+import { WalletAppsFlyerEvents } from 'wallet/src/telemetry/constants'
 
 export function useLastBalancesReporter(): () => void {
   const dispatch = useAppDispatch()
@@ -56,7 +58,7 @@ export function useLastBalancesReporter(): () => void {
     const sumOfFunds = signerAccountValues.reduce((a, b) => a + b, 0)
     if (!walletIsFunded && sumOfFunds) {
       // Only trigger the first time a funded wallet is detected
-      await sendAppsFlyerEvent(MobileAppsFlyerEvents.WalletFunded, { sumOfFunds })
+      await sendWalletAppsFlyerEvent(WalletAppsFlyerEvents.WalletFunded, { sumOfFunds })
       dispatch(recordWalletFunded())
     }
   }, [dispatch, signerAccountValues, walletIsFunded])
@@ -74,7 +76,7 @@ export function useLastBalancesReporter(): () => void {
     ) {
       const totalBalance = signerAccountValues.reduce((a, b) => a + b, 0)
 
-      sendAnalyticsEvent(MobileEventName.BalancesReport, {
+      sendMobileAnalyticsEvent(MobileEventName.BalancesReport, {
         total_balances_usd: totalBalance,
         wallets: signerAccountAddresses,
         balances: signerAccountValues,

@@ -4,7 +4,6 @@ import {
   TokenWebDocument,
   TokenWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Data } from 'utils/cache'
 import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
 import client from '../client'
 
@@ -41,13 +40,11 @@ export default async function getToken(networkName: string, tokenAddress: string
 
   const title = formatTokenMetatagTitleName(asset.symbol, asset.name)
 
-  const formattedAsset: Data = {
+  const formattedAsset = {
     title,
     image,
     url,
-    tokenData: {
-      symbol: asset.symbol ?? 'UNK',
-    },
+    symbol: asset.symbol ?? 'UNK',
     ogImage: asset.project?.logoUrl,
     name: asset.name ?? 'Token',
   }

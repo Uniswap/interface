@@ -1,5 +1,3 @@
-import { OffchainOrderType } from 'state/routing/types'
-
 export enum UniswapXOrderStatus {
   FILLED = 'filled',
   OPEN = 'open',
@@ -10,24 +8,16 @@ export enum UniswapXOrderStatus {
   INSUFFICIENT_FUNDS = 'insufficient-funds',
 }
 
-// Mirrors UniswapXOrderEntity type at https://github.com/Uniswap/uniswapx-service/blob/main/lib/entities/Order.ts
 interface BaseUniswapXBackendOrder {
-  type: OffchainOrderType
-  encodedOrder: string
-  signature: string
-  nonce: string
-  orderHash: string
   orderStatus: UniswapXOrderStatus
+  orderHash: string
+  offerer: string
+  createdAt: number
   chainId: number
-  swapper: string
-  reactor: string
-  decayStartTime: number
-  decayEndTime: number
-  deadline: number
   input: {
+    endAmount: string
     token: string
-    startAmount?: string
-    endAmount?: string
+    startAmount: string
   }
   outputs: [
     {
@@ -37,17 +27,6 @@ interface BaseUniswapXBackendOrder {
       token: string
     }
   ]
-  createdAt?: number
-  // QuoteId field is defined when the order has a quote associated with it.
-  quoteId?: string
-  cosignerData?: {
-    decayStartTime: number
-    decayEndTime: number
-    exclusiveFiller: string
-    inputOverride: string
-    outputOverrides: string[]
-  }
-  cosignature?: string
 }
 
 interface NonfilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
@@ -61,15 +40,9 @@ interface NonfilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
 
 interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   orderStatus: UniswapXOrderStatus.FILLED
-  // Filler field is defined when the order has been filled and the status tracking function has recorded the filler address.
-  filler?: string
-  // TxHash field is defined when the order has been filled and there is a txHash associated with the fill.
   txHash: string
-  // SettledAmount field is defined for v1 orders when the order has been filled and the fill amounts have been recorded.
-  settledAmounts?: [
+  settledAmounts: [
     {
-      tokenIn: string
-      amountIn: string
       tokenOut: string
       amountOut: string
     }

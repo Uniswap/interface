@@ -27,7 +27,7 @@ const getPaddingForSize = (size: TooltipSize) => {
 
 const TooltipContainer = styled.div<{ size: TooltipSize }>`
   max-width: ${({ size }) => size};
-  width: ${({ size }) => (size === TooltipSize.Max ? 'auto' : `calc(100vw - 16px)`)};
+  width: calc(100vw - 16px);
   cursor: default;
   padding: ${({ size }) => getPaddingForSize(size)};
   pointer-events: auto;

@@ -3,19 +3,19 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { CHAIN_INFO, isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
-import { Trans, t } from 'i18n'
+import { Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { Helmet } from 'react-helmet-async/lib/index'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
   useRangeHopCallbacks,
@@ -29,14 +29,13 @@ import { Text } from 'ui/src'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
-import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
-import { useAccount } from 'wagmi'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -90,8 +89,8 @@ const BLAST_REBASING_TOKENS = [
 ]
 
 export default function AddLiquidityWrapper() {
-  const account = useAccount()
-  const isSupportedChain = useIsSupportedChainId(account.chainId)
+  const chainId = useChainId()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   if (isSupportedChain) {
     return <AddLiquidity />
   } else {
@@ -112,8 +111,7 @@ function AddLiquidity() {
     feeAmount?: string
     tokenId?: string
   }>()
-  const account = useAccount()
-  const signer = useEthersSigner()
+  const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
   const trace = useTrace()
 
@@ -229,11 +227,11 @@ function AddLiquidity() {
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
@@ -241,7 +239,7 @@ function AddLiquidity() {
   )
 
   async function onAdd() {
-    if (account.status !== 'connected' || !signer) return
+    if (!chainId || !provider || !account) return
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -249,7 +247,7 @@ function AddLiquidity() {
 
     const deadline = await getDeadline()
 
-    if (position && deadline) {
+    if (position && account && deadline) {
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
       const { calldata, value } =
         hasExistingPosition && tokenId
@@ -261,14 +259,14 @@ function AddLiquidity() {
             })
           : NonfungiblePositionManager.addCallParameters(position, {
               slippageTolerance: allowedSlippage,
-              recipient: account.address,
+              recipient: account,
               deadline: deadline.toString(),
               useNative,
               createPool: noLiquidity,
             })
 
       let txn: { to: string; data: string; value: string } = {
-        to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId],
+        to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
         data: calldata,
         value,
       }
@@ -278,10 +276,10 @@ function AddLiquidity() {
         const amountB = parsedAmounts[Field.CURRENCY_B]
         const batch = [
           ...(amountA && amountA.currency.isToken
-            ? [approveAmountCalldata(amountA, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId])]
+            ? [approveAmountCalldata(amountA, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId])]
             : []),
           ...(amountB && amountB.currency.isToken
-            ? [approveAmountCalldata(amountB, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId])]
+            ? [approveAmountCalldata(amountB, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId])]
             : []),
           {
             to: txn.to,
@@ -297,12 +295,13 @@ function AddLiquidity() {
         }
       }
 
-      const connectedChainId = await signer.getChainId()
-      if (account.chainId !== connectedChainId) throw new WrongChainError()
+      const connectedChainId = await provider.getSigner().getChainId()
+      if (chainId !== connectedChainId) throw new WrongChainError()
 
       setAttemptingTxn(true)
 
-      signer
+      provider
+        .getSigner()
         .estimateGas(txn)
         .then((estimate) => {
           const newTxn = {
@@ -310,25 +309,28 @@ function AddLiquidity() {
             gasLimit: calculateGasMargin(estimate),
           }
 
-          return signer.sendTransaction(newTxn).then((response: TransactionResponse) => {
-            setAttemptingTxn(false)
-            const transactionInfo: TransactionInfo = {
-              type: TransactionType.ADD_LIQUIDITY_V3_POOL,
-              baseCurrencyId: currencyId(baseCurrency),
-              quoteCurrencyId: currencyId(quoteCurrency),
-              createPool: Boolean(noLiquidity),
-              expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
-              expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
-              feeAmount: position.pool.fee,
-            }
-            addTransaction(response, transactionInfo)
-            setTxHash(response.hash)
-            sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
-              label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-              ...trace,
-              ...transactionInfo,
+          return provider
+            .getSigner()
+            .sendTransaction(newTxn)
+            .then((response: TransactionResponse) => {
+              setAttemptingTxn(false)
+              const transactionInfo: TransactionInfo = {
+                type: TransactionType.ADD_LIQUIDITY_V3_POOL,
+                baseCurrencyId: currencyId(baseCurrency),
+                quoteCurrencyId: currencyId(quoteCurrency),
+                createPool: Boolean(noLiquidity),
+                expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient?.toString() ?? '0',
+                expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient?.toString() ?? '0',
+                feeAmount: position.pool.fee,
+              }
+              addTransaction(response, transactionInfo)
+              setTxHash(response.hash)
+              sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
+                label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+                ...trace,
+                ...transactionInfo,
+              })
             })
-          })
         })
         .catch((error) => {
           console.error('Failed to send transaction', error)
@@ -354,11 +356,11 @@ function AddLiquidity() {
         // prevent weth + eth
         const isETHOrWETHNew =
           currencyIdNew === 'ETH' ||
-          (account.status === 'connected' && currencyIdNew === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address)
+          (chainId !== undefined && currencyIdNew === WRAPPED_NATIVE_CURRENCY[chainId]?.address)
         const isETHOrWETHOther =
           currencyIdOther !== undefined &&
           (currencyIdOther === 'ETH' ||
-            (account.status === 'connected' && currencyIdOther === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address))
+            (chainId !== undefined && currencyIdOther === WRAPPED_NATIVE_CURRENCY[chainId]?.address))
 
         if (isETHOrWETHNew && isETHOrWETHOther) {
           return [currencyIdNew, undefined]
@@ -367,7 +369,7 @@ function AddLiquidity() {
         }
       }
     },
-    [account.chainId, account.status]
+    [chainId]
   )
 
   const handleCurrencyASelect = useCallback(
@@ -497,7 +499,7 @@ function AddLiquidity() {
           <Trans>Unsupported Asset</Trans>
         </ThemedText.DeprecatedMain>
       </ButtonPrimary>
-    ) : account.status !== 'connected' ? (
+    ) : !account ? (
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
@@ -583,11 +585,10 @@ function AddLiquidity() {
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT =
-    addressesAreEquivalent(owner, account.address) ||
-    addressesAreEquivalent(existingPositionDetails?.operator, account.address)
-  const showOwnershipWarning = Boolean(hasExistingPosition && account.address && !ownsNFT)
+    addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
+  const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
   const showBlastRebasingWarning =
-    account.chainId === ChainId.BLAST &&
+    chainId === ChainId.BLAST &&
     ((!!currencyIdA && BLAST_REBASING_TOKENS.includes(currencyIdA)) ||
       (!!currencyIdB && BLAST_REBASING_TOKENS.includes(currencyIdB)))
 
@@ -601,14 +602,6 @@ function AddLiquidity() {
 
   return (
     <>
-      <Helmet>
-        <title>
-          {t(`Add liquidity to {{token pair}} ({{chain}}) on Uniswap`, {
-            tokenPair: `${quoteCurrency?.symbol}/${baseCurrency?.symbol}`,
-            chain: CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : ChainId.MAINNET].label,
-          })}
-        </title>
-      </Helmet>
       <ScrollablePage>
         <TransactionConfirmationModal
           isOpen={showConfirm}

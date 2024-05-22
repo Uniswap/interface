@@ -11,6 +11,8 @@ import {
 } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModalContent'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
@@ -19,18 +21,17 @@ import {
   WalletConnectRequest,
   isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { GasSpeed } from 'wallet/src/features/gas/types'
+import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import {
   EthMethod,
   UwULinkMethod,
   WCEventType,
   WCRequestOutcome,
-} from 'uniswap/src/types/walletConnect'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasSpeed } from 'wallet/src/features/gas/types'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+} from 'wallet/src/features/walletConnect/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { UwULinkErc20SendModal } from './UwULinkErc20SendModal'
 
@@ -129,7 +130,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+    sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,
@@ -183,7 +184,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     rejectOnCloseRef.current = false
 
-    sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+    sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
       request_type: isTransactionRequest(request)
         ? WCEventType.TransactionRequest
         : WCEventType.SignRequest,
@@ -227,7 +228,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   if (request.type === UwULinkMethod.Erc20Send) {
     return (
       <UwULinkErc20SendModal
-        gasFee={gasFee}
         hasSufficientGasFunds={hasSufficientFunds}
         request={request}
         onClose={handleClose}

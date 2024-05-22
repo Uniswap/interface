@@ -1,6 +1,6 @@
 import { by, element, expect } from 'detox'
 import { TestWatchedWallet } from 'e2e/utils/fixtures'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export async function SwapBasicInteractions(): Promise<void> {
   // Navigate to swap screen

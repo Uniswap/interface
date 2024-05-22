@@ -6,7 +6,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
@@ -15,7 +15,6 @@ import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Unitag } from 'ui/src/components/icons'
-import { isIFramed } from 'utils/isIFramed'
 import { useAccount } from 'wagmi'
 import { ButtonSecondary } from '../Button'
 import { RowBetween } from '../Row'
@@ -140,8 +139,7 @@ function Web3StatusInner() {
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
-  // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if ((isConnecting || isReconnecting) && hasRecent && !isIFramed()) {
+  if ((isConnecting || isReconnecting) && hasRecent) {
     return (
       <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>

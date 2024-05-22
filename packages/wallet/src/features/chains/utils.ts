@@ -1,13 +1,14 @@
 import { BigNumber, BigNumberish } from 'ethers'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
 import {
   ALL_SUPPORTED_CHAINS,
+  ChainId,
   L2ChainId,
   L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
 } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId

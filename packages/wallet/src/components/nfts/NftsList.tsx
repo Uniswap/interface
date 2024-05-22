@@ -14,8 +14,6 @@ import {
 import { NoNfts } from 'ui/src/components/icons'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -28,6 +26,8 @@ import {
 import { useGroupNftsByVisibility } from 'wallet/src/features/nfts/hooks'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { formatNftItems, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 export const NUM_FIRST_NFTS = 30
@@ -115,7 +115,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   }, [hiddenNftsExpanded, footerHeight, fullHeight])
 
   useEffect(() => {
-    sendAnalyticsEvent(WalletEventName.NFTsLoaded, {
+    sendWalletAnalyticsEvent(WalletEventName.NFTsLoaded, {
       shown: numShown,
       hidden: numHidden,
     })

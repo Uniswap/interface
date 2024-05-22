@@ -1,8 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
 import { config } from 'uniswap/src/config'
-import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
 import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)

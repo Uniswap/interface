@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { DEFAULT_TRADE_PROTOCOLS } from 'wallet/src/features/transactions/swap/trade/legacy/api'
@@ -15,6 +14,7 @@ import {
 } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(

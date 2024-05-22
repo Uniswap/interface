@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
-import { TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
+import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   fromGraphQLChain,

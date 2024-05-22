@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -16,9 +17,7 @@ import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { useEthersSigner } from 'hooks/useEthersSigner'
 import { Text } from 'ui/src'
-import { useAccount } from 'wagmi'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -59,8 +58,7 @@ const AddLiquidityHeaderContainer = styled(AutoColumn)`
 export default function AddLiquidity() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA?: string; currencyIdB?: string }>()
   const navigate = useNavigate()
-  const account = useAccount()
-  const signer = useEthersSigner()
+  const { account, chainId, provider } = useWeb3React()
 
   const theme = useTheme()
   const trace = useTrace()
@@ -68,10 +66,10 @@ export default function AddLiquidity() {
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const wrappedNativeCurrency = account.status === 'connected' ? WRAPPED_NATIVE_CURRENCY[account.chainId] : undefined
+  const wrappedNativeCurrency = chainId ? WRAPPED_NATIVE_CURRENCY[chainId] : undefined
 
   const oneCurrencyIsWETH = Boolean(
-    account.chainId &&
+    chainId &&
       wrappedNativeCurrency &&
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
@@ -144,7 +142,7 @@ export default function AddLiquidity() {
   const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onAdd() {
-    if (account.status !== 'connected' || !signer || !router || !networkSupportsV2) return
+    if (!chainId || !provider || !account || !router || !networkSupportsV2) return
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     const deadline = await getDeadline()
@@ -171,7 +169,7 @@ export default function AddLiquidity() {
         (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        account.address,
+        account,
         deadline.toHexString(),
       ]
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).quotient.toString())
@@ -185,7 +183,7 @@ export default function AddLiquidity() {
         parsedAmountB.quotient.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
-        account.address,
+        account,
         deadline.toHexString(),
       ]
       value = null
@@ -441,7 +439,7 @@ export default function AddLiquidity() {
                   <Trans>Unsupported asset</Trans>
                 </ThemedText.DeprecatedMain>
               </ButtonPrimary>
-            ) : account.status !== 'connected' ? (
+            ) : !account ? (
               <TraceEvent
                 events={[BrowserEvent.onClick]}
                 name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}

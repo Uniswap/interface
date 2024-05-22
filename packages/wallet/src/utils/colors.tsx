@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
 import { colors as GlobalColors, GlobalPalette, colorsLight } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
 import { assert } from 'utilities/src/errors'
+import { ChainId } from 'wallet/src/constants/chains'
 import { hex } from 'wcag-contrast'
 
 export const MIN_COLOR_CONTRAST_THRESHOLD = 3

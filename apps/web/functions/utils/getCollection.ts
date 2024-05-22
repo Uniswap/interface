@@ -2,7 +2,6 @@ import {
   CollectionDocument,
   CollectionQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Data } from 'utils/cache'
 import client from '../client'
 
 export default async function getCollection(collectionAddress: string, url: string) {
@@ -18,15 +17,13 @@ export default async function getCollection(collectionAddress: string, url: stri
   if (!collection || !collection.name) {
     return undefined
   }
-  const formattedAsset: Data = {
+  const formattedAsset = {
     title: collection.name + ' on Uniswap',
     image,
     url,
     name: collection.name ?? 'Collection',
     ogImage: collection.image?.url ?? origin + '/images/192x192_App_Icon.png',
-    nftCollectionData: {
-      isVerified: collection.isVerified ?? false,
-    },
+    isVerified: collection.isVerified ?? false,
   }
   return formattedAsset
 }

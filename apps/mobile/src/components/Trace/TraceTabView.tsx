@@ -1,9 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { Route, TabView, TabViewProps } from 'react-native-tab-view'
-import { SectionNameType } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { Screens } from 'src/screens/Screens'
+import { SectionNameType } from 'wallet/src/telemetry/constants'
 
 type TraceRouteProps = { key: SectionNameType } & Route
 
@@ -12,9 +12,9 @@ export default function TraceTabView<T extends TraceRouteProps>({
   navigationState,
   screenName,
   ...rest
-}: TabViewProps<T> & { screenName: MobileScreens }): JSX.Element {
+}: TabViewProps<T> & { screenName: Screens }): JSX.Element {
   const onIndexChangeTrace = (index: number): void => {
-    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+    sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       section: navigationState.routes[index]?.key,
       screen: screenName,
     })

@@ -3,7 +3,7 @@ import React from 'react'
 import { Trans } from 'react-i18next'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
-import { EthMethod, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import { EthMethod, UwULinkMethod } from 'wallet/src/features/walletConnect/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function HeaderText({

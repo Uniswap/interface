@@ -1,13 +1,13 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
   FinalizedTransactionStatus,
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
 export enum AppNotificationType {
   Default,
@@ -18,7 +18,7 @@ export enum AppNotificationType {
   Copied,
   CopyFailed,
   Success,
-  NetworkChanged,
+  SwapNetwork,
   ChooseCountry,
   AssetVisibility, // could be token or NFT
   SwapPending,
@@ -159,10 +159,9 @@ export interface SuccessNotification extends AppNotificationBase {
   title: string
 }
 
-export interface NetworkChangedNotification extends AppNotificationBase {
-  type: AppNotificationType.NetworkChanged
+export interface SwapNetworkNotification extends AppNotificationBase {
+  type: AppNotificationType.SwapNetwork
   chainId: ChainId
-  flow: 'swap' | 'send'
 }
 
 export interface ChooseCountryNotification extends AppNotificationBase {
@@ -208,7 +207,7 @@ export type AppNotification =
   | CopyFailedNotification
   | WalletConnectNotification
   | TransactionNotification
-  | NetworkChangedNotification
+  | SwapNetworkNotification
   | ChooseCountryNotification
   | ChangeAssetVisibilityNotification
   | SuccessNotification

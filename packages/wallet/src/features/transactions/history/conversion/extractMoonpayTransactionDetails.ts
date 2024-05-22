@@ -1,6 +1,6 @@
-import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import {
   FiatOnRampTransactionDetails,

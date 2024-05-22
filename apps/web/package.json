@@ -6,7 +6,7 @@
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
     "check:deps:usage": "depcheck",
-    "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 6\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
+    "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 7\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
     "graphql:schema": "node scripts/fetch-schema.js",
     "graphql:generate:thegraph": "graphql-codegen --config graphql.thegraph.codegen.config.ts",
     "graphql:generate": "yarn graphql:generate:thegraph",
@@ -112,7 +112,7 @@
     "@types/uuid": "9.0.1",
     "@types/wcag-contrast": "3.0.0",
     "@types/xml2js": "0.4.14",
-    "@uniswap/default-token-list": "11.19.0",
+    "@uniswap/default-token-list": "11.16.0",
     "@uniswap/eslint-config": "workspace:^",
     "@vanilla-extract/jest-transform": "1.1.1",
     "@vanilla-extract/webpack-plugin": "2.3.1",

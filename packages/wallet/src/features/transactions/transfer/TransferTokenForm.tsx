@@ -18,7 +18,6 @@ import {
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
@@ -47,6 +46,7 @@ import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWar
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
@@ -427,7 +427,7 @@ export function TransferTokenForm({
           )}
           <Button
             disabled={actionButtonDisabled && !isViewOnlyWallet}
-            // Override opacity only for view-only wallets
+            // Override opacity only for view only wallets
             opacity={isViewOnlyWallet ? 0.4 : undefined}
             size="large"
             testID={ElementName.ReviewTransfer}

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useIsSmartContractAddress(

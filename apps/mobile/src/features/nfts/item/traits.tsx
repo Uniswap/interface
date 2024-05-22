@@ -1,22 +1,8 @@
-import dayjs from 'dayjs'
 import React from 'react'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NftAssetTrait } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-const formatTraitValue = (trait: NftAssetTrait): string | undefined => {
-  if (!trait.value) {
-    return
-  }
-
-  if (trait.name?.toLowerCase().split(' ').includes('date')) {
-    const date = dayjs(+trait.value * 1000)
-    return date.isValid() ? date.format('MMM D, YYYY') : trait.value
-  }
-
-  return trait.value
-}
 
 export function NFTTraitCard({
   trait,
@@ -26,7 +12,6 @@ export function NFTTraitCard({
   titleTextColor?: string
 }): JSX.Element {
   const colors = useSporeColors()
-
   return (
     <Flex
       backgroundColor="$surface3"
@@ -41,7 +26,7 @@ export function NFTTraitCard({
         {trait.name}
       </Text>
       <Text color="$neutral1" variant="subheading2">
-        {formatTraitValue(trait)}
+        {trait.value}
       </Text>
     </Flex>
   )

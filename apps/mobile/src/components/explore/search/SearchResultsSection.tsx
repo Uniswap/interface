@@ -20,10 +20,9 @@ import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,

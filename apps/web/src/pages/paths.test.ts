@@ -1,5 +1,7 @@
-import { routes } from 'pages/RouteDefinitions'
-import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
+
+import { routes } from './RouteDefinitions'
+import { getDefaultTokensTitle } from './getDefaultTokensTitle'
 import { getExploreTitle } from './getExploreTitle'
 import { paths } from './paths'
 
@@ -64,27 +66,22 @@ describe('getExploreTitle', () => {
   })
 })
 
-describe('positionPage static titles and descriptions', () => {
-  it('should return the correct title for v3 pools', () => {
-    expect(getPositionPageTitle('/pools')).toBe('Manage pool liquidity on Uniswap')
+describe('getDefaultTokensTitle', () => {
+  it('should return the correct title for /tokens', () => {
+    expect(getDefaultTokensTitle('/tokens')).toBe('Explore top tokens on Ethereum on Uniswap')
   })
 
-  it('should return the correct title for v2 pools', () => {
-    expect(getPositionPageTitle('/pools/v2')).toBe('Manage pool liquidity (v2) on Uniswap')
+  it('should return the correct title for /tokens/ethereum', () => {
+    expect(getDefaultTokensTitle('/tokens/ethereum')).toBe('Explore top tokens on Ethereum on Uniswap')
   })
 
-  it('should return the correct description for v3 pools', () => {
-    expect(getPositionPageDescription('/pool/512372?chain=optimism')).toBe(
-      'View your active v3 liquidity positions. Add new positions.'
+  it('should return the correct title for /tokens/optimism', () => {
+    expect(getDefaultTokensTitle('/tokens/optimism')).toBe('Explore top tokens on Optimism on Uniswap')
+  })
+
+  it('should return the correct title for /tokens/ethereum/<weth address>', () => {
+    expect(getDefaultTokensTitle(`/tokens/ethereum/${WETH9[ChainId.MAINNET].address}`)).toBe(
+      'Explore top tokens on Ethereum on Uniswap'
     )
-  })
-
-  it('should return the correct description for v2 pools', () => {
-    expect(getPositionPageDescription('/pool/v2')).toBe('View your active v2 liquidity positions. Add new positions.')
-  })
-
-  it('should return the correct title for Add Liquidity pages', () => {
-    expect(getAddLiquidityPageTitle('/add')).toBe('Add liquidity to pools on Uniswap')
-    expect(getAddLiquidityPageTitle('/add/v2')).toBe('Add liquidity to pools (v2) on Uniswap')
   })
 })

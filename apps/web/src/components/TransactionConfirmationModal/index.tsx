@@ -7,14 +7,13 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { Trans, t } from 'i18n'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
-import { isConfirmedTx, useTransaction } from 'state/transactions/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { useChainId } from 'wagmi'
 
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Circle from '../../assets/images/blue-loader.svg'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -214,12 +213,13 @@ function L2Content({
   const theme = useTheme()
 
   const transaction = useTransaction(hash)
-  const confirmed = transaction && isConfirmedTx(transaction)
-  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
+  const confirmed = useIsTransactionConfirmed(hash)
+  const transactionSuccess = transaction?.receipt?.status === 1
 
   // convert unix time difference to seconds
-  const secondsToConfirm =
-    confirmed && transaction.confirmedTime ? (transaction.confirmedTime - transaction.addedTime) / 1000 : undefined
+  const secondsToConfirm = transaction?.confirmedTime
+    ? (transaction.confirmedTime - transaction.addedTime) / 1000
+    : undefined
 
   const info = CHAIN_INFO[chainId]
 

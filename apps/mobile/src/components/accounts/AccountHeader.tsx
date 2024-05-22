@@ -2,11 +2,11 @@ import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
+import { setUserProperty } from 'src/features/telemetry'
+import { UserPropertyName } from 'src/features/telemetry/constants'
+import { Screens } from 'src/screens/Screens'
 import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isDevEnv } from 'uniswap/src/utils/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
@@ -19,6 +19,7 @@ import {
   selectActiveAccountAddress,
 } from 'wallet/src/features/wallet/selectors'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 
@@ -34,10 +35,10 @@ export function AccountHeader(): JSX.Element {
   useEffect(() => {
     switch (displayName?.type) {
       case DisplayNameType.ENS:
-        setUserProperty(MobileUserPropertyName.HasLoadedENS, true)
+        setUserProperty(UserPropertyName.HasLoadedENS, true)
         return
       case DisplayNameType.Unitag:
-        setUserProperty(MobileUserPropertyName.HasLoadedUnitag, true)
+        setUserProperty(UserPropertyName.HasLoadedUnitag, true)
         return
       default:
         return
@@ -49,7 +50,7 @@ export function AccountHeader(): JSX.Element {
   }, [dispatch])
 
   const onPressSettings = (): void => {
-    navigate(MobileScreens.SettingsStack, { screen: MobileScreens.Settings })
+    navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
 
   const onPressCopyAddress = async (): Promise<void> => {

@@ -2,7 +2,7 @@ import { BottomSheetModal as BaseModal } from '@gorhom/bottom-sheet'
 import { ComponentProps, PropsWithChildren } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { DynamicColor } from 'ui/src'
-import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalNameType } from 'wallet/src/telemetry/constants'
 
 export type BottomSheetModalProps = PropsWithChildren<{
   animatedPosition?: SharedValue<number>

@@ -48,7 +48,7 @@ const previousState: PersistAppStateV9 = {
     },
   },
   _persist: {
-    version: 8,
+    version: 7,
     rehydrated: true,
   },
 }

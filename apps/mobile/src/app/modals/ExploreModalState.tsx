@@ -1,7 +1,7 @@
 import { ExploreStackParamList } from 'src/app/navigation/types'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { Screens } from 'src/screens/Screens'
 
-type InnerExploreStackParamList = Omit<ExploreStackParamList, MobileScreens.Explore>
+type InnerExploreStackParamList = Omit<ExploreStackParamList, Screens.Explore>
 
 // The ExploreModalState allows a Screen and its Params to be defined, except for the initial Explore screen.
 // This workaround facilitates navigation to any screen within the ExploreStack from outside.

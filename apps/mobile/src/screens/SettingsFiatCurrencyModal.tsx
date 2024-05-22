@@ -6,11 +6,11 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
   const dispatch = useAppDispatch()

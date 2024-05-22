@@ -5,11 +5,11 @@ import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTran
 import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { Screens } from 'src/screens/Screens'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { ModalsState } from './ModalsState'
 
 type AccountSwitcherModalParams = {
@@ -79,7 +79,7 @@ type SendModalParams = { name: typeof ModalName.Send; initialState?: Transaction
 
 type UnitagsIntroParams = {
   name: typeof ModalName.UnitagsIntro
-  initialState?: { address: Address; entryPoint: MobileScreens.Home | MobileScreens.Settings }
+  initialState?: { address: Address; entryPoint: Screens.Home | Screens.Settings }
 }
 
 type ViewOnlyExplainerParams = {

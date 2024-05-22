@@ -6,16 +6,16 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
+import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
-  MobileScreens.SettingsCloudBackupPasswordCreate
+  Screens.SettingsCloudBackupPasswordCreate
 >
 
 // This screen is visited when no iCloud backup exists (checked from settings)
@@ -32,7 +32,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
 
   const navigateToNextScreen = ({ password }: { password: string }): void => {
     navigation.navigate({
-      name: MobileScreens.SettingsCloudBackupPasswordConfirm,
+      name: Screens.SettingsCloudBackupPasswordConfirm,
       params: {
         password,
         address,

@@ -60,7 +60,7 @@ describe('signature reducer', () => {
   describe('updateSignature', () => {
     it('updates the signature', () => {
       store.dispatch(addSignature(signature))
-      const updatedSignature = { ...signature, status: UniswapXOrderStatus.CANCELLED } as const
+      const updatedSignature = { ...signature, status: UniswapXOrderStatus.CANCELLED }
       store.dispatch(updateSignature(updatedSignature))
 
       const txs = store.getState()

@@ -1,13 +1,44 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { CyHttpMessages } from 'cypress/types/net-stubbing'
 import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
-import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'
 
 const QuoteWhereUniswapXIsBetter = 'uniswapx/quote1.json'
 const QuoteWithEthInput = 'uniswapx/quote2.json'
-const Xv1OrderSubmissionEndpoint = 'https://interface.gateway.uniswap.org/v2/order'
+const PricingQuoteUSDC = 'uniswapx/pricingQuoteUSDC.json'
+const PricingQuoteDAI = 'uniswapx/pricingQuoteDAI.json'
+
+const QuoteEndpoint = 'https://interface.gateway.uniswap.org/v2/quote'
+const OrderSubmissionEndpoint = 'https://interface.gateway.uniswap.org/v2/order'
 const OrderStatusEndpoint =
-  'https://interface.gateway.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19&orderType=Dutch_V1_V2'
+  'https://interface.gateway.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
+
+/** Stubs quote to return a quote for non-price requests */
+function stubNonPriceQuoteWith(fixture: string) {
+  cy.intercept(QuoteEndpoint, (req: CyHttpMessages.IncomingHttpRequest) => {
+    let body = req.body
+    if (typeof body === 'string') {
+      body = JSON.parse(body)
+    }
+    if (body.intent === 'pricing') {
+      const pricingFixture = body.tokenIn === USDC_MAINNET.address ? PricingQuoteUSDC : PricingQuoteDAI
+      req.reply({ fixture: pricingFixture })
+    } else {
+      req.reply({ fixture })
+    }
+  }).as('quote')
+}
+
+/** Stubs the provider to return a tx receipt corresponding to the mock filled uniswapx order's txHash */
+function stubSwapTxReceipt() {
+  cy.hardhat().then((hardhat) => {
+    cy.fixture('uniswapx/fillTransactionReceipt.json').then((mockTxReceipt) => {
+      const getTransactionReceiptStub = cy.stub(hardhat.provider, 'getTransactionReceipt').log(false)
+      getTransactionReceiptStub.withArgs(mockTxReceipt.transactionHash).resolves(mockTxReceipt)
+      getTransactionReceiptStub.callThrough()
+    })
+  })
+}
 
 describe('UniswapX Toggle', () => {
   beforeEach(() => {
@@ -24,7 +55,7 @@ describe('UniswapX Toggle', () => {
   })
 })
 
-describe('UniswapX v1', () => {
+describe('UniswapX', () => {
   beforeEach(() => {
     stubSwapTxReceipt()
   })
@@ -41,7 +72,7 @@ describe('UniswapX v1', () => {
 
     beforeEach(() => {
       stubNonPriceQuoteWith(QuoteWithEthInput)
-      cy.intercept(Xv1OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+      cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
       cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
       cy.visit(`/swap/?inputCurrency=ETH&outputCurrency=${DAI.address}`)
     })
@@ -145,7 +176,7 @@ describe('UniswapX v1', () => {
 
     beforeEach(() => {
       stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
-      cy.intercept(Xv1OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
+      cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
       cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' }).as('orderStatusOpen')
       cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     })

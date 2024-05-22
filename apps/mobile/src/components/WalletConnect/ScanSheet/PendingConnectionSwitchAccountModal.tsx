@@ -2,10 +2,10 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwitchAccountOption } from 'src/components/WalletConnect/ScanSheet/SwitchAccountOption'
 import { Flex, Text } from 'ui/src'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   activeAccount: Account | null

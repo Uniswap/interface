@@ -1,7 +1,7 @@
 import { useCrossChainBalances, useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { Screens } from 'src/screens/Screens'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
   SAMPLE_CURRENCY_ID_1,
@@ -155,7 +155,7 @@ describe(useTokenDetailsNavigation, () => {
     await act(() => result.current.navigate(SAMPLE_CURRENCY_ID_1))
 
     expect(mockedNavigation.navigate).toHaveBeenCalledTimes(1)
-    expect(mockedNavigation.navigate).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
+    expect(mockedNavigation.navigate).toHaveBeenNthCalledWith(1, Screens.TokenDetails, {
       currencyId: SAMPLE_CURRENCY_ID_1,
     })
   })
@@ -169,7 +169,7 @@ describe(useTokenDetailsNavigation, () => {
 
       expect(mockedNavigation.pop).toHaveBeenCalledTimes(1)
       expect(mockedNavigation.push).toHaveBeenCalledTimes(1)
-      expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
+      expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, Screens.TokenDetails, {
         currencyId: SAMPLE_CURRENCY_ID_1,
       })
     })
@@ -182,7 +182,7 @@ describe(useTokenDetailsNavigation, () => {
 
       expect(mockedNavigation.pop).not.toHaveBeenCalled()
       expect(mockedNavigation.push).toHaveBeenCalledTimes(1)
-      expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, MobileScreens.TokenDetails, {
+      expect(mockedNavigation.push).toHaveBeenNthCalledWith(1, Screens.TokenDetails, {
         currencyId: SAMPLE_CURRENCY_ID_1,
       })
     })

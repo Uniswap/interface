@@ -5,11 +5,11 @@ import {
   useBiometricAppSettings,
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
+import { setUserProperty } from 'src/features/telemetry'
+import { UserPropertyName, getAuthMethod } from 'src/features/telemetry/constants'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
-import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
-import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
@@ -46,15 +46,15 @@ export function TraceUserProperties(): null {
   useGatingUserPropertyUsernames()
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.AppVersion, getFullAppVersion())
+    setUserProperty(UserPropertyName.AppVersion, getFullAppVersion())
     Keyring.getMnemonicIds() // Temporary to prepare for fix, should be removed in 1.28
       .then((mnemonicIds) => {
-        setUserProperty(MobileUserPropertyName.MnemonicCount, mnemonicIds.length)
+        setUserProperty(UserPropertyName.MnemonicCount, mnemonicIds.length)
       })
       .catch(() => {})
     if (isAndroid) {
       NativeModules.AndroidDeviceModule.getPerformanceClass().then((perfClass: number) => {
-        setUserProperty(MobileUserPropertyName.AndroidPerfClass, perfClass)
+        setUserProperty(UserPropertyName.AndroidPerfClass, perfClass)
       })
     }
     return () => {
@@ -63,61 +63,58 @@ export function TraceUserProperties(): null {
   }, [allowAnalytics])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.WalletSwapProtectionSetting, swapProtectionSetting)
+    setUserProperty(UserPropertyName.WalletSwapProtectionSetting, swapProtectionSetting)
   }, [allowAnalytics, swapProtectionSetting])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.DarkMode, isDarkMode)
+    setUserProperty(UserPropertyName.DarkMode, isDarkMode)
   }, [allowAnalytics, isDarkMode])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccounts.length)
+    setUserProperty(UserPropertyName.WalletSignerCount, signerAccounts.length)
     setUserProperty(
-      MobileUserPropertyName.WalletSignerAccounts,
+      UserPropertyName.WalletSignerAccounts,
       signerAccounts.map((account) => account.address)
     )
   }, [allowAnalytics, signerAccounts])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.WalletViewOnlyCount, viewOnlyAccounts.length)
+    setUserProperty(UserPropertyName.WalletViewOnlyCount, viewOnlyAccounts.length)
   }, [allowAnalytics, viewOnlyAccounts])
 
   useEffect(() => {
     if (!activeAccount) {
       return
     }
-    setUserProperty(MobileUserPropertyName.ActiveWalletAddress, activeAccount.address)
-    setUserProperty(MobileUserPropertyName.ActiveWalletType, activeAccount.type)
+    setUserProperty(UserPropertyName.ActiveWalletAddress, activeAccount.address)
+    setUserProperty(UserPropertyName.ActiveWalletType, activeAccount.type)
     setUserProperty(
-      MobileUserPropertyName.IsCloudBackedUp,
+      UserPropertyName.IsCloudBackedUp,
       Boolean(activeAccount.backups?.includes(BackupType.Cloud))
     )
-    setUserProperty(
-      MobileUserPropertyName.IsPushEnabled,
-      Boolean(activeAccount.pushNotificationsEnabled)
-    )
+    setUserProperty(UserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
 
-    setUserProperty(MobileUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)
-    setUserProperty(MobileUserPropertyName.IsHideSpamTokensEnabled, hideSpamTokens)
+    setUserProperty(UserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)
+    setUserProperty(UserPropertyName.IsHideSpamTokensEnabled, hideSpamTokens)
   }, [allowAnalytics, activeAccount, hideSmallBalances, hideSpamTokens])
 
   useEffect(() => {
     setUserProperty(
-      MobileUserPropertyName.AppOpenAuthMethod,
+      UserPropertyName.AppOpenAuthMethod,
       getAuthMethod(biometricsAppSettingsState.requiredForAppAccess, touchId, faceId)
     )
     setUserProperty(
-      MobileUserPropertyName.TransactionAuthMethod,
+      UserPropertyName.TransactionAuthMethod,
       getAuthMethod(biometricsAppSettingsState.requiredForTransactions, touchId, faceId)
     )
   }, [allowAnalytics, biometricsAppSettingsState, touchId, faceId])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.Language, currentLanguage)
+    setUserProperty(UserPropertyName.Language, currentLanguage)
   }, [allowAnalytics, currentLanguage])
 
   useEffect(() => {
-    setUserProperty(MobileUserPropertyName.Currency, currentFiatCurrency)
+    setUserProperty(UserPropertyName.Currency, currentFiatCurrency)
   }, [allowAnalytics, currentFiatCurrency])
 
   return null

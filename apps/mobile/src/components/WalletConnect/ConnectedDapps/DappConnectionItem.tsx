@@ -12,14 +12,14 @@ import { WalletConnectSession, removeSession } from 'src/features/walletConnect/
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function DappConnectionItem({
   session,

@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { transferTokenActions } from 'wallet/src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'

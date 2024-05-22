@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Flex, flexStyles, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
-import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetDetachedModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ModalNameType } from 'wallet/src/telemetry/constants'
 
 export interface MenuItemProp {
   key: string

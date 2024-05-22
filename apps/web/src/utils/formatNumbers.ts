@@ -563,7 +563,7 @@ interface FormatCurrencyAmountOptions {
   conversionRate?: number
 }
 
-export function formatCurrencyAmount({
+function formatCurrencyAmount({
   amount,
   type = NumberType.TokenNonTx,
   placeholder,

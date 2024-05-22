@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { GqlResult } from 'uniswap/src/data/types'
-import { ChainId } from 'uniswap/src/types/chains'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import {
   SectionHeader,
@@ -14,6 +13,7 @@ import { usePortfolioTokenOptions } from 'wallet/src/components/TokenSelector/ho
 import { OnSelectCurrency, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 

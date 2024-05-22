@@ -8,13 +8,6 @@ import {
 } from 'src/features/deepLinking/constants'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
-import {
-  EthMethod,
-  EthTransaction,
-  UwULinkErc20SendRequest,
-  UwULinkMethod,
-  UwULinkRequest,
-} from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { RPCType } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -24,6 +17,13 @@ import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/sc
 import { getTokenTransferRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { TransferCurrencyParams } from 'wallet/src/features/transactions/transfer/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import {
+  EthMethod,
+  EthTransaction,
+  UwULinkErc20SendRequest,
+  UwULinkMethod,
+  UwULinkRequest,
+} from 'wallet/src/features/walletConnect/types'
 import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {

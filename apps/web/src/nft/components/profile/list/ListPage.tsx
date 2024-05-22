@@ -1,4 +1,5 @@
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Column from 'components/Column'
 import Row from 'components/Row'
@@ -13,7 +14,7 @@ import {
   useSubscribeListingState,
   verifyStatus,
 } from 'nft/components/profile/list/utils'
-import { useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
+import { useIsMobile, useNFTList, useProfilePageState, useSellAsset } from 'nft/hooks'
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { ProfilePageStateType } from 'nft/types'
 import { ListingMarkets } from 'nft/utils/listNfts'
@@ -25,9 +26,6 @@ import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { useIsMobile } from 'hooks/screenSize'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useAccount } from 'wagmi'
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
@@ -185,8 +183,7 @@ const EthValueWrapper = styled.span<{ totalEthListingValue: boolean }>`
 export const ListPage = () => {
   const { formatNumberOrString } = useFormatter()
   const { setProfilePageState: setSellPageState } = useProfilePageState()
-  const account = useAccount()
-  const signer = useEthersSigner()
+  const { provider, chainId } = useWeb3React()
   const isMobile = useIsMobile()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const { formatCurrencyAmount } = useFormatter()
@@ -206,7 +203,7 @@ export const ListPage = () => {
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
-  const nativeCurrency = useNativeCurrency(account.chainId)
+  const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
   const usdcAmount = formatCurrencyAmount({
@@ -215,6 +212,7 @@ export const ListPage = () => {
   })
   const [showListModal, toggleShowListModal] = useReducer((s) => !s, false)
   const [selectedMarkets, setSelectedMarkets] = useState([ListingMarkets[0]]) // default marketplace: x2y2
+  const signer = provider?.getSigner()
 
   // instantiate listings and collections to approve when users modify input data
   useSubscribeListingState()

@@ -1,7 +1,7 @@
 import { getAbiFetchersForChainId, Parser } from 'no-yolo-signatures'
 import { useMemo } from 'react'
 import { config } from 'uniswap/src/config'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 
 export function useNoYoloParser(chainId: ChainId): Parser {
   const parser = useMemo(() => {

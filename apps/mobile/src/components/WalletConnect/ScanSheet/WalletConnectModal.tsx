@@ -5,6 +5,7 @@ import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
+import Trace from 'src/components/Trace/Trace'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import {
   URIType,
@@ -26,15 +27,14 @@ import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { EthMethod, UwULinkMethod, UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { EthMethod, UwULinkMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   initialScreenState?: ScannerModalState

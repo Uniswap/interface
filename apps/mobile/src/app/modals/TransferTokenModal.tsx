@@ -7,8 +7,8 @@ import { TransferFlow as TransferFlowRewrite } from 'src/features/transactions/t
 import { useSporeColors } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function TransferTokenModal(): JSX.Element {
   const colors = useSporeColors()

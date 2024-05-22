@@ -4,16 +4,17 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
-import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { SectionName } from 'wallet/src/telemetry/constants'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -87,7 +88,7 @@ export const TokenItem = memo(function _TokenItem({
   const onPress = (): void => {
     tokenDetailsNavigation.preload(_currencyId)
     tokenDetailsNavigation.navigate(_currencyId)
-    sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
+    sendMobileAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId) as number,
       name,

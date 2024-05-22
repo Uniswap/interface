@@ -1,12 +1,21 @@
 import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { SupportedInterfaceChainId } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCallback, useEffect, useRef } from 'react'
+import { toSerializableReceipt } from 'state/activity/utils'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { parseRemote as parseRemoteOrder } from 'state/signatures/parseRemote'
 import { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
-import { TransactionActivity, TransactionDetails, TransactionType } from 'state/transactions/types'
+import {
+  SerializableTransactionReceipt,
+  TransactionActivity,
+  TransactionDetails,
+  TransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
 import {
   AssetActivityPartsFragment,
   TokenTransfer,
@@ -34,6 +43,16 @@ export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
   useEffect(() => onActivity(activity), [activity, onActivity])
 }
 
+async function getReceipt(chainId: SupportedInterfaceChainId, hash: string): Promise<SerializableTransactionReceipt>
+async function getReceipt(
+  chainId: SupportedInterfaceChainId,
+  hash?: string
+): Promise<SerializableTransactionReceipt | undefined>
+async function getReceipt(chainId: SupportedInterfaceChainId, hash?: string) {
+  if (!hash) return undefined
+  return toSerializableReceipt(await RPC_PROVIDERS[chainId].getTransactionReceipt(hash))
+}
+
 function useOnOrderActivity(onActivityUpdate: OnActivityUpdate) {
   // Updates should only trigger from the AssetActivity subscription, so the pending orders are behind a ref.
   const pendingOrders = useRef<UniswapXOrderDetails[]>([])
@@ -48,6 +67,7 @@ function useOnOrderActivity(onActivityUpdate: OnActivityUpdate) {
         chainId: updatedOrder.chainId,
         original: pendingOrder,
         update: updatedOrder,
+        receipt: await getReceipt(updatedOrder.chainId, updatedOrder.txHash),
       })
     },
     [onActivityUpdate]
@@ -62,7 +82,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
   return useCallback(
     async (activity: TransactionActivity) => {
       const chainId = supportedChainIdFromGQLChain(activity.chain)
-      if (activity.details.status === TransactionStatus.Pending || !chainId) return
+      if (activity.details.status !== TransactionStatus.Confirmed || !chainId) return
 
       const pendingTransaction = pendingTransactions.current?.find(
         ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId
@@ -70,8 +90,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
       // TODO(WEB-4007): Add transactions which were submitted from a different client (and are not already tracked).
       if (!pendingTransaction) return
 
-      const updatedTransaction: TransactionUpdate['update'] = {
-        status: activity.details.status,
+      const updatedTransaction: TransactionUpdate['update'] & { info: TransactionInfo } = {
         info: { ...pendingTransaction.info },
       }
       if (updatedTransaction.info.type === TransactionType.SWAP) {
@@ -94,6 +113,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
         chainId,
         original: pendingTransaction,
         update: updatedTransaction,
+        receipt: await getReceipt(chainId, pendingTransaction.hash),
       })
     },
     [onActivityUpdate]

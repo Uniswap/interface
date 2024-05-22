@@ -4,8 +4,8 @@ import {
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>

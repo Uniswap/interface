@@ -7,15 +7,15 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
+import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/slice'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()
@@ -35,7 +35,7 @@ export function UnitagsIntroModal(): JSX.Element {
     }
 
     appDispatch(setHasCompletedUnitagsIntroModal(true))
-    navigate(MobileScreens.UnitagStack, {
+    navigate(Screens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
       params: {
         entryPoint,
@@ -43,7 +43,7 @@ export function UnitagsIntroModal(): JSX.Element {
       },
     })
     if (address) {
-      sendAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
+      sendWalletAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
     }
     onClose()
   }

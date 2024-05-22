@@ -4,8 +4,8 @@ import { StyleSheet } from 'react-native'
 import 'react-native-reanimated'
 import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { EXTENSION_PROMO_MODAL_DARK, EXTENSION_PROMO_MODAL_LIGHT } from 'ui/src/assets'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function ExtensionPromoModal({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()

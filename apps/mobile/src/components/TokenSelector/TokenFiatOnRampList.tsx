@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { Flex, Inset, Loader } from 'ui/src'
-import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void

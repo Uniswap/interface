@@ -1,4 +1,3 @@
-import { isWeb } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { iconSizes } from 'ui/src/theme'
@@ -8,12 +7,15 @@ interface TokenLoaderProps {
   withPrice?: boolean
 }
 
+const TOKEN_BALANCE_ITEM_HEIGHT = 56
+
 export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): JSX.Element {
   return (
     <Flex
       alignItems="flex-start"
       flexDirection="row"
       justifyContent="space-between"
+      minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
       opacity={opacity}
       py="$spacing8">
       <Flex grow row alignItems="center" gap="$spacing12" overflow="hidden">
@@ -36,7 +38,7 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
               loading="no-shimmer"
               loadingPlaceholderText="1,000 TFN"
               numberOfLines={1}
-              variant={isWeb ? 'body3' : 'body2'}
+              variant="subheading2"
             />
           </Flex>
         </Flex>

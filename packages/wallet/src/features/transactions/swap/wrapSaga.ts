@@ -3,9 +3,9 @@ import { Contract, providers } from 'ethers'
 import { call } from 'typed-redux-saga'
 import { Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
-import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import {
   TransactionOptions,

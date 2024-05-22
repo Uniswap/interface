@@ -6,6 +6,7 @@ import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-nat
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
+import Trace from 'src/components/Trace/Trace'
 import { enroll, tryLocalAuthenticate } from 'src/features/biometrics'
 import {
   biometricAuthenticationSuccessful,
@@ -16,16 +17,15 @@ import {
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import { borderRadii, imageSizes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { ImportType } from 'uniswap/src/types/onboarding'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
+import { ImportType } from 'wallet/src/features/onboarding/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -186,7 +186,6 @@ const SecurityBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   return (
     <Image
-      resizeMode="contain"
       source={
         isDarkMode
           ? Platform.select(SECURITY_SCREEN_BACKGROUND_DARK)
@@ -204,5 +203,6 @@ const styles = StyleSheet.create({
   },
   image: {
     height: '100%',
+    resizeMode: 'contain',
   },
 })

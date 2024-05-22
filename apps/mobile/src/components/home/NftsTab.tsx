@@ -5,9 +5,9 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { NftView } from 'src/components/NFT/NftView'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
+import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
@@ -39,7 +39,7 @@ export const NftsTab = memo(
     const renderNFTItem = useCallback(
       (item: NFTItem) => {
         const onPressNft = (): void => {
-          navigation.navigate(MobileScreens.NFTItem, {
+          navigation.navigate(Screens.NFTItem, {
             owner,
             address: item.contractAddress ?? '',
             tokenId: item.tokenId ?? '',

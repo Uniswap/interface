@@ -76,12 +76,11 @@ const RangeText = styled(ThemedText.BodySmall)`
   border-radius: 8px;
 `
 
-const FeeTierText = styled(ThemedText.BodyPrimary)`
+const FeeTierText = styled(ThemedText.UtilityBadge)`
+  font-size: 16px !important;
   margin-left: 8px !important;
-  line-height: 12px;
   color: ${({ theme }) => theme.neutral3};
 `
-
 const ExtentsText = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   display: inline-block;

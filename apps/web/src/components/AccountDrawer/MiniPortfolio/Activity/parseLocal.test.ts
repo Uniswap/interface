@@ -13,7 +13,7 @@ import {
 } from 'state/transactions/types'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionStatus as MockTxStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
 
@@ -60,17 +60,22 @@ const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
 const mockApprovalAmountRaw = '10000000'
 
-function mockHash(id: string, status: TransactionStatus = TransactionStatus.Confirmed) {
+function mockHash(id: string, status: MockTxStatus = MockTxStatus.Confirmed) {
   return id + status
 }
 
-function mockCommonFields(id: string, account = mockAccount2, status: TransactionStatus) {
+function mockCommonFields(id: string, account = mockAccount2, status: MockTxStatus) {
   const hash = mockHash(id, status)
   return {
-    status,
     hash,
     from: account,
-    txHash: hash,
+    receipt:
+      status === MockTxStatus.Pending
+        ? undefined
+        : {
+            transactionHash: hash,
+            status: status === MockTxStatus.Confirmed ? 1 : 0,
+          },
     addedTime: 0,
   }
 }
@@ -79,15 +84,15 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
   // Mocks a transaction with multiple statuses
   return [
     [
-      { info, ...mockCommonFields(id, mockAccount2, TransactionStatus.Pending) } as unknown as TransactionDetails,
+      { info, ...mockCommonFields(id, mockAccount2, MockTxStatus.Pending) } as unknown as TransactionDetails,
       mockChainId,
     ],
     [
-      { info, ...mockCommonFields(id, mockAccount2, TransactionStatus.Confirmed) } as unknown as TransactionDetails,
+      { info, ...mockCommonFields(id, mockAccount2, MockTxStatus.Confirmed) } as unknown as TransactionDetails,
       mockChainId,
     ],
     [
-      { info, ...mockCommonFields(id, mockAccount2, TransactionStatus.Failed) } as unknown as TransactionDetails,
+      { info, ...mockCommonFields(id, mockAccount2, MockTxStatus.Failed) } as unknown as TransactionDetails,
       mockChainId,
     ],
   ]
@@ -107,7 +112,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
               MockDAI,
               mockCurrencyAmountRaw
             ),
-            ...mockCommonFields('0x123', mockAccount1, TransactionStatus.Confirmed),
+            ...mockCommonFields('0x123', mockAccount1, MockTxStatus.Confirmed),
           } as TransactionDetails,
           mockChainId,
         ],
@@ -235,8 +240,10 @@ describe('parseLocalActivity', () => {
         MockDAI,
         mockCurrencyAmountRaw
       ),
-      hash: '0x123',
-      status: TransactionStatus.Confirmed,
+      receipt: {
+        transactionHash: '0x123',
+        status: 1,
+      },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
     const result = await transactionToActivity(details, chainId, formatNumber)
@@ -244,7 +251,7 @@ describe('parseLocalActivity', () => {
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
-      hash: '0x123',
+      hash: undefined,
       from: undefined,
       status: 'CONFIRMED',
       timestamp: NaN,
@@ -263,8 +270,10 @@ describe('parseLocalActivity', () => {
         MockDAI,
         mockCurrencyAmountRaw
       ),
-      hash: '0x123',
-      status: TransactionStatus.Confirmed,
+      receipt: {
+        transactionHash: '0x123',
+        status: 1,
+      },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
     const result = await transactionToActivity(details, chainId, formatNumber)
@@ -290,8 +299,10 @@ describe('parseLocalActivity', () => {
         MockDAI,
         mockCurrencyAmountRaw
       ),
-      hash: '0x123',
-      status: TransactionStatus.Confirmed,
+      receipt: {
+        transactionHash: '0x123',
+        status: 1,
+      },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
     const result = await transactionToActivity(details, chainId, formatNumber)
@@ -323,9 +334,9 @@ describe('parseLocalActivity', () => {
       })
     })
 
-    expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Pending)]?.title).toEqual('Swapping')
-    expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Confirmed)]?.title).toEqual('Swapped')
-    expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Failed)]?.title).toEqual('Swap failed')
+    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Pending)]?.title).toEqual('Swapping')
+    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Confirmed)]?.title).toEqual('Swapped')
+    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Failed)]?.title).toEqual('Swap failed')
   })
 
   it('Adapts Swap exact input to Activity type', async () => {
@@ -344,7 +355,7 @@ describe('parseLocalActivity', () => {
       title: 'Swapped',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -365,7 +376,7 @@ describe('parseLocalActivity', () => {
       title: 'Swapped',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -386,7 +397,7 @@ describe('parseLocalActivity', () => {
       title: 'Approved',
       descriptor: MockDAI.symbol,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -407,7 +418,7 @@ describe('parseLocalActivity', () => {
       title: 'Revoked approval',
       descriptor: MockUSDT.symbol,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
     })
   })
 
@@ -429,7 +440,7 @@ describe('parseLocalActivity', () => {
       title: 'Wrapped',
       descriptor: `1.00 ${native.symbol} for 1.00 ${native.wrapped.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -452,7 +463,7 @@ describe('parseLocalActivity', () => {
       title: 'Unwrapped',
       descriptor: `1.00 ${native.wrapped.symbol} for 1.00 ${native.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -473,7 +484,7 @@ describe('parseLocalActivity', () => {
       title: 'Added liquidity',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -494,7 +505,7 @@ describe('parseLocalActivity', () => {
       title: 'Removed liquidity',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -515,7 +526,7 @@ describe('parseLocalActivity', () => {
       title: 'Added V2 liquidity',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -536,7 +547,7 @@ describe('parseLocalActivity', () => {
       title: 'Collected fees',
       descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })
@@ -557,7 +568,7 @@ describe('parseLocalActivity', () => {
       title: 'Migrated liquidity',
       descriptor: `${MockUSDC_MAINNET.symbol} and ${MockDAI.symbol}`,
       hash,
-      status: TransactionStatus.Confirmed,
+      status: MockTxStatus.Confirmed,
       from: mockAccount2,
     })
   })

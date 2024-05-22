@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'

@@ -1,4 +1,5 @@
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { useWeb3React } from '@web3-react/core'
 import { Trace, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
@@ -17,8 +18,6 @@ import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import { useAccount } from 'wagmi'
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
 import { SuccessScreen } from './SuccessScreen'
@@ -46,8 +45,7 @@ const ListModalWrapper = styled.div`
 `
 
 export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
-  const account = useAccount()
-  const provider = useEthersWeb3Provider()
+  const { provider, chainId } = useWeb3React()
   const signer = provider?.getSigner()
   const trace = useTrace({ modal: InterfaceModalName.NFT_LISTING })
   const { formatCurrencyAmount } = useFormatter()
@@ -74,7 +72,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
     Section.APPROVE
   )
-  const nativeCurrency = useNativeCurrency(account.chainId)
+  const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
   const usdcValue = useStablecoinValue(parsedAmount)
   const usdcAmount = formatCurrencyAmount({

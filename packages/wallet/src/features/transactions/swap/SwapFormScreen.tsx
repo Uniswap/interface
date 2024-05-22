@@ -6,9 +6,8 @@ import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-
 import { Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
+import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
@@ -24,6 +23,7 @@ import { TransactionModalInnerContainer } from 'wallet/src/features/transactions
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'

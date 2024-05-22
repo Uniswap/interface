@@ -1,7 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
 
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import reducer, {
   addTransaction,
   cancelTransaction,
@@ -11,7 +10,7 @@ import reducer, {
   initialState,
   TransactionState,
 } from './reducer'
-import { ConfirmedTransactionDetails, PendingTransactionDetails, TransactionType } from './types'
+import { TransactionType } from './types'
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>
@@ -42,10 +41,10 @@ describe('transaction reducer', () => {
       expect(txs[1]?.['0x0']).toBeTruthy()
       const tx = txs[1]?.['0x0']
       expect(tx).toBeTruthy()
-      expect(tx.hash).toEqual('0x0')
-      expect(tx.from).toEqual('abc')
-      expect(tx.addedTime).toBeGreaterThanOrEqual(beforeTime)
-      expect(tx.info).toEqual({
+      expect(tx?.hash).toEqual('0x0')
+      expect(tx?.from).toEqual('abc')
+      expect(tx?.addedTime).toBeGreaterThanOrEqual(beforeTime)
+      expect(tx?.info).toEqual({
         type: TransactionType.APPROVAL,
         tokenAddress: 'abc',
         spender: 'def',
@@ -60,7 +59,16 @@ describe('transaction reducer', () => {
         finalizeTransaction({
           chainId: ChainId.MAINNET,
           hash: '0x0',
-          status: TransactionStatus.Failed,
+          receipt: {
+            status: 1,
+            transactionIndex: 1,
+            transactionHash: '0x0',
+            to: '0x0',
+            from: '0x0',
+            contractAddress: '0x0',
+            blockHash: '0x0',
+            blockNumber: 1,
+          },
         })
       )
       expect(store.getState()).toEqual({})
@@ -85,12 +93,30 @@ describe('transaction reducer', () => {
         finalizeTransaction({
           chainId: ChainId.MAINNET,
           hash: '0x0',
-          status: TransactionStatus.Confirmed,
+          receipt: {
+            status: 1,
+            transactionIndex: 1,
+            transactionHash: '0x0',
+            to: '0x0',
+            from: '0x0',
+            contractAddress: '0x0',
+            blockHash: '0x0',
+            blockNumber: 1,
+          },
         })
       )
-      const tx = store.getState()[ChainId.MAINNET]?.['0x0'] as ConfirmedTransactionDetails
-      expect(tx.status).toBe(TransactionStatus.Confirmed)
-      expect(tx.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
+      expect(tx?.confirmedTime).toBeGreaterThanOrEqual(beforeTime)
+      expect(tx?.receipt).toEqual({
+        status: 1,
+        transactionIndex: 1,
+        transactionHash: '0x0',
+        to: '0x0',
+        from: '0x0',
+        contractAddress: '0x0',
+        blockHash: '0x0',
+        blockNumber: 1,
+      })
     })
   })
 
@@ -127,8 +153,8 @@ describe('transaction reducer', () => {
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[ChainId.MAINNET]?.['0x0'] as PendingTransactionDetails
-      expect(tx.lastCheckedBlockNumber).toEqual(1)
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
+      expect(tx?.lastCheckedBlockNumber).toEqual(1)
     })
     it('never decreases', () => {
       store.dispatch(
@@ -159,8 +185,8 @@ describe('transaction reducer', () => {
           blockNumber: 1,
         })
       )
-      const tx = store.getState()[ChainId.MAINNET]?.['0x0'] as PendingTransactionDetails
-      expect(tx.lastCheckedBlockNumber).toEqual(3)
+      const tx = store.getState()[ChainId.MAINNET]?.['0x0']
+      expect(tx?.lastCheckedBlockNumber).toEqual(3)
     })
   })
 

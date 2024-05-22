@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
@@ -44,6 +43,7 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { transformPaymentMethods } from './utils'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
@@ -87,14 +87,14 @@ export const fiatOnRampApi = createApi({
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayIPAddressesResponse) => {
-            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: response.isBuyAllowed ?? false,
               networkError: false,
             })
             return { data: response }
           })
           .catch((e) => {
-            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: false,
               networkError: true,
             })

@@ -1,8 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { DEFAULT_NATIVE_ADDRESS } from 'wallet/src/constants/chains'
+import { ChainId, DEFAULT_NATIVE_ADDRESS } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
 

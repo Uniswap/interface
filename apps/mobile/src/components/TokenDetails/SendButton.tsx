@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   onPress: () => void

@@ -1,6 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI } from 'wallet/src/constants/tokens'
-import { noOpFunction } from 'wallet/src/test/mocks'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const ONE_DAI = CurrencyAmount.fromRawAmount(DAI, '1000000000000000000')
@@ -32,7 +31,7 @@ describe(getCurrencyAmount, () => {
     ).toBeUndefined()
   })
 
-  it('handle undefined Currency with defined uint256 value', () => {
+  it('handle undefined Currency wit defined uint256 value', () => {
     expect(
       getCurrencyAmount({ value: '1000000000', valueType: ValueType.Exact, currency: undefined })
     ).toBeUndefined()
@@ -75,7 +74,6 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle over-precise float amount', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '0.00000000000000000000001',
@@ -86,7 +84,6 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle incorrect raw amount', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '0.1',
@@ -107,7 +104,6 @@ describe(getCurrencyAmount, () => {
   })
 
   it('handle invalid values', () => {
-    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
     expect(
       getCurrencyAmount({
         value: '123as2s',

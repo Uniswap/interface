@@ -1,6 +1,6 @@
 import Identicon from 'components/Identicon'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
-import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'styled-components'
 import { flexColumnNoWrap } from 'theme/styles'

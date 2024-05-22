@@ -6,9 +6,9 @@ import { useAppDispatch } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 // TODO(MOB-1190): this is DEP_blue_300 at 10% opacity, remove when we have a named color for this
 const LIGHT_BLUE = '#4C82FB1A'

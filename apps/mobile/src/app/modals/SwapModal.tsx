@@ -9,10 +9,10 @@ import {
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
-import { SwapFlow } from 'wallet/src/features/transactions/swap/SwapFlow'
 import { useSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
+import { SwapFlow } from 'wallet/src/features/transactions/swap/SwapFlow'
+import { ModalName } from 'wallet/src/telemetry/constants'
+import { updateSwapStartTimestamp } from 'wallet/src/telemetry/timing/slice'
 
 export function SwapModal(): JSX.Element {
   const appDispatch = useAppDispatch()

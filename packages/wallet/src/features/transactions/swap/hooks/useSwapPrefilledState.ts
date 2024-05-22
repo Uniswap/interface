@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {

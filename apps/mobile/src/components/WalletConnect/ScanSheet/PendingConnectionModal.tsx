@@ -9,6 +9,8 @@ import { ModalWithOverlay } from 'src/components/WalletConnect/ModalWithOverlay/
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { truncateQueryParams } from 'src/components/WalletConnect/ScanSheet/util'
 import { LinkButton } from 'src/components/buttons/LinkButton'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
@@ -21,13 +23,10 @@ import {
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
-import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
+import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
@@ -36,6 +35,12 @@ import {
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import {
+  WCEventType,
+  WCRequestOutcome,
+  WalletConnectEvent,
+} from 'wallet/src/features/walletConnect/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   pendingSession: WalletConnectPendingSession
@@ -186,7 +191,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
   const onPressSettleConnection = useCallback(
     async (approved: boolean) => {
-      sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
+      sendMobileAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
         request_type: WCEventType.SessionPending,
         dapp_url: pendingSession.dapp.url,
         dapp_name: pendingSession.dapp.name,

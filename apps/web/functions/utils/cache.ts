@@ -1,28 +1,11 @@
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-interface TokenData {
-  symbol: string
-}
-interface PoolData {
-  feeTier: string
-  protocolVersion: ProtocolVersion
-  token0Image?: string
-  token1Image?: string
-}
-
-interface NftCollectionData {
-  isVerified: boolean
-}
-
 export interface Data {
   title: string
   image: string
   url: string
   name?: string
   ogImage?: string
-  poolData?: PoolData
-  tokenData?: TokenData
-  nftCollectionData?: NftCollectionData
+  isVerified?: boolean
+  symbol?: string
 }
 
 const CACHE_NAME = 'functions-cache' as const

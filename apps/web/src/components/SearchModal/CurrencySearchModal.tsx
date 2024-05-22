@@ -3,8 +3,8 @@ import TokenSafety from 'components/TokenSafety'
 import { memo, useCallback, useEffect, useState } from 'react'
 
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import { useWindowSize } from '../../hooks/screenSize'
 import useLast from '../../hooks/useLast'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
 import { CurrencySearch, CurrencySearchFilters } from './CurrencySearch'
 
@@ -89,7 +89,7 @@ export default memo(function CurrencySearchModal({
       if (warningToken) {
         content = (
           <TokenSafety
-            token0={warningToken}
+            tokenAddress={warningToken.address}
             onContinue={() => handleCurrencySelect(warningToken)}
             onCancel={() => setModalView(CurrencyModalView.search)}
             showCancel={true}

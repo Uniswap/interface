@@ -1,10 +1,10 @@
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { Screens } from 'src/screens/Screens'
 
 export const DIRECT_LOG_ONLY_SCREENS: string[] = [
-  MobileScreens.TokenDetails,
-  MobileScreens.ExternalProfile,
-  MobileScreens.NFTItem,
-  MobileScreens.NFTCollection,
+  Screens.TokenDetails,
+  Screens.ExternalProfile,
+  Screens.NFTItem,
+  Screens.NFTCollection,
 ]
 
 export function shouldLogScreen(

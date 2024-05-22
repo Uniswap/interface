@@ -20,11 +20,8 @@ import {
 } from 'src/features/fiatOnRamp/aggregatorHooks'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
+import { FiatOnRampScreens } from 'src/screens/Screens'
 import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
-import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
@@ -36,9 +33,16 @@ import {
   useFiatOnRampAggregatorTransactionQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
+import {
+  getServiceProviderLogo,
+  isFiatOnRampApiError,
+  isNoQuotesError,
+} from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { FiatOnRampEventName } from 'wallet/src/telemetry/constants'
+import { WalletEventProperties } from 'wallet/src/telemetry/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
@@ -214,9 +218,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }
 
   const onChangeValue =
-    (source: UniverseEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
+    (source: WalletEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
         source,
       })
       setValue(newAmount)
@@ -267,7 +271,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setQuoteCurrency(newCurrency)
     setShowTokenSelector(false)
     if (newCurrency.currencyInfo?.currency.symbol) {
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
         token: newCurrency.currencyInfo.currency.symbol.toLowerCase(),
       })
     }
@@ -278,7 +282,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     meldSupportedFiatCurrency.code.toLowerCase()
   )
 
-  const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
+  const notAvailableInThisRegion =
+    supportedFiatCurrencies?.length === 0 ||
+    (isFiatOnRampApiError(quotesError) && isNoQuotesError(quotesError)) ||
+    quotes?.length === 0
 
   const { errorText, errorColor } = useParseFiatOnRampError(
     !notAvailableInThisRegion && (quotesError || serviceProvidersError),

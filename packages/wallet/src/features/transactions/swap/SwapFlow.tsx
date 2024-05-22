@@ -2,8 +2,7 @@ import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import {
   SwapFormContextProvider,
@@ -26,6 +25,7 @@ import {
   TransactionModalFooterContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { TransactionModalProps } from 'wallet/src/features/transactions/swap/TransactionModalProps'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 export function SwapFlow({
   prefilledState,

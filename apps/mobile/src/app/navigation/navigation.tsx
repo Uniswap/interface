@@ -46,6 +46,7 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
+import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
@@ -65,13 +66,7 @@ import { RotatableChevron } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import {
-  FiatOnRampScreens,
-  MobileScreens,
-  OnboardingScreens,
-  UnitagScreens,
-} from 'uniswap/src/types/screens/mobile'
+import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
@@ -90,55 +85,49 @@ function SettingsStackGroup(): JSX.Element {
         fullScreenGestureEnabled: true,
         animation: 'slide_from_right',
       }}>
-      <SettingsStack.Screen component={SettingsScreen} name={MobileScreens.Settings} />
-      <SettingsStack.Screen component={SettingsWallet} name={MobileScreens.SettingsWallet} />
-      <SettingsStack.Screen
-        component={SettingsWalletEdit}
-        name={MobileScreens.SettingsWalletEdit}
-      />
+      <SettingsStack.Screen component={SettingsScreen} name={Screens.Settings} />
+      <SettingsStack.Screen component={SettingsWallet} name={Screens.SettingsWallet} />
+      <SettingsStack.Screen component={SettingsWalletEdit} name={Screens.SettingsWalletEdit} />
       <SettingsStack.Screen
         component={SettingsWalletManageConnection}
-        name={MobileScreens.SettingsWalletManageConnection}
+        name={Screens.SettingsWalletManageConnection}
       />
-      <SettingsStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
-      <SettingsStack.Screen component={DevScreen} name={MobileScreens.Dev} />
+      <SettingsStack.Screen component={WebViewScreen} name={Screens.WebView} />
+      <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
       <SettingsStack.Screen
         component={SettingsBiometricAuthScreen}
-        name={MobileScreens.SettingsBiometricAuth}
+        name={Screens.SettingsBiometricAuth}
       />
       <SettingsStack.Screen
         component={SettingsViewSeedPhraseScreen}
-        name={MobileScreens.SettingsViewSeedPhrase}
+        name={Screens.SettingsViewSeedPhrase}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupPasswordCreateScreen}
-        name={MobileScreens.SettingsCloudBackupPasswordCreate}
+        name={Screens.SettingsCloudBackupPasswordCreate}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupPasswordConfirmScreen}
-        name={MobileScreens.SettingsCloudBackupPasswordConfirm}
+        name={Screens.SettingsCloudBackupPasswordConfirm}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupProcessingScreen}
-        name={MobileScreens.SettingsCloudBackupProcessing}
+        name={Screens.SettingsCloudBackupProcessing}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupStatus}
-        name={MobileScreens.SettingsCloudBackupStatus}
+        name={Screens.SettingsCloudBackupStatus}
       />
       <SettingsStack.Screen
         component={SettingsAppearanceScreen}
-        name={MobileScreens.SettingsAppearance}
+        name={Screens.SettingsAppearance}
       />
-      <SettingsStack.Screen
-        component={SettingsPrivacyScreen}
-        name={MobileScreens.SettingsPrivacy}
-      />
+      <SettingsStack.Screen component={SettingsPrivacyScreen} name={Screens.SettingsPrivacy} />
     </SettingsStack.Navigator>
   )
 }
 
-export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   // Adding `key` forces a full re-render and re-mount when switching accounts
   // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
@@ -167,24 +156,24 @@ export function ExploreStackNavigator(): JSX.Element {
       }}>
       <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
-        initialRouteName={MobileScreens.Explore}
+        initialRouteName={Screens.Explore}
         screenOptions={{
           ...navOptions.noHeader,
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
           animation: 'slide_from_right',
         }}>
-        <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
+        <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
         <ExploreStack.Group
           screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
-          <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
+          <ExploreStack.Screen name={Screens.ExternalProfile}>
             {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
           </ExploreStack.Screen>
-          <ExploreStack.Screen name={MobileScreens.NFTCollection}>
+          <ExploreStack.Screen name={Screens.NFTCollection}>
             {(props): JSX.Element => <NFTCollectionScreen {...props} renderedInModal />}
           </ExploreStack.Screen>
-          <ExploreStack.Screen component={NFTItemScreen} name={MobileScreens.NFTItem} />
-          <ExploreStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
+          <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+          <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
         </ExploreStack.Group>
       </ExploreStack.Navigator>
     </NavigationContainer>
@@ -371,27 +360,25 @@ export function AppStackNavigator(): JSX.Element {
         gestureEnabled: true,
         animation: 'slide_from_right',
       }}>
-      {finishedOnboarding && (
-        <AppStack.Screen component={WrappedHomeScreen} name={MobileScreens.Home} />
-      )}
+      {finishedOnboarding && <AppStack.Screen component={WrappedHomeScreen} name={Screens.Home} />}
       <AppStack.Screen
         component={OnboardingStackNavigator}
-        name={MobileScreens.OnboardingStack}
+        name={Screens.OnboardingStack}
         navigationKey={
           finishedOnboarding
             ? OnboardingEntryPoint.Sidebar.valueOf()
             : OnboardingEntryPoint.FreshInstallOrReplace.valueOf()
         }
       />
-      <AppStack.Screen component={UnitagStackNavigator} name={MobileScreens.UnitagStack} />
-      <AppStack.Screen component={ExternalProfileScreen} name={MobileScreens.ExternalProfile} />
-      <AppStack.Screen component={TokenDetailsScreen} name={MobileScreens.TokenDetails} />
-      <AppStack.Screen component={NFTItemScreen} name={MobileScreens.NFTItem} />
-      <AppStack.Screen component={NFTCollectionScreen} name={MobileScreens.NFTCollection} />
-      <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
-      <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
+      <AppStack.Screen component={UnitagStackNavigator} name={Screens.UnitagStack} />
+      <AppStack.Screen component={ExternalProfileScreen} name={Screens.ExternalProfile} />
+      <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+      <AppStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
+      <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
+      <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
+        <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>
     </AppStack.Navigator>
   )

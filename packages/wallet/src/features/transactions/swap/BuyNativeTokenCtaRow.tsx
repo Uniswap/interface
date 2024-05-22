@@ -1,7 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { Button, ColorTokens, Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { useNetworkColors } from 'wallet/src/utils/colors'
 

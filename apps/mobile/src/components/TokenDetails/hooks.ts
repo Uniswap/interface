@@ -1,13 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useBalances } from 'src/features/dataApi/balances'
+import { Screens } from 'src/screens/Screens'
 import {
   Chain,
   useTokenDetailsScreenLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
@@ -80,14 +80,14 @@ export function useTokenDetailsNavigation(): {
       if (navigation.canGoBack()) {
         navigation.pop()
       }
-      navigation.push(MobileScreens.TokenDetails, { currencyId })
+      navigation.push(Screens.TokenDetails, { currencyId })
     },
     [navigation]
   )
 
   const navigate = useCallback(
     (currencyId: CurrencyId): void => {
-      navigation.navigate(MobileScreens.TokenDetails, { currencyId })
+      navigation.navigate(Screens.TokenDetails, { currencyId })
     },
     [navigation]
   )

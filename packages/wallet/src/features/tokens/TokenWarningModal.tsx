@@ -4,13 +4,13 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { ThemeNames, imageSizes, opacify } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { useTokenSafetyLevelColors } from 'wallet/src/features/tokens/safetyHooks'
 import { getTokenSafetyHeaderText } from 'wallet/src/features/tokens/utils'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction): string {
   switch (safetyLevel) {

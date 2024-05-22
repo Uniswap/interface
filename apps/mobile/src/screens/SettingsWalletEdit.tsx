@@ -15,7 +15,6 @@ import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { Button, Flex, Text } from 'ui/src'
 import { PenLine } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
@@ -27,8 +26,9 @@ import {
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { Screens } from './Screens'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWalletEdit>
+type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletEdit>
 
 export function SettingsWalletEdit({
   route: {
@@ -136,7 +136,7 @@ export function SettingsWalletEdit({
               </Flex>
             )}
             {showUnitagBanner && (
-              <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />
+              <UnitagBanner compact address={address} entryPoint={Screens.Settings} />
             )}
           </Flex>
           <Button

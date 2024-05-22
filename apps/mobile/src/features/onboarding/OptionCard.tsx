@@ -1,8 +1,8 @@
 import React from 'react'
+import Trace from 'src/components/Trace/Trace'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementNameType } from 'wallet/src/telemetry/constants'
 
 export function OptionCard({
   title,

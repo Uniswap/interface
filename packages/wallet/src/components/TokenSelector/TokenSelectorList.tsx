@@ -1,19 +1,19 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
+import { AnimatedFlex, Flex, isWeb, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { renderSuggestedTokenItem } from 'wallet/src/components/TokenSelector/renderSuggestedTokenItem'
+import { suggestedTokensKeyExtractor } from 'wallet/src/components/TokenSelector/suggestedTokensKeyExtractor'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import {
   SectionHeaderProps,
   TokenSectionBaseList,
   TokenSectionBaseListRef,
 } from 'wallet/src/components/TokenSelector/TokenSectionBaseList'
-import { renderSuggestedTokenItem } from 'wallet/src/components/TokenSelector/renderSuggestedTokenItem'
-import { suggestedTokensKeyExtractor } from 'wallet/src/components/TokenSelector/suggestedTokensKeyExtractor'
 import {
   OnSelectCurrency,
   SuggestedTokenSection,
@@ -21,7 +21,7 @@ import {
   TokenSection,
   TokenSelectorListSections,
 } from 'wallet/src/components/TokenSelector/types'
-import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)

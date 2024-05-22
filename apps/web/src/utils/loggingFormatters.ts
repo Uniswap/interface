@@ -9,7 +9,7 @@ import {
   getTokenAddress,
 } from 'lib/utils/analytics'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
+import { isClassicTrade } from 'state/routing/utils'
 
 import { RoutingDiagramEntry } from './getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from './prices'
@@ -83,7 +83,7 @@ export const formatSwapButtonClickEventProperties = ({
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: isClassicTrade(trade) ? trade.gasUseEstimateUSD : undefined,
   transaction_hash: swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined,
-  order_hash: isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : undefined,
+  order_hash: swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : undefined,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_address: trade ? getTokenAddress(trade.inputAmount.currency) : undefined,
   token_out_address: trade ? getTokenAddress(trade.outputAmount.currency) : undefined,

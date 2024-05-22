@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { pushNotification } from 'wallet/src/features/notifications/slice'

@@ -13,12 +13,12 @@ import {
 } from 'ui/src'
 import { EXTENSION_PROMO_BANNER_DARK, EXTENSION_PROMO_BANNER_LIGHT } from 'ui/src/assets'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   ExtensionOnboardingState,
   setExtensionOnboardingState,
 } from 'wallet/src/features/behaviorHistory/slice'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ExtensionOnboardingEventName } from 'wallet/src/telemetry/constants'
 
 const IMAGE_ASPECT_RATIO = 0.69
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.3
@@ -40,14 +40,14 @@ export function ExtensionPromoBanner({
 
   const onPressClaimNow = (): void => {
     Keyboard.dismiss()
-    sendAnalyticsEvent(MobileEventName.ExtensionPromoBannerActionTaken, {
+    sendWalletAnalyticsEvent(ExtensionOnboardingEventName.PromoBannerActionTaken, {
       action: 'join',
     })
     onShowExtensionPromoModal()
   }
 
   const onPressMaybeLater = (): void => {
-    sendAnalyticsEvent(MobileEventName.ExtensionPromoBannerActionTaken, {
+    sendWalletAnalyticsEvent(ExtensionOnboardingEventName.PromoBannerActionTaken, {
       action: 'dismiss',
     })
     dispatch(setExtensionOnboardingState(ExtensionOnboardingState.Completed))

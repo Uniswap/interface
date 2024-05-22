@@ -7,9 +7,9 @@ import {
 } from 'react-native'
 import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   alwaysShowInputSuffix?: boolean

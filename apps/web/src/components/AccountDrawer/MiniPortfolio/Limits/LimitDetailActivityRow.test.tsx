@@ -31,6 +31,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
     minimumOutputCurrencyAmountRaw: '106841079134757921',
     settledOutputCurrencyAmountRaw: '106841079134757921',
   },
+  txHash: '0x1234',
   encodedOrder: '0xencodedOrder',
   id: '0x1234',
   addedTime: 3,

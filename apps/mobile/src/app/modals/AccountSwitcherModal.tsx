@@ -9,6 +9,7 @@ import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorage
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 import {
   Button,
@@ -21,13 +22,11 @@ import {
 } from 'ui/src'
 import { Plus } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   createAccountActions,
@@ -40,6 +39,7 @@ import {
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
 
 export function AccountSwitcherModal(): JSX.Element {
@@ -109,8 +109,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(MobileScreens.SettingsStack, {
-      screen: MobileScreens.SettingsWallet,
+    navigate(Screens.SettingsStack, {
+      screen: Screens.SettingsWallet,
       params: { address: activeAccountAddress },
     })
   }
@@ -133,7 +133,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         setCreatedAdditionalAccount(true)
       } else {
         // create pending account and place into welcome flow
-        navigate(MobileScreens.OnboardingStack, {
+        navigate(Screens.OnboardingStack, {
           screen: OnboardingScreens.WelcomeWallet,
           params: {
             importType: ImportType.CreateNew,
@@ -147,7 +147,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     const onPressAddViewOnlyWallet = (): void => {
-      navigate(MobileScreens.OnboardingStack, {
+      navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.WatchWallet,
         params: {
           importType: ImportType.Watch,
@@ -162,7 +162,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       if (hasImportedSeedPhrase && activeAccountAddress) {
         dispatch(openModal({ name: ModalName.RemoveWallet }))
       } else {
-        navigate(MobileScreens.OnboardingStack, {
+        navigate(Screens.OnboardingStack, {
           screen: OnboardingScreens.SeedPhraseInput,
           params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
         })
@@ -195,7 +195,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         return
       }
 
-      navigate(MobileScreens.OnboardingStack, {
+      navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.RestoreCloudBackupLoading,
         params: { importType: ImportType.Restore, entryPoint: OnboardingEntryPoint.Sidebar },
       })

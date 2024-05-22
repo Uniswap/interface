@@ -6,7 +6,7 @@ import { useReducer } from 'react'
 import { Check } from 'react-feather'
 import { css, useTheme } from 'styled-components'
 
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { filterTimeAtom } from '../state'
 
 export enum TimePeriodDisplay {

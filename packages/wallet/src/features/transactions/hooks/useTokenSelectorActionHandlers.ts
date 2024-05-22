@@ -1,14 +1,14 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { AssetType } from 'wallet/src/entities/assets'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function useTokenSelectorActionHandlers(
@@ -43,7 +43,7 @@ export function useTokenSelectorActionHandlers(
       )
 
       // log event that a currency was selected
-      sendAnalyticsEvent(WalletEventName.TokenSelected, {
+      sendWalletAnalyticsEvent(WalletEventName.TokenSelected, {
         name: currency.name,
         address: currencyAddress(currency),
         chain: currency.chainId,

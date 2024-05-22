@@ -3,12 +3,9 @@ import React from 'react'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupProcessingAnimation } from 'src/features/CloudBackup/CloudBackupProcessingAnimation'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<
-  SettingsStackParamList,
-  MobileScreens.SettingsCloudBackupProcessing
->
+type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupProcessing>
 
 export function SettingsCloudBackupProcessingScreen({
   navigation,
@@ -17,11 +14,11 @@ export function SettingsCloudBackupProcessingScreen({
   },
 }: Props): JSX.Element | null {
   const onBackupComplete = (): void => {
-    navigation.replace(MobileScreens.SettingsCloudBackupStatus, { address })
+    navigation.replace(Screens.SettingsCloudBackupStatus, { address })
   }
 
   const onErrorPress = (): void => {
-    navigation.navigate(MobileScreens.Settings)
+    navigation.navigate(Screens.Settings)
   }
 
   return (

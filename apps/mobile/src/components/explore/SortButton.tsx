@@ -6,13 +6,13 @@ import {
   getTokensOrderByMenuLabel,
   getTokensOrderBySelectedLabel,
 } from 'src/features/explore/utils'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
@@ -70,7 +70,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         }
 
         dispatch(setTokensOrderBy({ newTokensOrderBy: selectedMenuAction.orderBy }))
-        sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
+        sendMobileAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
           filter_type: selectedMenuAction.orderBy,
         })
       }}>

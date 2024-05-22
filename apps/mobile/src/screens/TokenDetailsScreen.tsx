@@ -14,9 +14,11 @@ import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHead
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
+import Trace from 'src/components/Trace/Trace'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
 import {
@@ -38,13 +40,10 @@ import {
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
+import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -57,6 +56,7 @@ import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenConte
 import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function HeaderTitleElement({
@@ -104,7 +104,7 @@ function HeaderTitleElement({
 
 export function TokenDetailsScreen({
   route,
-}: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
+}: AppStackScreenProp<Screens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
   // Potentially delays loading of perf-heavy content to speed up navigation
   const showSkeleton = useSkeletonLoading()
@@ -148,12 +148,12 @@ export function TokenDetailsScreen({
   )
 
   return (
-    <ReactNavigationPerformanceView interactive screenName={MobileScreens.TokenDetails}>
+    <ReactNavigationPerformanceView interactive screenName={Screens.TokenDetails}>
       <Trace
         directFromPage
         logImpression
         properties={traceProperties}
-        screen={MobileScreens.TokenDetails}>
+        screen={Screens.TokenDetails}>
         <TokenDetails
           _currencyId={_currencyId}
           data={data}
@@ -267,7 +267,7 @@ function TokenDetails({
   const [ellipsisMenuVisible, setEllipsisMenuVisible] = useState<boolean>(false)
 
   return (
-    <Trace screen={MobileScreens.TokenDetails}>
+    <Trace screen={Screens.TokenDetails}>
       <HeaderScrollScreen
         centerElement={<HeaderTitleElement data={data} ellipsisMenuVisible={ellipsisMenuVisible} />}
         renderedInModal={inModal}

@@ -1,6 +1,7 @@
 import { PersistState } from 'redux-persist'
-import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
+import { apolloClientRef } from 'src/data/usePersistedApolloClient'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
+import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { modalWatcher } from 'src/features/modals/saga'
@@ -9,7 +10,6 @@ import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { call, delay, select, spawn } from 'typed-redux-saga'
-import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
 import {
   swapActions,
@@ -43,7 +43,7 @@ import {
   importAccountSaga,
   importAccountSagaName,
 } from 'wallet/src/features/wallet/import/importAccountSaga'
-import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
+import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
 
 const REHYDRATION_STATUS_POLLING_INTERVAL = 50
 

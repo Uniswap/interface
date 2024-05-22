@@ -30,7 +30,7 @@ exports[`TokenItem renders without error 1`] = `
         ],
       }
     }
-    testID="token-item-tkn"
+    testID="token-item-cum"
   >
     <View
       collapsable={false}
@@ -99,7 +99,6 @@ exports[`TokenItem renders without error 1`] = `
           }
         >
           <Image
-            resizeMode="contain"
             source={
               {
                 "uri": "https://loremflickr.com/640/480",
@@ -107,6 +106,9 @@ exports[`TokenItem renders without error 1`] = `
             }
             style={
               [
+                {
+                  "resizeMode": "contain",
+                },
                 {
                   "backgroundColor": "#2222220D",
                   "borderColor": "#2222220D",
@@ -143,7 +145,7 @@ exports[`TokenItem renders without error 1`] = `
           }
           suppressHighlighting={true}
         >
-          tkn
+          cum
         </Text>
         <Text
           allowFontScaling={true}

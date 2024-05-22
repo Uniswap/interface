@@ -5,6 +5,7 @@ import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
+import Trace from 'src/components/Trace/Trace'
 import { Screen } from 'src/components/layout/Screen'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { TransferHeader } from 'src/features/transactions/transfer/TransferHeader'
@@ -13,8 +14,6 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import {
   TokenSelectorModal,
   TokenSelectorVariation,
@@ -53,6 +52,7 @@ import {
 } from 'wallet/src/features/transactions/transfer/types'
 import { TransactionStep, TransferFlowProps } from 'wallet/src/features/transactions/types'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 interface TransferFormProps {

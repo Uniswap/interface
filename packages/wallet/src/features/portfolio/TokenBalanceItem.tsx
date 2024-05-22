@@ -10,16 +10,14 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
-/**
- * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.
- */
-
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
   onPressToken?: (currencyId: CurrencyId) => void
   isLoading?: boolean
   padded?: boolean
 }
+
+export const TOKEN_BALANCE_ITEM_HEIGHT = 56
 
 export const TokenBalanceItem = memo(function _TokenBalanceItem({
   portfolioBalance,
@@ -52,6 +50,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       flexDirection="row"
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="space-between"
+      minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
       onLongPress={disableOnPress}

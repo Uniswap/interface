@@ -1,7 +1,7 @@
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import { useContract } from 'hooks/useContract'
-import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -11,7 +11,6 @@ import { Permit2 } from 'uniswap/src/abis/types'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { useAccount } from 'wagmi'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
@@ -58,14 +57,13 @@ export function useUpdatePermitAllowance(
   nonce: number | undefined,
   onPermitSignature: (signature: PermitSignature) => void
 ) {
-  const account = useAccount()
-  const signer = useEthersSigner()
+  const { account, chainId, provider } = useWeb3React()
   return useCallback(
     () =>
       trace({ name: 'Permit2', op: 'permit.permit2.signature' }, async (trace) => {
         try {
-          if (account.status !== 'connected') throw new Error('wallet not connected')
-          if (!signer) throw new Error('missing signer')
+          if (!chainId) throw new Error('missing chainId')
+          if (!provider) throw new Error('missing provider')
           if (!token) throw new Error('missing token')
           if (!spender) throw new Error('missing spender')
           if (nonce === undefined) throw new Error('missing nonce')
@@ -81,10 +79,10 @@ export function useUpdatePermitAllowance(
             sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
           }
 
-          const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, account.chainId)
+          const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
-              return await signTypedData(signer, domain, types, values)
+              return await signTypedData(provider.getSigner(account), domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
                 walletTrace.setStatus('cancelled')
@@ -107,6 +105,6 @@ export function useUpdatePermitAllowance(
           }
         }
       }),
-    [account.chainId, account.status, nonce, onPermitSignature, signer, spender, token]
+    [account, chainId, nonce, onPermitSignature, provider, spender, token]
   )
 }

@@ -14,7 +14,6 @@ import {
   POLYGON_LOGO,
 } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { ChainId } from 'uniswap/src/types/chains'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
 export const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
@@ -23,6 +22,20 @@ export enum RPCType {
   Public = 'public',
   Private = 'private',
   PublicAlt = 'public_alternative',
+}
+
+// Renamed from SupportedChainId in web app
+export enum ChainId {
+  Mainnet = 1,
+  Goerli = 5,
+
+  ArbitrumOne = 42161,
+  Base = 8453,
+  Optimism = 10,
+  Polygon = 137,
+  PolygonMumbai = 80001,
+  Blast = 81457,
+  Bnb = 56,
 }
 
 export const ALL_SUPPORTED_CHAINS: string[] = Object.values(ChainId).map((c) => c.toString())

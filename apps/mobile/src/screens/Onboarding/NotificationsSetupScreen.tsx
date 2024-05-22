@@ -4,26 +4,26 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Image, Platform, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import Trace from 'src/components/Trace/Trace'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
+import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
+import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
@@ -146,7 +146,6 @@ const NotificationsBackgroundImage = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
   return (
     <Image
-      resizeMode="contain"
       source={
         isDarkMode
           ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK)
@@ -160,6 +159,7 @@ const NotificationsBackgroundImage = (): JSX.Element => {
 const styles = StyleSheet.create({
   image: {
     height: '100%',
+    resizeMode: 'contain',
     width: '100%',
   },
 })

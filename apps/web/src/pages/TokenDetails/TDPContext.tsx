@@ -1,7 +1,6 @@
 import { QueryResult } from '@apollo/client'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
-import { InterfaceGqlChain, SupportedInterfaceChainId } from 'constants/chains'
 import { Warning } from 'constants/tokenSafety'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import {
@@ -16,9 +15,9 @@ export type MultiChainMap = {
 }
 
 type BaseTDPContext = {
-  currencyChain: InterfaceGqlChain
+  currencyChain: Chain
   /** Equivalent to `currency.chainId`, typed as `ChainId` instead of `number` */
-  currencyChainId: SupportedInterfaceChainId
+  currencyChainId: ChainId
 
   /** Set to `NATIVE_CHAIN_ID` if currency is native, else equal to `currency.address` */
   address: string

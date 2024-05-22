@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'

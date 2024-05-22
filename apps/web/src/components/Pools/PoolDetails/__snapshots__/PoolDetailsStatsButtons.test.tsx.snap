@@ -1138,7 +1138,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
                         data-disable-theme="true"
                       >
-                        Sell
+                        You pay
                       </span>
                       <div
                         class="c28"
@@ -1275,7 +1275,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
                           data-disable-theme="true"
                         >
-                          Buy
+                          You receive
                         </span>
                         <div
                           class="c28"

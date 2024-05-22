@@ -14,8 +14,6 @@ import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
 import { legacyLocalStorageMigration } from 'state/migrations/legacy'
 import { migration10 } from './migrations/10'
-import { migration11 } from './migrations/11'
-import { migration12 } from './migrations/12'
 
 /**
  * These run once per state re-hydration when a version mismatch is detected.
@@ -38,8 +36,6 @@ export const migrations: MigrationManifest = {
   8: migration8,
   9: migration9,
   10: migration10,
-  11: migration11,
-  12: migration12,
 } as const
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'

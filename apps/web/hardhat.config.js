@@ -1,4 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { UNIVERSAL_ROUTER_CREATION_BLOCK } from '@uniswap/universal-router-sdk'
 
 /* eslint-env node */
 require('dotenv').config()
@@ -16,6 +17,7 @@ const forks = {
   },
   [ChainId.POLYGON]: {
     url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+    blockNumber: UNIVERSAL_ROUTER_CREATION_BLOCK(ChainId.POLYGON),
     ...forkingConfig,
   },
 }

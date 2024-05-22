@@ -1,7 +1,6 @@
 import { BigNumber } from 'ethers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
@@ -9,6 +8,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 

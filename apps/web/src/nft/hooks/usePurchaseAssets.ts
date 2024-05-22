@@ -1,7 +1,7 @@
+import { useWeb3React } from '@web3-react/core'
 import { RouteResponse, UpdatedGenieAsset } from 'nft/types'
 import { useCallback } from 'react'
 
-import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useBag } from './useBag'
 import { useSendTransaction } from './useSendTransaction'
 import { useTransactionResponse } from './useTransactionResponse'
@@ -11,7 +11,7 @@ export function usePurchaseAssets(): (
   assetsToBuy: UpdatedGenieAsset[],
   purchasingWithErc20?: boolean
 ) => Promise<void> {
-  const signer = useEthersSigner()
+  const { provider } = useWeb3React()
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
   const setTransactionResponse = useTransactionResponse((state) => state.setTransactionResponse)
 
@@ -27,9 +27,14 @@ export function usePurchaseAssets(): (
 
   return useCallback(
     async (routingData: RouteResponse, assetsToBuy: UpdatedGenieAsset[], purchasingWithErc20 = false) => {
-      if (!signer) return
+      if (!provider) return
 
-      const purchaseResponse = await sendTransaction(signer, assetsToBuy, routingData, purchasingWithErc20)
+      const purchaseResponse = await sendTransaction(
+        provider.getSigner(),
+        assetsToBuy,
+        routingData,
+        purchasingWithErc20
+      )
 
       if (purchaseResponse) {
         setBagLocked(false)
@@ -38,6 +43,6 @@ export function usePurchaseAssets(): (
         resetBag()
       }
     },
-    [signer, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
+    [provider, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
   )
 }

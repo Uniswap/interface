@@ -2,7 +2,6 @@ import { providers } from 'ethers'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -21,6 +20,7 @@ import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo

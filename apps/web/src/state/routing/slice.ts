@@ -7,7 +7,6 @@ import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 
 import {
-  ClassicAPIConfig,
   GetQuoteArgs,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
   QuoteIntent,
@@ -18,8 +17,6 @@ import {
   TradeResult,
   URAQuoteResponse,
   URAQuoteType,
-  UniswapXConfig,
-  UniswapXv2Config,
 } from './types'
 import { isExactInput, transformQuoteToTrade } from './utils'
 
@@ -41,21 +38,18 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference, protocolPreferences, isXv2 } = args
+  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference, protocolPreferences } = args
 
-  const uniswapX: UniswapXConfig = {
+  const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
+    // Protocol supports swap+send to different destination address, but
+    // for now recipient === swapper
+    recipient: account,
     swapper: account,
-    routingType: URAQuoteType.DUTCH_V1,
+    routingType: URAQuoteType.DUTCH_LIMIT,
   }
 
-  const uniswapXv2: UniswapXv2Config = {
-    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
-    swapper: account,
-    routingType: URAQuoteType.DUTCH_V2,
-  }
-
-  const classic: ClassicAPIConfig = {
+  const classic = {
     ...DEFAULT_QUERY_PARAMS,
     protocols: protocolPreferences && protocolPreferences.length > 0 ? protocolPreferences : protocols,
     routingType: URAQuoteType.CLASSIC,
@@ -72,7 +66,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     return [classic]
   }
 
-  return [isXv2 ? uniswapXv2 : uniswapX, classic]
+  return [uniswapx, classic]
 }
 
 export const routingApi = createApi({
@@ -104,8 +98,6 @@ export const routingApi = createApi({
             intent:
               args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? QuoteIntent.Pricing : QuoteIntent.Quote,
             configs: getRoutingAPIConfig(args),
-            useUniswapX: args.routerPreference === RouterPreference.X,
-            swapper: args.account,
           }
 
           try {

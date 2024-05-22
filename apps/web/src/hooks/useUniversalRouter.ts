@@ -4,9 +4,9 @@ import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -54,8 +54,7 @@ export function useUniversalRouterSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
   options: SwapOptions
 ) {
-  const account = useAccount()
-  const provider = useEthersWeb3Provider()
+  const { account, chainId, provider } = useWeb3React()
   const connectorName = useAccount().connector?.name
 
   const analyticsContext = useTrace()
@@ -68,11 +67,12 @@ export function useUniversalRouterSwapCallback(
     (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
       trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
         try {
-          if (account.status !== 'connected') throw new Error('wallet not connected')
+          if (!account) throw new Error('missing account')
+          if (!chainId) throw new Error('missing chainId')
           if (!provider) throw new Error('missing provider')
           if (!trade) throw new Error('missing trade')
           const connectedChainId = await provider.getSigner().getChainId()
-          if (account.chainId !== connectedChainId) throw new WrongChainError()
+          if (chainId !== connectedChainId) throw new WrongChainError()
 
           const deadline = await getDeadline()
 
@@ -85,8 +85,8 @@ export function useUniversalRouterSwapCallback(
             flatFee: options.flatFeeOptions,
           })
           const tx = {
-            from: account.address,
-            to: UNIVERSAL_ROUTER_ADDRESS(account.chainId),
+            from: account,
+            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
             data,
             // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),
@@ -135,7 +135,7 @@ export function useUniversalRouterSwapCallback(
             }),
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
-            [CustomUserProperties.WALLET_ADDRESS]: account.address,
+            [CustomUserProperties.WALLET_ADDRESS]: account,
             [CustomUserProperties.WALLET_TYPE]: connectorName,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
@@ -167,9 +167,8 @@ export function useUniversalRouterSwapCallback(
         }
       }),
     [
-      account.status,
-      account.chainId,
-      account.address,
+      account,
+      chainId,
       provider,
       trade,
       getDeadline,

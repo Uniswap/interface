@@ -4,8 +4,8 @@ import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
-import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 
 export function useContract<T extends Contract = Contract>(

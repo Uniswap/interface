@@ -6,8 +6,6 @@ import { getUniqueId } from 'react-native-device-info'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
-import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { isIOS } from 'uniswap/src/utils/platform'
@@ -24,6 +22,8 @@ import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 
 export function ChangeUnitagModal({
   unitag,
@@ -123,7 +123,7 @@ export function ChangeUnitagModal({
 
       // If change succeeded, exit the modal and display a success message
       if (changeResponse.success) {
-        sendAnalyticsEvent(UnitagEventName.UnitagChanged)
+        sendWalletAnalyticsEvent(UnitagEventName.UnitagChanged)
         triggerRefetchUnitags()
         dispatch(
           pushNotification({

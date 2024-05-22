@@ -294,10 +294,6 @@ function useSyncedSelectedOrder(): UniswapXOrderDetails | undefined {
   return useMemo(() => {
     if (!selectedOrder?.order) return undefined
 
-    if (selectedOrder.order.status === UniswapXOrderStatus.FILLED) {
-      return selectedOrder.order
-    }
-
     return {
       ...selectedOrder.order,
       ...localPendingOrder,

@@ -7,7 +7,7 @@ import {
   OpenModalParams,
 } from 'src/features/modals/modalSlice'
 import { takeEvery } from 'typed-redux-saga'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function* modalWatcher() {
   yield* takeEvery(openModal, handleOpenModalAction)

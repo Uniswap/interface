@@ -1,4 +1,4 @@
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { Link } from 'react-router-dom'
 import { useTogglePrivacyPolicy } from 'state/application/hooks'

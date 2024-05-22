@@ -3,14 +3,14 @@ import { AppStackScreenProp } from 'src/app/navigation/types'
 import { Carousel } from 'src/components/carousel/Carousel'
 import { educationContent } from 'src/components/education'
 import { Screen } from 'src/components/layout/Screen'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { Screens } from 'src/screens/Screens'
 import { isIOS } from 'uniswap/src/utils/platform'
 
 export function EducationScreen({
   route: {
     params: { type, importType, entryPoint },
   },
-}: AppStackScreenProp<MobileScreens.Education>): JSX.Element {
+}: AppStackScreenProp<Screens.Education>): JSX.Element {
   const content = useMemo(
     () =>
       educationContent[type]({

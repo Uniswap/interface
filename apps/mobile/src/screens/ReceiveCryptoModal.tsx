@@ -14,7 +14,6 @@ import {
 } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -22,6 +21,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 
 const ACCOUNT_IMAGE_SIZE = 52

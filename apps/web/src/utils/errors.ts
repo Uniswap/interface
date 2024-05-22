@@ -24,13 +24,6 @@ export class WrongChainError extends Error {
   }
 }
 
-export class UniswapXv2HardQuoteError extends Error {
-  constructor() {
-    super(t`UniswapX v2 hard quote failed. Retry with classic swap.`)
-    this.name = 'UniswapXv2HardQuoteError'
-  }
-}
-
 export class SignatureExpiredError extends Error {
   private _id: string
   constructor() {

@@ -1,8 +1,8 @@
 import { Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { SearchTextInput, SearchTextInputProps } from 'wallet/src/features/search/SearchTextInput'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface SearchBarProps extends SearchTextInputProps {
   onBack?: () => void

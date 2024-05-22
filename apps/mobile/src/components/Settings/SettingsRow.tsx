@@ -8,14 +8,14 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
+import { Screens } from 'src/screens/Screens'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 export interface SettingsSection {
@@ -31,7 +31,7 @@ export interface SettingsSectionItemComponent {
 type SettingsModal = typeof ModalName.FiatCurrencySelector | typeof ModalName.LanguageSelector
 
 export interface SettingsSectionItem {
-  screen?: keyof SettingsStackParamList | typeof MobileScreens.OnboardingStack
+  screen?: keyof SettingsStackParamList | typeof Screens.OnboardingStack
   modal?: SettingsModal
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   externalLink?: string

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from 
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'

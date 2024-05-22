@@ -25,8 +25,8 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
 import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
 import { BottomSheetContextProvider } from './BottomSheetContext'

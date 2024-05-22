@@ -2,8 +2,6 @@ import React from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { DappLogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -11,6 +9,8 @@ import { NotificationToast } from 'wallet/src/features/notifications/components/
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { formWCNotificationTitle } from 'wallet/src/features/notifications/utils'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function WCNotification({
   notification,

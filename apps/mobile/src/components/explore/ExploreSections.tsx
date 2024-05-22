@@ -22,9 +22,9 @@ import {
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'

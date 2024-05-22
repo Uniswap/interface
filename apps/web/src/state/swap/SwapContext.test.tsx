@@ -7,11 +7,6 @@ import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { SwapAndLimitContextProvider, SwapContextProvider } from './SwapContext'
 
-jest.mock('hooks/useContract', () => ({
-  ...jest.requireActual('hooks/useContract'),
-  useContract: jest.fn(),
-}))
-
 describe('Swap Context', () => {
   test('should use context', () => {
     let swapContext

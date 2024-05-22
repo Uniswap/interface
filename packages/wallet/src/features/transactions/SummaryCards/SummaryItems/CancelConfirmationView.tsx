@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { Button, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
@@ -12,6 +11,7 @@ import { useCancelationGasFeeInfo, useUSDValue } from 'wallet/src/features/gas/h
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function CancelConfirmationView({
@@ -63,10 +63,16 @@ export function CancelConfirmationView({
       grow
       backgroundColor="$surface1"
       borderRadius="$rounded20"
-      gap="$spacing12"
-      p="$spacing12">
-      <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-        <SlashCircleIcon color={colors.neutral2.get()} strokeWidth="1" />
+      gap="$spacing24"
+      p="$spacing24"
+      pb="$spacing48">
+      <Flex
+        centered
+        backgroundColor="$surface2"
+        borderColor="$neutral2"
+        borderRadius="$rounded12"
+        p="$spacing12">
+        <SlashCircleIcon color={colors.neutral2.get()} height={24} strokeWidth="1" width={24} />
       </Flex>
       <Flex centered gap="$spacing8">
         <Text variant="buttonLabel2">{t('transaction.action.cancel.title')}</Text>
@@ -74,7 +80,12 @@ export function CancelConfirmationView({
           {t('transaction.action.cancel.description')}
         </Text>
       </Flex>
-      <Flex backgroundColor="$surface2" borderRadius="$rounded16" width="100%">
+      <Flex
+        backgroundColor="$surface2"
+        borderBottomColor="$surface3"
+        borderBottomWidth={1}
+        borderRadius="$rounded16"
+        width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
           <Text variant="subheading2">{t('transaction.networkCost.label')}</Text>
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFee}</Text>}
@@ -93,8 +104,8 @@ export function CancelConfirmationView({
           </Flex>
         )}
       </Flex>
-      <Flex row gap="$spacing8" px="$spacing4" width="100%">
-        <Button fill theme="tertiary" width="50%" onPress={onBack}>
+      <Flex grow row gap="$spacing8" px="$spacing4">
+        <Button fill theme="tertiary" onPress={onBack}>
           {t('common.button.back')}
         </Button>
         <Button
@@ -102,7 +113,6 @@ export function CancelConfirmationView({
           disabled={disableConfirmationButton}
           testID={ElementName.Cancel}
           theme="detrimental"
-          width="50%"
           onPress={onPressCancel}>
           {t('common.button.confirm')}
         </Button>

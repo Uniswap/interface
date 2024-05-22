@@ -29,8 +29,6 @@ export function getOSCollectionsInfiniteQueryOptions(address: string) {
 const OSCollectionsFetcher = async ({ params }: any): Promise<WalletCollection[]> => {
   let hasEmptyFields = false
 
-  if (!params) return []
-
   for (const v of Object.values(params)) {
     if (v === undefined) {
       hasEmptyFields = true

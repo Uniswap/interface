@@ -5,13 +5,13 @@ import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { Settings } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export type SlippageInfoModalProps = {
   trade: Trade<Currency, Currency, TradeType>

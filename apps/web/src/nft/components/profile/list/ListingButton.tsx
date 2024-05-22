@@ -1,12 +1,11 @@
 import { BaseButton } from 'components/Button'
 import { Plural, t, Trans } from 'i18n'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
-import { useSellAsset } from 'nft/hooks'
+import { useIsMobile, useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
-import { useIsMobile } from 'hooks/screenSize'
 import { findListingIssues } from './utils'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`

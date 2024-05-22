@@ -5,12 +5,12 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
+import { Screens } from 'src/screens/Screens'
 import { Text } from 'ui/src'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsViewSeedPhrase>
+type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsViewSeedPhrase>
 
 export function SettingsViewSeedPhraseScreen({
   navigation,

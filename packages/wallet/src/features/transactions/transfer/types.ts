@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, NFTAssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'

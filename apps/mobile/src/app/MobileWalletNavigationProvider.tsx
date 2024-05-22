@@ -5,12 +5,9 @@ import { exploreNavigationRef } from 'src/app/navigation/navigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
+import { Screens } from 'src/screens/Screens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
@@ -24,6 +21,8 @@ import {
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ModalName, ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
@@ -62,7 +61,7 @@ function useHandleShareNft(): (args: ShareNftArgs) => Promise<void> {
 
       await Share.share({ message: url })
 
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
         entity: ShareableEntity.NftItem,
         url,
       })
@@ -89,7 +88,7 @@ function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
     try {
       await Share.share({ message: url })
 
-      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
         entity: ShareableEntity.Token,
         url,
       })
@@ -105,7 +104,7 @@ function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
   const { navigate } = useAppStackNavigation()
 
   return useCallback((): void => {
-    navigate(MobileScreens.Home, { tab })
+    navigate(Screens.Home, { tab })
   }, [navigate, tab])
 }
 
@@ -150,9 +149,9 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
   return useCallback(
     (currencyId: string): void => {
       if (exploreNavigationRef.isFocused()) {
-        exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+        exploreNavigationRef.navigate(Screens.TokenDetails, { currencyId })
       } else {
-        appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
+        appNavigation.navigate(Screens.TokenDetails, { currencyId })
       }
     },
     [appNavigation]
@@ -164,7 +163,7 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
 
   return useCallback(
     ({ owner, address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
-      navigation.navigate(MobileScreens.NFTItem, {
+      navigation.navigate(Screens.NFTItem, {
         owner,
         address,
         tokenId,

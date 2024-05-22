@@ -8,8 +8,6 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -18,6 +16,8 @@ import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 interface DappConnectedNetworkModalProps {
   session: WalletConnectSession
   onClose: () => void

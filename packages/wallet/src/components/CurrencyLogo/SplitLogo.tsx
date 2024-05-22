@@ -1,8 +1,8 @@
 import { Flex } from 'ui/src'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
+import { ChainId } from 'wallet/src/constants/chains'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>

@@ -1,10 +1,8 @@
-import { faker } from '@faker-js/faker'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
+import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
@@ -25,6 +23,7 @@ import {
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import {
   approveTransactionInfo,
   fiatPurchaseTransactionInfo,
@@ -47,7 +46,6 @@ describe(transactionWatcher, () => {
     const approveTxDetailsPending = transactionDetails({
       typeInfo: approveTransactionInfo(),
       status: TransactionStatus.Pending,
-      hash: faker.datatype.uuid(),
     })
 
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
@@ -156,7 +154,7 @@ describe(watchFiatOnRampTransaction, () => {
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
           [call(fetchMoonpayTransaction, txDetailsPending), staleTx],
-          [matchers.call.fn(sendAnalyticsEvent), undefined],
+          [matchers.call.fn(sendWalletAnalyticsEvent), undefined],
         ])
         .put(
           transactionActions.deleteTransaction({
@@ -241,7 +239,7 @@ describe(watchFiatOnRampTransaction, () => {
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
         [call(fetchMoonpayTransaction, txDetailsPending), confirmedTx],
-        [matchers.call.fn(sendAnalyticsEvent), undefined],
+        [matchers.call.fn(sendWalletAnalyticsEvent), undefined],
       ])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)

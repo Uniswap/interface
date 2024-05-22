@@ -5,9 +5,9 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangle, DocumentList } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 export function ExtensionWaitlistModal(): JSX.Element {

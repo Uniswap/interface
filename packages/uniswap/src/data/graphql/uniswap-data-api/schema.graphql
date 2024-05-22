@@ -2,9 +2,36 @@
 directive @defer on FIELD
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
 
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
@@ -18,41 +45,14 @@ Tells the service this field/object has access authorized by an API key.
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Cognito User Pools token.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by sigv4 signing.
 """
 directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -905,7 +905,7 @@ type Query {
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
   nftCollections(chain: Chain, filter: NftCollectionsFilterInput, after: String, first: Int): NftCollectionConnection
-  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int, chains: [Chain!]): NftBalanceConnection
+  nftBalances(chain: Chain, ownerAddress: String!, filter: NftBalancesFilterInput, after: String, first: Int, before: String, last: Int): NftBalanceConnection
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection

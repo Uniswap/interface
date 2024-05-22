@@ -6,7 +6,7 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
 
 export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {

@@ -3,9 +3,10 @@ import { Image } from 'react-native'
 import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
-import { ChainId } from 'uniswap/src/types/chains'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
+import { THIN_BORDER, style } from 'wallet/src/components/CurrencyLogo/styles'
+import { ChainId } from 'wallet/src/constants/chains'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 import { NetworkLogo } from './NetworkLogo'
 
@@ -51,16 +52,16 @@ export const TokenLogo = memo(function _TokenLogo({
     } else {
       tokenImage = (
         <Image
-          resizeMode="contain"
           source={{ uri: httpUri }}
           style={[
+            style.image,
             {
               backgroundColor: colors.surface3.get(),
               width: size,
               height: size,
               borderRadius: size / 2,
               borderColor: colors.surface3.get(),
-              borderWidth: 0.5,
+              borderWidth: THIN_BORDER,
             },
           ]}
         />
