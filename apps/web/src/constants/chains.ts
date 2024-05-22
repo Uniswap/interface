@@ -67,7 +67,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
 /**
  * @deprecated when v2 pools are enabled on chains supported through sdk-core
  */
-export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [ChainId.MAINNET, ChainId.GOERLI] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [ChainId.MAINNET, ChainId.CELO] as const
 export const SUPPORTED_V2POOL_CHAIN_IDS = Object.keys(V2_ROUTER_ADDRESSES).map((chainId) => parseInt(chainId))
 
 export const TESTNET_CHAIN_IDS = [
@@ -118,28 +118,29 @@ export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
  */
 export function getChainPriority(chainId: ChainId): number {
   switch (chainId) {
+    case ChainId.CELO:
+    case ChainId.CELO_ALFAJORES:
+      return 0
     case ChainId.MAINNET:
     case ChainId.GOERLI:
     case ChainId.SEPOLIA:
-      return 0
+      return 1
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
-      return 1
+      return 2
     case ChainId.OPTIMISM:
     case ChainId.OPTIMISM_GOERLI:
-      return 2
+      return 3
     case ChainId.POLYGON:
     case ChainId.POLYGON_MUMBAI:
-      return 3
-    case ChainId.BASE:
       return 4
-    case ChainId.BNB:
+    case ChainId.BASE:
       return 5
-    case ChainId.AVALANCHE:
+    case ChainId.BNB:
       return 6
-    case ChainId.CELO:
-    case ChainId.CELO_ALFAJORES:
+    case ChainId.AVALANCHE:
       return 7
+
     case ChainId.BLAST:
       return 8
     default:
