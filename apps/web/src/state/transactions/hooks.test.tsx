@@ -5,7 +5,7 @@ import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
-
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useAccount } from 'wagmi'
 import {
   useHasPendingApproval,
@@ -76,16 +76,7 @@ describe('Transactions hooks', () => {
         finalizeTransaction({
           chainId: ChainId.MAINNET,
           hash: pendingTransactionResponse.hash,
-          receipt: {
-            status: 1,
-            transactionIndex: 1,
-            transactionHash: pendingTransactionResponse.hash,
-            to: '0x0',
-            from: '0x0',
-            contractAddress: '0x0',
-            blockHash: '0x0',
-            blockNumber: 1,
-          },
+          status: TransactionStatus.Confirmed,
         })
       )
     })
@@ -100,6 +91,7 @@ describe('Transactions hooks', () => {
       addedTime: Date.now(),
       nonce: pendingTransactionResponse.nonce,
       deadline: undefined,
+      status: TransactionStatus.Pending,
     })
   })
 

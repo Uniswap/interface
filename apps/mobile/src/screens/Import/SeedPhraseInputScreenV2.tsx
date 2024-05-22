@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import {
@@ -14,16 +13,17 @@ import {
   StringKey,
   useSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInput'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>

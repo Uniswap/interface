@@ -10,6 +10,7 @@ import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
 import { TransactionType } from 'state/transactions/types'
 import { logSwapSuccess } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'utils/chains'
 import { usePollPendingOrders } from './polling/orders'
 import { usePollPendingTransactions } from './polling/transactions'
@@ -47,29 +48,33 @@ function useOnActivityUpdate(): OnActivityUpdate {
     (activity: ActivityUpdate) => {
       const popupDismissalTime = isL2ChainId(activity.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       if (activity.type === 'transaction') {
-        const { chainId, original, update, receipt } = activity
+        const { chainId, original, update } = activity
         const hash = original.hash
-        dispatch(finalizeTransaction({ chainId, hash, receipt, info: update?.info }))
+        dispatch(finalizeTransaction({ chainId, hash, ...update }))
 
-        if (receipt.status === 1 && original.info.type === TransactionType.SWAP) {
+        if (original.info.type === TransactionType.SWAP && update.status === TransactionStatus.Confirmed) {
           logSwapSuccess(hash, chainId, analyticsContext)
         }
 
         addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
       } else if (activity.type === 'signature') {
-        const { chainId, original, update, receipt } = activity
-        const updatedOrder = { ...original, ...update, txHash: receipt?.transactionHash }
+        const { chainId, original, update } = activity
+
+        // Return early if the order is already filled
+        if (original.status === UniswapXOrderStatus.FILLED) return
+
+        const updatedOrder = { ...original, ...update }
         dispatch(updateSignature(updatedOrder))
 
-        if (receipt && updatedOrder.status === UniswapXOrderStatus.FILLED) {
-          const hash = receipt.transactionHash
+        if (updatedOrder.status === UniswapXOrderStatus.FILLED) {
+          const hash = updatedOrder.txHash
           const from = original.offerer
           // Add a transaction in addition to updating signature for filled orders
-          dispatch(addTransaction({ chainId, from, hash, info: updatedOrder.swapInfo, receipt }))
+          dispatch(addTransaction({ chainId, from, hash, info: updatedOrder.swapInfo }))
           addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
 
           // Only track swap success for Dutch orders; limit order fill-time will throw off time tracking analytics
-          if (original.type !== SignatureType.SIGN_LIMIT && receipt.status === 1) {
+          if (original.type !== SignatureType.SIGN_LIMIT) {
             logSwapSuccess(hash, chainId, analyticsContext)
           }
         } else if (original.status !== updatedOrder.status) {

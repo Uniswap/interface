@@ -9,11 +9,11 @@ import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColor
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   onClose: () => void

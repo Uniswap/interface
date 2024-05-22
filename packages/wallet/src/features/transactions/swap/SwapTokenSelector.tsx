@@ -1,13 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { isWeb } from 'ui/src'
-import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   TokenSelector,
   TokenSelectorModal,
   TokenSelectorProps,
   TokenSelectorVariation,
 } from 'wallet/src/components/TokenSelector/TokenSelector'
+import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
@@ -16,8 +18,6 @@ import {
 } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function SwapTokenSelector(): JSX.Element {
@@ -69,7 +69,7 @@ export function SwapTokenSelector(): JSX.Element {
 
       updateSwapForm(newState)
 
-      sendWalletAnalyticsEvent(WalletEventName.TokenSelected, {
+      sendAnalyticsEvent(WalletEventName.TokenSelected, {
         name: currency.name,
         address: currencyAddress(currency),
         chain: currency.chainId,

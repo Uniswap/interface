@@ -12,6 +12,7 @@ import {
 } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -19,7 +20,6 @@ import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/n
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppDispatch } from 'wallet/src/state'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 

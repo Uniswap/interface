@@ -31,6 +31,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     selectingCurrencyField,
     txId,
     customSlippageTolerance,
+    tradeProtocolPreference,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -81,6 +82,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const shouldGetQuote = !isWrapAction(wrapType)
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
   const isTradingApiEnabled = useFeatureFlag(FeatureFlags.TradingApi)
+  const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeParams = {
     amountSpecified: shouldGetQuote ? amountSpecified : null,
@@ -88,6 +90,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
     sendPortionEnabled,
+    // Only pass custom routing preference if feature is enabled
+    tradeProtocolPreference: isOptionalRoutingEnabled ? tradeProtocolPreference : undefined,
   }
 
   const legacyTrade = useTrade({

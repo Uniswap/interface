@@ -6,6 +6,7 @@ import { AnimatedFlex, Button, Flex, Text, isWeb, useDeviceDimensions, useMedia 
 import { BackArrow } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -16,7 +17,6 @@ import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {

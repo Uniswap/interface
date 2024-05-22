@@ -5,8 +5,8 @@ import { runOnJS } from 'react-native-reanimated'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
 function Page({

@@ -9,14 +9,15 @@ import {
   useTransferScreenContext,
 } from 'src/features/transactions/transfer/transferRewrite/TransferScreenContext'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import {
   SwapFormContextProvider,
   SwapFormState,
 } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
+import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 /**
  * @todo: The screens within this flow are not implemented.
@@ -95,6 +96,7 @@ function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.
             txId: initialState.txId,
             isFiatMode: false,
             isSubmitting: false,
+            tradeProtocolPreference: TradeProtocolPreference.Default,
           }
         : undefined,
     [initialState]

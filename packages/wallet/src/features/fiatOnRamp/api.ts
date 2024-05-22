@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
@@ -43,12 +44,12 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { transformPaymentMethods } from './utils'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
+const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 3
 
 const FOR_API_HEADERS = {
   'Content-Type': 'application/json',
@@ -86,14 +87,14 @@ export const fiatOnRampApi = createApi({
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayIPAddressesResponse) => {
-            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: response.isBuyAllowed ?? false,
               networkError: false,
             })
             return { data: response }
           })
           .catch((e) => {
-            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: false,
               networkError: true,
             })
@@ -404,8 +405,11 @@ export async function fetchFiatOnRampTransaction(
   account: Account,
   signerManager: SignerManager
 ): Promise<FiatOnRampTransactionDetails | undefined> {
+  // Force fetch if requested or for the first 3 minutes after the transaction was added
+  const shouldForceFetch = shouldForceFetchTransaction(previousTransactionDetails, forceFetch)
+
   const { requestParams, signature } = await createSignedRequestParams<FORTransactionRequest>(
-    { sessionId: previousTransactionDetails.id, forceFetch },
+    { sessionId: previousTransactionDetails.id, forceFetch: shouldForceFetch },
     account,
     signerManager
   )
@@ -453,6 +457,17 @@ export async function fetchFiatOnRampTransaction(
   }
 
   return extractFiatOnRampTransactionDetails(transaction)
+}
+
+function shouldForceFetchTransaction(
+  previousTransactionDetails: FiatOnRampTransactionDetails,
+  forceFetch: boolean
+): boolean {
+  const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
+    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms')
+  )
+  const isSyncedWithBackend = previousTransactionDetails.typeInfo?.syncedWithBackend
+  return forceFetch || (isRecent && !isSyncedWithBackend)
 }
 
 export function useCexTransferProviders(isEnabled: boolean): FORServiceProvider[] {

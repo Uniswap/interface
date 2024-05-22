@@ -44,7 +44,7 @@ import {
 
 expect.extend({ toIncludeSameMembers })
 
-jest.mock('wallet/src/telemetry')
+jest.mock('uniswap/src/features/telemetry/send')
 
 const eth = ethToken()
 const dai = daiToken()

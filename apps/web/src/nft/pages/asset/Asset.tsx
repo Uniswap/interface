@@ -70,8 +70,8 @@ const AssetPage = () => {
         <title>
           {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Uniswap
         </title>
-        {metaTags.map((tag) => (
-          <meta key={tag.attribute} {...tag} />
+        {metaTags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace

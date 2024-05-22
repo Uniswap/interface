@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -29,7 +30,6 @@ import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 
@@ -88,10 +88,13 @@ export function useTransactionRequestInfo({
 
     // TODO: remove this when api does slippage calculation for us
     // https://linear.app/uniswap/issue/MOB-2581/remove-slippage-adjustment-in-swap-request
-    quote.quote.slippage = tradeWithStatus.trade.slippageTolerance
+    const quoteWithSlippage = {
+      ...quote.quote,
+      slippage: tradeWithStatus.trade.slippageTolerance,
+    }
 
     return {
-      quote: quote.quote,
+      quote: quoteWithSlippage,
       permitData: quote.permitData ?? undefined,
       signature: signatureInfo.signature,
       simulateTransaction: shouldSimulateTxn,
@@ -149,14 +152,14 @@ export function useTransactionRequestInfo({
   }
 
   // Only log analytics events once per quote
-  const previousQuoteIdRef = useRef(quote?.quote.quoteId)
+  const previousQuoteIdRef = useRef(swapQuote?.quoteId)
 
   useEffect(() => {
-    if (!quote) {
+    if (!swapQuote) {
       return
     }
 
-    const currentQuoteId = quote.quote.quoteId
+    const currentQuoteId = swapQuote?.quoteId
     const isNewQuote = previousQuoteIdRef.current !== currentQuoteId
     previousQuoteIdRef.current = currentQuoteId
 
@@ -172,13 +175,13 @@ export function useTransactionRequestInfo({
         },
       })
 
-      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: gasEstimateError,
         txRequest: data?.swap,
       })
     }
-  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, quote, swapRequestArgs])
+  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapQuote, swapRequestArgs])
 
   return {
     transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,

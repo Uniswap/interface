@@ -10,10 +10,10 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useCallback } from 'react'
 import store from 'state'
 import { updateSignature } from 'state/signatures/reducer'
@@ -143,7 +143,7 @@ function getCancelMultipleUniswapXOrdersParams(
 export function useCancelMultipleOrdersCallback(
   orders?: Array<UniswapXOrderDetails>
 ): () => Promise<ContractTransaction[] | undefined> {
-  const { provider } = useWeb3React()
+  const provider = useEthersWeb3Provider()
   const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
 
   return useCallback(async () => {
@@ -162,6 +162,7 @@ export function useCancelMultipleOrdersCallback(
       chainId: orders?.[0].chainId,
     }).then((result) => {
       orders.forEach((order) => {
+        if (order.status === UniswapXOrderStatus.FILLED) return
         store.dispatch(updateSignature({ ...order, status: UniswapXOrderStatus.PENDING_CANCELLATION }))
       })
       return result

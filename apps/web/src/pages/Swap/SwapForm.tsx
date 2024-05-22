@@ -510,7 +510,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
-              label={<Trans>You pay</Trans>}
+              label={<Trans>Sell</Trans>}
               disabled={disableTokenInputs}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={showMaxButton}
@@ -558,7 +558,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 value={formattedAmounts[Field.OUTPUT]}
                 disabled={disableTokenInputs}
                 onUserInput={handleTypeOutput}
-                label={<Trans>You receive</Trans>}
+                label={<Trans>Buy</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}

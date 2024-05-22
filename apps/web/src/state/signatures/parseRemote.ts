@@ -7,7 +7,7 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyId } from 'utils/currencyId'
 import { addSignature } from './reducer'
-import { OrderActivity, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
+import { OrderActivity, SignatureDetails, SignatureType } from './types'
 
 const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Limit]: SignatureType.SIGN_LIMIT,
@@ -33,7 +33,7 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
   }
 
   const status = ORDER_STATUS_MAP[details.orderStatus]
-  const isFilled = status == UniswapXOrderStatus.FILLED
+  const isFilled = status === UniswapXOrderStatus.FILLED
 
   const inputTokenQuantity = parseUnits(details.inputTokenQuantity, details.inputToken.decimals).toString()
   const outputTokenQuantity = parseUnits(details.outputTokenQuantity, details.outputToken.decimals).toString()
@@ -43,7 +43,7 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
     throw new Error('Invalid activity received from GQL')
   }
 
-  const signature: UniswapXOrderDetails = {
+  const signature: SignatureDetails = {
     id: details.id,
     type: SIGNATURE_TYPE_MAP[details.swapOrderType],
     offerer: details.offerer,
@@ -51,10 +51,16 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
     orderHash: details.hash,
     expiry: details.expiry,
     encodedOrder: details.encodedOrder,
-    status,
     addedTime: timestamp,
-    // only if completed
-    txHash: isFilled ? details.hash : undefined,
+    ...(isFilled
+      ? {
+          status: UniswapXOrderStatus.FILLED,
+          txHash: details.hash,
+        }
+      : {
+          status,
+          txHash: undefined,
+        }),
 
     swapInfo: {
       isUniswapXOrder: true,

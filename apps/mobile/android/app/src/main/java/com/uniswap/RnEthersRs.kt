@@ -28,10 +28,10 @@ class RnEthersRs(applicationContext: Context) {
     )
   }
 
-  val mnemonicIds: Array<String>
+  val mnemonicIds: List<String>
     get() = keychain.all.keys.map {
         key -> key.replace(ENTIRE_MNEMONIC_PREFIX, "")
-    }.toTypedArray()
+    }
 
   /**
    * Imports a mnemonic and returns the associated address.

@@ -41,5 +41,9 @@ export function useAccountIdentifier() {
     (address ? recentAccountIdentifierMap[address] : recentAccountIdentifierMap['recent']) ?? {}
 
   const accountIdentifier = unitag ?? ensName ?? shortenAddress(address)
-  return { accountIdentifier, hasUnitag: Boolean(unitag), hasRecent: Boolean(recentAccountIdentifierMap['recent']) }
+  return {
+    accountIdentifier,
+    hasUnitag: Boolean(unitag),
+    hasRecent: Boolean(Object.keys(recentAccountIdentifierMap['recent'] || {}).length),
+  }
 }

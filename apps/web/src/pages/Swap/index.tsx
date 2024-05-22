@@ -7,7 +7,7 @@ import SwapHeader from 'components/swap/SwapHeader'
 import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { SendForm } from 'pages/Swap/Send/SendForm'
 import { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -50,7 +50,7 @@ export default function SwapPage({ className }: { className?: string }) {
           initialOutputCurrency={initialOutputCurrency}
           syncTabToUrl={true}
         />
-        <NetworkAlert />
+        {location.pathname !== '/limit' && <NetworkAlert />}
       </PageWrapper>
       {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>

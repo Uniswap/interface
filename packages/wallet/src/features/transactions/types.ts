@@ -6,12 +6,12 @@ import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'uniswap/src/types/chains'
 import { QuoteType } from 'uniswap/src/types/quote'
+import { DappInfo } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import { FORLogo, MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
 export enum WrapType {
   NotApplicable,

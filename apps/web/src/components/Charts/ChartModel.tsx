@@ -1,9 +1,9 @@
 import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
+import { useScreenSize } from 'hooks/screenSize'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { useUpdateAtom } from 'jotai/utils'
 import {

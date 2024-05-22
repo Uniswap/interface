@@ -5,9 +5,9 @@ import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder, UnsignedV2DutchOrder, V2DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 
@@ -39,10 +39,9 @@ function isV2DutchAuctionOrderSuccess(response: any): response is V2DutchAuction
 const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order is DutchAuctionOrderError =>
   res.status < 200 || res.status > 202
 
-const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
+if (UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
 // getUpdatedNonce queries the UniswapX service for the most up-to-date nonce for a user.
@@ -74,7 +73,8 @@ export function useUniswapXSwapCallback({
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
-  const { account, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const connectorName = useAccount().connector?.name
 
   const analyticsContext = useTrace()
@@ -83,7 +83,7 @@ export function useUniswapXSwapCallback({
   return useCallback(
     () =>
       trace({ name: 'Swap (Dutch)', op: 'swap.x.dutch' }, async (trace) => {
-        if (!account) throw new Error('missing account')
+        if (account.status !== 'connected') throw new Error('wallet not connected')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
 
@@ -99,7 +99,7 @@ export function useUniswapXSwapCallback({
 
         try {
           // TODO(limits): WEB-3434 - add error state for missing nonce
-          const updatedNonce = await getUpdatedNonce(account, trade.inputAmount.currency.chainId)
+          const updatedNonce = await getUpdatedNonce(account.address, trade.inputAmount.currency.chainId)
 
           const now = Math.floor(Date.now() / 1000)
           let deadline: number
@@ -114,7 +114,7 @@ export function useUniswapXSwapCallback({
             const order: UnsignedV2DutchOrder = trade.order
             updatedOrder = V2DutchOrderBuilder.fromOrder(order)
               .deadline(deadline)
-              .nonFeeRecipient(account, trade.swapFee?.recipient)
+              .nonFeeRecipient(account.address, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
               .nonce(updatedNonce ?? order.info.nonce)
               .buildPartial()
@@ -124,12 +124,12 @@ export function useUniswapXSwapCallback({
             const endTime = startTime + trade.auctionPeriodSecs
             deadline = endTime + trade.deadlineBufferSecs
 
-            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
+            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account.address }).order
             updatedOrder = DutchOrderBuilder.fromOrder(order)
               .decayStartTime(startTime)
               .decayEndTime(endTime)
               .deadline(deadline)
-              .nonFeeRecipient(account, trade.swapFee?.recipient)
+              .nonFeeRecipient(account.address, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
               .nonce(updatedNonce ?? order.info.nonce)
               .build()
@@ -143,7 +143,7 @@ export function useUniswapXSwapCallback({
 
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
-              return await signTypedData(provider.getSigner(account), domain, types, values)
+              return await signTypedData(provider.getSigner(account.address), domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
                 walletTrace.setStatus('cancelled')
@@ -166,7 +166,7 @@ export function useUniswapXSwapCallback({
             }),
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
-            [CustomUserProperties.WALLET_ADDRESS]: account,
+            [CustomUserProperties.WALLET_ADDRESS]: account.address,
             [CustomUserProperties.WALLET_TYPE]: connectorName,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
@@ -259,6 +259,16 @@ export function useUniswapXSwapCallback({
           }
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connectorName]
+    [
+      account.status,
+      account.address,
+      provider,
+      trade,
+      allowedSlippage,
+      fiatValues,
+      portfolioBalanceUsd,
+      analyticsContext,
+      connectorName,
+    ]
   )
 }

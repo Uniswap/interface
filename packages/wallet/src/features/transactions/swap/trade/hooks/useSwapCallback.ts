@@ -2,11 +2,14 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { selectSwapStartTimestamp } from 'wallet/src/features/timing/selectors'
+import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SwapParams, swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
@@ -14,9 +17,6 @@ import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { selectSwapStartTimestamp } from 'wallet/src/telemetry/timing/selectors'
-import { updateSwapStartTimestamp } from 'wallet/src/telemetry/timing/slice'
 import { toStringish } from 'wallet/src/utils/number'
 
 /** Callback to submit trades and track progress */
@@ -72,7 +72,7 @@ export function useSwapCallback(
             : undefined
           : trade.quoteData?.quote?.blockNumber
 
-      sendWalletAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
+      sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties({ formatter, trade }),
         estimated_network_fee_wei: gasFee.value,
         gas_limit: toStringish(swapTxRequest.gasLimit),

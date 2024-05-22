@@ -4,7 +4,6 @@ import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Flex,
   Image,
@@ -17,12 +16,13 @@ import {
 } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useAppSelector } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 
 const IMAGE_ASPECT_RATIO = 0.42
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.18
@@ -35,7 +35,7 @@ export function UnitagBanner({
 }: {
   address: Address
   compact?: boolean
-  entryPoint: Screens.Home | Screens.Settings
+  entryPoint: MobileScreens.Home | MobileScreens.Settings
 }): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -48,17 +48,17 @@ export function UnitagBanner({
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
     : IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
   const imageHeight = imageWidth / IMAGE_ASPECT_RATIO
-  const analyticsEntryPoint = entryPoint === Screens.Home ? 'home' : 'settings'
+  const analyticsEntryPoint = entryPoint === MobileScreens.Home ? 'home' : 'settings'
 
   const onPressClaimNow = (): void => {
     Keyboard.dismiss()
-    sendWalletAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
+    sendAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
       action: 'claim',
       entryPoint: analyticsEntryPoint,
     })
 
     if (hasCompletedUnitagsIntroModal) {
-      navigate(Screens.UnitagStack, {
+      navigate(MobileScreens.UnitagStack, {
         screen: UnitagScreens.ClaimUnitag,
         params: {
           entryPoint,
@@ -71,7 +71,7 @@ export function UnitagBanner({
   }
 
   const onPressMaybeLater = (): void => {
-    sendWalletAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
+    sendAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
       action: 'dismiss',
       entryPoint: analyticsEntryPoint,
     })

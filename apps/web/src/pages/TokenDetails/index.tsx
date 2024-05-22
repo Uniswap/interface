@@ -166,8 +166,8 @@ export default function TokenDetailsPage() {
     <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
         <title>{getTokenPageTitle(currency, currencyChainId)}</title>
-        {metatags.map((tag) => (
-          <meta key={tag.attribute} {...tag} />
+        {metatags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       {(() => {

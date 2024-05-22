@@ -64,8 +64,8 @@ interface FilledUniswapXBackendOrder extends BaseUniswapXBackendOrder {
   // Filler field is defined when the order has been filled and the status tracking function has recorded the filler address.
   filler?: string
   // TxHash field is defined when the order has been filled and there is a txHash associated with the fill.
-  txHash?: string
-  // SettledAmount field is defined when the order has been filled and the fill amounts have been recorded.
+  txHash: string
+  // SettledAmount field is defined for v1 orders when the order has been filled and the fill amounts have been recorded.
   settledAmounts?: [
     {
       tokenIn: string

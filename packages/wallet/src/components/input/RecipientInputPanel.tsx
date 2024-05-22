@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface RecipientInputPanelProps {
   recipientAddress: string

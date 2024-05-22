@@ -8,6 +8,8 @@ import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -18,8 +20,6 @@ import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { InstitutionTransferEventName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
@@ -81,7 +81,7 @@ export function ExchangeTransferConnecting({
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       onClose()
-      sendWalletAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
+      sendAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
         externalTransactionId,
         serviceProvider: serviceProvider.serviceProvider,
       })

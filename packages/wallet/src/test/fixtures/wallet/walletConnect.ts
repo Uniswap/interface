@@ -1,4 +1,4 @@
-import { DappInfoUwULink, DappInfoWC } from 'wallet/src/features/walletConnect/types'
+import { DappInfoUwULink, DappInfoWC } from 'uniswap/src/types/walletConnect'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture } from 'wallet/src/test/utils'
 

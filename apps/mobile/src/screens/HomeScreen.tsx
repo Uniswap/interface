@@ -23,7 +23,6 @@ import { ExtensionPromoModal } from 'src/app/modals/ExtensionPromoModal'
 import { UniconsV2Modal } from 'src/app/modals/UniconsV2Modal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { ExtensionPromoBanner } from 'src/components/banners/ExtensionPromoBanner'
@@ -45,11 +44,9 @@ import {
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Screens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import {
   AnimatedFlex,
@@ -69,6 +66,16 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import {
+  ElementName,
+  ElementNameType,
+  MobileEventName,
+  ModalName,
+  SectionName,
+  SectionNameType,
+} from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -96,13 +103,6 @@ import {
   useNonPendingSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
-import {
-  ElementName,
-  ElementNameType,
-  ModalName,
-  SectionName,
-  SectionNameType,
-} from 'wallet/src/telemetry/constants'
 import { HomeScreenTabIndex } from './HomeScreenTabIndex'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
@@ -112,7 +112,7 @@ const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
  * Manages TokensTabs and NftsTab scroll offsets when header is collapsed
  * Borrowed from: https://stormotion.io/blog/how-to-create-collapsing-tab-header-using-react-native/
  */
-export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Element {
+export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -438,7 +438,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     if (shouldPromptUnitag) {
       return (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-          <UnitagBanner address={activeAccount.address} entryPoint={Screens.Home} />
+          <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
         </AnimatedFlex>
       )
     } else if (showExtensionPromoBanner) {
@@ -723,7 +723,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
           navigationState={{ index: tabIndex, routes }}
           renderScene={renderTab}
           renderTabBar={renderTabBar}
-          screenName={Screens.Home}
+          screenName={MobileScreens.Home}
           onIndexChange={setTabIndex}
         />
       </View>

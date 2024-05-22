@@ -5,10 +5,10 @@ import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 function key(item: FORServiceProvider): string {
   return item.serviceProvider

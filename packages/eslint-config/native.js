@@ -1,6 +1,8 @@
 // this allows us to use es6, es2017, es2018 syntax (const, spread operators outside of array literals, etc.)
 /* eslint-env es6, es2017, es2018 */
 
+const { shared: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+
 // reduces code complexity
 const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
@@ -190,10 +192,10 @@ module.exports = {
             message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
           },
           {
-            name: 'src/data/usePersistedApolloClient',
+            name: 'wallet/src/data/apollo/usePersistedApolloClient',
             importNames: ['usePersistedApolloClient'],
             message:
-              "This hook should only be used once at the App level. You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'src/data/usePersistedApolloClient'`.",
+              "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`.",
           },
           {
             name: 'statsig-react',
@@ -203,6 +205,11 @@ module.exports = {
             name: 'statsig-react-native',
             message: 'Import from internal module uniswap/src/features/gating instead',
           },
+          {
+            name: '@uniswap/analytics',
+            message: "Did you mean to import from 'uniswap/src/features/telemetry/send'?",
+          },
+          ...restrictedImports.paths,
         ],
       },
     ],

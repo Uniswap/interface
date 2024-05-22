@@ -7,7 +7,7 @@ import {
   EthSignMethod,
   EthTransaction,
   UwULinkMethod,
-} from 'wallet/src/features/walletConnect/types'
+} from 'uniswap/src/types/walletConnect'
 
 export type WalletConnectPendingSession = {
   id: string

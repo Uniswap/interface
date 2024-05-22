@@ -1,3 +1,4 @@
+import { Protocol } from '@uniswap/router-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { ChainId } from 'uniswap/src/types/chains'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
@@ -18,7 +19,7 @@ export interface QuoteRequest {
   type: 'EXACT_INPUT' | 'EXACT_OUTPUT'
   configs: [
     {
-      protocols: string[]
+      protocols: Protocol[]
       routingType: 'CLASSIC'
       enableUniversalRouter: boolean
       enableFeeOnTransferFeeFetching: boolean

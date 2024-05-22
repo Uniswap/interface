@@ -146,8 +146,8 @@ export default function App() {
           <title>{staticTitle}</title>
           {staticDescription && <meta name="description" content={staticDescription} />}
           {staticDescription && <meta property="og:description" content={staticDescription} />}
-          {metaTags.map((tag) => (
-            <meta key={tag.attribute} {...tag} />
+          {metaTags.map((tag, index) => (
+            <meta key={index} {...tag} />
           ))}
         </Helmet>
         <UserPropertyUpdater />

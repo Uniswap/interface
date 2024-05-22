@@ -2,7 +2,6 @@ import * as Sentry from '@sentry/react'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { Trans } from 'i18n'
 import { ChevronUpIcon } from 'nft/components/icons'
-import { useIsMobile } from 'nft/hooks'
 import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components'
@@ -10,6 +9,7 @@ import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
 import { isSentryEnabled } from 'utils/env'
 import { useChainId } from 'wagmi'
 
+import { useIsMobile } from 'hooks/screenSize'
 import { Column } from '../Column'
 
 const FallbackWrapper = styled.div`

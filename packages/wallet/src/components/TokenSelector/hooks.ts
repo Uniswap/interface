@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ChainId } from 'uniswap/src/types/chains'
 import { filter } from 'wallet/src/components/TokenSelector/filter'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
@@ -19,8 +21,6 @@ import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { useAppSelector } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import {
   buildNativeCurrencyId,
@@ -122,7 +122,7 @@ export function useFilterCallbacks(
   const onChangeChainFilter = useCallback(
     (newChainFilter: typeof chainFilter) => {
       setChainFilter(newChainFilter)
-      sendWalletAnalyticsEvent(WalletEventName.NetworkFilterSelected, {
+      sendAnalyticsEvent(WalletEventName.NetworkFilterSelected, {
         chain: newChainFilter ?? 'All',
         modal: flowToModalName(flow),
       })

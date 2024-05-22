@@ -5,6 +5,7 @@ import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Prettify } from 'viem/chains'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
@@ -34,15 +35,25 @@ interface BaseSignatureFields {
  * `UniswapXOrderDetails` is used for both submitting orders and fetching order details.
  * - `type` is required for order submission; marked as optional due to the difficulty in distinguishing between X v1 & v2 orders when fetching details from on-chain data
  * - `encodedOrder` is required for order submission; marked is optional as it's not returned by the GQL TransactionDetails schema when fetching order details
- * - `txHash` is marked as optional because it's only present for orders that have been filled onchain. OrderHash !== TxHash
+ * - `txHash` is defined for filled order only. `orderHash` !== `txHash`
  */
-export interface UniswapXOrderDetails extends BaseSignatureFields {
+interface BaseUniswapXOrderDetails extends BaseSignatureFields {
   orderHash: string
   type?: SignatureType
-  status: UniswapXOrderStatus
   swapInfo: (ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo) & { isUniswapXOrder: true }
-  txHash?: string
   encodedOrder?: string
 }
+
+export interface UnfilledUniswapXOrderDetails extends BaseUniswapXOrderDetails {
+  status: Exclude<UniswapXOrderStatus, UniswapXOrderStatus.FILLED>
+  txHash?: undefined
+}
+
+export interface FilledUniswapXOrderDetails extends BaseUniswapXOrderDetails {
+  status: UniswapXOrderStatus.FILLED
+  txHash: string
+}
+
+export type UniswapXOrderDetails = Prettify<UnfilledUniswapXOrderDetails | FilledUniswapXOrderDetails>
 
 export type SignatureDetails = UniswapXOrderDetails

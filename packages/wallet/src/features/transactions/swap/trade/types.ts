@@ -9,6 +9,7 @@ import { QuoteType } from 'uniswap/src/types/quote'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { QuoteResult } from 'wallet/src/features/transactions/swap/trade/legacy/types'
+import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 // Response data from either legacy for trading api quote request
 export type QuoteData =
@@ -78,6 +79,7 @@ export interface UseTradeArgs {
   isUSDQuote?: boolean
   sendPortionEnabled?: boolean
   skip?: boolean
+  tradeProtocolPreference?: TradeProtocolPreference
 }
 
 export type SwapFee = { recipient?: string; percent: Percent; amount: string }

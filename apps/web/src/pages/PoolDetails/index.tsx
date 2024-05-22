@@ -147,8 +147,8 @@ export default function PoolDetailsPage() {
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
         <title>{getPoolDetailPageTitle(poolData)}</title>
-        {metatags.map((tag) => (
-          <meta key={tag.attribute} {...tag} />
+        {metatags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace

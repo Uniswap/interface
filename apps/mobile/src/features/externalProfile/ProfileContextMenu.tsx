@@ -8,14 +8,15 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ChainId } from 'uniswap/src/types/chains'
+import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
@@ -64,7 +65,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       await Share.share({
         message: url,
       })
-      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
         entity: ShareableEntity.Wallet,
         url,
       })

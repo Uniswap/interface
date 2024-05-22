@@ -9,29 +9,29 @@ import {
   OnboardingStackParamList,
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { OSDynamicCloudIcon, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
-  NativeStackScreenProps<AppStackParamList, Screens.Education>
+  NativeStackScreenProps<AppStackParamList, MobileScreens.Education>
 >
 
 export function BackupScreen({ navigation, route: { params } }: Props): JSX.Element {
@@ -74,7 +74,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressEducationButton = (): void => {
-    navigation.navigate(Screens.Education, {
+    navigation.navigate(MobileScreens.Education, {
       type: EducationContentType.SeedPhrase,
       importType: params.importType,
       entryPoint: params.entryPoint,

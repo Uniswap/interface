@@ -11,10 +11,11 @@ import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { AnimatedFlex, Button, ColorTokens, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import {
@@ -24,7 +25,6 @@ import {
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 export function RemoveWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
@@ -65,7 +65,7 @@ export function RemoveWalletModal(): JSX.Element | null {
       navigateToOnboardingImportMethod()
     } else if (isReplacing) {
       // there are account left and it's replacing, user has view-only accounts left
-      navigate(Screens.OnboardingStack, {
+      navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.ImportMethod,
         params: {
           importType: ImportType.NotYetSelected,

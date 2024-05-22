@@ -9,7 +9,6 @@ import {
   VirtualizedList,
 } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
@@ -17,12 +16,13 @@ import { ArrowDownCircle, Buy as BuyIcon, PaperStack } from 'ui/src/components/i
 import { borderRadii } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ElementNameType, ModalName } from 'wallet/src/telemetry/constants'
 
 interface ActionCardItem {
   title: string

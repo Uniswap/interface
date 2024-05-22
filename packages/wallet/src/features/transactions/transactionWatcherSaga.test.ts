@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -24,7 +25,6 @@ import {
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import {
   approveTransactionInfo,
   fiatPurchaseTransactionInfo,
@@ -156,7 +156,7 @@ describe(watchFiatOnRampTransaction, () => {
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
           [call(fetchMoonpayTransaction, txDetailsPending), staleTx],
-          [matchers.call.fn(sendWalletAnalyticsEvent), undefined],
+          [matchers.call.fn(sendAnalyticsEvent), undefined],
         ])
         .put(
           transactionActions.deleteTransaction({
@@ -241,7 +241,7 @@ describe(watchFiatOnRampTransaction, () => {
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
         [call(fetchMoonpayTransaction, txDetailsPending), confirmedTx],
-        [matchers.call.fn(sendWalletAnalyticsEvent), undefined],
+        [matchers.call.fn(sendAnalyticsEvent), undefined],
       ])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)

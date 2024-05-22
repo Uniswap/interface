@@ -3,7 +3,6 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { Trace, sendAnalyticsEvent } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
@@ -46,7 +45,9 @@ import { unwrappedToken } from 'utils/unwrappedToken'
 import { useChainId } from 'wagmi'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { Text } from 'ui/src'
+import { useAccount } from 'wagmi'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -404,8 +405,9 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
-  const { chainId, account, provider } = useWeb3React()
-  const supportedChain = useSupportedChainId(chainId)
+  const account = useAccount()
+  const supportedChain = useSupportedChainId(account.chainId)
+  const signer = useEthersSigner()
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
@@ -520,11 +522,10 @@ function PositionPageContent() {
     if (
       !currency0ForFeeCollectionPurposes ||
       !currency1ForFeeCollectionPurposes ||
-      !chainId ||
+      account.status !== 'connected' ||
       !positionManager ||
-      !account ||
       !tokenId ||
-      !provider
+      !signer
     )
       return
 
@@ -536,7 +537,7 @@ function PositionPageContent() {
       tokenId: tokenId.toString(),
       expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
       expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
-      recipient: account,
+      recipient: account.address,
     })
 
     const txn = {
@@ -545,11 +546,10 @@ function PositionPageContent() {
       value,
     }
 
-    const connectedChainId = await provider.getSigner().getChainId()
-    if (chainId !== connectedChainId) throw new WrongChainError()
+    const connectedChainId = await signer.getChainId()
+    if (account.chainId !== connectedChainId) throw new WrongChainError()
 
-    provider
-      .getSigner()
+    signer
       .estimateGas(txn)
       .then((estimate) => {
         const newTxn = {
@@ -557,50 +557,48 @@ function PositionPageContent() {
           gasLimit: calculateGasMargin(estimate),
         }
 
-        return provider
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            setCollectMigrationHash(response.hash)
-            setCollecting(false)
+        return signer.sendTransaction(newTxn).then((response: TransactionResponse) => {
+          setCollectMigrationHash(response.hash)
+          setCollecting(false)
 
-            sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
-              source: LiquiditySource.V3,
-              label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            })
-
-            addTransaction(response, {
-              type: TransactionType.COLLECT_FEES,
-              currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-              currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-              expectedCurrencyOwed0:
-                feeValue0?.quotient.toString() ??
-                CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-              expectedCurrencyOwed1:
-                feeValue1?.quotient.toString() ??
-                CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
-            })
+          sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
+            source: LiquiditySource.V3,
+            label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
           })
+
+          addTransaction(response, {
+            type: TransactionType.COLLECT_FEES,
+            currencyId0: currencyId(currency0ForFeeCollectionPurposes),
+            currencyId1: currencyId(currency1ForFeeCollectionPurposes),
+            expectedCurrencyOwed0:
+              feeValue0?.quotient.toString() ??
+              CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
+            expectedCurrencyOwed1:
+              feeValue1?.quotient.toString() ??
+              CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
+          })
+        })
       })
       .catch((error) => {
         setCollecting(false)
         console.error(error)
       })
   }, [
-    chainId,
-    feeValue0,
-    feeValue1,
     currency0ForFeeCollectionPurposes,
     currency1ForFeeCollectionPurposes,
+    account.status,
+    account.address,
+    account.chainId,
     positionManager,
-    account,
     tokenId,
+    signer,
+    feeValue0,
+    feeValue1,
     addTransaction,
-    provider,
   ])
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
-  const ownsNFT = owner === account || positionDetails?.operator === account
+  const ownsNFT = owner === account.address || positionDetails?.operator === account.address
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1
   const feeValueLower = inverted ? feeValue1 : feeValue0
@@ -781,8 +779,8 @@ function PositionPageContent() {
                     }}
                   >
                     <NFT image={metadata.result.image} height={400} />
-                    {typeof chainId === 'number' && owner && !ownsNFT ? (
-                      <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>
+                    {typeof account.chainId === 'number' && owner && !ownsNFT ? (
+                      <ExternalLink href={getExplorerLink(account.chainId, owner, ExplorerDataType.ADDRESS)}>
                         <Trans>Owner</Trans>
                       </ExternalLink>
                     ) : null}
@@ -824,7 +822,7 @@ function PositionPageContent() {
                     <LightCard padding="12px 16px">
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyQuote} />
+                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyQuote} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount0 : position?.amount1 })}
@@ -839,7 +837,7 @@ function PositionPageContent() {
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyBase} />
+                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyBase} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount1 : position?.amount0 })}

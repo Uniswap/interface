@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 const WALLET_IMAGE_ASPECT_RATIO = 327 / 215
 
@@ -28,7 +28,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
     if (hasImportedSeedPhrase && activeAccountAddress) {
       dispatch(openModal({ name: ModalName.RemoveWallet }))
     } else {
-      navigate(Screens.OnboardingStack, {
+      navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.SeedPhraseInput,
         params: { importType: ImportType.SeedPhrase, entryPoint: OnboardingEntryPoint.Sidebar },
       })

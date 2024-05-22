@@ -61,7 +61,9 @@ describe('useOrderedConnections', () => {
   })
 
   it('should throw an error if expected connectors are missing', () => {
-    mocked(useConnect).mockReturnValue({ connectors: [] } as unknown as ReturnType<typeof useConnect>)
+    mocked(useConnect).mockReturnValue({ connectors: [WALLET_CONNECT_CONNECTOR] } as unknown as ReturnType<
+      typeof useConnect
+    >)
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.error?.message).toEqual('Expected connector injected missing from wagmi context.')

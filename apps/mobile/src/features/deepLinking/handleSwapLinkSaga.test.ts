@@ -2,6 +2,7 @@ import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ChainId } from 'uniswap/src/types/chains'
 import { DAI, UNI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -9,7 +10,6 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()

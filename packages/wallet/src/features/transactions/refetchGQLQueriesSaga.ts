@@ -5,13 +5,13 @@ import {
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -71,7 +71,7 @@ export function* refetchGQLQueries({
     freshnessLag += REFETCH_INTERVAL
   }
 
-  sendWalletAnalyticsEvent(WalletEventName.PortfolioBalanceFreshnessLag, {
+  sendAnalyticsEvent(WalletEventName.PortfolioBalanceFreshnessLag, {
     freshnessLag,
     updatedCurrencies: Object.keys(currencyIdToStartingBalance),
   })

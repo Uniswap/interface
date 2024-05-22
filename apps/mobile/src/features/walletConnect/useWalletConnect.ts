@@ -13,8 +13,8 @@ import {
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 interface WalletConnect {
   sessions: WalletConnectSession[]

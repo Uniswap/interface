@@ -19,7 +19,9 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     isUSDQuote,
     sendPortionEnabled,
     skip,
+    tradeProtocolPreference,
   } = args
+
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(
     amountSpecified,
     SWAP_FORM_DEBOUNCE_TIME_MS
@@ -47,6 +49,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     customSlippageTolerance,
     isUSDQuote,
     sendPortionEnabled,
+    tradeProtocolPreference,
     skip,
   })
 

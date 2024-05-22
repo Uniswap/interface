@@ -84,7 +84,7 @@ describe(AccountList, () => {
       const viewOnlyAccounts = createArray(3, readOnlyAccount)
       render(<AccountList accounts={viewOnlyAccounts} onPress={jest.fn()} />, { resolvers })
 
-      expect(screen.queryByText('View only wallets')).toBeTruthy()
+      expect(screen.queryByText('View-only wallets')).toBeTruthy()
 
       viewOnlyAccounts.forEach((account) => {
         const address = sanitizeAddressText(shortenAddress(account.address))
@@ -100,7 +100,7 @@ describe(AccountList, () => {
         resolvers,
       })
 
-      expect(screen.queryByText('View only wallets')).toBeFalsy()
+      expect(screen.queryByText('View-only wallets')).toBeFalsy()
       cleanup()
     })
   })

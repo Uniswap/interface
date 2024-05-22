@@ -7,14 +7,16 @@ import { UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSli
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 type Props = {
@@ -23,9 +25,11 @@ type Props = {
   onReject: () => void
   request: UwuLinkErc20Request
   hasSufficientGasFunds: boolean
+  gasFee: GasFeeResult
 }
 
 export function UwULinkErc20SendModal({
+  gasFee,
   onClose,
   onConfirm,
   onReject,
@@ -52,6 +56,7 @@ export function UwULinkErc20SendModal({
       onReject={onReject}>
       <UwULinkErc20SendModalContent
         currencyInfo={currencyInfo}
+        gasFee={gasFee}
         hasSufficientGasFunds={hasSufficientGasFunds}
         hasSufficientTokenFunds={hasSufficientTokenFunds}
         loading={!balance || !currencyInfo}
@@ -62,12 +67,14 @@ export function UwULinkErc20SendModal({
 }
 
 function UwULinkErc20SendModalContent({
+  gasFee,
   request,
   loading,
   currencyInfo,
   hasSufficientGasFunds,
   hasSufficientTokenFunds,
 }: {
+  gasFee: GasFeeResult
   request: UwuLinkErc20Request
   loading: boolean
   hasSufficientGasFunds: boolean
@@ -123,6 +130,9 @@ function UwULinkErc20SendModalContent({
           />
           <Text>{symbol}</Text>
         </Flex>
+      </Flex>
+      <Flex alignSelf="stretch" borderTopColor="$surface3" borderTopWidth={1} pt="$spacing16">
+        <NetworkFee chainId={chainId} gasFee={gasFee} />
       </Flex>
       {!hasSufficientGasFunds && (
         <Text color="$DEP_accentWarning" pt="$spacing8" textAlign="center" variant="body3">

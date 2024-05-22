@@ -3,6 +3,7 @@ import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { CONNECTION } from 'components/Web3Provider/constants'
+import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import {
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
@@ -17,7 +18,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-import { Connector, useAccount, useChainId } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 
 import ChainSelectorRow from './ChainSelectorRow'
 
@@ -40,11 +41,6 @@ const styledMobileMenuCss = css`
     bottom: 50px;
   }
 `
-
-type WalletConnectConnector = Connector & {
-  type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => ChainId[]
-}
 
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useAccount()

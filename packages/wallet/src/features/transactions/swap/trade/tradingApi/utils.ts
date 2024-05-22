@@ -10,6 +10,7 @@ import {
   ClassicQuote,
   Quote,
   QuoteResponse,
+  RoutingPreference,
   ChainId as TradingApiChainId,
   TokenInRoute as TradingApiTokenInRoute,
   V2PoolInRoute as TradingApiV2PoolInRoute,
@@ -19,7 +20,10 @@ import { LocalizationContextState } from 'wallet/src/features/language/Localizat
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { QuoteData, SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TradeProtocolPreference,
+} from 'wallet/src/features/transactions/transactionState/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { currencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
@@ -43,6 +47,11 @@ export function transformTradingApiResponseToTrade(
   const routes = computeRoutesTradingApi(tokenInIsNative, tokenOutIsNative, data)
 
   if (!routes) {
+    return null
+  }
+
+  // TODO MOB-2438: remove quote type check when other quote types are supported
+  if (!isClassicQuote(data?.quote)) {
     return null
   }
 
@@ -342,4 +351,20 @@ export function validateTrade({
   }
 
   return trade
+}
+
+// Converts routing preference type to expected type for trading api
+export function getRoutingPreferenceForSwapRequest(
+  protocolPreference?: TradeProtocolPreference
+): RoutingPreference {
+  switch (protocolPreference) {
+    case TradeProtocolPreference.Default:
+      return RoutingPreference.CLASSIC
+    case TradeProtocolPreference.V2Only:
+      return RoutingPreference.V2_ONLY
+    case TradeProtocolPreference.V3Only:
+      return RoutingPreference.V3_ONLY
+    default:
+      return RoutingPreference.CLASSIC
+  }
 }

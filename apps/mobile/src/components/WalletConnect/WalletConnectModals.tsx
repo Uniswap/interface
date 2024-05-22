@@ -16,6 +16,7 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
@@ -24,7 +25,6 @@ import {
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {

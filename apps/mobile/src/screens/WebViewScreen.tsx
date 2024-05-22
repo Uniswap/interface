@@ -3,14 +3,16 @@ import WebView from 'react-native-webview'
 import { AppStackScreenProp, SettingsStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { Screens } from 'src/screens/Screens'
 import { Separator, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function WebViewScreen({
   route,
-}: SettingsStackScreenProp<Screens.WebView> | AppStackScreenProp<Screens.WebView>): JSX.Element {
+}:
+  | SettingsStackScreenProp<MobileScreens.WebView>
+  | AppStackScreenProp<MobileScreens.WebView>): JSX.Element {
   const { headerTitle, uriLink } = route.params
 
   return (

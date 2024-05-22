@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
-import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -11,7 +10,13 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
 import { useAccount } from 'wagmi'
 import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
-import { TransactionDetails, TransactionInfo, TransactionType } from './types'
+import {
+  ConfirmedTransactionDetails,
+  PendingTransactionDetails,
+  TransactionDetails,
+  TransactionInfo,
+  TransactionType,
+} from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -102,13 +107,13 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
 
   if (!transactionHash || !transactions[transactionHash]) return false
 
-  return Boolean(transactions[transactionHash].receipt)
+  return isConfirmedTx(transactions[transactionHash])
 }
 
 export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
   const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
   if (!transaction) return undefined
-  return getTransactionStatus(transaction)
+  return transaction.status
 }
 
 /**
@@ -127,7 +132,7 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     }
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
-      if (!tx || tx.receipt || tx.info.type !== TransactionType.APPROVAL) continue
+      if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) continue
       if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
         return BigNumber.from(tx.info.amount)
       }
@@ -145,16 +150,23 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
-export function isPendingTx(tx: TransactionDetails): boolean {
-  return !tx.receipt && !tx.cancelled
+export function isPendingTx(tx: TransactionDetails): tx is PendingTransactionDetails {
+  return tx.status === TransactionStatus.Pending && !tx.cancelled
 }
 
-export function usePendingTransactions(): TransactionDetails[] {
+export function isConfirmedTx(tx: TransactionDetails): tx is ConfirmedTransactionDetails {
+  return tx.status === TransactionStatus.Confirmed || tx.status === TransactionStatus.Failed
+}
+
+export function usePendingTransactions(): PendingTransactionDetails[] {
   const allTransactions = useAllTransactions()
   const account = useAccount()
 
   return useMemo(
-    () => Object.values(allTransactions).filter((tx) => tx.from === account.address && isPendingTx(tx)),
+    () =>
+      Object.values(allTransactions).filter(
+        (tx): tx is PendingTransactionDetails => tx.from === account.address && isPendingTx(tx)
+      ),
     [account.address, allTransactions]
   )
 }

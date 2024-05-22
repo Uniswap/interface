@@ -1,4 +1,4 @@
-import { MixedRouteSDK } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers'
 import { QuoteType } from 'uniswap/src/types/quote'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { DEFAULT_TRADE_PROTOCOLS } from 'wallet/src/features/transactions/swap/trade/legacy/api'
 import {
   PoolType,
   QuoteResult,
@@ -13,6 +14,7 @@ import {
   V3PoolInRoute,
 } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(
@@ -216,4 +218,20 @@ function isV2OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V2Poo
 
 function isV3OnlyRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V3PoolInRoute[] {
   return route.every((pool) => pool.type === PoolType.V3Pool)
+}
+
+// Converts routing preference type to expected type for routing api
+export function formatProtocolArgsForSwapRequest(
+  protocolPreference?: TradeProtocolPreference
+): Protocol[] {
+  switch (protocolPreference) {
+    case TradeProtocolPreference.Default:
+      return DEFAULT_TRADE_PROTOCOLS
+    case TradeProtocolPreference.V2Only:
+      return [Protocol.V2]
+    case TradeProtocolPreference.V3Only:
+      return [Protocol.V3]
+    default:
+      return DEFAULT_TRADE_PROTOCOLS
+  }
 }

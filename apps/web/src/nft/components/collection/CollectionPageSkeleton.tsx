@@ -1,11 +1,12 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
-import { useBag, useIsMobile } from 'nft/hooks'
+import { useBag } from 'nft/hooks'
 import { BannerWrapper, CollectionBannerLoading } from 'nft/pages/collection'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import styled from 'styled-components'
 
+import { useIsMobile } from 'hooks/screenSize'
 import { ActivitySwitcherLoading } from './ActivitySwitcher'
 import { CollectionNftsAndMenuLoading } from './CollectionNfts'
 import { CollectionStatsLoading } from './CollectionStats'

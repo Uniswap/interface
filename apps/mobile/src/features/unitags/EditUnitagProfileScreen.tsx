@@ -12,7 +12,6 @@ import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptio
 import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
-import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Button,
   Flex,
@@ -29,10 +28,13 @@ import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme
 import { useExtractedColors } from 'ui/src/utils/colors'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { ChainId } from 'uniswap/src/types/chains'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
@@ -48,8 +50,6 @@ import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppDispatch } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
 const BIO_TEXT_INPUT_LINES = 6
@@ -227,7 +227,7 @@ export function EditUnitagProfileScreen({
     }
 
     // Log changed metadata
-    sendWalletAnalyticsEvent(UnitagEventName.UnitagMetadataUpdated, {
+    sendAnalyticsEvent(UnitagEventName.UnitagMetadataUpdated, {
       avatar: uploadedNewAvatar,
       description: isFieldEdited(unitagMetadata?.description, updatedMetadata.description),
       twitter: isFieldEdited(unitagMetadata?.twitter, updatedMetadata.twitter),
@@ -246,7 +246,7 @@ export function EditUnitagProfileScreen({
 
     // If entered from claim flow confirmation screen, navigate back to home on update success
     if (entryPoint === UnitagScreens.UnitagConfirmation) {
-      navigate(Screens.Home)
+      navigate(MobileScreens.Home)
     }
   }
 
@@ -279,7 +279,7 @@ export function EditUnitagProfileScreen({
           alignment="center"
           endAdornment={
             // Only show options to delete and edit username if editing from settings
-            entryPoint === Screens.SettingsWallet ? (
+            entryPoint === MobileScreens.SettingsWallet ? (
               <ContextMenu
                 dropdownMenuMode
                 actions={menuActions}
@@ -305,7 +305,7 @@ export function EditUnitagProfileScreen({
           onPressBack={
             // If entering from confirmation screen, back btn navigates to home
             entryPoint === UnitagScreens.UnitagConfirmation
-              ? (): void => navigate(Screens.Home)
+              ? (): void => navigate(MobileScreens.Home)
               : undefined
           }>
           <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>

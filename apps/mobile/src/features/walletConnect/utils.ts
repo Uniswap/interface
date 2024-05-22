@@ -4,9 +4,9 @@ import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'uniswap/src/types/chains'
+import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { EthMethod, EthSignMethod } from 'wallet/src/features/walletConnect/types'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.

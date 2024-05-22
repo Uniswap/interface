@@ -5,8 +5,8 @@ import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
+import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import useDebounce from 'hooks/useDebounce'
-import { useScreenSize } from 'hooks/useScreenSize'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
@@ -24,7 +24,6 @@ import {
   useBag,
   useCollectionFilters,
   useFiltersExpanded,
-  useIsMobile,
 } from 'nft/hooks'
 import { useIsCollectionLoading } from 'nft/hooks/useIsCollectionLoading'
 import { usePriceRange } from 'nft/hooks/usePriceRange'

@@ -6,6 +6,7 @@ import {
   TradeQuoteRequest,
   useQuoteQuery,
 } from 'wallet/src/features/transactions/swap/trade/legacy/api'
+import { formatProtocolArgsForSwapRequest } from 'wallet/src/features/transactions/swap/trade/legacy/routeUtils'
 import { TradeQuoteResult } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { UseTradeArgs } from 'wallet/src/features/transactions/swap/trade/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -37,6 +38,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     customSlippageTolerance,
     isUSDQuote,
     sendPortionEnabled,
+    tradeProtocolPreference,
   } = params
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
@@ -52,6 +54,8 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     currencyIn &&
     currencyOut &&
     areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
+
+  const protocols = formatProtocolArgsForSwapRequest(tradeProtocolPreference)
 
   const skipQuery =
     skip ||
@@ -84,21 +88,23 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
       },
       sendPortionEnabled,
       intent: isUSDQuote ? RoutingIntent.Pricing : RoutingIntent.Quote,
+      protocols,
     }
   }, [
-    amountSpecified?.quotient,
-    customSlippageTolerance,
-    fetchSimulatedGasLimit,
-    isUSDQuote,
-    permitSignatureInfo,
-    recipient?.address,
     skipQuery,
     tokenInAddress,
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
+    amountSpecified?.quotient,
     tradeType,
+    recipient?.address,
+    fetchSimulatedGasLimit,
+    permitSignatureInfo,
+    customSlippageTolerance,
+    isUSDQuote,
     sendPortionEnabled,
+    protocols,
   ])
 
   const result = useQuoteQuery(request, { pollInterval })

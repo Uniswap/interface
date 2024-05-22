@@ -4,9 +4,9 @@ import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { render } from 'src/test/test-utils'
 import { ImportType } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 jest.mock('src/utils/useAddBackButton', () => ({
   useAddBackButton: (): jest.Mock => jest.fn(),
@@ -14,7 +14,7 @@ jest.mock('src/utils/useAddBackButton', () => ({
 
 const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput, undefined>,
-  NativeStackNavigationProp<AppStackParamList, Screens.OnboardingStack, undefined>
+  NativeStackNavigationProp<AppStackParamList, MobileScreens.OnboardingStack, undefined>
 >
 
 const routeProp = { params: { importType: ImportType.CreateNew } } as RouteProp<

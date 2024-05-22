@@ -9,6 +9,7 @@ import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ChainId } from 'uniswap/src/types/chains'
 import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
@@ -47,7 +48,6 @@ import {
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
@@ -410,7 +410,7 @@ export function useSwapTxAndGasInfoLegacy({
           ? new Error(UNKNOWN_SIM_ERROR)
           : simulatedGasEstimateError
 
-      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: simulationError.toString(),
         txRequest: transactionRequest,
@@ -435,7 +435,7 @@ export function useSwapTxAndGasInfoLegacy({
         tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
       })
 
-      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: swapGasFee.error.toString(),
         txRequest: transactionRequest,
@@ -512,7 +512,12 @@ export function useShowSwapNetworkNotification(chainId?: ChainId): void {
     }
 
     appDispatch(
-      pushNotification({ type: AppNotificationType.SwapNetwork, chainId, hideDelay: 2000 })
+      pushNotification({
+        type: AppNotificationType.NetworkChanged,
+        chainId,
+        flow: 'swap',
+        hideDelay: 2000,
+      })
     )
   }, [chainId, prevChainId, appDispatch])
 }

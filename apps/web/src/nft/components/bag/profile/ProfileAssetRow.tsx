@@ -2,10 +2,11 @@ import { ButtonEmphasis, ButtonSize } from 'components/Button'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { useIsMobile, useSellAsset } from 'nft/hooks'
+import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
 
+import { useIsMobile } from 'hooks/screenSize'
 import { RemoveAssetButton, RemoveButton } from '../BagRow'
 import * as styles from '../BagRow.css'
 

@@ -26,7 +26,9 @@ export function useRecentTokenTransfers(address?: string) {
           activity &&
           (activity.details as TransactionDetails).type === TransactionType.Send &&
           (activity.details as TransactionDetails).assetChanges.length === 1 &&
-          (activity.details as TransactionDetails).assetChanges[0]?.__typename === 'TokenTransfer'
+          (activity.details as TransactionDetails).assetChanges[0]?.__typename === 'TokenTransfer' &&
+          ((activity.details as TransactionDetails).assetChanges as TokenTransfer[])[0].asset.project &&
+          !((activity.details as TransactionDetails).assetChanges as TokenTransfer[])[0].asset.project?.isSpam
       )
       // Safe to unwrap based on filter expression above
       .map((activity) => ((activity!.details as TransactionDetails).assetChanges as TokenTransfer[])[0])

@@ -14,6 +14,7 @@ import {
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'uniswap/src/types/chains'
+import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
@@ -27,7 +28,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
 interface LogoWithTxStatusBaseProps {
   assetType: AssetType

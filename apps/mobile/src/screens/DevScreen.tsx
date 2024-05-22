@@ -4,9 +4,9 @@ import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
-import { Screens } from 'src/screens/Screens'
 import { Flex, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconSampleSheet'
 import { Switch } from 'wallet/src/components/buttons/Switch'
@@ -31,7 +31,7 @@ export function DevScreen(): JSX.Element {
     dispatch(createAccountActions.trigger())
   }
 
-  const activateWormhole = (s: Screens): void => {
+  const activateWormhole = (s: MobileScreens): void => {
     navigate(s)
   }
 
@@ -83,7 +83,7 @@ export function DevScreen(): JSX.Element {
             🌀🌀Screen Stargate🌀🌀
           </Text>
           <Flex centered row flexWrap="wrap">
-            {Object.values(Screens).map((s) => (
+            {Object.values(MobileScreens).map((s) => (
               <TouchableArea
                 key={s}
                 m="$spacing8"

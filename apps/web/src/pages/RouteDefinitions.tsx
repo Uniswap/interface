@@ -76,7 +76,7 @@ const StaticTitlesAndDescriptions = {
   SwapTitle: t`Buy, sell & trade Ethereum and other top tokens on Uniswap`,
   SwapDescription: t`Swapping made simple. Buy and sell crypto on Ethereum, Base, Arbitrum, Polygon, and more. Trusted by millions.`,
   DetailsPageBaseTitle: t`Buy and sell on Uniswap`,
-  TDPDescription: t`Buy and sell on Uniswap. Real-time prices, charts, transaction data, and more.`,
+  TDPDescription: t`Real-time prices, charts, transaction data, and more.`,
   PDPDescription: t`Trade tokens and provide liquidity. Real-time prices, charts, transaction data, and more.`,
   NFTTitle: t`Explore NFTs on Uniswap`,
   MigrateTitle: t`Migrate v2 pool liquidity to Uniswap v3`,

@@ -63,7 +63,7 @@
   "account.wallet.header.button.disabled.title": "Edit profile",
   "account.wallet.header.button.title": "Edit label",
   "account.wallet.header.other": "Your other wallets",
-  "account.wallet.header.viewOnly": "View only wallets",
+  "account.wallet.header.viewOnly": "View-only wallets",
   "account.wallet.menu.copy.title": "Copy wallet address",
   "account.wallet.menu.edit.title": "Edit label",
   "account.wallet.menu.remove.title": "Remove wallet",
@@ -353,6 +353,7 @@
   "notification.copied.transactionId": "Transaction ID copied",
   "notification.countryChange": "Switched to {{countryName}}",
   "notification.restore.success": "Wallet restored!",
+  "notification.send.network": "Sending on {{network}}",
   "notification.swap.network": "Swapping on {{network}}",
   "notification.swap.pending.swap": "Swap pending",
   "notification.swap.pending.unwrap": "Unwrap pending",
@@ -736,6 +737,11 @@
   "swap.settings.protection.subtitle.supported": "{{chainName}} Network",
   "swap.settings.protection.subtitle.unavailable": "Not available on {{chainName}}",
   "swap.settings.protection.title": "Swap Protection",
+  "swap.settings.routingPreference.option.default.description": "The Uniswap client selects the best trade type factoring price and network costs.",
+  "swap.settings.routingPreference.option.default.title": "Default trade",
+  "swap.settings.routingPreference.option.v2.title": "v2 pools only",
+  "swap.settings.routingPreference.option.v3.title": "v3 pools only",
+  "swap.settings.routingPreference.title": "Trade options",
   "swap.settings.slippage.control.auto": "Auto",
   "swap.settings.slippage.control.title": "Max slippage",
   "swap.settings.slippage.description": "Your transaction will revert if the price changes more than the slippage percentage.",
@@ -1041,5 +1047,5 @@
   "walletConnect.request.warning.general.message": "Be careful: this message may transfer assets",
   "walletConnect.request.warning.general.transaction": "Be careful: this transaction may transfer assets",
   "walletConnect.request.warning.message": "In order to sign messages or transactions, you’ll need to import the wallet’s recovery phrase.",
-  "walletConnect.request.warning.title": "This wallet is in view only mode"
+  "walletConnect.request.warning.title": "This wallet is in view-only mode"
 }

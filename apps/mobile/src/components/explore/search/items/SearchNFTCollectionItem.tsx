@@ -1,12 +1,12 @@
 import { default as React } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
-import { Screens } from 'src/screens/Screens'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
@@ -14,7 +14,6 @@ import {
   SearchResultType,
 } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 type NFTCollectionItemProps = {
   collection: NFTCollectionSearchResult
@@ -30,12 +29,12 @@ export function SearchNFTCollectionItem({
   const navigation = useAppStackNavigation()
 
   const onPress = (): void => {
-    navigation.navigate(Screens.NFTCollection, {
+    navigation.navigate(MobileScreens.NFTCollection, {
       collectionAddress: address,
     })
 
     if (searchContext) {
-      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name,
         chain: chainId,

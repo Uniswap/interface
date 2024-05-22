@@ -17,7 +17,7 @@ import { getContractManager, getProvider } from 'wallet/src/features/wallet/cont
 import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks, mockContractManager, noOpFunction } from 'wallet/src/test/mocks'
 
-jest.mock('wallet/src/telemetry')
+jest.mock('uniswap/src/features/telemetry/send')
 
 const account = signerMnemonicAccount()
 

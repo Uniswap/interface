@@ -11,7 +11,7 @@ import { Portal } from 'nft/components/common/Portal'
 import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
-import { useIsMobile, useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
+import { useNativeUsdPrice, useSendTransaction, useTransactionResponse } from 'nft/hooks'
 import { TxResponse, TxStateType } from 'nft/types'
 import { generateTweetForPurchase, getSuccessfulImageSize, parseTransactionResponse } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
@@ -20,6 +20,7 @@ import styled from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { useIsMobile } from 'hooks/screenSize'
 import * as styles from './TransactionCompleteModal.css'
 
 const TWITTER_WIDTH = 560

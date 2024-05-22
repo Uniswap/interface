@@ -5,6 +5,7 @@ import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   CurrencyField,
+  TradeProtocolPreference,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -27,6 +28,7 @@ export function useSwapPrefilledState(
             txId: initialState.txId,
             isFiatMode: false,
             isSubmitting: false,
+            tradeProtocolPreference: TradeProtocolPreference.Default,
           }
         : undefined,
     [initialState]

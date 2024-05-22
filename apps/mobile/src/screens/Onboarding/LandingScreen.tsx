@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import {
   LANDING_ANIMATION_DURATION,
   LandingBackground,
@@ -12,10 +11,12 @@ import {
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { OnboardingScreens, UnitagScreens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { AnimatedFlex, Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { isDevEnv } from 'uniswap/src/utils/env'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -25,7 +26,6 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 

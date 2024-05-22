@@ -83,7 +83,7 @@ export function useContract<T extends Contract = Contract>(
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const isMainnet = chainId === ChainId.MAINNET
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
 
@@ -109,7 +109,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
@@ -150,7 +150,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   return useContract(chainId ? V2_ROUTER_ADDRESSES[chainId] : undefined, IUniswapV2Router02ABI, true)
 }
 

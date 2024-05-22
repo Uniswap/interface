@@ -5,7 +5,7 @@ import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -14,7 +14,7 @@ import { CollectionNftsAndMenuLoading } from 'nft/components/collection/Collecti
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { BagCloseIcon } from 'nft/components/icons'
-import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
@@ -200,8 +200,8 @@ const Collection = () => {
             name: collectionStats.name,
           })}
         </title>
-        {metaTags.map((tag) => (
-          <meta key={tag.attribute} {...tag} />
+        {metaTags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace

@@ -23,7 +23,6 @@ import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
 import {
   AnimatedFlex,
@@ -59,7 +58,9 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -85,7 +86,6 @@ import {
   setHideSmallBalances,
   setHideSpamTokens,
 } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -145,7 +145,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.preferences'),
         data: [
           {
-            screen: Screens.SettingsAppearance,
+            screen: MobileScreens.SettingsAppearance,
             text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
@@ -173,7 +173,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <Language {...iconProps} />,
           },
           {
-            screen: Screens.SettingsPrivacy,
+            screen: MobileScreens.SettingsPrivacy,
             text: t('settings.setting.privacy.title'),
             icon: <LineChartDots {...iconProps} />,
           },
@@ -199,7 +199,8 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
+                  screen:
+                    MobileScreens.SettingsBiometricAuth as MobileScreens.SettingsBiometricAuth,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
                   icon: isTouchIdSupported ? (
@@ -211,7 +212,7 @@ export function SettingsScreen(): JSX.Element {
               ]
             : []),
           {
-            screen: Screens.SettingsViewSeedPhrase,
+            screen: MobileScreens.SettingsViewSeedPhrase,
             text: t('settings.setting.recoveryPhrase.title'),
             icon: <Key {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
@@ -219,10 +220,10 @@ export function SettingsScreen(): JSX.Element {
           },
           {
             screen: walletNeedsRestore
-              ? Screens.OnboardingStack
+              ? MobileScreens.OnboardingStack
               : hasCloudBackup
-              ? Screens.SettingsCloudBackupStatus
-              : Screens.SettingsCloudBackupPasswordCreate,
+              ? MobileScreens.SettingsCloudBackupStatus
+              : MobileScreens.SettingsCloudBackupPasswordCreate,
             screenProps: walletNeedsRestore
               ? {
                   screen: OnboardingScreens.RestoreCloudBackupLoading,
@@ -244,7 +245,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.support'),
         data: [
           {
-            screen: Screens.WebView,
+            screen: MobileScreens.WebView,
             screenProps: {
               uriLink: APP_FEEDBACK_LINK,
               headerTitle: t('settings.action.feedback'),
@@ -253,7 +254,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <Feedback color="$neutral2" size="$icon.24" />,
           },
           {
-            screen: Screens.WebView,
+            screen: MobileScreens.WebView,
             screenProps: {
               uriLink: uniswapUrls.helpUrl,
               headerTitle: t('settings.action.help'),
@@ -267,7 +268,7 @@ export function SettingsScreen(): JSX.Element {
         subTitle: t('settings.section.about'),
         data: [
           {
-            screen: Screens.WebView,
+            screen: MobileScreens.WebView,
             screenProps: {
               uriLink: uniswapUrls.privacyPolicyUrl,
               headerTitle: t('settings.action.privacy'),
@@ -276,7 +277,7 @@ export function SettingsScreen(): JSX.Element {
             icon: <LockIcon {...svgProps} />,
           },
           {
-            screen: Screens.WebView,
+            screen: MobileScreens.WebView,
             screenProps: {
               uriLink: uniswapUrls.termsOfServiceUrl,
               headerTitle: t('settings.action.terms'),
@@ -291,7 +292,7 @@ export function SettingsScreen(): JSX.Element {
         isHidden: !__DEV__,
         data: [
           {
-            screen: Screens.Dev,
+            screen: MobileScreens.Dev,
             text: 'Dev options',
             icon: <UniswapIcon {...svgProps} />,
           },
@@ -423,7 +424,7 @@ function WalletSettings(): JSX.Element {
   }
 
   const handleNavigation = (address: string): void => {
-    navigation.navigate(Screens.SettingsWallet, { address })
+    navigation.navigate(MobileScreens.SettingsWallet, { address })
   }
 
   return (

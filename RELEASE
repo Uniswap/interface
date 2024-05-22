@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTpccVs1zJ53DxsUVGfYDtekJLEkYkcz7ytv7ztQLAQoK`
-- CIDv1: `bafybeicrorjzrhlzqcfsojgjsfofublb2gz6s3nl7v2r2vefkxe5ws7w6i`
+- CIDv0: `QmSR8nYexuW3tYLMY62XR3PCG7tcT9QWpeVkHNX6wnZn3p`
+- CIDv1: `bafybeib4stith4o7l5dyd5uejt25qoxfndl57qj2gfc5sgpsmpe6lcb3y4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,54 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicrorjzrhlzqcfsojgjsfofublb2gz6s3nl7v2r2vefkxe5ws7w6i.ipfs.dweb.link/
-- https://bafybeicrorjzrhlzqcfsojgjsfofublb2gz6s3nl7v2r2vefkxe5ws7w6i.ipfs.cf-ipfs.com/
-- [ipfs://QmTpccVs1zJ53DxsUVGfYDtekJLEkYkcz7ytv7ztQLAQoK/](ipfs://QmTpccVs1zJ53DxsUVGfYDtekJLEkYkcz7ytv7ztQLAQoK/)
+- https://bafybeib4stith4o7l5dyd5uejt25qoxfndl57qj2gfc5sgpsmpe6lcb3y4.ipfs.dweb.link/
+- https://bafybeib4stith4o7l5dyd5uejt25qoxfndl57qj2gfc5sgpsmpe6lcb3y4.ipfs.cf-ipfs.com/
+- [ipfs://QmSR8nYexuW3tYLMY62XR3PCG7tcT9QWpeVkHNX6wnZn3p/](ipfs://QmSR8nYexuW3tYLMY62XR3PCG7tcT9QWpeVkHNX6wnZn3p/)
 
-### 5.28.1 (2024-05-22)
+## 5.29.0 (2024-05-22)
+
+
+### Features
+
+* **web:** [multichain] show limits page in disabled state (#8164) df50ab0
+* **web:** add PDP rich link previews (#8003) 564b6e1
+* **web:** avoid fetching redundant on-chain receipts (#7508) 0cc8511
+* **web:** unicon v2 education label (#8339) 1487fbd
+* **web:** update wallet connect modal's color mode with app theme (#7993) 38a9308
 
 
 ### Bug Fixes
 
-* **web:** lowercase unicon flag 626ec60
+* **web:** add null check to OSCollectionsFetcher (#8188) e5077c0
+* **web:** Allow viewing pool mgmt pages when disconnected (#8239) 0ac09da
+* **web:** change gap on landing page (#8175) f98a7e8
+* **web:** change You pay and You receive to Buy and Sell (#8198) 601d1d9
+* **web:** chart dot grid size (#8085) cf94701
+* **web:** check client chain for undefined (#8215) 03697e7
+* **web:** check for supported network on pools page (#8224) 5c7d58d
+* **web:** filtering out spam on send (#8386) (#8405) 2775043
+* **web:** fix limits price parsing bug in different locales (#8199) b9613d9
+* **web:** fix SEO metatags (#8286) c294e33
+* **web:** hotfixing mouseover bug (#8402) 8c5cf28
+* **web:** lowercase unicon flag 02dcbf7
+* **web:** prevent connection from hanging when iframed - staging (#8394) 80ed62c
+* **web:** set initial user state in cypress tests using localStorage (#8189) 941d8fe
+* **web:** Show unsupported network in navbar (#8181) 7746ac4
+* **web:** support multichain input params (#8250) 110976e
+* **web:** window.ethereum fallback on mobile [prod] (#8261) 8b791cc
+
+
+### Tests
+
+* **web:** remove explicit blocknumbers (#8162) 4a83a6f
+
+
+### Code Refactoring
+
+* **web:** refactor NFT sell flow to use wagmi (#7636) 2ebaf2c
+* **web:** screen size hooks (#8100) 9593763
+* **web:** Use wagmi for add/remove liquidity and collecting fees (#7641) 6448ae2
+* **web:** use wagmi for NFT Buys (#7633) f472ce0
+* **web:** Use wagmi for Swap and Limit Order flow (#7779) 832d7ff
 
 

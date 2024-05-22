@@ -10,12 +10,12 @@ import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmati
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ManualPageViewScreen } from 'src/features/telemetry/constants'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ManualPageViewScreen, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import {
@@ -24,7 +24,6 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -84,12 +83,12 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   useEffect(() => {
     switch (view) {
       case View.SeedPhrase:
-        sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.WriteDownRecoveryPhrase,
         })
         break
       case View.SeedPhraseConfirm:
-        sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+        sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
           screen: ManualPageViewScreen.ConfirmRecoveryPhrase,
         })
     }

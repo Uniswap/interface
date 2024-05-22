@@ -24,4 +24,4 @@ export const tokenItemData = createFixture<TokenItemData, TokenItemDataOptions>(
   }
 })
 
-export const TOKEN_ITEM_DATA = tokenItemData()
+export const TOKEN_ITEM_DATA = tokenItemData({ name: 'tkn' })

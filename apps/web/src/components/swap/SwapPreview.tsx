@@ -31,7 +31,7 @@ export function SwapPreview({
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}
-          label={<Trans>You pay</Trans>}
+          label={<Trans>Sell</Trans>}
           amount={trade.inputAmount}
           currency={inputCurrency ?? trade.inputAmount.currency}
           usdAmount={fiatValueInput.data}
@@ -39,7 +39,7 @@ export function SwapPreview({
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
-          label={<Trans>You receive</Trans>}
+          label={<Trans>Buy</Trans>}
           amount={trade.outputAmount}
           currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}

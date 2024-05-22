@@ -5,11 +5,11 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { toSerializableReceipt } from 'state/activity/utils'
 import { useAppDispatch } from 'state/hooks'
 import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
-import { TransactionDetails } from 'state/transactions/types'
+import { PendingTransactionDetails } from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
@@ -74,7 +74,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const dispatch = useAppDispatch()
 
   const getReceipt = useCallback(
-    (tx: TransactionDetails) => {
+    (tx: PendingTransactionDetails) => {
       if (!provider || !supportedChain) throw new Error('No provider or chainId')
       const retryOptions =
         getChainInfo({ chainId: supportedChain })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
@@ -95,7 +95,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               }
               throw new RetryableError()
             }
-            return toSerializableReceipt(receipt)
+            return receipt
           }),
         retryOptions
       )
@@ -117,7 +117,10 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               type: 'transaction',
               chainId,
               original: tx,
-              receipt,
+              update: {
+                status: receipt.status === 1 ? TransactionStatus.Confirmed : TransactionStatus.Failed,
+                info: tx.info,
+              },
             })
           })
           .catch((error) => {

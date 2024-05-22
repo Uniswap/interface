@@ -1,6 +1,6 @@
 import { by, element, expect } from 'detox'
 import { TestWallet } from 'e2e/utils/fixtures'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export async function CreateNewWallet(): Promise<void> {
   // Selects "Create a new wallet" option on the landing screen

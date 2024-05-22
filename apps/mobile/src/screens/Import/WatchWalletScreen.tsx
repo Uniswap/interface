@@ -9,12 +9,13 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ChainId } from 'uniswap/src/types/chains'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -22,7 +23,6 @@ import { useIsSmartContractAddress } from 'wallet/src/features/transactions/tran
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
@@ -141,7 +141,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           })
         )
       }
-      sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         screen: OnboardingScreens.WatchWallet,
         element: ElementName.Continue,
       })

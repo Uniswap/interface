@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   ActionSheetModalContent,
@@ -19,7 +20,6 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { useAppDispatch } from 'wallet/src/state'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'wallet/src/utils/linking'
 
