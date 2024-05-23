@@ -35,6 +35,7 @@ import {
   Erc1155,
   Erc20,
   Erc721,
+  UbeConvert,
   Weth,
 } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
@@ -179,5 +180,5 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 }
 
 export function useUbeConvertContract() {
-  return useContract<V3Migrator>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
+  return useContract<UbeConvert>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
 }

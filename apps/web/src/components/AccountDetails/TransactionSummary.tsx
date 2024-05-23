@@ -14,6 +14,7 @@ import {
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
+  CustomTransactionInfo,
   DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -321,6 +322,10 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
   }
 }
 
+function CustomTransactionSummary({ info }: { info: CustomTransactionInfo }) {
+  return <Trans>{info.summary}</Trans>
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -376,5 +381,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SEND:
       return <SendSummary info={info} />
+
+    case TransactionType.CUSTOM:
+      return <CustomTransactionSummary info={info} />
   }
 }

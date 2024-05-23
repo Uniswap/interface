@@ -45,6 +45,7 @@ export enum TransactionType {
   DEPLOY,
   CANCEL,
   LIMIT,
+  CUSTOM,
 }
 
 interface BaseTransactionInfo {
@@ -188,6 +189,11 @@ export interface SendTransactionInfo {
   recipient: string
 }
 
+export interface CustomTransactionInfo {
+  type: TransactionType.CUSTOM
+  summary: string
+}
+
 export type TransactionInfo =
   | ApproveTransactionInfo
   | ExactOutputSwapTransactionInfo
@@ -208,6 +214,7 @@ export type TransactionInfo =
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
   | SendTransactionInfo
+  | CustomTransactionInfo
 
 export interface TransactionDetails {
   hash: string

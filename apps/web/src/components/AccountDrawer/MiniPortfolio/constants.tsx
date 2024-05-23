@@ -145,6 +145,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t`Limit executed`,
     [TransactionStatus.Failed]: t`Limit failed`,
   },
+  [TransactionType.CUSTOM]: {
+    [TransactionStatus.Pending]: t`Submitting transaction`,
+    [TransactionStatus.Confirmed]: t`Transaction executed`,
+    [TransactionStatus.Failed]: t`Transaction failed`,
+  },
 }
 
 export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
@@ -175,6 +180,7 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.MIGRATE_LIQUIDITY_V3]: t`Migrate liquidity cancelled`,
   [TransactionType.SUBMIT_PROPOSAL]: t`Submit proposal cancelled`,
   [TransactionType.LIMIT]: t`Limit cancelled`,
+  [TransactionType.CUSTOM]: t`Transaction cancelled`,
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {

@@ -1,5 +1,7 @@
+import type { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+// import { Dialog } from 'components/Dialog/Dialog'
 import { useUbeConvertContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -7,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components'
+// import { AlertCircle } from 'ui/src/components/icons'
 
 import { ButtonConfirmed, ButtonError, ButtonLight } from '../../components-old/Button'
 import Column, { AutoColumn } from '../../components-old/Column'
@@ -22,9 +25,12 @@ import { useToken } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 // import { useWalletModalToggle } from '../../state/application/hooks'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import AppBody from 'pages/AppBody'
+import { usePendingTransactions, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { ThemedText } from 'theme/components'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import AppBody from '../AppBody'
 
 enum Field {
   INPUT = 'INPUT',
@@ -46,24 +52,24 @@ export function useConvertCallback(): [
   (amountToConvert: CurrencyAmount<Token>, maxOldUbeAmount: string, signature: string) => Promise<void>
 ] {
   const { account } = useWeb3React()
+  const addTransaction = useTransactionAdder()
 
-  // const hasPendingTx = useHasPendingTransaction()
+  const pendingTxs = usePendingTransactions()
   const [isPending, setIsPending] = useState(false)
 
   const convertContract = useUbeConvertContract()
   // const doTransaction = useDoTransaction()
 
   const approve = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async (amountToConvert: CurrencyAmount<Token>, maxOldUbeAmount: string, signature: string): Promise<void> => {
       if (!account) {
         console.error('no account')
         return
       }
-      // if (hasPendingTx) {
-      //   console.error('already pending transaction')
-      //   return
-      // }
+      if (pendingTxs.length > 0) {
+        console.error('already pending transaction')
+        return
+      }
       if (isPending) {
         console.error('already pending')
         return
@@ -79,19 +85,39 @@ export function useConvertCallback(): [
         return
       }
 
-      setIsPending(true)
       try {
-        // await doTransaction(convertContract, 'convert', {
-        //   args: [amountToConvert.raw.toString(), maxOldUbeAmount, signature],
-        //   summary: `Convert to new UBE`,
-        // })
+        setIsPending(true)
+
+        const convertArgs = [amountToConvert.quotient.toString(), maxOldUbeAmount, signature] as const
+        await convertContract.estimateGas
+          .convert(...convertArgs)
+          .then((estimatedGasLimit) => {
+            return convertContract
+              .convert(...convertArgs, {
+                gasLimit: calculateGasMargin(estimatedGasLimit),
+              })
+              .then((response: TransactionResponse) => {
+                addTransaction(response, {
+                  type: TransactionType.CUSTOM,
+                  summary: 'Convert to new UBE',
+                })
+                return response.wait(1)
+              })
+          })
+          .catch((error) => {
+            console.error('Failed to send transaction', error)
+            setIsPending(false)
+            if (error?.code !== 4001) {
+              console.error(error)
+            }
+          })
       } catch (e) {
         console.error(e)
       } finally {
         setIsPending(false)
       }
     },
-    [isPending, convertContract, account]
+    [isPending, convertContract, account, pendingTxs, addTransaction]
   )
 
   return [isPending, approve]
@@ -231,11 +257,13 @@ export default function ClaimNewUbeToken() {
     convertCallback(parsedAmount, data.amount, data.signature)
       .then(() => {
         console.log('444')
-        //
       })
       .catch((error) => {
         console.log('xxx')
         console.error(error)
+      })
+      .finally(() => {
+        setTypedValue('')
       })
   }, [convertCallback, account, parsedAmount, whitelist])
 
@@ -384,6 +412,15 @@ export default function ClaimNewUbeToken() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
+
+      {/*<Dialog
+        isVisible={true}
+        icon={<AlertCircle size={28} />}
+        title="Is this a wallet address"
+        description="You have reached the conversion limit. ."
+        onCancel={() => {}}
+        showHelpButton={false}
+      /> */}
     </>
   )
 }
