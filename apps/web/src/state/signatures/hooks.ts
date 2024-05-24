@@ -3,10 +3,10 @@ import { SupportedInterfaceChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
-import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, OffchainOrderType } from 'state/routing/types'
+import { OffchainOrderType } from 'state/routing/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { addSignature } from './reducer'
-import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
+import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const { account } = useWeb3React()

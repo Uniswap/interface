@@ -5,6 +5,8 @@ import { ActivityIndicator } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
+import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { logger } from 'utilities/src/logger/logger'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -14,8 +16,6 @@ import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 
 export function DeleteUnitagModal({
   unitag,
@@ -62,7 +62,7 @@ export function DeleteUnitagModal({
       }
 
       if (deleteResponse?.success) {
-        sendWalletAnalyticsEvent(UnitagEventName.UnitagRemoved)
+        sendAnalyticsEvent(UnitagEventName.UnitagRemoved)
         triggerRefetchUnitags()
         dispatch(
           pushNotification({

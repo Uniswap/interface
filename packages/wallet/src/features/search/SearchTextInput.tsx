@@ -23,9 +23,9 @@ import {
 } from 'ui/src'
 import { RotatableChevron, Search, X } from 'ui/src/components/icons'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 const DEFAULT_MIN_HEIGHT = 48
 
@@ -90,7 +90,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       setIsFocus(false)
       setShowClearButton(false)
       Keyboard.dismiss()
-      sendWalletAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
+      sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
       onChangeText?.('')
       onCancel?.()
     }

@@ -30,6 +30,7 @@ export function useRoutingAPIArguments({
   protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
+  const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
@@ -54,6 +55,7 @@ export function useRoutingAPIArguments({
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXForceSyntheticQuotes,
             sendPortionEnabled,
+            isXv2,
           },
     [
       tokenIn,
@@ -65,6 +67,7 @@ export function useRoutingAPIArguments({
       tradeType,
       uniswapXForceSyntheticQuotes,
       sendPortionEnabled,
+      isXv2,
     ]
   )
 }

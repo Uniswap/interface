@@ -5,11 +5,11 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { QuoteResult } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 // Response data from either legacy for trading api quote request
 export type QuoteData =

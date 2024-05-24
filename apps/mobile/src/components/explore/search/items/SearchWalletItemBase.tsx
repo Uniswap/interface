@@ -4,10 +4,10 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
@@ -42,7 +42,7 @@ export function SearchWalletItemBase({
           : type === SearchResultType.ENSAddress
           ? searchResult.ensName
           : undefined
-      sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
+      sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name: walletName,
         address,

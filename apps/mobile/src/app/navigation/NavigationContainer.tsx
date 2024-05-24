@@ -9,14 +9,14 @@ import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { getEventParams } from 'src/features/telemetry/constants'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
+import { getEventParams } from 'src/features/telemetry/utils'
 import { processWidgetEvents } from 'src/features/widgets/widgets'
-import { AppScreen } from 'src/screens/Screens'
 import { useSporeColors } from 'ui/src'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { MobileAppScreen } from 'uniswap/src/types/screens/mobile'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
@@ -32,7 +32,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
   onReady,
 }: PropsWithChildren<Props>) => {
   const colors = useSporeColors()
-  const [routeName, setRouteName] = useState<AppScreen>()
+  const [routeName, setRouteName] = useState<MobileAppScreen>()
   const [routeParams, setRouteParams] = useState<Record<string, unknown> | undefined>()
   const [logImpression, setLogImpression] = useState<boolean>(false)
 
@@ -48,17 +48,18 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       }}
       onReady={(): void => {
         onReady(navigationRef)
-        sendMobileAnalyticsEvent(SharedEventName.APP_LOADED)
+        sendAnalyticsEvent(SharedEventName.APP_LOADED)
         // Process widget events on app load
         processWidgetEvents().catch(() => undefined)
 
         // setting initial route name for telemetry
-        const initialRoute = navigationRef.getCurrentRoute()?.name as AppScreen
+        const initialRoute = navigationRef.getCurrentRoute()?.name as MobileAppScreen
         setRouteName(initialRoute)
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName
-        const currentRouteName: AppScreen = navigationRef.getCurrentRoute()?.name as AppScreen
+        const currentRouteName: MobileAppScreen = navigationRef.getCurrentRoute()
+          ?.name as MobileAppScreen
 
         if (
           currentRouteName &&
@@ -67,7 +68,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
         ) {
           const currentRouteParams = getEventParams(
             currentRouteName,
-            navigationRef.getCurrentRoute()?.params as RootParamList[AppScreen]
+            navigationRef.getCurrentRoute()?.params as RootParamList[MobileAppScreen]
           )
           setLogImpression(true)
           setRouteName(currentRouteName)

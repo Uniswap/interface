@@ -5,17 +5,17 @@ import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountCardItemProps = {
@@ -86,8 +86,8 @@ export function AccountCardItem({
 
   const onPressWalletSettings = (): void => {
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
-    navigate(Screens.SettingsStack, {
-      screen: Screens.SettingsWallet,
+    navigate(MobileScreens.SettingsStack, {
+      screen: MobileScreens.SettingsWallet,
       params: { address },
     })
   }

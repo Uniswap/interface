@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { QuoteType } from 'uniswap/src/types/quote'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
@@ -13,7 +14,6 @@ import {
   transformTradingApiResponseToTrade,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { Trade, TradeWithStatus } from 'wallet/src/features/transactions/swap/trade/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 export function useSetTradeSlippage(
   trade: TradeWithStatus,

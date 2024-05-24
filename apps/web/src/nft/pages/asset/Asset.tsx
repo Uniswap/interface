@@ -6,7 +6,7 @@ import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
 import { blocklistedCollections } from 'nft/utils'
-import { useMetatags } from 'pages/metatags'
+import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useParams } from 'react-router-dom'
@@ -51,10 +51,13 @@ const AssetPage = () => {
       title: formatNFTAssetMetatagTitleName(asset.name, collection.collectionName, tokenId),
       image: window.location.origin + '/api/image/nfts/asset/' + contractAddress + '/' + tokenId,
       url: window.location.href,
+      description:
+        collection.collectionDescription ??
+        'View traits, trading activity, descriptions, and other details on your NFTs.',
     }),
-    [asset.name, collection.collectionName, contractAddress, tokenId]
+    [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId]
   )
-  const metaTags = useMetatags(metaTagProperties)
+  const metaTags = useDynamicMetatags(metaTagProperties)
 
   if (blocklistedCollections.includes(contractAddress)) {
     return <Navigate to="/nfts" replace />
@@ -67,8 +70,8 @@ const AssetPage = () => {
         <title>
           {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Uniswap
         </title>
-        {metaTags.map((tag) => (
-          <meta key={tag.attribute} {...tag} />
+        {metaTags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace

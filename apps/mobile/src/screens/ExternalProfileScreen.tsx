@@ -4,23 +4,23 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { AppStackParamList } from 'src/app/navigation/types'
+import TraceTabView from 'src/components/Trace/TraceTabView'
 import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
-import { renderTabLabel, TAB_STYLES, TabContentProps } from 'src/components/layout/TabHelpers'
-import Trace from 'src/components/Trace/Trace'
-import TraceTabView from 'src/components/Trace/TraceTabView'
+import { TAB_STYLES, TabContentProps, renderTabLabel } from 'src/components/layout/TabHelpers'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { SectionName, SectionNameType } from 'wallet/src/telemetry/constants'
 
-type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile> & {
+type Props = NativeStackScreenProps<AppStackParamList, MobileScreens.ExternalProfile> & {
   renderedInModal?: boolean
 }
 
@@ -157,7 +157,7 @@ export function ExternalProfileScreen({
           directFromPage
           logImpression
           properties={traceProperties}
-          screen={Screens.ExternalProfile}>
+          screen={MobileScreens.ExternalProfile}>
           <Flex grow gap="$spacing16">
             <ProfileHeader address={address} />
             <TraceTabView
@@ -165,7 +165,7 @@ export function ExternalProfileScreen({
               navigationState={{ index: tabIndex, routes: tabs }}
               renderScene={renderTab}
               renderTabBar={renderTabBar}
-              screenName={Screens.ExternalProfile}
+              screenName={MobileScreens.ExternalProfile}
               onIndexChange={setIndex}
             />
           </Flex>

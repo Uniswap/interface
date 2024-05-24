@@ -13,10 +13,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 

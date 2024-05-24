@@ -1,6 +1,9 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { NumberType } from 'utilities/src/format/types'
 import {
   LocalizationContextState,
@@ -10,9 +13,6 @@ import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/trad
 import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -30,7 +30,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
       return
     }
 
-    sendWalletAnalyticsEvent(
+    sendAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
       getBaseTradeAnalyticsProperties({ formatter, trade })
     )

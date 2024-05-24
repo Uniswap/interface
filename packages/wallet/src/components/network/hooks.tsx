@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NetworkOption } from 'wallet/src/components/network/NetworkOption'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId } from 'wallet/src/constants/chains'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 
 export function useNetworkOptions({
   onPress,

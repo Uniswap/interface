@@ -1,10 +1,24 @@
-Excited to share some new updates! Here’s what’s new:
+IPFS hash of the deployment:
+- CIDv0: `QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb`
+- CIDv1: `bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey`
 
-Transfer from Centralized Exchange — Coinbase and Robinhood users can now transfer their crypto assets directly to the Uniswap Wallet!
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Expanded Assets on Fiat On-ramp — Users can now on-ramp to assets on other networks (e.g. ETH and USDC on Base). 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other changes: 
-- Better NFT visibility
-- Home screen improvements for new users
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey.ipfs.dweb.link/
+- https://bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey.ipfs.cf-ipfs.com/
+- [ipfs://QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb/](ipfs://QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb/)
+
+### 5.29.1 (2024-05-24)
+
+
+### Bug Fixes
+
+* **web:** Check if WC getNamespaceChainsIds is empty rather than unde… (#8455) 40a9355
+
+

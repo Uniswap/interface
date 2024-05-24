@@ -15,7 +15,8 @@ import { useColor } from 'hooks/useColor'
 import { Trans } from 'i18n'
 import NotFound from 'pages/NotFound'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
-import { useReducer } from 'react'
+import { useDynamicMetatags } from 'pages/metatags'
+import { useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -128,11 +129,27 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
+  const metatagProperties = useMemo(() => {
+    const token0Symbol = poolData?.token0.symbol
+    const token1Symbol = poolData?.token1.symbol
+    const poolName = `${token0Symbol}/${token1Symbol}`
+    const chainName = chainInfo?.label ?? 'Ethereum'
+    return {
+      title: poolName,
+      url: window.location.href,
+      description: `Swap ${poolName} on ${chainName}. Trade tokens and provide liquidity. Real-time prices, charts, transaction data, and more.`,
+    }
+  }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol])
+  const metatags = useDynamicMetatags(metatagProperties)
+
   if (poolNotFound) return <NotFound />
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
         <title>{getPoolDetailPageTitle(poolData)}</title>
+        {metatags.map((tag, index) => (
+          <meta key={index} {...tag} />
+        ))}
       </Helmet>
       <Trace
         page={InterfacePageName.POOL_DETAILS_PAGE}

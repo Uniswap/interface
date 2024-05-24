@@ -6,8 +6,8 @@ import { CopiedNotification } from 'wallet/src/features/notifications/components
 import { CopyFailedNotification } from 'wallet/src/features/notifications/components/CopyFailedNotification'
 import { DefaultNotification } from 'wallet/src/features/notifications/components/DefaultNotification'
 import { ErrorNotification } from 'wallet/src/features/notifications/components/ErrorNotification'
+import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
-import { SwapNetworkNotification } from 'wallet/src/features/notifications/components/SwapNetworkNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
 import { SwapPendingNotification } from 'wallet/src/features/notifications/components/SwapPendingNotification'
 import { TransferCurrencyNotification } from 'wallet/src/features/notifications/components/TransferCurrencyNotification'
@@ -38,8 +38,8 @@ export function SharedNotificationToastRouter({
       return <ErrorNotification notification={notification} />
     case AppNotificationType.ChooseCountry:
       return <ChooseCountryNotification notification={notification} />
-    case AppNotificationType.SwapNetwork:
-      return <SwapNetworkNotification notification={notification} />
+    case AppNotificationType.NetworkChanged:
+      return <NetworkChangedNotification notification={notification} />
     case AppNotificationType.SwapPending:
       return <SwapPendingNotification notification={notification} />
     case AppNotificationType.TransferCurrencyPending:

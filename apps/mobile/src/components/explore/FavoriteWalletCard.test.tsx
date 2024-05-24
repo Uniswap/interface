@@ -1,9 +1,9 @@
 import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
-import { Screens } from 'src/screens/Screens'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import * as ensHooks from 'wallet/src/features/ens/api'
 import {
   ON_PRESS_EVENT_PAYLOAD,
@@ -103,7 +103,7 @@ describe('FavoriteWalletCard', () => {
       const touchable = getByTestId('favorite-wallet-card')
       fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(mockedNavigation.navigate).toHaveBeenCalledWith(Screens.ExternalProfile, {
+      expect(mockedNavigation.navigate).toHaveBeenCalledWith(MobileScreens.ExternalProfile, {
         address: defaultProps.address,
       })
     })

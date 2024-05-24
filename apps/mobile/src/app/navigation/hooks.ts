@@ -3,8 +3,8 @@ import { useCallback, useContext } from 'react'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { Screens } from 'src/screens/Screens'
 import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 /**
  * Utility hook to simplify navigating to Activity screen.
@@ -29,7 +29,7 @@ export function useEagerActivityNavigation(): {
   )
 
   const navigate = useCallback(
-    () => navigation.navigate(Screens.Home, { tab: HomeScreenTabIndex.Activity }),
+    () => navigation.navigate(MobileScreens.Home, { tab: HomeScreenTabIndex.Activity }),
     [navigation]
   )
 
@@ -57,7 +57,7 @@ export function useEagerExternalProfileNavigation(): {
 
   const navigate = useCallback(
     (address: string) => {
-      navigation.navigate(Screens.ExternalProfile, { address })
+      navigation.navigate(MobileScreens.ExternalProfile, { address })
     },
     [navigation]
   )
@@ -83,7 +83,7 @@ export function useEagerExternalProfileRootNavigation(): {
   )
 
   const navigate = useCallback(async (address: string, callback?: () => void) => {
-    await rootNavigate(Screens.ExternalProfile, { address })
+    await rootNavigate(MobileScreens.ExternalProfile, { address })
     callback?.()
   }, [])
 

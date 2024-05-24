@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 const balanceReportFrequency = ONE_MINUTE_MS * 5
 
@@ -31,7 +31,7 @@ export const slice = createSlice({
   initialState: initialTelemetryState,
   reducers: {
     recordHeartbeat: (state) => {
-      sendWalletAnalyticsEvent(SharedEventName.HEARTBEAT)
+      sendAnalyticsEvent(SharedEventName.HEARTBEAT)
       state.lastHeartbeat = Date.now()
     },
     recordBalancesReport: (
@@ -46,7 +46,7 @@ export const slice = createSlice({
     },
     setAllowAnalytics: (state, { payload: { enabled } }: PayloadAction<{ enabled: boolean }>) => {
       const logToggleEvent = (): void => {
-        sendWalletAnalyticsEvent(SharedEventName.ANALYTICS_SWITCH_TOGGLED, { enabled })
+        sendAnalyticsEvent(SharedEventName.ANALYTICS_SWITCH_TOGGLED, { enabled })
         analytics.flushEvents()
       }
 

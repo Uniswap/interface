@@ -17,6 +17,7 @@ import {
 import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
+import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
@@ -24,7 +25,6 @@ import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { NetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { EthMethod, isPrimaryTypePermit } from 'wallet/src/features/walletConnect/types'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200

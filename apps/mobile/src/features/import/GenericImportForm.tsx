@@ -6,12 +6,12 @@ import {
   TextInput as NativeTextInput,
   StyleSheet,
 } from 'react-native'
-import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { SectionName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   value: string | undefined

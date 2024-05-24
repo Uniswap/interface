@@ -13,14 +13,14 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { Screens } from 'src/screens/Screens'
 import { AnimatedFlex, ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
-import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
@@ -56,9 +56,9 @@ export function ExploreScreen(): JSX.Element {
 
   const onSearchFocus = (): void => {
     setIsSearchMode(true)
-    sendMobileAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
+    sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
       section: SectionName.ExploreSearch,
-      screen: Screens.Explore,
+      screen: MobileScreens.Explore,
     })
   }
 

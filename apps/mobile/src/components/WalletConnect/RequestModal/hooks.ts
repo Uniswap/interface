@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'

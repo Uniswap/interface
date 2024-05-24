@@ -61,7 +61,9 @@ describe('useOrderedConnections', () => {
   })
 
   it('should throw an error if expected connectors are missing', () => {
-    mocked(useConnect).mockReturnValue({ connectors: [] } as unknown as ReturnType<typeof useConnect>)
+    mocked(useConnect).mockReturnValue({ connectors: [WALLET_CONNECT_CONNECTOR] } as unknown as ReturnType<
+      typeof useConnect
+    >)
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.error?.message).toEqual('Expected connector injected missing from wagmi context.')
@@ -126,6 +128,7 @@ describe('useOrderedConnections', () => {
   })
 
   it('should include the fallback injected provider when no eip6963 injectors are present', async () => {
+    window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
       connectors: [UNISWAP_MOBILE_CONNECTOR, INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],
     } as unknown as ReturnType<typeof useConnect>)
@@ -136,7 +139,20 @@ describe('useOrderedConnections', () => {
       { id: CONNECTION.WALLET_CONNECT_CONNECTOR_ID },
       { id: CONNECTION.COINBASE_SDK_CONNECTOR_ID },
     ]
+    result.current.forEach((connector, index) => {
+      expect(connector.id).toEqual(expectedConnectors[index].id)
+    })
+    expect(result.current.length).toEqual(expectedConnectors.length)
+  })
 
+  it('should include only the fallback injected provider when no eip6963 injectors are present on mobile', async () => {
+    UserAgentMock.isMobile = true
+    window.ethereum = true as any
+    mocked(useConnect).mockReturnValue({
+      connectors: [UNISWAP_MOBILE_CONNECTOR, INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],
+    } as unknown as ReturnType<typeof useConnect>)
+    const { result } = renderHook(() => useOrderedConnections())
+    const expectedConnectors = [{ id: CONNECTION.INJECTED_CONNECTOR_ID }]
     result.current.forEach((connector, index) => {
       expect(connector.id).toEqual(expectedConnectors[index].id)
     })

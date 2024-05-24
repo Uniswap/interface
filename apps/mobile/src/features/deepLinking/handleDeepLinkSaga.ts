@@ -17,18 +17,19 @@ import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayR
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
-import { WidgetType } from 'src/features/widgets/widgets'
-import { Screens } from 'src/screens/Screens'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { WidgetType } from 'uniswap/src/types/widgets'
 import { logger } from 'utilities/src/logger/logger'
 import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
@@ -46,7 +47,6 @@ import {
   selectSignerMnemonicAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ModalName, ShareableEntity } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 
@@ -80,7 +80,7 @@ export function* deepLinkWatcher() {
 export function* handleUniswapAppDeepLink(path: string, url: string, linkSource: LinkSource) {
   // Navigate to the home page to ensure that a page isn't already open as a screen,
   // which causes the bottom sheet to break
-  navigate(Screens.Home)
+  navigate(MobileScreens.Home)
 
   // Handle NFT Item share (ex. https://app.uniswap.org/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
@@ -92,7 +92,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       openModal({
         name: ModalName.Explore,
         initialState: {
-          screen: Screens.NFTItem,
+          screen: MobileScreens.NFTItem,
           params: {
             address: contractAddress,
             tokenId,
@@ -101,7 +101,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
         },
       })
     )
-    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftItem,
       url,
     })
@@ -118,14 +118,14 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       openModal({
         name: ModalName.Explore,
         initialState: {
-          screen: Screens.NFTCollection,
+          screen: MobileScreens.NFTCollection,
           params: {
             collectionAddress: contractAddress,
           },
         },
       })
     )
-    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftCollection,
       url,
     })
@@ -147,7 +147,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       openModal({
         name: ModalName.Explore,
         initialState: {
-          screen: Screens.TokenDetails,
+          screen: MobileScreens.TokenDetails,
           params: {
             currencyId,
           },
@@ -155,12 +155,12 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       })
     )
     if (linkSource === LinkSource.Share) {
-      yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+      yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
         entity: ShareableEntity.Token,
         url,
       })
     } else {
-      yield* call(sendMobileAnalyticsEvent, MobileEventName.WidgetClicked, {
+      yield* call(sendAnalyticsEvent, MobileEventName.WidgetClicked, {
         widget_type: WidgetType.TokenPrice,
         url,
       })
@@ -188,7 +188,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
         openModal({
           name: ModalName.Explore,
           initialState: {
-            screen: Screens.ExternalProfile,
+            screen: MobileScreens.ExternalProfile,
             params: {
               address: accountAddress,
             },
@@ -196,7 +196,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
         })
       )
     }
-    yield* call(sendMobileAnalyticsEvent, MobileEventName.ShareLinkOpened, {
+    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.Wallet,
       url,
     })
@@ -322,7 +322,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
-    yield* call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+    yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
       url: url.toString(),
       screen: screen ?? 'other',
       is_cold_start: coldStart,

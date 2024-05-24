@@ -1,12 +1,19 @@
 import { AddressZero } from '@ethersproject/constants'
+import { PermitTransferFromData } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
+import {
+  DutchOrderInfo,
+  DutchOrderInfoJSON,
+  DutchOrderTrade as IDutchOrderTrade,
+  V2DutchOrderTrade as IV2DutchOrderTrade,
+  UnsignedV2DutchOrderInfo,
+  UnsignedV2DutchOrderInfoJSON,
+} from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
-import { SignatureType } from 'state/signatures/types'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -57,6 +64,7 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
+  isXv2: boolean
 }
 
 export type GetQuickQuoteArgs = {
@@ -114,9 +122,10 @@ export type V2PoolInRoute = {
   address?: string
 }
 
+// From `ClassicQuoteDataJSON` in https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/ClassicQuote.ts
 export interface ClassicQuoteData {
-  quoteId?: string
   requestId?: string
+  quoteId?: string
   blockNumber: string
   amount: string
   amountDecimals: string
@@ -140,22 +149,46 @@ export interface ClassicQuoteData {
   quoteGasAndPortionAdjustedDecimals?: string
 }
 
+// From `DutchQuoteDataJSON` https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/DutchQuote.ts
 export type URADutchOrderQuoteData = {
-  auctionPeriodSecs: number
-  deadlineBufferSecs: number
-  startTimeBufferSecs: number
   orderInfo: DutchOrderInfoJSON
   quoteId?: string
   requestId?: string
+  encodedOrder: string
+  orderHash: string
+  startTimeBufferSecs: number
+  auctionPeriodSecs: number
+  deadlineBufferSecs: number
   slippageTolerance: string
+  permitData: PermitTransferFromData
   portionBips?: number
-  portionRecipient?: string
   portionAmount?: string
+  portionRecipient?: string
+}
+
+// From `DutchV2QuoteDataJSON` in https://github.com/Uniswap/unified-routing-api/blob/main/lib/entities/quote/DutchV2Quote.ts
+export type URADutchOrderV2QuoteData = {
+  orderInfo: UnsignedV2DutchOrderInfoJSON
+  quoteId?: string
+  requestId?: string
+  encodedOrder: string
+  orderHash: string
+  deadlineBufferSecs: number
+  slippageTolerance: string
+  permitData: PermitTransferFromData
+  portionBips?: number
+  portionAmount?: string
+  portionRecipient?: string
 }
 
 type URADutchOrderQuoteResponse = {
-  routing: URAQuoteType.DUTCH_LIMIT
+  routing: URAQuoteType.DUTCH_V1
   quote: URADutchOrderQuoteData
+  allQuotes: Array<URAQuoteResponse>
+}
+type URADutchOrderV2QuoteResponse = {
+  routing: URAQuoteType.DUTCH_V2
+  quote: URADutchOrderV2QuoteData
   allQuotes: Array<URAQuoteResponse>
 }
 type URAClassicQuoteResponse = {
@@ -163,7 +196,7 @@ type URAClassicQuoteResponse = {
   quote: ClassicQuoteData
   allQuotes: Array<URAQuoteResponse>
 }
-export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse
+export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse | URADutchOrderV2QuoteResponse
 
 export type QuickRouteResponse = {
   tokenIn: {
@@ -192,6 +225,7 @@ export function isClassicQuoteResponse(data: URAQuoteResponse): data is URAClass
 export enum TradeFillType {
   Classic = 'classic', // Uniswap V1, V2, and V3 trades with on-chain routes
   UniswapX = 'uniswap_x', // off-chain trades, no routes
+  UniswapXv2 = 'uniswap_x_v2',
   None = 'none', // for preview trades, cant be used for submission
 }
 
@@ -288,12 +322,7 @@ export enum OffchainOrderType {
   DUTCH_AUCTION = 'Dutch',
   DUTCH_V2_AUCTION = 'Dutch_V2',
   LIMIT_ORDER = 'Limit',
-}
-
-export const OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE: Record<OffchainOrderType, SignatureType> = {
-  [OffchainOrderType.DUTCH_AUCTION]: SignatureType.SIGN_UNISWAPX_ORDER,
-  [OffchainOrderType.DUTCH_V2_AUCTION]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
-  [OffchainOrderType.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
+  DUTCH_V1_AND_V2 = 'Dutch_V1_V2', // Only used for GET /orders queries. Returns both Dutch V1 and V2 orders.
 }
 
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
@@ -370,8 +399,79 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     return 0
   }
 
+  /**
+   * Ensures that LimitOrderTrade conforms to the same interface as DutchOrderTrade
+   * By using trade.asDutchOrderTrade(), we can uniformly handle both trade types without needing to verify their specific class type.
+   */
   public asDutchOrderTrade() {
     return this
+  }
+}
+
+export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, TradeType> {
+  public readonly fillType = TradeFillType.UniswapXv2
+  public readonly offchainOrderType = OffchainOrderType.DUTCH_V2_AUCTION
+
+  quoteId?: string
+  requestId?: string
+  wrapInfo: WrapInfo
+  approveInfo: ApproveInfo
+  // The gas estimate of the reference classic trade, if there is one.
+  classicGasUseEstimateUSD?: number
+  deadlineBufferSecs: number
+  slippageTolerance: Percent
+
+  inputTax = ZERO_PERCENT
+  outputTax = ZERO_PERCENT
+  swapFee: SwapFeeInfo | undefined
+
+  constructor({
+    currencyIn,
+    currenciesOut,
+    orderInfo,
+    tradeType,
+    quoteId,
+    requestId,
+    wrapInfo,
+    approveInfo,
+    classicGasUseEstimateUSD,
+    deadlineBufferSecs,
+    slippageTolerance,
+    swapFee,
+  }: {
+    currencyIn: Currency
+    currenciesOut: Currency[]
+    orderInfo: UnsignedV2DutchOrderInfo
+    tradeType: TradeType
+    quoteId?: string
+    requestId?: string
+    approveInfo: ApproveInfo
+    wrapInfo: WrapInfo
+    classicGasUseEstimateUSD?: number
+    deadlineBufferSecs: number
+    slippageTolerance: Percent
+    swapFee?: SwapFeeInfo
+  }) {
+    super({ currencyIn, currenciesOut, orderInfo, tradeType })
+    this.quoteId = quoteId
+    this.requestId = requestId
+    this.approveInfo = approveInfo
+    this.wrapInfo = wrapInfo
+    this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
+    this.deadlineBufferSecs = deadlineBufferSecs
+    this.slippageTolerance = slippageTolerance
+    this.swapFee = swapFee
+  }
+
+  public get totalGasUseEstimateUSD(): number {
+    if (this.wrapInfo.needsWrap && this.approveInfo.needsApprove) {
+      return this.wrapInfo.wrapGasEstimateUSD + this.approveInfo.approveGasEstimateUSD
+    }
+
+    if (this.wrapInfo.needsWrap) return this.wrapInfo.wrapGasEstimateUSD
+    if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
+
+    return 0
   }
 }
 
@@ -520,8 +620,12 @@ export class LimitOrderTrade {
     this.deadline = (nowSecs + deadlineBufferSecs) * 1000
   }
 
+  /**
+   * Ensures that LimitOrderTrade conforms to the same interface as DutchOrderTrade
+   * By using trade.asDutchOrderTrade(), we can uniformly handle both trade types without needing to verify their specific class type.
+   */
   public asDutchOrderTrade(options?: {
-    nonce: BigNumber
+    nonce: BigNumber | null
     swapper: string
   }): IDutchOrderTrade<Currency, Currency, TradeType> {
     const swapperOutput = {
@@ -615,7 +719,7 @@ export class LimitOrderTrade {
   }
 }
 
-export type SubmittableTrade = ClassicTrade | DutchOrderTrade | LimitOrderTrade
+export type SubmittableTrade = ClassicTrade | DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade
 export type InterfaceTrade = SubmittableTrade | PreviewTrade
 
 export enum QuoteState {
@@ -674,18 +778,50 @@ export enum SwapRouterNativeAssets {
 
 export enum URAQuoteType {
   CLASSIC = 'CLASSIC',
-  DUTCH_LIMIT = 'DUTCH_LIMIT',
+  DUTCH_V1 = 'DUTCH_LIMIT', // "dutch limit" refers to dutch. Fully separate from "limit orders"
+  DUTCH_V2 = 'DUTCH_V2',
 }
 
-type ClassicAPIConfig = {
+/* Config types should match URA config schemas `classicConfig`, `dutchLimitConfig`, and `dutchV2Config` at https://github.com/Uniswap/unified-routing-api/blob/main/lib/util/validator.ts */
+
+export type ClassicAPIConfig = {
+  routingType: URAQuoteType.CLASSIC
   protocols: Protocol[]
+  gasPriceWei?: string
+  simulateFromAddress?: string
+  recipient?: string
+  permitSignature?: string
+  permitNonce?: string
+  permitExpiration?: number
+  permitAmount?: string
+  permitSigDeadline?: number
+  enableUniversalRouter?: boolean
+  deadline?: number
+  minSplits?: number
+  forceCrossProtocol?: boolean
+  forceMixedRoutes?: boolean
+  slippageTolerance?: number
+  algorithm?: string
+  quoteSpeed?: string
+  enableFeeOnTransferFeeFetching?: boolean
 }
 
-type UniswapXConfig = {
+export type UniswapXConfig = {
+  routingType: URAQuoteType.DUTCH_V1
   swapper?: string
   exclusivityOverrideBps?: number
-  auctionPeriodSecs?: number
   startTimeBufferSecs?: number
+  auctionPeriodSecs?: number
+  deadlineBufferSecs?: number
+  slippageTolerance?: number
+  useSyntheticQuotes?: boolean
 }
 
-export type RoutingConfig = (UniswapXConfig | ClassicAPIConfig)[]
+export type UniswapXv2Config = {
+  routingType: URAQuoteType.DUTCH_V2
+  swapper?: string
+  deadlineBufferSecs?: number
+  useSyntheticQuotes?: boolean
+}
+
+export type RoutingConfig = (UniswapXConfig | UniswapXv2Config | ClassicAPIConfig)[]

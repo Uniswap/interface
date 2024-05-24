@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
 
-import { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from './types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from './types'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -9,16 +10,6 @@ export interface TransactionState {
   [chainId: number]: {
     [txHash: string]: TransactionDetails
   }
-}
-
-interface AddTransactionPayload {
-  chainId: ChainId
-  from: string
-  hash: string
-  info: TransactionInfo
-  nonce?: number
-  deadline?: number
-  receipt?: SerializableTransactionReceipt
 }
 
 export const initialState: TransactionState = {}
@@ -29,27 +20,37 @@ const transactionSlice = createSlice({
   reducers: {
     addTransaction(
       transactions,
-      { payload: { chainId, from, hash, info, nonce, deadline, receipt } }: { payload: AddTransactionPayload }
+      {
+        payload: { chainId, hash, ...details },
+      }: { payload: { chainId: ChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> }
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
       }
       const txs = transactions[chainId] ?? {}
-      txs[hash] = { hash, info, from, addedTime: Date.now(), nonce, deadline, receipt }
+      txs[hash] = {
+        status: TransactionStatus.Pending,
+        hash,
+        addedTime: Date.now(),
+        ...details,
+      }
       transactions[chainId] = txs
     },
-    clearAllTransactions(transactions, { payload: { chainId } }) {
+    clearAllTransactions(transactions, { payload: { chainId } }: { payload: { chainId: ChainId } }) {
       if (!transactions[chainId]) return
       transactions[chainId] = {}
     },
-    removeTransaction(transactions, { payload: { chainId, hash } }) {
+    removeTransaction(transactions, { payload: { chainId, hash } }: { payload: { chainId: ChainId; hash: string } }) {
       if (transactions[chainId][hash]) {
         delete transactions[chainId][hash]
       }
     },
-    checkedTransaction(transactions, { payload: { chainId, hash, blockNumber } }) {
+    checkedTransaction(
+      transactions,
+      { payload: { chainId, hash, blockNumber } }: { payload: { chainId: ChainId; hash: string; blockNumber: number } }
+    ) {
       const tx = transactions[chainId]?.[hash]
-      if (!tx) {
+      if (!tx || tx.status !== TransactionStatus.Pending) {
         return
       }
       if (!tx.lastCheckedBlockNumber) {
@@ -58,18 +59,34 @@ const transactionSlice = createSlice({
         tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
       }
     },
-    finalizeTransaction(transactions, { payload: { hash, chainId, receipt, info } }) {
+    finalizeTransaction(
+      transactions,
+      {
+        payload: { chainId, hash, status, info },
+      }: {
+        payload: {
+          chainId: ChainId
+          hash: string
+          status: TransactionStatus
+          info?: TransactionInfo
+        }
+      }
+    ) {
       const tx = transactions[chainId]?.[hash]
       if (!tx) {
         return
       }
-      tx.receipt = receipt
-      tx.confirmedTime = Date.now()
-      if (info) {
-        tx.info = info
+      transactions[chainId][hash] = {
+        ...tx,
+        status,
+        confirmedTime: Date.now(),
+        info: info ?? tx.info,
       }
     },
-    cancelTransaction(transactions, { payload: { hash, chainId, cancelHash } }) {
+    cancelTransaction(
+      transactions,
+      { payload: { chainId, hash, cancelHash } }: { payload: { chainId: ChainId; hash: string; cancelHash: string } }
+    ) {
       const tx = transactions[chainId]?.[hash]
 
       if (tx) {

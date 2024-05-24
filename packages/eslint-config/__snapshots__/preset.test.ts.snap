@@ -105,25 +105,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
     ],
-    "@typescript-eslint/no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
-            "name": "ethers",
-          },
-        ],
-        "patterns": [
-          {
-            "group": [
-              "**/dist",
-            ],
-            "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.",
-          },
-        ],
-      },
-    ],
     "@typescript-eslint/no-this-alias": [
       "error",
     ],
@@ -1008,25 +989,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
-            "name": "ethers",
-          },
-        ],
-        "patterns": [
-          {
-            "group": [
-              "**/dist",
-            ],
-            "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.",
-          },
-        ],
-      },
     ],
     "@typescript-eslint/no-this-alias": [
       "error",
@@ -1968,15 +1930,22 @@ exports[`should have a correct configuration for a React file 1`] = `
       {
         "paths": [
           {
+            "message": "Please use the Trace in 'uniswap/src/features/telemetry/Trace' for app level usage!",
+            "name": "utilities/src/telemetry/trace/Trace",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
-          {
-            "message": "Please import from styled-components/macro.",
-            "name": "styled-components",
-          },
         ],
         "patterns": [
+          {
+            "group": [
+              "*react-native*",
+              "!react-native-image-colors",
+            ],
+            "message": "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
+          },
           {
             "group": [
               "**/dist",
@@ -2937,25 +2906,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-restricted-imports": [
-      "error",
-      {
-        "paths": [
-          {
-            "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
-            "name": "ethers",
-          },
-        ],
-        "patterns": [
-          {
-            "group": [
-              "**/dist",
-            ],
-            "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.",
-          },
-        ],
-      },
     ],
     "@typescript-eslint/no-this-alias": [
       "error",

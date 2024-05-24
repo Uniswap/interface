@@ -31,9 +31,12 @@ globalThis.origin = 'https://app.uniswap.org'
 
   globalThis.matchMedia =
     globalThis.matchMedia ||
-    (() => {
+    ((query) => {
+      const reducedMotion = query.match(/prefers-reduced-motion: ([a-zA-Z0-9-]+)/)
+
       return {
-        matches: false,
+        // Needed for reanimated to disable reduced motion warning in tests
+        matches: reducedMotion ? reducedMotion[1] === 'no-preference' : false,
         addListener: jest.fn(),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),

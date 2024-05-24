@@ -1,5 +1,5 @@
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { FORTransaction, FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import {

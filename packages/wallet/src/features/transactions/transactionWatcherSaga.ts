@@ -5,9 +5,16 @@ import { BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import {
+  FiatOnRampEventName,
+  InstitutionTransferEventName,
+  MobileAppsFlyerEvents,
+  WalletEventName,
+} from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   fetchFiatOnRampTransaction,
@@ -44,13 +51,6 @@ import { getFinalizedTransactionStatus } from 'wallet/src/features/transactions/
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { appSelect } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent, sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
-import {
-  FiatOnRampEventName,
-  InstitutionTransferEventName,
-  WalletAppsFlyerEvents,
-  WalletEventName,
-} from 'wallet/src/telemetry/constants'
 
 export function* transactionWatcher({
   apolloClient,
@@ -173,7 +173,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
           updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
         if (updatedTransaction.typeInfo.serviceProvider) {
           yield* call(
-            sendWalletAnalyticsEvent,
+            sendAnalyticsEvent,
             isTransfer
               ? InstitutionTransferEventName.InstitutionTransferTransactionUpdated
               : FiatOnRampEventName.FiatOnRampTransactionUpdated,
@@ -380,7 +380,7 @@ export function logTransactionEvent(
       status === TransactionStatus.Success
         ? SwapEventName.SWAP_TRANSACTION_COMPLETED
         : SwapEventName.SWAP_TRANSACTION_FAILED
-    sendWalletAnalyticsEvent(eventName, {
+    sendAnalyticsEvent(eventName, {
       address: from,
       hash,
       chain_id: chainId,
@@ -405,7 +405,7 @@ export function logTransactionEvent(
   // Log metrics for confirmed transfers
   if (type === TransactionType.Send) {
     const { tokenAddress, recipient: toAddress } = typeInfo as SendTokenTransactionInfo
-    sendWalletAnalyticsEvent(WalletEventName.TransferCompleted, {
+    sendAnalyticsEvent(WalletEventName.TransferCompleted, {
       chainId,
       tokenAddress,
       toAddress,
@@ -476,7 +476,7 @@ function* finalizeTransaction({
     if (hasDoneOneSwap) {
       // Only log event if it's a user's first ever swap
       // TODO: Add $ amount to swap event once transaction type supports it
-      yield* call(sendWalletAppsFlyerEvent, WalletAppsFlyerEvents.SwapCompleted)
+      yield* call(sendAppsFlyerEvent, MobileAppsFlyerEvents.SwapCompleted)
     }
   }
 }

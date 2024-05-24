@@ -21,6 +21,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": false,
     "resolveJsonModule": true,
+    "noErrorTruncation": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,

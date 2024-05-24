@@ -1,4 +1,5 @@
 import { providers } from 'ethers'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTransactionRequestInfo'
@@ -6,7 +7,6 @@ import { ApprovalAction } from 'wallet/src/features/transactions/swap/trade/type
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { sumGasFees } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 interface SwapTxAndGasInfo {
   txRequest?: providers.TransactionRequest

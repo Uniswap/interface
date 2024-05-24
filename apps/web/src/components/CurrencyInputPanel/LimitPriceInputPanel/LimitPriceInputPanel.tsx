@@ -9,7 +9,11 @@ import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import {
+  NumberType,
+  formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
+  useFormatter,
+} from 'utils/formatNumbers'
 
 import { sendAnalyticsEvent } from 'analytics'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
@@ -134,16 +138,17 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       setLimitPrice(
-        formatCurrencyAmount({
+        formatCurrencyAmountWithoutUserLocale({
           amount: marketOutputAmount,
           type: NumberType.SwapTradeAmount,
           placeholder: limitPrice,
+          locale: 'en-US',
         })
       )
       setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
       sendAnalyticsEvent('Limit Preset Rate Selected', { value: adjustmentPercentage })
     },
-    [formatCurrencyAmount, baseCurrency, limitPrice, setLimitPrice, setLimitState]
+    [baseCurrency, limitPrice, setLimitPrice, setLimitState]
   )
 
   const { currentPriceAdjustment } = useCurrentPriceAdjustment({
@@ -168,7 +173,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           onClick={() => {
             if (baseCurrency && marketPrice && quoteCurrency) {
               setLimitPrice(
-                formatCurrencyAmount({
+                formatCurrencyAmountWithoutUserLocale({
                   amount: marketPrice
                     .invert()
                     .quote(
@@ -176,6 +181,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
                     ),
                   type: NumberType.SwapTradeAmount,
                   placeholder: '',
+                  locale: 'en-US',
                 })
               )
             }

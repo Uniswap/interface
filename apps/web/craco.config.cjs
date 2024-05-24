@@ -79,6 +79,7 @@ module.exports = {
           '^react-native$': 'react-native-web',
           'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
         },
+        setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
       })
     },
   },

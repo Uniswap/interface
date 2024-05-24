@@ -7,10 +7,15 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import {
+  FiatOnRampScreens,
+  MobileScreens,
+  OnboardingScreens,
+  UnitagScreens,
+} from 'uniswap/src/types/screens/mobile'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 
 type NFTItemScreenParams = {
   owner?: Address
@@ -26,13 +31,13 @@ export type CloudBackupFormParams = {
 }
 
 export type ExploreStackParamList = {
-  [Screens.Explore]: undefined
-  [Screens.ExternalProfile]: {
+  [MobileScreens.Explore]: undefined
+  [MobileScreens.ExternalProfile]: {
     address: string
   }
-  [Screens.NFTItem]: NFTItemScreenParams
-  [Screens.NFTCollection]: { collectionAddress: string }
-  [Screens.TokenDetails]: {
+  [MobileScreens.NFTItem]: NFTItemScreenParams
+  [MobileScreens.NFTCollection]: { collectionAddress: string }
+  [MobileScreens.TokenDetails]: {
     currencyId: string
   }
 }
@@ -44,22 +49,22 @@ export type FiatOnRampStackParamList = {
 }
 
 export type SettingsStackParamList = {
-  [Screens.Dev]: undefined
-  [Screens.Settings]: undefined
-  [Screens.SettingsAppearance]: undefined
-  [Screens.SettingsBiometricAuth]: undefined
-  [Screens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParams
-  [Screens.SettingsCloudBackupPasswordCreate]: { address: Address }
-  [Screens.SettingsCloudBackupProcessing]: CloudBackupFormParams
-  [Screens.SettingsCloudBackupStatus]: { address: Address }
-  [Screens.SettingsHelpCenter]: undefined
-  [Screens.SettingsLanguage]: undefined
-  [Screens.SettingsPrivacy]: undefined
-  [Screens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
-  [Screens.SettingsWallet]: { address: Address }
-  [Screens.SettingsWalletEdit]: { address: Address }
-  [Screens.SettingsWalletManageConnection]: { address: Address }
-  [Screens.WebView]: { headerTitle: string; uriLink: string }
+  [MobileScreens.Dev]: undefined
+  [MobileScreens.Settings]: undefined
+  [MobileScreens.SettingsAppearance]: undefined
+  [MobileScreens.SettingsBiometricAuth]: undefined
+  [MobileScreens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParams
+  [MobileScreens.SettingsCloudBackupPasswordCreate]: { address: Address }
+  [MobileScreens.SettingsCloudBackupProcessing]: CloudBackupFormParams
+  [MobileScreens.SettingsCloudBackupStatus]: { address: Address }
+  [MobileScreens.SettingsHelpCenter]: undefined
+  [MobileScreens.SettingsLanguage]: undefined
+  [MobileScreens.SettingsPrivacy]: undefined
+  [MobileScreens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
+  [MobileScreens.SettingsWallet]: { address: Address }
+  [MobileScreens.SettingsWalletEdit]: { address: Address }
+  [MobileScreens.SettingsWalletManageConnection]: { address: Address }
+  [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
 }
 
 export type OnboardingStackBaseParams = {
@@ -68,7 +73,10 @@ export type OnboardingStackBaseParams = {
   unitagClaim?: UnitagClaim
 }
 
-export type UnitagEntryPoint = OnboardingScreens.Landing | Screens.Home | Screens.Settings
+export type UnitagEntryPoint =
+  | OnboardingScreens.Landing
+  | MobileScreens.Home
+  | MobileScreens.Settings
 
 export type SharedUnitagScreenParams = {
   [UnitagScreens.ClaimUnitag]: {
@@ -117,27 +125,27 @@ export type UnitagStackParamList = SharedUnitagScreenParams & {
   [UnitagScreens.EditProfile]: {
     address: Address
     unitag: string
-    entryPoint: UnitagScreens.UnitagConfirmation | Screens.SettingsWallet
+    entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet
   }
 }
 
 export type AppStackParamList = {
-  [Screens.Education]: {
+  [MobileScreens.Education]: {
     type: EducationContentType
   } & OnboardingStackBaseParams
-  [Screens.Home]?: { tab?: HomeScreenTabIndex }
-  [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
-  [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
-  [Screens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
-  [Screens.TokenDetails]: {
+  [MobileScreens.Home]?: { tab?: HomeScreenTabIndex }
+  [MobileScreens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
+  [MobileScreens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
+  [MobileScreens.UnitagStack]: NavigatorScreenParams<UnitagStackParamList>
+  [MobileScreens.TokenDetails]: {
     currencyId: string
   }
-  [Screens.NFTItem]: NFTItemScreenParams
-  [Screens.NFTCollection]: { collectionAddress: string }
-  [Screens.ExternalProfile]: {
+  [MobileScreens.NFTItem]: NFTItemScreenParams
+  [MobileScreens.NFTCollection]: { collectionAddress: string }
+  [MobileScreens.ExternalProfile]: {
     address: string
   }
-  [Screens.WebView]: { headerTitle: string; uriLink: string }
+  [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

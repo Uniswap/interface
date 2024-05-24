@@ -3,6 +3,7 @@ import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { CONNECTION } from 'components/Web3Provider/constants'
+import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import {
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
@@ -17,7 +18,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-import { Connector, useAccount, useChainId } from 'wagmi'
+import { useAccount, useChainId } from 'wagmi'
 
 import ChainSelectorRow from './ChainSelectorRow'
 
@@ -41,11 +42,6 @@ const styledMobileMenuCss = css`
   }
 `
 
-type WalletConnectConnector = Connector & {
-  type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => ChainId[]
-}
-
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useAccount()
 
@@ -53,14 +49,18 @@ function useWalletSupportedChains(): ChainId[] {
     case CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
     case CONNECTION.WALLET_CONNECT_CONNECTOR_ID:
       // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
-      return (connector as WalletConnectConnector).getNamespaceChainsIds?.() ?? NETWORK_SELECTOR_CHAINS
+      return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
+        ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
+        : NETWORK_SELECTOR_CHAINS
     default:
       return NETWORK_SELECTOR_CHAINS
   }
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const chainId = useChainId()
+  const disconnectedChainId = useChainId()
+  const account = useAccount()
+  const chainId = account?.chainId ?? disconnectedChainId
   const isSupportedChain = useIsSupportedChainId(chainId)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 

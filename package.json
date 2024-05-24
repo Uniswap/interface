@@ -42,7 +42,7 @@
     "@react-navigation/routers": "6.1.9",
     "@react-navigation/core": "6.2.2",
     "@sideway/formula": "3.0.1",
-    "@walletconnect/ethereum-provider": "2.10.1",
+    "@walletconnect/ethereum-provider": "2.11.3",
     "@xmldom/xmldom": "0.7.7",
     "esbuild": "0.19.3",
     "eslint-plugin-import": "2.27.5",

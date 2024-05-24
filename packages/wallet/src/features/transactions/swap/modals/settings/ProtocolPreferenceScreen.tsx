@@ -1,9 +1,9 @@
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
-import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
 
 export function ProtocolPreferenceScreen({
   tradeProtocolPreference,

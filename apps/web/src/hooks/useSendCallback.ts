@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -9,6 +9,7 @@ import { trace } from 'tracing/trace'
 import { currencyId } from 'utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { useAccount } from 'wagmi'
 
 export function useSendCallback({
   currencyAmount,
@@ -21,14 +22,15 @@ export function useSendCallback({
   transactionRequest?: TransactionRequest
   gasFee?: GasFeeResult
 }) {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const signer = useEthersSigner({ chainId: account.chainId })
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     () =>
       trace({ name: 'Send', op: 'send' }, async (trace) => {
-        if (!account || !chainId) throw new Error('wallet must be connect to send')
-        if (!provider) throw new Error('missing provider')
+        if (account.status !== 'connected') throw new Error('wallet must be connected to send')
+        if (!signer) throw new Error('missing signer')
         if (!transactionRequest) throw new Error('missing to transaction to execute')
         if (!currencyAmount) throw new Error('missing currency amount to send')
         if (!recipient) throw new Error('missing recipient')
@@ -38,7 +40,7 @@ export function useSendCallback({
             { name: 'Send transaction', op: 'wallet.send_transaction' },
             async (walletTrace) => {
               try {
-                return await provider.getSigner().sendTransaction({
+                return await signer.sendTransaction({
                   ...transactionRequest,
                   ...gasFee?.params,
                 })
@@ -68,6 +70,6 @@ export function useSendCallback({
           }
         }
       }),
-    [account, addTransaction, chainId, currencyAmount, provider, recipient, transactionRequest, gasFee]
+    [account.status, signer, transactionRequest, currencyAmount, recipient, addTransaction, gasFee?.params]
   )
 }

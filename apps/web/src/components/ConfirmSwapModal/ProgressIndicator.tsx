@@ -10,8 +10,8 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { t } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
-import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
-import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
+import { InterfaceTrade } from 'state/routing/types'
+import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -82,7 +82,7 @@ export default function ProgressIndicator({
   }, [blockConfirmationTime, estimatedTransactionTime])
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
   const swapConfirmed =
     swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
@@ -154,12 +154,10 @@ export default function ProgressIndicator({
         previewTitle: isLimitTrade(trade) ? t`Confirm` : t`Confirm swap`,
         actionRequiredTitle: isLimitTrade(trade) ? t`Confirm in wallet` : t`Confirm swap in wallet`,
         inProgressTitle: isLimitTrade(trade) ? t`Pending...` : t`Swap pending...`,
-        ...(isUniswapXTrade(trade) && trade.offchainOrderType === OffchainOrderType.DUTCH_AUCTION
-          ? {
-              timeToStart: trade.asDutchOrderTrade().order.info.deadline - Math.floor(Date.now() / 1000),
-              delayedStartTitle: t`Confirmation timed out. Please retry.`,
-            }
-          : {}),
+        ...(isUniswapXSwapTrade(trade) && {
+          timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
+          delayedStartTitle: t`Confirmation timed out. Please retry.`,
+        }),
         learnMoreLinkText: isLimitTrade(trade) ? t`Learn more about limits` : t`Learn more about swaps`,
         learnMoreLinkHref: isLimitTrade(trade)
           ? SupportArticleURL.LEARN_ABOUT_LIMITS

@@ -4,9 +4,10 @@ import renderer, { act } from 'react-test-renderer'
 import * as appHooks from 'src/app/hooks'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
-import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
+import { AuthMethod } from 'src/features/telemetry/utils'
 import * as versionUtils from 'src/utils/version'
 import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
+import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import * as fiatCurrencyHooks from 'wallet/src/features/fiatCurrency/hooks'
@@ -101,32 +102,35 @@ describe('TraceUserProperties', () => {
     })
 
     // Check setUserProperty calls with correct values
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppVersion, '1.0.0.345')
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.DarkMode, true)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.ActiveWalletAddress, 'address')
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppVersion, '1.0.0.345')
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.DarkMode, true)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.ActiveWalletAddress, 'address')
     expect(mocked).toHaveBeenCalledWith(
-      UserPropertyName.ActiveWalletType,
+      MobileUserPropertyName.ActiveWalletType,
       AccountType.SignerMnemonic
     )
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsCloudBackedUp, true)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsPushEnabled, true)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsHideSmallBalancesEnabled, false)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.IsHideSpamTokensEnabled, true)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletViewOnlyCount, 2)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletSignerCount, 3)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletSignerAccounts, [
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsCloudBackedUp, true)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsPushEnabled, true)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsHideSmallBalancesEnabled, false)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.IsHideSpamTokensEnabled, true)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletViewOnlyCount, 2)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletSignerCount, 3)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletSignerAccounts, [
       address1,
       address2,
       address3,
     ])
     expect(mocked).toHaveBeenCalledWith(
-      UserPropertyName.WalletSwapProtectionSetting,
+      MobileUserPropertyName.WalletSwapProtectionSetting,
       SwapProtectionSetting.On
     )
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.FaceId)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.FaceId)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.Language, 'English')
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.Currency, 'USD')
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.FaceId)
+    expect(mocked).toHaveBeenCalledWith(
+      MobileUserPropertyName.TransactionAuthMethod,
+      AuthMethod.FaceId
+    )
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English')
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD')
 
     expect(mocked).toHaveBeenCalledTimes(17)
   })
@@ -161,12 +165,15 @@ describe('TraceUserProperties', () => {
     })
 
     // Check setUserProperty calls with correct values
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppVersion, '1.0.0.345')
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.DarkMode, true)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletViewOnlyCount, 0)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.WalletSignerCount, 0)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.None)
-    expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.None)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppVersion, '1.0.0.345')
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.DarkMode, true)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletViewOnlyCount, 0)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletSignerCount, 0)
+    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.None)
+    expect(mocked).toHaveBeenCalledWith(
+      MobileUserPropertyName.TransactionAuthMethod,
+      AuthMethod.None
+    )
 
     expect(mocked).toHaveBeenCalledTimes(11)
   })

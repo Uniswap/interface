@@ -25,10 +25,11 @@ import {
 import { call, fork, put, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
 import i18n from 'uniswap/src/i18n/i18n'
+import { ChainId } from 'uniswap/src/types/chains'
+import { EthEvent, EthMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
 
 export let wcWeb3Wallet: IWeb3Wallet
 

@@ -1,6 +1,8 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { ProviderRpcError } from '@web3-react/types'
+import { wagmiConfig } from 'components/Web3Provider/wagmi'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { getAccount } from 'wagmi/actions'
 
 // `responseStatus` is only currently supported on certain browsers.
 // see: https://caniuse.com/mdn-api_performanceresourcetiming_responsestatus
@@ -32,6 +34,7 @@ export const beforeSend: Required<ClientOptions>['beforeSend'] = (event: ErrorEv
   }
 
   updateRequestUrl(event)
+  updateConnection(event)
 
   return event
 }
@@ -58,6 +61,25 @@ function updateRequestUrl(event: ErrorEvent) {
     if (event.request.url.endsWith('/')) {
       event.request.url = event.request.url.slice(0, -1)
     }
+  }
+}
+
+function updateConnection(event: ErrorEvent) {
+  const { status, address, connector } = getAccount(wagmiConfig)
+  event.extra = {
+    ...event.extra,
+    connection: {
+      type: connector?.type,
+      name: connector?.name,
+      rdns: connector?.id,
+      address,
+      status,
+    },
+  }
+  event.tags = {
+    ...event.tags,
+    connectionStatus: status,
+    connection: connector?.id ?? connector?.name ?? connector?.type,
   }
 }
 

@@ -1,5 +1,5 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
 import styled from 'styled-components'
 

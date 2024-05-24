@@ -9,6 +9,7 @@ import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { isIFramed } from 'utils/isIFramed'
 import { Connector, useAccount } from 'wagmi'
 
 const OptionCardLeft = styled.div`
@@ -103,9 +104,11 @@ export function Option({
   const isCurrentOptionPending = isConnecting && variables?.connector === connector
   const rightSideDetail = isCurrentOptionPending ? <Loader /> : isRecent ? <RecentBadge /> : null
   const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
+  // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
+  const isDisabled = (isConnecting || isReconnecting) && !isIFramed()
 
   return (
-    <Wrapper disabled={isConnecting || isReconnecting}>
+    <Wrapper disabled={isDisabled}>
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
@@ -113,7 +116,7 @@ export function Option({
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
-          disabled={isConnecting || isReconnecting}
+          disabled={isDisabled}
           onClick={() => connect(connector)}
           selected={isCurrentOptionPending}
           data-testid={`wallet-option-${connector.type}`}

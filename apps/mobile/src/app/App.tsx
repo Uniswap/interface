@@ -2,16 +2,17 @@ import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
+import { MMKVWrapper } from 'apollo3-cache-persist'
 import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { PersistGate } from 'redux-persist/integration/react'
-import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
@@ -19,20 +20,16 @@ import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
 import { persistor, store } from 'src/app/store'
-import Trace from 'src/components/Trace/Trace'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
-// eslint-disable-next-line no-restricted-imports
-import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
+import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
   processWidgetEvents,
   setAccountAddressesUserDefaults,
@@ -53,6 +50,9 @@ import { WALLET_EXPERIMENTS } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigProvider } from 'uniswap/src/features/gating/sdk/statsig'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -61,6 +61,9 @@ import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
+import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+// eslint-disable-next-line no-restricted-imports
+import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
@@ -185,12 +188,19 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
   return <>{children}</>
 }
 
+const MAX_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 25 // 25 MB
+
 // Ensures redux state is available inside usePersistedApolloClient for the custom endpoint
 function AppOuter(): JSX.Element | null {
-  const client = usePersistedApolloClient()
+  const customEndpoint = useAppSelector(selectCustomEndpoint)
+  const client = usePersistedApolloClient({
+    storageWrapper: new MMKVWrapper(new MMKV()),
+    maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
+    customEndpoint,
+  })
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {
-    sendMobileAnalyticsEvent(MobileEventName.PerformanceReport, report)
+    sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 
   if (!client) {

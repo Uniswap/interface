@@ -8,10 +8,10 @@ import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Accordion, Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function ExperimentsModal(): JSX.Element {
   const insets = useDeviceInsets()

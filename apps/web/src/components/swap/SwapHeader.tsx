@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { Trans } from 'i18n'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import styled from 'styled-components'
@@ -42,14 +41,8 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Limits is only available on mainnet for now
-    if (PathnameToTab[pathname] === SwapTab.Limit && chainId !== ChainId.MAINNET) {
-      navigate(`/${SwapTab.Swap}`, { replace: true })
-      return
-    }
-
     setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
-  }, [chainId, navigate, pathname, setCurrentTab])
+  }, [pathname, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -77,16 +70,14 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         >
           <Trans>Swap</Trans>
         </SwapHeaderTabButton>
-        {chainId === ChainId.MAINNET && (
-          <SwapHeaderTabButton
-            $isActive={currentTab === SwapTab.Limit}
-            onClick={() => {
-              onTabClick(SwapTab.Limit)
-            }}
-          >
-            <Trans>Limit</Trans>
-          </SwapHeaderTabButton>
-        )}
+        <SwapHeaderTabButton
+          $isActive={currentTab === SwapTab.Limit}
+          onClick={() => {
+            onTabClick(SwapTab.Limit)
+          }}
+        >
+          <Trans>Limit</Trans>
+        </SwapHeaderTabButton>
         {!isIFramed() && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Send}

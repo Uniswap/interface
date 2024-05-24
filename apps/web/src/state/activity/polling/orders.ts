@@ -2,14 +2,14 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
+import { OffchainOrderType } from 'state/routing/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { OnActivityUpdate } from '../types'
-import { toSerializableReceipt } from '../utils'
+import { OnActivityUpdate, OrderUpdate } from '../types'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -43,7 +43,7 @@ async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`
+    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`
   )
 }
 
@@ -76,19 +76,25 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           const updatedOrder = statuses.find((order) => order.orderHash === pendingOrder.orderHash)
           if (!updatedOrder) return
 
-          const swapInfo = { ...pendingOrder.swapInfo }
-          let receipt = undefined
-          if (updatedOrder?.orderStatus === UniswapXOrderStatus.FILLED) {
+          const update: OrderUpdate['update'] = {
+            ...(updatedOrder.orderStatus === UniswapXOrderStatus.FILLED
+              ? {
+                  status: updatedOrder.orderStatus,
+                  txHash: updatedOrder.txHash,
+                }
+              : {
+                  status: updatedOrder.orderStatus,
+                  txHash: undefined,
+                }),
+            swapInfo: { ...pendingOrder.swapInfo },
+          }
+          if (updatedOrder.orderStatus === UniswapXOrderStatus.FILLED) {
             // Update the order to contain the settled/on-chain output amount
             if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
-              const exactInputSwapInfo = swapInfo as ExactInputSwapTransactionInfo
+              const exactInputSwapInfo = update.swapInfo as ExactInputSwapTransactionInfo
               exactInputSwapInfo.settledOutputCurrencyAmountRaw = updatedOrder.settledAmounts?.[0]?.amountOut
             } else if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_OUTPUT) {
               // TODO(WEB-3962): Handle settled EXACT_OUTPUT amounts
-            }
-
-            if (provider) {
-              receipt = toSerializableReceipt(await provider?.getTransactionReceipt(updatedOrder.txHash))
             }
           }
 
@@ -96,11 +102,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
             type: 'signature',
             chainId: pendingOrder.chainId,
             original: pendingOrder,
-            update: {
-              status: updatedOrder.orderStatus,
-              swapInfo,
-            },
-            receipt,
+            update,
           })
         })
       } catch (e) {

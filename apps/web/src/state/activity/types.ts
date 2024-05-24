@@ -1,22 +1,24 @@
 import { SupportedInterfaceChainId } from 'constants/chains'
-import { SignatureDetails } from 'state/signatures/types'
-import { SerializableTransactionReceipt, TransactionDetails } from '../transactions/types'
+import { FilledUniswapXOrderDetails, SignatureDetails, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
+import { ConfirmedTransactionDetails, TransactionDetails } from '../transactions/types'
 
 interface BaseUpdate<T> {
   type: string
   chainId: SupportedInterfaceChainId
   original: T
-  update?: Partial<T>
-  receipt?: SerializableTransactionReceipt
+  update: Partial<T>
 }
 
 export interface TransactionUpdate extends BaseUpdate<TransactionDetails> {
   type: 'transaction'
-  receipt: SerializableTransactionReceipt
+  update: Required<Pick<ConfirmedTransactionDetails, 'status' | 'info'>>
 }
 
-interface OrderUpdate extends BaseUpdate<SignatureDetails> {
+export interface OrderUpdate extends BaseUpdate<SignatureDetails> {
   type: 'signature'
+  update:
+    | Pick<UnfilledUniswapXOrderDetails, 'swapInfo' | 'status'>
+    | Pick<FilledUniswapXOrderDetails, 'swapInfo' | 'status' | 'txHash'>
 }
 
 export type ActivityUpdate = TransactionUpdate | OrderUpdate

@@ -10,6 +10,8 @@ const DEFAULT_METATAGS: MetaTagInjectorInput = {
   url: 'https://app.uniswap.com',
 }
 
+type MetatagAttributes = { property?: string; name?: string; content: string }
+
 /**
  * Metatags are already injected server-side for SEO/crawlers. We also want
  * to dynamically update metatags as user navigates. (Safari's native share
@@ -17,28 +19,28 @@ const DEFAULT_METATAGS: MetaTagInjectorInput = {
  *
  * See `functions/README.md` for more info.
  */
-export function useMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
-  const [metaTagAttributes, setMetaTagAttributes] = useState<{ attribute: string; content: string }[]>([])
+export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
+  const [metaTagAttributes, setMetaTagAttributes] = useState<MetatagAttributes[]>([])
   const location = useLocation()
   useEffect(() => {
     metaTags.url = window.location.href
-    const attributes = [
-      { attribute: 'property="og:title"', content: metaTags.title },
-      { attribute: 'property="og:url"', content: metaTags.url },
-      { attribute: 'property="twitter:title"', content: metaTags.title },
+    const attributes: MetatagAttributes[] = [
+      { property: 'og:title', content: metaTags.title },
+      { property: 'og:url', content: metaTags.url },
+      { property: 'twitter:title', content: metaTags.title },
     ]
     if (metaTags.description) {
       attributes.push(
-        { attribute: 'property="og:description"', content: metaTags.description },
-        { attribute: 'name="description"', content: metaTags.description }
+        { property: 'og:description', content: metaTags.description },
+        { name: 'description', content: metaTags.description }
       )
     }
     if (metaTags.image) {
       attributes.push(
-        { attribute: 'property="og:image"', content: metaTags.image },
-        { attribute: 'property="og:image:alt"', content: metaTags.title },
-        { attribute: 'property="twitter:image"', content: metaTags.image },
-        { attribute: 'property="twitter:image:alt"', content: metaTags.title }
+        { property: 'og:image', content: metaTags.image },
+        { property: 'og:image:alt', content: metaTags.title },
+        { property: 'twitter:image', content: metaTags.image },
+        { property: 'twitter:image:alt', content: metaTags.title }
       )
     }
     setMetaTagAttributes(attributes)

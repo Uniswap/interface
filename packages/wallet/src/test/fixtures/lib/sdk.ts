@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 
 export const ETH = new Token(
   ChainId.Mainnet,

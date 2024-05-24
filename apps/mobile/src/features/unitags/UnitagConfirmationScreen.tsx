@@ -15,10 +15,10 @@ import {
   SwapElement,
   TextElement,
 } from 'src/screens/Onboarding/OnboardingElements'
-import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { AnimatePresence, Button, Flex, Text, useDeviceDimensions, useDeviceInsets } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { spacing } from 'ui/src/theme'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export function UnitagConfirmationScreen({
@@ -32,7 +32,7 @@ export function UnitagConfirmationScreen({
   const boxWidth = dimensions.fullWidth - insets.left - insets.right - spacing.spacing32
 
   const onPressCustomize = (): void => {
-    navigate(Screens.UnitagStack, {
+    navigate(MobileScreens.UnitagStack, {
       screen: UnitagScreens.EditProfile,
       params: {
         address,
@@ -43,7 +43,7 @@ export function UnitagConfirmationScreen({
   }
 
   const onPressDone = (): void => {
-    navigate(Screens.Home)
+    navigate(MobileScreens.Home)
   }
 
   const elementsToAnimate = useMemo(
