@@ -11300,15 +11300,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/rebass@npm:4.0.7":
-  version: 4.0.7
-  resolution: "@types/rebass@npm:4.0.7"
+"@types/rebass@npm:4.0.14":
+  version: 4.0.14
+  resolution: "@types/rebass@npm:4.0.14"
   dependencies:
     "@types/react": "*"
     "@types/styled-components": "*"
     "@types/styled-system": "*"
     "@types/styled-system__css": "*"
-  checksum: cb2fc75787fe9d053f5a8bafbce6e91a29f841482ae92aa9ea75bf9d00f0430934803e38e68d22c7c8cd56f65a1de26f70ea719ea46e061743b516a4e5cae7b6
+  checksum: f08d835f9aef56c62d85a22d0508ba9360ee101605dbe78e52aaeaaf1b7f863afad29832fa7f15f77c59359a6a1ddd490f8f3ba3843c55575415d7b7c5c8ff6e
   languageName: node
   linkType: hard
 
@@ -12212,7 +12212,7 @@ __metadata:
     "@types/react-virtualized-auto-sizer": 1.0.0
     "@types/react-window": 1.8.2
     "@types/react-window-infinite-loader": 1.0.6
-    "@types/rebass": 4.0.7
+    "@types/rebass": 4.0.14
     "@types/styled-components": 5.1.25
     "@types/testing-library__cypress": 5.0.13
     "@types/uuid": 9.0.1

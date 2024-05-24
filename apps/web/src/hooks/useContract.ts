@@ -6,7 +6,9 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  UBE_ADDRESSES,
   UBE_CONVERT_ADDRESSES,
+  UBE_ROMULUS_ADDRESSES,
   V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
 } from '@ubeswap/sdk-core'
@@ -28,6 +30,7 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
+import UBE_ROMULUS_ABI from 'uniswap/src/abis/romulus-delegate.json'
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
@@ -35,12 +38,15 @@ import {
   Erc1155,
   Erc20,
   Erc721,
+  RomulusDelegate,
   UbeConvert,
+  UbeToken,
   Weth,
 } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
+import UBE_TOKEN_ABI from 'uniswap/src/abis/ube-token.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
 
@@ -181,4 +187,12 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
 
 export function useUbeConvertContract() {
   return useContract<UbeConvert>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
+}
+
+export function useUbeTokenContract() {
+  return useContract<UbeToken>(UBE_ADDRESSES, UBE_TOKEN_ABI, true)
+}
+
+export function useRomulusDelegateContract() {
+  return useContract<RomulusDelegate>(UBE_ROMULUS_ADDRESSES, UBE_ROMULUS_ABI, true)
 }

@@ -189,3 +189,11 @@ export const UNIVERSAL_ROUTER_ADDRESS = (chainId: number) => {
 export const UBE_CONVERT_ADDRESSES: AddressMap = {
   [ChainId.CELO]: '0x9DFc135e0984Fe88aCd45d68e62a73E98Dbb7A36',
 }
+
+export const UBE_ROMULUS_ADDRESSES: AddressMap = {
+  [ChainId.CELO]: '0xD355A00220FbA16b69Cd8C4fbE16E02CA855f928',
+}
+
+export const UBE_VOTABLE_STAKE_ADDRESSES: AddressMap = {
+  [ChainId.CELO]: '0x388D611A57Ac15dCC1B937f287E5E908Ba5ff5c9',
+}
