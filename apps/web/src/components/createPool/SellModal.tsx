@@ -6,6 +6,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { PoolInfo, useDerivedPoolInfo } from '../../state/buy/hooks'
 import { usePoolExtendedContract } from '../../state/pool/hooks'
@@ -54,7 +55,7 @@ export default function SellModal({
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   const wrappedOnDismiss = useCallback(() => {
     setHash(undefined)

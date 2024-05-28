@@ -8,11 +8,8 @@ import { connect } from 'wagmi/actions'
 import {
   arbitrum,
   arbitrumGoerli,
-  avalanche,
   base,
-  blast,
   bsc,
-  celo,
   celoAlfajores,
   goerli,
   mainnet,
@@ -32,16 +29,13 @@ const CHAIN_ID_TO_VIEM_CHAIN: Record<SupportedInterfaceChainId, Chain> = {
   [ChainId.SEPOLIA]: sepolia,
   [ChainId.POLYGON]: polygon,
   [ChainId.POLYGON_MUMBAI]: polygonMumbai,
-  [ChainId.CELO]: celo,
   [ChainId.CELO_ALFAJORES]: celoAlfajores,
   [ChainId.ARBITRUM_ONE]: arbitrum,
   [ChainId.ARBITRUM_GOERLI]: arbitrumGoerli,
   [ChainId.OPTIMISM]: optimism,
   [ChainId.OPTIMISM_GOERLI]: optimismGoerli,
   [ChainId.BNB]: bsc,
-  [ChainId.AVALANCHE]: avalanche,
   [ChainId.BASE]: base,
-  [ChainId.BLAST]: blast,
 } as const
 
 /** Converts a Chain to use our public RPC URL instead of the default wagmi URL. */

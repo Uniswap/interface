@@ -235,12 +235,12 @@ function AddLiquidity() {
   const isRbPool = true
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined,
     isRbPool
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined,
     isRbPool
   )
 

@@ -1,5 +1,5 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trace } from 'analytics'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'

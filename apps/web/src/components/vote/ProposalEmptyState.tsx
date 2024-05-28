@@ -37,7 +37,7 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 )
 
 export default function ProposalEmptyState() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   if (
     (chainId && chainId === ChainId.MAINNET) ||
     (chainId && chainId === ChainId.GOERLI) ||

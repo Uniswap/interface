@@ -8,6 +8,7 @@ import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 //import { Text } from 'ui/src'
@@ -139,7 +140,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {

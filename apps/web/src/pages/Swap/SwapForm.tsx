@@ -29,7 +29,6 @@ import { Interface } from 'ethers/lib/utils'
 import { useCurrency } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 //import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { /*usePermit2Allowance,*/ AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -47,12 +46,7 @@ import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import {
-  queryParametersToCurrencyState,
-  useSwapActionHandlers,
-  useSwapAndLimitContext,
-  useSwapContext,
-} from 'state/swap/hooks'
+import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -199,10 +193,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
 
+  const account = useAccount()
+
   // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
   const operatedPools: Token[] | undefined = useMemo(() => {
-    if (!account || !chainId || !results || !poolAddresses) return
-    const mockToken = new Token(0, account, 1)
+    if (!account.address || !chainId || !results || !poolAddresses) return
+    const mockToken = new Token(0, account.address, 1)
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
@@ -213,13 +209,13 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         const { name, symbol, decimals, owner } = pools[0]
         if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
         //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
-        const isPoolOperator = owner === account
+        const isPoolOperator = owner === account.address
         if (!isPoolOperator) return mockToken
         return new Token(chainId, poolAddress, decimals, symbol, name)
       })
       .filter((p) => p !== mockToken)
-    //.filter((p) => account === owner)
-  }, [account, chainId, poolAddresses, results])
+    //.filter((p) => account.address === owner)
+  }, [account.address, chainId, poolAddresses, results])
 
   const defaultPool = useMemo(() => {
     if (!operatedPools) return

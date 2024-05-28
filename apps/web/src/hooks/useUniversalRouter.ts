@@ -84,7 +84,7 @@ export function useUniversalRouterSwapCallback(
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
             fee: options.feeOptions,
-            recipient: account,
+            recipient: account.address,
           })
           const tx = {
             from: account.address,

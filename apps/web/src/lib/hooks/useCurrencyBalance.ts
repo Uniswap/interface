@@ -1,6 +1,5 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useInterfaceMulticall, useTokenContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
@@ -9,6 +8,8 @@ import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { useChainId } from 'wagmi'
 
 import { isAddress } from 'utilities/src/addresses'
+import { nativeOnChain } from '../../constants/tokens'
+import { useInterfaceMulticall, useTokenContract } from '../../hooks/useContract'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -57,7 +58,7 @@ export function useCurrencyBalancesMultipleAccounts(
 ): {
   [address: string]: CurrencyAmount<Currency> | undefined
 } {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const multicallContract = useInterfaceMulticall()
 
   const validAddressInputs: [string][] = useMemo(

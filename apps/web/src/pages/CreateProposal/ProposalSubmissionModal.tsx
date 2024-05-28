@@ -9,6 +9,7 @@ import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const ProposalSubmissionModal = ({
@@ -25,7 +26,7 @@ export const ProposalSubmissionModal = ({
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>

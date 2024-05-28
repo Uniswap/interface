@@ -9,6 +9,7 @@ import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from '../../components/vote/DelegateModal'
@@ -130,7 +131,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {

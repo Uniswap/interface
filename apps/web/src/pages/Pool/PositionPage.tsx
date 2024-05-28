@@ -593,7 +593,6 @@ function PositionPageContent() {
     currency0ForFeeCollectionPurposes,
     currency1ForFeeCollectionPurposes,
     account.status,
-    account.address,
     account.chainId,
     positionManager,
     smartPoolAddress,

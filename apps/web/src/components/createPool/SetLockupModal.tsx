@@ -6,6 +6,7 @@ import { ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { useSetLockupCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
@@ -55,7 +56,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {

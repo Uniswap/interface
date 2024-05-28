@@ -770,7 +770,7 @@ export function getChainPriority(chainId: ChainId): number {
 }
 
 // TODO: amend when adding UniswapX
-export function isUniswapXSupportedChain(chainId: number) {
+export function isUniswapXSupportedChain(chainId?: number) {
   return chainId === 0
 }
 

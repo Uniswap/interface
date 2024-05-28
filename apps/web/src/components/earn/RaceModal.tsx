@@ -5,6 +5,7 @@ import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
 import { GRG } from '../../constants/tokens'
@@ -57,7 +58,7 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
-  const transactionSuccess = transaction?.receipt?.status === 1
+  const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {
