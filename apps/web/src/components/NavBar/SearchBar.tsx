@@ -23,7 +23,6 @@ import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useSt
 import { useLocation } from 'react-router-dom'
 import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components'
-import { useWeb3React } from 'wagmi'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useChainId } from 'wagmi'
 
