@@ -1,12 +1,11 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -15,10 +14,10 @@ import { CollectionNftsAndMenuLoading } from 'nft/components/collection/Collecti
 import { CollectionPageSkeleton } from 'nft/components/collection/CollectionPageSkeleton'
 import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { BagCloseIcon } from 'nft/components/icons'
-import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
+import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
-import { useMetatags } from 'pages/metatags'
+import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -27,6 +26,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { useChainId } from 'wagmi'
 
 const FILTER_WIDTH = 332
 const EMPTY_TRAIT_OBJ = {}
@@ -134,7 +134,7 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const screenSize = useScreenSize()
 
   const { data: collectionStats, loading } = useCollection(contractAddress as string)
@@ -156,14 +156,15 @@ const Collection = () => {
     },
   })
 
-  const metaTags = useMemo(() => {
+  const metaTagProperties = useMemo(() => {
     return {
       title: collectionStats.name + ' on Uniswap',
       image: window.location.origin + '/api/image/nfts/collection/' + contractAddress,
       url: window.location.href,
+      description: collectionStats.description,
     }
-  }, [collectionStats.name, contractAddress])
-  const metaTagProperties = useMetatags(metaTags)
+  }, [collectionStats.description, collectionStats.name, contractAddress])
+  const metaTags = useDynamicMetatags(metaTagProperties)
 
   useEffect(() => {
     const marketCount: Record<string, number> = {}
@@ -195,12 +196,12 @@ const Collection = () => {
     <>
       <Helmet>
         <title>
-          {t(`Buy, sell & trade {{name}} on Uniswap`, {
+          {t(`{{name}} | Explore and buy on Uniswap`, {
             name: collectionStats.name,
           })}
         </title>
-        {metaTagProperties.map((tag) => (
-          <meta key={tag.property} {...tag} />
+        {metaTags.map((tag, index) => (
+          <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace

@@ -3,10 +3,10 @@ import { SupportedInterfaceChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
-import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, OffchainOrderType } from 'state/routing/types'
+import { OffchainOrderType } from 'state/routing/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { addSignature } from './reducer'
-import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
+import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const { account } = useWeb3React()
@@ -69,8 +69,16 @@ export function useAddOrder() {
   )
 }
 
-export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
-  return orderStatus !== UniswapXOrderStatus.OPEN && orderStatus !== UniswapXOrderStatus.PENDING_CANCELLATION
+export function isFinalizedOrder(order: UniswapXOrderDetails) {
+  if (order.type === SignatureType.SIGN_LIMIT) {
+    return ![
+      UniswapXOrderStatus.OPEN,
+      UniswapXOrderStatus.PENDING_CANCELLATION,
+      UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+    ].includes(order.status)
+  } else {
+    return ![UniswapXOrderStatus.OPEN, UniswapXOrderStatus.PENDING_CANCELLATION].includes(order.status)
+  }
 }
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
@@ -78,10 +86,21 @@ export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
 }
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
-  return (
-    (signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
-      signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
-      signature.type === SignatureType.SIGN_LIMIT) &&
-    [UniswapXOrderStatus.OPEN, UniswapXOrderStatus.PENDING_CANCELLATION].includes(signature.status)
-  )
+  if (signature.type === SignatureType.SIGN_LIMIT) {
+    return [
+      UniswapXOrderStatus.OPEN,
+      UniswapXOrderStatus.PENDING_CANCELLATION,
+      UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+    ].includes(signature.status)
+  } else if (
+    signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
+    signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER
+  ) {
+    return [
+      UniswapXOrderStatus.OPEN,
+      UniswapXOrderStatus.PENDING_CANCELLATION,
+      UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+    ].includes(signature.status)
+  }
+  return false
 }

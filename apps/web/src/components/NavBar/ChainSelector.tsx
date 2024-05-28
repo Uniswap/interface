@@ -1,15 +1,14 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
+import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { getConnection } from 'connection'
-import { ConnectionType } from 'connection/types'
-import { WalletConnectV2 } from 'connection/WalletConnectV2'
+import { CONNECTION } from 'components/Web3Provider/constants'
+import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import {
-  getChainPriority,
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
+  getChainPriority,
   useIsSupportedChainId,
 } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
@@ -19,9 +18,8 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
+import { useAccount, useChainId } from 'wagmi'
 
-import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import ChainSelectorRow from './ChainSelectorRow'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -45,20 +43,24 @@ const styledMobileMenuCss = css`
 `
 
 function useWalletSupportedChains(): ChainId[] {
-  const { connector } = useWeb3React()
-  const connectionType = getConnection(connector).type
+  const { connector } = useAccount()
 
-  switch (connectionType) {
-    case ConnectionType.WALLET_CONNECT_V2:
-    case ConnectionType.UNISWAP_WALLET_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
+  switch (connector?.type) {
+    case CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
+    case CONNECTION.WALLET_CONNECT_CONNECTOR_ID:
+      // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
+      return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
+        ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
+        : NETWORK_SELECTOR_CHAINS
     default:
       return NETWORK_SELECTOR_CHAINS
   }
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const { chainId } = useWeb3React()
+  const disconnectedChainId = useChainId()
+  const account = useAccount()
+  const chainId = account?.chainId ?? disconnectedChainId
   const isSupportedChain = useIsSupportedChainId(chainId)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 

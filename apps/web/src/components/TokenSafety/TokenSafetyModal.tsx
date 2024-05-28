@@ -7,8 +7,8 @@ interface TokenSafetyModalProps extends TokenSafetyProps {
 
 export default function TokenSafetyModal({
   isOpen,
-  tokenAddress,
-  secondTokenAddress,
+  token0,
+  token1,
   onContinue,
   onCancel,
   onBlocked,
@@ -17,8 +17,8 @@ export default function TokenSafetyModal({
   return (
     <Modal isOpen={isOpen} onDismiss={onCancel}>
       <TokenSafety
-        tokenAddress={tokenAddress}
-        secondTokenAddress={secondTokenAddress}
+        token0={token0}
+        token1={token1}
         onContinue={onContinue}
         onBlocked={onBlocked}
         onCancel={onCancel}

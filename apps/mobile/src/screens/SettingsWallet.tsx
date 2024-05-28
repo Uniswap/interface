@@ -25,19 +25,19 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { ChainId } from 'uniswap/src/types/chains'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import {
   EditAccountAction,
@@ -45,9 +45,8 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
+type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWallet>
 
 // Specific design request not in standard sizing type
 const UNICON_ICON_SIZE = 56
@@ -95,7 +94,7 @@ export function SettingsWallet({
   )
 
   const onChangeNotificationSettings = (enabled: boolean): void => {
-    sendMobileAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
+    sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
     if (notificationOSPermission === NotificationPermission.Enabled) {
       dispatch(
         editAccountActions.trigger({
@@ -129,7 +128,7 @@ export function SettingsWallet({
   }
 
   const editNicknameSectionOption: SettingsSectionItem = {
-    screen: Screens.SettingsWalletEdit,
+    screen: MobileScreens.SettingsWalletEdit,
     text: t('settings.setting.wallet.label'),
     icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
     screenProps: { address },
@@ -153,7 +152,7 @@ export function SettingsWallet({
           icon: <NotificationIcon {...iconProps} />,
         },
         {
-          screen: Screens.SettingsWalletManageConnection,
+          screen: MobileScreens.SettingsWalletManageConnection,
           text: t('settings.setting.wallet.connections.title'),
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
@@ -238,16 +237,16 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
 
   const onPressEditProfile = (): void => {
     if (unitag?.username) {
-      navigate(Screens.UnitagStack, {
+      navigate(MobileScreens.UnitagStack, {
         screen: UnitagScreens.EditProfile,
         params: {
           address,
           unitag: unitag.username,
-          entryPoint: Screens.SettingsWallet,
+          entryPoint: MobileScreens.SettingsWallet,
         },
       })
     } else {
-      navigate(Screens.SettingsWalletEdit, {
+      navigate(MobileScreens.SettingsWalletEdit, {
         address,
       })
     }

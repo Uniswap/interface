@@ -1,4 +1,4 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { token } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'

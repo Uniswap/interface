@@ -28,9 +28,7 @@ module.exports = function (api) {
     // TypeScript compiles this, but in production builds, metro doesn't use tsc
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these
-    '@babel/plugin-proposal-numeric-separator',
-    // automatically require React when using JSX
-    'react-require',
+    '@babel/plugin-proposal-numeric-separator'
   ]
 
   if (inProduction) {
@@ -39,7 +37,7 @@ module.exports = function (api) {
   }
 
   return {
-    presets: ['module:metro-react-native-babel-preset'],
+    presets: ['module:@react-native/babel-preset'],
     plugins,
   }
 }

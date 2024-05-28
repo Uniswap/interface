@@ -3,10 +3,10 @@ import { StyleSheet } from 'react-native'
 import { Flex } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { DappInfo } from 'uniswap/src/types/walletConnect'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
 export function DappHeaderIcon({
   dapp,

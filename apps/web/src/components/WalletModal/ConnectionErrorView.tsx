@@ -1,7 +1,7 @@
-import { useCloseAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
-import { ActivationStatus, useActivationState } from 'connection/activate'
+import { useConnectWithLogs } from 'connection/activate'
 import { Trans } from 'i18n'
+import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -23,13 +23,23 @@ const AlertTriangleIcon = styled(AlertTriangle)`
 `
 
 // TODO(cartcrom): move this to a top level modal, rather than inline in the drawer
-export default function ConnectionErrorView() {
-  const { activationState, tryActivation, cancelActivation } = useActivationState()
-  const closeDrawer = useCloseAccountDrawer()
+export default function ConnectionErrorView({
+  connectWithLogs,
+}: {
+  connectWithLogs: ReturnType<typeof useConnectWithLogs>
+}) {
+  const { variables, connect, reset } = connectWithLogs
+  const connector = variables?.connector
+  const retry = useCallback(() => {
+    if (!connector) return
 
-  if (activationState.status !== ActivationStatus.ERROR) return null
+    if (typeof connector === 'function') {
+      console.warn('a createConnectorFn was passed to the connect() function, rather than a Connector instance')
+      return
+    }
 
-  const retry = () => tryActivation(activationState.connection, closeDrawer)
+    connect(connector)
+  }, [connector, connect])
 
   return (
     <Wrapper>
@@ -46,7 +56,7 @@ export default function ConnectionErrorView() {
         <Trans>Try again</Trans>
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-        <ThemedText.Link onClick={cancelActivation} marginBottom={12}>
+        <ThemedText.Link onClick={reset} marginBottom={12}>
           <Trans>Back to wallet selection</Trans>
         </ThemedText.Link>
       </ButtonEmpty>

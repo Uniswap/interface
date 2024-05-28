@@ -8,21 +8,47 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import ENSAvatarIcon from './ENSAvatarIcon'
 
-export default function Identicon({ account, size }: { account?: string; size: number }) {
+export enum IdenticonType {
+  LOADING = 'loading',
+  UNITAG_PROFILE_PICTURE = 'unitagProfilePicture',
+  ENS_AVATAR = 'ensAvatar',
+  UNICON = 'unicon',
+  UNICON_V2 = 'uniconV2',
+}
+
+export function useIdenticonType(account?: string) {
   const { unitag, loading: unitagLoading } = useUnitagByAddress(account)
   const { avatar, loading: ensAvatarLoading } = useENSAvatar(account)
   const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
-  if (!account) return null
+  if (!account) return undefined
   if (unitagLoading || ensAvatarLoading) {
-    return <Loader data-testid="IdenticonLoader" size={size + 'px'} />
-  }
-
-  if (unitag?.metadata?.avatar) {
-    return <UniTagProfilePicture account={account} size={size} />
+    return IdenticonType.LOADING
+  } else if (unitag?.metadata?.avatar) {
+    return IdenticonType.UNITAG_PROFILE_PICTURE
   } else if (avatar) {
-    return <ENSAvatarIcon account={account} size={size} />
+    return IdenticonType.ENS_AVATAR
   } else {
-    return uniconV2Enabled ? <UniconV2 address={account} size={size} /> : <Unicon address={account} size={size} />
+    return uniconV2Enabled ? IdenticonType.UNICON_V2 : IdenticonType.UNICON
+  }
+}
+
+export default function Identicon({ account, size }: { account?: string; size: number }) {
+  const identiconType = useIdenticonType(account)
+  if (!account) return null
+
+  switch (identiconType) {
+    case IdenticonType.LOADING:
+      return <Loader data-testid="IdenticonLoader" size={size + 'px'} />
+    case IdenticonType.UNITAG_PROFILE_PICTURE:
+      return <UniTagProfilePicture account={account} size={size} />
+    case IdenticonType.ENS_AVATAR:
+      return <ENSAvatarIcon account={account} size={size} />
+    case IdenticonType.UNICON_V2:
+      return <UniconV2 address={account} size={size} />
+    case IdenticonType.UNICON:
+      return <Unicon address={account} size={size} />
+    default:
+      return null
   }
 }

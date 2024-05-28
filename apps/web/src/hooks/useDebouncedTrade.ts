@@ -1,5 +1,4 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -10,6 +9,7 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useChainId } from 'wagmi'
 import useAutoRouterSupported from './useAutoRouterSupported'
 import useDebounce from './useDebounce'
 
@@ -67,7 +67,7 @@ export function useDebouncedTrade(
   method?: QuoteMethod
   swapQuoteLatency?: number
 } {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const autoRouterSupported = useAutoRouterSupported()
 
   const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(

@@ -277,7 +277,7 @@ interface BagFooterProps {
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const theme = useTheme()
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
@@ -366,7 +366,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
     if (connected && chainId !== ChainId.MAINNET) {
-      const handleClick = () => switchChain(connector, ChainId.MAINNET)
+      const handleClick = () => switchChain(ChainId.MAINNET)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 
@@ -451,7 +451,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     theme,
     fetchAssets,
     switchChain,
-    connector,
     toggleWalletDrawer,
     setBagExpanded,
   ])

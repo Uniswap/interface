@@ -1,9 +1,9 @@
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
@@ -40,7 +40,7 @@ interface QueueModalProps {
 }
 
 export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModalProps) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const queueCallback = useQueueCallback()
 
   // monitor call to help UI loading state

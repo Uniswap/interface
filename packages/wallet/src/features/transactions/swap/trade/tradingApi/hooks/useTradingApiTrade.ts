@@ -8,7 +8,6 @@ import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
-  RoutingPreference,
   QuoteRequest as TradingApiQuoteRequest,
   QuoteResponse as TradingApiQuoteResponse,
   TradeType as TradingApiTradeType,
@@ -16,6 +15,7 @@ import {
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
+  getRoutingPreferenceForSwapRequest,
   getTokenAddressForApiRequest,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
@@ -51,6 +51,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     customSlippageTolerance,
     isUSDQuote,
     skip,
+    tradeProtocolPreference,
   } = args
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -77,6 +78,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApiRequest(currencyIn)
   const tokenOutAddress = getTokenAddressForApiRequest(currencyOut)
+
+  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference)
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT
@@ -106,7 +109,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
       includeGasInfo: true,
-      routingPreference: RoutingPreference.CLASSIC,
+      routingPreference,
       deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS),
     }
   }, [
@@ -114,6 +117,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     amount,
     customSlippageTolerance,
     requestTradeType,
+    routingPreference,
     skipQuery,
     tokenInAddress,
     tokenInChainId,

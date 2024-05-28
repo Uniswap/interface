@@ -23,7 +23,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       cacheUrl,
       () => getCollection(collectionAddress, cacheUrl),
       (data): data is NonNullable<Awaited<ReturnType<typeof getCollection>>> =>
-        Boolean(data.ogImage && data.name && data.isVerified)
+        Boolean(data.ogImage && data.name && data.nftCollectionData?.isVerified)
     )
 
     if (!data) {
@@ -33,7 +33,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage)])
 
     // Split name into words to wrap them since satori does not support inline text wrapping
-    const words = data.name.split(' ')
+    const words = data.name?.split(' ')
 
     return new ImageResponse(
       (
@@ -92,10 +92,8 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                     flexWrap: 'wrap',
                   }}
                 >
-                  {words.map((word: string) => (
-                    <text key={word + index}>{word}</text>
-                  ))}
-                  {data.isVerified && <img src={CHECK_URL} height="54px" />}
+                  {words && words.map((word: string) => <text key={word + index}>{word}</text>)}
+                  {data.nftCollectionData?.isVerified && <img src={CHECK_URL} height="54px" />}
                 </div>
                 <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
               </div>

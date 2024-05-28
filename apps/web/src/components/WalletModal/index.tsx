@@ -1,21 +1,17 @@
-import { useWeb3React } from '@web3-react/core'
 import IconButton from 'components/AccountDrawer/IconButton'
-import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useCloseAccountDrawer, useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
-import { networkConnection } from 'connection'
-import { ActivationStatus, useActivationState } from 'connection/activate'
-import { useIsSupportedChainId } from 'constants/chains'
+import { useConnectWithLogs } from 'connection/activate'
 import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
 import { Trans } from 'i18n'
-import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 import ConnectionErrorView from './ConnectionErrorView'
-import { DeprecatedInjectorMessage } from './Option'
+import { Option } from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
 import { UniswapWalletOptions } from './UniswapWalletOptions'
 import { useOrderedConnections } from './useOrderedConnections'
@@ -51,20 +47,14 @@ const Line = styled.div`
 `
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
-  const { connector, chainId } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
   const showMoonpayText = useShowMoonpayText()
 
-  const { activationState } = useActivationState()
-  // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
-  useEffect(() => {
-    if (chainId && isSupportedChain && connector !== networkConnection.connector) {
-      networkConnection.connector.activate(chainId)
-    }
-  }, [chainId, connector, isSupportedChain])
+  const closeAccountDrawer = useCloseAccountDrawer()
+  const connectWithLogs = useConnectWithLogs(closeAccountDrawer)
+  const { error } = connectWithLogs
 
   const showUniswapWalletOptions = useUniswapWalletOptions()
-  const { orderedConnections, showDeprecatedMessage } = useOrderedConnections(!!showUniswapWalletOptions)
+  const connectors = useOrderedConnections(showUniswapWalletOptions)
 
   return (
     <Wrapper data-testid="wallet-modal">
@@ -74,7 +64,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
       </AutoRow>
       {showUniswapWalletOptions && (
         <>
-          <UniswapWalletOptions />
+          <UniswapWalletOptions connectWithLogs={connectWithLogs} />
           <Row align="center" padding="8px 0px">
             <Line />
             <Text variant="body3" color="$neutral2" mx={18} whiteSpace="nowrap">
@@ -84,18 +74,17 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
           </Row>
         </>
       )}
-      {activationState.status === ActivationStatus.ERROR ? (
-        <ConnectionErrorView />
+      {error ? (
+        <ConnectionErrorView connectWithLogs={connectWithLogs} />
       ) : (
         <Column gap="md" flex="1">
           <Row flex="1" align="flex-start">
-            <OptionGrid data-testid="option-grid">{orderedConnections}</OptionGrid>
+            <OptionGrid data-testid="option-grid">
+              {connectors.map((c) => (
+                <Option connector={c} key={c.uid} connectWithLogs={connectWithLogs} />
+              ))}
+            </OptionGrid>
           </Row>
-          {showDeprecatedMessage && (
-            <TextSectionWrapper>
-              <DeprecatedInjectorMessage />
-            </TextSectionWrapper>
-          )}
           <Column gap="md">
             <TextSectionWrapper>
               <PrivacyPolicyNotice />

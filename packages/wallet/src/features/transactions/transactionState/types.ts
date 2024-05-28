@@ -5,6 +5,12 @@ export enum CurrencyField {
   OUTPUT = 'output',
 }
 
+export enum TradeProtocolPreference {
+  Default = 'Default',
+  V2Only = 'V2Only',
+  V3Only = 'V3Only',
+}
+
 export interface TransactionState {
   txId?: string
   [CurrencyField.INPUT]: TradeableAsset | null
@@ -18,4 +24,5 @@ export interface TransactionState {
   selectingCurrencyField?: CurrencyField
   showRecipientSelector?: boolean
   customSlippageTolerance?: number
+  tradeProtocolPreference?: TradeProtocolPreference
 }

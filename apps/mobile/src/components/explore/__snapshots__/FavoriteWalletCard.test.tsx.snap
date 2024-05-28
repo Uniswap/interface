@@ -2,14 +2,14 @@
 
 exports[`FavoriteWalletCard renders without error 1`] = `
 <View
-  animatedStyle={
+  collapsable={false}
+  jestAnimatedStyle={
     {
       "value": {
         "opacity": 1,
       },
     }
   }
-  collapsable={false}
   style={
     {
       "flexDirection": "column",
@@ -336,18 +336,18 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             </View>
           </View>
           <View
-            animatedStyle={
+            cancelable={true}
+            collapsable={false}
+            disabled={false}
+            focusable={true}
+            hitSlop={[Function]}
+            jestAnimatedStyle={
               {
                 "value": {
                   "opacity": 0,
                 },
               }
             }
-            cancelable={true}
-            collapsable={false}
-            disabled={false}
-            focusable={true}
-            hitSlop={[Function]}
             minPressDuration={0}
             onBlur={[Function]}
             onFocus={[Function]}

@@ -1,4 +1,4 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 describe(getExplorerLink, () => {

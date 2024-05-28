@@ -31,6 +31,8 @@ jest.mock('@sentry/react-native', () => ({
 // Disables animated driver warning
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
+jest.mock('@walletconnect/react-native-compat', () => ({}))
+
 jest.mock('src/lib/RNEthersRs')
 
 // Mock OneSignal package

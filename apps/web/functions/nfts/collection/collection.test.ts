@@ -22,6 +22,7 @@ test.each([...collections])('should inject metadata for collections', async (col
   expect(body).toMatchSnapshot()
   expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
+  expect(body).not.toContain(`<meta name="description"`)
   expect(body).toContain(`<meta property="og:image" content="${collection.image}" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:width" content="1200" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)

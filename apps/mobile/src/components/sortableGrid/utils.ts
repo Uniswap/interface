@@ -1,4 +1,15 @@
-import { FlatList, ScrollView } from 'react-native'
+import { Vector } from 'src/components/sortableGrid/types'
+
+export const areArraysDifferent = <T>(
+  arr1: T[],
+  arr2: T[],
+  areEqual = (a: T, b: T): boolean => a === b
+): boolean => {
+  'worklet'
+  return (
+    arr1.length !== arr2.length || arr1.some((item, index) => !areEqual(item, arr2[index] as T))
+  )
+}
 
 const hasProp = <O extends object, P extends string>(
   object: O,
@@ -24,6 +35,42 @@ export const defaultKeyExtractor = <I>(item: I, index: number): string => {
   return String(index)
 }
 
-export const isScrollView = (scrollable: ScrollView | FlatList): scrollable is ScrollView => {
-  return 'scrollTo' in scrollable
+export const getRowIndex = (index: number, numColumns: number): number => {
+  'worklet'
+  return Math.floor(index / numColumns)
+}
+
+export const getColumnIndex = (index: number, numColumns: number): number => {
+  'worklet'
+  return index % numColumns
+}
+
+export const getItemsInColumnCount = (
+  index: number,
+  numColumns: number,
+  itemsCount: number
+): number => {
+  'worklet'
+  const columnIndex = getColumnIndex(index, numColumns)
+  return Math.floor(itemsCount / numColumns) + (columnIndex < itemsCount % numColumns ? 1 : 0)
+}
+
+export const getItemZIndex = (
+  isActive: boolean,
+  pressProgress: number,
+  position: Vector,
+  targetPosition?: Vector
+): number => {
+  'worklet'
+  if (isActive) {
+    return 3
+  }
+  if (pressProgress > 0) {
+    return 2
+  }
+  // If the item is being re-ordered but is not dragged
+  if (targetPosition && (position.x !== targetPosition.x || position.y !== targetPosition.y)) {
+    return 1
+  }
+  return 0
 }

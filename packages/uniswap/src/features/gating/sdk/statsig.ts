@@ -4,6 +4,9 @@ const statsigContext = StatsigContext
 
 export {
   DynamicConfig,
+  StatsigOptions,
+  StatsigOverrides,
+  StatsigProvider,
   useConfig,
   useExperiment,
   useExperimentWithExposureLoggingDisabled,

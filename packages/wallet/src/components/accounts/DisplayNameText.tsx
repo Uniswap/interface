@@ -26,7 +26,7 @@ export function DisplayNameText({
       <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} numberOfLines={1}>
         {name}
         {isUnitag && includeUnitagSuffix && (
-          <Text {...textProps} color="$neutral3" flexShrink={1} numberOfLines={1}>
+          <Text {...textProps} color="$neutral2" flexShrink={1} numberOfLines={1}>
             {UNITAG_SUFFIX}
           </Text>
         )}

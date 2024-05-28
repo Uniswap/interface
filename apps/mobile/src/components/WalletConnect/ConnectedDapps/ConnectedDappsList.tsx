@@ -14,8 +14,8 @@ import {
 import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
 import { Edit, Scan } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]

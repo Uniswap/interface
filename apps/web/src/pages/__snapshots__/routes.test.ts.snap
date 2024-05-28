@@ -4,6 +4,7 @@ exports[`Routes router definition should match snapshot 1`] = `
 Array [
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -11,6 +12,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [
@@ -22,6 +24,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -29,6 +32,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -36,6 +40,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -43,6 +48,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -50,6 +56,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -57,6 +64,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -64,6 +72,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -71,6 +80,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -78,6 +88,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -85,6 +96,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -92,6 +104,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -99,6 +112,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -106,6 +120,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -113,6 +128,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -120,6 +136,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -127,6 +144,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -134,6 +152,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -141,6 +160,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -148,6 +168,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -155,6 +176,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [
@@ -165,6 +187,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [
@@ -177,6 +200,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -184,6 +208,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -191,6 +216,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -198,6 +224,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -205,6 +232,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -212,6 +240,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -219,6 +248,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -226,6 +256,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -233,6 +264,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -240,6 +272,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
@@ -247,6 +280,7 @@ Array [
   },
   Object {
     "enabled": [Function],
+    "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],

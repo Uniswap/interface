@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { OnboardingScreens } from 'src/screens/Screens'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 export type Props = NativeStackScreenProps<
   OnboardingStackParamList,

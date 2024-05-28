@@ -1,4 +1,5 @@
 import { isExtension, isInterface } from 'uniswap/src/utils/platform'
+import { logger } from 'utilities/src/logger/logger'
 
 const EXTENSION_ID_DEV = 'chrome-extension://afhngfaoadjjlhbgopehflaabbgfbcmn'
 const EXTENSION_ID_BETA = 'chrome-extension://foilfbjokdonehdajefeadkclfpmhdga'
@@ -10,7 +11,7 @@ export function isDevEnv(): boolean {
   } else if (isExtension) {
     return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV
   } else {
-    return false
+    throw createAndLogError('isProdEnv')
   }
 }
 
@@ -21,7 +22,7 @@ export function isBetaEnv(): boolean {
   } else if (isExtension) {
     return chrome.runtime.id === EXTENSION_ID_BETA
   } else {
-    return false
+    throw createAndLogError('isBetaEnv')
   }
 }
 
@@ -31,6 +32,17 @@ export function isProdEnv(): boolean {
   } else if (isExtension) {
     return chrome.runtime.id === EXTENSION_ID_PROD
   } else {
-    return false
+    throw createAndLogError('isProdEnv')
   }
+}
+
+function createAndLogError(funcName: string): Error {
+  const e = new Error('Unsupported app environment that failed all checks')
+  logger.error(e, {
+    tags: {
+      file: 'uniswap/src/utils/env/index.ts',
+      function: funcName,
+    },
+  })
+  return e
 }

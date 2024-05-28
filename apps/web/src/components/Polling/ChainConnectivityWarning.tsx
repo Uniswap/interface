@@ -1,11 +1,11 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { L2ChainInfo, getChainInfo, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { ExternalLink } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -51,7 +51,7 @@ const Wrapper = styled.div`
 `
 
 export function ChainConnectivityWarning() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const supportedChain = useSupportedChainId(chainId)
   const info = getChainInfo({ chainId: supportedChain, withFallback: true })
   const label = info.label

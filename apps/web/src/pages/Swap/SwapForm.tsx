@@ -8,7 +8,6 @@ import {
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -23,15 +22,12 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
-import { useConnectionReady } from 'connection/eagerlyConnect'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
-import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
@@ -42,14 +38,9 @@ import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import {
-  queryParametersToCurrencyState,
-  useSwapActionHandlers,
-  useSwapAndLimitContext,
-  useSwapContext,
-} from 'state/swap/hooks'
+import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -63,9 +54,11 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import Error from 'components/Icons/Error'
 import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import useSelectChain from 'hooks/useSelectChain'
 import { CurrencyState } from 'state/swap/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useAccount } from 'wagmi'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
@@ -79,8 +72,8 @@ interface SwapFormProps {
 }
 
 export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapFormProps) {
-  const connectionReady = useConnectionReady()
-  const { account, chainId: connectedChainId, connector } = useWeb3React()
+  const { isDisconnected, chainId: connectedChainId } = useAccount()
+
   const trace = useTrace()
 
   const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
@@ -89,14 +82,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const { typedValue, independentField } = swapState
 
   // token warning stuff
-  const parsedQs = useParsedQueryString()
-  const prefilledCurrencies = useMemo(() => {
-    return queryParametersToCurrencyState(parsedQs)
-  }, [parsedQs])
-
-  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.inputCurrencyId, chainId)
-  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.outputCurrencyId, chainId)
-
+  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledState.inputCurrency)
+  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledState.outputCurrency)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
 
@@ -405,11 +392,13 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const handleConfirmDismiss = useCallback(() => {
     setSwapFormState((currentState) => ({ ...currentState, showConfirm: false }))
+    // If swap had a temporary router preference override, we want to reset it
+    setSwapState((state) => ({ ...state, routerPreferenceOverride: undefined }))
     // If there was a swap, we want to clear the input
     if (swapResult) {
       onUserInput(Field.INPUT, '')
     }
-  }, [onUserInput, swapResult])
+  }, [onUserInput, setSwapState, swapResult])
 
   const handleAcceptChanges = useCallback(() => {
     setSwapFormState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
@@ -462,41 +451,20 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   )
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
-  const switchChain = useSwitchChain()
+  const selectChain = useSelectChain()
+
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)
-
-  const [showBannedExtension, setShowBannedExtension] = useState<boolean>(false)
-  useEffect(() => {
-    const isBannedExtension = async () => {
-      let blocked = false
-      const webAccessibleResources = [
-        'chrome-extension://gacgndbocaddlemdiaadajmlggabdeod/ccip.08a1ffae.js', // pocket universe extension
-      ]
-      for (let i = 0; i < webAccessibleResources.length; i++) {
-        if (blocked) {
-          break
-        }
-        try {
-          await fetch(webAccessibleResources[i])
-          // if anything comes back, then the extension is active
-          blocked = true
-        } catch (error) {
-          console.error(error)
-        }
-      }
-      setShowBannedExtension(blocked)
-    }
-    if (window.chrome) isBannedExtension().catch(console.error)
-  }, [])
+  // @ts-ignore
+  const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
   return (
     <>
       <TokenSafetyModal
         isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokenAddress={urlTokensNotInDefault[0]?.address}
-        secondTokenAddress={urlTokensNotInDefault[1]?.address}
+        token0={urlTokensNotInDefault[0]}
+        token1={urlTokensNotInDefault[1]}
         onContinue={handleConfirmTokenWarning}
         onCancel={handleDismissTokenWarning}
         showCancel={true}
@@ -516,6 +484,14 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           allowance={allowance}
           swapError={swapError}
           onDismiss={handleConfirmDismiss}
+          onXV2RetryWithClassic={() => {
+            // Keep swap parameters but re-quote X trade with classic API
+            setSwapState((state) => ({
+              ...state,
+              routerPreferenceOverride: RouterPreference.API,
+            }))
+            handleContinueToReview()
+          }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
         />
@@ -534,7 +510,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
-              label={<Trans>You pay</Trans>}
+              label={<Trans>Sell</Trans>}
               disabled={disableTokenInputs}
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={showMaxButton}
@@ -582,7 +558,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 value={formattedAmounts[Field.OUTPUT]}
                 disabled={disableTokenInputs}
                 onUserInput={handleTypeOutput}
-                label={<Trans>You receive</Trans>}
+                label={<Trans>Buy</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
@@ -621,7 +597,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans>Connecting to {{ label: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '' }}</Trans>
             </ButtonPrimary>
-          ) : connectionReady && !account ? (
+          ) : isDisconnected ? (
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
@@ -637,7 +613,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               $borderRadius="16px"
               onClick={async () => {
                 try {
-                  await switchChain(connector, chainId)
+                  await selectChain(chainId)
                 } catch (error) {
                   if (didUserReject(error)) {
                     // Ignore error, which keeps the user on the previous chain.
@@ -684,7 +660,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={showBannedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
+                disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>
@@ -710,7 +686,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               priceImpact={largerPriceImpact}
             />
           )}
-          {showBannedExtension && <SwapNotice />}
+          {isUsingBlockedExtension && <SwapNotice />}
         </div>
       </AutoColumn>
     </>

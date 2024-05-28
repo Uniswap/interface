@@ -6,9 +6,9 @@ import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -28,7 +28,7 @@ type Props = {
   onErrorPress: () => void
   navigation:
     | NativeStackNavigationProp<OnboardingStackParamList, OnboardingScreens.BackupCloudProcessing>
-    | NativeStackNavigationProp<SettingsStackParamList, Screens.SettingsCloudBackupProcessing>
+    | NativeStackNavigationProp<SettingsStackParamList, MobileScreens.SettingsCloudBackupProcessing>
 }
 
 /** Screen to perform secure recovery phrase backup to Cloud  */

@@ -6,9 +6,10 @@ import {
   TwoDecimalsCurrency,
 } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 
 function getFormatterRule(input: number, type: NumberType): FormatterRule {
-  const rules = TYPE_TO_FORMATTER_RULES[type]
+  const { rules, defaultFormat } = TYPE_TO_FORMATTER_RULES[type]
   for (const rule of rules) {
     if (
       (rule.exact !== undefined && input === rule.exact) ||
@@ -18,7 +19,16 @@ function getFormatterRule(input: number, type: NumberType): FormatterRule {
     }
   }
 
-  throw new Error(`formatter for type ${type} not configured correctly`)
+  logger.error('Invalid input or misconfigured formatter rules for type', {
+    tags: {
+      file: 'localeBased',
+      function: 'getFormatterRule',
+    },
+    extra: { type, input },
+  })
+
+  // Use default formatting if no applicable rules found (should never happen)
+  return { formatter: defaultFormat }
 }
 
 export function formatNumber({

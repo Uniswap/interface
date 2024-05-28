@@ -1,9 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import Trace from 'src/components/Trace/Trace'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
-import { ElementName, ElementNameType, SectionName } from 'wallet/src/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({

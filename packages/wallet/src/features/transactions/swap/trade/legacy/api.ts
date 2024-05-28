@@ -1,13 +1,14 @@
 import { ApolloError, QueryHookOptions } from '@apollo/client'
+import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
 import { ROUTING_API_PATH } from 'uniswap/src/data/constants'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { GqlResult } from 'uniswap/src/data/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
-import { ChainId } from 'wallet/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/trade/legacy/routeUtils'
 import {
@@ -22,8 +23,6 @@ import {
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
 
-const protocols: string[] = ['v2', 'v3', 'mixed']
-
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
 export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
@@ -32,6 +31,8 @@ export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
 export const NO_QUOTE_DATA = 'NO_QUOTE_DATA'
 
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
+
+export const DEFAULT_TRADE_PROTOCOLS = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 export enum RoutingIntent {
   Pricing = 'pricing',
@@ -56,6 +57,7 @@ export interface TradeQuoteRequest {
   }
   sendPortionEnabled?: boolean
   intent: RoutingIntent
+  protocols?: Protocol[]
 }
 
 export function useQuoteQuery(
@@ -81,6 +83,7 @@ export function useQuoteQuery(
       tokenOutChainId,
       type,
       sendPortionEnabled,
+      protocols = DEFAULT_TRADE_PROTOCOLS,
     } = request
 
     const recipientParams = recipient

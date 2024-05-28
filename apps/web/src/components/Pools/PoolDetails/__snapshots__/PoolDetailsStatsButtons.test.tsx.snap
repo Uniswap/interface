@@ -167,30 +167,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 4px;
 }
 
-.c50 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  text-align: center;
-  line-height: inherit;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  font-size: inherit;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  color: white;
-  background-color: primary;
-  border: 0;
-  border-radius: 4px;
-  font-weight: 535;
-}
-
 .c2 {
   width: 100%;
   display: -webkit-box;
@@ -288,20 +264,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   grid-row-gap: 4px;
 }
 
-.c53 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
 .c33 {
   padding: 16px;
   width: 100%;
@@ -359,42 +321,32 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: none;
 }
 
-.c51 {
-  background-color: #FFEFFF;
-  color: #FC72FF;
+.c50 {
+  background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
 }
 
-.c51:focus {
-  box-shadow: 0 0 0 1pt #FFEFFF;
-  background-color: #FFEFFF;
+.c50:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
 }
 
-.c51:hover {
-  background-color: #FFEFFF;
+.c50:hover {
+  background-color: #fb58ff;
 }
 
-.c51:active {
-  box-shadow: 0 0 0 1pt #FFEFFF;
-  background-color: #FFEFFF;
+.c50:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
 }
 
-.c51:hover .c52 {
-  background-color: #98A1C014;
-}
-
-.c51:active .c52 {
-  background-color: #B8C0DC3d;
-}
-
-.c51:disabled {
-  opacity: 0.4;
-}
-
-.c51:disabled:hover {
+.c50:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
   cursor: auto;
-  background-color: transparent;
   box-shadow: none;
   border: 1px solid transparent;
   outline: none;
@@ -474,7 +426,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   display: flex;
 }
 
-.c54 {
+.c51 {
   z-index: 1020;
   overflow: hidden;
   top: 0;
@@ -980,7 +932,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 @media only screen and (max-width:1024px) {
-  .c54 {
+  .c51 {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: opacity 250ms ease-in-out;
@@ -1186,7 +1138,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
                         data-disable-theme="true"
                       >
-                        You pay
+                        Sell
                       </span>
                       <div
                         class="c28"
@@ -1323,7 +1275,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
                           data-disable-theme="true"
                         >
-                          You receive
+                          Buy
                         </span>
                         <div
                           class="c28"
@@ -1413,13 +1365,9 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                 </div>
                 <div>
                   <button
-                    class="c50 c33 c51"
-                    font-weight="535"
+                    class="c31 c33 c50"
                   >
-                    <div
-                      class="c52 c53"
-                    />
-                    Connect wallet
+                    Connect to Ethereum
                   </button>
                 </div>
               </div>
@@ -1427,7 +1375,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
           </main>
         </div>
         <div
-          class="c54"
+          class="c51"
         />
       </div>
     </span>

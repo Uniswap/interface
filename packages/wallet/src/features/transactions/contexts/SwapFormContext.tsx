@@ -9,12 +9,15 @@ import {
   useRef,
   useState,
 } from 'react'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TradeProtocolPreference,
+} from 'wallet/src/features/transactions/transactionState/types'
 
 export type SwapFormState = {
   customSlippageTolerance?: number
@@ -28,6 +31,7 @@ export type SwapFormState = {
   txId?: string
   isFiatMode: boolean
   isSubmitting: boolean
+  tradeProtocolPreference: TradeProtocolPreference
 }
 
 type DerivedSwapFormState = {
@@ -58,6 +62,7 @@ const DEFAULT_STATE: Readonly<SwapFormState> = {
   output: undefined,
   isFiatMode: false,
   isSubmitting: false,
+  tradeProtocolPreference: TradeProtocolPreference.Default,
 }
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -103,6 +108,7 @@ export function SwapFormContextProvider({
     focusOnCurrencyField: swapForm.focusOnCurrencyField,
     selectingCurrencyField: swapForm.selectingCurrencyField,
     customSlippageTolerance: swapForm.customSlippageTolerance,
+    tradeProtocolPreference: swapForm.tradeProtocolPreference,
   })
 
   useSwapAnalytics(derivedSwapInfo)
@@ -122,6 +128,7 @@ export function SwapFormContextProvider({
       isFiatMode: swapForm.isFiatMode,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
+      tradeProtocolPreference: swapForm.tradeProtocolPreference,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       setSwapForm,
       txId: swapForm.txId,
@@ -137,10 +144,11 @@ export function SwapFormContextProvider({
       swapForm.isFiatMode,
       swapForm.isSubmitting,
       swapForm.output,
+      swapForm.tradeProtocolPreference,
       swapForm.selectingCurrencyField,
       swapForm.txId,
-      updateSwapForm,
       derivedSwapInfo,
+      updateSwapForm,
     ]
   )
 

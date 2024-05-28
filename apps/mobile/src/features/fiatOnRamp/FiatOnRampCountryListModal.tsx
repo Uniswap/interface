@@ -17,6 +17,7 @@ import {
 } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -25,7 +26,6 @@ import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fia
 import { FORCountry } from 'wallet/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 

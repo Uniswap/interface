@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // Number formatting in our app should follow the guide in this doc:
 // https://www.notion.so/uniswaplabs/Number-standards-fbb9f533f10e4e22820722c2f66d23c0
 
@@ -341,128 +342,182 @@ export type FormatterRule =
       overrideValue?: number
       postFormatModifier?: (formatted: string) => string
     }
+  | {
+      formatter: Format
+      overrideValue?: undefined
+      exact?: undefined
+      upperBound?: undefined
+      postFormatModifier?: undefined
+    }
+
+export type Formatter = {
+  rules: FormatterRule[]
+  defaultFormat: Format
+}
 
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TwoDecimals as the formatter.
-export const tokenNonTxFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: ThreeDecimals },
-  { upperBound: 1e6, formatter: TwoDecimals },
-  { upperBound: 1e15, formatter: ShorthandTwoDecimals },
-  { upperBound: Infinity, formatter: '>999T' },
-]
+export const tokenNonTxFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: 0.001, formatter: '<0.001' },
+    { upperBound: 1, formatter: ThreeDecimals },
+    { upperBound: 1e6, formatter: TwoDecimals },
+    { upperBound: 1e15, formatter: ShorthandTwoDecimals },
+    { upperBound: Infinity, formatter: '>999T' },
+  ],
+  defaultFormat: TwoDecimals,
+}
 
-export const tokenTxFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.00001, formatter: '<0.00001' },
-  { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMin },
-  { upperBound: 10000, formatter: SixSigFigsTwoDecimals },
-  { upperBound: Infinity, formatter: TwoDecimals },
-]
+export const tokenTxFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: 0.00001, formatter: '<0.00001' },
+    { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMin },
+    { upperBound: 10000, formatter: SixSigFigsTwoDecimals },
+    { upperBound: Infinity, formatter: TwoDecimals },
+  ],
+  defaultFormat: SixSigFigsTwoDecimals,
+}
 
-export const swapTradeAmountFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.1, formatter: SixSigFigsNoCommas },
-  { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMinNoCommas },
-  { upperBound: Infinity, formatter: SixSigFigsTwoDecimalsNoCommas },
-]
+export const swapTradeAmountFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: 0.1, formatter: SixSigFigsNoCommas },
+    { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMinNoCommas },
+    { upperBound: Infinity, formatter: SixSigFigsTwoDecimalsNoCommas },
+  ],
+  defaultFormat: SixSigFigsTwoDecimalsNoCommas,
+}
 
-export const swapPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.00001, formatter: '<0.00001' },
-  ...swapTradeAmountFormatter,
-]
+export const swapPriceFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: 0.00001, formatter: '<0.00001' },
+    ...swapTradeAmountFormatter.rules,
+  ],
+  defaultFormat: SixSigFigsTwoDecimalsNoCommas,
+}
 
-export const fiatTokenDetailsFormatter: FormatterRule[] = [
-  {
-    upperBound: 0.00000001,
-    overrideValue: 0.00000001,
-    formatter: SmallestNumCurrency,
-    postFormatModifier: (formatted: string) => `<${formatted}`,
-  },
-  { upperBound: 0.1, formatter: ThreeSigFigsCurrency },
-  { upperBound: 1.05, formatter: ThreeDecimalsCurrency },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
-]
+export const fiatTokenDetailsFormatter: Formatter = {
+  rules: [
+    {
+      upperBound: 0.00000001,
+      overrideValue: 0.00000001,
+      formatter: SmallestNumCurrency,
+      postFormatModifier: (formatted: string) => `<${formatted}`,
+    },
+    { upperBound: 0.1, formatter: ThreeSigFigsCurrency },
+    { upperBound: 1.05, formatter: ThreeDecimalsCurrency },
+    { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
+  ],
+  defaultFormat: TwoDecimalsCurrency,
+}
 
-export const fiatTokenPricesFormatter: FormatterRule[] = [
-  {
-    upperBound: 0.00000001,
-    overrideValue: 0.00000001,
-    formatter: SmallestNumCurrency,
-    postFormatModifier: (formatted: string) => `<${formatted}`,
-  },
-  { upperBound: 1, formatter: ThreeSigFigsCurrency },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
-]
+export const fiatTokenPricesFormatter: Formatter = {
+  rules: [
+    {
+      upperBound: 0.00000001,
+      overrideValue: 0.00000001,
+      formatter: SmallestNumCurrency,
+      postFormatModifier: (formatted: string) => `<${formatted}`,
+    },
+    { upperBound: 1, formatter: ThreeSigFigsCurrency },
+    { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
+  ],
+  defaultFormat: TwoDecimalsCurrency,
+}
 
-export const fiatTokenStatsFormatter: FormatterRule[] = [
-  // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
-  { exact: 0, formatter: '-' },
-  {
-    upperBound: 0.01,
-    overrideValue: 0.01,
-    formatter: SmallestNumCurrency,
-    postFormatModifier: (formatted: string) => `<${formatted}`,
-  },
-  { upperBound: 1000, formatter: TwoDecimalsCurrency },
-  { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrency },
-]
+export const fiatTokenStatsFormatter: Formatter = {
+  rules: [
+    // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
+    { exact: 0, formatter: '-' },
+    {
+      upperBound: 0.01,
+      overrideValue: 0.01,
+      formatter: SmallestNumCurrency,
+      postFormatModifier: (formatted: string) => `<${formatted}`,
+    },
+    { upperBound: 1000, formatter: TwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrency },
+  ],
+  defaultFormat: ShorthandOneDecimalsCurrency,
+}
 
-export const fiatGasPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: StandardCurrency },
-  {
-    upperBound: 0.01,
-    overrideValue: 0.01,
-    formatter: SmallestNumCurrency,
-    postFormatModifier: (formatted: string) => `<${formatted}`,
-  },
-  { upperBound: 1e6, formatter: TwoDecimalsCurrency },
-  { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
-]
+export const fiatGasPriceFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: StandardCurrency },
+    {
+      upperBound: 0.01,
+      overrideValue: 0.01,
+      formatter: SmallestNumCurrency,
+      postFormatModifier: (formatted: string) => `<${formatted}`,
+    },
+    { upperBound: 1e6, formatter: TwoDecimalsCurrency },
+    { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
+  ],
+  defaultFormat: TwoDecimalsCurrency,
+}
 
-export const fiatStandardFormatter: FormatterRule[] = [
-  {
-    upperBound: Infinity,
-    formatter: StandardCurrency,
-  },
-]
+export const fiatStandardFormatter: Formatter = {
+  rules: [
+    {
+      upperBound: Infinity,
+      formatter: StandardCurrency,
+    },
+  ],
+  defaultFormat: StandardCurrency,
+}
 
-export const fiatTokenQuantityFormatter = [
-  {
-    exact: 0,
-    formatter: StandardCurrency,
-  },
-  ...fiatGasPriceFormatter,
-]
+export const fiatTokenQuantityFormatter = {
+  rules: [
+    {
+      exact: 0,
+      formatter: StandardCurrency,
+    },
+    ...fiatGasPriceFormatter.rules,
+  ],
+  defaultFormat: TwoDecimalsCurrency,
+}
 
-export const portfolioBalanceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: StandardCurrency },
-  { upperBound: Infinity, formatter: TwoDecimalsCurrency },
-]
+export const portfolioBalanceFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: StandardCurrency },
+    { upperBound: Infinity, formatter: TwoDecimalsCurrency },
+  ],
+  defaultFormat: TwoDecimalsCurrency,
+}
 
-export const ntfTokenFloorPriceFormatter: FormatterRule[] = [
-  { exact: 0, formatter: '0' },
-  { upperBound: 0.001, formatter: '<0.001' },
-  { upperBound: 1, formatter: ThreeDecimals },
-  { upperBound: 1000, formatter: TwoDecimals },
-  { upperBound: 1e15, formatter: ShorthandTwoDecimals },
-  { upperBound: Infinity, formatter: '>999T' },
-]
+export const ntfTokenFloorPriceFormatter: Formatter = {
+  rules: [
+    { exact: 0, formatter: '0' },
+    { upperBound: 0.001, formatter: '<0.001' },
+    { upperBound: 1, formatter: ThreeDecimals },
+    { upperBound: 1000, formatter: TwoDecimals },
+    { upperBound: 1e15, formatter: ShorthandTwoDecimals },
+    { upperBound: Infinity, formatter: '>999T' },
+  ],
+  defaultFormat: TwoDecimals,
+}
 
-export const ntfCollectionStatsFormatter: FormatterRule[] = [
-  { upperBound: 1000, formatter: NoDecimals },
-  { upperBound: Infinity, formatter: ShorthandOneDecimal },
-]
+export const ntfCollectionStatsFormatter: Formatter = {
+  rules: [
+    { upperBound: 1000, formatter: NoDecimals },
+    { upperBound: Infinity, formatter: ShorthandOneDecimal },
+  ],
+  defaultFormat: ShorthandOneDecimal,
+}
 
-export const percentagesFormatter: FormatterRule[] = [
-  { upperBound: 0.01, formatter: TwoDecimalsPercentages },
-  { upperBound: Infinity, formatter: NoTrailingDecimalsPercentages },
-]
+export const percentagesFormatter: Formatter = {
+  rules: [
+    { upperBound: 0.01, formatter: TwoDecimalsPercentages },
+    { upperBound: Infinity, formatter: NoTrailingDecimalsPercentages },
+  ],
+  defaultFormat: NoTrailingDecimalsPercentages,
+}
 
 export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,

@@ -1,4 +1,5 @@
 import { providers } from 'ethers'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTransactionRequestInfo'
@@ -6,7 +7,6 @@ import { ApprovalAction } from 'wallet/src/features/transactions/swap/trade/type
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { sumGasFees } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 interface SwapTxAndGasInfo {
   txRequest?: providers.TransactionRequest
@@ -45,10 +45,16 @@ export function useSwapTxAndGasInfoTradingApi({
   const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
   const gasFeeError = transactionRequestInfo.gasFeeResult.error || approvalError
 
-  // Dont populate gas fee if errors exist on swap or approval requests
-  const totalGasFee = gasFeeError
-    ? undefined
-    : sumGasFees(tokenApprovalInfo?.gasFee, transactionRequestInfo?.gasFeeResult.value)
+  const areValuesReady =
+    tokenApprovalInfo && transactionRequestInfo.gasFeeResult.value !== undefined
+
+  // Do not populate gas fee:
+  //   - If errors exist on swap or approval requests.
+  //   - If we don't have both the approval and transaction gas fees.
+  const totalGasFee =
+    gasFeeError || !areValuesReady
+      ? undefined
+      : sumGasFees(tokenApprovalInfo?.gasFee, transactionRequestInfo?.gasFeeResult.value)
 
   const gasFeeResult = {
     value: totalGasFee,

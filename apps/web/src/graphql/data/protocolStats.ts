@@ -2,6 +2,7 @@ import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType } from 'components/Charts/utils'
 import { ChartQueryResult, checkDataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import {
@@ -38,8 +39,10 @@ export function useHistoricalProtocolVolume(
   chain: Chain,
   duration: HistoryDuration
 ): ChartQueryResult<StackedHistogramData, ChartType.VOLUME> {
+  const isWindowVisible = useIsWindowVisible()
   const { data: queryData, loading } = useHistoricalProtocolVolumeQuery({
     variables: { chain, duration },
+    skip: !isWindowVisible,
   })
 
   return useMemo(() => {
@@ -62,8 +65,10 @@ export function useHistoricalProtocolVolume(
 }
 
 export function useDailyProtocolTVL(chain: Chain): ChartQueryResult<StackedLineData, ChartType.TVL> {
+  const isWindowVisible = useIsWindowVisible()
   const { data: queryData, loading } = useDailyProtocolTvlQuery({
     variables: { chain },
+    skip: !isWindowVisible,
   })
 
   return useMemo(() => {

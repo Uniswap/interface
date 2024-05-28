@@ -8,22 +8,22 @@ import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptio
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { useENSName } from 'wallet/src/features/ens/api'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
-    case Screens.Home:
+    case MobileScreens.Home:
       return 'home'
-    case Screens.Settings:
+    case MobileScreens.Settings:
       return 'settings'
     case OnboardingScreens.Landing:
       return 'onboarding'
@@ -66,7 +66,7 @@ export function ChooseProfilePictureScreen({
   const onPressContinue = async (): Promise<void> => {
     if (entryPoint === OnboardingScreens.Landing) {
       // Handle case navigating from onboarding
-      navigate(Screens.OnboardingStack, {
+      navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.WelcomeWallet,
         params: {
           importType: ImportType.CreateNew,
@@ -102,7 +102,7 @@ export function ChooseProfilePictureScreen({
 
     // Navigate to confirmation screen when a claim has been made
     if (attemptClaimError === undefined) {
-      navigate(Screens.UnitagStack, {
+      navigate(MobileScreens.UnitagStack, {
         screen: UnitagScreens.UnitagConfirmation,
         params: {
           unitag,
@@ -138,7 +138,9 @@ export function ChooseProfilePictureScreen({
             </Flex>
           </Flex>
         </Flex>
-        <UnitagName fontSize={unitagFontSize} name={unitag} />
+        <Flex row>
+          <UnitagName fontSize={unitagFontSize} name={unitag} />
+        </Flex>
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}

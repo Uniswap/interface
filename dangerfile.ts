@@ -53,9 +53,18 @@ async function processAddChanges() {
   }
 
   // Check for UI package imports that are longer than needed
-  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`, `'ui/src/assets'`, `'ui/src/components/icons'`]
+  const validLongerImports = [
+    `'ui/src'`,
+    `'ui/src/theme'`,
+    `'ui/src/loading'`,
+    `'ui/src/assets'`,
+    `'ui/src/components/icons'`,
+    `'ui/src/components/logos'`,
+    `'ui/src/icons'`,
+    `'ui/src/animations'`
+  ]
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
-  allLinesAdded.forEach((change) => {
+  allNonUILinesAdded.forEach((change) => {
     const indices = getIndicesOf(`from 'ui/src/`, change.content)
 
     indices.forEach((idx) => {

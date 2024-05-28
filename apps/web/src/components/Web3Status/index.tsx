@@ -1,32 +1,25 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
-import { getConnection } from 'connection'
-import { useConnectionReady } from 'connection/eagerlyConnect'
-import { getRecentConnectionMeta } from 'connection/meta'
-import useENSName from 'hooks/useENSName'
-import useLast from 'hooks/useLast'
-import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { updateRecentConnectionMeta } from 'state/user/reducer'
+import { useCallback } from 'react'
+import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddress } from 'utilities/src/addresses'
-
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { Unitag } from 'ui/src/components/icons'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { isIFramed } from 'utils/isIFramed'
+import { useAccount } from 'wagmi'
 import { ButtonSecondary } from '../Button'
 import { RowBetween } from '../Row'
+import { useAccountIdentifier } from './useAccountIdentifier'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
@@ -136,15 +129,7 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const ignoreWhileSwitchingChain = useCallback(() => !switchingChain, [switchingChain])
-  const connectionReady = useConnectionReady()
-  const activeWeb3 = useWeb3React()
-  const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
-  const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
-  const { unitag } = useUnitagByAddress(account)
-  const { ENSName, loading: ENSLoading } = useENSName(account)
-  const connection = getConnection(connector)
-  const dispatch = useAppDispatch()
+  const { address, isConnecting, isReconnecting } = useAccount()
 
   const [, toggleAccountDrawer] = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -153,48 +138,24 @@ function Web3StatusInner() {
   }, [toggleAccountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
+  const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
-  // Display a loading state while initializing the connection, based on the last session's persisted connection.
-  // The connection will go through three states:
-  // - startup:       connection is not ready
-  // - initializing:  account is available, but ENS (if preset on the persisted initialMeta) is still loading
-  // - initialized:   account and ENS are available
-  // Subsequent connections are always considered initialized, and will not display startup/initializing states.
-  const initialConnection = useRef(getRecentConnectionMeta())
-  const isConnectionInitializing = Boolean(
-    initialConnection.current?.address === account && initialConnection.current?.ENSName && ENSLoading
-  )
-  const isConnectionInitialized = connectionReady && !isConnectionInitializing
-  // Clear the initial connection once initialized so it does not interfere with subsequent connections.
-  useEffect(() => {
-    if (isConnectionInitialized) {
-      initialConnection.current = undefined
-    }
-  }, [isConnectionInitialized])
-  // Persist the connection if it changes, so it can be used to initialize the next session's connection.
-  useEffect(() => {
-    if (account || ENSName) {
-      const { rdns } = connection.getProviderInfo()
-      dispatch(
-        updateRecentConnectionMeta({ type: connection.type, address: account, ENSName: ENSName ?? undefined, rdns })
-      )
-    }
-  }, [ENSName, account, connection, dispatch])
-
-  if (!isConnectionInitialized) {
+  // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
+  if ((isConnecting || isReconnecting) && hasRecent && !isIFramed()) {
     return (
-      <Web3StatusConnecting disabled={!isConnectionInitializing} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer $loading={true}>
-          <Text>{initialConnection.current?.ENSName ?? shortenAddress(initialConnection.current?.address)}</Text>
+          <Text>{accountIdentifier}</Text>
+          {hasUnitag && <Unitag size={18} />}
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
     )
   }
 
-  if (account) {
+  if (address) {
     return (
       <TraceEvent
         events={[BrowserEvent.onClick]}
@@ -207,9 +168,7 @@ function Web3StatusInner() {
           onClick={handleWalletDropdownClick}
           pending={hasPendingActivity}
         >
-          {!hasPendingActivity && (
-            <StatusIcon account={account} size={24} connection={connection} showMiniIcons={false} />
-          )}
+          {!hasPendingActivity && <StatusIcon size={24} showMiniIcons={false} />}
           {hasPendingActivity ? (
             <RowBetween>
               <Text>
@@ -219,8 +178,8 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{unitag?.username ?? ENSName ?? shortenAddress(account)}</Text>
-              {unitag?.username && <Unitag size={18} />}
+              <Text>{accountIdentifier}</Text>
+              {hasUnitag && <Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

@@ -7,10 +7,10 @@ import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiat
 import { languageSettingsReducer } from 'wallet/src/features/language/slice'
 import { notificationReducer } from 'wallet/src/features/notifications/slice'
 import { searchHistoryReducer } from 'wallet/src/features/search/searchHistorySlice'
+import { timingReducer } from 'wallet/src/features/timing/slice'
 import { tokensReducer } from 'wallet/src/features/tokens/tokensSlice'
 import { transactionReducer } from 'wallet/src/features/transactions/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
-import { timingReducer } from 'wallet/src/telemetry/timing/slice'
 
 export const sharedReducers = {
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,

@@ -1,8 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
+import { useChainId } from 'wagmi'
 
 import { darkTheme, lightTheme } from '../colors'
 
@@ -36,7 +36,7 @@ function setDefaultBackground(backgroundRadialGradientElement: HTMLElement, dark
 }
 
 export default function RadialGradientByChainUpdater(): null {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const [darkMode] = useDarkModeManager()
   const isNftPage = useIsNftPage()
 

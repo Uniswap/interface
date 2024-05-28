@@ -4,6 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
+import { useChainId } from 'wagmi'
 // eslint-disable-next-line no-restricted-imports
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
@@ -54,7 +55,7 @@ function useGovernanceBravoContract(): Contract | null {
 const useLatestGovernanceContract = useGovernanceBravoContract
 
 function useUniContract() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
@@ -231,7 +232,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const gov0 = useGovernanceV0Contract()
   const gov1 = useGovernanceV1Contract()
   const gov2 = useGovernanceBravoContract()
@@ -339,7 +340,7 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (
@@ -538,7 +539,7 @@ export function useLatestProposalId(address: string | undefined): string | undef
 }
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')

@@ -90,7 +90,6 @@ describe('Token details', () => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
       cy.visit(`/explore/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
-        cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
     })

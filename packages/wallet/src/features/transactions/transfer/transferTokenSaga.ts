@@ -4,14 +4,14 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType } from 'wallet/src/entities/assets'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -33,7 +33,7 @@ export function* transferToken(params: Params) {
       options: { request: txRequest },
       typeInfo,
     })
-    sendWalletAnalyticsEvent(WalletEventName.TransferSubmitted, {
+    sendAnalyticsEvent(WalletEventName.TransferSubmitted, {
       chainId: params.transferTokenParams.chainId,
       tokenAddress: params.transferTokenParams.tokenAddress,
       toAddress: params.transferTokenParams.toAddress,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Flex, Separator, Text, isWeb, useSporeColors } from 'ui/src'
+import { Accordion, Button, Flex, Separator, Text, isWeb, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import {
   Experiments,
@@ -31,11 +31,15 @@ export function GatingOverrides(): JSX.Element {
 
   return (
     <>
+      <Text variant="heading3">Gating</Text>
+
       <Accordion.Item value="feature-flags">
         <AccordionHeader title="⛳️ Feature Flags" />
 
         <Accordion.Content>
-          <Text variant="body2">Overridden feature flags are reset when the app is restarted</Text>
+          <Button p="$spacing4" theme="tertiary" onPress={() => Statsig.removeGateOverride()}>
+            <Text variant="body2">Clear all local feature gate overrides</Text>
+          </Button>
 
           <Flex gap="$spacing12" mt="$spacing12">
             {featureFlagRows}
@@ -46,13 +50,26 @@ export function GatingOverrides(): JSX.Element {
         <AccordionHeader title="🔬 Experiments" />
 
         <Accordion.Content>
-          <Text variant="body2">Overridden experiments are reset when the app is restarted</Text>
+          <Button p="$spacing4" theme="tertiary" onPress={() => Statsig.removeConfigOverride()}>
+            <Text variant="body2">Clear all local experiment/config overrides</Text>
+          </Button>
 
           <Flex gap="$spacing24" mt="$spacing12">
             {experimentRows}
           </Flex>
         </Accordion.Content>
       </Accordion.Item>
+
+      <Button
+        p="$spacing4"
+        theme="tertiary"
+        onPress={() => {
+          Statsig.removeGateOverride()
+          Statsig.removeConfigOverride()
+          Statsig.removeLayerOverride()
+        }}>
+        <Text variant="body2">Clear all gating overrides</Text>
+      </Button>
     </>
   )
 }
@@ -60,10 +77,10 @@ export function GatingOverrides(): JSX.Element {
 export function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Element {
   return (
     <Accordion.Header mt="$spacing12">
-      <Accordion.Trigger>
+      <Accordion.Trigger width="100%">
         {({ open }: { open: boolean }): JSX.Element => (
           <>
-            <Flex row justifyContent="space-between" width="100%">
+            <Flex row justifyContent="space-between">
               <Text variant="subheading1">{title}</Text>
               <RotatableChevron direction={open ? 'up' : 'down'} />
             </Flex>

@@ -4,7 +4,8 @@
 /* eslint-disable max-lines */
 
 import dayjs from 'dayjs'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
@@ -18,7 +19,6 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 

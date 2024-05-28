@@ -1,28 +1,27 @@
 import { getTestSelector } from '../utils'
-import { CONNECTED_WALLET_USER_STATE, DISCONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
 describe('Landing Page', () => {
   it('shows landing page when no user state exists', () => {
-    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.visit('/', { eagerlyConnect: false })
     cy.get(getTestSelector('landing-page'))
     cy.screenshot()
   })
 
   it('redirects to swap page when a user has already connected a wallet', () => {
-    cy.visit('/', { userState: CONNECTED_WALLET_USER_STATE })
+    cy.visit('/')
     cy.get('#swap-page')
     cy.url().should('include', '/swap')
     cy.screenshot()
   })
 
   it('shows landing page when a user has already connected a wallet but ?intro=true is in query', () => {
-    cy.visit('/?intro=true', { userState: CONNECTED_WALLET_USER_STATE })
+    cy.visit('/?intro=true')
     cy.get(getTestSelector('landing-page'))
   })
 
   it('remains on landing page when account drawer is opened and only redirects after user becomes connected', () => {
     // Visit landing page with no connection or recent connection, and open account drawer
-    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.visit('/', { eagerlyConnect: false })
     cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect').click()
     cy.url().should('not.include', '/swap')
 
@@ -59,7 +58,7 @@ describe('Landing Page', () => {
         res.body = doc.documentElement.outerHTML
       })
     })
-    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.visit('/', { eagerlyConnect: false })
 
     cy.get(getTestSelector('landing-page')).should('not.exist')
     cy.get(getTestSelector('buy-fiat-button')).should('not.exist')

@@ -164,7 +164,6 @@ Object {
   },
   "prefixIconSrc": "bolt.svg",
   "status": "FAILED",
-  "statusMessage": "Your swap could not be fulfilled at this time. Please try again.",
   "timestamp": 10000,
   "title": "Swap expired",
 }

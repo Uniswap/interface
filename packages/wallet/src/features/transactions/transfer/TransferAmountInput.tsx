@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useLayoutEffect } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
@@ -81,7 +81,7 @@ export function TransferAmountInput({
   )
 
   // Resize font value when value changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (value) {
       // Account for currency sign if fiat mode in text width
       const formattedValueString = isFiatInput ? symbol + value : value
@@ -111,7 +111,15 @@ export function TransferAmountInput({
   const inputColor = !value ? '$neutral3' : '$neutral1'
 
   return (
-    <Flex centered gap="$spacing16" onLayout={onLayout} {...rest}>
+    <Flex
+      centered
+      gap="$spacing16"
+      onLayout={(e): void => {
+        onLayout(e)
+        // Avoid case where onSetFontSize is called before onLayout, resulting in incorrect sizing if view is re-mounted
+        onSetFontSize(value || '0')
+      }}
+      {...rest}>
       <Flex fill grow row alignItems="center" height={MAX_INPUT_FONT_SIZE} overflow="hidden">
         {currencyInfo ? (
           <AmountInput

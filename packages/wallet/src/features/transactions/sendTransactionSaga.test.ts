@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   sendTransaction,
   signAndSendTransaction,
@@ -16,7 +16,7 @@ import {
   getSignerManager,
 } from 'wallet/src/features/wallet/context'
 import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
+import { noOpFunction, provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
 const account = signerMnemonicAccount()
 
@@ -91,6 +91,7 @@ describe(sendTransaction, () => {
   })
 
   it('Fails for readonly accounts', () => {
+    jest.spyOn(console, 'error').mockImplementation(noOpFunction)
     const readOnlyAccount: ReadOnlyAccount = {
       type: AccountType.Readonly,
       address: '0xabc',

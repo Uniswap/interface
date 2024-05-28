@@ -7,10 +7,8 @@ import { ActivityIndicator, Keyboard } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackParamList } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import {
   AnimatePresence,
@@ -26,13 +24,17 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { Pill } from 'wallet/src/components/text/Pill'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   UNITAG_SUFFIX,
   UNITAG_SUFFIX_NO_LEADING_DOT,
@@ -40,8 +42,6 @@ import {
 } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -160,9 +160,9 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const onPressMaybeLater = (): void => {
-    sendWalletAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
+    sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
     // Navigate to next screen if in onboarding
-    navigate(Screens.OnboardingStack, {
+    navigate(MobileScreens.OnboardingStack, {
       screen: OnboardingScreens.WelcomeWallet,
       params: {
         importType: ImportType.CreateNew,
@@ -182,10 +182,10 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       }
 
       // Log claim display and action taken
-      sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
+      sendAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
         result: 'available',
       })
-      sendWalletAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'select' })
+      sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'select' })
 
       // Animate the Unitag logo in and text input out
       setShowTextInputView(false)
@@ -204,7 +204,9 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       // Navigate to ChooseProfilePicture screen after initial delay + translation to allow animations to finish
       setTimeout(() => {
         navigate(
-          entryPoint === OnboardingScreens.Landing ? Screens.OnboardingStack : Screens.UnitagStack,
+          entryPoint === OnboardingScreens.Landing
+            ? MobileScreens.OnboardingStack
+            : MobileScreens.UnitagStack,
           {
             screen: UnitagScreens.ChooseProfilePicture,
             params: { unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize },
@@ -223,7 +225,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       if (!canClaimUnitagNameError) {
         navigateWithAnimation(unitagToCheck)
       } else {
-        sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
+        sendAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
           result: requiresENSMatch ? 'restricted' : 'unavailable',
         })
         setShouldBlockContinue(true)
@@ -251,7 +253,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const title =
-    entryPoint === Screens.Home
+    entryPoint === MobileScreens.Home
       ? t('unitags.onboarding.claim.title.claim')
       : t('unitags.onboarding.claim.title.choose')
 

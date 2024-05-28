@@ -1,6 +1,6 @@
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
-import { getTestSelector } from '../utils'
+import { getTestSelector, resetHardhatChain } from '../utils'
 import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
 
 describe('Add Liquidity', () => {
@@ -17,14 +17,19 @@ describe('Add Liquidity', () => {
     cy.contains('0.05% fee tier')
   })
 
-  it('clears the token selection when chain changes', () => {
-    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
-    cy.get(getTestSelector('chain-selector')).last().click()
-    cy.contains('Polygon').click()
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
+  describe('chain changes', () => {
+    afterEach(resetHardhatChain)
+
+    it('clears the token selection when chain changes', () => {
+      cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
+      cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
+      cy.get(getTestSelector('chain-selector')).last().click()
+      cy.contains('Polygon').click()
+      cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', `Polygon`)
+      cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MATIC')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
+    })
   })
 
   it('does not crash if token is duplicated', () => {

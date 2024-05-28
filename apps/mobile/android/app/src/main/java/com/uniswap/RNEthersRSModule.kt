@@ -29,7 +29,11 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
   override fun getName() = "RNEthersRS"
 
   @ReactMethod fun getMnemonicIds(promise: Promise) {
-    promise.resolve(ethersRs.mnemonicIds)
+    val array = WritableNativeArray()
+    ethersRs.mnemonicIds.forEach {
+      array.pushString(it)
+    }
+    promise.resolve(array)
   }
 
   @ReactMethod fun importMnemonic(mnemonic: String, promise: Promise) {

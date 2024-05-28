@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagQuery, useWaitlistPositionQuery } from 'uniswap/src/features/unitags/api'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
@@ -12,10 +14,10 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { ChainId } from 'wallet/src/constants/chains'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
 import {
@@ -49,8 +51,6 @@ import {
 } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MIN_UNITAG_LENGTH = 3
@@ -208,7 +208,7 @@ export const useClaimUnitag = (): ((
 
       if (claimResponse.success) {
         // Log claim success
-        sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimed, context)
+        sendAnalyticsEvent(UnitagEventName.UnitagClaimed, context)
         if (claim.avatarUri && isLocalFileUri(claim.avatarUri)) {
           const { success: uploadUpdateAvatarSuccess } = await uploadAndUpdateAvatarAfterClaim({
             username: claim.username,

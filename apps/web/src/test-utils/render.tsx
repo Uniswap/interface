@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
 import { RenderOptions, render } from '@testing-library/react'
 import { RenderHookOptions, WrapperComponent, renderHook } from '@testing-library/react-hooks'
+import Web3Provider from 'components/Web3Provider'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
@@ -28,23 +29,21 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            {/*
-             * Web3Provider is mocked through setupTests.ts
-             * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
-             */}
-            <MockedProvider showWarnings={false}>
-              <AssetActivityProvider>
-                <TokenBalancesProvider>
-                  <MockedBlockNumberProvider>
-                    <UnitagUpdaterContextProvider>
-                      <ThemeProvider>
-                        <TamaguiProvider>{children}</TamaguiProvider>
-                      </ThemeProvider>
-                    </UnitagUpdaterContextProvider>
-                  </MockedBlockNumberProvider>
-                </TokenBalancesProvider>
-              </AssetActivityProvider>
-            </MockedProvider>
+            <Web3Provider>
+              <MockedProvider showWarnings={false}>
+                <AssetActivityProvider>
+                  <TokenBalancesProvider>
+                    <MockedBlockNumberProvider>
+                      <UnitagUpdaterContextProvider>
+                        <ThemeProvider>
+                          <TamaguiProvider>{children}</TamaguiProvider>
+                        </ThemeProvider>
+                      </UnitagUpdaterContextProvider>
+                    </MockedBlockNumberProvider>
+                  </TokenBalancesProvider>
+                </AssetActivityProvider>
+              </MockedProvider>
+            </Web3Provider>
           </BrowserRouter>
         </QueryClientProvider>
       </Provider>

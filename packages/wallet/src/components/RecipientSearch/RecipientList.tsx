@@ -4,13 +4,13 @@ import { Keyboard, ListRenderItemInfo, SectionList, SectionListData } from 'reac
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex, Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ViewOnlyRecipientModal } from 'wallet/src/components/RecipientSearch/ViewOnlyRecipientModal'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { SearchResultType, extractDomain } from 'wallet/src/features/search/SearchResult'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 interface RecipientListProps {
   renderedInModal?: boolean
@@ -112,7 +112,7 @@ export const RecipientRow = memo(function RecipientRow({
 
   const onPressWithAnalytics = (): void => {
     if (domain) {
-      sendWalletAnalyticsEvent(WalletEventName.SendRecipientSelected, {
+      sendAnalyticsEvent(WalletEventName.SendRecipientSelected, {
         domain,
       })
     }

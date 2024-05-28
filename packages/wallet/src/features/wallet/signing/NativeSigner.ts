@@ -1,7 +1,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'

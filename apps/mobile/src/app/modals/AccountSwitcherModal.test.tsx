@@ -2,7 +2,7 @@ import React from 'react'
 import { AccountSwitcher } from 'src/app/modals/AccountSwitcherModal'
 import { preloadedMobileState, preloadedModalsState } from 'src/test/fixtures'
 import { cleanup, render } from 'src/test/test-utils'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ACCOUNT } from 'wallet/src/test/fixtures'
 import { noOpFunction } from 'wallet/src/test/mocks'
 

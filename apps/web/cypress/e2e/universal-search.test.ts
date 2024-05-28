@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { UNI } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, UNI } from 'constants/tokens'
 
 import { getTestSelector } from '../utils'
 
@@ -8,7 +8,7 @@ const UNI_ADDRESS = UNI[ChainId.MAINNET].address.toLowerCase()
 describe('Universal search bar', () => {
   function openSearch() {
     // can't just type "/" because on mobile it doesn't respond to that
-    cy.get('[data-cy="magnifying-icon"]').parent().eq(1).click()
+    return cy.get('[data-cy="right-search-container"] [data-cy="magnifying-icon"]').click()
   }
 
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('Universal search bar', () => {
   })
 
   function getSearchBar() {
-    return cy.get('[data-cy="search-bar-input"]').last()
+    return cy.get('[data-cy="right-search-container"] [data-cy="search-bar-input"]').click()
   }
 
   it('should yield clickable result that is then added to recent searches', () => {
@@ -39,34 +39,20 @@ describe('Universal search bar', () => {
       .should('exist')
   })
 
-  it(
-    'should go to the selected result when recent results are shown',
-    // this test is experiencing flake despite being correct, i can see the right value in DOM
-    // but for some reason cypress doesn't find it, so adding retries for now :/
-    {
-      // @ts-ignore see https://uniswapteam.slack.com/archives/C047U65H422/p1691455547556309
-      // basically cypress has bad types due to overlap with jest and you just have to deal with it
-      // i tried removing jest types but still happens
-      retries: {
-        runMode: 3,
-        openMode: 3,
-      },
-    },
-    () => {
-      // Seed recent results with UNI.
-      openSearch()
-      getSearchBar().type('uni')
-      cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
-      getSearchBar().clear().type('{esc}')
+  it('should go to the selected result when recent results are shown', () => {
+    // Seed recent results with UNI.
+    openSearch()
+    getSearchBar().type('uni')
+    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${UNI_ADDRESS}`))
+    getSearchBar().clear().type('{esc}')
 
-      // Search a different token by name.
-      openSearch()
-      getSearchBar().type('eth')
-      cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE'))
+    // Search a different token by name.
+    openSearch()
+    getSearchBar().type('eth')
+    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${NATIVE_CHAIN_ID}`))
 
-      // Validate that we go to the searched/selected result.
-      cy.get(getTestSelector('searchbar-token-row-ETHEREUM-NATIVE')).click()
-      cy.url().should('contain', '/explore/tokens/ethereum/NATIVE')
-    }
-  )
+    // Validate that we go to the searched/selected result.
+    cy.get(getTestSelector(`searchbar-token-row-ETHEREUM-${NATIVE_CHAIN_ID}`)).click()
+    cy.url().should('contain', `/explore/tokens/ethereum/${NATIVE_CHAIN_ID}`)
+  })
 })

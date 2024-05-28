@@ -4,20 +4,21 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import Trace from 'src/components/Trace/Trace'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 import {
   PendingAccountActions,
@@ -26,11 +27,10 @@ import {
 import { useActiveAccountAddress, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppDispatch } from 'wallet/src/state'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WelcomeWallet>,
-  NativeStackScreenProps<AppStackParamList, Screens.Home, undefined>
+  NativeStackScreenProps<AppStackParamList, MobileScreens.Home, undefined>
 >
 
 export function WelcomeWalletScreen({ navigation, route: { params } }: Props): JSX.Element {

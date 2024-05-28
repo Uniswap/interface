@@ -1,9 +1,9 @@
 import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
-import { Screens } from 'src/screens/Screens'
 import { preloadedMobileState } from 'src/test/fixtures'
-import { fireEvent, render } from 'src/test/test-utils'
+import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import * as ensHooks from 'wallet/src/features/ens/api'
 import {
   ON_PRESS_EVENT_PAYLOAD,
@@ -31,7 +31,7 @@ const mockStore = configureMockStore()
 
 const defaultProps: FavoriteWalletCardProps = {
   address: SAMPLE_SEED_ADDRESS_1,
-  isTouched: makeMutable(false),
+  pressProgress: makeMutable(0),
   isEditing: false,
   dragActivationProgress: makeMutable(0),
   setIsEditing: jest.fn(),
@@ -103,27 +103,31 @@ describe('FavoriteWalletCard', () => {
       const touchable = getByTestId('favorite-wallet-card')
       fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
 
-      expect(mockedNavigation.navigate).toHaveBeenCalledWith(Screens.ExternalProfile, {
+      expect(mockedNavigation.navigate).toHaveBeenCalledWith(MobileScreens.ExternalProfile, {
         address: defaultProps.address,
       })
     })
 
-    it('does not display the remove button', () => {
+    it('does not display the remove button', async () => {
       const { getByTestId } = render(<FavoriteWalletCard {...defaultProps} />)
 
       const removeButton = getByTestId('explore/remove-button')
 
-      expect(removeButton).toHaveAnimatedStyle({ opacity: 0 })
+      await waitFor(() => {
+        expect(removeButton).toHaveAnimatedStyle({ opacity: 0 })
+      })
     })
   })
 
   describe('when editing', () => {
-    it('displays the remove button', () => {
+    it('displays the remove button', async () => {
       const { getByTestId } = render(<FavoriteWalletCard {...defaultProps} isEditing />)
 
       const removeButton = getByTestId('explore/remove-button')
 
-      expect(removeButton).toHaveAnimatedStyle({ opacity: 1 })
+      await waitFor(() => {
+        expect(removeButton).toHaveAnimatedStyle({ opacity: 1 })
+      })
     })
 
     it('dispatches removeWatchedAddress when remove button is pressed', () => {

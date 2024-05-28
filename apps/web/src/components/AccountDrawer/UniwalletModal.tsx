@@ -1,20 +1,17 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
 import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { uniwalletWCV2ConnectConnection } from 'connection'
-import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
-import { ActivationStatus, useActivationState } from 'connection/activate'
-import { ConnectionType } from 'connection/types'
+import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { CONNECTION } from 'components/Web3Provider/constants'
 import { Trans } from 'i18n'
 import { QRCodeSVG } from 'qrcode.react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
-
+import { useAccountEffect, useConnect, useDisconnect } from 'wagmi'
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
 
@@ -39,23 +36,39 @@ const Divider = styled.div`
 `
 
 export default function UniwalletModal() {
-  const { activationState, cancelActivation } = useActivationState()
   const [uri, setUri] = useState<string>()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
-  const open =
-    !onLaunchedMobilePlatform &&
-    activationState.status === ActivationStatus.PENDING &&
-    activationState.connection.type === ConnectionType.UNISWAP_WALLET_V2 &&
-    !!uri
+  const open = !onLaunchedMobilePlatform && !!uri
+
+  const { disconnect } = useDisconnect()
+  const { connectors } = useConnect()
+  useAccountEffect({
+    onConnect: () => {
+      setUri(undefined)
+    },
+  })
+  const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
+    shouldThrow: true,
+  })
 
   useEffect(() => {
-    const connectorV2 = uniwalletWCV2ConnectConnection.connector as WalletConnectv2
-    connectorV2.events.addListener(UniwalletConnectV2.UNI_URI_AVAILABLE, (uri: string) => {
-      uri && setUri(uri)
-    })
-  }, [])
+    function listener({ type, data }: { type: string; data?: unknown }) {
+      if (type === 'display_uniswap_uri' && typeof data === 'string') setUri(data)
+    }
+
+    uniswapWalletConnectConnector.emitter.on('message', listener)
+
+    return () => {
+      uniswapWalletConnectConnector.emitter.off('message', listener)
+    }
+  }, [connectors, uniswapWalletConnectConnector.emitter])
+
+  const close = useCallback(() => {
+    disconnect()
+    setUri(undefined)
+  }, [disconnect])
 
   useEffect(() => {
     if (open) sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
@@ -63,13 +76,13 @@ export default function UniwalletModal() {
 
   const theme = useTheme()
   return (
-    <Modal isOpen={open} onDismiss={cancelActivation}>
+    <Modal isOpen={open} onDismiss={close}>
       <UniwalletConnectWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
             <Trans>Scan with Uniswap Wallet</Trans>
           </ThemedText.SubHeader>
-          <CloseIcon onClick={cancelActivation} />
+          <CloseIcon onClick={close} />
         </HeaderRow>
         <QRCodeWrapper>
           {uri && (

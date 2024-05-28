@@ -1,11 +1,9 @@
-import { Trans } from 'i18n'
-// eslint-disable-next-line no-restricted-imports
-import { useWeb3React } from '@web3-react/core'
-import { t } from 'i18n'
+import { Trans, t } from 'i18n'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { useChainId } from 'wagmi'
 
 import useENS from '../../hooks/useENS'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -87,7 +85,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const theme = useTheme()
 
   const { address, loading, name } = useENS(value)

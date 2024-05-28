@@ -1,78 +1,115 @@
-import { connections, eip6963Connection } from 'connection'
-import { useInjectedProviderDetails } from 'connection/eip6963/providers'
-import { Connection, ConnectionType, RecentConnectionMeta } from 'connection/types'
-import { shouldUseDeprecatedInjector } from 'connection/utils'
-import { useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Option from './Option'
+import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useCallback, useMemo } from 'react'
+import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { Connector, useConnect } from 'wagmi'
 
-export function useEIP6963Connections() {
-  const eip6963Injectors = useInjectedProviderDetails()
-  const eip6963Enabled = useFeatureFlag(FeatureFlags.Eip6936Enabled)
+type ConnectorID = (typeof CONNECTION)[keyof typeof CONNECTION]
 
-  return useMemo(() => {
-    if (!eip6963Enabled) return { eip6963Connections: [], showDeprecatedMessage: false }
+const SHOULD_THROW = { shouldThrow: true } as const
 
-    const eip6963Connections = eip6963Injectors.flatMap((injector) => eip6963Connection.wrap(injector.info) ?? [])
-
-    // Displays ui to activate window.ethereum for edge-case where we detect window.ethereum !== one of the eip6963 providers
-    const showDeprecatedMessage = eip6963Connections.length > 0 && shouldUseDeprecatedInjector(eip6963Injectors)
-
-    return { eip6963Connections, showDeprecatedMessage }
-  }, [eip6963Injectors, eip6963Enabled])
+function getConnectorWithId(
+  connectors: readonly Connector[],
+  id: ConnectorID,
+  options: { shouldThrow: true }
+): Connector
+function getConnectorWithId(connectors: readonly Connector[], id: ConnectorID): Connector | undefined
+function getConnectorWithId(
+  connectors: readonly Connector[],
+  id: ConnectorID,
+  options?: { shouldThrow: true }
+): Connector | undefined {
+  const connector = connectors.find((c) => c.id === id)
+  if (!connector && options?.shouldThrow) {
+    throw new Error(`Expected connector ${id} missing from wagmi context.`)
+  }
+  return connector
 }
 
-function mergeConnections(connections: Connection[], eip6963Connections: Connection[]) {
-  const hasEip6963Connections = eip6963Connections.length > 0
-  const displayedConnections = connections.filter((c) => c.shouldDisplay())
-
-  if (!hasEip6963Connections) return displayedConnections
-
-  const allConnections = [...displayedConnections.filter((c) => c.type !== ConnectionType.INJECTED)]
-  // By default, injected options should appear second in the list (below Uniswap wallet)
-  allConnections.splice(1, 0, ...eip6963Connections)
-
-  return allConnections
+/** Returns a wagmi `Connector` with the given id. If `shouldThrow` is passed, an error will be thrown if the connector is not found. */
+export function useConnectorWithId(id: ConnectorID, options: { shouldThrow: true }): Connector
+export function useConnectorWithId(id: ConnectorID): Connector | undefined
+export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: true }): Connector | undefined {
+  const { connectors } = useConnect()
+  return useMemo(
+    () => (options?.shouldThrow ? getConnectorWithId(connectors, id, options) : getConnectorWithId(connectors, id)),
+    [connectors, id, options]
+  )
 }
 
-// TODO(WEB-3244) Improve ordering logic to make less brittle, as it is spread across connections/index.ts and here
-/** Returns an array of all connection Options that should be displayed, where the recent connection is first in the array */
-function getOrderedConnections(
-  connections: Connection[],
-  recentConnection: RecentConnectionMeta | undefined,
-  excludeUniswapConnections: boolean
-) {
-  const list: JSX.Element[] = []
-  for (const connection of connections) {
-    if (!connection.shouldDisplay()) continue
-    const { name, rdns } = connection.getProviderInfo()
-
-    // Uniswap options may be displayed separately
-    if (excludeUniswapConnections && name.includes('Uniswap')) {
-      continue
+function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapConnections?: boolean) {
+  let isCoinbaseWalletBrowser = false
+  const injectedConnectors = connectors.filter((c) => {
+    // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
+    if (c.id === CONNECTION.COINBASE_RDNS) {
+      if (isMobile) isCoinbaseWalletBrowser = true
+      return false
     }
 
-    // For eip6963 injectors, we need to check rdns in addition to connection type to ensure it's the recent connection
-    const isRecent = connection.type === recentConnection?.type && (!rdns || rdns === recentConnection.rdns)
+    // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately.
+    if (c.id === CONNECTION.UNISWAP_EXTENSION_RDNS && excludeUniswapConnections) {
+      return false
+    }
 
-    const option = <Option key={name} connection={connection} isRecent={isRecent} />
+    return c.type === CONNECTION.INJECTED_CONNECTOR_TYPE && c.id !== CONNECTION.INJECTED_CONNECTOR_ID
+  })
 
-    // Place recent connection at top of list
-    isRecent ? list.unshift(option) : list.push(option)
+  // Special-case: Return deprecated window.ethereum connector when no eip6963 injectors are present.
+  const fallbackInjector = getConnectorWithId(connectors, CONNECTION.INJECTED_CONNECTOR_ID, { shouldThrow: true })
+  if (!injectedConnectors.length && Boolean(window.ethereum)) {
+    return { injectedConnectors: [fallbackInjector], isCoinbaseWalletBrowser }
   }
 
-  return list
+  return { injectedConnectors, isCoinbaseWalletBrowser }
 }
 
 export function useOrderedConnections(excludeUniswapConnections?: boolean) {
-  const { eip6963Connections, showDeprecatedMessage } = useEIP6963Connections()
-  const recentConnection = useAppSelector((state) => state.user.recentConnectionMeta)
-  const orderedConnections = useMemo(() => {
-    const allConnections = mergeConnections(connections, eip6963Connections)
-    return getOrderedConnections(allConnections, recentConnection, excludeUniswapConnections ?? false)
-  }, [eip6963Connections, excludeUniswapConnections, recentConnection])
+  const { connectors } = useConnect()
+  const recentConnectorId = useRecentConnectorId()
 
-  return { orderedConnections, showDeprecatedMessage }
+  const sortByRecent = useCallback(
+    (a: Connector, b: Connector) => {
+      if (a.id === recentConnectorId) return -1
+      else if (b.id === recentConnectorId) return 1
+      else return 0
+    },
+    [recentConnectorId]
+  )
+
+  return useMemo(() => {
+    const { injectedConnectors, isCoinbaseWalletBrowser } = getInjectedConnectors(connectors, excludeUniswapConnections)
+
+    const coinbaseSdkConnector = getConnectorWithId(connectors, CONNECTION.COINBASE_SDK_CONNECTOR_ID, SHOULD_THROW)
+    const walletConnectConnector = getConnectorWithId(connectors, CONNECTION.WALLET_CONNECT_CONNECTOR_ID, SHOULD_THROW)
+    const uniswapWalletConnectConnector = getConnectorWithId(
+      connectors,
+      CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+      SHOULD_THROW
+    )
+    if (!coinbaseSdkConnector || !walletConnectConnector || !uniswapWalletConnectConnector) {
+      throw new Error('Expected connector(s) missing from wagmi context.')
+    }
+
+    // Special-case: Only display the injected connector for in-wallet browsers.
+    if (isMobile && injectedConnectors.length === 1) return injectedConnectors
+
+    // Special-case: Only display the Coinbase connector in the Coinbase Wallet.
+    if (isCoinbaseWalletBrowser) return [coinbaseSdkConnector]
+
+    const orderedConnectors: Connector[] = []
+    const shouldDisplayUniswapWallet = !excludeUniswapConnections && (isWebIOS || isWebAndroid || !isTouchable)
+
+    // Place the Uniswap Wallet at the top of the list by default.
+    if (shouldDisplayUniswapWallet) orderedConnectors.push(uniswapWalletConnectConnector)
+
+    // Injected connectors should appear next in the list, as the user intentionally installed/uses them.
+    orderedConnectors.push(...injectedConnectors)
+
+    // WalletConnect and Coinbase are added last in the list.
+    orderedConnectors.push(walletConnectConnector)
+    orderedConnectors.push(coinbaseSdkConnector)
+
+    // Place the most recent connector at the top of the list.
+    orderedConnectors.sort(sortByRecent)
+    return orderedConnectors
+  }, [connectors, excludeUniswapConnections, sortByRecent])
 }

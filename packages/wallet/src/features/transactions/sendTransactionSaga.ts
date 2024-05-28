@@ -1,7 +1,10 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {
@@ -18,8 +21,6 @@ import {
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {
@@ -111,7 +112,7 @@ function* addTransaction(
         extra: { transaction },
       })
     } else {
-      yield* call(sendWalletAnalyticsEvent, WalletEventName.SwapSubmitted, {
+      yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
         transaction_hash: hash,
         ...analytics,
       })

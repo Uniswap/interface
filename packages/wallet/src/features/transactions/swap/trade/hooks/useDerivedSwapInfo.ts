@@ -2,7 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
@@ -31,6 +31,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     selectingCurrencyField,
     txId,
     customSlippageTolerance,
+    tradeProtocolPreference,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -81,6 +82,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const shouldGetQuote = !isWrapAction(wrapType)
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
   const isTradingApiEnabled = useFeatureFlag(FeatureFlags.TradingApi)
+  const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeParams = {
     amountSpecified: shouldGetQuote ? amountSpecified : null,
@@ -88,6 +90,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
     sendPortionEnabled,
+    // Only pass custom routing preference if feature is enabled
+    tradeProtocolPreference: isOptionalRoutingEnabled ? tradeProtocolPreference : undefined,
   }
 
   const legacyTrade = useTrade({

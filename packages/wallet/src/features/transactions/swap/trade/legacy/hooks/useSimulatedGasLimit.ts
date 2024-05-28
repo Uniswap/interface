@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
 import { useRouterQuote } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useRouterQuote'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 export function useSimulatedGasLimit(
   amountSpecified: Maybe<CurrencyAmount<Currency>>,

@@ -1,11 +1,11 @@
 import CacheMock from 'browser-cache-mock'
 
 import { mocked } from '../../src/test-utils/mocked'
-import Cache from './cache'
+import Cache, { Data } from './cache'
 
 const cacheMock = new CacheMock()
 
-const data = {
+const data: Data = {
   title: 'test',
   image: 'testImage',
   url: 'testUrl',

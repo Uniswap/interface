@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getRecentConnectionMeta, setRecentConnectionMeta } from 'connection/meta'
-import { RecentConnectionMeta } from 'connection/types'
 
 import { SupportedLocale } from '../../constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
@@ -10,8 +8,6 @@ import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
-  recentConnectionMeta?: RecentConnectionMeta
-
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
 
@@ -58,7 +54,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  recentConnectionMeta: getRecentConnectionMeta(),
   userLocale: null,
   userRouterPreference: RouterPreference.X,
   userHideClosedPositions: false,
@@ -76,21 +71,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateRecentConnectionMeta(state, { payload: meta }: { payload: RecentConnectionMeta }) {
-      setRecentConnectionMeta(meta)
-      state.recentConnectionMeta = meta
-    },
-    setRecentConnectionDisconnected(state) {
-      if (!state.recentConnectionMeta) return
-
-      const disconnectedMeta = { ...state.recentConnectionMeta, disconnected: true }
-      setRecentConnectionMeta(disconnectedMeta)
-      state.recentConnectionMeta = disconnectedMeta
-    },
-    clearRecentConnectionMeta(state) {
-      setRecentConnectionMeta(undefined)
-      state.recentConnectionMeta = undefined
-    },
     updateUserLocale(state, action) {
       if (action.payload.userLocale !== state.userLocale) {
         state.userLocale = action.payload.userLocale
@@ -137,9 +117,6 @@ const userSlice = createSlice({
 })
 
 export const {
-  updateRecentConnectionMeta,
-  setRecentConnectionDisconnected,
-  clearRecentConnectionMeta,
   addSerializedPair,
   addSerializedToken,
   setOriginCountry,

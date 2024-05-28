@@ -318,6 +318,7 @@ export type FORTransaction = {
   sourceCurrencyCode: string
   destinationAmount: number
   destinationCurrencyCode: string
+  destinationContractAddress: string
   serviceProvider: string
   cryptoDetails: FORCryptoDetails
   createdAt: string
@@ -325,15 +326,11 @@ export type FORTransaction = {
   externalSessionId: string
 }
 
-export type FORTransactionsRequest = {
-  limit?: number
+export type FORTransactionRequest = {
+  sessionId?: string
+  forceFetch?: boolean
 }
 
-export type FORTransactionsResponse = {
-  transactions: FORTransaction[]
-  count: number
-  remaining: number
-  totalCount: number
-  message: string | null
-  error: string | null
+export type FORTransactionResponse = {
+  transaction?: FORTransaction
 }

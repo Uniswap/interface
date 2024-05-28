@@ -1,5 +1,4 @@
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { chainIdToBackendChain, getChainInfo, isSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { COMMON_BASES } from 'constants/routing'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
@@ -20,6 +19,7 @@ import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyId } from 'utils/currencyId'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+import { useChainId } from 'wagmi'
 import { useCombinedInactiveLists } from '../state/lists/hooks'
 import { useUserAddedTokens } from '../state/user/userAddedTokens'
 
@@ -86,7 +86,7 @@ export function useCurrencyInfo(
   chainId?: ChainId,
   skip?: boolean
 ): Maybe<CurrencyInfo> {
-  const { chainId: connectedChainId } = useWeb3React()
+  const connectedChainId = useChainId()
   const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId)
 
   const address =
@@ -153,7 +153,7 @@ export function useCurrencyInfo(
 }
 
 export function useToken(tokenAddress?: string, chainId?: ChainId): Maybe<Token> {
-  const { chainId: connectedChainId } = useWeb3React()
+  const connectedChainId = useChainId()
   const currency = useCurrency(tokenAddress, chainId ?? connectedChainId)
   // Some chains are not supported by the backend, so we need to fetch token
   // details directly from the blockchain.
@@ -189,7 +189,7 @@ const UNKNOWN_TOKEN_NAME = 'Unknown Token'
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: boolean): Token | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const formattedAddress = isAddress(tokenAddress)
   const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)

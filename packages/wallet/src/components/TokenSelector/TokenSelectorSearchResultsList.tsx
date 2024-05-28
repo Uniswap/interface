@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { GqlResult } from 'uniswap/src/data/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   SectionHeader,
   TokenSelectorList,
@@ -15,7 +16,6 @@ import {
   formatSearchResults,
   getTokenOptionsSection,
 } from 'wallet/src/components/TokenSelector/utils'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useSearchTokens } from 'wallet/src/features/dataApi/searchTokens'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'

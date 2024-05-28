@@ -3,7 +3,7 @@ import { Field, SwapTab } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 import { ParsedQs } from 'qs'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
-import { InterfaceTrade, TradeState } from 'state/routing/types'
+import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 
 export type SwapInfo = {
   currencies: { [field in Field]?: Currency }
@@ -100,6 +100,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
 export interface SerializedCurrencyState {
   inputCurrencyId?: string
   outputCurrencyId?: string
+  chainId?: number
 }
 
 // shared state between Swap and Limit
@@ -111,4 +112,5 @@ export interface CurrencyState {
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
+  routerPreferenceOverride?: RouterPreference.API
 }

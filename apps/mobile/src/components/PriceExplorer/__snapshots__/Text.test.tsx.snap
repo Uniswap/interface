@@ -5,13 +5,13 @@ exports[`DatetimeText renders loading state 1`] = `null`;
 exports[`DatetimeText renders without error 1`] = `
 <TextInput
   allowFontScaling={true}
-  animatedStyle={
+  collapsable={false}
+  editable={false}
+  jestAnimatedStyle={
     {
       "value": {},
     }
   }
-  collapsable={false}
-  editable={false}
   maxFontSizeMultiplier={1.4}
   style={
     {
@@ -39,15 +39,15 @@ exports[`PriceText renders loading state 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "fontSize": 106,
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       {
@@ -77,15 +77,15 @@ exports[`PriceText renders without error 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "fontSize": 106,
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       {
@@ -103,7 +103,9 @@ exports[`PriceText renders without error 1`] = `
   />
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "color": "#CECECE",
@@ -111,8 +113,6 @@ exports[`PriceText renders without error 1`] = `
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       {
@@ -142,15 +142,15 @@ exports[`PriceText renders without error less than a dollar 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "fontSize": 106,
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       {
@@ -168,7 +168,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
   />
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "color": "#222222",
@@ -176,8 +178,6 @@ exports[`PriceText renders without error less than a dollar 1`] = `
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.2}
     style={
       {
@@ -246,13 +246,13 @@ exports[`RelativeChangeText renders loading state 1`] = `
           >
             <TextInput
               allowFontScaling={true}
-              animatedStyle={
+              collapsable={false}
+              editable={false}
+              jestAnimatedStyle={
                 {
                   "value": {},
                 }
               }
-              collapsable={false}
-              editable={false}
               maxFontSizeMultiplier={1.4}
               style={
                 {
@@ -269,12 +269,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
               underlineColorAndroid="transparent"
             />
             <Text
-              animatedStyle={
+              collapsable={false}
+              jestAnimatedStyle={
                 {
                   "value": {},
                 }
               }
-              collapsable={false}
               style={
                 {
                   "fontFamily": "Basel-Book",
@@ -325,7 +325,12 @@ exports[`RelativeChangeText renders without error 1`] = `
 >
   <RNSVGSvgView
     align="xMidYMid"
-    animatedStyle={
+    bbHeight="16"
+    bbWidth="16"
+    collapsable={false}
+    fill="none"
+    focusable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "color": "#FF5F52",
@@ -337,11 +342,6 @@ exports[`RelativeChangeText renders without error 1`] = `
         },
       }
     }
-    bbHeight="16"
-    bbWidth="16"
-    collapsable={false}
-    fill="none"
-    focusable={false}
     meetOrSlice={0}
     minX={0}
     minY={0}
@@ -411,15 +411,15 @@ exports[`RelativeChangeText renders without error 1`] = `
   </RNSVGSvgView>
   <TextInput
     allowFontScaling={true}
-    animatedStyle={
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
       {
         "value": {
           "color": "#FF5F52",
         },
       }
     }
-    collapsable={false}
-    editable={false}
     maxFontSizeMultiplier={1.4}
     style={
       {

@@ -3,7 +3,6 @@ import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { V2Unsupported } from 'components/V2Unsupported'
@@ -19,7 +18,9 @@ import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { Text } from 'ui/src'
+import { useAccount } from 'wagmi'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -51,8 +52,8 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function RemoveLiquidityWrapper() {
-  const { chainId } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const account = useAccount()
+  const isSupportedChain = useIsSupportedChainId(account.chainId)
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   if (isSupportedChain && currencyA !== currencyB) {
@@ -66,7 +67,8 @@ function RemoveLiquidity() {
   const navigate = useNavigate()
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const signer = useEthersSigner()
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useTheme()
@@ -120,7 +122,7 @@ function RemoveLiquidity() {
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
 
   async function onAttemptToApprove() {
-    if (!pairContract || !pair || !provider) throw new Error('missing dependencies')
+    if (!pairContract || !pair || !signer) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
@@ -165,7 +167,7 @@ function RemoveLiquidity() {
   const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onRemove() {
-    if (!chainId || !provider || !account || !router || !networkSupportsV2) {
+    if (account.status !== 'connected' || !signer || !router || !networkSupportsV2) {
       throw new Error('missing dependencies')
     }
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -201,7 +203,7 @@ function RemoveLiquidity() {
           liquidityAmount.quotient.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
-          account,
+          account.address,
           deadline.toHexString(),
         ]
       }
@@ -214,7 +216,7 @@ function RemoveLiquidity() {
           liquidityAmount.quotient.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          account,
+          account.address,
           deadline.toHexString(),
         ]
       }
@@ -229,7 +231,7 @@ function RemoveLiquidity() {
           liquidityAmount.quotient.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
-          account,
+          account.address,
           signatureData.deadline,
           false,
           signatureData.v,
@@ -246,7 +248,7 @@ function RemoveLiquidity() {
           liquidityAmount.quotient.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          account,
+          account.address,
           signatureData.deadline,
           false,
           signatureData.v,
@@ -409,10 +411,10 @@ function RemoveLiquidity() {
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
 
   const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      WRAPPED_NATIVE_CURRENCY[chainId] &&
-      ((currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA)) ||
-        (currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB)))
+    account.status === 'connected' &&
+      WRAPPED_NATIVE_CURRENCY[account.chainId] &&
+      ((currencyA && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyA)) ||
+        (currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB)))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -553,17 +555,17 @@ function RemoveLiquidity() {
                         </Text>
                       </RowFixed>
                     </RowBetween>
-                    {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
+                    {account.status === 'connected' && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
-                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                              currencyA?.isNative && WRAPPED_NATIVE_CURRENCY[account.chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[account.chainId]?.address
                                 : currencyIdA
                             }/${
-                              currencyB?.isNative && chainId && WRAPPED_NATIVE_CURRENCY[chainId]
-                                ? WRAPPED_NATIVE_CURRENCY[chainId]?.address
+                              currencyB?.isNative && WRAPPED_NATIVE_CURRENCY[account.chainId]
+                                ? WRAPPED_NATIVE_CURRENCY[account.chainId]?.address
                                 : currencyIdB
                             }`}
                           >
@@ -572,9 +574,13 @@ function RemoveLiquidity() {
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
                             to={`/remove/v2/${
-                              currencyA && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyA) ? 'ETH' : currencyIdA
+                              currencyA && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyA)
+                                ? 'ETH'
+                                : currencyIdA
                             }/${
-                              currencyB && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(currencyB) ? 'ETH' : currencyIdB
+                              currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB)
+                                ? 'ETH'
+                                : currencyIdB
                             }`}
                           >
                             Receive ETH
@@ -647,7 +653,7 @@ function RemoveLiquidity() {
               </div>
             )}
             <div style={{ position: 'relative' }}>
-              {!account ? (
+              {account.status !== 'connected' ? (
                 <TraceEvent
                   events={[BrowserEvent.onClick]}
                   name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}

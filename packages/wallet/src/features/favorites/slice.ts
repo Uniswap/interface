@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
+import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'
 import { currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 

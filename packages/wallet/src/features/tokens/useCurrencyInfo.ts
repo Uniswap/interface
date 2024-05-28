@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   currencyIdToContractInput,
   gqlTokenToCurrencyInfo,

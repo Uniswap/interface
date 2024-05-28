@@ -7,9 +7,10 @@ import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
-import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import {
   FeeOnTransferFeeGroup,
@@ -18,7 +19,6 @@ import {
 import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -58,7 +58,7 @@ export function TransactionDetails({
 
   const onPressToggleShowChildren = (): void => {
     if (!showChildren) {
-      sendWalletAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
+      sendAnalyticsEvent(SwapEventName.SWAP_DETAILS_EXPANDED)
     }
     setShowChildren(!showChildren)
   }

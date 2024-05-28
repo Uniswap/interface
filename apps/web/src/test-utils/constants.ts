@@ -5,7 +5,14 @@ import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import { Expiry } from 'state/limit/types'
-import { ClassicTrade, DutchOrderTrade, LimitOrderTrade, PreviewTrade, QuoteMethod } from 'state/routing/types'
+import {
+  ClassicTrade,
+  DutchOrderTrade,
+  LimitOrderTrade,
+  PreviewTrade,
+  QuoteMethod,
+  V2DutchOrderTrade,
+} from 'state/routing/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
@@ -138,6 +145,40 @@ export const TEST_DUTCH_TRADE_ETH_INPUT = new DutchOrderTrade({
   auctionPeriodSecs: 120,
   deadlineBufferSecs: 30,
   startTimeBufferSecs: 30,
+  slippageTolerance: new Percent(5, 100),
+})
+
+export const TEST_DUTCH_V2_TRADE_ETH_INPUT = new V2DutchOrderTrade({
+  currencyIn: ETH_MAINNET.wrapped,
+  currenciesOut: [TEST_TOKEN_2],
+  orderInfo: {
+    deadline: 1000,
+    reactor: 'test_reactor',
+    swapper: 'test_offerer',
+    nonce: BigNumber.from(1),
+    cosigner: 'test_cosigner',
+    additionalValidationContract: '0x0',
+    additionalValidationData: '0x0',
+    input: {
+      token: ETH_MAINNET.wrapped.address,
+      startAmount: BigNumber.from(1000),
+      endAmount: BigNumber.from(900),
+    },
+    outputs: [
+      {
+        token: TEST_TOKEN_2.address,
+        startAmount: BigNumber.from(1000),
+        endAmount: BigNumber.from(900),
+        recipient: '0x0',
+      },
+    ],
+  },
+  tradeType: TradeType.EXACT_INPUT,
+  quoteId: '0x0000000',
+  wrapInfo: { needsWrap: false },
+  approveInfo: { needsApprove: false },
+  classicGasUseEstimateUSD: 7.87,
+  deadlineBufferSecs: 30,
   slippageTolerance: new Percent(5, 100),
 })
 

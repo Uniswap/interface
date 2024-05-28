@@ -2,9 +2,10 @@
 import { TFunction } from 'i18next'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, isWeb, Text, useIsShortMobileDevice } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   selectHasSubmittedHoldToSwap,
   selectHasViewedReviewScreen,
@@ -28,7 +29,6 @@ import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppSelector } from 'wallet/src/state'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3000
 
@@ -122,7 +122,7 @@ export function SwapFormButton(): JSX.Element {
           hapticFeedback
           backgroundColor={buttonBgColor}
           disabled={reviewButtonDisabled && !isHoldToSwapPressed && !isViewOnlyWallet}
-          // Override opacity only for view only wallets
+          // Override opacity only for view-only wallets
           opacity={isViewOnlyWallet ? 0.4 : undefined}
           size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
           testID={ElementName.ReviewSwap}

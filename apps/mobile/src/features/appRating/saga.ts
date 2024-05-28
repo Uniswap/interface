@@ -2,9 +2,11 @@ import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
+import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -26,8 +28,8 @@ export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     // count successful swaps
 
-    // TODO(MOB-1814): Remove once Android goes live
-    if (isAndroid) {
+    const shouldSkip = yield* call(shouldSkipRatingPrompt)
+    if (shouldSkip) {
       return
     }
 
@@ -103,7 +105,7 @@ function* maybeRequestAppRating() {
       // assume it was and mark rating as provided.
       yield* put(setAppRating({ ratingProvided: true }))
 
-      sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+      sendAnalyticsEvent(MobileEventName.AppRating, {
         type: 'store-review',
         appRatingPromptedMs,
         appRatingProvidedMs,
@@ -115,7 +117,7 @@ function* maybeRequestAppRating() {
       if (feedbackSent) {
         yield* put(setAppRating({ feedbackProvided: true }))
 
-        sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+        sendAnalyticsEvent(MobileEventName.AppRating, {
           type: 'feedback-form',
           appRatingPromptedMs,
           appRatingProvidedMs,
@@ -123,7 +125,7 @@ function* maybeRequestAppRating() {
       } else {
         yield* put(setAppRating({ feedbackProvided: false }))
 
-        sendMobileAnalyticsEvent(MobileEventName.AppRating, {
+        sendAnalyticsEvent(MobileEventName.AppRating, {
           type: 'remind',
           appRatingPromptedMs,
           appRatingProvidedMs,
@@ -195,4 +197,11 @@ async function openNativeReviewModal() {
   } catch (e) {
     logger.error(e, { tags: { file: 'appRating/saga', function: 'useAppRating' } })
   }
+}
+
+function shouldSkipRatingPrompt(): boolean {
+  const isPlaystoreRatingPromptEnabled = Statsig.checkGate(
+    WALLET_FEATURE_FLAG_NAMES.get(FeatureFlags.PlaystoreAppRating) ?? ''
+  )
+  return isAndroid && !isPlaystoreRatingPromptEnabled
 }

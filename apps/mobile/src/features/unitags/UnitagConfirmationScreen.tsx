@@ -2,12 +2,11 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
-import { AnimateInOrder } from 'src/components/animation/AnimateInOrder'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
 import {
-  EmojiElement,
   ENSElement,
+  EmojiElement,
   FroggyElement,
   HeartElement,
   OpenseaElement,
@@ -15,10 +14,11 @@ import {
   SendElement,
   SwapElement,
   TextElement,
-} from 'src/features/unitags/ConfirmationElements'
-import { Screens, UnitagScreens } from 'src/screens/Screens'
+} from 'src/screens/Onboarding/OnboardingElements'
 import { AnimatePresence, Button, Flex, Text, useDeviceDimensions, useDeviceInsets } from 'ui/src'
+import { AnimateInOrder } from 'ui/src/animations'
 import { spacing } from 'ui/src/theme'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export function UnitagConfirmationScreen({
@@ -32,7 +32,7 @@ export function UnitagConfirmationScreen({
   const boxWidth = dimensions.fullWidth - insets.left - insets.right - spacing.spacing32
 
   const onPressCustomize = (): void => {
-    navigate(Screens.UnitagStack, {
+    navigate(MobileScreens.UnitagStack, {
       screen: UnitagScreens.EditProfile,
       params: {
         address,
@@ -43,7 +43,7 @@ export function UnitagConfirmationScreen({
   }
 
   const onPressDone = (): void => {
-    navigate(Screens.Home)
+    navigate(MobileScreens.Home)
   }
 
   const elementsToAnimate = useMemo(

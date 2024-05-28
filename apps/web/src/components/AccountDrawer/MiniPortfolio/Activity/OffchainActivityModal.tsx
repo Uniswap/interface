@@ -147,6 +147,7 @@ function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
     case UniswapXOrderStatus.PENDING_CANCELLATION:
       return <Trans>Pending cancellation</Trans>
     case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
+      return <Trans>Insufficient funds</Trans>
     case UniswapXOrderStatus.CANCELLED:
       return isLimit ? <Trans>Limit cancelled</Trans> : <Trans>Order cancelled</Trans>
     case UniswapXOrderStatus.FILLED:
@@ -267,7 +268,14 @@ export function OrderContent({
               <Trans>Insufficient balance</Trans>
             </ThemedText.SubHeader>
             <ThemedText.SubHeaderSmall lineHeight="20px">
-              <Trans>This order was canceled because your balance went below the input amount.</Trans>
+              {order.type === SignatureType.SIGN_LIMIT ? (
+                <Trans>
+                  This order will not fill because your balance went below the input amount. Increase your balance to
+                  fix.
+                </Trans>
+              ) : (
+                <Trans>This order was canceled because your balance went below the input amount.</Trans>
+              )}
             </ThemedText.SubHeaderSmall>
           </Column>
         </InsufficientFundsCopyContainer>
@@ -285,6 +293,10 @@ function useSyncedSelectedOrder(): UniswapXOrderDetails | undefined {
 
   return useMemo(() => {
     if (!selectedOrder?.order) return undefined
+
+    if (selectedOrder.order.status === UniswapXOrderStatus.FILLED) {
+      return selectedOrder.order
+    }
 
     return {
       ...selectedOrder.order,

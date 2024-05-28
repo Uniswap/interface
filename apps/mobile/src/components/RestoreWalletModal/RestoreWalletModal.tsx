@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
-import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
@@ -22,7 +22,7 @@ export function RestoreWalletModal(): JSX.Element | null {
 
   const onRestore = (): void => {
     dispatch(closeAllModals())
-    navigate(Screens.OnboardingStack, {
+    navigate(MobileScreens.OnboardingStack, {
       screen: OnboardingScreens.RestoreCloudBackupLoading,
       params: {
         entryPoint: OnboardingEntryPoint.Sidebar,

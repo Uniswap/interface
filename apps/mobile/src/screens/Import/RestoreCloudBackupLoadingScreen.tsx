@@ -11,16 +11,16 @@ import {
 import { clearCloudBackups } from 'src/features/CloudBackup/cloudBackupSlice'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Loader } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
+import { ImportType } from 'uniswap/src/types/onboarding'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<
@@ -55,14 +55,19 @@ export function RestoreCloudBackupLoadingScreen({
   useAddBackButton(navigation)
 
   // Starts query for cloud backup files, backup files found are streamed into Redux
-  const fetchCloudStorageBackups = useCallback(async () => {
+  const fetchCloudStorageBackups = useCallback(() => {
     setIsError(false)
-    try {
-      await startFetchingCloudStorageBackups()
-      setIsLoading(true)
-    } catch (e) {
-      setIsError(true)
-    }
+    setIsLoading(true)
+    // delays native oauth consent screen to avoid UI freezes
+    setTimeout(async () => {
+      try {
+        await startFetchingCloudStorageBackups()
+      } catch (e) {
+        setIsError(true)
+      } finally {
+        setIsLoading(false)
+      }
+    }, 0)
   }, [])
 
   /**
@@ -104,9 +109,9 @@ export function RestoreCloudBackupLoadingScreen({
    */
   useFocusEffect(
     useCallback(() => {
-      return navigation.addListener('transitionEnd', async () => {
+      return navigation.addListener('transitionEnd', () => {
         dispatch(clearCloudBackups())
-        await fetchCloudStorageBackups()
+        fetchCloudStorageBackups()
       })
     }, [dispatch, fetchCloudStorageBackups, navigation])
   )

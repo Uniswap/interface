@@ -24,8 +24,6 @@ export function FiatOnRampCtaButton({
   const continueText = eligible ? continueButtonText : t('fiatOnRamp.error.unsupported')
   return (
     <Button
-      // TODO: remove when https://linear.app/uniswap/issue/MOB-3182/disabled-ui-on-enabled-button is fixed
-      key={Math.random()}
       color={buttonAvailable ? '$white' : '$neutral2'}
       disabled={disabled}
       icon={
