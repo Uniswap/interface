@@ -17,7 +17,7 @@ export const apolloClient = new ApolloClient({
   link: httpLink,
   headers: {
     'Content-Type': 'application/json',
-    Origin: 'https://app.uniswap.org',
+    Origin: 'https://app.rigoblock.com',
   },
   cache: new InMemoryCache({
     typePolicies: {

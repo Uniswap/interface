@@ -12,4 +12,5 @@ export enum SupportArticleURL {
   LIMIT_FAILURE = 'https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute',
   IMPERMANENT_LOSS = 'https://support.uniswap.org/hc/en-us/articles/20904453751693-What-is-Impermanent-Loss',
   TOKEN_ADDITION_FORM = 'https://docs.rigoblock.com/governance/token-whitelists',
+  GET_HELP = 'https://discord.gg/FXd8EU8',
 }

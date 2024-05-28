@@ -34,7 +34,7 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
   // this should be removed once BE fixes issue where enableUniversalRouter is required for fees to work
-  enableUniversalRouter: true,
+  enableUniversalRouter: false,
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {

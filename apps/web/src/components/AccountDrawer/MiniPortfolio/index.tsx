@@ -15,9 +15,9 @@ import { atom, useAtom } from 'jotai'
 import { ActivityTab } from './Activity'
 import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
-//import Pools from './Pools'
+import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
-//import Tokens from './Tokens'
+import Tokens from './Tokens'
 
 const lastPageAtom = atom(0)
 
@@ -73,24 +73,24 @@ interface Page {
 
 // TODO: fix returned tokens loading and display values
 const Pages: Array<Page> = [
-  //{
-  //  title: <Trans>Tokens</Trans>,
-  //  key: 'tokens',
-  //  component: Tokens,
-  //  loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
-  //},
+  {
+    title: <Trans>Tokens</Trans>,
+    key: 'tokens',
+    component: Tokens,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
+  },
   {
     title: <Trans>NFTs</Trans>,
     key: 'nfts',
     component: NFTs,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
   },
-  //{
-  //  title: <Trans>Pools</Trans>,
-  //  key: 'pools',
-  //  component: Pools,
-  //  loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
-  //},
+  {
+    title: <Trans>Pools</Trans>,
+    key: 'pools',
+    component: Pools,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
+  },
   {
     title: <Trans>Activity</Trans>,
     key: 'activity',

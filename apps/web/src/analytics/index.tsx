@@ -15,8 +15,9 @@ export {
   type ITraceContext,
 } from '@uniswap/analytics'
 
+// TODO: we do not collect analytics, check if we want to add them instead
 const allowAnalyticsAtomKey = 'allow_analytics'
-export const allowAnalyticsAtom = atomWithStorage<boolean>(allowAnalyticsAtomKey, true)
+export const allowAnalyticsAtom = atomWithStorage<boolean>(allowAnalyticsAtomKey, false)
 
 export const Trace = memo((props: React.ComponentProps<typeof AnalyticsTrace>) => {
   const allowAnalytics = useAtomValue(allowAnalyticsAtom)
@@ -37,7 +38,7 @@ export const TraceEvent = memo((props: React.ComponentProps<typeof AnalyticsEven
 TraceEvent.displayName = 'TraceEvent'
 
 export const sendAnalyticsEvent: typeof sendAnalyticsTraceEvent = (event, properties) => {
-  let allowAnalytics = true
+  let allowAnalytics = false
 
   try {
     const value = localStorage.getItem(allowAnalyticsAtomKey)

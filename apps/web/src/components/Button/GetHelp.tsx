@@ -26,7 +26,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 export default function GetHelp() {
   return (
-    <StyledExternalLink href={SupportArticleURL.HOME}>
+    <StyledExternalLink href={SupportArticleURL.GET_HELP}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
         <Trans>Get help</Trans>

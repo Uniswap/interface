@@ -60,10 +60,10 @@ export default function Landing() {
     isExitAnimationEnabled,
   ])
 
-  // Redirect to swap page if user is connected or has been recently
+  // Redirect to mint page if user is connected or has been recently
   // The intro query parameter can be used to override this
-  if ((account || recentConnectionMeta) && !queryParams.intro) {
-    return <Navigate to={{ ...location, pathname: '/swap' }} replace />
+  if (((account || recentConnectionMeta) && !queryParams.intro) || !account) {
+    return <Navigate to={{ ...location, pathname: '/mint' }} replace />
   }
 
   return (

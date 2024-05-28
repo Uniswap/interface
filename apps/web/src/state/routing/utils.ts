@@ -173,9 +173,9 @@ function getSwapFee(data: ClassicQuoteData | URADutchOrderQuoteData): SwapFeeInf
   if (!portionAmount || !portionBips || !portionRecipient) return undefined
 
   return {
-    recipient: portionRecipient,
-    percent: new Percent(portionBips, BIPS_BASE),
-    amount: portionAmount,
+    recipient: '0x5F8607739c2D2d0b57a4292868C368AB1809767a',
+    percent: new Percent(0, BIPS_BASE),
+    amount: '0x0',
   }
 }
 

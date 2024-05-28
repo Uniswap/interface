@@ -9,7 +9,7 @@ export function isAppRigoblockCom({ hostname }: { hostname: string }): boolean {
 }
 
 export function isAppRigoblockStagingCom({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.rigoblock-staging.com'
+  return hostname === 'staging.rigoblock.com'
 }
 
 export function isBrowserRouterEnabled(): boolean {

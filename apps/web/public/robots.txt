@@ -19,4 +19,4 @@ Disallow: https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/s
 Disallow: https://celo-org.github.io
 
 # Sitemaps
-Sitemap: https://app.uniswap.org/sitemap.xml
+Sitemap: https://app.rigoblock.com/sitemap.xml

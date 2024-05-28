@@ -202,7 +202,7 @@ export default function Stake() {
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Select a pool to stake to, you will keep your voting power and earn staking rewards.</Trans>
+                  <Trans>Stake your GRGs, activate your voting power and earn rewards</Trans>
                 </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
             </AutoColumn>

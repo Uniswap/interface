@@ -22,6 +22,7 @@
   ],
   "frameSrc": [
     "'self'",
+    "https://api.swipelux.com/",
     "https://buy.moonpay.com/",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/"
@@ -43,6 +44,7 @@
     "https://*.nodereal.io",
     "https://*.optimism.io",
     "https://*.quiknode.pro",
+    "https://*.rigoblock.com",
     "https://*.twnodes.com",
     "https://*.uniswap.org",
     "https://*.walletconnect.com",
@@ -77,6 +79,7 @@
     "https://polygon-rpc.com/",
     "https://raw.githubusercontent.com",
     "https://raw.seadn.io/",
+    "https://rigoblock.com",
     "https://rpc-mainnet.maticvigil.com",
     "https://rpc-mumbai.maticvigil.com",
     "https://rpc.ankr.com",
@@ -89,6 +92,7 @@
     "https://sockjs-us3.pusher.com/",
     "https://sparrow.cloudflare.com/",
     "https://statsigapi.net",
+    "https://track.swipelux.com",
     "https://trustwallet.com",
     "https://uniswap.org",
     "https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm",
