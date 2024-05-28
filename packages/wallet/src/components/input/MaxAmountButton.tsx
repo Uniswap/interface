@@ -2,9 +2,9 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { maxAmountSpend } from 'wallet/src/utils/balance'
 
 interface MaxAmountButtonProps {

@@ -1,13 +1,13 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometrics/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import {
   WarningModal,
   WarningModalProps,
 } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   isTouchIdDevice: boolean

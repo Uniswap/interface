@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
-import { RecentConnectionMeta } from 'connection/types'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
@@ -70,7 +69,6 @@ type ExpectedAppState = CombinedState<{
 assert<Equals<AppState, ExpectedAppState>>()
 
 interface ExpectedUserState {
-  recentConnectionMeta?: RecentConnectionMeta
   lastUpdateVersionTimestamp?: number
   userLocale: SupportedLocale | null
   userRouterPreference: RouterPreference

@@ -1,16 +1,15 @@
 import { Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import { isUniswapXSupportedChain, L2_CHAIN_IDS, useIsSupportedChainId } from 'constants/chains'
+import { useIsMobile } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
-import { useIsMobile } from 'nft/hooks'
 import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
@@ -22,6 +21,7 @@ import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useChainId } from 'wagmi'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
@@ -117,7 +117,7 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const { chainId: connectedChainId } = useWeb3React()
+  const connectedChainId = useChainId()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
   const node = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)

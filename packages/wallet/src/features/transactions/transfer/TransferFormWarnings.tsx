@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ChainId } from 'uniswap/src/types/chains'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
@@ -14,7 +15,6 @@ import {
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 interface TransferFormWarningProps {
   recipient?: string

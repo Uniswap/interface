@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
@@ -25,7 +26,6 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20

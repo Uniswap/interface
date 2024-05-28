@@ -3,7 +3,7 @@ import { ESLint } from 'eslint'
 it('should have a correct configuration for a TypeScript file', async () => {
   const linter = new ESLint({
     overrideConfig: {
-      extends: ['./node.js'],
+      extends: ['./base.js'],
     },
   })
   expect(await linter.calculateConfigForFile('file.ts')).toMatchSnapshot({ parser: expect.any(String) })
@@ -21,7 +21,7 @@ it('should have a correct configuration for a React file', async () => {
 it('should have a correct configuration for a Jest file', async () => {
   const linter = new ESLint({
     overrideConfig: {
-      extends: ['./node.js'],
+      extends: ['./base.js'],
     },
   })
   expect(await linter.calculateConfigForFile('src/feature/file.test.ts')).toMatchSnapshot({
@@ -32,7 +32,7 @@ it('should have a correct configuration for a Jest file', async () => {
 it('should have a correct configuration for a Cypress e2e file', async () => {
   const linter = new ESLint({
     overrideConfig: {
-      extends: ['./node.js'],
+      extends: ['./base.js'],
     },
   })
   expect(await linter.calculateConfigForFile('cypress/e2e/file.ts')).toMatchSnapshot({

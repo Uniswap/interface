@@ -1,10 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import styled, { css } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 const CTASection = styled.section`
   display: grid;
@@ -69,7 +69,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 export default function CTACards() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const chain = CHAIN_INFO[useSupportedChainId(chainId) ?? ChainId.MAINNET]
 
   return (

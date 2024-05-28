@@ -1,5 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
@@ -9,6 +8,7 @@ import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { t, Trans } from 'i18n'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { css } from 'styled-components'
@@ -18,8 +18,8 @@ import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { useChainId } from 'wagmi'
 
-import { isLimitTrade } from 'state/routing/utils'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
@@ -103,10 +103,10 @@ export function Pending({
   // price that the user actually submitted.
   // TODO(WEB-3854): Stop requesting new swap quotes after the user submits the transaction.
   const initialTrade = useRef(trade).current
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
   const limitPlaced = isLimitTrade(initialTrade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
   const swapConfirmed =

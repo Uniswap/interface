@@ -4,7 +4,6 @@ import { EthMini } from 'components/Icons/EthMini'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import Popover from 'components/Popover'
 import Row from 'components/Row'
-import { Connection } from 'connection/types'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
@@ -131,16 +130,14 @@ export function Status({
   account,
   ensUsername,
   uniswapUsername,
-  connection,
 }: {
   account: string
   ensUsername: string | null
   uniswapUsername?: string
-  connection: Connection
 }) {
   return (
     <Container data-testid="account-drawer-status">
-      <StatusIcon account={account} connection={connection} size={40} />
+      <StatusIcon size={40} />
       <Identifiers>
         <ThemedText.SubHeader>
           <CopyHelper

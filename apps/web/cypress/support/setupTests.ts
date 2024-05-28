@@ -1,5 +1,7 @@
 // @ts-ignore
+import { ChainId } from '@uniswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
+import { revertHardhat, setupHardhat } from '../utils'
 
 beforeEach(() => {
   // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
@@ -39,11 +41,16 @@ beforeEach(() => {
 
   // Mock statsig to allow us to mock flags.
   cy.intercept(/statsig/, { statusCode: 409 })
-
-  // Reset hardhat between tests to ensure isolation.
-  // This resets the fork, as well as options like automine.
-  cy.hardhat().then((hardhat) => hardhat.reset())
 })
+
+// Reset hardhat between suites to ensure isolation.
+// This resets the fork, as well as options like automine.
+before(() => cy.hardhat().then((hardhat) => hardhat.reset(ChainId.MAINNET)))
+
+// Reverts hardhat between tests to ensure isolation.
+// This reverts the fork, but not options like automine.
+setupHardhat()
+beforeEach(revertHardhat)
 
 function logJsonRpc(req: CyHttpMessages.IncomingHttpRequest) {
   req.alias = req.body.method

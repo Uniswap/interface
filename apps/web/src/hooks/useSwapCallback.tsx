@@ -78,7 +78,7 @@ export function useSwapCallback(
       type: TransactionType.SWAP,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
       outputCurrencyId: currencyId(trade.outputAmount.currency),
-      isUniswapXOrder: result.type === TradeFillType.UniswapX,
+      isUniswapXOrder: result.type === TradeFillType.UniswapX || result.type === TradeFillType.UniswapXv2,
       ...(trade.tradeType === TradeType.EXACT_INPUT
         ? {
             tradeType: TradeType.EXACT_INPUT,
@@ -94,18 +94,21 @@ export function useSwapCallback(
           }),
     }
 
-    if (result.type === TradeFillType.UniswapX) {
-      addOrder(
-        account,
-        result.response.orderHash,
-        chainId,
-        result.response.deadline,
-        swapInfo as UniswapXOrderDetails['swapInfo'],
-        result.response.encodedOrder,
-        isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION // satisfying type-checker; isUniswapXTrade should always be true
-      )
-    } else {
-      addTransaction(result.response, swapInfo, result.deadline?.toNumber())
+    switch (result.type) {
+      case TradeFillType.UniswapX:
+      case TradeFillType.UniswapXv2:
+        addOrder(
+          account,
+          result.response.orderHash,
+          chainId,
+          result.response.deadline,
+          swapInfo as UniswapXOrderDetails['swapInfo'],
+          result.response.encodedOrder,
+          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION // satisfying type-checker; isUniswapXTrade should always be true
+        )
+        break
+      default:
+        addTransaction(result.response, swapInfo, result.deadline?.toNumber())
     }
 
     return result

@@ -16,6 +16,8 @@ export enum FeatureFlags {
   CexTransfers,
   LanguageSelection,
   MevBlocker,
+  OptionalRouting,
+  PlaystoreAppRating,
   PortionFields,
   RestoreWallet,
   Scantastic,
@@ -50,7 +52,7 @@ export enum FeatureFlags {
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
-  [FeatureFlags.UniconsV2, 'unicon_V2'],
+  [FeatureFlags.UniconsV2, 'unicon_v2'],
   // Web Specific
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
@@ -84,6 +86,8 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.CexTransfers, 'cex-transfers'],
   [FeatureFlags.LanguageSelection, 'language-selection'],
   [FeatureFlags.MevBlocker, 'mev-blocker'],
+  [FeatureFlags.OptionalRouting, 'optional-routing'],
+  [FeatureFlags.PlaystoreAppRating, 'playstore-app-rating'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.RestoreWallet, 'restore-wallet'],
   [FeatureFlags.Scantastic, 'scantastic'],

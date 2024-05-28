@@ -25,6 +25,7 @@ test.each(assets)('should inject metadata for valid assets', async (nft) => {
   expect(body).toMatchSnapshot(nft.collectionName)
   expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
+  expect(body).not.toContain(`<meta name="description"`)
   expect(body).toContain(`<meta property="og:image" content="${nft.image}" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:width" content="1200" data-rh="true">`)
   expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)

@@ -1,5 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
+import { styled as tamaguiStyled } from '@tamagui/core'
 import { RowFixed } from 'components/Row'
+import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, DEFAULT_MS_BEFORE_WARNING, useIsSupportedChainId } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -9,11 +10,10 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { ExternalLink } from 'theme/components'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { styled as tamaguiStyled } from '@tamagui/core'
-import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, DEFAULT_MS_BEFORE_WARNING, useIsSupportedChainId } from 'constants/chains'
 import { Text } from 'ui/src'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { useChainId } from 'wagmi'
+
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
@@ -113,7 +113,7 @@ const Spinner = styled.div<{ warning: boolean }>`
 `
 
 export default function Polling() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)

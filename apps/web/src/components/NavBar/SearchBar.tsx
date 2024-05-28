@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { Search } from 'components/Icons/Search'
@@ -14,19 +13,21 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
+import { useTranslation } from 'i18n'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { magicalGradientOnHover } from 'nft/css/common.css'
-import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components'
+import { useWeb3React } from 'wagmi'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useChainId } from 'wagmi'
 
-import { useTranslation } from 'i18n'
+import { useIsMobile, useIsTablet } from 'hooks/screenSize'
 import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
@@ -66,7 +67,7 @@ export const SearchBar = () => {
 
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
@@ -205,7 +206,6 @@ export const SearchBar = () => {
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
       <Column
-        data-cy="search-bar"
         position={{ sm: 'fixed', md: 'absolute' }}
         width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}

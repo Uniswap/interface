@@ -11,13 +11,15 @@ import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { FiatOnRampScreens } from 'src/screens/Screens'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ChainId } from 'uniswap/src/types/chains'
+import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getOptionalServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
@@ -26,8 +28,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { FiatOnRampEventName, ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
@@ -111,7 +111,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         baseCurrencyInfo &&
         quotesSections?.[0]?.data?.[0]
       ) {
-        sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
+        sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
           externalTransactionId,
           serviceProvider: serviceProvider.serviceProvider,
           preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProvider,

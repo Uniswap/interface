@@ -1,12 +1,12 @@
 import { isAddress } from '@ethersproject/address'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useChainId } from 'wagmi'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -44,7 +44,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   // state for smart contract input
   const [typed, setTyped] = useState('')

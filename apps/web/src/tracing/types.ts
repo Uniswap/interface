@@ -1,4 +1,3 @@
-import { ConnectionType } from 'connection/types'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 /**
@@ -46,5 +45,5 @@ export type TraceContext = {
   | { op: 'http.client'; tags: { host: string } }
   | { op: 'http.graphql.query'; tags: { host: string; chain?: Chain; operation?: string; address?: string } }
   | { op: 'http.json_rpc'; tags: { host: string; chain?: Chain; method?: string } }
-  | { op: 'wallet.connect' | 'wallet.connect.eager'; tags: { type: ConnectionType; wallet?: string } }
+  | { op: 'wallet.connect' | 'wallet.connect.eager'; tags: { id: string; wallet?: string } }
 )

@@ -36,7 +36,7 @@ export function UnitagName({
         enterStyle={animateIcon ? { opacity: 0, scale: 0.8, x: 20 } : undefined}
         exitStyle={animateIcon ? { opacity: 0, scale: 0.8, x: -20 } : undefined}
         position="absolute"
-        right={-spacing.spacing4}
+        right={-spacing.spacing24}
         top={-spacing.spacing4}>
         <Unitag size="$icon.24" />
       </Flex>

@@ -14,7 +14,6 @@ import {
   InterfaceGqlChain,
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
-  PUBLIC_RPC_URLS,
   SUPPORTED_GAS_ESTIMATE_CHAIN_IDS,
   SUPPORTED_INTERFACE_CHAIN_IDS,
   SupportedInterfaceChainId,
@@ -241,120 +240,6 @@ test.each(backendNotyetSupportedChainIds)(
   (chainId: SupportedInterfaceChainId) => {
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId)).toBe(true)
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.length).toEqual(backendNotyetSupportedChainIds.length)
-  }
-)
-
-const publicRpcUrls: Record<SupportedInterfaceChainId, string[]> = {
-  [ChainId.MAINNET]: [
-    // "Safe" URLs
-    'https://api.mycryptoapi.com/eth',
-    'https://cloudflare-eth.com',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth',
-    'https://eth-mainnet.public.blastapi.io',
-  ],
-  [ChainId.GOERLI]: [
-    // "Safe" URLs
-    'https://rpc.goerli.mudit.blog/',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/eth_goerli',
-  ],
-  [ChainId.SEPOLIA]: [
-    // "Safe" URLs
-    'https://rpc.sepolia.dev/',
-    // "Fallback" URLs
-    'https://rpc.sepolia.org/',
-    'https://rpc2.sepolia.org/',
-    'https://rpc.sepolia.online/',
-    'https://www.sepoliarpc.space/',
-    'https://rpc-sepolia.rockx.com/',
-    'https://rpc.bordel.wtf/sepolia',
-  ],
-  [ChainId.POLYGON]: [
-    // "Safe" URLs
-    'https://polygon-rpc.com/',
-    'https://rpc-mainnet.matic.network',
-    'https://matic-mainnet.chainstacklabs.com',
-    'https://rpc-mainnet.maticvigil.com',
-    'https://rpc-mainnet.matic.quiknode.pro',
-    'https://matic-mainnet-full-rpc.bwarelabs.com',
-  ],
-  [ChainId.POLYGON_MUMBAI]: [
-    // "Safe" URLs
-    'https://matic-mumbai.chainstacklabs.com',
-    'https://rpc-mumbai.maticvigil.com',
-    'https://matic-testnet-archive-rpc.bwarelabs.com',
-  ],
-  [ChainId.ARBITRUM_ONE]: [
-    // "Safe" URLs
-    'https://arb1.arbitrum.io/rpc',
-    // "Fallback" URLs
-    'https://arbitrum.public-rpc.com',
-  ],
-  [ChainId.ARBITRUM_GOERLI]: [
-    // "Safe" URLs
-    'https://goerli-rollup.arbitrum.io/rpc',
-  ],
-  [ChainId.OPTIMISM]: [
-    // "Safe" URLs
-    'https://mainnet.optimism.io/',
-    // "Fallback" URLs
-    'https://rpc.ankr.com/optimism',
-  ],
-  [ChainId.OPTIMISM_GOERLI]: [
-    // "Safe" URLs
-    'https://goerli.optimism.io',
-  ],
-  //[ChainId.CELO]: [
-  //  // "Safe" URLs
-  //  `https://forno.celo.org`,
-  //],
-  [ChainId.CELO_ALFAJORES]: [
-    // "Safe" URLs
-    `https://alfajores-forno.celo-testnet.org`,
-  ],
-  [ChainId.BNB]: [
-    // "Safe" URLs
-    'https://endpoints.omniatech.io/v1/bsc/mainnet/public',
-    'https://bsc-mainnet.gateway.pokt.network/v1/lb/6136201a7bad1500343e248d',
-    'https://1rpc.io/bnb',
-    'https://bsc-dataseed3.binance.org',
-    'https://bsc-dataseed2.defibit.io',
-    'https://bsc-dataseed1.ninicoin.io',
-    'https://binance.nodereal.io',
-    'https://bsc-dataseed4.defibit.io',
-    'https://rpc.ankr.com/bsc',
-  ],
-  //[ChainId.AVALANCHE]: [
-  //  // "Safe" URLs
-  //  'https://api.avax.network/ext/bc/C/rpc',
-  //  'https://avalanche-c-chain.publicnode.com',
-  //],
-  [ChainId.BASE]: [
-    // "Safe" URLs
-    'https://mainnet.base.org/',
-    'https://developer-access-mainnet.base.org/',
-    'https://base.gateway.tenderly.co',
-    'https://base.publicnode.com',
-    // "Fallback" URLs
-    'https://1rpc.io/base',
-    'https://base.meowrpc.com',
-  ],
-  //[ChainId.BLAST]: [
-  //  // "Safe" URLs
-  //  'https://rpc.blast.io/',
-  //  'https://rpc.ankr.com/blast',
-  //  'https://blast.din.dev/rpc',
-  //  'https://blastl2-mainnet.public.blastapi.io',
-  //  'https://blast.blockpi.network/v1/rpc/public',
-  //],
-}
-
-test.each(Object.keys(publicRpcUrls).map((key) => parseInt(key) as SupportedInterfaceChainId))(
-  'PUBLIC_RPC_URLS generates the correct chains',
-  (chain) => {
-    const urls = PUBLIC_RPC_URLS[chain]
-    expect(urls).toEqual(publicRpcUrls[chain])
   }
 )
 

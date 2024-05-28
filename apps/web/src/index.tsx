@@ -4,7 +4,6 @@ import '@reach/dialog/styles.css'
 import 'inter-ui'
 import 'polyfills'
 import 'tracing'
-import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
 import { ApolloProvider } from '@apollo/client'

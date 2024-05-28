@@ -10,8 +10,8 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade, isPreviewTrade } from 'state/routing/utils'
+import { InterfaceTrade } from 'state/routing/types'
+import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -19,7 +19,7 @@ import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SignatureExpiredError } from 'utils/errors'
+import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -62,6 +62,7 @@ export function ConfirmSwapModal({
   onConfirm,
   onCurrencySelection,
   onDismiss,
+  onXV2RetryWithClassic,
 }: {
   trade: InterfaceTrade
   originalTrade?: InterfaceTrade
@@ -79,6 +80,7 @@ export function ConfirmSwapModal({
   onConfirm: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
   onDismiss: () => void
+  onXV2RetryWithClassic?: () => void
 }) {
   const {
     confirmModalState,
@@ -90,6 +92,7 @@ export function ConfirmSwapModal({
     wrapTxHash,
     startSwapFlow,
     onCancel,
+    resetToReviewScreen,
   } = useConfirmModalState({
     trade,
     originalTrade,
@@ -105,7 +108,7 @@ export function ConfirmSwapModal({
 
   // Get status depending on swap type
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
+  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
   // Has the transaction been confirmed onchain?
   const swapConfirmed =
@@ -122,6 +125,7 @@ export function ConfirmSwapModal({
     if (approvalError) return approvalError
     if (tokenError) return tokenError
     if (swapError instanceof SignatureExpiredError) return
+    if (swapError instanceof UniswapXv2HardQuoteError) return PendingModalError.XV2_HARD_QUOTE_ERROR
     if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
     return
   }, [approvalError, swapError, tokenError])
@@ -266,7 +270,19 @@ export function ConfirmSwapModal({
         )}
         {/* Error screen handles all error types with custom messaging and retry logic */}
         {errorType && showError && (
-          <SwapError trade={trade} swapResult={swapResult} errorType={errorType} onRetry={startSwapFlow} />
+          <SwapError
+            trade={trade}
+            swapResult={swapResult}
+            errorType={errorType}
+            onRetry={() => {
+              if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
+                onXV2RetryWithClassic?.()
+                resetToReviewScreen()
+              } else {
+                startSwapFlow()
+              }
+            }}
+          />
         )}
       </SwapModal>
     </ThemeProvider>

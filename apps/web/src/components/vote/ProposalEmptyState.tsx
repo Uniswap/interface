@@ -1,8 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral2};
@@ -38,7 +38,6 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 
 export default function ProposalEmptyState() {
   const { chainId } = useWeb3React()
-  // TODO: add bsc support
   if (
     (chainId && chainId === ChainId.MAINNET) ||
     (chainId && chainId === ChainId.GOERLI) ||

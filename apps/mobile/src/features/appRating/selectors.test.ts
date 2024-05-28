@@ -1,6 +1,6 @@
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   TransactionDetails,
   TransactionStatus,

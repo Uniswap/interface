@@ -7,7 +7,6 @@ import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
@@ -17,7 +16,6 @@ import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackg
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Screens } from 'src/screens/Screens'
 import {
   Flex,
   HapticFeedback,
@@ -36,6 +34,9 @@ import {
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -46,7 +47,6 @@ import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { setClipboardImage } from 'wallet/src/utils/clipboard'
 import {
@@ -56,7 +56,7 @@ import {
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
-type NFTItemScreenProps = AppStackScreenProp<Screens.NFTItem>
+type NFTItemScreenProps = AppStackScreenProp<MobileScreens.NFTItem>
 
 export function NFTItemScreen(props: NFTItemScreenProps): JSX.Element {
   return isAndroid ? (
@@ -124,7 +124,7 @@ function NFTItemScreenContents({
   const onPressCollection = (): void => {
     const collectionAddress = asset?.nftContract?.address ?? fallbackData?.contractAddress
     if (collectionAddress) {
-      navigation.navigate(Screens.NFTCollection, { collectionAddress })
+      navigation.navigate(MobileScreens.NFTCollection, { collectionAddress })
     }
   }
 
@@ -135,7 +135,7 @@ function NFTItemScreenContents({
 
   const onPressOwner = (): void => {
     if (owner) {
-      navigation.navigate(Screens.ExternalProfile, {
+      navigation.navigate(MobileScreens.ExternalProfile, {
         address: owner,
       })
     }
@@ -206,7 +206,7 @@ function NFTItemScreenContents({
         directFromPage
         logImpression={!!traceProperties}
         properties={traceProperties}
-        screen={Screens.NFTItem}>
+        screen={MobileScreens.NFTItem}>
         <ExploreModalAwareView>
           <>
             {isIOS ? (
@@ -438,7 +438,7 @@ function RightElement({
       width={iconSizes.icon40}>
       {menuActions.length > 0 ? (
         onlyShare ? (
-          <TouchableOpacity onPress={menuActions[0]?.onPress}>
+          <TouchableOpacity hitSlop={24} onPress={menuActions[0]?.onPress}>
             <ShareIcon
               color={colors.neutral1.get()}
               height={iconSizes.icon24}
@@ -447,11 +447,13 @@ function RightElement({
           </TouchableOpacity>
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-            <EllipsisIcon
-              color={colors.neutral1.get()}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <TouchableArea p="$spacing16">
+              <EllipsisIcon
+                color={colors.neutral1.get()}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
+            </TouchableArea>
           </ContextMenu>
         )
       ) : undefined}

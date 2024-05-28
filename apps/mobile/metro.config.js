@@ -8,7 +8,7 @@ const { getMetroAndroidAssetsResolutionFix } = require('react-native-monorepo-to
 const androidAssetsResolutionFix = getMetroAndroidAssetsResolutionFix()
 
 const path = require('path')
-const { getDefaultConfig } = require('metro-config')
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const mobileRoot = path.resolve(__dirname)
 const workspaceRoot = path.resolve(mobileRoot, '../..')
@@ -17,32 +17,35 @@ const watchFolders = [mobileRoot, `${workspaceRoot}/node_modules`, `${workspaceR
 
 const detoxExtensions = process.env.DETOX_MODE === 'mocked' ? ['mock.tsx', 'mock.ts'] : []
 
-module.exports = (async () => {
-  const {
-    resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig()
-  return {
-    resolver: {
-      nodeModulesPaths: [`${workspaceRoot}/node_modules`],
-      assetExts: assetExts.filter((ext) => ext !== 'svg'),
-      // detox mocking works properly only being spreaded at the beginning of sourceExts array
-      sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs']
-    },
-    transformer: {
-      getTransformOptions: async () => ({
-        transform: {
-          experimentalImportSupport: false,
-          inlineRequires: true,
-        },
-      }),
-      babelTransformerPath: require.resolve('react-native-svg-transformer'),
-      publicPath: androidAssetsResolutionFix.publicPath,
-    },
-    server: {
-      enhanceMiddleware: (middleware) => {
-        return androidAssetsResolutionFix.applyMiddleware(middleware)
+const defaultConfig = getDefaultConfig(__dirname);
+
+const {
+  resolver: { sourceExts, assetExts },
+} = defaultConfig;
+
+const config = {
+  resolver: {
+    nodeModulesPaths: [`${workspaceRoot}/node_modules`],
+    assetExts: assetExts.filter((ext) => ext !== 'svg'),
+    // detox mocking works properly only being spreaded at the beginning of sourceExts array
+    sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs']
+  },
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: false,
+        inlineRequires: true,
       },
+    }),
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+    publicPath: androidAssetsResolutionFix.publicPath,
+  },
+  server: {
+    enhanceMiddleware: (middleware) => {
+      return androidAssetsResolutionFix.applyMiddleware(middleware)
     },
-    watchFolders,
-  }
-})()
+  },
+  watchFolders,
+}
+
+module.exports = mergeConfig(defaultConfig, config);

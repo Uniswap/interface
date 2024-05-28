@@ -13,7 +13,7 @@ import { chainIdToBackendChain, SupportedInterfaceChainId } from 'constants/chai
 import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/tokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
@@ -153,7 +153,7 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
 }
 
 export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
-  const { chainId: walletChainId, connector, account } = useWeb3React()
+  const { chainId: walletChainId, account } = useWeb3React()
   const { positions: userOwnedPositions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
@@ -194,7 +194,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
 
   const handleAddLiquidity = async () => {
     if (currency0 && currency1) {
-      if (walletChainId !== chainId && chainId) await switchChain(connector, chainId)
+      if (walletChainId !== chainId && chainId) await switchChain(chainId)
       navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`)
     }
   }

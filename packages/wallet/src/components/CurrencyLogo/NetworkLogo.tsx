@@ -2,7 +2,8 @@ import React from 'react'
 import { Image, ImageResizeMode, StyleSheet } from 'react-native'
 import { Flex, FlexProps, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type NetworkLogoProps = FlexProps & {
   chainId: ChainId
@@ -23,6 +24,8 @@ export function TransactionSummaryNetworkLogo({
   )
 }
 
+const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
+
 function _NetworkLogo({
   chainId,
   shape,
@@ -33,7 +36,7 @@ function _NetworkLogo({
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
     <Flex style={{ borderColor: colors.surface1.get(), borderRadius, ...styles.iconWrapper }}>
-      <Image source={logo} style={{ ...style.image, width: size, height: size }} />
+      <Image resizeMode={RESIZE_MODE_CONTAIN} source={logo} style={{ width: size, height: size }} />
     </Flex>
   ) : null
 }
@@ -49,15 +52,3 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 })
-
-const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
-
-export const style = StyleSheet.create({
-  image: {
-    resizeMode: RESIZE_MODE_CONTAIN,
-  },
-})
-
-export const SHADOW_OFFSET = { width: 0, height: 2 }
-
-export const THIN_BORDER = 0.5

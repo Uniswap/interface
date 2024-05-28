@@ -9,6 +9,7 @@ import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { useChainId } from 'wagmi'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -59,7 +60,7 @@ export function useApproval(
     | undefined
   >
 ] {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status

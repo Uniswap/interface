@@ -4,11 +4,11 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
   walletNeedsRestore: undefined | boolean

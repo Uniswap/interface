@@ -7,10 +7,9 @@ import { trace } from 'tracing/trace'
 import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, RouterPreference } from './types'
 import { isExactInput, transformQuickRouteToTrade } from './utils'
 
-const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be a defined environment variable`)
+if (UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be a defined environment variable`)
 }
 
 export const quickRouteApi = createApi({

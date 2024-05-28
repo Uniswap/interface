@@ -8,16 +8,14 @@ import {
   LinkSource,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
-
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
-import { Screens } from 'src/screens/Screens'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import {
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
@@ -64,7 +62,7 @@ describe(handleDeepLink, () => {
       .withState(stateWithActiveAccountAddress)
       .call(parseAndValidateUserAddress, account.address)
       .put(setAccountAsActive(account.address))
-      .call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: swapDeepLinkPayload.url,
         screen: 'swap',
         is_cold_start: swapDeepLinkPayload.coldStart,
@@ -76,7 +74,7 @@ describe(handleDeepLink, () => {
     return expectSaga(handleDeepLink, { payload: transactionDeepLinkPayload, type: '' })
       .withState(stateWithActiveAccountAddress)
       .call(handleTransactionLink)
-      .call(sendMobileAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
         url: transactionDeepLinkPayload.url,
         screen: 'transaction',
         is_cold_start: transactionDeepLinkPayload.coldStart,
@@ -169,7 +167,7 @@ describe(handleDeepLink, () => {
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
-        screen: Screens.NFTItem,
+        screen: MobileScreens.NFTItem,
         params: {
           address: SAMPLE_SEED_ADDRESS_1,
           tokenId: '123',
@@ -212,7 +210,7 @@ describe(handleDeepLink, () => {
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
-        screen: Screens.NFTCollection,
+        screen: MobileScreens.NFTCollection,
         params: {
           collectionAddress: SAMPLE_SEED_ADDRESS_1,
         },
@@ -253,7 +251,7 @@ describe(handleDeepLink, () => {
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
-        screen: Screens.TokenDetails,
+        screen: MobileScreens.TokenDetails,
         params: {
           currencyId: `1-${SAMPLE_SEED_ADDRESS_1}`,
         },
@@ -335,7 +333,7 @@ describe(handleDeepLink, () => {
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
-        screen: Screens.ExternalProfile,
+        screen: MobileScreens.ExternalProfile,
         params: {
           address: SAMPLE_SEED_ADDRESS_2,
         },

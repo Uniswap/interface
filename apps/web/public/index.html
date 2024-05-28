@@ -16,17 +16,20 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    <% let cspConfig = require('./csp.json'); %>
 
-    <!-- Allow vercel feedback in preview environments -->
-    <% if (process.env.REACT_APP_STAGING) { %>
-      <% const cspDevConfig = require('./vercel-csp.json'); %>
-      <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
+    <!-- Skip the CSP in specified test environments -->
+    <% if (!process.env.REACT_APP_SKIP_CSP) { %>
+      <% let cspConfig = require('./csp.json'); %>
+      <!-- Allow vercel feedback in preview environments -->
+      <% if (process.env.REACT_APP_STAGING) { %>
+        <% const cspDevConfig = require('./vercel-csp.json'); %>
+        <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
+      <% } %>
+      <meta
+        http-equiv="Content-Security-Policy" 
+        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
+      >
     <% } %>
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
-    >
 
     <!-- 
       Apple Smart App Banner for Safari on iOS

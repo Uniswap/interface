@@ -5,7 +5,11 @@ import {
   ReadOnlyAccount,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures/constants'
+import {
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_2,
+  SAMPLE_SEED_ADDRESS_3,
+} from 'wallet/src/test/fixtures/constants'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 
@@ -55,4 +59,8 @@ export const ACCOUNT2 = signerMnemonicAccount({
   timeImportedMs: 100,
   mnemonicId: SAMPLE_SEED_ADDRESS_1,
   backups: [BackupType.Manual],
+})
+
+export const ACCOUNT3 = signerMnemonicAccount({
+  address: SAMPLE_SEED_ADDRESS_3,
 })

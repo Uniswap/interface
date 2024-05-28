@@ -142,4 +142,8 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
   return StatsigMock
 })
 
+// TODO: Remove this mock after mocks in jest-expo are fixed
+// (see the issue: https://github.com/expo/expo/issues/26893)
+jest.mock('expo-web-browser', () => ({}))
+
 global.__DEV__ = true

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
@@ -16,7 +15,6 @@ import {
   NFT_BANNER_HEIGHT,
 } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Screens } from 'src/screens/Screens'
 import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
@@ -32,6 +30,8 @@ import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
@@ -75,7 +75,7 @@ function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTIt
   })
 }
 
-type NFTCollectionScreenProps = AppStackScreenProp<Screens.NFTCollection> & {
+type NFTCollectionScreenProps = AppStackScreenProp<MobileScreens.NFTCollection> & {
   renderedInModal?: boolean
 }
 
@@ -134,7 +134,7 @@ export function NFTCollectionScreen({
   })
 
   const onPressItem = (asset: NFTItem): void => {
-    navigation.navigate(Screens.NFTItem, {
+    navigation.navigate(MobileScreens.NFTItem, {
       address: asset.contractAddress ?? '',
       tokenId: asset.tokenId ?? '',
       isSpam: asset.isSpam ?? false,
@@ -252,7 +252,7 @@ export function NFTCollectionScreen({
         directFromPage
         logImpression={!!traceProperties}
         properties={traceProperties}
-        screen={Screens.NFTCollection}>
+        screen={MobileScreens.NFTCollection}>
         <Screen noInsets={true}>
           <ScrollHeader
             fullScreen

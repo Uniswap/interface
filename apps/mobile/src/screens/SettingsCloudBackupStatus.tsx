@@ -9,10 +9,11 @@ import { Screen } from 'src/components/layout/Screen'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -27,9 +28,8 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
+type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
 
 export function SettingsCloudBackupStatus({
   navigation,
@@ -67,7 +67,7 @@ export function SettingsCloudBackupStatus({
         })
       )
       setShowBackupDeleteWarning(false)
-      navigation.navigate(Screens.Settings)
+      navigation.navigate(MobileScreens.Settings)
     } catch (error) {
       setShowBackupDeleteWarning(false)
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
@@ -84,7 +84,7 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   const onPressBack = (): void => {
-    navigation.navigate(Screens.Settings)
+    navigation.navigate(MobileScreens.Settings)
   }
 
   const googleDriveEmail = backups[0]?.googleDriveEmail

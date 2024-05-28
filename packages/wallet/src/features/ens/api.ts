@@ -2,8 +2,8 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { ChainId } from 'wallet/src/constants/chains'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 

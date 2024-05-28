@@ -20,6 +20,12 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
+jest.mock('uniswap/src/utils/env', () => ({
+  isDevEnv: jest.fn(() => false),
+  isBetaEnv: jest.fn(() => false),
+  isProdEnv: jest.fn(() => false),
+}))
+
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
   useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),

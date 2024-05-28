@@ -1,0 +1,12 @@
+diff --git a/lib/browser/eip1193.js b/lib/browser/eip1193.js
+index ce028c25a164d8af8d513bc0eae4cf104234f6e8..81ba2f29d379f18c04c57b5a560cc6c4f4b57e0d 100644
+--- a/lib/browser/eip1193.js
++++ b/lib/browser/eip1193.js
+@@ -70,6 +70,7 @@ class Eip1193 extends eip1193_bridge_1.Eip1193Bridge {
+                         yield _super.send.call(this, method, params);
+                         // Providers will not "rewind" to an older block number nor notice chain changes, so they must be reset.
+                         this.utils.providers.forEach((provider) => provider.reset());
++                        this.emit('chainChanged', params[0].chainId);
+                         break;
+                     default:
+                         result = yield _super.send.call(this, method, params);

@@ -4,6 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
+import { useChainId } from 'wagmi'
 // eslint-disable-next-line no-restricted-imports
 //import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
@@ -47,7 +48,7 @@ function useGovernanceProxyContract(): Contract | null {
 const useLatestGovernanceContract = useGovernanceProxyContract
 
 function useUniContract() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
@@ -281,7 +282,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const blockNumber = useBlockNumber()
   const gov = useGovernanceProxyContract()
 
@@ -402,7 +403,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const latestGovernanceContract = useLatestGovernanceContract()
   const govParams = useSingleCallResult(latestGovernanceContract, 'governanceParameters')?.result?.[0]
   const quorumVotes = govParams?.params?.quorumThreshold
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   if (
@@ -788,7 +789,7 @@ export function useCreateProposalCallback(): (
 //}
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'governanceParameters')

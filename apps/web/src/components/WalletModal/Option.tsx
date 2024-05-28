@@ -1,17 +1,16 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
-import { deprecatedInjectedConnection } from 'connection'
-import { ActivationStatus, useActivationState } from 'connection/activate'
-import { Connection } from 'connection/types'
+
+import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useConnectWithLogs } from 'connection/activate'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
-import { ButtonText, ThemedText } from 'theme/components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { isIFramed } from 'utils/isIFramed'
+import { Connector, useAccount } from 'wagmi'
 
 const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
@@ -92,61 +91,45 @@ const RecentBadge = () => (
   </StyledBadge>
 )
 
-interface OptionProps {
-  connection: Connection
-  isRecent?: boolean
-}
-
-export default function Option({ connection, isRecent }: OptionProps) {
-  const { activationState, tryActivation } = useActivationState()
-  const toggleAccountDrawer = useToggleAccountDrawer()
-  const { chainId } = useWeb3React()
-
-  const isDarkMode = useIsDarkMode()
-  const { name, icon } = connection.getProviderInfo(isDarkMode)
-
-  const isSomeOptionPending = activationState.status === ActivationStatus.PENDING
-  const isCurrentOptionPending = isSomeOptionPending && activationState.connection === connection
-
+export function Option({
+  connector,
+  connectWithLogs,
+}: {
+  connector: Connector
+  connectWithLogs: ReturnType<typeof useConnectWithLogs>
+}) {
+  const { isConnecting, isReconnecting } = useAccount()
+  const { variables, connect } = connectWithLogs
+  const isRecent = connector.id === useRecentConnectorId()
+  const isCurrentOptionPending = isConnecting && variables?.connector === connector
   const rightSideDetail = isCurrentOptionPending ? <Loader /> : isRecent ? <RecentBadge /> : null
+  const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
+  // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
+  const isDisabled = (isConnecting || isReconnecting) && !isIFramed()
 
   return (
-    <Wrapper disabled={isSomeOptionPending}>
+    <Wrapper disabled={isDisabled}>
       <TraceEvent
         events={[BrowserEvent.onClick]}
         name={InterfaceEventName.WALLET_SELECTED}
-        properties={{ wallet_type: name }}
+        properties={{ wallet_type: connector.name }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
-          disabled={isSomeOptionPending}
-          onClick={() => tryActivation(connection, toggleAccountDrawer, chainId)}
+          disabled={isDisabled}
+          onClick={() => connect(connector)}
           selected={isCurrentOptionPending}
-          data-testid={`wallet-option-${connection.type}`}
+          data-testid={`wallet-option-${connector.type}`}
         >
           <OptionCardLeft>
             <IconWrapper>
-              <img src={icon} alt={name} />
+              <img src={icon} alt={connector.name} />
             </IconWrapper>
-            <HeaderText>{name}</HeaderText>
+            <HeaderText>{connector.name}</HeaderText>
           </OptionCardLeft>
           {rightSideDetail}
         </OptionCardClickable>
       </TraceEvent>
     </Wrapper>
-  )
-}
-
-export function DeprecatedInjectorMessage() {
-  const { tryActivation } = useActivationState()
-  const toggleAccountDrawer = useToggleAccountDrawer()
-  const { chainId } = useWeb3React()
-
-  return (
-    <ButtonText onClick={() => tryActivation(deprecatedInjectedConnection, toggleAccountDrawer, chainId)}>
-      <ThemedText.BodySmall color="neutral2">
-        <Trans>Don&apos;t see your wallet?</Trans>
-      </ThemedText.BodySmall>
-    </ButtonText>
   )
 }

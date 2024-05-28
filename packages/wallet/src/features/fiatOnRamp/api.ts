@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
@@ -19,8 +20,8 @@ import {
   FORSupportedFiatCurrenciesResponse,
   FORSupportedTokensRequest,
   FORSupportedTokensResponse,
-  FORTransactionsRequest,
-  FORTransactionsResponse,
+  FORTransactionRequest,
+  FORTransactionResponse,
   FORTransferWidgetUrlRequest,
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
@@ -43,12 +44,12 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { transformPaymentMethods } from './utils'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
+const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 3
 
 const FOR_API_HEADERS = {
   'Content-Type': 'application/json',
@@ -86,14 +87,14 @@ export const fiatOnRampApi = createApi({
         fetch(`${config.moonpayApiUrl}/v4/ip_address?${COMMON_QUERY_PARAMS}`)
           .then((response) => response.json())
           .then((response: MoonpayIPAddressesResponse) => {
-            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: response.isBuyAllowed ?? false,
               networkError: false,
             })
             return { data: response }
           })
           .catch((e) => {
-            sendWalletAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
+            sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, {
               success: false,
               networkError: true,
             })
@@ -293,10 +294,7 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
     }),
-    fiatOnRampAggregatorTransactions: builder.query<
-      FORTransactionsResponse,
-      FORTransactionsRequest
-    >({
+    fiatOnRampAggregatorTransaction: builder.query<FORTransactionResponse, FORTransactionRequest>({
       async queryFn(args, { getState }, _extraOptions, baseQuery) {
         try {
           const account = selectActiveAccount(getState() as RootState)
@@ -311,7 +309,7 @@ export const fiatOnRampAggregatorApi = createApi({
             signerManager
           )
           const result = await baseQuery({
-            url: `/transactions?${objectToQueryString(requestParams)}`,
+            url: `/transaction?${objectToQueryString(requestParams)}`,
             method: 'GET',
             headers: {
               'x-uni-sig': signature,
@@ -320,7 +318,7 @@ export const fiatOnRampAggregatorApi = createApi({
           if (result.error) {
             return { error: result.error }
           }
-          return { data: result.data as FORTransactionsResponse }
+          return { data: result.data as FORTransactionResponse }
         } catch (error) {
           return { error: { status: 'FETCH_ERROR', error: String(error) } }
         }
@@ -338,7 +336,7 @@ export const {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,
-  useFiatOnRampAggregatorTransactionsQuery,
+  useFiatOnRampAggregatorTransactionQuery,
   useFiatOnRampAggregatorGetCountryQuery,
 } = fiatOnRampAggregatorApi
 
@@ -403,16 +401,20 @@ export function fetchMoonpayTransaction(
  */
 export async function fetchFiatOnRampTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
+  forceFetch: boolean,
   account: Account,
   signerManager: SignerManager
 ): Promise<FiatOnRampTransactionDetails | undefined> {
-  const { requestParams, signature } = await createSignedRequestParams(
-    { externalSessionId: previousTransactionDetails.id },
+  // Force fetch if requested or for the first 3 minutes after the transaction was added
+  const shouldForceFetch = shouldForceFetchTransaction(previousTransactionDetails, forceFetch)
+
+  const { requestParams, signature } = await createSignedRequestParams<FORTransactionRequest>(
+    { sessionId: previousTransactionDetails.id, forceFetch: shouldForceFetch },
     account,
     signerManager
   )
   const res = await fetch(
-    `${uniswapUrls.fiatOnRampApiUrl}/transactions?${objectToQueryString(requestParams)}`,
+    `${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`,
     {
       headers: {
         'x-uni-sig': signature,
@@ -420,10 +422,7 @@ export async function fetchFiatOnRampTransaction(
       },
     }
   )
-  const { transactions }: FORTransactionsResponse = await res.json()
-  const transaction = transactions.sort((a, b) =>
-    dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1
-  )?.[0]
+  const { transaction }: FORTransactionResponse = await res.json()
   if (!transaction) {
     const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
       dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')
@@ -458,6 +457,17 @@ export async function fetchFiatOnRampTransaction(
   }
 
   return extractFiatOnRampTransactionDetails(transaction)
+}
+
+function shouldForceFetchTransaction(
+  previousTransactionDetails: FiatOnRampTransactionDetails,
+  forceFetch: boolean
+): boolean {
+  const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
+    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms')
+  )
+  const isSyncedWithBackend = previousTransactionDetails.typeInfo?.syncedWithBackend
+  return forceFetch || (isRecent && !isSyncedWithBackend)
 }
 
 export function useCexTransferProviders(isEnabled: boolean): FORServiceProvider[] {

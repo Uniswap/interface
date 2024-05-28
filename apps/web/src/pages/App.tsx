@@ -7,7 +7,7 @@ import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } 
 import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { useMetatags } from 'pages/metatags'
+import { useDynamicMetatags } from 'pages/metatags'
 import { lazy, memo, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
@@ -113,7 +113,9 @@ export default function App() {
 
   useFeatureFlagURLOverrides()
 
-  const metaTagProperties = useMetatags()
+  const metaTags = useDynamicMetatags()
+  const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
+  const staticDescription = findRouteByPath(pathname)?.getDescription(pathname)
 
   // redirect address to landing pages until implemented
   const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
@@ -141,9 +143,11 @@ export default function App() {
           you can set it later in the page component itself, since react-helmet-async prefers the most recently rendered title.
         */}
         <Helmet>
-          <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
-          {metaTagProperties.map((tag) => (
-            <meta key={tag.property} {...tag} />
+          <title>{staticTitle}</title>
+          {staticDescription && <meta name="description" content={staticDescription} />}
+          {staticDescription && <meta property="og:description" content={staticDescription} />}
+          {metaTags.map((tag, index) => (
+            <meta key={index} {...tag} />
           ))}
         </Helmet>
         <UserPropertyUpdater />

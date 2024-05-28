@@ -1,9 +1,18 @@
-import { deprecatedInjectedConnection } from 'connection'
-import { render, waitFor } from 'test-utils/render'
-
 import StatusIcon from 'components/Identicon/StatusIcon'
+import { mocked } from 'test-utils/mocked'
+import { render, waitFor } from 'test-utils/render'
+import { useAccount } from 'wagmi'
 
-const ACCOUNT = '0x52270d8234b864dcAC9947f510CE9275A8a116Db'
+const ACCOUNT = '0x0'
+
+jest.mock('wagmi', () => ({
+  ...jest.requireActual('wagmi'),
+  useAccount: jest.fn(),
+}))
+
+jest.mock('uniswap/src/features/unitags/hooks', () => ({
+  useUnitagByAddress: () => ({ unitag: undefined, loading: false }),
+}))
 
 jest.mock('../../hooks/useSocksBalance', () => ({
   useHasSocks: () => true,
@@ -12,31 +21,38 @@ jest.mock('../../hooks/useSocksBalance', () => ({
 describe('StatusIcon', () => {
   describe('with no account', () => {
     it('renders children in correct order', () => {
-      const component = render(<StatusIcon account="" connection={deprecatedInjectedConnection} />)
+      mocked(useAccount).mockReturnValue({
+        address: undefined,
+        connector: undefined,
+      } as unknown as ReturnType<typeof useAccount>)
+      const component = render(<StatusIcon />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
-    })
-
-    it('renders without mini icons', async () => {
-      const component = render(
-        <StatusIcon account="" connection={deprecatedInjectedConnection} showMiniIcons={false} />
-      )
-      await waitFor(() => expect(component.queryByTestId('IdenticonLoader')).not.toBeInTheDocument())
-      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(0)
+      expect(component.queryByTestId('MiniIcon')).not.toBeInTheDocument()
     })
   })
 
   describe('with account', () => {
     it('renders children in correct order', () => {
-      const component = render(<StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} />)
-      expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
-    })
+      jest.spyOn(console, 'error').mockImplementation(() => null)
+      mocked(useAccount).mockReturnValue({
+        address: ACCOUNT,
+        connector: { id: 'io.metamask' },
+      } as unknown as ReturnType<typeof useAccount>)
 
-    it('renders without mini icons', async () => {
-      const component = render(
-        <StatusIcon account={ACCOUNT} connection={deprecatedInjectedConnection} showMiniIcons={false} />
-      )
-      await waitFor(() => expect(component.queryByTestId('IdenticonLoader')).not.toBeInTheDocument())
-      expect(component.getByTestId('StatusIconRoot').children.length).toEqual(1)
+      const component = render(<StatusIcon />)
+      expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
+      expect(component.getByTestId('MiniIcon')).toBeInTheDocument()
     })
+  })
+
+  it('renders without mini icons', async () => {
+    mocked(useAccount).mockReturnValue({
+      address: ACCOUNT,
+      connector: { id: 'io.metamask' },
+    } as unknown as ReturnType<typeof useAccount>)
+
+    const component = render(<StatusIcon showMiniIcons={false} />)
+    await waitFor(() => expect(component.queryByTestId('IdenticonLoader')).not.toBeInTheDocument())
+    expect(component.queryByTestId('MiniIcon')).not.toBeInTheDocument()
   })
 })

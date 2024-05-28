@@ -19,7 +19,6 @@ export enum BiometricAuthenticationStatus {
   MissingEnrollment = 'MISSING_ENROLLMENT',
   Rejected = 'REJECTED',
   Authenticated = 'AUTHENTICATED',
-  Canceled = 'CANCELED',
   Authenticating = 'AUTHENTICATING',
   Lockout = 'LOCKOUT',
   UserCancel = 'USER_CANCEL',

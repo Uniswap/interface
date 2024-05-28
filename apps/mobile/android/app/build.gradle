@@ -131,17 +131,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.27"
+        versionName "1.28"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.27"
+        versionName "1.28"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.27"
+        versionName "1.28"
       }
     }
 
@@ -183,7 +183,7 @@ android {
         compose true
     }
     composeOptions {
-         kotlinCompilerExtensionVersion = "1.4.6"
+        kotlinCompilerExtensionVersion = "1.4.6"
     }
 
     sourceSets {
@@ -242,18 +242,11 @@ dependencies {
 
     implementation "com.google.accompanist:accompanist-flowlayout:$flowlayout"
 
-    implementation project(':@sentry_react-native')
     // Used for device-reported performance class.
     implementation("androidx.core:core-performance:$corePerf")
     implementation("androidx.core:core-performance-play-services:$corePerf")
 
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-      exclude group:'com.facebook.fbjni'
-    }
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+    implementation("com.facebook.react:flipper-integration")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

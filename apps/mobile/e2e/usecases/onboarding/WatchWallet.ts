@@ -1,6 +1,6 @@
 import { by, element, expect } from 'detox'
 import { TestWatchedWallet } from 'e2e/utils/fixtures'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export async function WatchWallet(): Promise<void> {
   // Selects "Add an existing wallet" option on the landing screen

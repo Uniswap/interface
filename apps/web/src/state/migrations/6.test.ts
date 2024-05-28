@@ -1,4 +1,3 @@
-import { ConnectionType } from 'connection/types'
 import { createMigrate } from 'redux-persist'
 import { RouterPreference } from 'state/routing/types'
 import { SlippageTolerance } from 'state/user/types'
@@ -35,7 +34,7 @@ const previousStateUnselected: PersistAppStateV6 = {
 
 const previousStateSelected: PersistAppStateV6 = {
   user: {
-    selectedWallet: ConnectionType.INJECTED,
+    selectedWallet: 'Injected',
     ...persistUserState,
   },
   _persist: {
@@ -76,6 +75,6 @@ describe('migration to v6', () => {
     )
     const result: any = await migrator(previousStateSelected, 6)
     expect(Object.keys(result)).not.toContain('selectedWallet')
-    expect(result?.user?.recentConnectionMeta).toMatchObject({ type: ConnectionType.INJECTED })
+    expect(result?.user?.recentConnectionMeta).toMatchObject({ type: 'Injected' })
   })
 })

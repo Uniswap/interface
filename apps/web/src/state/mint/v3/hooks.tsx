@@ -21,6 +21,7 @@ import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
 import { useCurrencyBalances } from '../../connection/hooks'
@@ -137,6 +138,7 @@ export function useV3DerivedMintInfo(
   depositBDisabled: boolean
   invertPrice: boolean
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
+  isTaxed: boolean
 } {
   const { account } = useWeb3React()
 
@@ -401,6 +403,11 @@ export function useV3DerivedMintInfo(
         (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB))
     )
 
+  const { inputTax: currencyATax, outputTax: currencyBTax } = useSwapTaxes(
+    currencyA?.isToken ? currencyA.address : undefined,
+    currencyB?.isToken ? currencyB.address : undefined
+  )
+
   // create position entity based on users selection
   const position: Position | undefined = useMemo(() => {
     if (
@@ -476,7 +483,8 @@ export function useV3DerivedMintInfo(
     errorMessage = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_B]?.symbol }} balance</Trans>
   }
 
-  const invalidPool = poolState === PoolState.INVALID
+  const isTaxed = currencyATax.greaterThan(0) || currencyBTax.greaterThan(0)
+  const invalidPool = poolState === PoolState.INVALID || isTaxed
 
   return {
     dependentField,
@@ -499,6 +507,7 @@ export function useV3DerivedMintInfo(
     depositBDisabled,
     invertPrice,
     ticksAtLimit,
+    isTaxed,
   }
 }
 

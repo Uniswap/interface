@@ -1,11 +1,13 @@
+import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { Web3ReactHooks, Web3ReactProvider, useWeb3React } from '@web3-react/core'
-import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, useTrace, user } from 'analytics'
-import { connections, getConnection } from 'connection'
+import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
+import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmi'
 import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import usePrevious from 'hooks/usePrevious'
+import { useUpdateAtom } from 'jotai/utils'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
@@ -13,26 +15,35 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
+import { WagmiProvider, useAccount } from 'wagmi'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
-  const connectors = connections.map<[Connector, Web3ReactHooks]>(({ hooks, connector }) => [connector, hooks])
-
   return (
-    <Web3ReactProvider connectors={connectors}>
-      <Updater />
-      {children}
-    </Web3ReactProvider>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <Updater />
+        {children}
+      </QueryClientProvider>
+    </WagmiProvider>
   )
 }
 
 /** A component to run hooks under the Web3ReactProvider context. */
 function Updater() {
-  const { account, chainId, connector, provider } = useWeb3React()
+  const { address: account, chainId } = useAccount()
+  const provider = useEthersWeb3Provider()
+
   const isSupportedChain = useIsSupportedChainId(chainId)
+  const { connector } = useAccount()
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
   const networkProvider = isSupportedChain ? RPC_PROVIDERS[chainId] : undefined
+
+  const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
+  useEffect(() => {
+    if (connector) updateRecentConnectorId(connector.id)
+  }, [connector, updateRecentConnectorId])
 
   // Trace RPC calls (for debugging).
   const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)
@@ -56,7 +67,7 @@ function Updater() {
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
-        wallet_type: getConnection(connector).getProviderInfo().name,
+        wallet_type: connector?.name ?? 'Network',
         chain_id: chainId,
         previousConnectedChainId,
         page: currentPage,
@@ -69,8 +80,9 @@ function Updater() {
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
     if (account && account !== previousAccount) {
-      const walletType = getConnection(connector).getProviderInfo().name
+      const walletType = connector?.name ?? 'Network'
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
+
       const isReconnect = connectedWallets.some(
         (wallet) => wallet.account === account && wallet.walletType === walletType
       )

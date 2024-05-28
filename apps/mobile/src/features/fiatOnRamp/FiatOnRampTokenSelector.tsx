@@ -2,12 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
-import Trace from 'src/components/Trace/Trace'
 import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { AnimatedFlex, Flex, Text, useSporeColors } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void

@@ -20,12 +20,11 @@ export function OutputTaxTooltipBody({ currencySymbol }: { currencySymbol?: stri
       <ThemedText.LabelMicro color="textPrimary">
         {currencySymbol ? (
           <Trans>
-            {{ currencySymbol }} fees don&apos;t allow for accurate exact outputs. Use the `You pay` field instead.
+            {{ currencySymbol }} fees don&apos;t allow for accurate exact outputs. Use the `Sell` field instead.
           </Trans>
         ) : (
           <Trans>
-            Fees on the selected output token don&apos;t allow for accurate exact outputs. Use the `You pay` field
-            instead.
+            Fees on the selected output token don&apos;t allow for accurate exact outputs. Use the `Sell` field instead.
           </Trans>
         )}
       </ThemedText.LabelMicro>

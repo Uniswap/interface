@@ -1,12 +1,10 @@
-import { useWeb3React } from '@web3-react/core'
 import Identicon from 'components/Identicon'
-import { Connection } from 'connection/types'
-import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
+import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
+import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
-import { getWalletMeta } from 'utils/walletMeta'
+import { useAccount } from 'wagmi'
 import sockImg from '../../assets/svg/socks.svg'
 
 export const IconWrapper = styled.div<{ size?: number }>`
@@ -51,7 +49,7 @@ const MiniImg = styled.img`
   height: 16px;
 `
 
-const Socks = () => {
+function Socks() {
   return (
     <MiniIconContainer side="left">
       <MiniImg src={sockImg} />
@@ -59,39 +57,26 @@ const Socks = () => {
   )
 }
 
-const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'left' | 'right' }) => {
-  const isDarkMode = useIsDarkMode()
-  const { provider } = useWeb3React()
+function MiniWalletIcon() {
+  const { connector } = useAccount()
+  if (!connector) return null
 
-  const providerInfo = connection.getProviderInfo(isDarkMode)
-
-  // Uses icon from wallet meta when available, otherwise uses icon from connection
-  const icon = (provider && getWalletMeta(provider)?.icons?.[0]) ?? providerInfo.icon
+  const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
 
   return (
-    <MiniIconContainer side={side}>
-      <MiniImg src={icon} alt={`${providerInfo.name} icon`} />
+    <MiniIconContainer side="right" data-testid="MiniIcon">
+      <MiniImg src={icon} alt={`${connector.name} icon`} />
     </MiniIconContainer>
   )
 }
 
-export default function StatusIcon({
-  account,
-  connection,
-  size = 16,
-  showMiniIcons = true,
-}: {
-  account?: string
-  connection: Connection
-  size?: number
-  showMiniIcons?: boolean
-}) {
+export default function StatusIcon({ size = 16, showMiniIcons = true }: { size?: number; showMiniIcons?: boolean }) {
+  const { address } = useAccount()
   const hasSocks = useHasSocks()
-
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <Identicon account={account} size={size} />
-      {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
+      <Identicon account={address} size={size} />
+      {showMiniIcons && <MiniWalletIcon />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>
   )

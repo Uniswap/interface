@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
@@ -15,7 +16,6 @@ import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRat
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -95,7 +95,7 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountFiat: swapFeeFiatFormatted,
+        formattedAmountFiat: swapFeeUsd ? swapFeeFiatFormatted : undefined,
       }
     : undefined
 

@@ -1,10 +1,10 @@
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { useChainId } from 'wagmi'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
@@ -43,7 +43,7 @@ interface VoteModalProps {
 }
 
 export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }: VoteModalProps) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const voteCallback = useVoteCallback()
   const { votes: availableVotes } = useUserVotes()
 

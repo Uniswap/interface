@@ -3,8 +3,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
-import { OnboardingScreens } from 'src/screens/Screens'
 import { render } from 'src/test/test-utils'
+import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 
 const setOptionsSpy = jest.fn()

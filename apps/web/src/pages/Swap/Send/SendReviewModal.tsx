@@ -1,5 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonPrimary } from 'components/Button'
 import GetHelp from 'components/Button/GetHelp'
@@ -17,6 +16,7 @@ import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/componen
 import { Unitag } from 'ui/src/components/icons'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useChainId } from 'wagmi'
 
 const ModalWrapper = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -64,7 +64,7 @@ const SendModalHeader = ({
 }
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },

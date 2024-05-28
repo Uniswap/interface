@@ -1,6 +1,6 @@
 import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
-import { SharedValue } from 'react-native-reanimated'
+import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
 import {
   HistoryDuration,
@@ -75,15 +75,18 @@ export function useTokenPriceHistory(
   const pricePercentChange24h =
     offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
 
+  const spotValue = useDerivedValue(() => price ?? 0)
+  const spotRelativeChange = useDerivedValue(() => pricePercentChange24h)
+
   const spot = useMemo(
     () =>
       price !== undefined
         ? {
-            value: { value: price },
-            relativeChange: { value: pricePercentChange24h },
+            value: spotValue,
+            relativeChange: spotRelativeChange,
           }
         : undefined,
-    [price, pricePercentChange24h]
+    [price, spotValue, spotRelativeChange]
   )
 
   const formattedPriceHistory = useMemo(() => {
@@ -93,6 +96,14 @@ export function useTokenPriceHistory(
 
     return formatted
   }, [priceHistory])
+
+  const data = useMemo(
+    () => ({
+      priceHistory: formattedPriceHistory,
+      spot,
+    }),
+    [formattedPriceHistory, spot]
+  )
 
   const numberOfDigits = useMemo(() => {
     const maxPriceInHistory = maxBy(priceHistory, 'value')?.value
@@ -119,10 +130,7 @@ export function useTokenPriceHistory(
 
   return useMemo(
     () => ({
-      data: {
-        priceHistory: formattedPriceHistory,
-        spot,
-      },
+      data,
       loading: isNonPollingRequestInFlight(networkStatus),
       error: isError(networkStatus, !!priceData),
       refetch: retry,
@@ -131,15 +139,6 @@ export function useTokenPriceHistory(
       numberOfDigits,
       onCompleted,
     }),
-    [
-      duration,
-      formattedPriceHistory,
-      networkStatus,
-      priceData,
-      retry,
-      spot,
-      onCompleted,
-      numberOfDigits,
-    ]
+    [data, duration, networkStatus, priceData, retry, onCompleted, numberOfDigits]
   )
 }

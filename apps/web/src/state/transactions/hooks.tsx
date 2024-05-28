@@ -1,8 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -10,8 +8,15 @@ import { TradeFillType } from 'state/routing/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
+import { useAccount } from 'wagmi'
 import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
-import { TransactionDetails, TransactionInfo, TransactionType } from './types'
+import {
+  ConfirmedTransactionDetails,
+  PendingTransactionDetails,
+  TransactionDetails,
+  TransactionInfo,
+  TransactionType,
+} from './types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -19,36 +24,34 @@ export function useTransactionAdder(): (
   info: TransactionInfo,
   deadline?: number
 ) => void {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
-      if (!account) return
-      if (!chainId) return
+      if (account.status !== 'connected') return
 
       const { hash, nonce } = response
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, info, chainId, nonce, deadline }))
+      dispatch(addTransaction({ hash, from: account.address, info, chainId: account.chainId, nonce, deadline }))
     },
-    [account, chainId, dispatch]
+    [account.address, account.chainId, account.status, dispatch]
   )
 }
 
 export function useTransactionRemover() {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   const dispatch = useAppDispatch()
 
   return useCallback(
     (hash: string) => {
-      if (!account) return
-      if (!chainId) return
+      if (account.status !== 'connected') return
 
-      dispatch(removeTransaction({ hash, chainId }))
+      dispatch(removeTransaction({ hash, chainId: account.chainId }))
     },
-    [account, chainId, dispatch]
+    [account.chainId, account.status, dispatch]
   )
 }
 
@@ -74,11 +77,11 @@ export function useMultichainTransactions(): [TransactionDetails, SupportedInter
 
 // returns all the transactions for the current chain
 function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   const state = useAppSelector((state) => state.transactions)
 
-  return chainId ? state[chainId] ?? {} : {}
+  return account.status === 'connected' ? state[account.chainId] ?? {} : {}
 }
 
 export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
@@ -104,13 +107,13 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
 
   if (!transactionHash || !transactions[transactionHash]) return false
 
-  return Boolean(transactions[transactionHash].receipt)
+  return isConfirmedTx(transactions[transactionHash])
 }
 
 export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
   const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
   if (!transaction) return undefined
-  return getTransactionStatus(transaction)
+  return transaction.status
 }
 
 /**
@@ -129,7 +132,7 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     }
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
-      if (!tx || tx.receipt || tx.info.type !== TransactionType.APPROVAL) continue
+      if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) continue
       if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
         return BigNumber.from(tx.info.amount)
       }
@@ -147,16 +150,23 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
-export function isPendingTx(tx: TransactionDetails): boolean {
-  return !tx.receipt && !tx.cancelled
+export function isPendingTx(tx: TransactionDetails): tx is PendingTransactionDetails {
+  return tx.status === TransactionStatus.Pending && !tx.cancelled
 }
 
-export function usePendingTransactions(): TransactionDetails[] {
+export function isConfirmedTx(tx: TransactionDetails): tx is ConfirmedTransactionDetails {
+  return tx.status === TransactionStatus.Confirmed || tx.status === TransactionStatus.Failed
+}
+
+export function usePendingTransactions(): PendingTransactionDetails[] {
   const allTransactions = useAllTransactions()
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   return useMemo(
-    () => Object.values(allTransactions).filter((tx) => tx.from === account && isPendingTx(tx)),
-    [account, allTransactions]
+    () =>
+      Object.values(allTransactions).filter(
+        (tx): tx is PendingTransactionDetails => tx.from === account.address && isPendingTx(tx)
+      ),
+    [account.address, allTransactions]
   )
 }

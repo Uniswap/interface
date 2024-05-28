@@ -1,5 +1,4 @@
 import { Percent } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import SettingsTab from 'components/Settings'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
@@ -12,6 +11,7 @@ import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
+import { useChainId } from 'wagmi'
 
 import { RowBetween } from '../Row'
 
@@ -80,7 +80,7 @@ export function AddRemoveTabs({
   showBackLink?: boolean
   children?: ReactNode
 }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()

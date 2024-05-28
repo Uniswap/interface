@@ -1,6 +1,8 @@
 // this allows us to use es6, es2017, es2018 syntax (const, spread operators outside of array literals, etc.)
 /* eslint-env es6, es2017, es2018 */
 
+const { shared: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+
 // reduces code complexity
 const complexityRules = {
   'max-depth': ['error', 4], // prevent deeply nested code paths which are hard to read
@@ -190,11 +192,24 @@ module.exports = {
             message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
           },
           {
-            name: 'src/data/usePersistedApolloClient',
+            name: 'wallet/src/data/apollo/usePersistedApolloClient',
             importNames: ['usePersistedApolloClient'],
             message:
-              "This hook should only be used once at the App level. You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'src/data/usePersistedApolloClient'`.",
+              "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`.",
           },
+          {
+            name: 'statsig-react',
+            message: 'Import from internal module uniswap/src/features/gating instead',
+          },
+          {
+            name: 'statsig-react-native',
+            message: 'Import from internal module uniswap/src/features/gating instead',
+          },
+          {
+            name: '@uniswap/analytics',
+            message: "Did you mean to import from 'uniswap/src/features/telemetry/send'?",
+          },
+          ...restrictedImports.paths,
         ],
       },
     ],
@@ -208,15 +223,27 @@ module.exports = {
       },
       {
         selector:
+          "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='tabs'][callee.object.object.name='chrome']",
+        message:
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.tabs.sendMessage.',
+      },
+      {
+        selector:
+          "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='runtime'][callee.object.object.name='chrome']",
+        message:
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.sendMessage.',
+      },
+      {
+        selector:
           "CallExpression[callee.property.name='addListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use addMessageListener from apps/stretch/src/background/messagePassing/messageUtils.ts instead of chrome.runtime.onMessage.addListener.',
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.addListener.',
       },
       {
         selector:
           "CallExpression[callee.property.name='removeListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use removeMessageListener from apps/stretch/src/background/messagePassing/messageUtils.ts instead of chrome.runtime.onMessage.removeListener.',
+          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.removeListener.',
       },
       {
         selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",

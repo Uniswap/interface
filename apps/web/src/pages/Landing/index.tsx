@@ -2,13 +2,11 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { getRecentConnectionMeta } from 'connection/meta'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import usePrevious from 'hooks/usePrevious'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from 'state/hooks'
-import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -16,13 +14,11 @@ import LandingV2 from './LandingV2'
 
 export default function Landing() {
   const { account, connector } = useWeb3React()
-  const recentConnectionMeta = getRecentConnectionMeta()
-  const dispatch = useAppDispatch()
+  const hasRecentConnection = !!useRecentConnectorId()
   const disconnect = useCallback(() => {
     connector.deactivate?.()
     connector.resetState()
-    dispatch(setRecentConnectionDisconnected())
-  }, [connector, dispatch])
+  }, [connector])
 
   const isExitAnimationEnabled = useFeatureFlag(FeatureFlags.ExitAnimation)
   const [transition, setTransition] = useState(false)
@@ -62,6 +58,7 @@ export default function Landing() {
 
   // Redirect to mint page if user is connected or has been recently
   // The intro query parameter can be used to override this
+
   if (((account || recentConnectionMeta) && !queryParams.intro) || !account) {
     return <Navigate to={{ ...location, pathname: '/mint' }} replace />
   }

@@ -3,6 +3,7 @@ import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { OrderDirection } from 'graphql/data/util'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import {
@@ -108,6 +109,7 @@ function useFilteredPools(pools: TablePool[]) {
 }
 
 export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedInterfaceChainId) {
+  const isWindowVisible = useIsWindowVisible()
   const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
@@ -115,6 +117,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedIn
     data: dataV3,
   } = useTopV3PoolsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
+    skip: !isWindowVisible,
   })
   const {
     loading: loadingV2,
@@ -122,7 +125,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedIn
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
+    skip: !isWindowVisible || !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loading = loadingV3 || loadingV2
 

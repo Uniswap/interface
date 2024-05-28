@@ -12,6 +12,7 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -20,7 +21,6 @@ import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const FEED_TAB_DATA_DEPENDENCIES = [GQLQueries.FeedTransactionList]
 

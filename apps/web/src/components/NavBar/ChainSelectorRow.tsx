@@ -1,6 +1,5 @@
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -8,6 +7,7 @@ import { getChainInfo, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
+import { useChainId } from 'wagmi'
 
 const LOGO_SIZE = 20
 
@@ -64,7 +64,7 @@ interface ChainSelectorRowProps {
   isPending: boolean
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const supportedChain = useSupportedChainId(targetChain)
   const active = chainId === targetChain
   const label = getChainInfo({ chainId: supportedChain })?.label

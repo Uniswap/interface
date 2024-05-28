@@ -1,5 +1,4 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'
@@ -12,6 +11,7 @@ import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { useChainId } from 'wagmi'
 
 const InlineLink = styled.div`
   color: ${({ theme }) => theme.accent1};
@@ -127,7 +127,7 @@ function RoutePreferenceToggle({
 }
 
 export default function MultipleRoutingOptions() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =

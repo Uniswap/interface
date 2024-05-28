@@ -14,6 +14,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { useChainId } from 'wagmi'
+
 import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
 import { useAssetActivitySubscription } from './AssetActivityProvider'
 
@@ -37,7 +39,7 @@ function mayAffectTokenBalances(data?: OnAssetActivitySubscription) {
 }
 
 function useIsRealtime() {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
   return isRealtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId)

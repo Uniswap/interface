@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function BlockedAddressModal({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()

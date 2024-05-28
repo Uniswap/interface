@@ -6,13 +6,13 @@ import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScan
 import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { filterRecipientByNameAndAddress } from 'wallet/src/components/RecipientSearch/filter'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
-import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { filterSections } from 'wallet/src/components/RecipientSearch/utils'
+import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { SearchBar } from 'wallet/src/features/search/SearchBar'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void

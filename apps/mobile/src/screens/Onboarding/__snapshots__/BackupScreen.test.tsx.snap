@@ -34,14 +34,14 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
     }
   >
     <View
-      animatedStyle={
+      collapsable={false}
+      entering={[Function]}
+      exiting={[Function]}
+      jestAnimatedStyle={
         {
           "value": {},
         }
       }
-      collapsable={false}
-      entering={[Function]}
-      exiting={[Function]}
       style={
         {
           "flexDirection": "column",
@@ -706,14 +706,14 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
     }
   >
     <View
-      animatedStyle={
+      collapsable={false}
+      entering={[Function]}
+      exiting={[Function]}
+      jestAnimatedStyle={
         {
           "value": {},
         }
       }
-      collapsable={false}
-      entering={[Function]}
-      exiting={[Function]}
       style={
         {
           "flexDirection": "column",

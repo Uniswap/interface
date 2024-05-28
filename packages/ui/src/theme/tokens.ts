@@ -1,6 +1,7 @@
 // until the web app needs all of tamagui, avoid heavy imports there
 // eslint-disable-next-line no-restricted-imports
 import { ColorTokens, createTokens } from '@tamagui/core'
+import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color/colors'
 import { fonts } from 'ui/src/theme/fonts'
@@ -79,7 +80,7 @@ export const tokens = createTokens({
 // it would be a bit nicer if this was cast to Token
 // but we'd need another new Tamagui release to support that (coming soon)
 
-export const validColor = (value: string | undefined | null): ColorTokens => {
+export const validColor = (value: DynamicColor | string | undefined | null): ColorTokens => {
   if (process.env.NODE_ENV !== 'production') {
     if (typeof value === 'string') {
       if (value[0] === '$') {
@@ -93,7 +94,8 @@ export const validColor = (value: string | undefined | null): ColorTokens => {
         !value.startsWith('rgb(') &&
         !value.startsWith('rgba(') &&
         !value.startsWith('hsl(') &&
-        !value.startsWith('hsla(')
+        !value.startsWith('hsla(') &&
+        !value.startsWith('var(')
       ) {
         throw new Error(
           `Invalid color value: ${value} this helper just does a rough check so if this error is wrong you can update this check!`

@@ -6,8 +6,8 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { Button, Flex, Text } from 'ui/src'
 import { DiamondExclamation } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useDebounce } from 'utilities/src/time/timing'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import {
   PASSWORD_VALIDATION_DEBOUNCE_MS,
   PasswordErrors,

@@ -3,18 +3,20 @@ import { SupportArticleURL } from 'constants/supportArticles'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade } from 'state/routing/utils'
+import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useTheme } from 'styled-components'
 
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { ExternalLink } from 'theme/components'
+
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
   PERMIT_ERROR,
+  XV2_HARD_QUOTE_ERROR,
   CONFIRMATION_ERROR,
   WRAP_ERROR,
   TOKEN_WHITELIST_ERROR,
@@ -27,15 +29,7 @@ interface ErrorModalContentProps {
   onRetry: () => void
 }
 
-function getErrorContent({
-  errorType,
-  trade,
-  swapResult,
-}: {
-  errorType: PendingModalError
-  swapResult?: SwapResult
-  trade?: InterfaceTrade
-}): {
+function getErrorContent({ errorType, trade }: { errorType: PendingModalError; trade?: InterfaceTrade }): {
   title: JSX.Element
   message?: JSX.Element
   supportArticleURL?: SupportArticleURL
@@ -57,6 +51,17 @@ function getErrorContent({
         message: <Trans>Permit2 allows token approvals to be shared and managed across different applications.</Trans>,
         supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
+    case PendingModalError.XV2_HARD_QUOTE_ERROR:
+      return {
+        title: <Trans>Swap failed</Trans>,
+        message: (
+          <Trans>
+            Swap couldn&apos;t be completed with UniswapX. Try your swap again to route it through the classic Uniswap
+            API.
+          </Trans>
+        ),
+        supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
+      }
     case PendingModalError.CONFIRMATION_ERROR:
       if (isLimitTrade(trade)) {
         return {
@@ -67,10 +72,9 @@ function getErrorContent({
         return {
           title: <Trans>Swap failed</Trans>,
           message: <Trans>Try adjusting slippage to a higher value.</Trans>,
-          supportArticleURL:
-            swapResult?.type === TradeFillType.UniswapX
-              ? SupportArticleURL.UNISWAP_X_FAILURE
-              : SupportArticleURL.TRANSACTION_FAILURE,
+          supportArticleURL: isUniswapXTrade(trade)
+            ? SupportArticleURL.UNISWAP_X_FAILURE
+            : SupportArticleURL.TRANSACTION_FAILURE,
         }
       }
     case PendingModalError.WRAP_ERROR:
@@ -108,7 +112,7 @@ function getErrorContent({
 
 export default function Error({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
   const theme = useTheme()
-  const { title, message, supportArticleURL } = getErrorContent({ errorType, swapResult, trade })
+  const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
 
   return (
     <DialogContent

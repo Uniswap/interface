@@ -15,13 +15,16 @@ test('should append meta tag to element', () => {
     },
     new Request('http://localhost')
   )
-  injector.append(element, property, content)
+  injector.appendProperty(element, property, content)
   expect(element.append).toHaveBeenCalledWith(`<meta property="${property}" content="${content}" data-rh="true">`, {
     html: true,
   })
 
   injector.element(element)
   expect(element.append).toHaveBeenCalledWith(`<meta property="og:title" content="test" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta name="description" content="testDescription" data-rh="true">`, {
     html: true,
   })
   expect(element.append).toHaveBeenCalledWith(
@@ -65,7 +68,7 @@ test('should append meta tag to element', () => {
     html: true,
   })
 
-  expect(element.append).toHaveBeenCalledTimes(13)
+  expect(element.append).toHaveBeenCalledTimes(14)
 })
 
 test('should pass through header blocked paths', () => {

@@ -14,8 +14,6 @@ import {
 import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { Screens } from 'src/screens/Screens'
 import {
   AnimatedFlex,
   Flex,
@@ -30,11 +28,13 @@ import {
 } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { borderRadii, fonts } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
 
 export const NAV_BAR_HEIGHT_XS = 52
@@ -44,8 +44,8 @@ export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_SHADOW_OFFSET = { width: 0, height: 4 }
 
 function sendSwapPressAnalyticsEvent(): void {
-  sendMobileAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-    screen: Screens.Home,
+  sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+    screen: MobileScreens.Home,
     element: ElementName.Swap,
   })
 }

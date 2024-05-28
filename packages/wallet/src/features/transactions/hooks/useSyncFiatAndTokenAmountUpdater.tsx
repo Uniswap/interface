@@ -43,9 +43,9 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
     }
 
     if (isFiatMode) {
-      const usdAmount = (parseFloat(exactAmountFiat ?? '0') / conversionRate).toFixed(
-        NUM_DECIMALS_FIAT_ROUNDING
-      )
+      const fiatAmount =
+        exactAmountFiat && !isNaN(parseFloat(exactAmountFiat)) ? parseFloat(exactAmountFiat) : 0
+      const usdAmount = (fiatAmount / conversionRate).toFixed(NUM_DECIMALS_FIAT_ROUNDING)
       const stablecoinAmount = getCurrencyAmount({
         value: usdAmount,
         valueType: ValueType.Exact,
@@ -59,9 +59,7 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
         type: NumberType.SwapTradeAmount,
         placeholder: '',
       })
-      updateSwapForm({
-        exactAmountToken: tokenAmountFormatted,
-      })
+      updateSwapForm({ exactAmountToken: tokenAmountFormatted })
     }
 
     // Special case when we have token amount, but not fiat, which can occur when we hit "max"

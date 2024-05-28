@@ -1,4 +1,5 @@
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
   AppErrorNotification,
@@ -10,13 +11,13 @@ import {
   ChooseCountryNotification,
   CopyNotification,
   CopyNotificationType,
+  NetworkChangedNotification,
   ReceiveCurrencyTxNotification,
   ReceiveNFTNotification,
   ScantasticCompleteNotification,
   SendCurrencyTxNotification,
   SendNFTNotification,
   SuccessNotification,
-  SwapNetworkNotification,
   SwapPendingNotification,
   SwapTxNotification,
   TransactionNotificationBase,
@@ -32,7 +33,6 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 import { currencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
@@ -160,10 +160,11 @@ export const successNotification = createFixture<SuccessNotification>()(() => ({
   title: faker.lorem.words(),
 }))
 
-export const swapNetworkNotification = createFixture<SwapNetworkNotification>()(() => ({
+export const swapNetworkNotification = createFixture<NetworkChangedNotification>()(() => ({
   ...appNotificationBase(),
-  type: AppNotificationType.SwapNetwork,
+  type: AppNotificationType.NetworkChanged,
   chainId: randomEnumValue(ChainId),
+  flow: 'swap',
 }))
 
 export const chooseCountryNotification = createFixture<ChooseCountryNotification>()(() => ({

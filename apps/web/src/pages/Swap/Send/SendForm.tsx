@@ -1,10 +1,8 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { useConnectionReady } from 'connection/eagerlyConnect'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -18,6 +16,7 @@ import { Trace } from 'analytics'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { useAccount } from 'wagmi'
 import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 import { SendRecipientForm } from './SendRecipientForm'
@@ -76,9 +75,9 @@ enum SendSpeedBump {
 }
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
-  const { account, chainId: connectedChainId, connector } = useWeb3React()
+  const { address: account, isDisconnected, chainId: connectedChainId } = useAccount()
   const switchChain = useSwitchChain()
-  const connectionReady = useConnectionReady()
+
   const toggleWalletDrawer = useToggleAccountDrawer()
 
   const [sendFormModalState, setSendFormModalState] = useState(SendFormModalState.None)
@@ -192,7 +191,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       <Column gap="xs">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
-        {connectionReady && !account ? (
+        {isDisconnected ? (
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
@@ -207,7 +206,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             $borderRadius="16px"
             onClick={async () => {
               try {
-                await switchChain(connector, chainId)
+                await switchChain(chainId)
               } catch (error) {
                 if (didUserReject(error)) {
                   // Ignore error, which keeps the user on the previous chain.

@@ -197,8 +197,9 @@ export function useAvatar(address: Maybe<string>): {
   avatar: Maybe<string>
   loading: boolean
 } {
-  const { data: ensAvatar, loading: ensLoading } = useENSAvatar(address)
-  const { unitag, loading: unitagLoading } = useUnitagByAddress(address || undefined)
+  const validated = getValidAddress(address)
+  const { data: ensAvatar, loading: ensLoading } = useENSAvatar(validated)
+  const { unitag, loading: unitagLoading } = useUnitagByAddress(validated || undefined)
 
   const unitagAvatar = unitag?.metadata?.avatar
 

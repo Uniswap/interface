@@ -152,7 +152,7 @@ export const SuggestionRow = ({
       $isFocused={isHovered}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address}` : ''}
+      data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
     >
       <Row width="60%" gap="sm">
         {isToken ? (

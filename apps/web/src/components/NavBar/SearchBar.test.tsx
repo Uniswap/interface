@@ -1,5 +1,5 @@
+import { useIsMobile, useIsTablet } from 'hooks/screenSize'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsMobile, useIsTablet } from 'nft/hooks'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
@@ -7,7 +7,7 @@ import { render, screen } from 'test-utils/render'
 import { SearchBar } from './SearchBar'
 
 jest.mock('hooks/useDisableNFTRoutes')
-jest.mock('nft/hooks')
+jest.mock('hooks/screenSize')
 jest.mock('nft/hooks/useIsNavSearchInputVisible')
 
 describe('disable nft on searchbar', () => {

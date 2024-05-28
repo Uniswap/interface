@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
+import { useChainId } from 'wagmi'
 
 import { isAddress } from 'utilities/src/addresses'
 import { UNI } from '../../constants/tokens'
@@ -99,7 +100,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
 function useUserClaimData(account: string | null | undefined): UserClaimData | null {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})
 
@@ -138,7 +139,7 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
 }
 
 export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 

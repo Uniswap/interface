@@ -11,8 +11,8 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
+import { useScreenSize } from 'hooks/screenSize'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
@@ -148,7 +148,7 @@ function TDPSwapComponent() {
       {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
       <TokenSafetyModal
         isOpen={openTokenSafetyModal || !!continueSwap}
-        tokenAddress={address}
+        token0={currency.isToken ? currency : undefined}
         onContinue={() => onResolveSwap(true)}
         onBlocked={() => {
           setOpenTokenSafetyModal(false)

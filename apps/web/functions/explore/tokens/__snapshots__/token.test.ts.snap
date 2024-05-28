@@ -18,14 +18,9 @@ exports[`should inject metadata for valid tokens 1`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
 
-    <!-- Allow vercel feedback in preview environments -->
+    <!-- Skip the CSP in specified test environments -->
     
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.mycryptoapi.com/eth https://api.opensea.io https://api.studio.thegraph.com/ https://api.thegraph.com/ https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
-    >
 
     <!-- 
       Apple Smart App Banner for Safari on iOS
@@ -165,14 +160,9 @@ exports[`should inject metadata for valid tokens 2`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
 
-    <!-- Allow vercel feedback in preview environments -->
+    <!-- Skip the CSP in specified test environments -->
     
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.mycryptoapi.com/eth https://api.opensea.io https://api.studio.thegraph.com/ https://api.thegraph.com/ https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
-    >
 
     <!-- 
       Apple Smart App Banner for Safari on iOS
@@ -312,14 +302,9 @@ exports[`should inject metadata for valid tokens 3`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
 
-    <!-- Allow vercel feedback in preview environments -->
+    <!-- Skip the CSP in specified test environments -->
     
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.mycryptoapi.com/eth https://api.opensea.io https://api.studio.thegraph.com/ https://api.thegraph.com/ https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
-    >
 
     <!-- 
       Apple Smart App Banner for Safari on iOS
@@ -459,14 +444,9 @@ exports[`should inject metadata for valid tokens 4`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
 
-    <!-- Allow vercel feedback in preview environments -->
+    <!-- Skip the CSP in specified test environments -->
     
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.mycryptoapi.com/eth https://api.opensea.io https://api.studio.thegraph.com/ https://api.thegraph.com/ https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
-    >
 
     <!-- 
       Apple Smart App Banner for Safari on iOS

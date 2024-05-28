@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {
   selectedChainId: ChainId

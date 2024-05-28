@@ -89,15 +89,15 @@
     "graphql:generate": {
       "inputs": [
         "codegen.ts",
-        "schema.graphql",
+        "src/**/schema.graphql",
         "scripts/fetch-schema.js",
         "src/graphql/**",
         "src/data/**/*.graphql"
       ],
       "outputs": [
-        "types-and-hooks.ts",
-        "data/__generated__/*",
-        "graphql/__generated__/*"
+        "src/**/types-and-hooks.ts",
+        "data/__generated__/**",
+        "graphql/__generated__/**"
       ],
       "dependsOn": []
     },

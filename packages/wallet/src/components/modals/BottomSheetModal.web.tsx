@@ -1,7 +1,8 @@
 import { pick } from 'lodash'
 import { ComponentProps, useEffect, useState } from 'react'
-import { Flex, Sheet, useSporeColors } from 'ui/src'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import { Flex, Portal, Sheet } from 'ui/src'
+import { validColor, zIndices } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetContextProvider } from 'wallet/src/components/modals/BottomSheetContext'
 import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
@@ -32,6 +33,11 @@ export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
     'maxWidth',
   ])
 
+  if (props.alignment === 'top') {
+    // we can't really use a sheet for top alignment as its designed for being attached to bottom
+    return <WebTopSheetModal {...supportedProps} />
+  }
+
   return <WebBottomSheetModal {...supportedProps} />
 }
 
@@ -52,6 +58,67 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
   return <WebBottomSheetModal {...supportedProps} />
 }
 
+function WebTopSheetModal({
+  children,
+  onClose,
+  backgroundColor,
+  isDismissible = true,
+  isModalOpen = true,
+  maxWidth,
+}: WebBottomSheetProps): JSX.Element {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  return (
+    <Portal zIndex={zIndices.modal}>
+      <Flex
+        inset={0}
+        maxWidth={maxWidth}
+        p="$spacing12"
+        pointerEvents="none"
+        position="absolute"
+        {...(isModalOpen && {
+          pointerEvents: 'auto',
+        })}>
+        {/* backdrop */}
+        <Flex
+          animation="300ms"
+          backgroundColor="$scrim"
+          inset={0}
+          opacity={0}
+          position="absolute"
+          zIndex={0}
+          onPress={isDismissible ? onClose : null}
+          {...(isModalOpen &&
+            isMounted && {
+              opacity: 1,
+            })}
+        />
+
+        {/* sheet */}
+        <Flex
+          animation="quicker"
+          backgroundColor={backgroundColor ? validColor(backgroundColor) : '$surface1'}
+          borderRadius="$rounded24"
+          flexShrink={1}
+          opacity={0}
+          p="$spacing12"
+          y={-20}
+          {...(isModalOpen &&
+            isMounted && {
+              opacity: 1,
+              y: 0,
+            })}>
+          {children}
+        </Flex>
+      </Flex>
+    </Portal>
+  )
+}
+
 const ANIMATION_MS = 200
 
 function WebBottomSheetModal({
@@ -65,7 +132,6 @@ function WebBottomSheetModal({
   alignment = 'center',
   maxWidth,
 }: WebBottomSheetProps): JSX.Element {
-  const colors = useSporeColors()
   const [fullyClosed, setFullyClosed] = useState(false)
 
   if (fullyClosed && isModalOpen) {
@@ -124,10 +190,10 @@ function WebBottomSheetModal({
             p="$spacing12"
             pointerEvents="none">
             <Flex
+              backgroundColor={backgroundColor ? validColor(backgroundColor) : '$surface1'}
               borderRadius="$rounded24"
               p="$spacing12"
               pointerEvents="auto"
-              style={{ backgroundColor: backgroundColor ?? colors.surface1.val }}
               width="100%">
               {/* To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open. */}
               {fullyClosed ? null : children}

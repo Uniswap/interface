@@ -6,12 +6,12 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
-import { Screens } from 'src/screens/Screens'
 import { Flex, Text } from 'ui/src'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
-  Screens.SettingsCloudBackupPasswordConfirm
+  MobileScreens.SettingsCloudBackupPasswordConfirm
 >
 
 export function SettingsCloudBackupPasswordConfirmScreen({
@@ -23,7 +23,7 @@ export function SettingsCloudBackupPasswordConfirmScreen({
 
   const navigateToNextScreen = (): void => {
     navigation.navigate({
-      name: Screens.SettingsCloudBackupProcessing,
+      name: MobileScreens.SettingsCloudBackupProcessing,
       params,
       merge: true,
     })

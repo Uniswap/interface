@@ -1,10 +1,9 @@
-import { ConnectionType } from 'connection/types'
 import { PersistState } from 'redux-persist'
 import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV6 = {
   _persist: PersistState
-} & { user?: UserState & { selectedWallet?: ConnectionType } }
+} & { user?: UserState & { selectedWallet?: unknown } & { recentConnectionMeta?: unknown } }
 
 /**
  * Migration to replace selected wallet with recentConnectionMeta in user state

@@ -1,11 +1,10 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { getChainInfo, useSupportedChainId } from 'constants/chains'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-
-import { getChainInfo, useSupportedChainId } from 'constants/chains'
+import { useChainId } from 'wagmi'
 
 /**
  * Returns the price in USDC of the input currency
@@ -73,7 +72,7 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
  * @returns CurrencyAmount where currency is stablecoin on active chain
  */
 export function useStablecoinAmountFromFiatValue(fiatValue: number | null | undefined) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const supportedChainId = useSupportedChainId(chainId)
   const stablecoin = supportedChainId
     ? getChainInfo({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency

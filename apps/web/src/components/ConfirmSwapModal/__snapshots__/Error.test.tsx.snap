@@ -836,7 +836,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2 1`] = `
+exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3 1`] = `
 <DocumentFragment>
   .c8 {
   box-sizing: border-box;
@@ -1254,7 +1254,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3 1`] = `
+exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4 1`] = `
 <DocumentFragment>
   .c8 {
   box-sizing: border-box;
@@ -1672,7 +1672,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1`] = `
+exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1`] = `
 <DocumentFragment>
   .c8 {
   box-sizing: border-box;
@@ -2088,7 +2088,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
 </DocumentFragment>
 `;
 
-exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1`] = `
+exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1`] = `
 <DocumentFragment>
   .c8 {
   box-sizing: border-box;

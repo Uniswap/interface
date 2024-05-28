@@ -1,11 +1,12 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
-import { Screens } from 'src/screens/Screens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   setHasSkippedUnitagPrompt,
@@ -13,7 +14,6 @@ import {
 } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
@@ -22,8 +22,6 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { sendWalletAnalyticsEvent, sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
-import { WalletAppsFlyerEvents } from 'wallet/src/telemetry/constants'
 
 export type OnboardingCompleteProps = OnboardingStackBaseParams
 
@@ -48,7 +46,7 @@ export function useCompleteOnboardingCallback({
   const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   return async () => {
-    sendMobileAnalyticsEvent(
+    sendAnalyticsEvent(
       entryPoint === OnboardingEntryPoint.Sidebar
         ? MobileEventName.WalletAdded
         : MobileEventName.OnboardingCompleted,
@@ -66,7 +64,7 @@ export function useCompleteOnboardingCallback({
     // Log TOS acceptance for new wallets before they are activated
     if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
       pendingWalletAddresses.forEach((address: string) => {
-        sendWalletAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
+        sendAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
       })
     }
 
@@ -102,11 +100,11 @@ export function useCompleteOnboardingCallback({
     // Exit flow
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
     if (entryPoint === OnboardingEntryPoint.Sidebar) {
-      navigation.navigate(Screens.Home)
+      navigation.navigate(MobileScreens.Home)
     }
 
     if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
-      await sendWalletAppsFlyerEvent(WalletAppsFlyerEvents.OnboardingCompleted, { importType })
+      await sendAppsFlyerEvent(MobileAppsFlyerEvents.OnboardingCompleted, { importType })
     }
   }
 }

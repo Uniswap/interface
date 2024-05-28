@@ -35,7 +35,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         popupList: application.popupList,
       },
       user: {
-        recentConnectionMeta: user.recentConnectionMeta,
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
         userLocale: user.userLocale,
         userRouterPreference: user.userRouterPreference,

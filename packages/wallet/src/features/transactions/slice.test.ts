@@ -1,5 +1,5 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   addTransaction,
   cancelTransaction,

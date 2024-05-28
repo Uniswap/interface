@@ -1,20 +1,20 @@
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useChainId } from 'wagmi'
+
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -56,7 +56,7 @@ export default function UnsupportedCurrencyFooter({
   show: boolean
   currencies: (Currency | undefined | null)[]
 }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const [showDetails, setShowDetails] = useState(false)
 
   const tokens =

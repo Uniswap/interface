@@ -8,8 +8,9 @@ import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
-
 import { trace } from 'tracing/trace'
+import { useChainId } from 'wagmi'
+
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useCurrencyBalance } from '../state/connection/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -33,7 +34,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 

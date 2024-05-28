@@ -128,13 +128,13 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
-  const { chainId: walletChainId, connector } = useWeb3React()
+  const { chainId: walletChainId } = useWeb3React()
   const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
-    if (walletChainId !== chainId) await switchChain(connector, chainId)
+    if (walletChainId !== chainId) await switchChain(chainId)
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, switchChain, connector, toggleWalletDrawer, navigate, details.tokenId])
+  }, [walletChainId, chainId, switchChain, toggleWalletDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

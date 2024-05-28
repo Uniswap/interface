@@ -1,7 +1,7 @@
 import { formatEther } from '@ethersproject/units'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { useIsMobile } from 'hooks/screenSize'
 import { VerifiedIcon } from 'nft/components/icons'
-import { useIsMobile } from 'nft/hooks'
 import { Denomination } from 'nft/types'
 import { ReactNode } from 'react'
 import styled from 'styled-components'

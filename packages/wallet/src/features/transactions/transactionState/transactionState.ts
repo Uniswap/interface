@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import {
   CurrencyField,

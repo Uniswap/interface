@@ -4,8 +4,8 @@ import {
   Chain,
   TokenDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
@@ -56,7 +56,7 @@ const meta: Meta<typeof FiatPurchaseSummaryItem> = {
 
 export default meta
 
-const baseFaitPurchaseTx: Omit<TransactionDetails, 'status'> & {
+const baseFiatPurchaseTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: FiatPurchaseTransactionInfo
 } = {
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
@@ -90,37 +90,37 @@ export const FiatPurchase: StoryObj = {
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Pending,
         }}
       />
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Cancelling,
         }}
       />
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Canceled,
         }}
       />
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Failed,
         }}
       />
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           typeInfo: {
-            ...baseFaitPurchaseTx.typeInfo,
+            ...baseFiatPurchaseTx.typeInfo,
             outputCurrencyAmount: null,
           },
           status: TransactionStatus.Failed,
@@ -129,17 +129,17 @@ export const FiatPurchase: StoryObj = {
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Success,
         }}
       />
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           status: TransactionStatus.Success,
           typeInfo: {
-            ...baseFaitPurchaseTx.typeInfo,
+            ...baseFiatPurchaseTx.typeInfo,
             outputCurrencyAmount: 123000000,
           },
         }}
@@ -147,7 +147,7 @@ export const FiatPurchase: StoryObj = {
       <FiatPurchaseSummaryItem
         layoutElement={TransactionSummaryLayout}
         transaction={{
-          ...baseFaitPurchaseTx,
+          ...baseFiatPurchaseTx,
           chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}

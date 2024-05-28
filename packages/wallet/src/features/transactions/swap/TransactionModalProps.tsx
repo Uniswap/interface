@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalContextState } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { ModalNameType } from 'wallet/src/telemetry/constants'
 
 export type TransactionModalProps = PropsWithChildren<{
   fullscreen: boolean

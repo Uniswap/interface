@@ -3,7 +3,6 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
@@ -34,8 +33,10 @@ import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
 
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { Text } from 'ui/src'
+import { useAccount } from 'wagmi'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
@@ -48,8 +49,8 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
-  const { chainId } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const account = useAccount()
+  const isSupportedChain = useIsSupportedChainId(account.chainId)
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -72,7 +73,8 @@ export default function RemoveLiquidityV3() {
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const signer = useEthersSigner()
   const trace = useTrace()
   const { formatCurrencyAmount } = useFormatter()
 
@@ -81,7 +83,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   // flag for receiving WETH
   const [receiveWETH, setReceiveWETH] = useState(false)
-  const nativeCurrency = useNativeCurrency(chainId)
+  const nativeCurrency = useNativeCurrency(account.chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
 
   // burn state
@@ -117,12 +119,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !positionManager ||
       !liquidityValue0 ||
       !liquidityValue1 ||
-      !account ||
+      account.status !== 'connected' ||
       !poolAddress ||
-      !chainId ||
       !positionSDK ||
       !liquidityPercentage ||
-      !provider
+      !signer
     ) {
       return
     }
@@ -140,7 +141,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       collectOptions: {
         expectedCurrencyOwed0: feeValue0 ?? CurrencyAmount.fromRawAmount(liquidityValue0.currency, 0),
         expectedCurrencyOwed1: feeValue1 ?? CurrencyAmount.fromRawAmount(liquidityValue1.currency, 0),
-        recipient: account,
+        recipient: account.address,
       },
     })
 
@@ -150,11 +151,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       value,
     }
 
-    const connectedChainId = await provider.getSigner().getChainId()
-    if (chainId !== connectedChainId) throw new WrongChainError()
+    const connectedChainId = await signer.getChainId()
+    if (account.chainId !== connectedChainId) throw new WrongChainError()
 
-    provider
-      .getSigner()
+    signer
       .estimateGas(txn)
       .then((estimate) => {
         const newTxn = {
@@ -162,25 +162,22 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           gasLimit: calculateGasMargin(estimate),
         }
 
-        return provider
-          .getSigner()
-          .sendTransaction(newTxn)
-          .then((response: TransactionResponse) => {
-            sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
-              source: LiquiditySource.V3,
-              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
-              ...trace,
-            })
-            setTxnHash(response.hash)
-            setAttemptingTxn(false)
-            addTransaction(response, {
-              type: TransactionType.REMOVE_LIQUIDITY_V3,
-              baseCurrencyId: currencyId(liquidityValue0.currency),
-              quoteCurrencyId: currencyId(liquidityValue1.currency),
-              expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
-              expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
-            })
+        return signer.sendTransaction(newTxn).then((response: TransactionResponse) => {
+          sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
+            source: LiquiditySource.V3,
+            label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
+            ...trace,
           })
+          setTxnHash(response.hash)
+          setAttemptingTxn(false)
+          addTransaction(response, {
+            type: TransactionType.REMOVE_LIQUIDITY_V3,
+            baseCurrencyId: currencyId(liquidityValue0.currency),
+            quoteCurrencyId: currencyId(liquidityValue1.currency),
+            expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
+            expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
+          })
+        })
       })
       .catch((error) => {
         setAttemptingTxn(false)
@@ -190,12 +187,13 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     positionManager,
     liquidityValue0,
     liquidityValue1,
-    account,
+    account.status,
+    account.address,
     poolAddress,
-    chainId,
+    account.chainId,
     positionSDK,
     liquidityPercentage,
-    provider,
+    signer,
     getDeadline,
     tokenId,
     allowedSlippage,

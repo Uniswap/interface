@@ -1,17 +1,18 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { QuoteType } from 'uniswap/src/types/quote'
 import { NumberType } from 'utilities/src/format/types'
 import {
   LocalizationContextState,
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
+import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -22,17 +23,14 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     trade: { trade },
   } = derivedSwapInfo
 
-  const quoteId =
-    trade?.quoteData?.quoteType === QuoteType.RoutingApi
-      ? trade?.quoteData?.quote?.quoteId
-      : trade?.quoteData?.quote?.quote.quoteId
+  const quoteId = getQuoteIdFromQuoteData(trade?.quoteData)
 
   useEffect(() => {
     if (!trade) {
       return
     }
 
-    sendWalletAnalyticsEvent(
+    sendAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
       getBaseTradeAnalyticsProperties({ formatter, trade })
     )
@@ -58,10 +56,7 @@ export function getBaseTradeAnalyticsProperties({
     currency: trade.outputAmount.currency,
   })
 
-  const quoteId =
-    trade.quoteData?.quoteType === QuoteType.RoutingApi
-      ? trade.quoteData?.quote?.quoteId
-      : trade.quoteData?.quote?.quote.quoteId
+  const quoteId = getQuoteIdFromQuoteData(trade?.quoteData)
 
   const finalOutputAmount = feeCurrencyAmount
     ? trade.outputAmount.subtract(feeCurrencyAmount)
@@ -149,5 +144,27 @@ function getPortionAmountFromQuoteData(quoteData?: QuoteData): string | undefine
     return quoteData.quote.portionAmount
   }
 
+  // TODO MOB-2438: remove quote type check when other quote types are supported
+  if (!isClassicQuote(quoteData.quote.quote)) {
+    return undefined
+  }
+
   return quoteData.quote.quote.portionAmount
+}
+
+function getQuoteIdFromQuoteData(quoteData?: QuoteData): string | undefined {
+  if (!quoteData?.quote) {
+    return undefined
+  }
+
+  if (quoteData.quoteType === QuoteType.RoutingApi) {
+    return quoteData.quote.quoteId
+  }
+
+  // TODO MOB-2438: remove quote type check when other quote types are supported
+  if (!isClassicQuote(quoteData.quote.quote)) {
+    return undefined
+  }
+
+  return quoteData.quote.quote.quoteId
 }

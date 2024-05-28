@@ -2,9 +2,9 @@ import * as ExpoClipboard from 'expo-clipboard'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { MobileState } from 'src/app/reducer'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { Screens } from 'src/screens/Screens'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import {
   ACCOUNT,
   ON_PRESS_EVENT_PAYLOAD,
@@ -109,7 +109,9 @@ describe(AccountHeader, () => {
 
     await waitFor(() => {
       expect(navigate).toHaveBeenCalledTimes(1)
-      expect(navigate).toHaveBeenCalledWith(Screens.SettingsStack, { screen: Screens.Settings })
+      expect(navigate).toHaveBeenCalledWith(MobileScreens.SettingsStack, {
+        screen: MobileScreens.Settings,
+      })
     })
   })
 })

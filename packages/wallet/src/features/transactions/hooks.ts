@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
-import { ChainId } from 'wallet/src/constants/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   makeSelectTransaction,

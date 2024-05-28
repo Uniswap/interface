@@ -1,5 +1,6 @@
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import { AssetDocument, AssetQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Data } from 'utils/cache'
 import client from '../client'
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {
@@ -19,7 +20,7 @@ export default async function getAsset(collectionAddress: string, tokenId: strin
     return undefined
   }
   const title = formatNFTAssetMetatagTitleName(asset.name, asset.collection?.name, asset.tokenId)
-  const formattedAsset = {
+  const formattedAsset: Data = {
     title,
     image,
     url,

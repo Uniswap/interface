@@ -13,7 +13,6 @@ import {
   TAB_VIEW_SCROLL_THROTTLE,
   TabProps,
 } from 'src/components/layout/TabHelpers'
-import { Screens } from 'src/screens/Screens'
 import {
   AnimatedFlex,
   Flex,
@@ -24,6 +23,7 @@ import {
 } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -178,7 +178,7 @@ export const TokenBalanceListInner = forwardRef<
 
   const getItemLayout = useCallback(
     (
-      _: Maybe<TokenBalanceListRow[]>,
+      _: Maybe<ArrayLike<string>>,
       index: number
     ): { length: number; offset: number; index: number } => ({
       length: ESTIMATED_TOKEN_ITEM_HEIGHT,
@@ -194,7 +194,7 @@ export const TokenBalanceListInner = forwardRef<
       interactive={balancesById !== undefined}
       screenName={
         // Marks the home screen as interactive when balances are defined
-        Screens.Home
+        MobileScreens.Home
       }>
       {!balancesById ? (
         isNonPollingRequestInFlight(networkStatus) ? (

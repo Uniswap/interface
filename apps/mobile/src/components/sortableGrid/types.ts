@@ -1,13 +1,14 @@
 import { FlatList, ScrollView, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
-export type Require<T, K extends keyof T = keyof T> = Required<Pick<T, K>> & Omit<T, K>
-
-export type ItemMeasurements = {
-  height: number
-  width: number
+export type Vector = {
   x: number
   y: number
+}
+
+export type Dimensions = {
+  width: number
+  height: number
 }
 
 export type AutoScrollProps = {
@@ -21,40 +22,10 @@ export type AutoScrollProps = {
   containerRef?: React.RefObject<View>
 }
 
-export type SortableGridContextType = {
-  gridContainerRef: React.RefObject<View>
-  itemAtIndexMeasurements: SharedValue<ItemMeasurements[]>
-  dragActivationProgress: SharedValue<number>
-  activeIndex: number | null
-  previousActiveIndex: SharedValue<number | null>
-  activeTranslation: SharedValue<{ x: number; y: number }>
-  scrollOffsetDiff: SharedValue<number>
-  renderIndexToDisplayIndex: SharedValue<number[]>
-  setActiveIndex: (index: number | null) => void
-  onDragStart?: () => void
-  displayToRenderIndex: SharedValue<number[]>
-  activeItemScale: SharedValue<number>
-  visibleHeight: SharedValue<number>
-  activeItemOpacity: SharedValue<number>
-  activeItemShadowOpacity: SharedValue<number>
-  touchedIndex: SharedValue<number | null>
-  editable: boolean
-  containerStartOffset: SharedValue<number>
-  containerEndOffset: SharedValue<number>
-}
-
-export type SortableGridRenderItemInfo<I> = {
-  item: I
-  index: number
-  dragActivationProgress: SharedValue<number>
-  isTouched: SharedValue<boolean>
-}
-
-export type SortableGridRenderItem<I> = (info: SortableGridRenderItemInfo<I>) => JSX.Element
-
-export type Vector = {
-  x: number
-  y: number
+export type ActiveItemDecorationSettings = {
+  activeItemScale: number
+  activeItemOpacity: number
+  activeItemShadowOpacity: number
 }
 
 export type SortableGridChangeEvent<I> = {
@@ -62,3 +33,21 @@ export type SortableGridChangeEvent<I> = {
   fromIndex: number
   toIndex: number
 }
+
+export type SortableGridDragStartEvent<I> = {
+  item: I
+  index: number
+}
+
+export type SortableGridDropEvent<I> = {
+  item: I
+  index: number
+}
+
+export type SortableGridRenderItemInfo<I> = {
+  item: I
+  pressProgress: SharedValue<number>
+  dragActivationProgress: SharedValue<number>
+}
+
+export type SortableGridRenderItem<I> = (info: SortableGridRenderItemInfo<I>) => JSX.Element

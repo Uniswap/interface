@@ -1,6 +1,5 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
@@ -8,6 +7,7 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
+import { useChainId } from 'wagmi'
 
 import { gqlToCurrency } from 'graphql/data/util'
 import { deserializeToken, serializeToken } from 'state/user/utils'
@@ -130,7 +130,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const dispatch = useAppDispatch()
   const userDeadline = useAppSelector((state) => state.user.userDeadline)
   const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
@@ -197,7 +197,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const supportedChainId = useSupportedChainId(chainId)
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection

@@ -20,7 +20,7 @@ import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function AppModals(): JSX.Element {
   return (

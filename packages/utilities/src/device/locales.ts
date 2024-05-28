@@ -23,6 +23,7 @@ export function getDeviceLocales(): Locale[] {
       currencySymbol: null,
       decimalSeparator: null,
       digitGroupingSeparator: null,
+      temperatureUnit: null,
       textDirection: null,
       measurementSystem: null,
     },
