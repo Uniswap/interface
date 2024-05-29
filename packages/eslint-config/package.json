@@ -1,23 +1,8 @@
 {
   "name": "@uniswap/eslint-config",
-  "version": "0.0.1",
   "description": "Uniswap ESLint config",
-  "repository": "https://github.com/Uniswap/eslint-config",
-  "homepage": "https://github.com/Uniswap/eslint-config#readme",
+  "version": "0.0.1",
   "bugs": "https://github.com/Uniswap/eslint-config/issues",
-  "license": "MIT",
-  "scripts": {
-    "lint": "eslint .",
-    "test": "jest"
-  },
-  "main": "base.js",
-  "files": [
-    "restrictedImports.js",
-    "base.js",
-    "react.js",
-    "native.js",
-    "load.js"
-  ],
   "dependencies": {
     "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.2.0",
@@ -44,9 +29,6 @@
     "prettier": "^2.8.0",
     "prettier-plugin-organize-imports": "3.2.4"
   },
-  "peerDependencies": {
-    "eslint": "^8.0.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "7.23.3",
@@ -56,5 +38,23 @@
     "eslint": "8.44.0",
     "jest": "29.7.0",
     "typescript": "5.3.3"
+  },
+  "files": [
+    "restrictedImports.js",
+    "base.js",
+    "react.js",
+    "native.js",
+    "load.js"
+  ],
+  "homepage": "https://github.com/Uniswap/eslint-config#readme",
+  "license": "MIT",
+  "main": "base.js",
+  "peerDependencies": {
+    "eslint": "^8.0.0"
+  },
+  "repository": "https://github.com/Uniswap/eslint-config",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "jest"
   }
 }

@@ -39,6 +39,7 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
       }
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
+    case ChainId.ARBITRUM_SEPOLIA:
       return {
         Symbol: arbitrum,
         bgColor: '#00A3FF33',

@@ -1,16 +1,6 @@
 {
   "name": "wallet",
   "version": "0.0.0",
-  "scripts": {
-    "check:deps:usage": "depcheck",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "test": "jest",
-    "tradingapi:schema": "curl https://api.uniswap.org/v2/trade/api.json -o ./src/data/tradingApi/api.json",
-    "tradingapi:generate": "openapi --input ./src/data/tradingApi/api.json --output ./src/data/tradingApi/__generated__ --client axios --useOptions --exportServices true --exportModels true",
-    "snapshots": "jest -u",
-    "typecheck": "tsc -b"
-  },
   "dependencies": {
     "@apollo/client": "3.9.6",
     "@ethersproject/bignumber": "5.7.0",
@@ -104,6 +94,16 @@
   },
   "main": "src/index.ts",
   "private": true,
+  "scripts": {
+    "check:deps:usage": "depcheck",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "snapshots": "jest -u",
+    "test": "jest",
+    "tradingapi:generate": "openapi --input ./src/data/tradingApi/api.json --output ./src/data/tradingApi/__generated__ --client axios --useOptions --exportServices true --exportModels true",
+    "tradingapi:schema": "curl https://api.uniswap.org/v2/trade/api.json -o ./src/data/tradingApi/api.json",
+    "typecheck": "tsc -b"
+  },
   "sideEffects": [
     "*.css"
   ]
