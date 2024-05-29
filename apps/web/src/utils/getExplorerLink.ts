@@ -6,6 +6,7 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
   [ChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
   [ChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
+  [ChainId.ARBITRUM_SEPOLIA]: 'https://sepolia.arbiscan.io',
   [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
   [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
   [ChainId.POLYGON]: 'https://polygonscan.com',

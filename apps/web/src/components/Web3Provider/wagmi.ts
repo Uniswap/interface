@@ -8,6 +8,7 @@ import { connect } from 'wagmi/actions'
 import {
   arbitrum,
   arbitrumGoerli,
+  arbitrumSepolia,
   avalanche,
   base,
   blast,
@@ -36,6 +37,7 @@ const CHAIN_ID_TO_VIEM_CHAIN: Record<SupportedInterfaceChainId, Chain> = {
   [ChainId.CELO_ALFAJORES]: celoAlfajores,
   [ChainId.ARBITRUM_ONE]: arbitrum,
   [ChainId.ARBITRUM_GOERLI]: arbitrumGoerli,
+  [ChainId.ARBITRUM_SEPOLIA]: arbitrumSepolia,
   [ChainId.OPTIMISM]: optimism,
   [ChainId.OPTIMISM_GOERLI]: optimismGoerli,
   [ChainId.BNB]: bsc,

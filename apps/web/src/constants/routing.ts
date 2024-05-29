@@ -21,6 +21,7 @@ import {
   PORTAL_ETH_CELO,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
+  USDC_ARBITRUM_SEPOLIA,
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
@@ -92,6 +93,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token].map(
     buildCurrencyInfo
   ),
+  
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     ARB,
@@ -105,6 +107,11 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(ChainId.ARBITRUM_GOERLI),
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
+  ].map(buildCurrencyInfo),
+  [ChainId.ARBITRUM_SEPOLIA]: [
+    nativeOnChain(ChainId.ARBITRUM_SEPOLIA),
+    WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_SEPOLIA] as Token,
+    USDC_ARBITRUM_SEPOLIA,
   ].map(buildCurrencyInfo),
 
   [ChainId.OPTIMISM]: [
