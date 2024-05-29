@@ -1,6 +1,21 @@
 {
   "name": "uniswap",
   "version": "0.0.0",
+  "scripts": {
+    "build": "tsc -b",
+    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+    "contracts": "yarn contracts:compile:abi && yarn contracts:compile:v3",
+    "check:deps:usage": "depcheck",
+    "graphql:generate": "graphql-codegen --config codegen.ts",
+    "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./src/data/graphql/uniswap-data-api/schema.graphql",
+    "i18n:generate": "i18next-resources-for-ts interface -i ./src/i18n/locales/source -o ./src/i18n/locales/@types/resources.d.ts",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest --passWithNoTests",
+    "snapshots": "jest -u",
+    "typecheck": "tsc -b"
+  },
   "dependencies": {
     "@apollo/client": "3.9.6",
     "@react-native-async-storage/async-storage": "1.17.10",
@@ -43,21 +58,6 @@
   },
   "main": "src/index.ts",
   "private": true,
-  "scripts": {
-    "build": "tsc -b",
-    "check:deps:usage": "depcheck",
-    "contracts": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
-    "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
-    "graphql:generate": "graphql-codegen --config codegen.ts",
-    "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./src/data/graphql/uniswap-data-api/schema.graphql",
-    "i18n:generate": "i18next-resources-for-ts interface -i ./src/i18n/locales/source -o ./src/i18n/locales/@types/resources.d.ts",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "snapshots": "jest -u",
-    "test": "jest --passWithNoTests",
-    "typecheck": "tsc -b"
-  },
   "sideEffects": [
     "*.css"
   ]

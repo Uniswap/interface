@@ -9,8 +9,6 @@ export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
       return Chain.Arbitrum
     case ChainId.ARBITRUM_GOERLI:
       return Chain.Arbitrum
-    case ChainId.ARBITRUM_SEPOLIA:
-      return Chain.Arbitrum
     case ChainId.GOERLI:
       return Chain.EthereumGoerli
     case ChainId.SEPOLIA:
