@@ -94,7 +94,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
                 <Line />
                 <TextSectionWrapper>
                   <ThemedText.Caption color="neutral3">
-                    <Trans>Fiat onramp powered by MoonPay USA LLC</Trans>
+                    <Trans>Fiat onramp powered by Swipelux OÜ</Trans>
                   </ThemedText.Caption>
                 </TextSectionWrapper>
               </>

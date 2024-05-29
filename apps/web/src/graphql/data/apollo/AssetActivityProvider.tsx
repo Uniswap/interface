@@ -11,6 +11,7 @@ import {
   useReducer,
   useState,
 } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import {
   ActivityWebQueryResult,
   AssetActivityPartsFragment,
@@ -33,7 +34,9 @@ const SubscriptionContext = createContext<
 >(undefined)
 
 export function AssetActivityProvider({ children }: PropsWithChildren) {
-  const { account } = useWeb3React()
+  let { account } = useWeb3React()
+  const activeSmartPool = useActiveSmartPool().address
+  account = activeSmartPool ?? account
   const previousAccount = usePrevious(account)
 
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
@@ -75,14 +78,20 @@ function useSubscribedActivities() {
   const { account } = useWeb3React()
   const previousAccount = usePrevious(account)
 
+  const activeSmartPool = useActiveSmartPool().address
+  const previousSmartPool = usePrevious(activeSmartPool)
+
   const [subscribedActivities, setSubscribedActivities] = useState<AssetActivityPartsFragment[]>([])
 
   // Clear the subscribed activity list when the account changes.
   useEffect(() => {
-    if (account !== previousAccount) {
+    if (!activeSmartPool && account !== previousAccount) {
       setSubscribedActivities([])
     }
-  }, [account, previousAccount])
+    if (activeSmartPool && activeSmartPool !== previousSmartPool) {
+      setSubscribedActivities([])
+    }
+  }, [account, previousAccount, activeSmartPool, previousSmartPool])
 
   // Update the subscribed activity list when a new activity is received from the subscription service.
   const subscription = useAssetActivitySubscription()

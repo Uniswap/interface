@@ -22,7 +22,7 @@ const StyledClose = styled(X)`
   ${ClickableStyle}
 `
 
-export const showUniconV2InfoPopupAtom = atomWithStorage('showUniconV2InfoPopup', true)
+export const showUniconV2InfoPopupAtom = atomWithStorage('showUniconV2InfoPopup', false)
 
 export default function UniconV2InfoPopup() {
   const account = useAccount()

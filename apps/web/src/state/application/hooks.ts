@@ -182,15 +182,15 @@ export function useRemovePopup(): (key: string) => void {
   )
 }
 
-export function useSelectActiveSmartPool(): (smartPoolValue: Currency) => void {
+export function useSelectActiveSmartPool(): (smartPoolValue?: Currency) => void {
   const dispatch = useAppDispatch()
   return useCallback(
-    (smartPoolValue: Currency) => {
+    (smartPoolValue?: Currency) => {
       dispatch(
         setSmartPoolValue({
           smartPool: {
-            address: smartPoolValue.isToken ? smartPoolValue.address : undefined,
-            name: smartPoolValue.isToken && smartPoolValue.name ? smartPoolValue.name : undefined,
+            address: smartPoolValue?.isToken ? smartPoolValue.address : undefined,
+            name: smartPoolValue?.isToken && smartPoolValue.name ? smartPoolValue.name : undefined,
           },
         })
       )

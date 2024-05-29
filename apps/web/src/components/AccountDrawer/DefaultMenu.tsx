@@ -3,6 +3,7 @@ import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/Limits
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { useCallback, useEffect, useMemo } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import styled from 'styled-components'
 
 import { sendAnalyticsEvent } from 'analytics'
@@ -55,11 +56,13 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     sendAnalyticsEvent('Portfolio Menu Opened', { name: menu })
   }, [menu])
 
+  const { address: smartPoolAddress } = useActiveSmartPool()
+
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:
         return isAuthenticated ? (
-          <AuthenticatedHeader account={account} openSettings={openSettings} />
+          <AuthenticatedHeader account={smartPoolAddress ?? account} openSettings={openSettings} />
         ) : (
           <WalletModal openSettings={openSettings} />
         )
@@ -87,6 +90,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     openLanguageSettings,
     openLocalCurrencySettings,
     openSettings,
+    smartPoolAddress,
   ])
 
   return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>

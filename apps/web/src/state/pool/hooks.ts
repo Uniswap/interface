@@ -4,17 +4,20 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { POOLS_LIST } from 'constants/lists'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { GRG } from 'constants/tokens'
 import { useContract } from 'hooks/useContract'
+import usePrevious from 'hooks/usePrevious'
 import { useTotalSupply } from 'hooks/useTotalSupply'
+import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
 import { useStakingContract } from 'state/governance/hooks'
 import { useAppSelector } from 'state/hooks'
 import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
@@ -22,6 +25,7 @@ import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { useAccount } from 'wagmi'
 
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
 import { useLogs } from '../logs/hooks'
@@ -462,4 +466,67 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
       poolOwnStake: delegatedOwnStakes ? delegatedOwnStakes[i].poolOwnStake : 0,
     })),
   }
+}
+
+export function useOperatedPools() {
+  // TODO: the following is expensive as overwrites all pools data, however it is called just once. It is useful when
+  //  switching chain in the swap page s otherwise the state is cleared when page is reloaded.
+  //  We sould try and update state only if poolsLogs is undefined
+  //const poolsLogs = useRegisteredPools()
+  const { data: poolsLogs } = useAllPoolsData()
+  const poolAddresses: (string | undefined)[] = useMemo(() => {
+    if (!poolsLogs) return []
+
+    return poolsLogs.map((p) => p.pool)
+  }, [poolsLogs])
+  const PoolInterface = new Interface(POOL_EXTENDED_ABI)
+  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
+
+  const { address: account, chainId } = useAccount()
+  const prevAccount = usePrevious(account)
+  const accountChanged = prevAccount && prevAccount !== account
+
+  // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
+  const operatedPools: Token[] | undefined = useMemo(() => {
+    if (!account || !chainId || !results || !poolAddresses) return
+    const mockToken = new Token(0, account, 1)
+    return results
+      .map((result, i) => {
+        const { result: pools, loading } = result
+        const poolAddress = poolAddresses[i]
+
+        if (loading || !pools || !pools?.[0] || !poolAddress) return mockToken
+        //const parsed: PoolInitParams[] | undefined = pools?.[0]
+        const { name, symbol, decimals, owner } = pools[0]
+        if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
+        //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
+        const isPoolOperator = owner === account
+        if (!isPoolOperator) return mockToken
+        return new Token(chainId ?? ChainId.MAINNET, poolAddress, decimals, symbol, name)
+      })
+      .filter((p) => p !== mockToken)
+    //.filter((p) => account.address === owner)
+  }, [account, chainId, poolAddresses, results])
+
+  const defaultPool = useMemo(() => {
+    if (!operatedPools) return
+    return operatedPools[0]
+  }, [operatedPools])
+
+  const activeSmartPool = useActiveSmartPool()
+
+  const onPoolSelect = useSelectActiveSmartPool()
+
+  useEffect(() => {
+    // Initialize default pool
+    if (defaultPool && (!activeSmartPool?.address || activeSmartPool.address === null)) {
+      onPoolSelect(defaultPool)
+    } else if (!defaultPool && activeSmartPool?.address) {
+      onPoolSelect()
+    } else if (accountChanged) {
+      onPoolSelect(defaultPool)
+    }
+  }, [defaultPool, activeSmartPool.address, onPoolSelect, accountChanged])
+
+  return operatedPools
 }

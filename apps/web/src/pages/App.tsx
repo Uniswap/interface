@@ -13,6 +13,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
+import { useOperatedPools } from 'state/pool/hooks'
 import { AppState } from 'state/reducer'
 import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components'
@@ -112,6 +113,10 @@ export default function App() {
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagURLOverrides()
+
+  // TODO: check this call does not load rpc calls
+  // load operated pools and store default pool address
+  useOperatedPools()
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'

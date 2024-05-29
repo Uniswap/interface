@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useAccount, useAccountEffect, useEnsName } from 'wagmi'
@@ -12,10 +13,14 @@ const recentAccountIdentifierMapAtom = atomWithStorage<{
 // Returns an identifier for the current or recently connected account, prioritizing unitag -> ENS name -> address
 export function useAccountIdentifier() {
   const [recentAccountIdentifierMap, updateRecentAccountIdentifierMap] = useAtom(recentAccountIdentifierMapAtom)
-  const { address } = useAccount()
+  const { address: signerAddress } = useAccount()
+  const activeSmartPool = useActiveSmartPool()
+
+  // display user address if user does not have an operated smart pool
+  const address = activeSmartPool.address && activeSmartPool.address !== '' ? activeSmartPool.address : signerAddress
 
   const { unitag: unitagResponse } = useUnitagByAddress(address)
-  const { data: ensNameResponse } = useEnsName({ address })
+  const { data: ensNameResponse } = useEnsName({ address: address as `0x${string}` })
 
   // Clear the `recent` account identifier when the user disconnects
   useAccountEffect({

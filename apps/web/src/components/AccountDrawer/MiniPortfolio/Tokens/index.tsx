@@ -4,11 +4,11 @@ import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PortfolioToken } from 'graphql/data/portfolios'
-import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
+import { /*getTokenDetailsURL,*/ gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { /*useCallback,*/ useMemo, useState } from 'react'
+//import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -20,7 +20,7 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer, useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer /*, useToggleAccountDrawer*/ } from '../hooks'
 
 export default function Tokens() {
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
@@ -80,13 +80,13 @@ function TokenRow({
   const { formatDelta } = useFormatter()
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
-  const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  //const navigate = useNavigate()
+  //const toggleWalletDrawer = useToggleAccountDrawer()
 
-  const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ ...token }))
-    toggleWalletDrawer()
-  }, [navigate, token, toggleWalletDrawer])
+  //const navigateToTokenDetails = useCallback(async () => {
+  //  navigate(getTokenDetailsURL({ ...token }))
+  //  toggleWalletDrawer()
+  //}, [navigate, token, toggleWalletDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
@@ -116,7 +116,8 @@ function TokenRow({
             {token?.symbol}
           </TokenBalanceText>
         }
-        onClick={navigateToTokenDetails}
+        // TODO: enable navigation after caching worker's response
+        //onClick={navigateToTokenDetails}
         right={
           denominatedValue && (
             <>

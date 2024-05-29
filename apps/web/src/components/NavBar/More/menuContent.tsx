@@ -20,8 +20,8 @@ export const useMenuContent = (): MenuSection[] => {
     {
       title: t('App'),
       items: [
-        { label: t('Pool'), href: '/pool', internal: true, overflow: true },
-        { label: t('Vote'), href: '/vote' },
+        { label: t('Stake'), href: '/stake', internal: true, overflow: true },
+        { label: t('Vote'), href: '/vote', internal: true },
         { label: t('Analytics'), href: 'https://defillama.com/protocol/rigoblock' },
       ],
     },

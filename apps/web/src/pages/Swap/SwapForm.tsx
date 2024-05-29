@@ -25,7 +25,6 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
-import { Interface } from 'ethers/lib/utils'
 import { useCurrency } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 //import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
@@ -36,7 +35,6 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -44,13 +42,13 @@ import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
+import { useOperatedPools } from 'state/pool/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
-import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -65,7 +63,6 @@ import Error from 'components/Icons/Error'
 import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import useSelectChain from 'hooks/useSelectChain'
-import { useAllPoolsData /*, useRegisteredPools*/ } from 'state/pool/hooks'
 import { CurrencyState } from 'state/swap/types'
 import styled from 'styled-components'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -180,47 +177,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   // toggle wallet when disconnected
   const toggleWalletDrawer = useToggleAccountDrawer()
 
-  // TODO: the following is expensive as overwrites all pools data, however it is called just once. It is useful when
-  //  switching chain in the swap page s otherwise the state is cleared when page is reloaded.
-  //  We sould try and update state only if poolsLogs is undefined
-  //const poolsLogs = useRegisteredPools()
-  const { data: poolsLogs } = useAllPoolsData()
-  const poolAddresses: (string | undefined)[] = useMemo(() => {
-    if (!poolsLogs) return []
-
-    return poolsLogs.map((p) => p.pool)
-  }, [poolsLogs])
-  const PoolInterface = new Interface(POOL_EXTENDED_ABI)
-  const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
-
-  const account = useAccount()
-
-  // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
-  const operatedPools: Token[] | undefined = useMemo(() => {
-    if (!account.address || !chainId || !results || !poolAddresses) return
-    const mockToken = new Token(0, account.address, 1)
-    return results
-      .map((result, i) => {
-        const { result: pools, loading } = result
-        const poolAddress = poolAddresses[i]
-
-        if (loading || !pools || !pools?.[0] || !poolAddress) return mockToken
-        //const parsed: PoolInitParams[] | undefined = pools?.[0]
-        const { name, symbol, decimals, owner } = pools[0]
-        if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
-        //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
-        const isPoolOperator = owner === account.address
-        if (!isPoolOperator) return mockToken
-        return new Token(chainId, poolAddress, decimals, symbol, name)
-      })
-      .filter((p) => p !== mockToken)
-    //.filter((p) => account.address === owner)
-  }, [account.address, chainId, poolAddresses, results])
-
-  const defaultPool = useMemo(() => {
-    if (!operatedPools) return
-    return operatedPools[0]
-  }, [operatedPools])
+  const operatedPools = useOperatedPools()
 
   const { address: smartPoolAddress, name: smartPoolName } = useActiveSmartPool()
   const smartPool = useCurrency(smartPoolAddress ?? undefined)
@@ -559,28 +516,13 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const prevTrade = usePrevious(trade)
   useEffect(() => {
-    // Initialize default pool
-    if (defaultPool && (!smartPoolAddress || smartPoolAddress === null)) {
-      onPoolSelect(defaultPool)
-    }
-
     if (!trade || prevTrade === trade) return // no new swap quote to log
 
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
       ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, outputFeeFiatValue),
       ...trace,
     })
-  }, [
-    prevTrade,
-    trade,
-    trace,
-    allowedSlippage,
-    swapQuoteLatency,
-    outputFeeFiatValue,
-    onPoolSelect,
-    defaultPool,
-    smartPoolAddress,
-  ])
+  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, outputFeeFiatValue])
 
   const showDetailsDropdown = Boolean(
     !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
