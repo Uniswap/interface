@@ -137,7 +137,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : 2963000 //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 2963000 //2570151
   } else if (chainId === ChainId.BNB) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 28843676
   } else {
