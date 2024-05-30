@@ -41,7 +41,7 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
   return useMemo(() => {
     if (!urls) return {}
     return urls.slice().reduce((allTokens, currentUrl) => {
-      const current = lists[currentUrl]?.current
+      const current = lists?.[currentUrl]?.current
       if (!current) return allTokens
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
@@ -54,7 +54,7 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
 }
 
 // TODO: define TokenInfo | undefined returned type
-export function usePoolsFromUrl(urls: string[] | undefined) {
+export function usePoolsFromUrl(urls?: string[]) {
   const lists = usePoolsList()
   return useMemo(() => {
     if (!urls) return []

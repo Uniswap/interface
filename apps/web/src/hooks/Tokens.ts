@@ -26,7 +26,10 @@ import { useUserAddedTokens } from '../state/user/userAddedTokens'
 type Maybe<T> = T | undefined
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<ChainId>): { [address: string]: TokenFromList } {
+export function useTokensFromMap(
+  tokenMap: TokenAddressMap,
+  chainId: Maybe<ChainId>
+): { [address: string]: TokenFromList } {
   return useMemo(() => {
     if (!chainId) return {}
 

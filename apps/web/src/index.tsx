@@ -34,6 +34,7 @@ import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
+import PoolListUpdater from './state/lists/poolsList/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import { ThemeProvider, ThemedGlobalStyle } from './theme'
@@ -53,6 +54,7 @@ function Updaters() {
       </Helmet>
       <RadialGradientByChainUpdater />
       <ListsUpdater />
+      <PoolListUpdater />
       <SystemThemeUpdater />
       <ThemeColorMetaUpdater />
       <ApplicationUpdater />

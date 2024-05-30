@@ -114,8 +114,7 @@ export default function App() {
 
   useFeatureFlagURLOverrides()
 
-  // TODO: check this call does not load rpc calls
-  // load operated pools and store default pool address
+  // load operated pools and store default pool, update on chain switch
   useOperatedPools()
 
   const metaTags = useDynamicMetatags()
