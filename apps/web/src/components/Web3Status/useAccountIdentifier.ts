@@ -1,9 +1,10 @@
+import { useAccount } from 'hooks/useAccount'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useAccount, useAccountEffect, useEnsName } from 'wagmi'
+import { useAccountEffect, useEnsName } from 'wagmi'
 
 const recentAccountIdentifierMapAtom = atomWithStorage<{
   [account in string]?: { unitag?: string; ensName?: string }
@@ -26,11 +27,17 @@ export function useAccountIdentifier() {
 
   // Keep the stored account identifiers synced with the latest unitag and ENS name
   useEffect(() => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     updateRecentAccountIdentifierMap((prev) => {
       const updatedIdentifiers = prev[address] ?? {}
-      if (unitagResponse) updatedIdentifiers.unitag = unitagResponse.username
-      if (ensNameResponse) updatedIdentifiers.ensName = ensNameResponse
+      if (unitagResponse) {
+        updatedIdentifiers.unitag = unitagResponse.username
+      }
+      if (ensNameResponse) {
+        updatedIdentifiers.ensName = ensNameResponse
+      }
 
       return { ...prev, [address]: updatedIdentifiers, recent: updatedIdentifiers }
     })

@@ -19,12 +19,16 @@ import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import {
+  useCreateOnboardingAccountIfNone,
+  useOnboardingContext,
+} from 'wallet/src/features/onboarding/OnboardingContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { useActiveAccountAddress, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppDispatch } from 'wallet/src/state'
 
@@ -35,15 +39,20 @@ type Props = CompositeScreenProps<
 
 export function WelcomeWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   useAddBackButton(navigation)
+  useCreateOnboardingAccountIfNone()
+
+  const { getOnboardingAccountAddress, getUnitagClaim } = useOnboardingContext()
+  const onboardingAccountAddress = getOnboardingAccountAddress()
+  const unitagClaim = getUnitagClaim()
 
   const colors = useSporeColors()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const media = useMedia()
 
-  const activeAddress = useActiveAccountAddress()
-  const walletName = useDisplayName(activeAddress)
-  const { data: avatar } = useENSAvatar(activeAddress)
+  const walletName = useDisplayName(onboardingAccountAddress)
+  const { data: avatar } = useENSAvatar(onboardingAccountAddress)
+
   const dispatch = useAppDispatch()
 
   const onPressNext = (): void => {
@@ -63,23 +72,23 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
 
   const zeroBalance = convertFiatAmountFormatted(0, NumberType.PortfolioBalance)
 
-  const displayName = params.unitagClaim
-    ? { type: DisplayNameType.Unitag, name: params.unitagClaim.username }
+  const displayName = unitagClaim
+    ? { type: DisplayNameType.Unitag, name: unitagClaim.username }
     : walletName
 
   return (
     <Screen mb="$spacing12" mx="$spacing24">
       <Flex fill gap="$spacing36" justifyContent="center">
         <Flex gap="$spacing12" px="$spacing16">
-          {params.unitagClaim?.avatarUri ? (
+          {unitagClaim?.avatarUri ? (
             <UnitagProfilePicture
-              address={activeAddress ?? ''}
+              address={onboardingAccountAddress ?? ''}
               size={iconSizes.icon64}
-              unitagAvatarUri={params.unitagClaim?.avatarUri}
+              unitagAvatarUri={unitagClaim?.avatarUri}
             />
           ) : (
             <AccountIcon
-              address={activeAddress ?? ''}
+              address={onboardingAccountAddress ?? ''}
               avatarUri={avatar}
               showBackground={true}
               showBorder={false}

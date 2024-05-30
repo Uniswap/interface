@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { sendAnalyticsEvent } from 'analytics'
 import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
-
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, RouterPreference } from './types'
 import { isExactInput, transformQuickRouteToTrade } from './utils'
 
@@ -46,7 +46,7 @@ export const quickRouteApi = createApi({
               typeof errorData === 'object' &&
               (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
             ) {
-              sendAnalyticsEvent('No quote received from quickroute API', {
+              sendAnalyticsEvent(InterfaceEventNameLocal.NoQuoteReceivedFromQuickrouteAPI, {
                 requestBody,
                 response,
               })

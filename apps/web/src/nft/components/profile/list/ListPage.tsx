@@ -1,7 +1,9 @@
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { useIsMobile } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -23,11 +25,9 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useIsMobile } from 'hooks/screenSize'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useAccount } from 'wagmi'
 import { ListModal } from './Modal/ListModal'
 import { NFTListingsGrid } from './NFTListingsGrid'
 import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
@@ -233,7 +233,9 @@ export const ListPage = () => {
   }
 
   const startListingFlow = async () => {
-    if (!signer) return
+    if (!signer) {
+      return
+    }
     sendAnalyticsEvent(NFTEventName.NFT_SELL_START_LISTING, { ...startListingEventProperties })
 
     // for all unique collection, marketplace combos -> approve collections
@@ -252,11 +254,11 @@ export const ListPage = () => {
 
   const BannerText = isMobile ? (
     <ThemedText.SubHeader>
-      <Trans>Receive</Trans>
+      <Trans i18nKey="common.receive" />
     </ThemedText.SubHeader>
   ) : (
     <ThemedText.HeadlineSmall lineHeight="28px">
-      <Trans>You receive</Trans>
+      <Trans i18nKey="common.youRecieve" />
     </ThemedText.HeadlineSmall>
   )
 
@@ -269,12 +271,12 @@ export const ListPage = () => {
               <BackArrow onClick={() => setSellPageState(ProfilePageStateType.VIEWING)} />
             </ArrowContainer>
             <ThemedText.BodySmall lineHeight="20px" color="neutral2">
-              <Trans>My NFTs</Trans>
+              <Trans i18nKey="nfts.my" />
             </ThemedText.BodySmall>
           </Row>
           <ListingHeaderRow>
             <TitleWrapper>
-              <Trans>Sell NFTs</Trans>
+              <Trans i18nKey="nfts.sell" />
             </TitleWrapper>
             <ButtonsWrapper>
               <SelectMarketplacesDropdown setSelectedMarkets={setSelectedMarkets} selectedMarkets={selectedMarkets} />

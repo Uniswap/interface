@@ -1,14 +1,11 @@
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, user } from 'analytics'
+import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-import { useAccount } from 'wagmi'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 
-jest.mock('wagmi', () => ({
-  ...jest.requireActual('wagmi'),
-  useAccount: jest.fn(),
-}))
-
+jest.mock('hooks/useAccount')
 jest.mock('hooks/useEthersProvider', () => ({
   useEthersWeb3Provider: () => {
     return { provider: {}, off: jest.fn(), send: jest.fn().mockResolvedValue('v1') }
@@ -20,10 +17,12 @@ const ACCOUNT2 = '0x0000000000000000000000000000000000000001'
 const account1Result = { address: ACCOUNT1, connector: { name: 'test' } } as unknown as ReturnType<typeof useAccount>
 const account2Result = { address: ACCOUNT2, connector: { name: 'test' } } as unknown as ReturnType<typeof useAccount>
 
-jest.mock('analytics', () => ({
-  useTrace: jest.fn(),
+jest.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: jest.fn(),
-  user: { set: jest.fn(), postInsert: jest.fn() },
+}))
+
+jest.mock('uniswap/src/features/telemetry/user', () => ({
+  setUserProperty: jest.fn(),
 }))
 
 function first<T>(array: T[]): T {
@@ -43,6 +42,7 @@ describe('Web3Provider', () => {
 
       // Assert
       expect(sendAnalyticsEvent).toHaveBeenCalledTimes(1)
+      expect(setUserProperty).toHaveBeenCalledTimes(4)
       expect(sendAnalyticsEvent).toHaveBeenCalledWith(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: '0x0000000000000000000000000000000000000000',
@@ -51,10 +51,7 @@ describe('Web3Provider', () => {
         peer_wallet_agent: '(Injected)',
       })
       expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
-        last(mocked(user.set).mock.invocationCallOrder)
-      )
-      expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
-        last(mocked(user.postInsert).mock.invocationCallOrder)
+        last(mocked(setUserProperty).mock.invocationCallOrder)
       )
     })
 

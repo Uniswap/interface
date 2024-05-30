@@ -89,7 +89,9 @@ export default function Zoom({
   )
 
   useEffect(() => {
-    if (!svg) return
+    if (!svg) {
+      return
+    }
 
     zoomBehavior.current = zoom()
       .scaleExtent([zoomLevels.min, zoomLevels.max])

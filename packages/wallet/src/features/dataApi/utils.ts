@@ -1,12 +1,13 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { useRef } from 'react'
 import {
   Chain,
   ContractInput,
   SafetyLevel,
   TokenProjectsQuery,
-  TopTokensQuery,
+  TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -28,6 +29,8 @@ type BuildCurrencyParams = {
   symbol?: Nullable<string>
   name?: Nullable<string>
   bypassChecksum?: boolean
+  buyFeeBps?: string
+  sellFeeBps?: string
 }
 
 // Converts CurrencyId to ContractInput format for GQL token queries
@@ -102,20 +105,31 @@ export function buildCurrency({
   symbol,
   name,
   bypassChecksum = true,
+  buyFeeBps,
+  sellFeeBps,
 }: BuildCurrencyParams): Token | NativeCurrency | undefined {
   if (!chainId || decimals === undefined || decimals === null) {
     return undefined
   }
 
   return isNonNativeAddress(chainId, address)
-    ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum)
+    ? new Token(
+        chainId,
+        address,
+        decimals,
+        symbol ?? undefined,
+        name ?? undefined,
+        bypassChecksum,
+        buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
+        sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
+      )
     : NativeCurrency.onChain(chainId)
 }
 
 export function gqlTokenToCurrencyInfo(
-  token: NonNullable<NonNullable<TopTokensQuery['topTokens']>[0]>
+  token: NonNullable<NonNullable<TokenQuery['token']>>
 ): CurrencyInfo | null {
-  const { chain, address, decimals, symbol, project } = token
+  const { chain, address, decimals, symbol, project, feeData } = token
   const chainId = fromGraphQLChain(chain)
 
   const currency = buildCurrency({
@@ -124,6 +138,8 @@ export function gqlTokenToCurrencyInfo(
     decimals,
     symbol,
     name: project?.name,
+    buyFeeBps: feeData?.buyFeeBps,
+    sellFeeBps: feeData?.sellFeeBps,
   })
 
   if (!currency) {

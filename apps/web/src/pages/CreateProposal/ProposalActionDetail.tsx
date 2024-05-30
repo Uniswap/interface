@@ -53,7 +53,7 @@ export const ProposalActionDetail = ({
     [ProposalAction.TRANSFER_TOKEN]: [
       {
         type: ProposalActionDetailField.ADDRESS,
-        label: <Trans>To</Trans>,
+        label: <Trans i18nKey="common.to" />,
       },
       {
         type: ProposalActionDetailField.CURRENCY,
@@ -62,7 +62,7 @@ export const ProposalActionDetail = ({
     [ProposalAction.APPROVE_TOKEN]: [
       {
         type: ProposalActionDetailField.ADDRESS,
-        label: <Trans>To</Trans>,
+        label: <Trans i18nKey="common.to" />,
       },
       {
         type: ProposalActionDetailField.CURRENCY,

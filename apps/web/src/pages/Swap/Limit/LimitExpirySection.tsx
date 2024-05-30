@@ -1,10 +1,11 @@
-import { sendAnalyticsEvent } from 'analytics'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useLimitContext } from 'state/limit/LimitContext'
-import { Expiry } from 'state/limit/types'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 const ExpirySection = styled(Row)`
   width: 100%;
@@ -26,18 +27,18 @@ const LimitExpiryButton = styled.button<{ $selected: boolean }>`
   ${ClickableStyle}
 `
 
-const EXPIRY_OPTIONS = [Expiry.Day, Expiry.Week, Expiry.Month, Expiry.Year]
+const EXPIRY_OPTIONS = [LimitsExpiry.Day, LimitsExpiry.Week, LimitsExpiry.Month, LimitsExpiry.Year]
 
-function getExpiryLabelText(expiry: Expiry) {
+function getExpiryLabelText(expiry: LimitsExpiry) {
   switch (expiry) {
-    case Expiry.Day:
-      return t`1 day`
-    case Expiry.Week:
-      return t`1 week`
-    case Expiry.Month:
-      return t`1 month`
-    case Expiry.Year:
-      return t`1 year`
+    case LimitsExpiry.Day:
+      return t('common.oneDay')
+    case LimitsExpiry.Week:
+      return t('common.oneWeek')
+    case LimitsExpiry.Month:
+      return t('common.oneMonth')
+    case LimitsExpiry.Year:
+      return t('common.oneYear')
   }
 }
 
@@ -47,7 +48,7 @@ export function LimitExpirySection() {
   return (
     <ExpirySection>
       <ThemedText.SubHeaderSmall>
-        <Trans>Expiry</Trans>
+        <Trans i18nKey="common.expiry" />
       </ThemedText.SubHeaderSmall>
       <Row justify="flex-end" gap="xs">
         {EXPIRY_OPTIONS.map((expiry) => (
@@ -55,8 +56,10 @@ export function LimitExpirySection() {
             key={expiry}
             $selected={expiry === limitState.expiry}
             onClick={() => {
-              if (expiry === limitState.expiry) return
-              sendAnalyticsEvent('Limit Expiry Selected', {
+              if (expiry === limitState.expiry) {
+                return
+              }
+              sendAnalyticsEvent(InterfaceEventNameLocal.LimitExpirySelected, {
                 value: expiry,
               })
               setLimitState((prev) => ({

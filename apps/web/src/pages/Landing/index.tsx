@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import usePrevious from 'hooks/usePrevious'
@@ -10,6 +9,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import LandingV2 from './LandingV2'
 
 export default function Landing() {
@@ -64,7 +64,7 @@ export default function Landing() {
   }
 
   return (
-    <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.LANDING_PAGE}>
       <LandingV2 transition={isExitAnimationEnabled && transition} />
     </Trace>
   )

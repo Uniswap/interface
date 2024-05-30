@@ -3,11 +3,11 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { Trace, sendAnalyticsEvent } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -22,7 +22,9 @@ import {
 } from 'constants/chains'
 import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -38,16 +40,13 @@ import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
-import { useChainId } from 'wagmi'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { Text } from 'ui/src'
-import { useAccount } from 'wagmi'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -205,15 +204,16 @@ function CurrentPriceCard({
     <LightCard padding="12px">
       <AutoColumn gap="sm" justify="center">
         <ExtentsText>
-          <Trans>Current price</Trans>
+          <Trans i18nKey="common.currentPrice" />
         </ExtentsText>
         <ThemedText.DeprecatedMediumHeader textAlign="center">
           {formatPrice({ price: inverted ? pool.token1Price : pool.token0Price, type: NumberType.TokenTx })}
         </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
-          <Trans>
-            {{ sym: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
-          </Trans>
+          <Trans
+            i18nKey="common.feesEarnedPerBase"
+            values={{ symbolA: currencyQuote?.symbol, symbolB: currencyBase?.symbol }}
+          />
         </ExtentsText>
       </AutoColumn>
     </LightCard>
@@ -366,13 +366,13 @@ export function PositionPageUnsupportedContent() {
     <PageWrapper>
       <div style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
         <ThemedText.HeadlineLarge style={{ marginBottom: '8px' }}>
-          <Trans>Position unavailable</Trans>
+          <Trans i18nKey="common.positionUnavailable">Position unavailable</Trans>
         </ThemedText.HeadlineLarge>
         <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
-          <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
+          <Trans i18nKey="pool.position.networkConnect" />
         </ThemedText.BodyPrimary>
         <PositionPageButtonPrimary as={Link} to="/pool" width="fit-content">
-          <Trans>Back to Pool</Trans>
+          <Trans i18nKey="pool.back" />
         </PositionPageButtonPrimary>
       </div>
     </PageWrapper>
@@ -380,7 +380,7 @@ export function PositionPageUnsupportedContent() {
 }
 
 export default function PositionPage() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const isSupportedChain = useIsSupportedChainId(chainId)
   if (isSupportedChain) {
     return <PositionPageContent />
@@ -395,7 +395,9 @@ const PositionLabelRow = styled(RowFixed)({
 })
 
 function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
-  if (!tokenId) return
+  if (!tokenId) {
+    return
+  }
   try {
     return BigNumber.from(tokenId)
   } catch (error) {
@@ -496,13 +498,17 @@ function PositionPageContent() {
   const price1 = useStablecoinPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
+    if (!price0 || !price1 || !feeValue0 || !feeValue1) {
+      return null
+    }
 
     // we wrap because it doesn't matter, the quote returns a USDC amount
     const feeValue0Wrapped = feeValue0?.wrapped
     const feeValue1Wrapped = feeValue1?.wrapped
 
-    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
+    if (!feeValue0Wrapped || !feeValue1Wrapped) {
+      return null
+    }
 
     const amount0 = price0.quote(feeValue0Wrapped)
     const amount1 = price1.quote(feeValue1Wrapped)
@@ -510,7 +516,9 @@ function PositionPageContent() {
   }, [price0, price1, feeValue0, feeValue1])
 
   const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
-    if (!price0 || !price1 || !position) return null
+    if (!price0 || !price1 || !position) {
+      return null
+    }
     const amount0 = price0.quote(position.amount0)
     const amount1 = price1.quote(position.amount1)
     return amount0.add(amount1)
@@ -526,8 +534,9 @@ function PositionPageContent() {
       !positionManager ||
       !tokenId ||
       !signer
-    )
+    ) {
       return
+    }
 
     setCollecting(true)
 
@@ -547,7 +556,9 @@ function PositionPageContent() {
     }
 
     const connectedChainId = await signer.getChainId()
-    if (account.chainId !== connectedChainId) throw new WrongChainError()
+    if (account.chainId !== connectedChainId) {
+      throw new WrongChainError()
+    }
 
     signer
       .estimateGas(txn)
@@ -634,10 +645,10 @@ function PositionPageContent() {
           </AutoColumn>
         </LightCard>
         <Text fontSize={12} fontStyle="italic" color="$neutral2">
-          <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
+          <Trans i18nKey="pool.collectingFeesWithdraw" />
         </Text>
         <ButtonPrimary data-testid="modal-collect-fees-button" onClick={collect}>
-          <Trans>Collect</Trans>
+          <Trans i18nKey="common.collect.button" />
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -672,7 +683,7 @@ function PositionPageContent() {
       <div />
     </LoadingRows>
   ) : (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
       <>
         <Helmet>
           <title>
@@ -690,12 +701,12 @@ function PositionPageContent() {
             hash={collectMigrationHash ?? ''}
             reviewContent={() => (
               <ConfirmationModalContent
-                title={<Trans>Claim fees</Trans>}
+                title={<Trans i18nKey="pool.claimFees" />}
                 onDismiss={() => setShowConfirm(false)}
                 topContent={modalHeader}
               />
             )}
-            pendingText={<Trans>Collecting fees</Trans>}
+            pendingText={<Trans i18nKey="common.collecting.fees" />}
           />
           <AutoColumn gap="md">
             <AutoColumn gap="sm">
@@ -705,7 +716,7 @@ function PositionPageContent() {
                 to="/pool"
               >
                 <HoverText>
-                  <Trans>← Back to Pool</Trans>
+                  ← <Trans i18nKey="pool.back" />
                 </HoverText>
               </Link>
               <ResponsiveRow>
@@ -741,7 +752,7 @@ function PositionPageContent() {
                         $borderRadius="12px"
                         style={{ marginRight: '8px' }}
                       >
-                        <Trans>Increase liquidity</Trans>
+                        <Trans i18nKey="pool.increaseLiquidity" />
                       </ButtonGray>
                     ) : null}
                     {tokenId && !removed ? (
@@ -752,7 +763,7 @@ function PositionPageContent() {
                         width="fit-content"
                         $borderRadius="12px"
                       >
-                        <Trans>Remove liquidity</Trans>
+                        <Trans i18nKey="pool.removeLiquidity" />
                       </SmallButtonPrimary>
                     ) : null}
                   </ActionButtonResponsiveRow>
@@ -781,7 +792,7 @@ function PositionPageContent() {
                     <NFT image={metadata.result.image} height={400} />
                     {typeof account.chainId === 'number' && owner && !ownsNFT ? (
                       <ExternalLink href={getExplorerLink(account.chainId, owner, ExplorerDataType.ADDRESS)}>
-                        <Trans>Owner</Trans>
+                        <Trans i18nKey="pool.owner" />
                       </ExternalLink>
                     ) : null}
                   </DarkCard>
@@ -804,7 +815,7 @@ function PositionPageContent() {
                   <AutoColumn gap="md" style={{ width: '100%' }}>
                     <AutoColumn gap="md">
                       <Label>
-                        <Trans>Liquidity</Trans>
+                        <Trans i18nKey="common.liquidity" />
                       </Label>
                       {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                         <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={535}>
@@ -815,7 +826,7 @@ function PositionPageContent() {
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
                         <ThemedText.DeprecatedLargeHeader color={theme.neutral1} fontSize="36px" fontWeight={535}>
-                          <Trans>-</Trans>
+                          -
                         </ThemedText.DeprecatedLargeHeader>
                       )}
                     </AutoColumn>
@@ -830,7 +841,7 @@ function PositionPageContent() {
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
                                 <BadgeText>
-                                  <Trans>{{ pct: inverted ? ratio : 100 - ratio }}%</Trans>
+                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? ratio : 100 - ratio }} />
                                 </BadgeText>
                               </Badge>
                             ) : null}
@@ -845,7 +856,7 @@ function PositionPageContent() {
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
                                 <BadgeText>
-                                  <Trans>{{ pct: inverted ? 100 - ratio : ratio }}%</Trans>
+                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? 100 - ratio : ratio }} />
                                 </BadgeText>
                               </Badge>
                             ) : null}
@@ -861,7 +872,7 @@ function PositionPageContent() {
                       <RowBetween style={{ alignItems: 'flex-start' }}>
                         <AutoColumn gap="md">
                           <Label>
-                            <Trans>Unclaimed fees</Trans>
+                            <Trans i18nKey="pool.unclaimedFees" />
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
@@ -886,19 +897,19 @@ function PositionPageContent() {
                           >
                             {!!collectMigrationHash && !isCollectPending ? (
                               <ThemedText.DeprecatedMain color={theme.neutral1}>
-                                <Trans> Collected</Trans>
+                                <Trans i18nKey="pool.collected" />
                               </ThemedText.DeprecatedMain>
                             ) : isCollectPending || collecting ? (
                               <ThemedText.DeprecatedMain color={theme.neutral1}>
                                 {' '}
                                 <Dots>
-                                  <Trans>Collecting</Trans>
+                                  <Trans i18nKey="pool.collecting" />
                                 </Dots>
                               </ThemedText.DeprecatedMain>
                             ) : (
                               <>
                                 <ThemedText.DeprecatedMain color={theme.white}>
-                                  <Trans>Collect fees</Trans>
+                                  <Trans i18nKey="pool.collectingFees" />
                                 </ThemedText.DeprecatedMain>
                               </>
                             )}
@@ -944,7 +955,7 @@ function PositionPageContent() {
                       <AutoColumn gap="md">
                         <RowBetween>
                           <ThemedText.DeprecatedMain>
-                            <Trans>Collect as {{ nativeWrappedSymbol }}</Trans>
+                            <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol }} />
                           </ThemedText.DeprecatedMain>
                           <Toggle
                             id="receive-as-weth"
@@ -963,7 +974,7 @@ function PositionPageContent() {
                 <RowBetween>
                   <RowFixed>
                     <Label display="flex" style={{ marginRight: '12px' }}>
-                      <Trans>Price range</Trans>
+                      <Trans i18nKey="pool.priceRange" />
                     </Label>
                     <HideExtraSmall>
                       <>
@@ -987,7 +998,7 @@ function PositionPageContent() {
                   <LightCard padding="12px" width="100%">
                     <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
-                        <Trans>Min price</Trans>
+                        <Trans i18nKey="pool.minPrice" />
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
                         {formatTickPrice({
@@ -999,14 +1010,15 @@ function PositionPageContent() {
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
-                        <Trans>
-                          {{ symbol: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
-                        </Trans>
+                        <Trans
+                          i18nKey="common.feesEarnedPerBase"
+                          values={{ symbolA: currencyQuote?.symbol, symbolB: currencyBase?.symbol }}
+                        />
                       </ExtentsText>
 
                       {inRange && (
                         <Text fontSize={11} color="$neutral3">
-                          <Trans>Your position will be 100% {{ symbol: currencyBase?.symbol }} at this price.</Trans>
+                          <Trans i18nKey="pool.position.100" />
                         </Text>
                       )}
                     </AutoColumn>
@@ -1016,7 +1028,7 @@ function PositionPageContent() {
                   <LightCard padding="12px" width="100%">
                     <AutoColumn gap="sm" justify="center">
                       <ExtentsText>
-                        <Trans>Max price</Trans>
+                        <Trans i18nKey="pool.maxPrice" />
                       </ExtentsText>
                       <ThemedText.DeprecatedMediumHeader textAlign="center">
                         {formatTickPrice({
@@ -1028,14 +1040,15 @@ function PositionPageContent() {
                       </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
-                        <Trans>
-                          {{ symbol: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
-                        </Trans>
+                        <Trans
+                          i18nKey="common.feesEarnedPerBase"
+                          values={{ symbolA: currencyQuote?.symbol, symbolB: currencyBase?.symbol }}
+                        />
                       </ExtentsText>
 
                       {inRange && (
                         <Text fontSize={11} color="$neutral3">
-                          <Trans>Your position will be 100% {{ symbol: currencyQuote?.symbol }} at this price.</Trans>
+                          <Trans i18nKey="pool.position.100.at" values={{ symbol: currencyQuote?.symbol }} />
                         </Text>
                       )}
                     </AutoColumn>

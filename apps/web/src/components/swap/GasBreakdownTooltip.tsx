@@ -21,7 +21,9 @@ type GasCostItemProps = { title: ReactNode; itemValue?: React.ReactNode; amount?
 const GasCostItem = ({ title, amount, itemValue }: GasCostItemProps) => {
   const { formatNumber } = useFormatter()
 
-  if (!amount && !itemValue) return null
+  if (!amount && !itemValue) {
+    return null
+  }
 
   const value = itemValue ?? formatNumber({ input: amount, type: NumberType.FiatGasPrice })
   return (
@@ -44,7 +46,9 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
   const inputCurrency = trade.inputAmount.currency
   const native = nativeOnChain(inputCurrency.chainId)
 
-  if (isPreviewTrade(trade)) return <NetworkCostDescription native={native} />
+  if (isPreviewTrade(trade)) {
+    return <NetworkCostDescription native={native} />
+  }
 
   const swapEstimate = !isUniswapX ? trade.gasUseEstimateUSD : undefined
   const approvalEstimate = trade.approveInfo.needsApprove ? trade.approveInfo.approveGasEstimateUSD : undefined
@@ -53,18 +57,23 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 
   const description = isUniswapX ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
 
-  if (!showEstimateDetails) return description
+  if (!showEstimateDetails) {
+    return description
+  }
 
   return (
     <Container gap="md">
       <AutoColumn gap="sm">
-        <GasCostItem title={<Trans>Wrap {{ sym: native.symbol }}</Trans>} amount={wrapEstimate} />
         <GasCostItem
-          title={<Trans>Allow {{ sym: inputCurrency.symbol }} (one time)</Trans>}
+          title={<Trans i18nKey="swap.wrap.token" values={{ sym: native.symbol }} />}
+          amount={wrapEstimate}
+        />
+        <GasCostItem
+          title={<Trans i18nKey="swap.allow.oneTime" values={{ sym: inputCurrency.symbol }} />}
           amount={approvalEstimate}
         />
-        <GasCostItem title={<Trans>Swap</Trans>} amount={swapEstimate} />
-        {isUniswapX && <GasCostItem title={<Trans>Swap</Trans>} itemValue={<GaslessSwapLabel />} />}
+        <GasCostItem title={<Trans i18nKey="common.swap" />} amount={swapEstimate} />
+        {isUniswapX && <GasCostItem title={<Trans i18nKey="common.swap" />} itemValue={<GaslessSwapLabel />} />}
       </AutoColumn>
       <Divider />
       {description}
@@ -78,11 +87,9 @@ function NetworkCostDescription({ native }: { native: Currency }) {
 
   return (
     <ThemedText.LabelMicro>
-      <Trans>
-        Network cost is paid in {{ sym: native.symbol }} on the {{ chainName }} network in order to transact.
-      </Trans>{' '}
+      <Trans i18nKey="swap.networkCost.paidIn" values={{ sym: native.symbol, chainName }} />{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
-        <Trans>Learn more</Trans>
+        <Trans i18nKey="common.learnMore.link" />
       </ExternalLink>
     </ThemedText.LabelMicro>
   )
@@ -94,12 +101,14 @@ const InlineUniswapXGradient = styled(UniswapXGradient)`
 export function UniswapXDescription() {
   return (
     <ThemedText.Caption color="neutral2">
-      <Trans>
-        <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and gas
-        free swaps.
-      </Trans>{' '}
+      <Trans
+        i18nKey="uniswapX.aggregatesLiquidity"
+        components={{
+          logo: <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient>,
+        }}
+      />{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
-        <Trans>Learn more</Trans>
+        <Trans i18nKey="common.learnMore.link" />
       </ExternalLink>
     </ThemedText.Caption>
   )

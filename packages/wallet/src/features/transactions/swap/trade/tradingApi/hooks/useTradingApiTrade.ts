@@ -3,6 +3,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
@@ -12,6 +13,7 @@ import {
   QuoteResponse as TradingApiQuoteResponse,
   TradeType as TradingApiTradeType,
 } from 'wallet/src/data/tradingApi/__generated__/index'
+import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
@@ -37,10 +39,7 @@ export const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
 
 export const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
-// We poll approximately once per block.
-// Ideally, we would poll more often to account for cases where we start polling right at the end of a block,
-// but our backend can't handle this right now, so do not increase this value without discussing it with the backend team first.
-export const SWAP_QUOTE_POLL_INTERVAL_MS = PollingInterval.Fast
+export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
 export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const {
@@ -127,7 +126,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   /***** Fetch quote from trading API  ******/
 
-  const internalPollInterval = pollInterval ?? SWAP_QUOTE_POLL_INTERVAL_MS
+  const internalPollInterval = pollInterval ?? getPollIntervalByChain(currencyIn?.chainId)
 
   const response = useRestQuery<
     TradingApiQuoteResponse,
@@ -242,4 +241,10 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     response,
     tradeType,
   ])
+}
+
+function getPollIntervalByChain(chainId?: ChainId): number {
+  return isL2Chain(chainId)
+    ? PollingInterval.AverageL2BlockTime
+    : PollingInterval.AverageL1BlockTime
 }

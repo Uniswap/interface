@@ -54,15 +54,18 @@ const StyledChart: typeof Chart = styled(Chart)`
 const PDPChartTypeSelector = ({
   chartType,
   onChartTypeChange,
+  disabledOption,
 }: {
   chartType: PoolsDetailsChartType
   onChartTypeChange: (c: PoolsDetailsChartType) => void
+  disabledOption?: PoolsDetailsChartType
 }) => (
   <ChartTypeSelectorContainer>
     <ChartTypeDropdown
       options={PDP_CHART_SELECTOR_OPTIONS}
       currentChartType={chartType}
       onSelectOption={onChartTypeChange}
+      disabledOption={disabledOption}
     />
   </ChartTypeSelectorContainer>
 )
@@ -171,7 +174,7 @@ export default function ChartSection(props: ChartSectionProps) {
       return <LiquidityChart {...selectedChartProps} />
     }
     if (activeQuery.dataQuality === DataQuality.INVALID || !currencyA || !currencyB) {
-      const errorText = loading ? undefined : <Trans>Unable to display historical data for the current pool.</Trans>
+      const errorText = loading ? undefined : <Trans i18nKey="chart.error.pools" />
       return <ChartSkeleton type={activeQuery.chartType} height={PDP_CHART_HEIGHT_PX} errorText={errorText} />
     }
 
@@ -188,16 +191,25 @@ export default function ChartSection(props: ChartSectionProps) {
   // BE does not support hourly price data for pools
   const filteredTimeOptions = useMemo(() => {
     if (activeQuery.chartType === ChartType.PRICE) {
+      if (timePeriod === TimePeriod.HOUR) {
+        setTimePeriod(TimePeriod.DAY)
+      }
       return DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
     }
     return DEFAULT_PILL_TIME_SELECTOR_OPTIONS
-  }, [activeQuery.chartType])
+  }, [activeQuery.chartType, setTimePeriod, timePeriod])
+
+  const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
   return (
     <div data-testid="pdp-chart-container">
       {ChartBody}
       <ChartActionsContainer>
-        <PDPChartTypeSelector chartType={activeQuery.chartType} onChartTypeChange={setChartType} />
+        <PDPChartTypeSelector
+          chartType={activeQuery.chartType}
+          onChartTypeChange={setChartType}
+          disabledOption={disabledChartOption}
+        />
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <PillMultiToggle
@@ -307,7 +319,9 @@ function LiquidityTooltipDisplay({
   currentTick?: number
 }) {
   const { formatNumber } = useFormatter()
-  if (!currentTick) return null
+  if (!currentTick) {
+    return null
+  }
 
   const displayValue0 =
     data.tick >= currentTick
@@ -349,8 +363,8 @@ function LiquidityChart({
   isReversed: boolean
   chainId: ChainId
 }) {
-  const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t`Token A`
-  const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t`Token B`
+  const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
+  const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 
   const { tickData, activeTick, loading } = useLiquidityBarData({
     tokenA,
@@ -372,7 +386,9 @@ function LiquidityChart({
     }
   }, [activeTick, isReversed, theme, tickData])
 
-  if (loading) return <LoadingChart />
+  if (loading) {
+    return <LoadingChart />
+  }
 
   return (
     <StyledChart
@@ -400,7 +416,7 @@ function LiquidityChart({
             <FadeInHeading>{`1 ${tokenBDescriptor} = ${displayPoint?.price1} ${tokenADescriptor}`}</FadeInHeading>
             {displayPoint && displayPoint.tick === activeTick && (
               <FadeInSubheader color="neutral2" paddingTop="4px">
-                <Trans>Active tick range</Trans>
+                <Trans i18nKey="pool.activeRange" />
               </FadeInSubheader>
             )}
           </div>

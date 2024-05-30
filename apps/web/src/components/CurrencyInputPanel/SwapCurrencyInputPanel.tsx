@@ -1,14 +1,16 @@
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import Tooltip from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { Trans } from 'i18n'
 import ms from 'ms'
 import { darken } from 'polished'
@@ -17,12 +19,9 @@ import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { Text } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -297,7 +296,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             <AutoColumn gap="sm" justify="center">
               <Lock />
               <Text variant="body2" textAlign="center" px="$spacing12">
-                <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
+                <Trans i18nKey="swap.marketPrice.outsideRange.label" />
               </Text>
             </AutoColumn>
           </FixedContainer>
@@ -360,7 +359,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                           className="token-symbol-container"
                           active={Boolean(currency && currency.symbol)}
                         >
-                          {currency ? formatCurrencySymbol(currency) : <Trans>Select token</Trans>}
+                          {currency ? formatCurrencySymbol(currency) : <Trans i18nKey="common.selectToken" />}
                         </StyledTokenName>
                       )}
                     </RowFixed>
@@ -391,28 +390,28 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         renderBalance ? (
                           renderBalance(selectedCurrencyBalance)
                         ) : (
-                          <Trans>
-                            Balance:{' '}
-                            {{
+                          <Trans
+                            i18nKey="swap.balance.amount"
+                            values={{
                               amount: formatCurrencyAmount({
                                 amount: selectedCurrencyBalance,
                                 type: NumberType.TokenNonTx,
                               }),
                             }}
-                          </Trans>
+                          />
                         )
                       ) : null}
                     </ThemedText.DeprecatedBody>
                     {showMaxButton && selectedCurrencyBalance ? (
-                      <TraceEvent
-                        events={[BrowserEvent.onClick]}
-                        name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
+                      <Trace
+                        logPress
+                        eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                         element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
                       >
                         <StyledBalanceMax onClick={onMax}>
-                          <Trans>Max</Trans>
+                          <Trans i18nKey="common.max" />
                         </StyledBalanceMax>
-                      </TraceEvent>
+                      </Trace>
                     ) : null}
                   </RowFixed>
                 ) : (

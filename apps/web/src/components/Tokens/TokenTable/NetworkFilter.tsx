@@ -1,6 +1,7 @@
 import Badge from 'components/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -9,6 +10,7 @@ import {
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { useReducer } from 'react'
@@ -16,6 +18,8 @@ import { Check } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const NetworkLabel = styled.div`
   ${EllipsisStyle}
@@ -47,6 +51,7 @@ export default function NetworkFilter() {
   const navigate = useNavigate()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
   const isSupportedChainCallaback = useIsSupportedChainIdCallback()
+  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
   const exploreParams = useExploreParams()
   const currentChain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
@@ -59,11 +64,30 @@ export default function NetworkFilter() {
         toggleOpen={toggleMenu}
         menuLabel={
           <NetworkLabel data-testid="tokens-network-filter-selected">
-            <ChainLogo chainId={currentChain.id} size={20} />
+            {!exploreParams.chainName && isMultichainExploreEnabled ? (
+              <AllNetworksIcon />
+            ) : (
+              <ChainLogo chainId={currentChain.id} size={20} />
+            )}
           </NetworkLabel>
         }
         internalMenuItems={
           <>
+            {isMultichainExploreEnabled && (
+              <InternalMenuItem
+                key="All networks"
+                data-testid="tokens-network-filter-option-all-networks"
+                onClick={() => {
+                  navigate(`/explore/${tab ?? ExploreTab.Tokens}`)
+                  toggleMenu()
+                }}
+              >
+                <NetworkLabel>
+                  <AllNetworksIcon /> <Trans>All networks</Trans>
+                </NetworkLabel>
+                {!exploreParams.chainName && <Check size={16} color={theme.accent1} />}
+              </InternalMenuItem>
+            )}
             {BACKEND_SUPPORTED_CHAINS.map((network) => {
               const chainId = supportedChainIdFromGQLChain(network)
               const isSupportedChain = isSupportedChainCallaback(chainId)
@@ -80,7 +104,9 @@ export default function NetworkFilter() {
                   <NetworkLabel>
                     <ChainLogo chainId={chainId} size={20} /> {chainInfo?.label}
                   </NetworkLabel>
-                  {network === currentChain.backendChain.chain && <Check size={16} color={theme.accent1} />}
+                  {network === currentChain.backendChain.chain && exploreParams.chainName && (
+                    <Check size={16} color={theme.accent1} />
+                  )}
                 </InternalMenuItem>
               )
             })}

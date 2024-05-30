@@ -1,8 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral2};
@@ -37,24 +37,19 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 )
 
 export default function ProposalEmptyState() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   if (chainId && chainId !== ChainId.MAINNET) {
     return (
       <EmptyState
-        HeaderContent={() => <Trans>Please connect to Layer 1 Ethereum</Trans>}
-        SubHeaderContent={() => (
-          <Trans>
-            Uniswap governance is only available on Layer 1. Switch your network to Ethereum Mainnet to view Proposals
-            and Vote.
-          </Trans>
-        )}
+        HeaderContent={() => <Trans i18nKey="proposal.connectLayer1" />}
+        SubHeaderContent={() => <Trans i18nKey="proposal.layer1Warning" />}
       />
     )
   }
   return (
     <EmptyState
-      HeaderContent={() => <Trans>No proposals found.</Trans>}
-      SubHeaderContent={() => <Trans>Proposals submitted by community members will appear here.</Trans>}
+      HeaderContent={() => <Trans i18nKey="proposal.noneFound" />}
+      SubHeaderContent={() => <Trans i18nKey="proposal.willAppearHere" />}
     />
   )
 }

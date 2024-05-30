@@ -24,7 +24,9 @@ export function createAdaptiveRefetchContext<T>() {
     // Tracks whether or not the current query data is undefined or out of date to avoid unnecessary re-fetches.
     const [isStale, setIsStale] = useState(true)
     useEffect(() => {
-      if (stale) setIsStale(true)
+      if (stale) {
+        setIsStale(true)
+      }
     }, [stale])
 
     // Fetches balances when the query is both stale and subscribed to.
@@ -41,7 +43,9 @@ export function createAdaptiveRefetchContext<T>() {
     }, [])
 
     const refetch = useCallback(() => {
-      if (!isStale) return
+      if (!isStale) {
+        return
+      }
       fetch()
       setIsStale(false)
     }, [fetch, isStale])
@@ -68,12 +72,16 @@ export function createAdaptiveRefetchContext<T>() {
    */
   function useQuery(options?: { cacheOnly?: boolean }) {
     const context = useContext(Context)
-    if (!context) throw new Error('useAdaptiveRefetchQuery must be used within an AdaptiveRefetchProvider')
+    if (!context) {
+      throw new Error('useAdaptiveRefetchQuery must be used within an AdaptiveRefetchProvider')
+    }
     const { subscribe } = context
 
     // Subscribing/unsubscribing allows AdaptiveRefetchProvider to track whether components are currently using the query or not, impacting whether or not to re-fetch when stale.
     useEffect(() => {
-      if (options?.cacheOnly === true) return
+      if (options?.cacheOnly === true) {
+        return
+      }
       return subscribe()
     }, [options?.cacheOnly, subscribe])
 
@@ -83,7 +91,9 @@ export function createAdaptiveRefetchContext<T>() {
   /** Fetches the query upon hover, even if no `useQuery` hooks are subscribed. */
   function PrefetchWrapper({ children, className }: PropsWithChildren<{ className?: string }>) {
     const contextValue = useContext(Context)
-    if (!contextValue) throw new Error('PrefetchWrapper must be used within an AdaptiveRefetchProvider')
+    if (!contextValue) {
+      throw new Error('PrefetchWrapper must be used within an AdaptiveRefetchProvider')
+    }
     const { refetch } = contextValue
 
     return (

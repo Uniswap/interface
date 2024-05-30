@@ -248,6 +248,7 @@ query NftsTab(
 ) {
   nftBalances(
     ownerAddress: $ownerAddress
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BLAST, BNB, ZORA]
     first: $first
     after: $after
     filter: $filter
@@ -255,6 +256,7 @@ query NftsTab(
     edges {
       node {
         ownedAsset {
+          chain
           id
           collection {
             id
@@ -452,6 +454,10 @@ query Token($chain: Chain!, $address: String) {
       safetyLevel
       isSpam
     }
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
   }
 }
 
@@ -523,6 +529,10 @@ query TokenDetailsScreen(
         chain
         address
       }
+    }
+    feeData {
+      buyFeeBps
+      sellFeeBps
     }
   }
 }

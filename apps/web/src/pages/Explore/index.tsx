@@ -1,5 +1,4 @@
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { Trace, TraceEvent } from 'analytics'
+import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
@@ -20,6 +19,7 @@ import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -81,23 +81,24 @@ interface Page {
   title: React.ReactNode
   key: ExploreTab
   component: () => JSX.Element
-  loggingElementName: string
+  loggingElementName: InterfaceElementName
 }
+
 const Pages: Array<Page> = [
   {
-    title: <Trans>Tokens</Trans>,
+    title: <Trans i18nKey="common.tokens" />,
     key: ExploreTab.Tokens,
     component: TopTokensTable,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
-    title: <Trans>Pools</Trans>,
+    title: <Trans i18nKey="common.pools" />,
     key: ExploreTab.Pools,
     component: TopPoolTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
-    title: <Trans>Transactions</Trans>,
+    title: <Trans i18nKey="common.transactions" />,
     key: ExploreTab.Transactions,
     component: RecentTransactions,
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
@@ -111,7 +112,9 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
 
-    if (!key || key === -1) return 0
+    if (!key || key === -1) {
+      return 0
+    }
     return key
   }, [initialTab])
 
@@ -154,20 +157,16 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   )
 
   return (
-    <Trace
-      page={InterfacePageName.EXPLORE_PAGE}
-      properties={{ chainName: chain.backendChain.chain }}
-      shouldLogImpression
-    >
+    <Trace logImpression page={InterfacePageName.EXPLORE_PAGE} properties={{ chainName: chain.backendChain.chain }}>
       <ExploreContainer>
         <ExploreChartsSection />
         <NavWrapper ref={tabNavRef}>
           <TabBar data-testid="explore-navbar">
             {Pages.map(({ title, loggingElementName, key }, index) => {
               return (
-                <TraceEvent
-                  events={[BrowserEvent.onClick]}
-                  name={SharedEventName.NAVBAR_CLICKED}
+                <Trace
+                  logPress
+                  eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
                   element={loggingElementName}
                   key={index}
                 >
@@ -178,7 +177,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                       {title}
                     </TabItem>
                   </StyledInternalLink>
-                </TraceEvent>
+                </Trace>
               )
             })}
           </TabBar>

@@ -27,7 +27,9 @@ export default function useInterval(callback: () => void | Promise<void>, delay:
         const promise = callback()
 
         // Defer the next interval until the current callback has resolved.
-        if (promise) await promise
+        if (promise) {
+          await promise
+        }
       }
 
       timeout = setTimeout(() => tick(delay), delay)

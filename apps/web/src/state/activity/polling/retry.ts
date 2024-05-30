@@ -66,7 +66,9 @@ export function retry<T>(
   return {
     promise,
     cancel: () => {
-      if (completed) return
+      if (completed) {
+        return
+      }
       completed = true
       rejectCancelled(new CanceledError())
     },

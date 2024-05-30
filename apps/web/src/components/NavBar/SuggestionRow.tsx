@@ -1,10 +1,16 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent } from 'analytics'
+import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
+import Row from 'components/Row'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
+import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
+import { LoadingBubble } from 'components/Tokens/loading'
+import { useTokenWarning } from 'constants/tokenSafety'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { VerifiedIcon } from 'nft/components/icons'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
@@ -12,15 +18,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import Column from 'components/Column'
-import Row from 'components/Row'
-import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
-import { LoadingBubble } from 'components/Tokens/loading'
-import { useTokenWarning } from 'constants/tokenSafety'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { Trans } from 'i18n'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 
 const PriceChangeContainer = styled.div`
@@ -82,7 +82,7 @@ interface SuggestionRowProps {
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
   index: number
-  eventProperties: Record<string, unknown>
+  eventProperties: InterfaceSearchResultSelectionProperties
 }
 
 function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
@@ -172,7 +172,7 @@ export const SuggestionRow = ({
             ) : (
               <>
                 {formatNumberOrString({ input: suggestion?.stats?.total_supply, type: NumberType.WholeNumber })}&nbsp;
-                <Trans>items</Trans>
+                <Trans i18nKey="common.items" />
               </>
             )}
           </ThemedText.SubHeaderSmall>
@@ -200,7 +200,7 @@ export const SuggestionRow = ({
             </>
           ) : (
             <ThemedText.BodySmall color="neutral2">
-              <Trans>Floor</Trans>
+              <Trans i18nKey="common.floor" />
             </ThemedText.BodySmall>
           )}
         </PriceChangeContainer>

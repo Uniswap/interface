@@ -39,7 +39,9 @@ export function useUnmountingAnimation(
     const removeChild = parent?.removeChild
 
     // If we can't remove the child or skipping is requested, stop here.
-    if (!(parent && removeChild) || skip) return
+    if (!(parent && removeChild) || skip) {
+      return
+    }
 
     // Override the parent's removeChild function to add our animation logic
     parent.removeChild = function <T extends Node>(child: T) {

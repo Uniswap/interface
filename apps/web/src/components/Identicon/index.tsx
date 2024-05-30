@@ -1,7 +1,9 @@
+import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { Loader } from 'react-feather'
+import styled from 'styled-components'
+import { fadeInAnimation } from 'theme/components/FadePresence'
 import { UniconV2 } from 'ui/src/components/UniconV2'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -21,7 +23,9 @@ export function useIdenticonType(account?: string) {
   const { avatar, loading: ensAvatarLoading } = useENSAvatar(account)
   const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
-  if (!account) return undefined
+  if (!account) {
+    return undefined
+  }
   if (unitagLoading || ensAvatarLoading) {
     return IdenticonType.LOADING
   } else if (unitag?.metadata?.avatar) {
@@ -33,21 +37,46 @@ export function useIdenticonType(account?: string) {
   }
 }
 
+const FadeInContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  ${fadeInAnimation}
+`
+
 export default function Identicon({ account, size }: { account?: string; size: number }) {
   const identiconType = useIdenticonType(account)
-  if (!account) return null
+  if (!account) {
+    return null
+  }
 
   switch (identiconType) {
     case IdenticonType.LOADING:
-      return <Loader data-testid="IdenticonLoader" size={size + 'px'} />
+      return <LoaderV3 size={size + 'px'} data-testid="IdenticonLoader" />
     case IdenticonType.UNITAG_PROFILE_PICTURE:
-      return <UniTagProfilePicture account={account} size={size} />
+      return (
+        <FadeInContainer>
+          <UniTagProfilePicture account={account} size={size} />
+        </FadeInContainer>
+      )
     case IdenticonType.ENS_AVATAR:
-      return <ENSAvatarIcon account={account} size={size} />
+      return (
+        <FadeInContainer>
+          <ENSAvatarIcon account={account} size={size} />
+        </FadeInContainer>
+      )
     case IdenticonType.UNICON_V2:
-      return <UniconV2 address={account} size={size} />
+      return (
+        <FadeInContainer>
+          <UniconV2 address={account} size={size} />
+        </FadeInContainer>
+      )
     case IdenticonType.UNICON:
-      return <Unicon address={account} size={size} />
+      return (
+        <FadeInContainer>
+          <Unicon address={account} size={size} />
+        </FadeInContainer>
+      )
     default:
       return null
   }

@@ -50,6 +50,10 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
   market: undefined,
   project: tokenProjectBase(),
+  feeData: {
+    buyFeeBps: '',
+    sellFeeBps: '',
+  },
 }))
 
 export const tokenBalance = createFixture<TokenBalance>()(() => ({

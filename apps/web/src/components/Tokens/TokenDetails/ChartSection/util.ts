@@ -48,7 +48,9 @@ export function checkDataQuality(
   chartType: ChartType,
   duration: HistoryDuration
 ): DataQuality {
-  if (data.length < 3) return DataQuality.INVALID
+  if (data.length < 3) {
+    return DataQuality.INVALID
+  }
   const timeInMs = data[data.length - 1].time * 1000
   const stalenessThreshold = CHART_DURATION_STALE_THRESHOLD_MAP[chartType]?.[duration]
   if (!stalenessThreshold || Date.now() - timeInMs < stalenessThreshold) {

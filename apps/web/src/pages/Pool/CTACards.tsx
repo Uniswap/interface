@@ -1,10 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled, { css } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
 const CTASection = styled.section`
   display: grid;
@@ -69,7 +69,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 export default function CTACards() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const chain = CHAIN_INFO[useSupportedChainId(chainId) ?? ChainId.MAINNET]
 
   return (
@@ -77,20 +77,20 @@ export default function CTACards() {
       <CTAExternalLink href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
         <ResponsiveColumn>
           <HeaderText>
-            <Trans>Learn about providing liquidity</Trans> ↗
+            <Trans i18nKey="pool.learnLiquidity" /> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485 }}>
-            <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
+            <Trans i18nKey="pool.learnv3LP" />
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTAExternalLink>
       <CTALink data-testid="cta-poolslink" to={`/explore/pools/${chain.urlParam}`}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
-            <Trans>Top pools</Trans> ↗
+            <Trans i18nKey="pool.top" /> ↗
           </HeaderText>
           <ThemedText.DeprecatedBody style={{ alignSelf: 'flex-start', fontWeight: 485 }}>
-            <Trans>Explore Uniswap Analytics.</Trans>
+            <Trans i18nKey="pool.exporeAnalytics" />
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTALink>

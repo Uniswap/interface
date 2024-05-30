@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { PropsWithChildren, useState } from 'react'
@@ -7,7 +8,6 @@ import { Copy } from 'react-feather'
 import styled from 'styled-components'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
 import { isSentryEnabled } from 'utils/env'
-import { useChainId } from 'wagmi'
 
 import { useIsMobile } from 'hooks/screenSize'
 import { Column } from '../Column'
@@ -105,7 +105,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
   const showMoreButton = (
     <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
       <ThemedText.Link color="neutral2">
-        {isExpanded ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
+        {isExpanded ? <Trans i18nKey="common.showLess.button" /> : <Trans i18nKey="common.showMore.button" />}
       </ThemedText.Link>
       <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
     </ShowMoreButton>
@@ -121,19 +121,16 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans>Something went wrong</Trans>
+                  <Trans i18nKey="common.somethingWentWrong.error" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
-                  <Trans>
-                    Sorry, an error occured while processing your request. If you request support, be sure to provide
-                    your error ID.
-                  </Trans>
+                  <Trans i18nKey="error.request.provideId" />
                 </Description>
               </Column>
               <CodeBlockWrapper>
                 <CodeTitle>
                   <ThemedText.SubHeader>
-                    <Trans>Error ID: {{ eventId }}</Trans>
+                    <Trans i18nKey="error.id" values={{ eventId }} />
                   </ThemedText.SubHeader>
                   <CopyToClipboard toCopy={eventId}>
                     <CopyIcon />
@@ -153,13 +150,10 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans>Something went wrong</Trans>
+                  <Trans i18nKey="common.somethingWentWrong.error" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
-                  <Trans>
-                    Sorry, an error occured while processing your request. If you request support, be sure to copy the
-                    details of this error.
-                  </Trans>
+                  <Trans i18nKey="common.error.request" />
                 </Description>
               </Column>
               <CodeBlockWrapper>
@@ -178,11 +172,11 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
           )}
           <StretchedRow>
             <SmallButtonPrimary onClick={() => window.location.reload()}>
-              <Trans>Reload the app</Trans>
+              <Trans i18nKey="common.reload.label" />
             </SmallButtonPrimary>
             <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
               <SmallButtonLight>
-                <Trans>Get support</Trans>
+                <Trans i18nKey="common.getSupport.button" />
               </SmallButtonLight>
             </ExternalLink>
           </StretchedRow>
@@ -193,7 +187,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
 }
 
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   return (
     <Sentry.ErrorBoundary
       fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}

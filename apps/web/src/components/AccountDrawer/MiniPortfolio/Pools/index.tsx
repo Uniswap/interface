@@ -1,7 +1,6 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
@@ -13,8 +12,8 @@ import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
@@ -111,7 +110,9 @@ const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
 `
 
 function calculateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
-  if (!price0 || !price1) return undefined
+  if (!price0 || !price1) {
+    return undefined
+  }
 
   const value0 = parseFloat(position.amount0.toExact()) * price0
   const value1 = parseFloat(position.amount1.toExact()) * price1
@@ -131,7 +132,9 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const { chainId: walletChainId } = useWeb3React()
   const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
-    if (walletChainId !== chainId) await switchChain(chainId)
+    if (walletChainId !== chainId) {
+      await switchChain(chainId)
+    }
     toggleWalletDrawer()
     navigate('/pool/' + details.tokenId)
   }, [walletChainId, chainId, switchChain, toggleWalletDrawer, navigate, details.tokenId])
@@ -147,12 +150,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   )
 
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={SharedEventName.ELEMENT_CLICKED}
-      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
-      properties={analyticsEventProperties}
-    >
+    <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
       <PortfolioRow
         onClick={onClick}
         left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
@@ -190,13 +188,13 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
             <Row justify="flex-end">
               <ThemedText.BodySmall color="neutral2">
-                {closed ? t`Closed` : inRange ? t`In range` : t`Out of range`}
+                {closed ? t('common.closed') : inRange ? t('common.withinRange') : t('common.outOfRange')}
               </ThemedText.BodySmall>
               <ActiveDot closed={closed} outOfRange={!inRange} />
             </Row>
           </>
         }
       />
-    </TraceEvent>
+    </Trace>
   )
 }

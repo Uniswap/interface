@@ -7,7 +7,6 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { UnitagClaim } from 'uniswap/src/features/unitags/types'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   FiatOnRampScreens,
@@ -70,7 +69,6 @@ export type SettingsStackParamList = {
 export type OnboardingStackBaseParams = {
   importType: ImportType
   entryPoint: OnboardingEntryPoint
-  unitagClaim?: UnitagClaim
 }
 
 export type UnitagEntryPoint =

@@ -137,7 +137,7 @@ function OtherChainBalance({
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   return (
-    <Trace logPress pressEvent={MobileEventName.TokenDetailsOtherChainButtonPressed}>
+    <Trace logPress eventOnTrigger={MobileEventName.TokenDetailsOtherChainButtonPressed}>
       <TouchableArea hapticFeedback onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
         <Flex row alignItems="center" justifyContent="space-between">
           <Flex row alignItems="center" gap="$spacing4">

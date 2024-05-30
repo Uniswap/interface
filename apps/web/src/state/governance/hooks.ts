@@ -4,7 +4,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
-import { useChainId } from 'wagmi'
 // eslint-disable-next-line no-restricted-imports
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
@@ -20,6 +19,7 @@ import { useWeb3React } from '@web3-react/core'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
@@ -55,7 +55,7 @@ function useGovernanceBravoContract(): Contract | null {
 const useLatestGovernanceContract = useGovernanceBravoContract
 
 function useUniContract() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
@@ -137,7 +137,9 @@ function useFormattedProposalCreatedLogs(
   // create filters for ProposalCreated events
   const filter = useMemo(() => {
     const filter = contract?.filters?.ProposalCreated()
-    if (!filter) return undefined
+    if (!filter) {
+      return undefined
+    }
     return {
       ...filter,
       fromBlock,
@@ -205,7 +207,9 @@ function useFormattedProposalCreatedLogs(
             if (signature === '') {
               const fourbyte = calldata.slice(0, 10)
               const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
-              if (!sig) throw new Error('Missing four byte sig')
+              if (!sig) {
+                throw new Error('Missing four byte sig')
+              }
               ;[name, types] = sig.substring(0, sig.length - 1).split('(')
               calldata = `0x${calldata.slice(10)}`
             } else {
@@ -232,7 +236,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const gov0 = useGovernanceV0Contract()
   const gov1 = useGovernanceV1Contract()
   const gov2 = useGovernanceBravoContract()
@@ -300,8 +304,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
         return {
           id: proposal?.result?.id.toString(),
-          title: title ?? t`Untitled`,
-          description: description ?? t`No description.`,
+          title: title ?? t('common.untitled'),
+          description: description ?? t('common.noDescription'),
           proposer: proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: CurrencyAmount.fromRawAmount(uni, proposal?.result?.forVotes),
@@ -340,7 +344,7 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
   const latestGovernanceContract = useLatestGovernanceContract()
   const quorumVotes = useSingleCallResult(latestGovernanceContract, 'quorumVotes')?.result?.[0]
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
 
   if (
@@ -349,8 +353,9 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
     chainId !== ChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
-  )
+  ) {
     return undefined
+  }
 
   return CurrencyAmount.fromRawAmount(uni, quorumVotes)
 }
@@ -396,9 +401,13 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 
   return useCallback(
     (delegatee: string | undefined) => {
-      if (!provider || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) return undefined
+      if (!provider || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) {
+        return undefined
+      }
       const args = [delegatee]
-      if (!uniContract) throw new Error('No UNI Contract!')
+      if (!uniContract) {
+        throw new Error('No UNI Contract!')
+      }
       return uniContract.estimateGas.delegate(...args, {}).then((estimatedGasLimit) => {
         return uniContract
           .delegate(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -425,7 +434,9 @@ export function useVoteCallback(): (
 
   return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId, voteOption === VoteOption.Against ? 0 : voteOption === VoteOption.For ? 1 : 2]
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -453,7 +464,9 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.queue(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -479,7 +492,9 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.execute(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -507,7 +522,9 @@ export function useCreateProposalCallback(): (
 
   return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
-      if (!account || !latestGovernanceContract || !createProposalData || !chainId) return undefined
+      if (!account || !latestGovernanceContract || !createProposalData || !chainId) {
+        return undefined
+      }
 
       const args = [
         createProposalData.targets,
@@ -539,7 +556,7 @@ export function useLatestProposalId(address: string | undefined): string | undef
 }
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'proposalThreshold')

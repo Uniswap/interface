@@ -21,7 +21,7 @@ export default function PresetsButtons({ onSetFullRange }: PresetsButtonsProps) 
     <AutoRow gap="4px" width="auto">
       <Button data-testid="set-full-range" onClick={onSetFullRange}>
         <ThemedText.DeprecatedBody fontSize={12}>
-          <Trans>Full range</Trans>
+          <Trans i18nKey="common.fullRange" />
         </ThemedText.DeprecatedBody>
       </Button>
     </AutoRow>

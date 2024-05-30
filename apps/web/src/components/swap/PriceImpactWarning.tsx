@@ -26,18 +26,11 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
   return (
     <StyledCard>
       <AutoColumn gap="sm">
-        <MouseoverTooltip
-          text={
-            <Trans>
-              A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a
-              large difference between the amount of your input token and what you will receive in the output token
-            </Trans>
-          }
-        >
+        <MouseoverTooltip text={<Trans i18nKey="swap.priceImpact.high" />}>
           <RowBetween>
             <RowFixed>
               <ThemedText.DeprecatedSubHeader color={theme.critical}>
-                <Trans>Price impact warning</Trans>
+                <Trans i18nKey="common.priceImpact" />
               </ThemedText.DeprecatedSubHeader>
             </RowFixed>
             <ThemedText.DeprecatedLabel textAlign="right" fontSize={14} color="critical">

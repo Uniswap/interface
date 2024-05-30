@@ -4,8 +4,8 @@ import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
@@ -15,18 +15,19 @@ import { useCallback } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
-import { useAccount } from 'wagmi'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
   constructor() {
-    super(t`Your swap is expected to fail.`)
+    super(t('swap.error.expectedToFail'))
   }
 }
 
@@ -36,9 +37,7 @@ class GasEstimationError extends Error {
  */
 class ModifiedSwapError extends Error {
   constructor() {
-    super(
-      t`Your swap was modified through your wallet. If this was a mistake, please cancel immediately or risk losing your funds.`
-    )
+    super(t('swap.error.modifiedByWallet'))
   }
 }
 
@@ -68,11 +67,19 @@ export function useUniversalRouterSwapCallback(
     (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
       trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
         try {
-          if (account.status !== 'connected') throw new Error('wallet not connected')
-          if (!provider) throw new Error('missing provider')
-          if (!trade) throw new Error('missing trade')
+          if (account.status !== 'connected') {
+            throw new Error('wallet not connected')
+          }
+          if (!provider) {
+            throw new Error('missing provider')
+          }
+          if (!trade) {
+            throw new Error('missing trade')
+          }
           const connectedChainId = await provider.getSigner().getChainId()
-          if (account.chainId !== connectedChainId) throw new WrongChainError()
+          if (account.chainId !== connectedChainId) {
+            throw new WrongChainError()
+          }
 
           const deadline = await getDeadline()
 
@@ -102,7 +109,7 @@ export function useUniversalRouterSwapCallback(
               ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
               ...analyticsContext,
               client_block_number: blockNumber,
-              tx,
+              txRequest: tx,
               isAutoSlippage,
             })
             console.warn(gasError)

@@ -44,7 +44,9 @@ const TDPContext = createContext<LoadedTDPContext | undefined>(undefined)
 
 export function useTDPContext(): LoadedTDPContext {
   const context = useContext(TDPContext)
-  if (!context) throw new Error('useTDPContext must be used within a TDPContextProvider')
+  if (!context) {
+    throw new Error('useTDPContext must be used within a TDPContextProvider')
+  }
   return context
 }
 

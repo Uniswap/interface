@@ -31,9 +31,13 @@ class Cache {
   async match(request: string): Promise<Data | undefined> {
     const cache = await caches.open(CACHE_NAME)
     const response = await cache.match(request)
-    if (!response) return undefined
+    if (!response) {
+      return undefined
+    }
     const data: Data = JSON.parse(await response.text())
-    if (!data.title || !data.image || !data.url) return undefined
+    if (!data.title || !data.image || !data.url) {
+      return undefined
+    }
     return data
   }
 

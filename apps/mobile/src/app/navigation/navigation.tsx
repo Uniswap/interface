@@ -72,6 +72,7 @@ import {
   OnboardingScreens,
   UnitagScreens,
 } from 'uniswap/src/types/screens/mobile'
+import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
@@ -235,87 +236,92 @@ export function OnboardingStackNavigator(): JSX.Element {
     : SeedPhraseInputScreen
 
   return (
-    <OnboardingStack.Navigator>
-      <OnboardingStack.Group
-        screenOptions={{
-          headerMode: 'float',
-          headerTitle: '',
-          headerBackTitleVisible: false,
-          headerBackImage: renderHeaderBackImage,
-          headerStatusBarHeight: insets.top + spacing.spacing8,
-          headerTransparent: true,
-          headerTintColor: colors.neutral2.val,
-          headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
-          headerRightContainerStyle: { paddingRight: spacing.spacing16 },
-          ...TransitionPresets.SlideFromRightIOS,
-        }}>
-        <OnboardingStack.Screen
-          component={LandingScreen}
-          name={OnboardingScreens.Landing}
-          options={navOptions.noHeader}
-        />
-        <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
-        <OnboardingStack.Screen
-          component={ChooseProfilePictureScreen}
-          name={UnitagScreens.ChooseProfilePicture}
-          options={{ ...TransitionPresets.ModalFadeTransition }}
-        />
-        <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
-        <OnboardingStack.Screen
-          component={NotificationsSetupScreen}
-          name={OnboardingScreens.Notifications}
-        />
-        <OnboardingStack.Screen component={SecuritySetupScreen} name={OnboardingScreens.Security} />
-        <OnboardingStack.Screen
-          component={ManualBackupScreen}
-          name={OnboardingScreens.BackupManual}
-        />
-        <OnboardingStack.Screen
-          component={WelcomeWalletScreen}
-          name={OnboardingScreens.WelcomeWallet}
-        />
-        <OnboardingStack.Screen
-          component={CloudBackupProcessingScreen}
-          name={OnboardingScreens.BackupCloudProcessing}
-        />
-        <OnboardingStack.Screen
-          component={CloudBackupPasswordCreateScreen}
-          name={OnboardingScreens.BackupCloudPasswordCreate}
-        />
-        <OnboardingStack.Screen
-          component={CloudBackupPasswordConfirmScreen}
-          name={OnboardingScreens.BackupCloudPasswordConfirm}
-        />
-        <OnboardingStack.Screen
-          component={ImportMethodScreen}
-          name={OnboardingScreens.ImportMethod}
-        />
-        <OnboardingStack.Screen
-          component={RestoreCloudBackupLoadingScreen}
-          name={OnboardingScreens.RestoreCloudBackupLoading}
-        />
-        <OnboardingStack.Screen
-          component={RestoreCloudBackupScreen}
-          name={OnboardingScreens.RestoreCloudBackup}
-        />
-        <OnboardingStack.Screen
-          component={RestoreCloudBackupPasswordScreen}
-          name={OnboardingScreens.RestoreCloudBackupPassword}
-        />
-        <OnboardingStack.Screen
-          component={SeedPhraseInputComponent}
-          name={OnboardingScreens.SeedPhraseInput}
-        />
-        <OnboardingStack.Screen
-          component={SelectWalletScreen}
-          name={OnboardingScreens.SelectWallet}
-        />
-        <OnboardingStack.Screen
-          component={WatchWalletScreen}
-          name={OnboardingScreens.WatchWallet}
-        />
-      </OnboardingStack.Group>
-    </OnboardingStack.Navigator>
+    <OnboardingContextProvider>
+      <OnboardingStack.Navigator>
+        <OnboardingStack.Group
+          screenOptions={{
+            headerMode: 'float',
+            headerTitle: '',
+            headerBackTitleVisible: false,
+            headerBackImage: renderHeaderBackImage,
+            headerStatusBarHeight: insets.top + spacing.spacing8,
+            headerTransparent: true,
+            headerTintColor: colors.neutral2.val,
+            headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
+            headerRightContainerStyle: { paddingRight: spacing.spacing16 },
+            ...TransitionPresets.SlideFromRightIOS,
+          }}>
+          <OnboardingStack.Screen
+            component={LandingScreen}
+            name={OnboardingScreens.Landing}
+            options={navOptions.noHeader}
+          />
+          <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
+          <OnboardingStack.Screen
+            component={ChooseProfilePictureScreen}
+            name={UnitagScreens.ChooseProfilePicture}
+            options={{ ...TransitionPresets.ModalFadeTransition }}
+          />
+          <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
+          <OnboardingStack.Screen
+            component={NotificationsSetupScreen}
+            name={OnboardingScreens.Notifications}
+          />
+          <OnboardingStack.Screen
+            component={SecuritySetupScreen}
+            name={OnboardingScreens.Security}
+          />
+          <OnboardingStack.Screen
+            component={ManualBackupScreen}
+            name={OnboardingScreens.BackupManual}
+          />
+          <OnboardingStack.Screen
+            component={WelcomeWalletScreen}
+            name={OnboardingScreens.WelcomeWallet}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupProcessingScreen}
+            name={OnboardingScreens.BackupCloudProcessing}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupPasswordCreateScreen}
+            name={OnboardingScreens.BackupCloudPasswordCreate}
+          />
+          <OnboardingStack.Screen
+            component={CloudBackupPasswordConfirmScreen}
+            name={OnboardingScreens.BackupCloudPasswordConfirm}
+          />
+          <OnboardingStack.Screen
+            component={ImportMethodScreen}
+            name={OnboardingScreens.ImportMethod}
+          />
+          <OnboardingStack.Screen
+            component={RestoreCloudBackupLoadingScreen}
+            name={OnboardingScreens.RestoreCloudBackupLoading}
+          />
+          <OnboardingStack.Screen
+            component={RestoreCloudBackupScreen}
+            name={OnboardingScreens.RestoreCloudBackup}
+          />
+          <OnboardingStack.Screen
+            component={RestoreCloudBackupPasswordScreen}
+            name={OnboardingScreens.RestoreCloudBackupPassword}
+          />
+          <OnboardingStack.Screen
+            component={SeedPhraseInputComponent}
+            name={OnboardingScreens.SeedPhraseInput}
+          />
+          <OnboardingStack.Screen
+            component={SelectWalletScreen}
+            name={OnboardingScreens.SelectWallet}
+          />
+          <OnboardingStack.Screen
+            component={WatchWalletScreen}
+            name={OnboardingScreens.WatchWallet}
+          />
+        </OnboardingStack.Group>
+      </OnboardingStack.Navigator>
+    </OnboardingContextProvider>
   )
 }
 

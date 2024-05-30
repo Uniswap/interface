@@ -1,9 +1,9 @@
 import { MoonpayEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 import {
   addPopup,
@@ -56,19 +56,25 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
       setLoading(true)
       try {
         const result = await getMoonpayAvailability()
-        sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, { success: result })
-        if (stale) return
+        sendAnalyticsEvent(MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED, { success: result, networkError: false })
+        if (stale) {
+          return
+        }
         dispatch(setFiatOnrampAvailability(result))
         if (result && callback) {
           callback()
         }
       } catch (e) {
         console.error('Error checking onramp availability', e.toString())
-        if (stale) return
+        if (stale) {
+          return
+        }
         setError('Error, try again later.')
         dispatch(setFiatOnrampAvailability(false))
       } finally {
-        if (!stale) setLoading(false)
+        if (!stale) {
+          setLoading(false)
+        }
       }
     }
 

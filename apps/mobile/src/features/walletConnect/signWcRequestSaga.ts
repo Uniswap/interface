@@ -1,14 +1,20 @@
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
+import {
+  TransactionRequest,
+  UwuLinkErc20Request,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { ChainId } from 'uniswap/src/types/chains'
 import {
   DappInfo,
   EthMethod,
   EthSignMethod,
+  UwULinkMethod,
   WalletConnectEvent,
 } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
+import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
@@ -39,6 +45,7 @@ type SignTransactionParams = {
   method: EthMethod.EthSendTransaction
   dapp: DappInfo
   chainId: ChainId
+  request: TransactionRequest | UwuLinkErc20Request
 }
 
 export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
@@ -50,6 +57,26 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = yield* call(signMessage, params.message, account, signerManager)
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
+    } else if (
+      method === EthMethod.EthSendTransaction &&
+      params.request.type === UwULinkMethod.Erc20Send
+    ) {
+      const txParams: SendTransactionParams = {
+        chainId: params.transaction.chainId || ChainId.Mainnet,
+        account,
+        options: {
+          request: params.transaction,
+        },
+        typeInfo: {
+          type: TransactionType.Send,
+          assetType: AssetType.Currency,
+          recipient: params.request.recipient.address,
+          tokenAddress: params.request.tokenAddress,
+          currencyAmountRaw: params.request.amount,
+        },
+      }
+      const { transactionResponse } = yield* call(sendTransaction, txParams)
+      signature = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: SendTransactionParams = {
         chainId: params.transaction.chainId || ChainId.Mainnet,

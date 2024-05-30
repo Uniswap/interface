@@ -24,7 +24,9 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
   const bAddress = b.isNative ? 'ETH' : b.address?.toLowerCase()
   // Sorts by balances
   const balanceComparison = balanceComparator(balances[aAddress]?.usdValue, balances[bAddress]?.usdValue)
-  if (balanceComparison !== 0) return balanceComparison
+  if (balanceComparison !== 0) {
+    return balanceComparison
+  }
 
   // Sorts by symbol
   if (a.symbol && b.symbol) {
@@ -62,7 +64,7 @@ export function getSortedPortfolioTokens(
         address,
         tokenBalance.token?.decimals,
         tokenBalance.token?.symbol,
-        tokenBalance.token?.name
+        tokenBalance.token?.project?.name ?? tokenBalance.token?.name
       )
 
       return portfolioToken

@@ -1,6 +1,5 @@
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { OpacityHoverState } from 'components/Common'
 import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
@@ -12,7 +11,9 @@ import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TWITTER_WIDTH = 560

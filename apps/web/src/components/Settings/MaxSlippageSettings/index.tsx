@@ -111,19 +111,15 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       header={
         <Row width="auto">
           <ThemedText.BodyPrimary>
-            <Trans>Max. slippage</Trans>
+            <Trans i18nKey="settings.maxSlippage" />
           </ThemedText.BodyPrimary>
-          <QuestionHelper
-            text={
-              <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
-            }
-          />
+          <QuestionHelper text={<Trans i18nKey="swap.settings.transactionRevertPrice" />} />
         </Row>
       }
       button={
         <ThemedText.BodyPrimary>
           {userSlippageTolerance === SlippageTolerance.Auto ? (
-            <Trans>Auto</Trans>
+            <Trans i18nKey="commmon.automatic" />
           ) : (
             formatPercent(userSlippageTolerance)
           )}
@@ -141,7 +137,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             isActive={userSlippageTolerance === SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
-              <Trans>Auto</Trans>
+              <Trans i18nKey="commmon.automatic" />
             </ThemedText.BodyPrimary>
           </Option>
           <Option
@@ -152,7 +148,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             isActive={userSlippageTolerance !== SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
-              <Trans>Custom</Trans>
+              <Trans i18nKey="common.custom" />
             </ThemedText.BodyPrimary>
           </Option>
         </Switch>
@@ -176,11 +172,12 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
           <CautionTriangle />
           <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
-              <Trans>
-                Slippage below {{ amt: formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE) }} may result in a failed transaction
-              </Trans>
+              <Trans
+                i18nKey="swap.slippageBelow.warning"
+                values={{ amt: formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE) }}
+              />
             ) : (
-              <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>
+              <Trans i18nKey="swap.frontrun.warning" />
             )}
           </ThemedText.BodySmall>
         </RowBetween>

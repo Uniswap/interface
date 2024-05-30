@@ -1,7 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -24,9 +23,9 @@ import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
@@ -151,12 +150,18 @@ export default function Landing() {
   )
   return (
     <>
-      <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+      <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={showUnlockVoting ? <Trans>Unlock votes</Trans> : <Trans>Update delegation</Trans>}
+            title={
+              showUnlockVoting ? (
+                <Trans i18nKey="vote.votePage.unlockVotes" />
+              ) : (
+                <Trans i18nKey="vote.votePage.updateDelegation" />
+              )
+            }
           />
           <TopSection gap="md">
             <VoteCard>
@@ -166,15 +171,12 @@ export default function Landing() {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Header>
-                      <Trans>Uniswap governance</Trans>
+                      <Trans i18nKey="vote.landing.uniswapGovernance" />
                     </Header>
                   </RowBetween>
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontSize={14}>
-                      <Trans>
-                        UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself
-                        or delegate your votes to a third party.
-                      </Trans>
+                      <Trans i18nKey="uni.votingShares" />
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
                   <ExternalLink
@@ -186,7 +188,7 @@ export default function Landing() {
                     target="_blank"
                   >
                     <ThemedText.DeprecatedWhite fontSize={14}>
-                      <Trans>Read more about Uniswap governance</Trans>
+                      <Trans i18nKey="vote.landing.readMoreAboutUniswapGovernance.link" />
                     </ThemedText.DeprecatedWhite>
                   </ExternalLink>
                 </AutoColumn>
@@ -198,7 +200,7 @@ export default function Landing() {
           <TopSection gap="2px">
             <WrapSmall>
               <ThemedText.DeprecatedMediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
-                <Trans>Proposals</Trans>
+                <Trans i18nKey="vote.landing.proposals" />
               </ThemedText.DeprecatedMediumHeader>
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? <Loader /> : null}
@@ -209,22 +211,28 @@ export default function Landing() {
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
-                    <Trans>Unlock voting</Trans>
+                    <Trans i18nKey="vote.landing.unlockVoting" />
                   </ButtonPrimary>
                 ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
-                    <Trans>
-                      <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                    </Trans>
+                    <Trans
+                      i18nKey="vote.landing.voteAmount"
+                      values={{
+                        amount: <FormattedCurrencyAmount currencyAmount={availableVotes} />,
+                      }}
+                    />
                   </ThemedText.DeprecatedBody>
                 ) : uniBalance &&
                   userDelegatee &&
                   userDelegatee !== ZERO_ADDRESS &&
                   JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
-                    <Trans>
-                      <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-                    </Trans>
+                    <Trans
+                      i18nKey="vote.landing.voteAmount"
+                      values={{
+                        amount: <FormattedCurrencyAmount currencyAmount={uniBalance} />,
+                      }}
+                    />
                   </ThemedText.DeprecatedBody>
                 ) : (
                   ''
@@ -235,7 +243,7 @@ export default function Landing() {
                   style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
                   padding="8px"
                 >
-                  <Trans>Create proposal</Trans>
+                  <Trans i18nKey="vote.landing.createProposal" />
                 </ButtonPrimary>
               </AutoRow>
             </WrapSmall>
@@ -245,17 +253,21 @@ export default function Landing() {
                 {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
                   <RowFixed>
                     <ThemedText.DeprecatedBody fontWeight={535} mr="4px">
-                      <Trans>Delegated to:</Trans>
+                      <Trans i18nKey="vote.landing.delegatedTo" />
                     </ThemedText.DeprecatedBody>
                     <AddressButton>
                       <StyledExternalLink
                         href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
                         style={{ margin: '0 4px' }}
                       >
-                        {userDelegatee === account ? <Trans>Self</Trans> : shortenAddress(userDelegatee)}
+                        {userDelegatee === account ? (
+                          <Trans i18nKey="vote.landing.self" />
+                        ) : (
+                          shortenAddress(userDelegatee)
+                        )}
                       </StyledExternalLink>
                       <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
-                        <Trans>(edit)</Trans>
+                        <Trans i18nKey="vote.landing.edit" />
                       </TextButton>
                     </AddressButton>
                   </RowFixed>
@@ -272,7 +284,7 @@ export default function Landing() {
                 <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Show cancelled</Trans>
+                    <Trans i18nKey="vote.landing.showCancelled" />
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     isActive={!hideCancelled}
@@ -300,7 +312,7 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
+            <Trans i18nKey="vote.landing.minThresholdRequired.error" />
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

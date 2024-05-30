@@ -22,7 +22,9 @@ export const deriveUniconAttributeIndices = (
   address: string,
   randomSeed = 0
 ): UniconAttributesToIndices | undefined => {
-  if (!isEthAddress(address)) return
+  if (!isEthAddress(address)) {
+    return
+  }
 
   const hexAddr = address.slice(-40)
   const newIndices = {

@@ -77,7 +77,7 @@ export const ProposalActionSelector = ({
     <ProposalActionSelectorFlex>
       <ProposalActionSelectorContainer className={className}>
         <ActionSelectorHeader>
-          <Trans>Proposed action</Trans>
+          <Trans i18nKey="proposal.action" />
         </ActionSelectorHeader>
         <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
       </ProposalActionSelectorContainer>
@@ -104,7 +104,7 @@ export function ProposalActionSelectorModal({
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={535} fontSize={16}>
-              <Trans>Select an action</Trans>
+              <Trans i18nKey="common.selectAction.label" />
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
@@ -113,14 +113,14 @@ export function ProposalActionSelectorModal({
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
             <Text fontWeight={535}>
-              <Trans>Transfer token</Trans>
+              <Trans i18nKey="vote.proposal.transferToken" />
             </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
           <Column>
             <Text fontWeight={535}>
-              <Trans>Approve token</Trans>
+              <Trans i18nKey="vote.proposal.approveToken" />
             </Text>
           </Column>
         </MenuItem>

@@ -1,5 +1,4 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
@@ -7,7 +6,7 @@ import { t } from 'i18n'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { exploreSearchStringAtom } from '../state'
 const ICON_SIZE = '20px'
@@ -72,7 +71,9 @@ export default function SearchBar({ tab }: { tab?: string }) {
 
   useEffect(() => {
     setLocalFilterString(currentString)
-    if (currentString) setIsOpen(true)
+    if (currentString) {
+      setIsOpen(true)
+    }
   }, [currentString])
 
   useEffect(() => {
@@ -82,15 +83,17 @@ export default function SearchBar({ tab }: { tab?: string }) {
   const handleFocus = () => setIsOpen(true)
 
   const handleBlur = () => {
-    if (localFilterString === '') setIsOpen(false)
+    if (localFilterString === '') {
+      setIsOpen(false)
+    }
   }
 
   return (
     <SearchBarContainer>
       {/* TODO need to figure out new style for this */}
-      <TraceEvent
-        events={[BrowserEvent.onFocus]}
-        name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
+      <Trace
+        logFocus
+        eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
         element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
       >
         <SearchInput
@@ -105,7 +108,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-      </TraceEvent>
+      </Trace>
     </SearchBarContainer>
   )
 }

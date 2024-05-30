@@ -8,7 +8,7 @@ import { ExternalLink } from 'theme/components'
 const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 6px;
+  padding: 4px 8px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;
@@ -29,7 +29,7 @@ export default function GetHelp() {
     <StyledExternalLink href={SupportArticleURL.HOME}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
-        <Trans>Get help</Trans>
+        <Trans i18nKey="common.getHelp.button" />
       </Row>
     </StyledExternalLink>
   )

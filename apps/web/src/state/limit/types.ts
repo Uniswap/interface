@@ -1,17 +1,11 @@
 import { Dispatch, SetStateAction } from 'react'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { LimitInfo } from './hooks'
-
-export enum Expiry {
-  Day = 'Day',
-  Week = 'Week',
-  Month = 'Month',
-  Year = 'Year',
-}
 
 export interface LimitState {
   readonly inputAmount: string
   readonly outputAmount: string
-  readonly expiry: Expiry
+  readonly expiry: LimitsExpiry
   readonly limitPrice: string
   readonly limitPriceInverted: boolean
 

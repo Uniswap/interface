@@ -26,16 +26,21 @@ export const useSellAsset = create<SellAssetState>()(
       showResolveIssues: false,
       selectSellAsset: (asset) =>
         set(({ sellAssets }) => {
-          if (sellAssets.length === 0) return { sellAssets: [asset] }
-          else return { sellAssets: [...sellAssets, asset] }
+          if (sellAssets.length === 0) {
+            return { sellAssets: [asset] }
+          } else {
+            return { sellAssets: [...sellAssets, asset] }
+          }
         }),
       removeSellAsset: (asset) => {
         set(({ sellAssets }) => {
-          if (sellAssets.length === 0) return { sellAssets: [] }
-          else
+          if (sellAssets.length === 0) {
+            return { sellAssets: [] }
+          } else {
             sellAssets.find(
               (x) => asset.tokenId === x.tokenId && x.asset_contract.address === asset.asset_contract.address
             )
+          }
           const assetsCopy = [...sellAssets]
           assetsCopy.splice(
             sellAssets.findIndex(
@@ -66,9 +71,15 @@ export const useSellAsset = create<SellAssetState>()(
             )
             if (asset.newListings && listingIndex != null && listingIndex > -1) {
               asset.newListings[listingIndex] = { price, marketplace, overrideFloorPrice: false }
-              if (listingIndex === 0) asset.marketAgnosticPrice = price
-            } else asset.newListings?.push({ price, marketplace, overrideFloorPrice: false })
-          } else asset.marketAgnosticPrice = price
+              if (listingIndex === 0) {
+                asset.marketAgnosticPrice = price
+              }
+            } else {
+              asset.newListings?.push({ price, marketplace, overrideFloorPrice: false })
+            }
+          } else {
+            asset.marketAgnosticPrice = price
+          }
           const index = sellAssets.findIndex(
             (n) => n.tokenId === asset.tokenId && n.asset_contract.address === asset.asset_contract.address
           )

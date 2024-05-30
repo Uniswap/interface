@@ -1,6 +1,6 @@
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { Plural, t, Trans } from 'i18n'
+import { Plural, Trans, t } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
@@ -100,28 +100,28 @@ export const BelowFloorWarningModal = ({
           <AlertTriangle height={90} width={90} color={theme.critical} />
         </HazardIconWrap>
         <ThemedText.HeadlineSmall lineHeight="28px" textAlign="center">
-          <Trans>Low listing price</Trans>
+          <Trans i18nKey="nft.lowPrice" />
         </ThemedText.HeadlineSmall>
         <ThemedText.BodyPrimary textAlign="center">
           <Plural
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            one={t(`One NFT is listed {{delta}} `, {
+            one={t('nft.oneListedDelta', {
               delta: formatDelta(
                 (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
               ),
             })}
-            other={t(`{{count}} NFTs are listed significantly `, {
+            other={t('nft.listedSignificantly', {
               count: listingsBelowFloor.length,
             })}
           />
           &nbsp;
-          <Trans>below the collection’s floor price. Are you sure you want to continue?</Trans>
+          <Trans i18nKey="nft.confirmBelowFloor" />
         </ThemedText.BodyPrimary>
         <ContinueButton onClick={clickContinue}>
-          <Trans>Continue</Trans>
+          <Trans i18nKey="common.continue.button" />
         </ContinueButton>
         <EditListings onClick={closeModal}>
-          <Trans>Edit listings</Trans>
+          <Trans i18nKey="nft.editListings" />
         </EditListings>
       </ModalWrapper>
       <Overlay onClick={closeModal} />

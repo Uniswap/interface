@@ -127,7 +127,7 @@ class NullKeyring implements IKeyring {
   }
 
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
-  importMnemonic(): Promise<string> {
+  importMnemonic(_mnemonic: string): Promise<string> {
     throw new NotImplementedError('importMnemonic')
   }
 

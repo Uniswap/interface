@@ -44,7 +44,9 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
-    if (!tokens) return undefined
+    if (!tokens) {
+      return undefined
+    }
     const tokenArray = Array.from(tokens).sort(TokenSortMethods[sortMethod])
 
     return sortAscending ? tokenArray.reverse() : tokenArray
@@ -57,14 +59,22 @@ function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
   return useMemo(() => {
-    if (!tokens) return undefined
+    if (!tokens) {
+      return undefined
+    }
     let returnTokens = tokens
     if (lowercaseFilterString) {
       returnTokens = returnTokens?.filter((token) => {
         const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
+        const projectNameIncludesFilterString = token?.project?.name?.toLowerCase().includes(lowercaseFilterString)
         const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
         const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+        return (
+          projectNameIncludesFilterString ||
+          nameIncludesFilterString ||
+          symbolIncludesFilterString ||
+          addressIncludesFilterString
+        )
       })
     }
     return returnTokens
@@ -126,7 +136,9 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const tokenSortRank = useMemo(
     () =>
       sortedTokens?.reduce((acc, cur, i) => {
-        if (!cur?.address) return acc
+        if (!cur?.address) {
+          return acc
+        }
         return {
           ...acc,
           [cur.address]: i + 1,

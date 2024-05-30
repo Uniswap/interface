@@ -1,9 +1,10 @@
 import { ChainId, Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Field, SwapTab } from 'components/swap/constants'
+import { Field } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 import { ParsedQs } from 'qs'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export type SwapInfo = {
   currencies: { [field in Field]?: Currency }
@@ -34,7 +35,7 @@ function parseTokenAmountURLParameter(urlParam: any): string {
   return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
 }
 
-export function parseIndependentFieldURLParameter(urlParam: any): Field {
+function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 

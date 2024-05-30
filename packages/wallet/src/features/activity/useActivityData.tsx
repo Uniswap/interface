@@ -18,7 +18,7 @@ import {
   useCreateSwapFormState,
   useMergeLocalAndRemoteTransactions,
 } from 'wallet/src/features/transactions/hooks'
-import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
+import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks/useMostRecentSwapTx'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'

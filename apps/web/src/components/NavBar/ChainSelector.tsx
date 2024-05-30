@@ -3,14 +3,7 @@ import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { CONNECTION } from 'components/Web3Provider/constants'
-import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
-import {
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
-  TESTNET_CHAIN_IDS,
-  getChainPriority,
-  useIsSupportedChainId,
-} from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS, getChainPriority } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { t } from 'i18n'
@@ -18,8 +11,9 @@ import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-import { useAccount, useChainId } from 'wagmi'
+import { Connector } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import ChainSelectorRow from './ChainSelectorRow'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -42,6 +36,11 @@ const styledMobileMenuCss = css`
   }
 `
 
+type WalletConnectConnector = Connector & {
+  type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
+  getNamespaceChainsIds: () => ChainId[]
+}
+
 function useWalletSupportedChains(): ChainId[] {
   const { connector } = useAccount()
 
@@ -58,10 +57,7 @@ function useWalletSupportedChains(): ChainId[] {
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const disconnectedChainId = useChainId()
-  const account = useAccount()
-  const chainId = account?.chainId ?? disconnectedChainId
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const { chainId } = useAccount()
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const theme = useTheme()
@@ -103,10 +99,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
     [selectChain, setIsOpen]
   )
 
-  if (!chainId) {
-    return null
-  }
-
   const styledMenuCss = css`
     ${leftAlign ? 'left: 0;' : 'right: 0;'}
     ${styledMobileMenuCss};
@@ -117,13 +109,13 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
       isOpen={isOpen}
       toggleOpen={() => setIsOpen(!isOpen)}
       menuLabel={
-        !isSupportedChain ? (
+        !chainId ? (
           <AlertTriangle size={20} color={theme.neutral2} />
         ) : (
           <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
         )
       }
-      tooltipText={isSupportedChain ? undefined : t`Your wallet's current network is unsupported.`}
+      tooltipText={chainId ? undefined : t('wallet.networkUnsupported')}
       dataTestId="chain-selector"
       optionsContainerTestId="chain-selector-options"
       internalMenuItems={

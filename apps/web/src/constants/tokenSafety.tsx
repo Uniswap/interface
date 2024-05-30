@@ -34,34 +34,34 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges.`, {
+            one={t('common.warning.tokenNotTraded', {
               name: tokenSymbol ?? 'This token',
             })}
-            other="These tokens aren't traded on leading U.S. centralized exchanges."
+            other={t('common.warning.tokensNotTraded')}
           />
         )
-        description = <Trans>Always conduct your own research before trading.</Trans>
+        description = <Trans i18nKey="token.safetyWarning" />
         break
       case SafetyLevel.StrongWarning:
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`, {
+            one={t('common.warning.tokenNotTradedOrSwapped', {
               name: tokenSymbol ?? 'This token',
             })}
-            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
+            other={t('common.warning.tokensNotTradedOrSwapped')}
           />
         )
-        description = <Trans>Always conduct your own research before trading.</Trans>
+        description = <Trans i18nKey="token.safetyWarning" />
         break
       case SafetyLevel.Blocked:
         description = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`You can't trade {{name}} using the Uniswap App.`, {
+            one={t(`token.safety.cantTrade`, {
               name: tokenSymbol ?? 'this token',
             })}
-            other="You can't trade these tokens using the Uniswap App."
+            other={t('common.cantTradeTokens')}
           />
         )
         break
@@ -79,19 +79,19 @@ export type Warning = {
 
 export const MediumWarning: Warning = {
   level: SafetyLevel.MediumWarning,
-  message: <Trans>Caution</Trans>,
+  message: <Trans i18nKey="common.caution.label" />,
   canProceed: true,
 }
 
 export const StrongWarning: Warning = {
   level: SafetyLevel.StrongWarning,
-  message: <Trans>Warning</Trans>,
+  message: <Trans i18nKey="common.warning" />,
   canProceed: true,
 }
 
 export const BlockedWarning: Warning = {
   level: SafetyLevel.Blocked,
-  message: <Trans>Not available</Trans>,
+  message: <Trans i18nKey="common.notAvailable" />,
   canProceed: false,
 }
 

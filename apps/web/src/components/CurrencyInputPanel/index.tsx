@@ -1,10 +1,12 @@
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { useIsSupportedChainId } from 'constants/chains'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -12,11 +14,8 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -277,7 +276,7 @@ export default function CurrencyInputPanel({
                             ? currency.symbol.slice(0, 4) +
                               '...' +
                               currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                            : currency?.symbol) || <Trans>Select a token</Trans>}
+                            : currency?.symbol) || <Trans i18nKey="common.selectToken" />}
                         </StyledTokenName>
                       )}
                     </RowFixed>
@@ -303,27 +302,27 @@ export default function CurrencyInputPanel({
                       >
                         {Boolean(!hideBalance && currency && selectedCurrencyBalance) &&
                           (renderBalance?.(selectedCurrencyBalance as CurrencyAmount<Currency>) || (
-                            <Trans>
-                              Balance:{' '}
-                              {{
+                            <Trans
+                              i18nKey="swap.balance.amount"
+                              values={{
                                 amount: formatCurrencyAmount({
                                   amount: selectedCurrencyBalance,
                                   type: NumberType.TokenNonTx,
                                 }),
                               }}
-                            </Trans>
+                            />
                           ))}
                       </ThemedText.DeprecatedBody>
                       {Boolean(showMaxButton && selectedCurrencyBalance) && (
-                        <TraceEvent
-                          events={[BrowserEvent.onClick]}
-                          name={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
+                        <Trace
+                          logPress
+                          eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                           element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
                         >
                           <StyledBalanceMax onClick={onMax}>
-                            <Trans>MAX</Trans>
+                            <Trans i18nKey="common.max.caps" />
                           </StyledBalanceMax>
-                        </TraceEvent>
+                        </Trace>
                       )}
                     </RowFixed>
                   )}

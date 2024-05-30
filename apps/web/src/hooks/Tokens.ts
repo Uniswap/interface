@@ -1,9 +1,16 @@
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
-import { chainIdToBackendChain, getChainInfo, isSupportedChainId, useSupportedChainId } from 'constants/chains'
+import {
+  SupportedInterfaceChainId,
+  chainIdToBackendChain,
+  getChain,
+  isSupportedChainId,
+  useSupportedChainId,
+} from 'constants/chains'
 import { COMMON_BASES } from 'constants/routing'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { useAccount } from 'hooks/useAccount'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
@@ -19,7 +26,6 @@ import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyId } from 'utils/currencyId'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { useChainId } from 'wagmi'
 import { useCombinedInactiveLists } from '../state/lists/hooks'
 import { useUserAddedTokens } from '../state/user/userAddedTokens'
 
@@ -28,7 +34,9 @@ type Maybe<T> = T | undefined
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<ChainId>): { [address: string]: TokenFromList } {
   return useMemo(() => {
-    if (!chainId) return {}
+    if (!chainId) {
+      return {}
+    }
 
     // reduce to just tokens
     return Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: TokenFromList }>((newMap, address) => {
@@ -86,7 +94,7 @@ export function useCurrencyInfo(
   chainId?: ChainId,
   skip?: boolean
 ): Maybe<CurrencyInfo> {
-  const connectedChainId = useChainId()
+  const { chainId: connectedChainId } = useAccount()
   const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId)
 
   const address =
@@ -124,7 +132,7 @@ export function useCurrencyInfo(
       (!address && !isNative) ||
       skip ||
       !!commonBase ||
-      !getChainInfo({ chainId: supportedChainId })?.backendChain.backendSupported,
+      !getChain({ chainId: supportedChainId })?.backendChain.backendSupported,
     fetchPolicy: 'cache-first',
   })
 
@@ -152,14 +160,14 @@ export function useCurrencyInfo(
   }, [commonBase, fallbackListTokens, address, skip, data?.token])
 }
 
-export function useToken(tokenAddress?: string, chainId?: ChainId): Maybe<Token> {
-  const connectedChainId = useChainId()
+export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
+  const { chainId: connectedChainId } = useAccount()
   const currency = useCurrency(tokenAddress, chainId ?? connectedChainId)
   // Some chains are not supported by the backend, so we need to fetch token
   // details directly from the blockchain.
   const networkToken = useTokenFromActiveNetwork(
     tokenAddress,
-    getChainInfo({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported
+    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported
   )
   return useMemo(() => {
     if (currency && currency instanceof Token) {
@@ -189,7 +197,7 @@ const UNKNOWN_TOKEN_NAME = 'Unknown Token'
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: boolean): Token | undefined {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const formattedAddress = isAddress(tokenAddress)
   const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
@@ -220,8 +228,12 @@ function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: bool
 
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
-    if (!tokenAddress || !isSupportedChainId(chainId) || !formattedAddress) return undefined
-    if (isLoading || !chainId) return undefined
+    if (!tokenAddress || !isSupportedChainId(chainId) || !formattedAddress) {
+      return undefined
+    }
+    if (isLoading || !chainId) {
+      return undefined
+    }
     if (!decimals?.result?.[0] && parsedSymbol === UNKNOWN_TOKEN_SYMBOL && parsedName === UNKNOWN_TOKEN_NAME) {
       return undefined
     }

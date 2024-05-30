@@ -3,13 +3,13 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
+import { useAccount } from 'hooks/useAccount'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { useChainId } from 'wagmi'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -30,10 +30,16 @@ function useApprovalStateForSpender(
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
-    if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
+    if (!amountToApprove || !spender) {
+      return ApprovalState.UNKNOWN
+    }
+    if (amountToApprove.currency.isNative) {
+      return ApprovalState.APPROVED
+    }
     // we might not have enough data to know whether or not we need to approve
-    if (!tokenAllowance) return ApprovalState.UNKNOWN
+    if (!tokenAllowance) {
+      return ApprovalState.UNKNOWN
+    }
 
     // amountToApprove will be defined if tokenAllowance is
     return tokenAllowance.lessThan(amountToApprove)
@@ -55,7 +61,7 @@ export function useApproval(
     | undefined
   >
 ] {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
   // check the current approval status

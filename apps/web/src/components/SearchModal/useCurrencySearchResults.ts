@@ -4,6 +4,7 @@ import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -19,7 +20,6 @@ import {
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isSameAddress } from 'utilities/src/addresses'
-import { useChainId } from 'wagmi'
 
 interface CurrencySearchParams {
   searchQuery?: string
@@ -51,7 +51,7 @@ export function useCurrencySearchResults({
   selectedCurrency,
   otherSelectedCurrency,
 }: CurrencySearchParams): CurrencySearchResults {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const supportedChain = useSupportedChainId(chainId)
 
   /**
@@ -175,7 +175,9 @@ export function useCurrencySearchResults({
 
       // If there is no query, filter out unselected user-added tokens with no balance.
       if (isEmpty(searchQuery) && currency instanceof UserAddedToken) {
-        if (selectedCurrency?.equals(currency) || otherSelectedCurrency?.equals(currency)) return true
+        if (selectedCurrency?.equals(currency) || otherSelectedCurrency?.equals(currency)) {
+          return true
+        }
         return balanceMap[currency.address.toLowerCase()]?.usdValue > 0
       }
 
@@ -211,16 +213,16 @@ export function useCurrencySearchResults({
   const finalCurrencyList: CurrencyListRow[] = useMemo(() => {
     if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
-        new CurrencyListSectionTitle(searchQuery ? t`Search results` : t`Popular tokens`),
+        new CurrencyListSectionTitle(searchQuery ? t('common.searchResults') : t('common.popularTokens')),
         ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
       ]
     } else if (sortedTokensWithoutPortfolio.length === 0) {
-      return [new CurrencyListSectionTitle(t`Your tokens`), ...portfolioTokens.map(currencyListRowMapper)]
+      return [new CurrencyListSectionTitle(t('common.yourTokens')), ...portfolioTokens.map(currencyListRowMapper)]
     } else {
       return [
-        new CurrencyListSectionTitle(t`Your tokens`),
+        new CurrencyListSectionTitle(t('common.yourTokens')),
         ...portfolioTokens.map(currencyListRowMapper),
-        new CurrencyListSectionTitle(t`Popular tokens`),
+        new CurrencyListSectionTitle(t('common.popularTokens')),
         ...sortedTokensWithoutPortfolio.map(currencyListRowMapper),
       ]
     }

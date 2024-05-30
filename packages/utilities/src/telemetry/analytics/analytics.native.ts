@@ -23,8 +23,16 @@ const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
 let allowAnalytics: Maybe<boolean>
 
+export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
+  return allowAnalytics ?? true
+}
+
 export const analytics: Analytics = {
-  async init(transportProvider: ApplicationTransport, allowed: boolean): Promise<void> {
+  async init(
+    transportProvider: ApplicationTransport,
+    allowed: boolean,
+    _initHash?: string
+  ): Promise<void> {
     try {
       allowAnalytics = allowed
       init(
@@ -66,11 +74,16 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
-  setUserProperty(property: string, value: UserPropertyValue): void {
+  setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void {
     if (!allowAnalytics) {
       return
     }
-    loggers.setUserProperty(property, value)
-    identify(new Identify().set(property, value))
+
+    if (insert) {
+      identify(new Identify().postInsert(property, value))
+    } else {
+      loggers.setUserProperty(property, value)
+      identify(new Identify().set(property, value))
+    }
   },
 }

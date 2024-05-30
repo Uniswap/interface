@@ -30,12 +30,7 @@ const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.Volume24h]: undefined,
   [PoolSortFields.VolumeWeek]: undefined,
   [PoolSortFields.TxCount]: undefined,
-  [PoolSortFields.OneDayApr]: (
-    <Trans>
-      1 day APR refers to the amount of trading fees relative to total value locked (TVL) within a pool. 1 day APR = 24H
-      Fees / TVL
-    </Trans>
-  ),
+  [PoolSortFields.OneDayApr]: <Trans i18nKey="pool.apr.feesNotice" />,
 }
 
 const TableWrapper = styled.div`
@@ -116,11 +111,11 @@ function useSetSortMethod(newSortMethod: PoolSortFields) {
 }
 
 const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
-  [PoolSortFields.TVL]: <Trans>TVL</Trans>,
-  [PoolSortFields.Volume24h]: <Trans>1 day volume</Trans>,
-  [PoolSortFields.VolumeWeek]: <Trans>7 day volume</Trans>,
-  [PoolSortFields.OneDayApr]: <Trans>1 day APR</Trans>,
-  [PoolSortFields.TxCount]: <Trans>Transactions</Trans>,
+  [PoolSortFields.TVL]: <Trans i18nKey="common.totalValueLocked" />,
+  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d" />,
+  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay" />,
+  [PoolSortFields.OneDayApr]: <Trans i18nKey="pool.apr.oneDay" />,
+  [PoolSortFields.TxCount]: <Trans i18nKey="common.transactions" />,
 }
 
 function PoolTableHeader({
@@ -271,7 +266,7 @@ export function PoolsTable({
             header: () => (
               <Cell justifyContent="flex-start" width={240} grow>
                 <ThemedText.BodySecondary>
-                  <Trans>Pool</Trans>
+                  <Trans i18nKey="common.pool" />
                 </ThemedText.BodySecondary>
               </Cell>
             ),

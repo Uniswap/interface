@@ -38,11 +38,14 @@ export const useBag = createWithEqualityFn<BagState>()(
         })),
       markAssetAsReviewed: (asset, toKeep) =>
         set(({ itemsInBag }) => {
-          if (itemsInBag.length === 0) return { itemsInBag: [] }
+          if (itemsInBag.length === 0) {
+            return { itemsInBag: [] }
+          }
           const itemsInBagCopy = [...itemsInBag]
           const index = itemsInBagCopy.findIndex((item) => item.asset.id === asset.id)
-          if (!toKeep && index !== -1) itemsInBagCopy.splice(index, 1)
-          else if (index !== -1) {
+          if (!toKeep && index !== -1) {
+            itemsInBagCopy.splice(index, 1)
+          } else if (index !== -1) {
             itemsInBagCopy[index].status = BagItemStatus.REVIEWED
           }
           return {
@@ -70,7 +73,9 @@ export const useBag = createWithEqualityFn<BagState>()(
         })),
       addAssetsToBag: (assets, fromSweep = false) =>
         set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          if (get().isLocked) {
+            return { itemsInBag: get().itemsInBag }
+          }
           const items: BagItem[] = []
           const itemsInBagCopy = [...itemsInBag]
           assets.forEach((asset) => {
@@ -91,23 +96,28 @@ export const useBag = createWithEqualityFn<BagState>()(
               items.push(assetWithId)
             }
           })
-          if (itemsInBag.length === 0)
+          if (itemsInBag.length === 0) {
             return {
               itemsInBag: items,
               bagStatus: BagStatus.ADDING_TO_BAG,
               usedSweep: fromSweep,
             }
-          else
+          } else {
             return {
               itemsInBag: [...itemsInBagCopy, ...items],
               bagStatus: BagStatus.ADDING_TO_BAG,
               usedSweep: fromSweep,
             }
+          }
         }),
       removeAssetsFromBag: (assets, fromSweep = false) => {
         set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: get().itemsInBag }
-          if (itemsInBag.length === 0) return { itemsInBag: [] }
+          if (get().isLocked) {
+            return { itemsInBag: get().itemsInBag }
+          }
+          if (itemsInBag.length === 0) {
+            return { itemsInBag: [] }
+          }
           const itemsCopy = itemsInBag.filter(
             (item) =>
               !assets.some((asset) =>
@@ -124,22 +134,25 @@ export const useBag = createWithEqualityFn<BagState>()(
       },
       lockSweepItems: (contractAddress) =>
         set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: get().itemsInBag }
+          if (get().isLocked) {
+            return { itemsInBag: get().itemsInBag }
+          }
           const itemsInBagCopy = itemsInBag.map((item) =>
             item.asset.address === contractAddress && item.inSweep ? { ...item, inSweep: false } : item
           )
-          if (itemsInBag.length === 0)
+          if (itemsInBag.length === 0) {
             return {
               itemsInBag,
             }
-          else
+          } else {
             return {
               itemsInBag: [...itemsInBagCopy],
             }
+          }
         }),
       reset: () =>
         set(() => {
-          if (!get().isLocked)
+          if (!get().isLocked) {
             return {
               bagStatus: BagStatus.ADDING_TO_BAG,
               itemsInBag: [],
@@ -148,7 +161,9 @@ export const useBag = createWithEqualityFn<BagState>()(
               bagManuallyClosed: false,
               bagExpanded: false,
             }
-          else return {}
+          } else {
+            return {}
+          }
         }),
     }),
     { name: 'useBag' }

@@ -233,11 +233,15 @@ function useMarketPriceAndFee(
   )
 
   const marketPrice: Price<Currency, Currency> | undefined = useMemo(() => {
-    if (skip) return undefined
+    if (skip) {
+      return undefined
+    }
 
     // if one of the currencies is ETH or WETH, just use the spot price from one of the Trade objects
     if (isNativeOrWrappedNative(inputCurrency)) {
-      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) return undefined
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) {
+        return undefined
+      }
 
       const referencePrice = tradeB.routes[0]?.midPrice
       // reconstruct Price object using correct currency between ETH or WETH
@@ -246,7 +250,9 @@ function useMarketPriceAndFee(
 
     // same thing but for output currency being ETH or WETH
     if (isNativeOrWrappedNative(outputCurrency)) {
-      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) return undefined
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) {
+        return undefined
+      }
 
       const referencePrice = tradeA.routes[0]?.midPrice
       return new Price(inputCurrency, outputCurrency, referencePrice.denominator, referencePrice.numerator)
@@ -257,11 +263,15 @@ function useMarketPriceAndFee(
       return undefined
     }
 
-    if (!tradeA || !tradeB || !isClassicTrade(tradeA) || !isClassicTrade(tradeB)) return undefined
+    if (!tradeA || !tradeB || !isClassicTrade(tradeA) || !isClassicTrade(tradeB)) {
+      return undefined
+    }
 
     const priceA = tradeA.routes[0]?.midPrice
     const priceB = tradeB.routes[0]?.midPrice
-    if (!priceA || !priceB) return undefined
+    if (!priceA || !priceB) {
+      return undefined
+    }
 
     // Combine spot prices of A -> ETH and ETH -> B to get a price for A -> B
     return priceA.multiply(priceB)
@@ -269,21 +279,29 @@ function useMarketPriceAndFee(
 
   const feesEnabled = useFeatureFlag(FeatureFlags.LimitsFees)
   const fee = useMemo(() => {
-    if (!marketPrice || !inputCurrency || !outputCurrency || !feesEnabled) return undefined
+    if (!marketPrice || !inputCurrency || !outputCurrency || !feesEnabled) {
+      return undefined
+    }
 
     if (isNativeOrWrappedNative(inputCurrency)) {
-      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) return undefined
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) {
+        return undefined
+      }
 
       return tradeB.swapFee
     }
 
     if (isNativeOrWrappedNative(outputCurrency)) {
-      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) return undefined
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) {
+        return undefined
+      }
 
       return tradeA.swapFee
     }
 
-    if (!tradeA || !tradeB) return undefined
+    if (!tradeA || !tradeB) {
+      return undefined
+    }
 
     // This currency pair is only eligible for fees iff both tradeA and tradeB are eligible for fees
     const canTakeFees = tradeA.swapFee?.percent.greaterThan(0) && tradeB.swapFee?.percent.greaterThan(0)

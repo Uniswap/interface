@@ -44,7 +44,9 @@ export function MenuItem({
 }) {
   const theme = useTheme()
 
-  if (!to) return null
+  if (!to) {
+    return null
+  }
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>

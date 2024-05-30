@@ -1,5 +1,5 @@
 import { BaseButton } from 'components/Button'
-import { Plural, t, Trans } from 'i18n'
+import { Plural, Trans, t } from 'i18n'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
@@ -61,16 +61,21 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
     setIssues(foundIssues)
     !foundIssues && showResolveIssues && toggleShowResolveIssues()
     // Only show Resolve Issue text if there was a user submitted error (ie not when page loads with no prices set)
-    if ((missingExpiration || overMaxExpiration || listingsAboveSellOrderFloor.length) && !showResolveIssues)
+    if ((missingExpiration || overMaxExpiration || listingsAboveSellOrderFloor.length) && !showResolveIssues) {
       toggleShowResolveIssues()
+    }
 
     return [listingsMissingPrice, listingsBelowFloor]
   }, [sellAssets, setIssues, showResolveIssues, toggleShowResolveIssues])
 
   const warningWrappedClick = () => {
-    if (issues) !showResolveIssues && toggleShowResolveIssues()
-    else if (listingsBelowFloor.length) setShowWarning(true)
-    else onClick()
+    if (issues) {
+      !showResolveIssues && toggleShowResolveIssues()
+    } else if (listingsBelowFloor.length) {
+      setShowWarning(true)
+    } else {
+      onClick()
+    }
   }
 
   return (
@@ -83,13 +88,13 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
         {showResolveIssues ? (
           <Plural
             value={issues !== 1 ? 2 : 1}
-            one={t`Resolve issue`}
-            other={t(`Resolve {{issues}} issues`, { issues })}
+            one={t('common.resolveIssue')}
+            other={t('common.resolveIssues', { issues })}
           />
         ) : listingsMissingPrice.length && !isMobile ? (
-          <Trans>Set prices to continue</Trans>
+          <Trans i18nKey="nft.setPrices" />
         ) : (
-          <Trans>Start listing</Trans>
+          <Trans i18nKey="nft.startListing" />
         )}
       </StyledListingButton>
 

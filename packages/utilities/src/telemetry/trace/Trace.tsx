@@ -1,10 +1,30 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { SharedEventName } from '@uniswap/analytics-events'
-import React, { memo, PropsWithChildren, ReactNode, useEffect, useMemo } from 'react'
+import { isWeb } from '@tamagui/constants'
+import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from './AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from './TraceContext'
 import { getEventHandlers } from './utils'
+
+export function getEventsFromProps(
+  logPress?: boolean,
+  logFocus?: boolean,
+  logKeyPress?: boolean
+): string[] {
+  const events = []
+  if (logPress) {
+    events.push(isWeb ? 'onClick' : 'onPress')
+  }
+  if (logFocus) {
+    events.push(BrowserEvent.onFocus)
+  }
+  if (logKeyPress) {
+    events.push(BrowserEvent.onKeyPress)
+  }
+  return events
+}
 
 export type TraceProps = {
   // whether to log impression on mount
@@ -12,8 +32,15 @@ export type TraceProps = {
 
   // whether to log a press on a click within the area
   logPress?: boolean
+
+  // whether to log a focus on this element
+  logFocus?: boolean
+
+  // whether to log a key press
+  logKeyPress?: boolean
+
   // event to log if logging an event other than the default for press
-  pressEvent?: string
+  eventOnTrigger?: string
 
   // verifies an impression has come from that page directly to override the direct only skip list
   directFromPage?: boolean
@@ -21,31 +48,43 @@ export type TraceProps = {
   // additional properties to log with impression
   // (eg. TokenDetails Impression: { tokenAddress: 'address', tokenName: 'name' })
   properties?: Record<string, unknown>
-} & ITraceContext
+}
+
+// only used for avoiding double logging in development
+const devDoubleLogDisableMap: Record<string, boolean> = {}
 
 function _Trace({
   children,
   logImpression,
-  pressEvent,
+  eventOnTrigger,
   logPress,
+  logFocus,
+  logKeyPress,
   directFromPage,
   screen,
+  page,
   section,
   element,
   modal,
   properties,
-}: PropsWithChildren<TraceProps>): JSX.Element {
+}: PropsWithChildren<TraceProps & ITraceContext>): JSX.Element {
+  const id = useId()
+
   const { useIsPartOfNavigationTree, shouldLogScreen: shouldLogScreen } =
     useAnalyticsNavigationContext()
   const isPartOfNavigationTree = useIsPartOfNavigationTree()
-
   const parentTrace = useTrace()
+
+  const events = useMemo(() => {
+    return getEventsFromProps(logPress, logFocus, logKeyPress)
+  }, [logFocus, logKeyPress, logPress])
 
   // Component props are destructured to ensure shallow comparison
   const combinedProps = useMemo(() => {
     // removes `undefined` values
     const filteredProps = {
       ...(screen ? { screen } : {}),
+      ...(page ? { page } : {}),
       ...(section ? { section } : {}),
       ...(modal ? { modal } : {}),
       ...(element ? { element } : {}),
@@ -55,45 +94,56 @@ function _Trace({
       ...parentTrace,
       ...filteredProps,
     }
-  }, [parentTrace, screen, section, modal, element])
+  }, [parentTrace, screen, section, modal, element, page])
 
   // Log impression on mount for elements that are not part of the navigation tree
   useEffect(() => {
-    if (logImpression && !isPartOfNavigationTree) {
-      const eventProps = { ...combinedProps, ...properties }
+    if (!devDoubleLogDisableMap[id] && logImpression && !isPartOfNavigationTree) {
       if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
-        analytics.sendEvent(SharedEventName.PAGE_VIEWED, eventProps)
+        // Log the event
+        const eventProps = { ...combinedProps, ...properties }
+        analytics.sendEvent(eventOnTrigger ?? SharedEventName.PAGE_VIEWED, eventProps)
+
+        // In development for web, ensure we don't double log impressions due to strict mode
+        if (__DEV__) {
+          devDoubleLogDisableMap[id] = true
+          setTimeout(() => {
+            devDoubleLogDisableMap[id] = false
+          }, 50)
+        }
       }
     }
     // Impressions should only be logged on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logImpression, directFromPage])
+  }, [logImpression])
 
-  const modifiedChildren = logPress ? (
-    <TraceContext.Consumer>
-      {(consumedProps): ReactNode =>
-        React.Children.map(children, (child) => {
-          if (!React.isValidElement(child)) {
-            return child
-          }
+  const modifiedChildren =
+    events.length > 0 ? (
+      <TraceContext.Consumer>
+        {(consumedProps): ReactNode =>
+          React.Children.map(children, (child) => {
+            if (!React.isValidElement(child)) {
+              return child
+            }
 
-          // For each child, augment event handlers defined in `actionProps`  with event tracing
-          return React.cloneElement(
-            child,
-            getEventHandlers(
+            // For each child, augment event handlers defined in `actionProps` with event tracing
+            return React.cloneElement(
               child,
-              consumedProps,
-              pressEvent ?? SharedEventName.ELEMENT_CLICKED,
-              element,
-              properties
+              getEventHandlers(
+                child,
+                consumedProps,
+                events,
+                eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
+                element,
+                properties
+              )
             )
-          )
-        })
-      }
-    </TraceContext.Consumer>
-  ) : (
-    children
-  )
+          })
+        }
+      </TraceContext.Consumer>
+    ) : (
+      children
+    )
 
   if (!isPartOfNavigationTree) {
     return <TraceContext.Provider value={combinedProps}>{modifiedChildren}</TraceContext.Provider>
@@ -110,13 +160,17 @@ function _Trace({
   )
 }
 
-type NavAwareTraceProps = Pick<TraceProps, 'logImpression' | 'properties' | 'directFromPage'>
+type NavAwareTraceProps = Pick<
+  TraceProps,
+  'logImpression' | 'properties' | 'directFromPage' | 'eventOnTrigger'
+>
 
 // Internal component to keep track of navigation events
 // Needed since we need to rely on `navigation.useFocusEffect` to track
 // impressions of pages that are not unmounted when navigating away from them
 function NavAwareTrace({
   logImpression,
+  eventOnTrigger,
   directFromPage,
   combinedProps,
   children,
@@ -129,10 +183,10 @@ function NavAwareTrace({
       if (logImpression) {
         const eventProps = { ...combinedProps, ...properties }
         if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
-          analytics.sendEvent(SharedEventName.PAGE_VIEWED, eventProps)
+          analytics.sendEvent(eventOnTrigger ?? SharedEventName.PAGE_VIEWED, eventProps)
         }
       }
-    }, [combinedProps, directFromPage, logImpression, properties, shouldLogScreen])
+    }, [combinedProps, directFromPage, eventOnTrigger, logImpression, properties, shouldLogScreen])
   )
 
   return <>{children}</>

@@ -15,9 +15,9 @@ import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/cont
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
 import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
@@ -40,8 +40,8 @@ import {
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getContract } from 'utilities/src/contracts/getContract'
-import { useAccount, useChainId } from 'wagmi'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
@@ -56,30 +56,28 @@ export function useContract<T extends Contract = Contract>(
   withSignerIfPossible = true
 ): T | null {
   const account = useAccount()
-  const disconnectedChainId = useChainId()
   const provider = useEthersProvider()
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !provider) return null
+    if (!addressOrAddressMap || !ABI || !provider || !account.chainId) {
+      return null
+    }
     let address: string | undefined
-    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
-    else address = addressOrAddressMap[account.chainId ?? disconnectedChainId]
-    if (!address) return null
+    if (typeof addressOrAddressMap === 'string') {
+      address = addressOrAddressMap
+    } else {
+      address = addressOrAddressMap[account.chainId]
+    }
+    if (!address) {
+      return null
+    }
     try {
       return getContract(address, ABI, provider, withSignerIfPossible && account.address ? account.address : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
       return null
     }
-  }, [
-    addressOrAddressMap,
-    ABI,
-    provider,
-    account.chainId,
-    account.address,
-    disconnectedChainId,
-    withSignerIfPossible,
-  ]) as T
+  }, [addressOrAddressMap, ABI, provider, account.chainId, account.address, withSignerIfPossible]) as T
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
@@ -88,8 +86,12 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
 
   return useMemo(() => {
-    if (isMainnet) return contract
-    if (!address) return null
+    if (isMainnet) {
+      return contract
+    }
+    if (!address) {
+      return null
+    }
     const provider = RPC_PROVIDERS[ChainId.MAINNET]
     try {
       return getContract(address, ABI, provider)

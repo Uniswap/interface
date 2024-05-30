@@ -83,8 +83,12 @@ export function useTDPPriceChartData(
           }
         })
         // Avoid modifying the last entry, as it should point to the current price
-        if (minIndex !== entries.length - 1) entries[minIndex].value = min
-        if (maxIndex !== entries.length - 1) entries[maxIndex].value = max
+        if (minIndex !== entries.length - 1) {
+          entries[minIndex].value = min
+        }
+        if (maxIndex !== entries.length - 1) {
+          entries[maxIndex].value = max
+        }
       }
       // Special case: backend data for OHLC data is currently too granular, so points should be combined, halving the data
       else if (priceChartType === PriceChartType.CANDLESTICK) {

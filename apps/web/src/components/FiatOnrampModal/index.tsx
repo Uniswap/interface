@@ -134,10 +134,10 @@ export default function FiatOnrampModal() {
           {error ? (
             <>
               <ThemedText.MediumHeader>
-                <Trans>MoonPay fiat on-ramp iframe</Trans>
+                <Trans i18nKey="moonpay.rampIframe" />
               </ThemedText.MediumHeader>
               <ErrorText>
-                <Trans>Something went wrong!</Trans>
+                <Trans i18nKey="common.error.somethingWrong" />
                 <br />
                 {error}
               </ErrorText>
@@ -155,7 +155,7 @@ export default function FiatOnrampModal() {
         </Wrapper>
         <MoonpayTextWrapper>
           <ThemedText.BodySmall color="neutral3">
-            <Trans>Powered by MoonPay USA LLC</Trans>
+            <Trans i18nKey="moonpay.poweredBy" />
           </ThemedText.BodySmall>
         </MoonpayTextWrapper>
       </Modal>

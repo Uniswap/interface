@@ -1,5 +1,4 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
@@ -9,6 +8,8 @@ import { useBag, useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface ViewMyNftsAssetProps {
   asset: WalletAsset
@@ -57,8 +58,9 @@ export const ViewMyNftsAsset = ({
         (x) => x.tokenId === asset.tokenId && x.asset_contract.address === asset.asset_contract.address
       ) &&
       !isMobile
-    )
+    ) {
       toggleCart()
+    }
   }
 
   const isDisabled = asset.susFlag
@@ -68,9 +70,9 @@ export const ViewMyNftsAsset = ({
       primaryInfo: !!asset.asset_contract.name && asset.asset_contract.name,
       primaryInfoIcon: asset.collectionIsVerified && <VerifiedIcon height="16px" width="16px" />,
       secondaryInfo: asset.name || asset.tokenId ? asset.name ?? `#${asset.tokenId}` : null,
-      selectedInfo: <Trans>Remove from bag</Trans>,
-      notSelectedInfo: <Trans>List for sale</Trans>,
-      disabledInfo: <Trans>Unavailable for listing</Trans>,
+      selectedInfo: <Trans i18nKey="nft.removeFromBag" />,
+      notSelectedInfo: <Trans i18nKey="nft.listForSale" />,
+      disabledInfo: <Trans i18nKey="nft.unavailableToList" />,
     }
   }, [asset.asset_contract.name, asset.collectionIsVerified, asset.name, asset.tokenId])
 
@@ -84,7 +86,9 @@ export const ViewMyNftsAsset = ({
       unselectAsset={() => handleSelect(true)}
       onButtonClick={toggleSelect}
       onCardClick={() => {
-        if (!hideDetails) navigate(detailsHref(asset))
+        if (!hideDetails) {
+          navigate(detailsHref(asset))
+        }
       }}
       mediaShouldBePlaying={mediaShouldBePlaying}
       setCurrentTokenPlayingMedia={setCurrentTokenPlayingMedia}

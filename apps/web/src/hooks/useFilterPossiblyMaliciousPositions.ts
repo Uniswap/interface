@@ -12,8 +12,8 @@ import {
   Token,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { hasURL } from 'utils/urlChecks'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { useTokenContractsConstant } from './useTokenContractsConstant'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -66,7 +66,7 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
  * The hope is that this approach removes the cheapest version of the attack without punishing non-malicious url symbols
  */
 export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]): PositionDetails[] {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const nonListPositionTokenAddresses = useMemo(() => getUniqueAddressesFromPositions(positions), [positions])
 
   const positionCurrencyInfos = useQueries({
@@ -78,7 +78,9 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
     const result: Record<string, string> = {}
     for (let i = 0; i < nonListPositionTokenAddresses.length; i++) {
       const callResult = symbolCallStates[i]?.result
-      if (!callResult) continue
+      if (!callResult) {
+        continue
+      }
       const address = nonListPositionTokenAddresses[i]
       result[address] = callResult as unknown as string
     }
@@ -88,23 +90,37 @@ export function useFilterPossiblyMaliciousPositions(positions: PositionDetails[]
   return useMemo(() => {
     return positionCurrencyInfos
       .map((result) => {
-        if (!result.data) return undefined
+        if (!result.data) {
+          return undefined
+        }
 
         const { currency0Info, currency1Info, position } = result.data
         let tokensInListCount = 0
-        if (!currency0Info?.isSpam && currency0Info?.safetyLevel === SafetyLevel.Verified) tokensInListCount++
-        if (!currency1Info?.isSpam && currency1Info?.safetyLevel === SafetyLevel.Verified) tokensInListCount++
+        if (!currency0Info?.isSpam && currency0Info?.safetyLevel === SafetyLevel.Verified) {
+          tokensInListCount++
+        }
+        if (!currency1Info?.isSpam && currency1Info?.safetyLevel === SafetyLevel.Verified) {
+          tokensInListCount++
+        }
         // if both tokens are in the list, then we let both have url symbols (so we don't check)
-        if (tokensInListCount === 2) return position
+        if (tokensInListCount === 2) {
+          return position
+        }
 
         // check the token symbols to see if they contain a url
         // prioritize the token entity from the list if it exists
         // if the token isn't in the list, then use the data returned from chain calls
         let urlSymbolCount = 0
-        if (hasURL(currency0Info?.currency?.symbol ?? addressesToSymbol[position.token0])) urlSymbolCount++
-        if (hasURL(currency1Info?.currency?.symbol ?? addressesToSymbol[position.token1])) urlSymbolCount++
+        if (hasURL(currency0Info?.currency?.symbol ?? addressesToSymbol[position.token0])) {
+          urlSymbolCount++
+        }
+        if (hasURL(currency1Info?.currency?.symbol ?? addressesToSymbol[position.token1])) {
+          urlSymbolCount++
+        }
         // if one token is in the list, then one token can have a url symbol
-        if (tokensInListCount === 1 && urlSymbolCount < 2) return position
+        if (tokensInListCount === 1 && urlSymbolCount < 2) {
+          return position
+        }
 
         // if neither token is in the list, then neither can have a url symbol
         return urlSymbolCount === 0 ? position : undefined

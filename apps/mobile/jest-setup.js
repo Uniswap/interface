@@ -9,17 +9,6 @@ import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
 
-// avoids polluting console in test runs, while keeping important log levels
-global.console = {
-  ...console,
-  // uncomment to ignore a specific log level
-  log: jest.fn(),
-  debug: jest.fn(),
-  info: jest.fn(),
-  // warn: jest.fn(),
-  // error: jest.fn(),
-}
-
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({
   init: () => jest.fn(),

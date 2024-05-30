@@ -34,6 +34,7 @@ export function SplitLogo({
         left={0}
         overflow="hidden"
         position="absolute"
+        testID="input-currency-logo-container"
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}>
         <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
@@ -43,6 +44,7 @@ export function SplitLogo({
         overflow="hidden"
         position="absolute"
         right={0}
+        testID="output-currency-logo-container"
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}>
         <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />

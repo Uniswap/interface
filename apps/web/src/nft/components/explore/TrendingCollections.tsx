@@ -124,7 +124,9 @@ const TrendingCollections = () => {
         denomination: isEthToggled ? Denomination.ETH : Denomination.USD,
         usdPrice: ethUsdPrice,
       }))
-    } else return [] as CollectionTableColumn[]
+    } else {
+      return [] as CollectionTableColumn[]
+    }
   }, [trendingCollections, trendingCollectionsAreLoading, isEthToggled, ethUsdPrice])
 
   return (

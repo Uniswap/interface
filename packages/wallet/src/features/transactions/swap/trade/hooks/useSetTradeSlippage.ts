@@ -1,16 +1,14 @@
 import { useMemo } from 'react'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
-import { QuoteType } from 'uniswap/src/types/quote'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { isL2Chain, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/trade/legacy/routeUtils'
 import {
-  isClassicQuote,
+  getClassicQuoteFromResponse,
   transformTradingApiResponseToTrade,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { Trade, TradeWithStatus } from 'wallet/src/features/transactions/swap/trade/types'
@@ -29,33 +27,22 @@ export function useSetTradeSlippage(
     }
 
     const { loading, error, isFetching } = trade
-    const { tradeType, deadline, quoteData, inputAmount, outputAmount } = trade.trade
+    const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
     const tokenInIsNative = inputAmount.currency.isNative
     const tokenOutIsNative = outputAmount.currency.isNative
 
-    if (!quoteData) {
+    if (!quote) {
       return { trade, autoSlippageTolerance }
     }
 
-    // Based on the quote type, transform the quote data into a trade
-    const newTrade =
-      quoteData.quoteType === QuoteType.RoutingApi
-        ? transformQuoteToTrade(
-            tokenInIsNative,
-            tokenOutIsNative,
-            tradeType,
-            deadline,
-            autoSlippageTolerance,
-            quoteData?.quote
-          )
-        : transformTradingApiResponseToTrade({
-            tokenInIsNative,
-            tokenOutIsNative,
-            tradeType,
-            deadline,
-            slippageTolerance: autoSlippageTolerance,
-            data: quoteData?.quote,
-          })
+    const newTrade = transformTradingApiResponseToTrade({
+      tokenInIsNative,
+      tokenOutIsNative,
+      tradeType,
+      deadline,
+      slippageTolerance: autoSlippageTolerance,
+      data: quote,
+    })
 
     return {
       trade: {
@@ -78,11 +65,7 @@ export function useSetTradeSlippage(
 
   Note: not using BigNumber because it sucks at decimals and we're dealing with USD values anyways
  */
-// TODO: move logic to `transformResponse` method of routingApi when endpoint returns output USD value
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
-  // Enforce quote types
-  const isLegacyQuote = trade?.quoteData?.quoteType === QuoteType.RoutingApi
-
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
   const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(
@@ -90,32 +73,17 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   )
 
   return useMemo<number>(() => {
-    if (isLegacyQuote) {
-      const chainId = trade.quoteData.quote?.route[0]?.[0]?.tokenIn?.chainId
-      const onL2 = isL2Chain(chainId)
-      const gasCostUSD = trade.quoteData.quote?.gasUseEstimateUSD
-      return calculateAutoSlippage({
-        onL2,
-        minAutoSlippageToleranceL2,
-        gasCostUSD,
-        outputAmountUSD,
-      })
-    } else {
-      // TODO:api remove this during Uniswap X integration
-      const quote = isClassicQuote(trade?.quoteData?.quote?.quote)
-        ? trade?.quoteData?.quote?.quote
-        : undefined
-      const chainId = toSupportedChainId(quote?.chainId) ?? undefined
-      const onL2 = isL2Chain(chainId)
-      const gasCostUSD = quote?.gasFeeUSD
-      return calculateAutoSlippage({
-        onL2,
-        minAutoSlippageToleranceL2,
-        gasCostUSD,
-        outputAmountUSD,
-      })
-    }
-  }, [isLegacyQuote, minAutoSlippageToleranceL2, outputAmountUSD, trade])
+    const quote = getClassicQuoteFromResponse(trade?.quote)
+    const chainId = toSupportedChainId(quote?.chainId) ?? undefined
+    const onL2 = isL2Chain(chainId)
+    const gasCostUSD = quote?.gasFeeUSD
+    return calculateAutoSlippage({
+      onL2,
+      minAutoSlippageToleranceL2,
+      gasCostUSD,
+      outputAmountUSD,
+    })
+  }, [minAutoSlippageToleranceL2, outputAmountUSD, trade])
 }
 
 function calculateAutoSlippage({

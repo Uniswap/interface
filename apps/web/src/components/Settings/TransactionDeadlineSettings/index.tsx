@@ -66,14 +66,12 @@ export default function TransactionDeadlineSettings() {
       header={
         <Row width="auto">
           <ThemedText.BodyPrimary>
-            <Trans>Transaction deadline</Trans>
+            <Trans i18nKey="swap.transaction.deadline" />
           </ThemedText.BodyPrimary>
-          <QuestionHelper
-            text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
-          />
+          <QuestionHelper text={<Trans i18nKey="swap.transaction.revertAfter" />} />
         </Row>
       }
-      button={<Trans>{{ time: deadline / 60 }}m</Trans>}
+      button={<Trans i18nKey="common.time.minute.amt" values={{ time: deadline / 60 }} />}
     >
       <Row>
         <InputContainer gap="md" error={!!deadlineError}>
@@ -89,7 +87,7 @@ export default function TransactionDeadlineSettings() {
             }}
           />
           <ThemedText.BodyPrimary>
-            <Trans>minutes</Trans>
+            <Trans i18nKey="common.time.minutes" />
           </ThemedText.BodyPrimary>
         </InputContainer>
       </Row>

@@ -7,8 +7,8 @@ import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import useGasPrice from './useGasPrice'
 import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
 import { useUSDPrice } from './useUSDPrice'
@@ -74,7 +74,7 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
  * Auto slippage is only relevant for Classic swaps because UniswapX slippage is determined by the backend service
  */
 export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): Percent {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
   const outputUSD = useUSDPrice(trade?.outputAmount)
   const outputDollarValue = useStablecoinAmountFromFiatValue(outputUSD.data)
@@ -99,7 +99,9 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
   const gasCostStablecoinAmount = useStablecoinAmountFromFiatValue(gasCostUSD.data)
 
   return useMemo(() => {
-    if (!trade || onL2) return DEFAULT_AUTO_SLIPPAGE
+    if (!trade || onL2) {
+      return DEFAULT_AUTO_SLIPPAGE
+    }
 
     // if valid estimate from api and using api trade, use gas estimate from api
     // NOTE - dont use gas estimate for L2s yet - need to verify accuracy

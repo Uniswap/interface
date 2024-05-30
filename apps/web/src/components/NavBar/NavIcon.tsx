@@ -15,7 +15,7 @@ interface NavIconProps {
 export const NavIcon = ({
   children,
   isActive,
-  label = t`Navigation button`,
+  label = t('common.navigationButton'),
   onClick,
   activeBackground,
 }: NavIconProps) => {

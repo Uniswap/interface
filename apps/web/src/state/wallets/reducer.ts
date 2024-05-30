@@ -21,7 +21,9 @@ const walletsSlice = createSlice({
   initialState,
   reducers: {
     addConnectedWallet(state, { payload }) {
-      if (state.connectedWallets.some((wallet) => shallowEqual(payload, wallet))) return
+      if (state.connectedWallets.some((wallet) => shallowEqual(payload, wallet))) {
+        return
+      }
       state.connectedWallets = [...state.connectedWallets, payload]
     },
     startSwitchingChain(state, { payload }) {

@@ -1,10 +1,9 @@
 import React from 'react'
 import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { logger } from 'utilities/src/logger/logger'
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
-
-const EVENTS_HANDLED = ['onPress']
 
 /**
  * Given a set of child element and action props, returns a spreadable
@@ -13,6 +12,7 @@ const EVENTS_HANDLED = ['onPress']
 export function getEventHandlers(
   child: React.ReactElement,
   consumedProps: ITraceContext,
+  triggers: string[],
   eventName: string,
   element?: string,
   properties?: Record<string, unknown>
@@ -20,7 +20,7 @@ export function getEventHandlers(
   const eventHandlers: Partial<
     Record<string, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
   > = {}
-  for (const event of EVENTS_HANDLED) {
+  for (const event of triggers) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
       if (!child.props[event]) {
         logger.error(new Error('Found a null handler while logging an event'), {

@@ -59,7 +59,9 @@ interface RouteResult {
  * create a `Trade`.
  */
 export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['route']): RouteResult[] | undefined {
-  if (routes.length === 0) return []
+  if (routes.length === 0) {
+    return []
+  }
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false, routes)
 
   try {
@@ -198,7 +200,9 @@ function getSwapFee(
 ): SwapFeeInfo | undefined {
   const { portionAmount, portionBips, portionRecipient } = data
 
-  if (!portionAmount || !portionBips || !portionRecipient) return undefined
+  if (!portionAmount || !portionBips || !portionRecipient) {
+    return undefined
+  }
 
   return {
     recipient: portionRecipient,
@@ -246,7 +250,9 @@ export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickR
 
 export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: number): number | undefined {
   // Some sus javascript float math but it's ok because its just an estimate for display purposes
-  if (!gasUseEstimateUSD || !gasUseEstimate) return undefined
+  if (!gasUseEstimateUSD || !gasUseEstimate) {
+    return undefined
+  }
   return gasUseEstimateUSD / gasUseEstimate
 }
 
@@ -327,6 +333,7 @@ export async function transformQuoteToTrade(
         deadlineBufferSecs: data.quote.deadlineBufferSecs,
         slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
         swapFee,
+        forceOpenOrder: args.isXv2Arbitrum,
       })
 
       return {
@@ -392,9 +399,15 @@ export function isExactInput(tradeType: TradeType): boolean {
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
-    if (isPolygon(currency.chainId)) return SwapRouterNativeAssets.MATIC
-    if (isBsc(currency.chainId)) return SwapRouterNativeAssets.BNB
-    if (isAvalanche(currency.chainId)) return SwapRouterNativeAssets.AVAX
+    if (isPolygon(currency.chainId)) {
+      return SwapRouterNativeAssets.MATIC
+    }
+    if (isBsc(currency.chainId)) {
+      return SwapRouterNativeAssets.BNB
+    }
+    if (isAvalanche(currency.chainId)) {
+      return SwapRouterNativeAssets.AVAX
+    }
     return SwapRouterNativeAssets.ETH
   }
 

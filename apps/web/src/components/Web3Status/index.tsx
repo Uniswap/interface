@@ -1,5 +1,4 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceEvent, sendAnalyticsEvent } from 'analytics'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -7,6 +6,7 @@ import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
@@ -15,8 +15,9 @@ import { useAppSelector } from 'state/hooks'
 import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Unitag } from 'ui/src/components/icons'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isIFramed } from 'utils/isIFramed'
-import { useAccount } from 'wagmi'
 import { ButtonSecondary } from '../Button'
 import { RowBetween } from '../Row'
 import { useAccountIdentifier } from './useAccountIdentifier'
@@ -157,11 +158,7 @@ function Web3StatusInner() {
 
   if (address) {
     return (
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
-        properties={{ type: 'open' }}
-      >
+      <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
         <Web3StatusConnected
           disabled={Boolean(switchingChain)}
           data-testid="web3-status-connected"
@@ -172,7 +169,7 @@ function Web3StatusInner() {
           {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{{ pendingActivityCount }} Pending</Trans>
+                <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>
@@ -183,13 +180,13 @@ function Web3StatusInner() {
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
-      </TraceEvent>
+      </Trace>
     )
   } else {
     return (
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+      <Trace
+        logPress
+        eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <Web3StatusConnectWrapper
@@ -198,10 +195,10 @@ function Web3StatusInner() {
           onClick={handleWalletDropdownClick}
         >
           <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-            <Trans>Connect</Trans>
+            <Trans i18nKey="common.connect.button" />
           </StyledConnectButton>
         </Web3StatusConnectWrapper>
-      </TraceEvent>
+      </Trace>
     )
   }
 }

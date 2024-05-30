@@ -147,7 +147,6 @@ describe(importAccount, () => {
           type: AccountType.Readonly,
           address: SAMPLE_SEED_ADDRESS_1,
           name: 'READONLY',
-          pending: true,
           timeImportedMs: expect.any(Number),
         },
       ]),

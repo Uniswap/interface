@@ -1,12 +1,13 @@
 import { ContractTransaction } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent, useTrace as useAnalyticsTrace } from 'analytics'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -46,15 +47,21 @@ export function useUpdateTokenAllowance(
   spender: string
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
   const contract = useTokenContract(amount?.currency.address)
-  const analyticsTrace = useAnalyticsTrace()
+  const analyticsTrace = useTrace()
 
   return useCallback(
     () =>
       trace({ name: 'Allowance', op: 'permit.allowance' }, async (trace) => {
         try {
-          if (!amount) throw new Error('missing amount')
-          if (!contract) throw new Error('missing contract')
-          if (!spender) throw new Error('missing spender')
+          if (!amount) {
+            throw new Error('missing amount')
+          }
+          if (!contract) {
+            throw new Error('missing contract')
+          }
+          if (!spender) {
+            throw new Error('missing spender')
+          }
 
           const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
           const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async (walletTrace) => {

@@ -56,7 +56,9 @@ export default function usePermit2Allowance(
   const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
   const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
   const isApproved = useMemo(() => {
-    if (!amount || !tokenAllowance) return false
+    if (!amount || !tokenAllowance) {
+      return false
+    }
     return tokenAllowance.greaterThan(amount) || tokenAllowance.equalTo(amount)
   }, [amount, tokenAllowance])
 
@@ -93,14 +95,18 @@ export default function usePermit2Allowance(
 
   const [signature, setSignature] = useState<PermitSignature>()
   const isSigned = useMemo(() => {
-    if (!amount || !signature) return false
+    if (!amount || !signature) {
+      return false
+    }
     return signature.details.token === token?.address && signature.spender === spender && signature.sigDeadline >= now
   }, [amount, now, signature, spender, token?.address])
 
   const { permitAllowance, expiration: permitExpiration, nonce } = usePermitAllowance(token, account, spender)
   const updatePermitAllowance = useUpdatePermitAllowance(token, spender, nonce, setSignature)
   const isPermitted = useMemo(() => {
-    if (!amount || !permitAllowance || !permitExpiration) return false
+    if (!amount || !permitAllowance || !permitExpiration) {
+      return false
+    }
     return (permitAllowance.greaterThan(amount) || permitAllowance.equalTo(amount)) && permitExpiration >= now
   }, [amount, now, permitAllowance, permitExpiration])
 

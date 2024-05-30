@@ -1,26 +1,20 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { trace } from 'tracing/trace'
-import { useChainId } from 'wagmi'
-
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WrapType } from 'uniswap/src/types/wrap'
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useCurrencyBalance } from '../state/connection/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { TransactionType } from '../state/transactions/types'
 import { useWETHContract } from './useContract'
-
-export enum WrapType {
-  NOT_APPLICABLE,
-  WRAP,
-  UNWRAP,
-}
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
 
@@ -33,7 +27,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
@@ -41,14 +35,14 @@ export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputErr
     case WrapInputError.NO_ERROR:
       return null
     case WrapInputError.ENTER_NATIVE_AMOUNT:
-      return <Trans>Enter {{ sym: native?.symbol }} amount</Trans>
+      return <Trans i18nKey="swap.enterAmount" values={{ sym: native?.symbol }} />
     case WrapInputError.ENTER_WRAPPED_AMOUNT:
-      return <Trans>Enter {{ sym: wrapped?.symbol }} amount</Trans>
+      return <Trans i18nKey="swap.enterAmount" values={{ sym: wrapped?.symbol }} />
 
     case WrapInputError.INSUFFICIENT_NATIVE_BALANCE:
-      return <Trans>Insufficient {{ sym: native?.symbol }} balance</Trans>
+      return <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: native?.symbol }} />
     case WrapInputError.INSUFFICIENT_WRAPPED_BALANCE:
-      return <Trans>Insufficient {{ sym: wrapped?.symbol }} balance</Trans>
+      return <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: wrapped?.symbol }} />
   }
 }
 
@@ -76,12 +70,18 @@ export default function useWrapCallback(
   // This allows an async error to propagate within the React lifecycle.
   // Without rethrowing it here, it would not show up in the UI - only the dev console.
   const [error, setError] = useState<Error>()
-  if (error) throw error
+  if (error) {
+    throw error
+  }
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
+    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) {
+      return NOT_APPLICABLE
+    }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
-    if (!weth) return NOT_APPLICABLE
+    if (!weth) {
+      return NOT_APPLICABLE
+    }
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)

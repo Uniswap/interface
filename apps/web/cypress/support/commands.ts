@@ -56,7 +56,9 @@ declare global {
 Cypress.Commands.overwrite(
   'visit',
   (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
-    if (typeof url !== 'string') throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
+    if (typeof url !== 'string') {
+      throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
+    }
 
     // Parse overrides
     const flagsOn: FeatureFlags[] = []
@@ -113,7 +115,9 @@ Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) =>
   function findAndDiscardEventsUpToTarget() {
     const events = Cypress.env('amplitudeEventCache')
     const targetEventIndex = events.findIndex((event) => {
-      if (event.event_type !== eventName) return false
+      if (event.event_type !== eventName) {
+        return false
+      }
       if (requiredProperties) {
         return requiredProperties.every((prop) => event.event_properties[prop])
       }

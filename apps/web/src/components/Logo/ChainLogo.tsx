@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId, getChainInfo, useIsSupportedChainId } from 'constants/chains'
+import { SupportedInterfaceChainId, getChain, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties, FunctionComponent } from 'react'
 import { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -123,8 +123,10 @@ export function ChainLogo({
   const { surface2 } = useTheme()
   const isSupportedChain = useIsSupportedChainId(chainId)
 
-  if (!isSupportedChain) return null
-  const { label } = getChainInfo({ chainId })
+  if (!isSupportedChain) {
+    return null
+  }
+  const { label } = getChain({ chainId })
 
   const { Symbol, bgColor } = getChainUI(chainId, darkMode)
   const iconSize = fillContainer ? '100%' : size

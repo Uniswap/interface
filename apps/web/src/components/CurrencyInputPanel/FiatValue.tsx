@@ -27,11 +27,19 @@ export function FiatValue({
   const { formatNumber, formatPercent } = useFormatter()
 
   const priceImpactColor = useMemo(() => {
-    if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return 'success'
+    if (!priceImpact) {
+      return undefined
+    }
+    if (priceImpact.lessThan('0')) {
+      return 'success'
+    }
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return 'neutral3'
-    if (severity < 3) return 'deprecated_yellow1'
+    if (severity < 1) {
+      return 'neutral3'
+    }
+    if (severity < 3) {
+      return 'deprecated_yellow1'
+    }
     return 'critical'
   }, [priceImpact])
 
@@ -48,14 +56,12 @@ export function FiatValue({
             type: NumberType.FiatTokenPrice,
           })
         ) : (
-          <MouseoverTooltip text={<Trans>Not enough liquidity to show accurate USD value.</Trans>}>-</MouseoverTooltip>
+          <MouseoverTooltip text={<Trans i18nKey="liquidity.notEnough.label" />}>-</MouseoverTooltip>
         )}
       </ThemedText.BodySmall>
       {priceImpact && (
         <ThemedText.BodySmall color={priceImpactColor}>
-          <MouseoverTooltip
-            text={<Trans>The estimated difference between the USD values of input and output amounts.</Trans>}
-          >
+          <MouseoverTooltip text={<Trans i18nKey="swap.estimatedDifference.label" />}>
             ({formatPercent(priceImpact.multiply(-1))})
           </MouseoverTooltip>
         </ThemedText.BodySmall>

@@ -11,7 +11,9 @@ describe('Swap with fees', () => {
       // Store trade quote into alias
       cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
         // Avoid tracking stablecoin pricing fetches
-        if (JSON.parse(req.body).intent !== 'pricing') req.alias = 'quoteFetch'
+        if (JSON.parse(req.body).intent !== 'pricing') {
+          req.alias = 'quoteFetch'
+        }
       })
     })
 
@@ -42,7 +44,9 @@ describe('Swap with fees', () => {
             .then(({ quote: { portionBips, portionRecipient, portionAmount } }) => {
               // Fees are generally expected to always be enabled for ETH -> USDC swaps
               // If the routing api does not include a fee, end the test early rather than manually update routes and hardcode fee vars
-              if (portionRecipient) return
+              if (portionRecipient) {
+                return
+              }
 
               cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((initialRecipientBalance) => {
                 const feeCurrencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, portionAmount)
@@ -89,7 +93,9 @@ describe('Swap with fees', () => {
           .then(({ quote: { portionBips, portionRecipient } }) => {
             // Fees are generally expected to always be enabled for ETH -> USDC swaps
             // If the routing api does not include a fee, end the test early rather than manually update routes and hardcode fee vars
-            if (portionRecipient) return
+            if (portionRecipient) {
+              return
+            }
 
             cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((initialRecipientBalance) => {
               // Initiate transaction

@@ -46,25 +46,25 @@ function useCancelLimitsDialogContent(
         title: (
           <Plural
             value={orders.length}
-            one={t`Cancel limit`}
-            other={t(`Cancel {{count}} limits`, { count: orders.length })}
+            one={t('common.limit.cancel')}
+            other={t(`common.limit.cancel.amount`, { count: orders.length })}
           />
         ),
         icon: <Slash />,
       }
     case CancellationState.PENDING_SIGNATURE:
       return {
-        title: <Trans>Confirm cancellation</Trans>,
+        title: <Trans i18nKey="common.confirmCancellation" />,
         icon: <LoaderV3 size="64px" color={theme.accent1} />,
       }
     case CancellationState.PENDING_CONFIRMATION:
       return {
-        title: <Trans>Cancellation submitted</Trans>,
+        title: <Trans i18nKey="common.cancellationSubmitted" />,
         icon: <SubmittedIcon />,
       }
     case CancellationState.CANCELLED:
       return {
-        title: <Trans>Cancellation Successful</Trans>,
+        title: <Trans i18nKey="common.cancellationSuccessful" />,
         icon: <ConfirmedIcon />,
       }
     default:
@@ -114,11 +114,11 @@ export function CancelLimitsDialog(
                 href={getExplorerLink(orders[0].chainId, cancelTxHash, ExplorerDataType.TRANSACTION)}
                 color="neutral2"
               >
-                <Trans>View on Explorer</Trans>
+                <Trans i18nKey="common.viewOnExplorer" />
               </ExternalLink>
             ) : (
               <ThemedText.BodySmall color="neutral2">
-                <Trans>Proceed in your wallet</Trans>
+                <Trans i18nKey="common.proceedInWallet" />
               </ThemedText.BodySmall>
             )}
           </Row>
@@ -135,20 +135,20 @@ export function CancelLimitsDialog(
           <Column>
             <Plural
               value={orders.length}
-              one={t`Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?`}
-              other={t`Your swaps could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?`}
+              one={t('limit.cancel.cannotExecute')}
+              other={t('limit.cancel.cannotExecute.plural')}
             />
             <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate.value} />
           </Column>
         }
         buttonsConfig={{
           left: {
-            title: <Trans>Nevermind</Trans>,
+            title: <Trans i18nKey="common.neverMind" />,
             onClick: onCancel,
             textColor: 'neutral1',
           },
           right: {
-            title: <Trans>Proceed</Trans>,
+            title: <Trans i18nKey="common.proceed" />,
             onClick: onConfirm,
             type: DialogButtonType.Error,
             disabled: cancelState !== CancellationState.REVIEWING_CANCELLATION,
@@ -175,7 +175,7 @@ function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: 
     <GasEstimateContainer>
       <DetailLineItem
         LineItem={{
-          Label: () => <Trans>Network cost</Trans>,
+          Label: () => <Trans i18nKey="common.networkCost" />,
           Value: () => <span>{gasEstimateValue ? gasFeeFormatted : '-'}</span>,
         }}
       />

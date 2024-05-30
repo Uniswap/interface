@@ -34,8 +34,12 @@ function useQuickRouteArguments({
   const allRoutesEnabled = multipleRouteOptionsRoutingPreference.protocols.length === 3
 
   return useMemo(() => {
-    if (!tokenIn || !tokenOut || !amount) return skipToken
-    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET || !allRoutesEnabled) return skipToken
+    if (!tokenIn || !tokenOut || !amount) {
+      return skipToken
+    }
+    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET || !allRoutesEnabled) {
+      return skipToken
+    }
 
     return {
       amount: amount.quotient.toString(),

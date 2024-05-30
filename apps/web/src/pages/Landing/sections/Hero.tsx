@@ -81,7 +81,8 @@ const LearnMoreContainer = styled(Box)`
     bottom: 64px;
   }
 
-  @media (max-height: ${heightBreakpoints.short}px) {
+  // Prevent overlap of Hero text and Learn More button on short screens
+  @media (max-height: ${heightBreakpoints.short + 30}px) {
     display: none;
   }
 `
@@ -128,15 +129,15 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         <Box maxWidth="920px" direction="column" align="center" style={{ pointerEvents: 'none' }}>
           <StyledH1>
             <RiseInText delay={0.0}>
-              <Trans>Swap</Trans>
+              <Trans i18nKey="common.swap" />
             </RiseInText>{' '}
             <RiseInText delay={0.1}>
-              <Trans>anytime,</Trans>
+              <Trans i18nKey="hero.anytime" />
             </RiseInText>
           </StyledH1>
           <RiseIn delay={0.2}>
             <StyledH1>
-              <Trans>anywhere.</Trans>
+              <Trans i18nKey="hero.anywhere" />
             </StyledH1>
           </RiseIn>
         </Box>
@@ -157,7 +158,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               variant: 'body2',
             }}
           >
-            <Trans>The largest onchain marketplace. Buy and sell crypto on Ethereum and 7+ other chains.</Trans>
+            <Trans i18nKey="hero.subtitle" />
           </Text>
         </RiseIn>
       </Center>
@@ -181,7 +182,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             <Hover>
               <ColumnCenter>
                 <Text variant="body2">
-                  <Trans>Scroll to learn more</Trans>
+                  <Trans i18nKey="hero.scroll" />
                 </Text>
                 <ChevronDown />
               </ColumnCenter>

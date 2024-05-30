@@ -155,7 +155,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ) : (
           <CurrencyLogo currency={currency} size={20} />
         )}
-        <TokenName>{isPool ? <Trans>Pool</Trans> : tokens[0]?.name}</TokenName>
+        <TokenName>{isPool ? <Trans i18nKey="common.pool" /> : tokens[0]?.name}</TokenName>
         <SymbolText>
           {isPool ? (
             `${tokens[0]?.symbol} / ${tokens[1]?.symbol}`
@@ -168,7 +168,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
       </TokenTextWrapper>
       <ButtonsRow>
         {!isNative && (
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
               {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
               <StyledCopyIcon />

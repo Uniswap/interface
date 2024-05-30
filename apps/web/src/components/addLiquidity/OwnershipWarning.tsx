@@ -31,14 +31,11 @@ const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (
     <TitleRow>
       <AlertTriangle style={{ marginRight: '8px' }} />
       <ThemedText.SubHeader color="deprecated_accentWarning">
-        <Trans>Warning</Trans>
+        <Trans i18nKey="common.warning" />
       </ThemedText.SubHeader>
     </TitleRow>
     <ExplainerText>
-      <Trans>
-        You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position
-        unless you own the following address: {{ ownerAddress }}
-      </Trans>
+      <Trans i18nKey="pool.liquidity.ownershipWarning.message" values={{ ownerAddress }} />
     </ExplainerText>
   </Wrapper>
 )

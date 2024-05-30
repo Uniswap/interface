@@ -42,7 +42,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
   switch (details.type) {
     case OffchainOrderLineItemType.EXCHANGE_RATE:
       return {
-        Label: () => <Trans>Rate</Trans>,
+        Label: () => <Trans i18nKey="common.rate">Rate</Trans>,
         Value: () => (
           <TradePrice
             price={
@@ -58,17 +58,17 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
       }
     case OffchainOrderLineItemType.EXPIRY:
       return {
-        Label: () => <Trans>Expiry</Trans>,
+        Label: () => <Trans i18nKey="common.expiry" />,
         Value: () => <span>{details.order.expiry && formatTimestamp(details.order.expiry * 1000)}</span>,
       }
     case OffchainOrderLineItemType.NETWORK_COST:
       return {
-        Label: () => <Trans>Network cost</Trans>,
+        Label: () => <Trans i18nKey="common.networkCost" />,
         Value: () => <span>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</span>,
       }
     case OffchainOrderLineItemType.TRANSACTION_ID:
       return {
-        Label: () => <Trans>Transaction ID</Trans>,
+        Label: () => <Trans i18nKey="common.transactionId" />,
         Value: () => (
           <ExternalLink href={details.explorerLink}>{ellipseMiddle(details.order.txHash ?? '')}</ExternalLink>
         ),
@@ -80,7 +80,9 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
 
 export function OffchainOrderLineItem(props: OffchainOrderLineItemProps) {
   const LineItem = useLineItem(props)
-  if (!LineItem) return null
+  if (!LineItem) {
+    return null
+  }
 
   return <DetailLineItem LineItem={LineItem} />
 }

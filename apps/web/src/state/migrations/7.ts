@@ -9,7 +9,9 @@ export type PersistAppStateV7 = {
  * Migration to rename hideAndroidAnnouncementBanner to hideAppPromoBanner.
  */
 export const migration7 = (state: PersistAppStateV7 | undefined) => {
-  if (!state) return state
+  if (!state) {
+    return state
+  }
   const userHidAndroidAnnouncementBanner = state?.user?.hideAndroidAnnouncementBanner
   if (state?.user && 'hideAndroidAnnouncementBanner' in state.user) {
     delete state.user['hideAndroidAnnouncementBanner']

@@ -3,7 +3,6 @@ import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -25,7 +24,7 @@ import {
 } from 'state/governance/hooks'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -91,17 +90,22 @@ const CreateProposalButton = ({
       onClick={handleCreateProposal}
     >
       {hasActiveOrPendingProposal ? (
-        <Trans>You already have an active or pending proposal</Trans>
+        <Trans i18nKey="vote.proposal.activeOrPendingProposal" />
       ) : !hasEnoughVote ? (
         <>
           {formattedProposalThreshold ? (
-            <Trans>You must have {{ formattedProposalThreshold }} votes to submit a proposal</Trans>
+            <Trans
+              i18nKey="vote.proposal.voteThreshold"
+              values={{
+                formattedProposalThreshold,
+              }}
+            />
           ) : (
-            <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
+            <Trans i18nKey="vote.proposal.notEnoughVotes" />
           )}
         </>
       ) : (
-        <Trans>Create proposal</Trans>
+        <Trans i18nKey="vote.landing.createProposal" />
       )}
     </ButtonError>
   )
@@ -214,10 +218,14 @@ export default function CreateProposal() {
 
     const createProposalData: CreateProposalData = {} as CreateProposalData
 
-    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
+    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) {
+      return
+    }
 
     const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
-    if (!tokenAmount) return
+    if (!tokenAmount) {
+      return
+    }
 
     createProposalData.targets = [currencyValue.address]
     createProposalData.values = ['0']
@@ -253,30 +261,32 @@ ${bodyValue}
       setAttempting(false)
     })
 
-    if (hash) setHash(hash)
+    if (hash) {
+      setHash(hash)
+    }
   }
 
   return (
-    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
       <PageWrapper>
         <AppBody $maxWidth="800px">
           <Nav to="/vote">
             <BackArrow />
-            <HeaderText>Create Proposal</HeaderText>
+            <HeaderText>
+              <Trans i18nKey="vote.landing.createProposal" />
+            </HeaderText>
           </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans>
-                    <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
-                    cannot be modified after submission, so please verify all information before submitting. The voting
-                    period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                    <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
-                      read the docs
-                    </ExternalLink>
-                    .
-                  </Trans>
+                  <Trans i18nKey="vote.create.prompt" />
+                  <ExternalLink
+                    key="create-proposal-prompt-link"
+                    href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose"
+                  >
+                    <Trans i18nKey="proposal.readTheDocs" />
+                  </ExternalLink>
                 </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>

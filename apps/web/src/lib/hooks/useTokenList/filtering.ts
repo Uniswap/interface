@@ -18,7 +18,9 @@ export function getTokenFilter<T extends Token | TokenInfo>(query: string): (tok
     .split(/\s+/)
     .filter((s) => s.length > 0)
 
-  if (queryParts.length === 0) return alwaysTrue
+  if (queryParts.length === 0) {
+    return alwaysTrue
+  }
 
   const match = (s: string): boolean => {
     const parts = s

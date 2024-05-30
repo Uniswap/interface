@@ -87,8 +87,9 @@ const urlParamsUtils = {
             !trait_type.endsWith(')') &&
             trait_value.endsWith(')') &&
             !trait_value.startsWith('(')
-          )
+          ) {
             clonedQuery['traits'] = [`${trait_type},${trait_value}`]
+          }
         }
       }
 
@@ -160,7 +161,9 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
 }
 
 export const applyFiltersFromURL = (location: Location, collectionStats: GenieCollection) => {
-  if (!location.search) return
+  if (!location.search) {
+    return
+  }
 
   const query = qs.parse(location.search, {
     arrayFormat: 'comma',

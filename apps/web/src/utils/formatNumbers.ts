@@ -550,7 +550,9 @@ function formatNumber({
   }
 
   const { input: hardCodedInputValue, prefix } = hardCodedInput
-  if (hardCodedInputValue === undefined) return placeholder
+  if (hardCodedInputValue === undefined) {
+    return placeholder
+  }
   return (prefix ?? '') + new Intl.NumberFormat(locale, formatterOptions).format(hardCodedInputValue)
 }
 
@@ -582,7 +584,9 @@ export function formatCurrencyAmount({
 }
 
 function formatPercent(percent: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
-  if (!percent) return '-'
+  if (!percent) {
+    return '-'
+  }
 
   return `${Number(percent.toFixed(3)).toLocaleString(locale, {
     maximumFractionDigits: 3,
@@ -672,9 +676,12 @@ function formatNumberOrString({
   localCurrency,
   conversionRate,
 }: FormatNumberOrStringOptions): string {
-  if (input === null || input === undefined) return '-'
-  if (typeof input === 'string')
+  if (input === null || input === undefined) {
+    return '-'
+  }
+  if (typeof input === 'string') {
     return formatNumber({ input: parseFloat(input), type, locale, localCurrency, conversionRate })
+  }
   return formatNumber({ input, type, locale, localCurrency, conversionRate })
 }
 
@@ -686,7 +693,9 @@ interface FormatEtherOptions {
 }
 
 function formatEther({ input, type, locale, localCurrency }: FormatEtherOptions) {
-  if (input === null || input === undefined) return '-'
+  if (input === null || input === undefined) {
+    return '-'
+  }
   return formatNumber({ input: parseFloat(ethersFormatEther(input.toString())), type, locale, localCurrency })
 }
 
@@ -825,8 +834,12 @@ function handleFallbackCurrency(
   shouldFallbackToUSD: boolean,
   shouldFallbackToPrevious: boolean
 ) {
-  if (shouldFallbackToUSD) return DEFAULT_LOCAL_CURRENCY
-  if (shouldFallbackToPrevious) return previousConversionRate ? previousSelectedCurrency : DEFAULT_LOCAL_CURRENCY
+  if (shouldFallbackToUSD) {
+    return DEFAULT_LOCAL_CURRENCY
+  }
+  if (shouldFallbackToPrevious) {
+    return previousConversionRate ? previousSelectedCurrency : DEFAULT_LOCAL_CURRENCY
+  }
   return selectedCurrency
 }
 

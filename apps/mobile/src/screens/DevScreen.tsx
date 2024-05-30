@@ -12,23 +12,32 @@ import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconS
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { resetDismissedWarnings } from 'wallet/src/features/tokens/tokensSlice'
-import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
+import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { resetWallet } from 'wallet/src/features/wallet/slice'
+import { useAppSelector } from 'wallet/src/state'
 
 export function DevScreen(): JSX.Element {
   const insets = useDeviceInsets()
   const dispatch = useAppDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
+  const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
   }
 
-  const onPressCreate = (): void => {
-    dispatch(createAccountActions.trigger())
+  const onPressCreate = async (): Promise<void> => {
+    dispatch(
+      createAccountsActions.trigger({
+        accounts: [await createOnboardingAccount(sortedMnemonicAccounts)],
+        activateFirst: true,
+      })
+    )
   }
 
   const activateWormhole = (s: MobileScreens): void => {

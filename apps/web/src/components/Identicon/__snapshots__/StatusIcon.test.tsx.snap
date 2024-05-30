@@ -1,6 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatusIcon with account renders children in correct order 1`] = `
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
+  animation: iCPeaJ 250ms ease-in-out forwards;
+}
+
 .c0 {
   position: relative;
   display: -webkit-box;
@@ -26,7 +43,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   width: 16px;
 }
 
-.c1 {
+.c2 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -51,7 +68,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c3 {
+.c4 {
   position: absolute;
   display: -webkit-box;
   display: -webkit-flex;
@@ -76,7 +93,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   overflow: hidden;
 }
 
-.c2 {
+.c3 {
   width: 16px;
   height: 16px;
 }
@@ -97,13 +114,13 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
 }
 
 @supports (overflow:clip) {
-  .c1 {
+  .c2 {
     overflow: clip;
   }
 }
 
 @supports (overflow:clip) {
-  .c3 {
+  .c4 {
     overflow: clip;
   }
 }
@@ -115,19 +132,22 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
 >
   <div
     class="c1"
+  />
+  <div
+    class="c2"
     data-testid="MiniIcon"
   >
     <img
       alt="undefined icon"
-      class="c2"
+      class="c3"
       src="metamask-icon.svg"
     />
   </div>
   <div
-    class="c3"
+    class="c4"
   >
     <img
-      class="c2"
+      class="c3"
       src="socks.svg"
     />
   </div>

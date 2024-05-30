@@ -108,7 +108,7 @@ export function PoolDetailsTransactionsTable({
             <Row gap="4px">
               {sortState.sortBy === Transaction_OrderBy.Timestamp && <HeaderArrow direction={OrderDirection.Desc} />}
               <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
-                <Trans>Time</Trans>
+                <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
           </Cell>
@@ -133,19 +133,26 @@ export function PoolDetailsTransactionsTable({
             color = 'success'
             text = (
               <span>
-                <Trans>Buy</Trans>&nbsp;{token0?.symbol}
+                <Trans i18nKey="common.buy.label" />
+                &nbsp;{token0?.symbol}
               </span>
             )
           } else if (row.type === PoolTableTransactionType.SELL) {
             color = 'critical'
             text = (
               <span>
-                <Trans>Sell</Trans>&nbsp;{token0?.symbol}
+                <Trans i18nKey="common.sell.label" />
+                &nbsp;{token0?.symbol}
               </span>
             )
           } else {
             color = row.type === PoolTableTransactionType.MINT ? 'success' : 'critical'
-            text = row.type === PoolTableTransactionType.MINT ? <Trans>Add</Trans> : <Trans>Remove</Trans>
+            text =
+              row.type === PoolTableTransactionType.MINT ? (
+                <Trans i18nKey="common.add.label" />
+              ) : (
+                <Trans i18nKey="common.remove.label" />
+              )
           }
           return <ThemedText.BodyPrimary color={color}>{text}</ThemedText.BodyPrimary>
         },
@@ -162,7 +169,7 @@ export function PoolDetailsTransactionsTable({
                   toggleFilterModal={toggleFilterModal}
                 />
                 <ThemedText.BodySecondary>
-                  <Trans>Type</Trans>
+                  <Trans i18nKey="common.type.label" />
                 </ThemedText.BodySecondary>
               </FilterHeaderRow>
             </Cell>
@@ -255,7 +262,7 @@ export function PoolDetailsTransactionsTable({
             grow
           >
             <ThemedText.BodySecondary>
-              <Trans>Wallet</Trans>
+              <Trans i18nKey="common.wallet.label" />
             </ThemedText.BodySecondary>
           </Cell>
         ),

@@ -23,9 +23,8 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
-import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -77,6 +76,7 @@ export function RestoreCloudBackupPasswordScreen({
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
   const dispatch = useAppDispatch()
+  const { generateImportedAccounts } = useOnboardingContext()
 
   const passwordAttemptCount = useAppSelector(selectPasswordAttempts)
   const lockoutEndTime = useAppSelector(selectLockoutEndTime)
@@ -117,13 +117,8 @@ export function RestoreCloudBackupPasswordScreen({
     async function checkCorrectPassword(): Promise<void> {
       try {
         await restoreMnemonicFromCloudStorage(params.mnemonicId, enteredPassword)
-        dispatch(
-          importAccountActions.trigger({
-            type: ImportAccountType.RestoreBackup,
-            mnemonicId: params.mnemonicId,
-            indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
-          })
-        )
+        await generateImportedAccounts(params.mnemonicId, BackupType.Cloud)
+
         dispatch(resetPasswordAttempts())
         // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
         if (!isRestoringMnemonic) {

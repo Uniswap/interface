@@ -65,7 +65,7 @@ export default function ShareButton({ name }: { name: string }) {
         isOpen={open}
         toggleOpen={toggleShare}
         menuLabel={<ShareIcon fill={theme.neutral1} width={18} height={18} />}
-        tooltipText={t`Share`}
+        tooltipText={t('common.share')}
         internalMenuItems={
           <>
             <ShareAction onClick={() => setCopied(currentLocation)}>
@@ -75,7 +75,7 @@ export default function ShareButton({ name }: { name: string }) {
                 <Link width="18px" height="18px" color={theme.neutral1} />
               )}
               <ThemedText.BodyPrimary>
-                {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
+                {isCopied ? <Trans i18nKey="common.copied" /> : <Trans i18nKey="common.copyLink.button" />}
               </ThemedText.BodyPrimary>
             </ShareAction>
             <ShareAction
@@ -86,7 +86,7 @@ export default function ShareButton({ name }: { name: string }) {
             >
               <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
               <ThemedText.BodyPrimary>
-                <Trans>Share to Twitter</Trans>
+                <Trans i18nKey="common.share.shareToTwitter" />
               </ThemedText.BodyPrimary>
             </ShareAction>
           </>

@@ -1,6 +1,5 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { Trace, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -23,6 +22,7 @@ import styled, { css, useTheme } from 'styled-components'
 import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import CTACards from './CTACards'
 import { LoadingRows } from './styled'
 
@@ -167,7 +167,7 @@ function WrongNetworkCard() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
               <ThemedText.H1Large>
-                <Trans>Positions</Trans>
+                <Trans i18nKey="pool.positions" />
               </ThemedText.H1Large>
             </TitleRow>
 
@@ -176,7 +176,7 @@ function WrongNetworkCard() {
                 <ThemedText.BodyPrimary color={theme.neutral3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
-                    <Trans>Your connected network is unsupported.</Trans>
+                    <Trans i18nKey="pool.connection.networkUnsupported" />
                   </div>
                 </ThemedText.BodyPrimary>
               </ErrorContainer>
@@ -225,7 +225,7 @@ export default function Pool() {
     {
       content: (
         <PoolMenuItem>
-          <Trans>Migrate</Trans>
+          <Trans i18nKey="common.migrate" />
           <ChevronsRight size={16} />
         </PoolMenuItem>
       ),
@@ -235,7 +235,7 @@ export default function Pool() {
     {
       content: (
         <PoolMenuItem>
-          <Trans>V2 liquidity</Trans>
+          <Trans i18nKey="pool.v2liquidity" />
           <Layers size={16} />
         </PoolMenuItem>
       ),
@@ -245,7 +245,7 @@ export default function Pool() {
     {
       content: (
         <PoolMenuItem>
-          <Trans>Learn</Trans>
+          <Trans i18nKey="pool.learn" />
           <BookOpen size={16} />
         </PoolMenuItem>
       ),
@@ -255,14 +255,14 @@ export default function Pool() {
   ]
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
               <Row gap="md" width="min-content">
                 <ThemedText.LargeHeader>
-                  <Trans>Positions</Trans>
+                  <Trans i18nKey="pool.positions" />
                 </ThemedText.LargeHeader>
                 <PoolVersionMenu protocolVersion={ProtocolVersion.V3} />
               </Row>
@@ -275,7 +275,7 @@ export default function Pool() {
                     ToggleUI={(props: any) => (
                       <MoreOptionsButton {...props}>
                         <MoreOptionsText>
-                          <Trans>More</Trans>
+                          <Trans i18nKey="common.more" />
                           <ChevronDown size={15} />
                         </MoreOptionsText>
                       </MoreOptionsButton>
@@ -283,7 +283,7 @@ export default function Pool() {
                   />
                 )}
                 <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans>New position</Trans>
+                  + <Trans i18nKey="pool.newPosition" />
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -302,7 +302,7 @@ export default function Pool() {
                   <ThemedText.BodyPrimary color={theme.neutral3} textAlign="center">
                     <InboxIcon strokeWidth={1} style={{ marginTop: '2em' }} />
                     <div>
-                      <Trans>Your active V3 liquidity positions will appear here.</Trans>
+                      <Trans i18nKey="pool.activePositions.appear" />
                     </div>
                   </ThemedText.BodyPrimary>
                   {!showConnectAWallet && closedPositions.length > 0 && (
@@ -310,13 +310,13 @@ export default function Pool() {
                       style={{ marginTop: '.5rem' }}
                       onClick={() => setUserHideClosedPositions(!userHideClosedPositions)}
                     >
-                      <Trans>Show closed positions</Trans>
+                      <Trans i18nKey="pool.showClosed" />
                     </ButtonText>
                   )}
                   {showConnectAWallet && (
-                    <TraceEvent
-                      events={[BrowserEvent.onClick]}
-                      name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    <Trace
+                      logPress
+                      eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                       properties={{ received_swap_quote: false }}
                       element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                     >
@@ -324,9 +324,9 @@ export default function Pool() {
                         style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
                         onClick={toggleWalletDrawer}
                       >
-                        <Trans>Connect a wallet</Trans>
+                        <Trans i18nKey="common.connectAWallet.button" />
                       </ButtonPrimary>
-                    </TraceEvent>
+                    </Trace>
                   )}
                 </ErrorContainer>
               )}

@@ -28,7 +28,7 @@ export default function RouterPreferenceSettings() {
             <UniswapXBrandMark />
           </ThemedText.BodySecondary>
           <ThemedText.BodySmall color="neutral2">
-            <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
+            <Trans i18nKey="routing.aggregateLiquidity" />{' '}
             <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
               <InlineLink>Learn more</InlineLink>
             </ExternalLink>

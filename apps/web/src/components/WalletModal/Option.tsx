@@ -1,16 +1,16 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
-
 import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useConnectWithLogs } from 'connection/activate'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isIFramed } from 'utils/isIFramed'
-import { Connector, useAccount } from 'wagmi'
+import { Connector } from 'wagmi'
 
 const OptionCardLeft = styled.div`
   ${flexColumnNoWrap};
@@ -86,7 +86,7 @@ const StyledBadge = styled(Badge)`
 const RecentBadge = () => (
   <StyledBadge variant={BadgeVariant.SOFT}>
     <ThemedText.LabelMicro color="accent1">
-      <Trans>Recent</Trans>
+      <Trans i18nKey="common.recent" />
     </ThemedText.LabelMicro>
   </StyledBadge>
 )
@@ -109,9 +109,9 @@ export function Option({
 
   return (
     <Wrapper disabled={isDisabled}>
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={InterfaceEventName.WALLET_SELECTED}
+      <Trace
+        logPress
+        eventOnTrigger={InterfaceEventName.WALLET_SELECTED}
         properties={{ wallet_type: connector.name }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
@@ -129,7 +129,7 @@ export function Option({
           </OptionCardLeft>
           {rightSideDetail}
         </OptionCardClickable>
-      </TraceEvent>
+      </Trace>
     </Wrapper>
   )
 }

@@ -1,6 +1,6 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedInterfaceChainId, getChainInfo, useSupportedChainId } from 'constants/chains'
+import { SupportedInterfaceChainId, getChain, useSupportedChainId } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
@@ -23,10 +23,16 @@ interface Transaction {
 }
 
 export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
-  if (tx.receipt) return false
-  if (!tx.lastCheckedBlockNumber) return true
+  if (tx.receipt) {
+    return false
+  }
+  if (!tx.lastCheckedBlockNumber) {
+    return true
+  }
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
-  if (blocksSinceCheck < 1) return false
+  if (blocksSinceCheck < 1) {
+    return false
+  }
   const minutesPending = (new Date().getTime() - tx.addedTime) / ms(`1m`)
   if (minutesPending > 60) {
     // every 10 blocks if pending longer than an hour
@@ -45,7 +51,9 @@ const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 function usePendingTransactions(chainId?: SupportedInterfaceChainId) {
   const multichainTransactions = useMultichainTransactions()
   return useMemo(() => {
-    if (!chainId) return []
+    if (!chainId) {
+      return []
+    }
     return multichainTransactions.flatMap(([tx, txChainId]) => {
       if (isPendingTx(tx) && txChainId === chainId) {
         return tx
@@ -75,9 +83,11 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   const getReceipt = useCallback(
     (tx: PendingTransactionDetails) => {
-      if (!provider || !supportedChain) throw new Error('No provider or chainId')
+      if (!provider || !supportedChain) {
+        throw new Error('No provider or chainId')
+      }
       const retryOptions =
-        getChainInfo({ chainId: supportedChain })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
+        getChain({ chainId: supportedChain })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
           provider.getTransactionReceipt(tx.hash).then(async (receipt) => {
@@ -104,7 +114,9 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   )
 
   useEffect(() => {
-    if (!chainId || !provider || !lastBlockNumber || !hasPending) return
+    if (!chainId || !provider || !lastBlockNumber || !hasPending) {
+      return
+    }
 
     const cancels = pendingTransactions
       .filter((tx) => shouldCheck(lastBlockNumber, tx))
@@ -124,7 +136,9 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             })
           })
           .catch((error) => {
-            if (error instanceof CanceledError) return
+            if (error instanceof CanceledError) {
+              return
+            }
             dispatch(checkedTransaction({ chainId, hash: tx.hash, blockNumber: lastBlockNumber }))
           })
         return cancel

@@ -7,7 +7,6 @@ import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { useTrade } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useTrade'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWrapType, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
@@ -81,7 +80,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
-  const isTradingApiEnabled = useFeatureFlag(FeatureFlags.TradingApi)
   const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeParams = {
@@ -94,20 +92,13 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeProtocolPreference: isOptionalRoutingEnabled ? tradeProtocolPreference : undefined,
   }
 
-  const legacyTrade = useTrade({
-    ...tradeParams,
-    skip: isTradingApiEnabled,
-  })
-
-  const tradingApiTrade = useTradingApiTrade({
-    ...tradeParams,
-    skip: !isTradingApiEnabled,
-  })
-
-  const activeTrade = isTradingApiEnabled ? tradingApiTrade : legacyTrade
+  const tradingApiTrade = useTradingApiTrade(tradeParams)
 
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
-  const { trade, autoSlippageTolerance } = useSetTradeSlippage(activeTrade, customSlippageTolerance)
+  const { trade, autoSlippageTolerance } = useSetTradeSlippage(
+    tradingApiTrade,
+    customSlippageTolerance
+  )
 
   const currencyAmounts = useMemo(
     () =>

@@ -13,6 +13,7 @@ type Props = {
   width: number
   resizeMode?: ImageResizeMode
   fallback?: JSX.Element
+  testID?: string
 }
 
 const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
@@ -26,6 +27,7 @@ export function RemoteImage({
   width,
   resizeMode = RESIZE_MODE_CONTAIN,
   fallback,
+  testID,
 }: Props): JSX.Element | null {
   const imageHttpUrl = uriToHttp(uri)[0]
 
@@ -42,6 +44,7 @@ export function RemoteImage({
         borderRadius={borderRadius}
         height={height}
         overflow="hidden"
+        testID={testID}
         width={width}>
         <WebSvgUri autoplay={true} maxHeight={height} uri={imageHttpUrl} />
       </Flex>
@@ -58,5 +61,5 @@ export function RemoteImage({
     height: !aspectRatio ? height : undefined,
   }
 
-  return <Image source={{ uri: imageHttpUrl }} style={style} />
+  return <Image source={{ uri: imageHttpUrl }} style={style} testID={testID} />
 }

@@ -3,8 +3,8 @@ import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import useENS from '../../hooks/useENS'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { AutoColumn } from '../Column'
@@ -85,7 +85,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const theme = useTheme()
 
   const { address, loading, name } = useENS(value)
@@ -108,14 +108,14 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
-                {label ?? <Trans>Recipient</Trans>}
+                {label ?? <Trans i18nKey="addressInput.recipient" />}
               </ThemedText.DeprecatedBlack>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}
                   style={{ fontSize: '14px' }}
                 >
-                  <Trans>(View on Explorer)</Trans>
+                  (<Trans i18nKey="common.viewOnExplorer" />)
                 </ExternalLink>
               )}
             </RowBetween>
@@ -126,7 +126,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`Wallet address or ENS name`}
+              placeholder={placeholder ?? t('common.addressOrENS')}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

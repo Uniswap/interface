@@ -36,7 +36,9 @@ const isAveragedPrice = (
   route: RoutingItem,
   txRoute?: RoutingItem[]
 ): boolean => {
-  if (!(route && 'priceInfo' in route.assetOut)) return false
+  if (!(route && 'priceInfo' in route.assetOut)) {
+    return false
+  }
 
   return (
     !!item.marketplace &&

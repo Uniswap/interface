@@ -6,6 +6,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { WidgetEvent } from 'uniswap/src/types/widgets'
 import { isAndroid } from 'uniswap/src/utils/platform'
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'

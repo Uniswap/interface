@@ -259,7 +259,7 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
           images={isNative ? undefined : [token.project?.logo?.url]}
           currencies={isNative ? [nativeCurrency] : undefined}
         />
-        <TokenSymbolText>{unwrappedToken?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
+        <TokenSymbolText>{unwrappedToken?.symbol ?? <Trans i18nKey="common.UNKNOWN" />}</TokenSymbolText>
       </Row>
     </StyledInternalLink>
   )

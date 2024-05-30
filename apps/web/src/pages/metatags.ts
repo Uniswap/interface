@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
-  title: t`Uniswap Interface`,
+  title: t('common.uniInterface'),
   description: t`Swap or provide liquidity on the Uniswap Protocol`,
   image: `https://app.uniswap.com/images/1200x630_Rich_Link_Preview_Image.png`,
   url: 'https://app.uniswap.com',

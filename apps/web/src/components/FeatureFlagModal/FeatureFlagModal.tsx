@@ -236,7 +236,10 @@ export default function FeatureFlagModal() {
         <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
         <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
         <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
-        <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
+        <FeatureFlagGroup name="Multichain UX">
+          <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
+          <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
+        </FeatureFlagGroup>
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
           <DynamicConfigDropdown

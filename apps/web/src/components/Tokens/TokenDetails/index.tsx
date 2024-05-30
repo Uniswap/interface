@@ -1,7 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
@@ -21,6 +20,7 @@ import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import styled from 'styled-components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 import { ActivitySection } from './ActivitySection'
@@ -45,10 +45,10 @@ function TDPBreadcrumb() {
   return (
     <BreadcrumbNavContainer aria-label="breadcrumb-nav">
       <BreadcrumbNavLink to={`/explore/${currencyChain.toLowerCase()}`}>
-        <Trans>Explore</Trans> <ChevronRight size={14} />
+        <Trans i18nKey="common.explore" /> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       <BreadcrumbNavLink to={`/explore/tokens/${currencyChain.toLowerCase()}`}>
-        <Trans>Tokens</Trans> <ChevronRight size={14} />
+        <Trans i18nKey="common.tokens" /> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       <CurrentPageBreadcrumb address={address} currency={currency} />
     </BreadcrumbNavContainer>
@@ -56,7 +56,9 @@ function TDPBreadcrumb() {
 }
 
 function getCurrencyURLAddress(currency?: Currency): string {
-  if (!currency) return ''
+  if (!currency) {
+    return ''
+  }
 
   if (currency.isToken) {
     return currency.address
@@ -93,7 +95,9 @@ function TDPSwapComponent() {
 
       const newDefaultToken = tokens.outputCurrency ?? tokens.inputCurrency
 
-      if (!newDefaultToken) return
+      if (!newDefaultToken) {
+        return
+      }
 
       const preloadedLogoSrc = getInitialLogoUrl(
         newDefaultToken.wrapped.address,
@@ -164,6 +168,7 @@ function TDPAnalytics({ children }: PropsWithChildren) {
   const { address, currency } = useTDPContext()
   return (
     <Trace
+      logImpression
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
       properties={{
         tokenAddress: address,
@@ -171,7 +176,6 @@ function TDPAnalytics({ children }: PropsWithChildren) {
         tokenName: currency.name,
         chainId: currency.chainId,
       }}
-      shouldLogImpression
     >
       {children}
     </Trace>

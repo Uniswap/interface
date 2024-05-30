@@ -1,26 +1,26 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { parseEther } from '@ethersproject/units'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import { useIsMobile, useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { Center, Column, Row } from 'nft/components/Flex'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
-import { Center, Column, Row } from 'nft/components/Flex'
 import { SweepIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import {
   CollectionFilters,
-  initialCollectionFilterState,
   SortBy,
   SortByQueries,
+  initialCollectionFilterState,
   useBag,
   useCollectionFilters,
   useFiltersExpanded,
@@ -31,10 +31,10 @@ import {
   DropDownOption,
   GenieAsset,
   GenieCollection,
-  isPooledMarket,
   Markets,
   UniformAspectRatio,
   UniformAspectRatios,
+  isPooledMarket,
 } from 'nft/types'
 import {
   calcPoolPrice,
@@ -56,13 +56,12 @@ import {
   NftMarketplace,
   NftStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useChainId } from 'wagmi'
-
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LoadingAssets } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
-import { ClearAllButton } from './shared'
 import { Sweep } from './Sweep'
 import { TraitChip } from './TraitChip'
+import { ClearAllButton } from './shared'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -223,7 +222,7 @@ export const getSortDropdownOptions = (setSortBy: (sortBy: SortBy) => void, hasR
 }
 
 export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerified }: CollectionNftsProps) => {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const traits = useCollectionFilters((state) => state.traits)
   const minPrice = useCollectionFilters((state) => state.minPrice)
   const maxPrice = useCollectionFilters((state) => state.maxPrice)
@@ -383,7 +382,9 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [contractAddress])
 
   const assets = useMemo(() => {
-    if (!collectionAssets) return null
+    if (!collectionAssets) {
+      return null
+    }
     return collectionAssets.map((asset) => (
       <CollectionAsset
         key={asset.address + asset.tokenId}
@@ -467,10 +468,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   }, [collectionStats, priceRangeLow, priceRangeHigh, setPriceRangeHigh, setPriceRangeLow])
 
   const handleSweepClick = useCallback(() => {
-    if (hasErc1155s) return
+    if (hasErc1155s) {
+      return
+    }
     if (!sweepIsOpen) {
       scrollToTop()
-      if (!bagExpanded && !isMobile) toggleBag()
+      if (!bagExpanded && !isMobile) {
+        toggleBag()
+      }
     }
     setSweepOpen(!sweepIsOpen)
   }, [bagExpanded, hasErc1155s, isMobile, sweepIsOpen, toggleBag])
@@ -495,11 +500,11 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       >
         <ActionsContainer>
           <ActionsSubContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
+            <Trace
+              logPress
               element={InterfaceElementName.NFT_FILTER_BUTTON}
-              name={NFTEventName.NFT_FILTER_OPENED}
-              shouldLogImpression={!isFiltersExpanded}
+              eventOnTrigger={NFTEventName.NFT_FILTER_OPENED}
+              logImpression={!isFiltersExpanded}
               properties={{ collection_address: contractAddress, chain_id: chainId }}
             >
               <FilterButton
@@ -507,11 +512,13 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
                 isFiltersExpanded={isFiltersExpanded}
                 collectionCount={collectionAssets?.[0]?.totalCount ?? 0}
                 onClick={() => {
-                  if (bagExpanded && !screenSize['xl']) toggleBag()
+                  if (bagExpanded && !screenSize['xl']) {
+                    toggleBag()
+                  }
                   setFiltersExpanded(!isFiltersExpanded)
                 }}
               />
-            </TraceEvent>
+            </Trace>
             <SortDropdownContainer isFiltersExpanded={isFiltersExpanded}>
               <SortDropdown dropDownOptions={sortDropDownOptions} />
             </SortDropdownContainer>

@@ -118,7 +118,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   )
 
   return useMemo(() => {
-    if (!chainId || !uni) return []
+    if (!chainId || !uni) {
+      return []
+    }
 
     return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
       // these two are dependent on account

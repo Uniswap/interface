@@ -160,7 +160,8 @@ const AutocompleteRow = ({
       </Row>
       {account && (
         <StyledTransferText>
-          {numberOfTransfers} <Plural value={numberOfTransfers} one={t`transfer`} other={t`transfers`} />
+          {numberOfTransfers}{' '}
+          <Plural value={numberOfTransfers} one={t('common.transfer')} other={t('common.transfers')} />
         </StyledTransferText>
       )}
     </StyledAutocompleteRow>
@@ -196,7 +197,7 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
   return (
     <MenuFlyout ref={ref}>
       <ThemedText.SubHeaderSmall>
-        <Trans>Recents</Trans>
+        <Trans i18nKey="sendRecipientForm.recentAddresses.label" />
       </ThemedText.SubHeaderSmall>
       {Object.keys(transfers)
         .slice(0, 3)
@@ -302,7 +303,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       {showInputField ? (
         <>
           <Text variant="body3" userSelect="none" color="$neutral2">
-            <Trans>To</Trans>
+            <Trans i18nKey="common.to.caps" />
           </Text>
           <StyledRecipientInputRow justify="space-between">
             <Row ref={inputWrapperNode}>
@@ -313,7 +314,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
-                placeholder={recipientData ? '' : t`Wallet address or ENS name`}
+                placeholder={recipientData ? '' : t('common.addressOrENS')}
                 pattern="^(0x[a-fA-F0-9]{40})$"
                 onChange={handleInput}
                 onFocus={() => handleFocus(true)}

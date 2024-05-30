@@ -10,7 +10,9 @@ function getChainIdFromFormattedString(item: string): number | null {
 export function getSupportedChainIdsFromWalletConnectSession(
   session?: SessionTypes.Struct
 ): SupportedInterfaceChainId[] {
-  if (!session?.namespaces) return []
+  if (!session?.namespaces) {
+    return []
+  }
 
   const eip155Keys = Object.keys(session.namespaces)
   const namespaces = Object.values(session.namespaces)

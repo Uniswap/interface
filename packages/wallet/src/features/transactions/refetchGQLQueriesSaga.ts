@@ -128,7 +128,7 @@ function readBalancesFromCache({
     {}
   )
 
-  const cachedBalancesData: Maybe<PortfolioBalancesQuery> = apolloClient.readQuery({
+  const cachedBalancesData = apolloClient.readQuery<PortfolioBalancesQuery>({
     query: PortfolioBalancesDocument,
     variables: { ownerAddress: owner },
   })

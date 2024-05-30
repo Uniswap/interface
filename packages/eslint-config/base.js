@@ -39,6 +39,7 @@ module.exports = {
         },
       },
       rules: {
+        curly: 'error',
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/ban-ts-ignore': 'off',

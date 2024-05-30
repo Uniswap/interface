@@ -1,7 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { ITraceContext, sendAnalyticsEvent } from 'analytics'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
-
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { SwapEventType, timestampTracker } from './SwapEventTimestampTracker'
 
 export function logSwapSuccess(hash: string, chainId: number, analyticsContext: ITraceContext) {
@@ -15,7 +15,7 @@ export function logSwapSuccess(hash: string, chainId: number, analyticsContext: 
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS, SwapEventType.FIRST_SWAP_ACTION),
     hash,
-    chainId,
+    chain_id: chainId,
     ...analyticsContext,
   })
 }

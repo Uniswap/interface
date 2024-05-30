@@ -76,10 +76,10 @@ export function useDerivedV3BurnInfo(
 
   let error: ReactNode | undefined
   if (!account) {
-    error = <Trans>Connect wallet</Trans>
+    error = <Trans i18nKey="common.connectWallet.button" />
   }
   if (percent === 0) {
-    error = error ?? <Trans>Enter a percent</Trans>
+    error = error ?? <Trans i18nKey="burn.input.enterAPercent.error" />
   }
   return {
     position: positionSDK,

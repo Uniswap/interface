@@ -2,7 +2,7 @@ import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activ
 import Column from 'components/Column'
 import { TimeForwardIcon } from 'components/Icons/TimeForward'
 import Row from 'components/Row'
-import { Plural, t, Trans } from 'i18n'
+import { Plural, Trans, t } from 'i18n'
 import { ChevronRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -17,8 +17,12 @@ const Container = styled.button`
 `
 
 function getExtraWarning(openLimitOrders: any[]) {
-  if (openLimitOrders.length >= 100) return <Trans>Cancel limits to proceed</Trans>
-  if (openLimitOrders.length >= 90) return <Trans>Approaching 100 limit maximum</Trans>
+  if (openLimitOrders.length >= 100) {
+    return <Trans i18nKey="common.limits.cancelProceed" />
+  }
+  if (openLimitOrders.length >= 90) {
+    return <Trans i18nKey="common.limits.approachMax" />
+  }
   return undefined
 }
 
@@ -36,7 +40,9 @@ export function OpenLimitOrdersButton({
   const { openLimitOrders } = useOpenLimitOrders(account)
   const theme = useTheme()
   const extraWarning = getExtraWarning(openLimitOrders)
-  if (!openLimitOrders || openLimitOrders.length < 1) return null
+  if (!openLimitOrders || openLimitOrders.length < 1) {
+    return null
+  }
   return (
     <Container onClick={openLimitsMenu} disabled={disabled} className={className}>
       <Row justify="space-between" align="center">
@@ -46,8 +52,8 @@ export function OpenLimitOrdersButton({
             <ThemedText.SubHeader textAlign="start">
               <Plural
                 value={openLimitOrders.length}
-                one={t`1 open limit`}
-                other={t(`{{count}} open limits`, { count: openLimitOrders.length })}
+                one={t('limit.open.one')}
+                other={t('limit.open.count', { count: openLimitOrders.length })}
               />
             </ThemedText.SubHeader>
             {extraWarning && <ThemedText.LabelMicro>{extraWarning}</ThemedText.LabelMicro>}

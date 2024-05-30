@@ -21,7 +21,11 @@ export function currencyKeyFromGraphQL(contract: {
 }): CurrencyKey {
   const chainId = supportedChainIdFromGQLChain(contract.chain)
   const address = contract.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
-  if (!address) throw new Error('Non-native token missing address')
-  if (!chainId) throw new Error('Unsupported chain from pools query')
+  if (!address) {
+    throw new Error('Non-native token missing address')
+  }
+  if (!chainId) {
+    throw new Error('Unsupported chain from pools query')
+  }
   return buildCurrencyKey(chainId, address)
 }

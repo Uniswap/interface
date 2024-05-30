@@ -1,10 +1,9 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
 import useENSName from 'hooks/useENSName'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
@@ -15,8 +14,8 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
-
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 
 const ProfilePageWrapper = styled.div`
@@ -64,16 +63,16 @@ const ConnectWalletButton = styled(ButtonPrimary)`
 
 function getProfilePageTitle(account: string | undefined, ENSName: string | null | undefined): string {
   if (!account) {
-    return t`NFT collection on Uniswap`
+    return t('nft.collectionOnUni')
   }
 
   if (!ENSName) {
-    return t(`NFT collection on Uniswap - {{address}}`, {
+    return t(`nft.collectonOnAddress`, {
       address: shortenAddress(account),
     })
   }
 
-  return t(`{{name}}'s NFT collection on Uniswap`, {
+  return t(`nft.authorsCollectionOnUni`, {
     name: ENSName,
   })
 }
@@ -105,7 +104,7 @@ export default function Profile() {
       <Helmet>
         <title>{getProfilePageTitle(account, ENSName)}</title>
       </Helmet>
-      <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
+      <Trace logImpression page={InterfacePageName.NFT_PROFILE_PAGE}>
         <ProfilePageWrapper>
           {account ? (
             <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
@@ -114,11 +113,11 @@ export default function Profile() {
           ) : (
             <Center>
               <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
-                <Trans>No items to display</Trans>
+                <Trans i18nKey="nft.noItems" />
               </ThemedText.HeadlineMedium>
               <ConnectWalletButton onClick={toggleWalletDrawer}>
                 <ThemedText.SubHeader color="white" lineHeight="20px">
-                  <Trans>Connect wallet</Trans>
+                  <Trans i18nKey="common.connectWallet.button" />
                 </ThemedText.SubHeader>
               </ConnectWalletButton>
             </Center>

@@ -1,3 +1,4 @@
+/* eslint-disable rulesdir/no-undefined-or */
 import { ChainId, Currency, CurrencyAmount, Token, V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
 import {
   CUSD_CELO,
@@ -30,7 +31,27 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { RetryOptions } from 'state/activity/polling/retry'
 import { darkTheme } from 'theme/colors'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { Chain } from 'viem'
+import {
+  Prettify,
+  arbitrum,
+  arbitrumGoerli,
+  avalanche,
+  base,
+  blast,
+  bsc,
+  celo,
+  celoAlfajores,
+  goerli,
+  mainnet,
+  optimism,
+  optimismGoerli,
+  polygon,
+  polygonMumbai,
+  sepolia,
+} from 'wagmi/chains'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 export const DEFAULT_MS_BEFORE_WARNING = ms(`10m`)
@@ -70,8 +91,6 @@ export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.BASE,
   ChainId.BLAST,
 ] as const
-
-export type SupportedInterfaceChainId = (typeof SUPPORTED_INTERFACE_CHAIN_IDS)[number]
 
 export function isSupportedChainId(chainId?: number | ChainId | null): chainId is SupportedInterfaceChainId {
   return !!chainId && SUPPORTED_INTERFACE_CHAIN_IDS.includes(chainId as SupportedInterfaceChainId)
@@ -114,37 +133,12 @@ export function useSupportedChainId(chainId?: number): SupportedInterfaceChainId
   return chainDisabled ? undefined : (chainId as SupportedInterfaceChainId)
 }
 
-/**
- * TODO(WEB-4058): Move this into the new upcoming chain config
- * Can't move into the chain configs without the type becoming widened to just `string`, so keeping this list separate for now.
- */
-const CHAIN_URL_PARAMS = [
-  'arbitrum_goerli',
-  'arbitrum',
-  'avalanche',
-  'base',
-  'blast',
-  'bnb',
-  'celo_alfajores',
-  'celo',
-  'ethereum',
-  'goerli',
-  'optimism_goerli',
-  'optimism',
-  'polygon_mumbai',
-  'polygon',
-  'sepolia',
-] as const
-export type ChainSlug = (typeof CHAIN_URL_PARAMS)[number]
-export const isChainUrlParam = (str?: string): str is ChainSlug => !!str && CHAIN_URL_PARAMS.includes(str as ChainSlug)
-export const getChainUrlParam = (str?: string): ChainSlug | undefined => (isChainUrlParam(str) ? str : undefined)
-
 export enum NetworkLayer {
   L1,
   L2,
 }
 
-export type InterfaceGqlChain = Exclude<Chain, Chain.UnknownChain>
+export type InterfaceGqlChain = Exclude<BackendChainId, BackendChainId.UnknownChain>
 
 interface BackendChain {
   chain: InterfaceGqlChain
@@ -155,175 +149,175 @@ interface BackendChain {
   /**
    * Set to true if the chain does not have a specific GQLChain. Eg: Optimism-Goerli.
    */
-  isSecondaryChain?: true
+  isSecondaryChain: boolean
   /**
    * Used for spot token prices
    */
-  nativeTokenBackendAddress?: string
-}
-
-interface RPCUrls {
-  /**
-   * Public JSON-RPC endpoints.
-   * These are used if an integrator does not provide an endpoint, or if the endpoint does not work.
-   *
-   * ONLY ADD URLS WHICH ARE ON THE METAMASK "Safe" LIST: https://chainid.network/chains.json.
-   * You should select the first valid (not API-key guarded) URL from the list.
-   * You must also add it to our CSP: public/csp.json.
-   *
-   * MetaMask allows switching to any URL, but displays a warning if it is not on the "Safe" list:
-   * https://github.com/MetaMask/metamask-mobile/blob/bdb7f37c90e4fc923881a07fca38d4e77c73a579/app/core/RPCMethods/wallet_addEthereumChain.js#L228-L235
-   */
-  safe: string[]
-  /**
-   * Fallback JSON-RPC endpoints, taken from chainlist.org.
-   */
-  fallback?: string[]
-  /**
-   * Application-specific JSON-RPC endpoints.
-   * These are URLs which may only be used by the interface, due to origin policies, &c.
-   */
-  appOnly: string[]
-  infuraPrefix?: string
+  nativeTokenBackendAddress: string | undefined
 }
 
 // TODO: https://linear.app/uniswap/issue/WEB-4058/chain-info-using-wagmi-chain-interface
 // Add createChainInfo function that appropriately sets the default values for each chain
-interface BaseChainInfo {
-  readonly id: SupportedInterfaceChainId
-  readonly name: string
-  readonly urlParam: ChainSlug
-  readonly blockWaitMsBeforeWarning?: number
-  // Average block times were pulled from https://dune.com/jacobdcastro/avg-block-times on 2024-03-14,
-  // and corroborated with that chain's documentation/explorer.
-  // Blocks per mainnet epoch is computed as `Math.floor(12s / AVG_BLOCK_TIME)` and hard-coded.
-  // Default is 1
-  readonly blockPerMainnetEpochForChainId: number
-  readonly pendingTransactionsRetryOptions?: RetryOptions
-  readonly docs: string
-  readonly bridge?: string
-  readonly explorer: string
-  readonly infoLink: string
-  readonly label: string
-  // The label for this chain, derived from the MetaMask "Safe" list.
-  // This is only needed if the default label does not match MetaMask's.
-  readonly safeLabel?: string
-  readonly helpCenterUrl?: string
-  readonly nativeCurrency: {
-    name: string // e.g. 'Goerli ETH',
-    symbol: string // e.g. 'gorETH',
-    decimals: number // e.g. 18,
+type ChainInfo = Prettify<
+  Chain & {
+    readonly id: ChainId
+    readonly interfaceName: string
+    readonly urlParam: string
+    // eslint-disable-next-line rulesdir/no-undefined-or
+    readonly blockWaitMsBeforeWarning: number | undefined
+    // Average block times were pulled from https://dune.com/jacobdcastro/avg-block-times on 2024-03-14,
+    // and corroborated with that chain's documentation/explorer.
+    // Blocks per mainnet epoch is computed as `Math.floor(12s / AVG_BLOCK_TIME)` and hard-coded.
+    // Default is 1
+    readonly blockPerMainnetEpochForChainId: number
+    readonly pendingTransactionsRetryOptions: RetryOptions | undefined
+    readonly docs: string
+    readonly infoLink: string
+    readonly label: string
+    readonly elementName: ElementNameType
+    // The label for this chain, derived from the MetaMask "Safe" list.
+    // This is only needed if the default label does not match MetaMask's.
+    readonly helpCenterUrl: string | undefined
+    readonly color: string | undefined
+    readonly backgroundColor: string | undefined
+    readonly chainPriority: number // Higher priority chains show up first in the chain selector
+    readonly supportsClientSideRouting: boolean
+    readonly supportsGasEstimates: boolean
+    readonly backendChain: BackendChain
+    readonly subgraphUrl: string | undefined
+    // Stablecoin amounts used when calculating spot price for a given currency.
+    // The amount is large enough to filter low liquidity pairs.
+    readonly spotPriceStablecoinAmount: CurrencyAmount<Token>
+    readonly stablecoins: Token[]
+    readonly assetRepoNetworkName: string | undefined // Name used to index the network on this repo: https://github.com/Uniswap/assets/
+    readonly infuraPrefix: string | undefined
+    readonly networkLayer: NetworkLayer
+    readonly bridge: string | undefined
+    readonly statusPage: string | undefined
   }
-  readonly color?: string
-  readonly backgroundColor?: string
-  readonly chainPriority: number // Higher priority chains show up first in the chain selector
-  readonly supportsClientSideRouting: boolean
-  readonly supportsGasEstimates?: true
-  readonly isTestnetChain?: true
-  readonly backendChain: BackendChain
-  readonly rpcUrls: RPCUrls
-  readonly subgraphUrl?: string
-  // Stablecoin amounts used when calculating spot price for a given currency.
-  // The amount is large enough to filter low liquidity pairs.
-  readonly spotPriceStablecoinAmount: CurrencyAmount<Token>
-  readonly stablecoins: Token[]
-  readonly assetRepoNetworkName?: string // Name used to index the network on this repo: https://github.com/Uniswap/assets/
-}
+>
 
-interface L1ChainInfo extends BaseChainInfo {
-  readonly networkLayer: NetworkLayer.L1
-}
-
-export interface L2ChainInfo extends BaseChainInfo {
-  readonly networkLayer: NetworkLayer.L2
-  readonly bridge: string
-  readonly statusPage?: string
-}
-
-export type ChainInfo = BaseChainInfo & (L1ChainInfo | L2ChainInfo)
-type ChainInfoMap = { readonly [chainId in SupportedInterfaceChainId]: ChainInfo }
-
-export const CHAIN_INFO: ChainInfoMap = {
-  [ChainId.MAINNET]: {
-    id: ChainId.MAINNET,
-    name: 'mainnet',
-    urlParam: 'ethereum',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_1,
-    chainPriority: 0,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Ethereum,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://cloudflare-eth.com'],
-      fallback: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
-      appOnly: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_MAINNET_RPC_URL],
-      infuraPrefix: 'mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100_000e6),
-    stablecoins: [USDC_MAINNET, DAI, USDT],
-    assetRepoNetworkName: 'ethereum',
+const MAINNET = {
+  ...mainnet,
+  id: ChainId.MAINNET,
+  interfaceName: 'mainnet',
+  urlParam: 'ethereum',
+  blockPerMainnetEpochForChainId: 1,
+  blockWaitMsBeforeWarning: undefined,
+  pendingTransactionsRetryOptions: undefined,
+  networkLayer: NetworkLayer.L1,
+  docs: 'https://docs.uniswap.org/',
+  infoLink: 'https://info.uniswap.org/#/',
+  label: 'Ethereum',
+  elementName: ElementName.ChainEthereum,
+  helpCenterUrl: undefined,
+  backgroundColor: undefined,
+  color: darkTheme.chain_1,
+  chainPriority: 0,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Ethereum,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
   },
-  [ChainId.GOERLI]: {
-    id: ChainId.GOERLI,
-    name: 'goerli',
-    urlParam: 'goerli',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://goerli.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Görli',
-    nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
-    color: darkTheme.chain_5,
-    chainPriority: 0,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.EthereumGoerli,
-      backendSupported: true,
+  rpcUrls: {
+    default: {
+      http: ['https://cloudflare-eth.com'],
     },
-    rpcUrls: {
-      safe: ['https://rpc.goerli.mudit.blog/'],
-      fallback: ['https://rpc.ankr.com/eth_goerli'],
-      appOnly: [`https://goerli.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'goerli',
+    fallback: {
+      http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
     },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_GOERLI, 10_000e6),
-    stablecoins: [USDC_GOERLI],
+    appOnly: {
+      http: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_MAINNET_RPC_URL],
+    },
   },
-  [ChainId.SEPOLIA]: {
-    id: ChainId.SEPOLIA,
-    name: 'sepolia',
-    urlParam: 'sepolia',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://sepolia.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Sepolia',
-    nativeCurrency: { name: 'Sepolia Ether', symbol: 'SepoliaETH', decimals: 18 },
-    color: darkTheme.chain_5,
-    chainPriority: 0,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.EthereumSepolia,
-      backendSupported: true,
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100_000e6),
+  stablecoins: [USDC_MAINNET, DAI, USDT],
+  assetRepoNetworkName: 'ethereum',
+  infuraPrefix: 'mainnet',
+  bridge: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const GOERLI = {
+  ...goerli,
+  id: ChainId.GOERLI,
+  interfaceName: 'goerli',
+  urlParam: 'goerli',
+  blockPerMainnetEpochForChainId: 1,
+  blockWaitMsBeforeWarning: undefined,
+  pendingTransactionsRetryOptions: undefined,
+  networkLayer: NetworkLayer.L1,
+  docs: 'https://docs.uniswap.org/',
+  infoLink: 'https://info.uniswap.org/#/',
+  label: 'Görli',
+  elementName: ElementName.ChainEthereumGoerli,
+  helpCenterUrl: undefined,
+  color: darkTheme.chain_5,
+  backgroundColor: undefined,
+  chainPriority: 0,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.EthereumGoerli,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.goerli.mudit.blog/'],
     },
-    rpcUrls: {
-      safe: ['https://rpc.sepolia.org/'],
-      fallback: [
+    fallback: {
+      http: ['https://rpc.ankr.com/eth_goerli'],
+    },
+    appOnly: {
+      http: [`https://goerli.infura.io/v3/${INFURA_KEY}`],
+    },
+  },
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_GOERLI, 10_000e6),
+  stablecoins: [USDC_GOERLI],
+  infuraPrefix: 'goerli',
+  subgraphUrl: undefined,
+  assetRepoNetworkName: undefined,
+  bridge: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const SEPOLIA = {
+  ...sepolia,
+  id: ChainId.SEPOLIA,
+  interfaceName: 'sepolia',
+  urlParam: 'sepolia',
+  blockPerMainnetEpochForChainId: 1,
+  blockWaitMsBeforeWarning: undefined,
+  pendingTransactionsRetryOptions: undefined,
+  networkLayer: NetworkLayer.L1,
+  docs: 'https://docs.uniswap.org/',
+  infoLink: 'https://info.uniswap.org/#/',
+  helpCenterUrl: undefined,
+  label: 'Sepolia',
+  elementName: ElementName.ChainSepolia,
+  color: darkTheme.chain_5,
+  backgroundColor: undefined,
+  chainPriority: 0,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.EthereumSepolia,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.sepolia.org/'],
+    },
+    fallback: {
+      http: [
         'https://rpc.sepolia.org/',
         'https://rpc2.sepolia.org/',
         'https://rpc.sepolia.online/',
@@ -331,433 +325,564 @@ export const CHAIN_INFO: ChainInfoMap = {
         'https://rpc-sepolia.rockx.com/',
         'https://rpc.bordel.wtf/sepolia',
       ],
-      appOnly: [`https://sepolia.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'sepolia',
     },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 10_000e6),
-    stablecoins: [USDC_SEPOLIA],
+    appOnly: { http: [`https://sepolia.infura.io/v3/${INFURA_KEY}`] },
   },
-  [ChainId.OPTIMISM]: {
-    id: ChainId.OPTIMISM,
-    name: 'optimism',
-    urlParam: 'optimism',
-    blockPerMainnetEpochForChainId: 6,
-    networkLayer: NetworkLayer.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://app.optimism.io/bridge',
-    docs: 'https://optimism.io/',
-    explorer: 'https://optimistic.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimism',
-    statusPage: 'https://optimism.io/status',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_10,
-    backgroundColor: darkTheme.chain_10_background,
-    chainPriority: 2,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Optimism,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://mainnet.optimism.io/'],
-      fallback: ['https://rpc.ankr.com/optimism'],
-      appOnly: [`https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'optimism-mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
-    stablecoins: [USDC_OPTIMISM, DAI_OPTIMISM],
-    assetRepoNetworkName: 'optimism',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 10_000e6),
+  stablecoins: [USDC_SEPOLIA],
+  infuraPrefix: 'sepolia',
+  subgraphUrl: undefined,
+  assetRepoNetworkName: undefined,
+  bridge: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const OPTIMISM = {
+  ...optimism,
+  id: ChainId.OPTIMISM,
+  interfaceName: 'optimism',
+  urlParam: 'optimism',
+  blockPerMainnetEpochForChainId: 6,
+  networkLayer: NetworkLayer.L2,
+  blockWaitMsBeforeWarning: ms(`25m`),
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  bridge: 'https://app.optimism.io/bridge',
+  docs: 'https://optimism.io/',
+  infoLink: 'https://info.uniswap.org/#/optimism/',
+  label: 'Optimism',
+  elementName: ElementName.ChainOptimism,
+  statusPage: 'https://optimism.io/status',
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+  color: darkTheme.chain_10,
+  backgroundColor: darkTheme.chain_10_background,
+  chainPriority: 2,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Optimism,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
   },
-  [ChainId.OPTIMISM_GOERLI]: {
-    id: ChainId.OPTIMISM_GOERLI,
-    name: 'optimism_goerli',
-    urlParam: 'optimism_goerli',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://app.optimism.io/bridge',
-    docs: 'https://optimism.io/',
-    explorer: 'https://goerli-optimism.etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimism Görli',
-    statusPage: 'https://optimism.io/status',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
-    nativeCurrency: { name: 'Optimism Goerli Ether', symbol: 'görOpETH', decimals: 18 },
-    color: darkTheme.chain_420,
-    chainPriority: 2,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.Optimism,
-      isSecondaryChain: true,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://goerli.optimism.io'],
-      appOnly: [`https://optimism-goerli.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'optimism-goerli',
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_OPTIMISM_GOERLI, 10_000e6),
-    stablecoins: [USDC_OPTIMISM_GOERLI],
+  rpcUrls: {
+    default: { http: ['https://mainnet.optimism.io/'] },
+    fallback: { http: ['https://rpc.ankr.com/optimism'] },
+    appOnly: { http: [`https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`] },
   },
-  [ChainId.ARBITRUM_ONE]: {
-    id: ChainId.ARBITRUM_ONE,
-    name: 'arbitrum',
-    urlParam: 'arbitrum',
-    blockPerMainnetEpochForChainId: 46,
-    networkLayer: NetworkLayer.L2,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://arbiscan.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: 'Arbitrum',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_42,
-    backgroundColor: darkTheme.chain_42161_background,
-    chainPriority: 1,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Arbitrum,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://arb1.arbitrum.io/rpc'],
-      fallback: ['https://arbitrum.public-rpc.com'],
-      appOnly: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_ARBITRUM_RPC_URL],
-      infuraPrefix: 'arbitrum-mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-    stablecoins: [USDC_ARBITRUM, DAI_ARBITRUM_ONE],
-    assetRepoNetworkName: 'arbitrum',
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
+  stablecoins: [USDC_OPTIMISM, DAI_OPTIMISM],
+  assetRepoNetworkName: 'optimism',
+  infuraPrefix: 'optimism-mainnet',
+} as const satisfies ChainInfo
+
+const OPTIMISM_GOERLI = {
+  ...optimismGoerli,
+  id: ChainId.OPTIMISM_GOERLI,
+  interfaceName: 'optimism_goerli',
+  urlParam: 'optimism_goerli',
+  blockPerMainnetEpochForChainId: 1,
+  networkLayer: NetworkLayer.L2,
+  blockWaitMsBeforeWarning: ms(`25m`),
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  bridge: 'https://app.optimism.io/bridge',
+  docs: 'https://optimism.io/',
+  infoLink: 'https://info.uniswap.org/#/optimism/',
+  label: 'Optimism Görli',
+  elementName: ElementName.ChainOptimismGoerli,
+  statusPage: 'https://optimism.io/status',
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+  color: darkTheme.chain_420,
+  backgroundColor: undefined,
+  chainPriority: 2,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.Optimism,
+    isSecondaryChain: true,
+    backendSupported: true,
+    nativeTokenBackendAddress: undefined,
   },
-  [ChainId.ARBITRUM_GOERLI]: {
-    id: ChainId.ARBITRUM_GOERLI,
-    name: 'arbitrum_goerli',
-    urlParam: 'arbitrum_goerli',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L2,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://bridge.arbitrum.io/',
-    docs: 'https://offchainlabs.com/',
-    explorer: 'https://goerli.arbiscan.io/',
-    infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Goerli',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
-    nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
-    color: darkTheme.chain_421613,
-    chainPriority: 1,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.Arbitrum,
-      isSecondaryChain: true,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://goerli-rollup.arbitrum.io/rpc'],
-      appOnly: [`https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'arbitrum-goerli',
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM_GOERLI, 10_000e6),
-    stablecoins: [USDC_ARBITRUM_GOERLI],
+  rpcUrls: {
+    default: { http: ['https://goerli.optimism.io'] },
+    appOnly: { http: [`https://optimism-goerli.infura.io/v3/${INFURA_KEY}`] },
   },
-  [ChainId.POLYGON]: {
-    id: ChainId.POLYGON,
-    name: 'polygon',
-    urlParam: 'polygon',
-    blockPerMainnetEpochForChainId: 5,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://wallet.polygon.technology/polygon/bridge',
-    docs: 'https://polygon.io/',
-    explorer: 'https://polygonscan.com/',
-    infoLink: 'https://info.uniswap.org/#/polygon/',
-    label: 'Polygon',
-    safeLabel: 'Polygon Mainnet',
-    nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
-    color: darkTheme.chain_137,
-    backgroundColor: darkTheme.chain_137_background,
-    chainPriority: 3,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Polygon,
-      backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
-    },
-    rpcUrls: {
-      safe: ['https://polygon-rpc.com/'],
-      appOnly: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'polygon-mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
-    stablecoins: [USDC_POLYGON, DAI_POLYGON],
-    assetRepoNetworkName: 'polygon',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_OPTIMISM_GOERLI, 10_000e6),
+  stablecoins: [USDC_OPTIMISM_GOERLI],
+  infuraPrefix: 'optimism-goerli',
+  subgraphUrl: undefined,
+  assetRepoNetworkName: undefined,
+} as const satisfies ChainInfo
+
+const ARBITRUM = {
+  ...arbitrum,
+  id: ChainId.ARBITRUM_ONE,
+  interfaceName: 'arbitrum',
+  urlParam: 'arbitrum',
+  blockPerMainnetEpochForChainId: 46,
+  networkLayer: NetworkLayer.L2,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  bridge: 'https://bridge.arbitrum.io/',
+  docs: 'https://offchainlabs.com/',
+  infoLink: 'https://info.uniswap.org/#/arbitrum',
+  label: 'Arbitrum',
+  elementName: ElementName.ChainArbitrum,
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
+  color: darkTheme.chain_42,
+  backgroundColor: darkTheme.chain_42161_background,
+  chainPriority: 1,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Arbitrum,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
   },
-  [ChainId.POLYGON_MUMBAI]: {
-    id: ChainId.POLYGON_MUMBAI,
-    name: 'polygon_mumbai',
-    urlParam: 'polygon_mumbai',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://wallet.polygon.technology/polygon/bridge/deposit',
-    docs: 'https://polygon.io/',
-    explorer: 'https://mumbai.polygonscan.com/',
-    infoLink: 'https://info.uniswap.org/#/polygon/',
-    label: 'Polygon Mumbai',
-    nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
-    chainPriority: 3,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.Polygon,
-      isSecondaryChain: true,
-      backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
-    },
-    rpcUrls: {
-      safe: ['https://rpc-mumbai.maticvigil.com'],
-      appOnly: [`https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'polygon-mumbai',
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON_MUMBAI, 10_000e6),
-    stablecoins: [USDC_POLYGON_MUMBAI],
+  rpcUrls: {
+    default: { http: ['https://arb1.arbitrum.io/rpc'] },
+    fallback: { http: ['https://arbitrum.public-rpc.com'] },
+    appOnly: { http: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_ARBITRUM_RPC_URL] },
   },
-  [ChainId.CELO]: {
-    id: ChainId.CELO,
-    name: 'celo',
-    urlParam: 'celo',
-    blockPerMainnetEpochForChainId: 2,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://www.portalbridge.com/#/transfer',
-    docs: 'https://docs.celo.org/',
-    explorer: 'https://celoscan.io/',
-    infoLink: 'https://info.uniswap.org/#/celo/',
-    label: 'Celo',
-    safeLabel: 'Celo Mainnet',
-    nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
-    chainPriority: 7,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Celo,
-      backendSupported: true,
-      nativeTokenBackendAddress: nativeOnChain(ChainId.CELO).wrapped.address,
-    },
-    rpcUrls: {
-      safe: [`https://forno.celo.org`],
-      appOnly: [`https://celo-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'celo-mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
-    stablecoins: [USDC_CELO],
-    assetRepoNetworkName: 'celo',
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  stablecoins: [USDC_ARBITRUM, DAI_ARBITRUM_ONE],
+  assetRepoNetworkName: 'arbitrum',
+  infuraPrefix: 'arbitrum-mainnet',
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const ARBITRUM_GOERLI = {
+  ...arbitrumGoerli,
+  id: ChainId.ARBITRUM_GOERLI,
+  interfaceName: 'arbitrum_goerli',
+  urlParam: 'arbitrum_goerli',
+  blockPerMainnetEpochForChainId: 1,
+  networkLayer: NetworkLayer.L2,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  bridge: 'https://bridge.arbitrum.io/',
+  docs: 'https://offchainlabs.com/',
+  infoLink: 'https://info.uniswap.org/#/arbitrum/',
+  label: 'Arbitrum Goerli',
+  elementName: ElementName.ChainArbitrumGoerli,
+  helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
+  color: darkTheme.chain_421613,
+  backgroundColor: undefined,
+  chainPriority: 1,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.Arbitrum,
+    isSecondaryChain: true,
+    backendSupported: true,
+    nativeTokenBackendAddress: undefined,
   },
-  [ChainId.CELO_ALFAJORES]: {
-    id: ChainId.CELO_ALFAJORES,
-    name: 'celo_alfajores',
-    urlParam: 'celo_alfajores',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://www.portalbridge.com/#/transfer',
-    docs: 'https://docs.celo.org/',
-    explorer: 'https://alfajores-blockscout.celo-testnet.org/',
-    infoLink: 'https://info.uniswap.org/#/celo/',
-    label: 'Celo Alfajores',
-    nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
-    chainPriority: 7,
-    supportsClientSideRouting: true,
-    isTestnetChain: true,
-    backendChain: {
-      chain: Chain.Celo,
-      isSecondaryChain: true,
-      backendSupported: true,
-      nativeTokenBackendAddress: nativeOnChain(ChainId.CELO_ALFAJORES).wrapped.address,
-    },
-    rpcUrls: {
-      safe: [`https://alfajores-forno.celo-testnet.org`],
-      appOnly: [`https://celo-alfajores.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'celo-alfajores',
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(CUSD_CELO_ALFAJORES, 10_000e6),
-    stablecoins: [USDC_CELO],
+  rpcUrls: {
+    default: { http: ['https://goerli-rollup.arbitrum.io/rpc'] },
+    appOnly: { http: [`https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`] },
   },
-  [ChainId.BNB]: {
-    id: ChainId.BNB,
-    name: 'bnb',
-    urlParam: 'bnb',
-    blockPerMainnetEpochForChainId: 4,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://cbridge.celer.network/1/56',
-    docs: 'https://docs.bnbchain.org/',
-    explorer: 'https://bscscan.com/',
-    infoLink: 'https://info.uniswap.org/#/bnb/',
-    label: 'BNB Chain',
-    safeLabel: 'BNB Smart Chain Mainnet',
-    nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
-    color: darkTheme.chain_56,
-    backgroundColor: darkTheme.chain_56_background,
-    chainPriority: 5,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Bnb,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://bsc-dataseed1.bnbchain.org'],
-      appOnly: [QUICKNODE_BNB_RPC_URL],
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_BSC, 100e18),
-    stablecoins: [USDC_BSC],
-    assetRepoNetworkName: 'smartchain',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM_GOERLI, 10_000e6),
+  stablecoins: [USDC_ARBITRUM_GOERLI],
+  infuraPrefix: 'arbitrum-goerli',
+  subgraphUrl: undefined,
+  assetRepoNetworkName: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const POLYGON = {
+  ...polygon,
+  id: ChainId.POLYGON,
+  name: 'Polygon Mainnet',
+  interfaceName: 'polygon',
+  urlParam: 'polygon',
+  blockPerMainnetEpochForChainId: 5,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://wallet.polygon.technology/polygon/bridge',
+  docs: 'https://polygon.io/',
+  infoLink: 'https://info.uniswap.org/#/polygon/',
+  helpCenterUrl: undefined,
+  label: 'Polygon',
+  elementName: ElementName.ChainPolygon,
+  color: darkTheme.chain_137,
+  backgroundColor: darkTheme.chain_137_background,
+  chainPriority: 3,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Polygon,
+    backendSupported: true,
+    nativeTokenBackendAddress: MATIC_POLYGON.address,
+    isSecondaryChain: false,
   },
-  [ChainId.AVALANCHE]: {
-    id: ChainId.AVALANCHE,
-    name: 'avalanche',
-    urlParam: 'avalanche',
-    blockPerMainnetEpochForChainId: 6,
-    networkLayer: NetworkLayer.L1,
-    blockWaitMsBeforeWarning: ms(`10m`),
-    bridge: 'https://core.app/bridge/',
-    docs: 'https://docs.avax.network/',
-    explorer: 'https://snowtrace.io/',
-    infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
-    label: 'Avalanche',
-    safeLabel: 'Avalanche C-Chain',
-    nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
-    color: darkTheme.chain_43114,
-    backgroundColor: darkTheme.chain_43114_background,
-    chainPriority: 6,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Avalanche,
-      backendSupported: false,
-    },
-    rpcUrls: {
-      safe: ['https://api.avax.network/ext/bc/C/rpc'],
-      appOnly: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'avalanche-mainnet',
-    },
-    subgraphUrl: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
-    stablecoins: [USDC_AVALANCHE],
-    assetRepoNetworkName: 'avalanchec',
+  rpcUrls: {
+    default: { http: ['https://polygon-rpc.com/'] },
+    appOnly: { http: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`] },
   },
-  [ChainId.BASE]: {
-    id: ChainId.BASE,
-    name: 'base',
-    urlParam: 'base',
-    blockPerMainnetEpochForChainId: 6,
-    networkLayer: NetworkLayer.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://bridge.base.org/deposit',
-    docs: 'https://docs.base.org',
-    explorer: 'https://basescan.org/',
-    infoLink: 'https://info.uniswap.org/#/base/',
-    label: 'Base',
-    statusPage: 'https://status.base.org/',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_84531,
-    chainPriority: 4,
-    supportsClientSideRouting: true,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Base,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://mainnet.base.org/'],
-      fallback: ['https://1rpc.io/base', 'https://base.meowrpc.com'],
-      appOnly: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'base-mainnet',
-    },
-    subgraphUrl: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest?source=uniswap',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
-    assetRepoNetworkName: 'base',
-    stablecoins: [USDC_BASE],
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
+  stablecoins: [USDC_POLYGON, DAI_POLYGON],
+  assetRepoNetworkName: 'polygon',
+  infuraPrefix: 'polygon-mainnet',
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const POLYGON_MUMBAI = {
+  ...polygonMumbai,
+  id: ChainId.POLYGON_MUMBAI,
+  interfaceName: 'polygon_mumbai',
+  urlParam: 'polygon_mumbai',
+  blockPerMainnetEpochForChainId: 1,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://wallet.polygon.technology/polygon/bridge/deposit',
+  docs: 'https://polygon.io/',
+  infoLink: 'https://info.uniswap.org/#/polygon/',
+  helpCenterUrl: undefined,
+  label: 'Polygon Mumbai',
+  elementName: ElementName.ChainPolygonMumbai,
+  color: darkTheme.chain_137,
+  backgroundColor: darkTheme.chain_137_background,
+  chainPriority: 3,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.Polygon,
+    isSecondaryChain: true,
+    backendSupported: true,
+    nativeTokenBackendAddress: MATIC_POLYGON.address,
   },
-  [ChainId.BLAST]: {
-    id: ChainId.BLAST,
-    name: 'blast',
-    urlParam: 'blast',
-    blockPerMainnetEpochForChainId: 1,
-    networkLayer: NetworkLayer.L2,
-    pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
-    bridge: 'https://blast.io/bridge',
-    docs: 'https://docs.blast.io',
-    explorer: 'https://blastscan.io/',
-    infoLink: 'https://info.uniswap.org/#/blast/',
-    label: 'Blast',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_81457,
-    chainPriority: 8,
-    supportsClientSideRouting: false,
-    supportsGasEstimates: true,
-    backendChain: {
-      chain: Chain.Blast,
-      backendSupported: true,
-    },
-    rpcUrls: {
-      safe: ['https://rpc.blast.io/'],
-      appOnly: [`https://blast-mainnet.infura.io/v3/${INFURA_KEY}`],
-      infuraPrefix: 'blast-mainnet',
-    },
-    subgraphUrl:
-      'https://gateway-arbitrum.network.thegraph.com/api/0ae45f0bf40ae2e73119b44ccd755967/subgraphs/id/2LHovKznvo8YmKC9ZprPjsYAZDCc4K5q4AYz8s3cnQn1',
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
-    stablecoins: [USDB_BLAST],
-    assetRepoNetworkName: 'blast',
+  rpcUrls: {
+    default: { http: ['https://rpc-mumbai.maticvigil.com'] },
+    appOnly: { http: [`https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`] },
   },
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_POLYGON_MUMBAI, 10_000e6),
+  stablecoins: [USDC_POLYGON_MUMBAI],
+  infuraPrefix: 'polygon-mumbai',
+  assetRepoNetworkName: undefined,
+  subgraphUrl: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const CELO = {
+  ...celo,
+  id: ChainId.CELO,
+  name: 'Celo Mainnet',
+  interfaceName: 'celo',
+  urlParam: 'celo',
+  blockPerMainnetEpochForChainId: 2,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://www.portalbridge.com/#/transfer',
+  docs: 'https://docs.celo.org/',
+  infoLink: 'https://info.uniswap.org/#/celo/',
+  helpCenterUrl: undefined,
+  label: 'Celo',
+  elementName: ElementName.ChainCelo,
+  chainPriority: 7,
+  color: undefined,
+  backgroundColor: undefined,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Celo,
+    backendSupported: true,
+    nativeTokenBackendAddress: nativeOnChain(ChainId.CELO).wrapped.address,
+    isSecondaryChain: false,
+  },
+  rpcUrls: {
+    default: { http: [`https://forno.celo.org`] },
+    appOnly: { http: [`https://celo-mainnet.infura.io/v3/${INFURA_KEY}`] },
+  },
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(CUSD_CELO, 10_000e18),
+  stablecoins: [USDC_CELO],
+  assetRepoNetworkName: 'celo',
+  infuraPrefix: 'celo-mainnet',
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const CELO_ALFAJORES = {
+  ...celoAlfajores,
+  id: ChainId.CELO_ALFAJORES,
+  interfaceName: 'celo_alfajores',
+  urlParam: 'celo_alfajores',
+  blockPerMainnetEpochForChainId: 1,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://www.portalbridge.com/#/transfer',
+  docs: 'https://docs.celo.org/',
+  infoLink: 'https://info.uniswap.org/#/celo/',
+  helpCenterUrl: undefined,
+  label: 'Celo Alfajores',
+  elementName: ElementName.ChainCeloAlfajores,
+  chainPriority: 7,
+  color: undefined,
+  backgroundColor: undefined,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: false,
+  backendChain: {
+    chain: BackendChainId.Celo,
+    isSecondaryChain: true,
+    backendSupported: true,
+    nativeTokenBackendAddress: nativeOnChain(ChainId.CELO_ALFAJORES).wrapped.address,
+  },
+  rpcUrls: {
+    default: { http: [`https://alfajores-forno.celo-testnet.org`] },
+    appOnly: { http: [`https://celo-alfajores.infura.io/v3/${INFURA_KEY}`] },
+  },
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(CUSD_CELO_ALFAJORES, 10_000e6),
+  stablecoins: [USDC_CELO],
+  infuraPrefix: 'celo-alfajores',
+  assetRepoNetworkName: undefined,
+  subgraphUrl: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const BNB = {
+  ...bsc,
+  id: ChainId.BNB,
+  name: 'BNB Smart Chain Mainnet',
+  interfaceName: 'bnb',
+  urlParam: 'bnb',
+  blockPerMainnetEpochForChainId: 4,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://cbridge.celer.network/1/56',
+  docs: 'https://docs.bnbchain.org/',
+  infoLink: 'https://info.uniswap.org/#/bnb/',
+  label: 'BNB Chain',
+  elementName: ElementName.ChainBNB,
+  helpCenterUrl: undefined,
+  color: darkTheme.chain_56,
+  backgroundColor: darkTheme.chain_56_background,
+  chainPriority: 5,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Bnb,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: { http: ['https://bsc-dataseed1.bnbchain.org'] },
+    appOnly: { http: [QUICKNODE_BNB_RPC_URL] },
+  },
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_BSC, 100e18),
+  stablecoins: [USDC_BSC],
+  assetRepoNetworkName: 'smartchain',
+  infuraPrefix: undefined,
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const AVALANCHE = {
+  ...avalanche,
+  id: ChainId.AVALANCHE,
+  name: 'Avalanche C-Chain',
+  interfaceName: 'avalanche',
+  urlParam: 'avalanche',
+  blockPerMainnetEpochForChainId: 6,
+  networkLayer: NetworkLayer.L1,
+  blockWaitMsBeforeWarning: ms(`10m`),
+  pendingTransactionsRetryOptions: undefined,
+  bridge: 'https://core.app/bridge/',
+  docs: 'https://docs.avax.network/',
+  infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
+  helpCenterUrl: undefined,
+  label: 'Avalanche',
+  elementName: ElementName.ChainAvalanche,
+  nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+  color: darkTheme.chain_43114,
+  backgroundColor: darkTheme.chain_43114_background,
+  chainPriority: 6,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Avalanche,
+    backendSupported: false,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
+    appOnly: { http: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`] },
+  },
+  subgraphUrl: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  stablecoins: [USDC_AVALANCHE],
+  assetRepoNetworkName: 'avalanchec',
+  infuraPrefix: 'avalanche-mainnet',
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const BASE = {
+  ...base,
+  id: ChainId.BASE,
+  interfaceName: 'base',
+  urlParam: 'base',
+  blockPerMainnetEpochForChainId: 6,
+  networkLayer: NetworkLayer.L2,
+  blockWaitMsBeforeWarning: ms(`25m`),
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  bridge: 'https://bridge.base.org/deposit',
+  docs: 'https://docs.base.org',
+  infoLink: 'https://info.uniswap.org/#/base/',
+  helpCenterUrl: undefined,
+  label: 'Base',
+  elementName: ElementName.ChainBase,
+  statusPage: 'https://status.base.org/',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  color: darkTheme.chain_84531,
+  backgroundColor: undefined,
+  chainPriority: 4,
+  supportsClientSideRouting: true,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Base,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: { http: ['https://mainnet.base.org/'] },
+    fallback: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
+    appOnly: { http: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`] },
+  },
+  subgraphUrl: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest?source=uniswap',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
+  assetRepoNetworkName: 'base',
+  stablecoins: [USDC_BASE],
+  infuraPrefix: 'base-mainnet',
+} as const satisfies ChainInfo
+
+const BLAST = {
+  ...blast,
+  id: ChainId.BLAST,
+  interfaceName: 'blast',
+  urlParam: 'blast',
+  blockPerMainnetEpochForChainId: 1,
+  networkLayer: NetworkLayer.L2,
+  pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
+  blockWaitMsBeforeWarning: undefined,
+  bridge: 'https://blast.io/bridge',
+  docs: 'https://docs.blast.io',
+  infoLink: 'https://info.uniswap.org/#/blast/',
+  helpCenterUrl: undefined,
+  label: 'Blast',
+  elementName: ElementName.ChainBlast,
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  color: darkTheme.chain_81457,
+  backgroundColor: undefined,
+  chainPriority: 8,
+  supportsClientSideRouting: false,
+  supportsGasEstimates: true,
+  backendChain: {
+    chain: BackendChainId.Blast,
+    backendSupported: true,
+    isSecondaryChain: false,
+    nativeTokenBackendAddress: undefined,
+  },
+  rpcUrls: {
+    default: { http: ['https://rpc.blast.io/'] },
+    appOnly: { http: [`https://blast-mainnet.infura.io/v3/${INFURA_KEY}`] },
+  },
+  subgraphUrl:
+    'https://gateway-arbitrum.network.thegraph.com/api/0ae45f0bf40ae2e73119b44ccd755967/subgraphs/id/2LHovKznvo8YmKC9ZprPjsYAZDCc4K5q4AYz8s3cnQn1',
+  spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
+  stablecoins: [USDB_BLAST],
+  assetRepoNetworkName: 'blast',
+  infuraPrefix: 'blast-mainnet',
+  statusPage: undefined,
+} as const satisfies ChainInfo
+
+const INTERFACE_SUPPORTED_CHAINS = [
+  MAINNET,
+  GOERLI,
+  SEPOLIA,
+  OPTIMISM,
+  OPTIMISM_GOERLI,
+  ARBITRUM,
+  ARBITRUM_GOERLI,
+  POLYGON,
+  POLYGON_MUMBAI,
+  AVALANCHE,
+  CELO,
+  CELO_ALFAJORES,
+  BNB,
+  BASE,
+  BLAST,
+] as const
+
+type ExtractObject<TObject extends Record<string, unknown>, TNarrowedObject extends Partial<TObject>> = Extract<
+  TObject,
+  TNarrowedObject
+>
+export type SupportedInterfaceChain<
+  partialChain extends Partial<(typeof INTERFACE_SUPPORTED_CHAINS)[number]> = Partial<
+    (typeof INTERFACE_SUPPORTED_CHAINS)[number]
+  >
+> = ExtractObject<(typeof INTERFACE_SUPPORTED_CHAINS)[number], partialChain>
+export type SupportedInterfaceChainId = SupportedInterfaceChain['id']
+type ChainInfoMap = { readonly [chainId in SupportedInterfaceChainId]: SupportedInterfaceChain }
+
+export const CHAIN_INFO: ChainInfoMap = {
+  [ChainId.MAINNET]: MAINNET,
+  [ChainId.GOERLI]: GOERLI,
+  [ChainId.SEPOLIA]: SEPOLIA,
+  [ChainId.OPTIMISM]: OPTIMISM,
+  [ChainId.OPTIMISM_GOERLI]: OPTIMISM_GOERLI,
+  [ChainId.ARBITRUM_ONE]: ARBITRUM,
+  [ChainId.ARBITRUM_GOERLI]: ARBITRUM_GOERLI,
+  [ChainId.POLYGON]: POLYGON,
+  [ChainId.POLYGON_MUMBAI]: POLYGON_MUMBAI,
+  [ChainId.CELO]: CELO,
+  [ChainId.CELO_ALFAJORES]: CELO_ALFAJORES,
+  [ChainId.BNB]: BNB,
+  [ChainId.AVALANCHE]: AVALANCHE,
+  [ChainId.BASE]: BASE,
+  [ChainId.BLAST]: BLAST,
 } as const
 
-export function getChainInfo(options: { chainId: SupportedInterfaceChainId }): ChainInfo
-export function getChainInfo(options: { chainId?: SupportedInterfaceChainId; withFallback: true }): ChainInfo
-export function getChainInfo(options: {
+export type ChainSlug = SupportedInterfaceChain['urlParam']
+export const isChainUrlParam = (str?: string): str is ChainSlug =>
+  !!str && Object.values(CHAIN_INFO).some((chain) => chain.urlParam === str)
+export const getChainUrlParam = (str?: string): ChainSlug | undefined => (isChainUrlParam(str) ? str : undefined)
+
+export function getChain(options: { chainId: SupportedInterfaceChainId }): SupportedInterfaceChain
+export function getChain(options: { chainId?: SupportedInterfaceChainId; withFallback: true }): SupportedInterfaceChain
+export function getChain(options: {
   chainId?: SupportedInterfaceChainId
   withFallback?: boolean
-}): ChainInfo | undefined
-export function getChainInfo({
+}): SupportedInterfaceChain | undefined
+export function getChain({
   chainId,
   withFallback,
 }: {
   chainId?: SupportedInterfaceChainId
   withFallback?: boolean
-}): ChainInfo | undefined {
+}): SupportedInterfaceChain | undefined {
   return chainId ? CHAIN_INFO[chainId] : withFallback ? CHAIN_INFO[ChainId.MAINNET] : undefined
 }
 
 export const CHAIN_IDS_TO_NAMES = Object.fromEntries(
-  Object.entries(CHAIN_INFO).map(([key, value]) => [key, value.name])
+  Object.entries(CHAIN_INFO).map(([key, value]) => [key, value.interfaceName])
 ) as { [chainId in SupportedInterfaceChainId]: string }
 
 export const GQL_MAINNET_CHAINS = Object.values(CHAIN_INFO)
-  .filter((chain) => !chain.isTestnetChain && !chain.backendChain.isSecondaryChain)
+  .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)
 
 const GQL_TESTNET_CHAINS = Object.values(CHAIN_INFO)
-  .filter((chain) => chain.isTestnetChain && !chain.backendChain.isSecondaryChain)
+  .filter((chain) => chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)
 
 export const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS]
@@ -800,7 +925,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = Object.keys(CHAIN_INFO)
   .map((key) => parseInt(key) as SupportedInterfaceChainId)
 
 export const TESTNET_CHAIN_IDS = Object.keys(CHAIN_INFO)
-  .filter((key) => CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].isTestnetChain)
+  .filter((key) => CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].testnet)
   .map((key) => parseInt(key) as SupportedInterfaceChainId)
 
 /**
@@ -823,7 +948,6 @@ export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
 /**
  * @deprecated when v2 pools are enabled on chains supported through sdk-core
  */
-export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [ChainId.MAINNET, ChainId.GOERLI] as const
 export const SUPPORTED_V2POOL_CHAIN_IDS = Object.keys(V2_ROUTER_ADDRESSES).map((chainId) => parseInt(chainId))
 
 export const BACKEND_SUPPORTED_CHAINS = Object.keys(CHAIN_INFO)
@@ -832,7 +956,7 @@ export const BACKEND_SUPPORTED_CHAINS = Object.keys(CHAIN_INFO)
     return (
       CHAIN_INFO[chainId].backendChain.backendSupported &&
       !CHAIN_INFO[chainId].backendChain.isSecondaryChain &&
-      !CHAIN_INFO[chainId].isTestnetChain
+      !CHAIN_INFO[chainId].testnet
     )
   })
   .map((key) => CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].backendChain.chain as InterfaceGqlChain)
@@ -843,8 +967,8 @@ export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = GQL_MAINNET_CHAINS.filter(
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: SupportedInterfaceChainId } = Object.fromEntries(
   Object.entries(CHAIN_INFO)
-    .filter(([, value]) => !!value.rpcUrls.infuraPrefix)
-    .map(([key, value]) => [value.rpcUrls.infuraPrefix, parseInt(key) as SupportedInterfaceChainId])
+    .filter(([, value]) => !!value.infuraPrefix)
+    .map(([key, value]) => [value.infuraPrefix, parseInt(key) as SupportedInterfaceChainId])
 )
 
 export const CHAIN_SUBGRAPH_URL = Object.fromEntries(
@@ -871,19 +995,24 @@ export function isUniswapXSupportedChain(chainId?: number) {
 }
 
 export function isStablecoin(currency?: Currency): boolean {
-  if (!currency) return false
+  if (!currency) {
+    return false
+  }
 
-  return getChainInfo({ chainId: currency.chainId as SupportedInterfaceChainId }).stablecoins.some((stablecoin) =>
+  return getChain({ chainId: currency.chainId as SupportedInterfaceChainId }).stablecoins.some((stablecoin) =>
     stablecoin.equals(currency)
   )
 }
 
-export function getChainFromChainUrlParam(chainUrlParam?: ChainSlug): ChainInfo | undefined {
+export function getChainFromChainUrlParam(chainUrlParam?: ChainSlug): SupportedInterfaceChain | undefined {
   return chainUrlParam !== undefined
     ? Object.values(CHAIN_INFO).find((chain) => chainUrlParam === chain.urlParam)
     : undefined
 }
 
-export function useChainFromUrlParam(): ChainInfo | undefined {
-  return getChainFromChainUrlParam(getChainUrlParam(useParams<{ chainName?: string }>().chainName))
+export function useChainFromUrlParam(): SupportedInterfaceChain | undefined {
+  const chainName = useParams<{ chainName?: string }>().chainName
+  // In the case where /explore/:chainName is used, the chainName is passed as a tab param
+  const tab = useParams<{ tab?: string }>().tab
+  return getChainFromChainUrlParam(getChainUrlParam(chainName ?? tab))
 }

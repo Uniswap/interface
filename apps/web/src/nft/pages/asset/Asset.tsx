@@ -1,5 +1,4 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { t } from 'i18n'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
@@ -12,6 +11,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useParams } from 'react-router-dom'
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import styled from 'styled-components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const AssetContainer = styled.div`
   display: flex;
@@ -63,21 +63,23 @@ const AssetPage = () => {
     return <Navigate to="/nfts" replace />
   }
 
-  if (loading) return <AssetDetailsLoading />
+  if (loading) {
+    return <AssetDetailsLoading />
+  }
   return (
     <>
       <Helmet>
         <title>
-          {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Uniswap
+          {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t('nft.explore')} on Uniswap
         </title>
         {metaTags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
       </Helmet>
       <Trace
+        logImpression
         page={InterfacePageName.NFT_DETAILS_PAGE}
         properties={{ collection_address: contractAddress, token_id: tokenId }}
-        shouldLogImpression
       >
         {!!asset && !!collection ? (
           <AssetContainer>

@@ -18,15 +18,12 @@ export function LimitDisclaimer({ className }: { className?: string }) {
   return (
     <Container gap="sm" className={className}>
       <DisclaimerText>
-        <Trans>
-          Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum
-          network congestion. Limits may not execute exactly when tokens reach the specified price.
-        </Trans>
+        <Trans i18nKey="pool.limitFluctuation.warning" />
       </DisclaimerText>
       <DisclaimerText>Canceling a limit has a network cost.</DisclaimerText>
       <DisclaimerText>
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
-          <Trans>Learn more</Trans>
+          <Trans i18nKey="common.learnMore.link" />
         </ExternalLink>
       </DisclaimerText>
     </Container>

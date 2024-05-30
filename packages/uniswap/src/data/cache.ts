@@ -24,7 +24,7 @@ const injectTimestampForRestQueries = (config: InMemoryCacheConfig = {}): InMemo
             merge(_, incoming): unknown {
               return {
                 ...incoming,
-                // add a timestamp because there is no cache-ttl in Apollo and in some cases (i.e. routing API quotes) we cannot show stale quotes
+                // add a timestamp because there is no cache-ttl in Apollo and in some cases (i.e. trading API quotes) we cannot show stale quotes
                 timestamp: Date.now(),
               }
             },

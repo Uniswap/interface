@@ -1,25 +1,25 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
+import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ChainId } from '@uniswap/sdk-core'
 import { CosignedV2DutchOrder, DutchOrder } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { t } from 'i18n'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { sendAnalyticsEvent } from 'analytics'
 import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { t } from 'i18n'
 import { useCallback } from 'react'
 import store from 'state'
 import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { Activity } from './types'
 
 interface ActivityGroup {
@@ -30,7 +30,9 @@ interface ActivityGroup {
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
 
 export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
-  if (activities.length === 0) return []
+  if (activities.length === 0) {
+    return []
+  }
   const now = Date.now()
 
   const pending: Array<Activity> = []
@@ -78,11 +80,11 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
     .map((year) => ({ title: year, transactions: yearMap[year] }))
 
   const transactionGroups: Array<ActivityGroup> = [
-    { title: t`Pending`, transactions: pending.sort(sortActivities) },
-    { title: t`Today`, transactions: today.sort(sortActivities) },
-    { title: t`This week`, transactions: currentWeek.sort(sortActivities) },
-    { title: t`This month`, transactions: last30Days.sort(sortActivities) },
-    { title: t`This year`, transactions: currentYear.sort(sortActivities) },
+    { title: t('common.pending'), transactions: pending.sort(sortActivities) },
+    { title: t('common.today'), transactions: today.sort(sortActivities) },
+    { title: t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
+    { title: t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
+    { title: t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
     ...sortedYears,
   ]
 
@@ -147,9 +149,11 @@ export function useCancelMultipleOrdersCallback(
   const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
 
   return useCallback(async () => {
-    if (!orders || orders.length === 0) return undefined
+    if (!orders || orders.length === 0) {
+      return undefined
+    }
 
-    sendAnalyticsEvent('UniswapX Order Cancel Initiated', {
+    sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderCancelInitiated, {
       orders: orders.map((order) => order.orderHash),
     })
 
@@ -162,7 +166,9 @@ export function useCancelMultipleOrdersCallback(
       chainId: orders?.[0].chainId,
     }).then((result) => {
       orders.forEach((order) => {
-        if (order.status === UniswapXOrderStatus.FILLED) return
+        if (order.status === UniswapXOrderStatus.FILLED) {
+          return
+        }
         store.dispatch(updateSignature({ ...order, status: UniswapXOrderStatus.PENDING_CANCELLATION }))
       })
       return result
@@ -182,7 +188,9 @@ async function cancelMultipleUniswapXOrders({
   provider?: Web3Provider
 }) {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  if (!permit2 || !provider) return
+  if (!permit2 || !provider) {
+    return
+  }
   try {
     const transactions: ContractTransaction[] = []
     for (const params of cancelParams) {
@@ -191,7 +199,9 @@ async function cancelMultipleUniswapXOrders({
     }
     return transactions
   } catch (error) {
-    if (!didUserReject(error)) console.error(error)
+    if (!didUserReject(error)) {
+      console.error(error)
+    }
     return undefined
   }
 }
@@ -202,7 +212,9 @@ async function getCancelMultipleUniswapXOrdersTransaction(
   permit2: Permit2
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  if (!permit2 || cancelParams.length === 0) return
+  if (!permit2 || cancelParams.length === 0) {
+    return
+  }
   try {
     const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
     return {
@@ -230,8 +242,9 @@ export function useCreateCancelTransactionRequest(
       !params.orders ||
       params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
       !permit2
-    )
+    ) {
       return
+    }
     return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
   }, [params, permit2])
 

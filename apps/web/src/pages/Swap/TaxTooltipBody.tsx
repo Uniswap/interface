@@ -14,18 +14,14 @@ export function OutputTaxTooltipBody({ currencySymbol }: { currencySymbol?: stri
   return (
     <>
       <ThemedText.SubHeaderSmall color="textPrimary">
-        <Trans>Exact input only</Trans>
+        <Trans i18nKey="swap.taxTooltip.label" />
       </ThemedText.SubHeaderSmall>
       <Divider />
       <ThemedText.LabelMicro color="textPrimary">
         {currencySymbol ? (
-          <Trans>
-            {{ currencySymbol }} fees don&apos;t allow for accurate exact outputs. Use the `Sell` field instead.
-          </Trans>
+          <Trans i18nKey="swap.taxTooltip.tokenSelected" values={{ tokenSymbol: currencySymbol }} />
         ) : (
-          <Trans>
-            Fees on the selected output token don&apos;t allow for accurate exact outputs. Use the `Sell` field instead.
-          </Trans>
+          <Trans i18nKey="swap.taxTooltip.noTokenSelected" />
         )}
       </ThemedText.LabelMicro>
     </>

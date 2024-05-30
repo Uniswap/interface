@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkLogo renders without error 1`] = `
+<View
+  style={
+    {
+      "borderColor": "#FFFFFF",
+      "borderRadius": 6,
+      "flexDirection": "column",
+      "overflow": "hidden",
+    }
+  }
+  testID="network-logo"
+>
+  <Image
+    resizeMode="contain"
+    source={
+      {
+        "process": [Function],
+      }
+    }
+    style={
+      {
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`TransactionSummaryNetworkLogo renders without error 1`] = `
+<View
+  style={
+    {
+      "borderBottomColor": "#FFFFFF",
+      "borderLeftColor": "#FFFFFF",
+      "borderRadius": 7,
+      "borderRightColor": "#FFFFFF",
+      "borderStyle": "solid",
+      "borderTopColor": "#FFFFFF",
+      "borderWidth": 2,
+      "flexDirection": "column",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "borderColor": "#FFFFFF",
+        "borderRadius": 6,
+        "flexDirection": "column",
+        "overflow": "hidden",
+      }
+    }
+    testID="network-logo"
+  >
+    <Image
+      resizeMode="contain"
+      source={
+        {
+          "process": [Function],
+        }
+      }
+      style={
+        {
+          "height": 20,
+          "width": 20,
+        }
+      }
+    />
+  </View>
+</View>
+`;

@@ -1,14 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -36,9 +36,9 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
@@ -208,7 +208,7 @@ const InputCurrencyValue = ({
   if (tradeState === TradeState.LOADING && !trade) {
     return (
       <ThemedText.BodyPrimary color="neutral3" lineHeight="20px" fontWeight="535">
-        <Trans>Fetching price...</Trans>
+        <Trans i18nKey="swap.fetchingPrice" />
       </ThemedText.BodyPrimary>
     )
   }
@@ -245,7 +245,7 @@ const FiatValue = ({
     <PriceImpactContainer>
       {priceImpact && (
         <>
-          <MouseoverTooltip text={t`The estimated difference between the USD values of input and output amounts.`}>
+          <MouseoverTooltip text={t('swap.estimatedDifference.label')}>
             <PriceImpactRow>
               <AlertTriangle color={priceImpact.priceImpactSeverity.color} size="16px" />
               <ThemedText.BodySmall style={{ color: priceImpact.priceImpactSeverity.color }} lineHeight="20px">
@@ -470,7 +470,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
               {isSupportedChain && (
                 <>
                   <ThemedText.SubHeaderSmall>
-                    <Trans>Pay with</Trans>
+                    <Trans i18nKey="swap.payWith" />
                   </ThemedText.SubHeaderSmall>
                   <CurrencyInput
                     onClick={() => {
@@ -491,7 +491,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             </Column>
             <TotalColumn gap="xs">
               <ThemedText.SubHeaderSmall>
-                <Trans>Total</Trans>
+                <Trans i18nKey="swap.total" />
               </ThemedText.SubHeaderSmall>
               <InputCurrencyValue
                 usingPayWithAnyToken={usingPayWithAnyToken}
@@ -509,12 +509,12 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             usingPayWithAnyToken={usingPayWithAnyToken}
           />
         </FooterHeader>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={NFTEventName.NFT_BUY_BAG_PAY}
+        <Trace
+          logPress
+          eventOnTrigger={NFTEventName.NFT_BUY_BAG_PAY}
           element={InterfaceElementName.NFT_BUY_BAG_PAY_BUTTON}
-          properties={{ ...traceEventProperties }}
-          shouldLogImpression={connected && !disabled}
+          properties={traceEventProperties}
+          logImpression={connected && !disabled}
         >
           <Warning color={warningTextColor}>{warningText}</Warning>
           <Helper color={helperTextColor}>{helperText}</Helper>
@@ -528,7 +528,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
             {isPending && <Loader size="20px" stroke="white" />}
             {buttonText}
           </ActionButton>
-        </TraceEvent>
+        </Trace>
       </Footer>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
