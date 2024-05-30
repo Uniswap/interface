@@ -46,7 +46,7 @@ const values: { [K in FeatureFlags]: boolean } = {
   [FeatureFlags.MultichainUX]: false,
   [FeatureFlags.QuickRouteMainnet]: false,
   [FeatureFlags.Realtime]: false,
-  [FeatureFlags.SendEnabled]: true,
+  [FeatureFlags.SendEnabled]: false,
   [FeatureFlags.TraceJsonRpc]: false,
   [FeatureFlags.UniswapXSyntheticQuote]: false,
   [FeatureFlags.UniswapXv2]: false,
