@@ -1,0 +1,1384 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c2 {
+  gap: 12px;
+  z-index: 1;
+}
+
+.c6 {
+  height: 44px;
+  width: 175px;
+  border-radius: 900px;
+}
+
+.c4 {
+  gap: 2px;
+  display: none;
+}
+
+@media (max-width:1024px) {
+  .c2 {
+    gap: 8px;
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    margin: 8px;
+    width: calc(100% - 16px);
+    background: #FFFFFF;
+    padding: 12px 32px;
+    border: 1px solid #22222212;
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 1020;
+  }
+
+  .c2 > :first-child {
+    margin-right: auto;
+  }
+}
+
+@media (max-width:768px) {
+  .c2 {
+    bottom: 56px;
+  }
+}
+
+@media (max-width:1024px) {
+  .c4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+        data-testid="pdp-buttons-loading-skeleton"
+      >
+        <div
+          class="c3 c4"
+        >
+          <div
+            class="c5 c6"
+          />
+        </div>
+        <div
+          class="c5 c6"
+        />
+        <div
+          class="c5 c6"
+        />
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c31 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c14 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c5 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c17 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c17:hover {
+  opacity: 0.6;
+}
+
+.c17:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c48 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 4px;
+}
+
+.c33 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c33:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c33 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c33 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c50 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c50:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c50:hover {
+  background-color: #fb58ff;
+}
+
+.c50:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c50:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c34 {
+  background-color: #FFFFFF;
+  color: #7D7D7D;
+  border: 1px solid #22222212;
+  font-size: 16px;
+  font-weight: 535;
+}
+
+.c34:hover {
+  background-color: #ececec;
+}
+
+.c34:active {
+  background-color: #e0e0e0;
+}
+
+.c45 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c20 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c39 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c39 img {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c40 {
+  width: 12px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c38 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c37 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c51 {
+  z-index: 1020;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.60);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.c29 {
+  color: #222222;
+  pointer-events: auto;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c29::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c29 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c29::-webkit-outer-spin-button,
+.c29::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c29::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c29::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c29:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c29::placeholder {
+  color: #CECECE;
+}
+
+.c30 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c27 {
+  min-height: 44px;
+  border-radius: 20px;
+  width: initial;
+}
+
+.c35 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  opacity: 1;
+  color: #222222;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #22222212;
+  font-size: 24px;
+  font-weight: 485;
+  width: initial;
+  padding: 4px 8px 4px 4px;
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  visibility: visible;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.c35:hover,
+.c35:active {
+  background-color: #F9F9F9;
+}
+
+.c35:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c35:hover:before {
+  background-color: #98A1C014;
+}
+
+.c35:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c28 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.c43 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.c43 span:hover {
+  cursor: pointer;
+  color: #4a4a4a;
+}
+
+.c44 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  min-height: 24px;
+  padding: 8px 0px 0px 0px;
+}
+
+.c36 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.c42 {
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+  margin-left: 8px;
+}
+
+.c42 path {
+  stroke: #222222;
+  stroke-width: 2px;
+}
+
+.c41 {
+  margin: 0 0.25rem 0 0.25rem;
+  font-size: 20px;
+  font-weight: 535;
+}
+
+.c10 {
+  position: relative;
+  z-index: 1;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c11 {
+  border-radius: 24px;
+  z-index: -1;
+}
+
+.c46 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c46:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c25 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c25:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c25:hover:before {
+  border-color: #98A1C014;
+}
+
+.c25:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c49 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c47 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c18 {
+  color: #222222;
+  background-color: #22222212;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c18:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c18:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19 {
+  color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c19:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c19:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c24 {
+  height: 24px;
+  width: 24px;
+}
+
+.c24 > * {
+  fill: #7D7D7D;
+}
+
+.c22 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c22:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c23 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c21 {
+  position: relative;
+}
+
+.c13 {
+  margin-bottom: 12px;
+  padding-right: 4px;
+  color: #7D7D7D;
+}
+
+.c15 {
+  gap: 0px;
+}
+
+.c15 .c16 {
+  padding: 8px 12px;
+}
+
+.c3 {
+  gap: 12px;
+  z-index: 1;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  padding: 12px 16px 12px 12px;
+  border: unset;
+  border-radius: 900px;
+  width: 50%;
+  gap: 8px;
+  color: #FC72FF;
+  background-color: #FC72FF1f;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: width 250ms ease-in-out;
+  transition: width 250ms ease-in-out;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c4:hover {
+  opacity: 0.6;
+}
+
+.c4:active {
+  opacity: 0.4;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  padding: 12px 16px 12px 12px;
+  border: unset;
+  border-radius: 900px;
+  width: 50%;
+  gap: 8px;
+  color: #FC72FF;
+  background-color: #FC72FF1f;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: width 250ms ease-in-out;
+  transition: width 250ms ease-in-out;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c6:hover {
+  opacity: 0.6;
+}
+
+.c6:active {
+  opacity: 0.4;
+}
+
+.c8 {
+  z-index: 0;
+  gap: 24px;
+  visibility: hidden;
+  opacity: 0;
+  max-height: 0;
+  -webkit-transition: max-height 250ms ease;
+  transition: max-height 250ms ease;
+  padding-bottom: 0;
+}
+
+.c8 .c9:before {
+  background-color: unset;
+}
+
+.c8 .c32 {
+  visibility: hidden;
+}
+
+@media only screen and (max-width:1024px) {
+  .c51 {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+  }
+}
+
+@media (max-width:1024px) {
+  .c3 {
+    gap: 8px;
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    margin: 8px;
+    width: calc(100% - 16px);
+    background: #FFFFFF;
+    padding: 12px 32px;
+    border: 1px solid #22222212;
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 1020;
+  }
+
+  .c3 > :first-child {
+    margin-right: auto;
+  }
+}
+
+@media (max-width:768px) {
+  .c3 {
+    bottom: 56px;
+  }
+}
+
+@media (max-width:1024px) {
+
+}
+
+@media (max-width:640px) {
+  .c4 {
+    width: 100%;
+  }
+}
+
+@media (max-width:1024px) {
+
+}
+
+@media (max-width:640px) {
+  .c6 {
+    display: none;
+    width: 100%;
+  }
+}
+
+@media (max-width:1024px) {
+  .c8 {
+    position: fixed;
+    width: calc(100% - 16px);
+    padding: 0px 12px 12px;
+    border-radius: 24px;
+    max-width: 480px;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    z-index: 1030;
+    background: #FFFFFF;
+    -webkit-transition: opacity 250ms ease;
+    transition: opacity 250ms ease;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1 c2 c3"
+        >
+          <button
+            class="c4"
+            data-testid="pool-details-swap-button"
+          >
+            <div
+              class="c5 css-1guhfcl"
+            >
+              Swap
+            </div>
+          </button>
+          <button
+            class="c6"
+            data-testid="pool-details-add-liquidity-button"
+          >
+            <div
+              class="c5 css-1guhfcl"
+            >
+              Add liquidity
+            </div>
+          </button>
+        </div>
+        <div
+          class="c7 c8"
+          data-testid="pool-details-swap-modal"
+        >
+          <main
+            class="c9 c10"
+            id="swap-page"
+          >
+            <div
+              class="c11"
+            >
+              <div
+                class="c1 c2 c12 c13"
+              >
+                <div
+                  class="c1 c2 c14 c15"
+                >
+                  <button
+                    class="c16 c17 c18"
+                    role="button"
+                    tabindex="0"
+                  >
+                    Swap
+                  </button>
+                  <button
+                    class="c16 c17 c19"
+                  >
+                    Limit
+                  </button>
+                  <button
+                    class="c16 c17 c19"
+                  >
+                    Send
+                  </button>
+                  <div
+                    class="c20"
+                  >
+                    <div>
+                      <button
+                        class="c16 c17 c19"
+                        data-testid="buy-fiat-button"
+                      >
+                        Buy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c1 c2 c14"
+                >
+                  <div
+                    class="c21"
+                  >
+                    <button
+                      aria-label="Transaction Settings"
+                      class="c22"
+                      data-testid="open-settings-dialog-button"
+                      id="open-settings-dialog-button"
+                    >
+                      <div
+                        class="c1 c2 c23"
+                      >
+                        <svg
+                          class="c24"
+                          fill="none"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="display: relative;"
+              >
+                <div
+                  class="c25"
+                >
+                  <div
+                    class="c26"
+                    id="swap-currency-input"
+                  >
+                    <div
+                      class="c27"
+                    >
+                      <span
+                        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+                        data-disable-theme="true"
+                      >
+                        Sell
+                      </span>
+                      <div
+                        class="c28"
+                      >
+                        <div
+                          style="display: flex; flex-grow: 1;"
+                        >
+                          <input
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="c29 c30 token-amount-input"
+                            id="swap-currency-input"
+                            inputmode="decimal"
+                            maxlength="79"
+                            minlength="1"
+                            pattern="^[0-9]*[.,]?[0-9]*$"
+                            placeholder="0"
+                            spellcheck="false"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <div>
+                          <div
+                            class="c20"
+                          >
+                            <button
+                              class="c31 c32 c33 c34 c35 open-currency-select-button"
+                            >
+                              <span
+                                class="c36"
+                              >
+                                <div
+                                  class="c1 c2 c14"
+                                >
+                                  <div
+                                    class="c37"
+                                    style="height: 24px; width: 24px; margin-right: 2px;"
+                                  >
+                                    <div
+                                      class="c38"
+                                    >
+                                      <div
+                                        class="c39"
+                                        size="24"
+                                      >
+                                         
+                                        <img
+                                          class="c40"
+                                          size="24"
+                                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <span
+                                    class="c41 token-symbol-container"
+                                  >
+                                    USDC
+                                  </span>
+                                </div>
+                                <svg
+                                  class="c42"
+                                >
+                                  dropdown.svg
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="c43 c44"
+                      >
+                        <div
+                          class="c1 c2 c12"
+                        >
+                          <div
+                            class="c45"
+                          />
+                          <span />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c46"
+                >
+                  <div
+                    class="c47"
+                    color="#222222"
+                    data-testid="swap-currency-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="16"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line
+                        x1="12"
+                        x2="12"
+                        y1="5"
+                        y2="19"
+                      />
+                      <polyline
+                        points="19 12 12 19 5 12"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c48"
+              >
+                <div>
+                  <div
+                    class="c25 c49"
+                  >
+                    <div
+                      class="c26"
+                      id="swap-currency-output"
+                    >
+                      <div
+                        class="c27"
+                      >
+                        <span
+                          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+                          data-disable-theme="true"
+                        >
+                          Buy
+                        </span>
+                        <div
+                          class="c28"
+                        >
+                          <div
+                            style="display: flex; flex-grow: 1;"
+                          >
+                            <input
+                              autocomplete="off"
+                              autocorrect="off"
+                              class="c29 c30 token-amount-input"
+                              id="swap-currency-output"
+                              inputmode="decimal"
+                              maxlength="79"
+                              minlength="1"
+                              pattern="^[0-9]*[.,]?[0-9]*$"
+                              placeholder="0"
+                              spellcheck="false"
+                              type="text"
+                              value=""
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="c20"
+                            >
+                              <button
+                                class="c31 c32 c33 c34 c35 open-currency-select-button"
+                              >
+                                <span
+                                  class="c36"
+                                >
+                                  <div
+                                    class="c1 c2 c14"
+                                  >
+                                    <div
+                                      class="c37"
+                                      style="height: 24px; width: 24px; margin-right: 2px;"
+                                    >
+                                      <div
+                                        class="c38"
+                                      >
+                                        <div
+                                          class="c39"
+                                          size="24"
+                                        >
+                                           
+                                          <img
+                                            class="c40"
+                                            size="24"
+                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <span
+                                      class="c41 token-symbol-container"
+                                    >
+                                      WETH
+                                    </span>
+                                  </div>
+                                  <svg
+                                    class="c42"
+                                  >
+                                    dropdown.svg
+                                  </svg>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="c43 c44"
+                        >
+                          <div
+                            class="c1 c2 c12"
+                          >
+                            <div
+                              class="c45"
+                            />
+                            <span />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    class="c31 c33 c50"
+                  >
+                    Connect to Ethereum
+                  </button>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+        <div
+          class="c51"
+        />
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

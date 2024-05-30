@@ -1,0 +1,239 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a relative change 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 2,
+      "justifyContent": "flex-start",
+    }
+  }
+  testID="relative-change"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight="16"
+    bbWidth="16"
+    fill="none"
+    focusable={false}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    strokeWidth={2}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "color": "#40B66B",
+          "height": 16,
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+          "width": 16,
+        },
+        {
+          "flex": 0,
+          "height": 16,
+          "width": 16,
+        },
+      ]
+    }
+    tintColor="#40B66B"
+    vbHeight={24}
+    vbWidth={24}
+  >
+    <RNSVGGroup
+      fill={null}
+      propList={
+        [
+          "fill",
+          "strokeWidth",
+        ]
+      }
+      strokeWidth="2"
+    >
+      <RNSVGPath
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      12%
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`renders placeholders with absolute change 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 2,
+      "justifyContent": "flex-start",
+    }
+  }
+  testID="relative-change"
+>
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight="16"
+    bbWidth="16"
+    fill="none"
+    focusable={false}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    strokeWidth={2}
+    style={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "color": "#40B66B",
+          "height": 16,
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+          "width": 16,
+        },
+        {
+          "flex": 0,
+          "height": 16,
+          "width": 16,
+        },
+      ]
+    }
+    tintColor="#40B66B"
+    vbHeight={24}
+    vbWidth={24}
+  >
+    <RNSVGGroup
+      fill={null}
+      propList={
+        [
+          "fill",
+          "strokeWidth",
+        ]
+      }
+      strokeWidth="2"
+    >
+      <RNSVGPath
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+          ]
+        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      $100.00 (12%)
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`renders placeholders without a change 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 2,
+      "justifyContent": "flex-start",
+    }
+  }
+  testID="relative-change"
+>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      -
+    </Text>
+  </View>
+</View>
+`;

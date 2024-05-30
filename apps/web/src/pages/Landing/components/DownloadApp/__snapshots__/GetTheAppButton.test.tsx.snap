@@ -1,0 +1,144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GetTheAppButton displays a button with call to action text and icons 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c2 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.c0 {
+  height: 40px;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #22222212;
+  padding: 8px 16px 8px 12px;
+  cursor: pointer;
+}
+
+.c0:hover {
+  background: #F9F9F9;
+}
+
+.c3 {
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  height: auto;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+      >
+        <div
+          class="c1 c2"
+          width="fit-content"
+        >
+          <span
+            class="font_body _display-_lg_none _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-0px _fontWeight-400 _whiteSpace-nowrap"
+            data-disable-theme="true"
+            data-testid="get-the-app-cta"
+          >
+            Get the app
+          </span>
+          <div
+            class="c3"
+            style="transform: none;"
+          >
+            <svg
+              data-testid="apple-logo"
+              fill="none"
+              height="16"
+              viewBox="0 0 14 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.6662 8.50891C11.6741 7.89565 11.837 7.29436 12.1397 6.76098C12.4424 6.22759 12.8752 5.77945 13.3976 5.45824C13.0657 4.98422 12.6279 4.59412 12.1188 4.31892C11.6098 4.04372 11.0436 3.89101 10.4652 3.87292C9.23139 3.74341 8.03528 4.6112 7.40655 4.6112C6.76567 4.6112 5.79765 3.88578 4.75526 3.90722C4.08101 3.92901 3.4239 4.12507 2.84796 4.47632C2.27202 4.82757 1.79688 5.32201 1.46884 5.91149C0.0478641 8.37169 1.10779 11.9874 2.46897 13.976C3.14999 14.9498 3.94592 16.0375 4.98737 15.999C6.00649 15.9567 6.38712 15.3491 7.61728 15.3491C8.83603 15.3491 9.19314 15.999 10.2557 15.9744C11.3493 15.9567 12.0383 14.9963 12.6954 14.0133C13.1847 13.3195 13.5613 12.5526 13.8111 11.7411C13.1757 11.4724 12.6336 11.0226 12.2521 10.4479C11.8707 9.87307 11.6669 9.19873 11.6662 8.50891Z"
+                fill="#222222"
+              />
+              <path
+                d="M9.65929 2.56468C10.2555 1.8489 10.5493 0.928877 10.4782 0C9.56722 0.0956776 8.72575 0.531052 8.12144 1.21937C7.82597 1.55564 7.59968 1.94684 7.45549 2.37061C7.3113 2.79438 7.25205 3.24242 7.28112 3.68911C7.73676 3.6938 8.18752 3.59504 8.59946 3.40027C9.0114 3.2055 9.37377 2.9198 9.65929 2.56468Z"
+                fill="#222222"
+              />
+            </svg>
+          </div>
+          <div
+            class="c3"
+            style="transform: none;"
+          >
+            <svg
+              data-testid="google-play-store-logo"
+              fill="none"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.48727 7.63928L0.873077 14.6688C0.873077 14.6688 0.873077 14.6688 0.873077 14.675C1.07802 15.4401 1.7736 16 2.5996 16C2.92876 16 3.23928 15.9129 3.50633 15.7512L3.52496 15.7387L10.9652 11.4402L7.48727 7.63928Z"
+                fill="#EA4335"
+              />
+              <path
+                d="M14.1759 6.44484L14.1696 6.43862L10.9588 4.57239L7.33809 7.80097L10.9712 11.4401L14.1696 9.59255C14.7286 9.28773 15.1074 8.69676 15.1074 8.0187C15.1074 7.33441 14.7286 6.74966 14.1759 6.44484Z"
+                fill="#FBBC04"
+              />
+              <path
+                d="M0.873171 1.33118C0.835908 1.48048 0.811066 1.62977 0.811066 1.79151V14.2144C0.811066 14.3761 0.829697 14.5254 0.873171 14.6747L7.71094 7.82566L0.873171 1.33118Z"
+                fill="#4285F4"
+              />
+              <path
+                d="M7.53695 7.99992L10.9589 4.57227L3.52496 0.255052C3.25791 0.0933115 2.94118 0 2.5996 0C1.7736 0 1.07802 0.566091 0.873077 1.32503L7.53695 7.99992Z"
+                fill="#34A853"
+              />
+            </svg>
+          </div>
+        </div>
+      </button>
+    </span>
+  </span>
+</div>
+`;

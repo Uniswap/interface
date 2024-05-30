@@ -1,0 +1,13 @@
+{
+  "react-native": {
+    "analytics_auto_collection_enabled": false,
+    "perf_auto_collection_enabled": false
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  }
+}

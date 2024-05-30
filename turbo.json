@@ -1,0 +1,179 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "prepare": {
+      "inputs": [
+        "package.json"
+      ]
+    },
+    "wallet#tradingapi:generate": {
+      "inputs": [
+        "src/data/tradingApi/api.json"
+      ],
+      "outputs": [
+        "src/**/__generated__/**"
+      ]
+    },
+    "@uniswap/interface#prepare": {
+      "inputs": [
+        "package.json"
+      ],
+      "dependsOn": [
+        "ajv",
+        "graphql:generate",
+        "^prepare"
+      ]
+    },
+    "uniswap#prepare": {
+      "inputs": [
+        "package.json"
+      ],
+      "dependsOn": [
+        "contracts",
+        "i18n:generate",
+        "graphql:generate",
+        "^prepare"
+      ]
+    },
+    "wallet#prepare": {
+      "inputs": [
+        "package.json"
+      ],
+      "dependsOn": [
+        "tradingapi:generate",
+        "^prepare"
+      ]
+    },
+    "uniswap#contracts": {
+      "inputs": [
+        "package.json"
+      ],
+      "outputs": [
+        "src/abis/**"
+      ]
+    },
+    "@uniswap/interface#ajv": {
+      "inputs": [
+        "scripts/compile-ajv-validators.js",
+        "package.json"
+      ],
+      "outputs": [
+        "src/utils/__generated__/**"
+      ]
+    },
+    "uniswap#i18n:generate": {
+      "inputs": [
+        "src/locales.ts",
+        "src/i18n/locales/source/**"
+      ],
+      "outputs": [
+        "src/i18n/locales/@types/**"
+      ]
+    },
+    "graphql:schema": {
+      "env": [
+        "THE_GRAPH_SCHEMA_ENDPOINT",
+        "REACT_APP_AWS_API_ENDPOINT",
+        "scripts/**"
+      ],
+      "inputs": [
+        "scripts/fetch-schema.js",
+        ".env.production",
+        "graphql.*.ts"
+      ],
+      "outputs": [
+        "schema.graphql"
+      ],
+      "dependsOn": []
+    },
+    "graphql:generate": {
+      "inputs": [
+        "codegen.ts",
+        "src/**/schema.graphql",
+        "scripts/fetch-schema.js",
+        "src/graphql/**",
+        "src/data/**/*.graphql"
+      ],
+      "outputs": [
+        "src/**/types-and-hooks.ts",
+        "data/__generated__/**",
+        "graphql/__generated__/**"
+      ],
+      "dependsOn": []
+    },
+    "typecheck": {
+      "inputs": [
+        "src/**.ts",
+        "src/**.tsx"
+      ],
+      "outputs": [],
+      "dependsOn": [
+        "prepare",
+        "^typecheck"
+      ]
+    },
+    "check:circular": {},
+    "check:deps:usage": {},
+    "lint": {
+      "dependsOn": [
+        "typecheck",
+        "^lint"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "typecheck",
+        "^lint:fix"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "prepare",
+        "^test"
+      ]
+    },
+    "start": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": [
+        "prepare"
+      ]
+    },
+    "snapshots": {
+      "dependsOn": [
+        "prepare",
+        "typecheck",
+        "lint"
+      ]
+    },
+    "build:production": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**/*"
+      ],
+      "outputs": [
+        "**/build/**"
+      ],
+      "dependsOn": [
+        "prepare",
+        "build"
+      ]
+    },
+    "build": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**.ts",
+        "{packages,apps}/src/**.tsx"
+      ],
+      "outputs": [
+        "**/dist/**",
+        "./apps/next/.next/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    }
+  }
+}

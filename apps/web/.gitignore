@@ -1,0 +1,55 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+
+# generated contract types
+/src/i18n/locales/translations
+/src/i18n/locales/source/en-US_old.json
+
+# generated files
+/src/**/__generated__
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+/cache
+/functions/coverage
+/.swc
+
+# builds
+/build
+/dts
+
+# misc
+.DS_Store
+
+!.env
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+instrumented
+.nyc_output
+.nyc_output/**/*
+
+/.netlify
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+notes.txt
+.idea/
+
+package-lock.json
+
+cypress/downloads
+cypress/videos
+cypress/screenshots
+
+.vercel
+
+.wrangler

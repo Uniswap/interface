@@ -1,0 +1,16 @@
+query AccountList(
+  $addresses: [String!]!
+  $valueModifiers: [PortfolioValueModifier!]
+) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    valueModifiers: $valueModifiers
+  ) {
+    id
+    ownerAddress
+    tokensTotalDenominatedValue {
+      value
+    }
+  }
+}

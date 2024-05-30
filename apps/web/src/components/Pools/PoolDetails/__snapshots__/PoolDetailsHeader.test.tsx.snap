@@ -1,0 +1,739 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c3 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c5 {
+  height: 40px;
+  width: 137px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: 'flex-start';
+  -webkit-box-align: 'flex-start';
+  -ms-flex-align: 'flex-start';
+  align-items: 'flex-start';
+  width: 100%;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+  -webkit-animation-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+.c4 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+        data-testid="pdp-header-loading-skeleton"
+      >
+        <div
+          class="c1 c2"
+        >
+          <div
+            class="c3 c4"
+          />
+          <div
+            class="c3 c5"
+          />
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
+<DocumentFragment>
+  .c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  color: #7D7D7D;
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c1:hover {
+  color: #CECECE;
+}
+
+.c4 {
+  gap: 6px;
+}
+
+.c5 {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: #222222;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.c6 {
+  cursor: pointer;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <nav
+        aria-label="breadcrumb-nav"
+        class="c0"
+      >
+        <a
+          class="c1"
+          href="/explore/ethereum"
+        >
+          Explore 
+          <svg
+            fill="none"
+            height="14"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polyline
+              points="9 18 15 12 9 6"
+            />
+          </svg>
+        </a>
+        <a
+          class="c1"
+          href="/explore/pools/ethereum"
+        >
+          Pools 
+          <svg
+            fill="none"
+            height="14"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polyline
+              points="9 18 15 12 9 6"
+            />
+          </svg>
+        </a>
+        <div
+          aria-current="page"
+          class="c2 c3 c4"
+          data-testid="current-breadcrumb"
+        >
+          <h1
+            class="c5"
+          >
+            USDC / WETH
+          </h1>
+           
+          <div
+            class="c2 c3 c6"
+            data-testid="breadcrumb-token-address"
+          >
+            <div
+              class="c7"
+            >
+              0x88e6...5640
+            </div>
+          </div>
+        </div>
+      </nav>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsHeader renders header text correctly 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c14 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c16 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c17 {
+  height: 100%;
+  color: #222222;
+  background-color: #FFFFFF;
+  margin: 0;
+  padding: 2px 6px 2px 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  border: 1px solid #22222212;
+  outline: none;
+}
+
+.c17:hover {
+  cursor: pointer;
+  background-color: #F9F9F9;
+  opacity: 1;
+}
+
+.c17:focus {
+  background-color: none;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  border: none;
+  text-align: left;
+  width: 100%;
+}
+
+.c19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border: none;
+  font-weight: 535;
+  width: 100%;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: #F9F9F9;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c18:hover {
+  opacity: 0.6;
+}
+
+.c18:active {
+  opacity: 0.4;
+}
+
+.c18:hover {
+  background-color: #2222221f;
+}
+
+.c18:focus {
+  background-color: #2222221f;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c4 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c4 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c5 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c3 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: 'flex-start';
+  -webkit-box-align: 'flex-start';
+  -ms-flex-align: 'flex-start';
+  align-items: 'flex-start';
+  width: 100%;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+  -webkit-animation-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+.c11 {
+  background: #F9F9F9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.c12 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  fill: #7D7D7D;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  gap: 12px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c8 {
+  font-size: 24px !important;
+}
+
+.c9 {
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+@media screen and (max-width:640px) {
+  .c8 {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1 c2"
+        >
+          <div
+            class="c3"
+          >
+            <div
+              class="c4"
+              size="32"
+            >
+              <img
+                class="c5"
+                size="32"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+              <img
+                class="c5"
+                size="32"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
+            </div>
+          </div>
+          <div
+            class="c6"
+          >
+            <div>
+              <div
+                class="c7 c8 css-4kpdx7"
+              >
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                >
+                  USDC
+                </a>
+                 / 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                >
+                  WETH
+                </a>
+              </div>
+            </div>
+            <div
+              class="c10 c11 css-1m65e73"
+            >
+              0.05%
+            </div>
+            <svg
+              class="c12"
+              data-testid="toggle-tokens-reverse-arrows"
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2.05836 6.27468C2.00086 6.21718 1.95514 6.14789 1.92348 6.07123C1.86014 5.91873 1.86014 5.74623 1.92348 5.59373C1.95514 5.51706 2.00086 5.44798 2.05836 5.39048L5.3917 2.05715C5.63586 1.81298 6.03173 1.81298 6.27589 2.05715C6.52006 2.30132 6.52006 2.69718 6.27589 2.94134L4.00925 5.20799H14.1667C14.5117 5.20799 14.7917 5.48799 14.7917 5.83299C14.7917 6.17799 14.5117 6.45799 14.1667 6.45799H4.00925L6.27589 8.72463C6.52006 8.9688 6.52006 9.36466 6.27589 9.60882C6.15423 9.73049 5.9942 9.79213 5.8342 9.79213C5.6742 9.79213 5.51418 9.73132 5.39251 9.60882L2.05836 6.27468ZM18.0766 13.9271C18.045 13.8504 17.9992 13.7813 17.9417 13.7238L14.6084 10.3905C14.3642 10.1463 13.9684 10.1463 13.7242 10.3905C13.4801 10.6346 13.4801 11.0305 13.7242 11.2747L15.9909 13.5413H5.83339C5.48839 13.5413 5.20839 13.8213 5.20839 14.1663C5.20839 14.5113 5.48839 14.7913 5.83339 14.7913H15.9909L13.7242 17.058C13.4801 17.3021 13.4801 17.698 13.7242 17.9422C13.8459 18.0638 14.0059 18.1255 14.1659 18.1255C14.3259 18.1255 14.4859 18.0647 14.6076 17.9422L17.9409 14.6088C17.9984 14.5513 18.0442 14.4822 18.0758 14.4056C18.14 14.2522 18.14 14.0804 18.0766 13.9271Z"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c13 c14"
+          width="max-content"
+        >
+          <div
+            style="position: relative;"
+          >
+            <div
+              class="c15"
+            >
+              <div
+                class="c16"
+                style="width: 100%;"
+              >
+                <div>
+                  <button
+                    class="c17 c18"
+                  >
+                    <div
+                      class="c19"
+                    >
+                      <svg
+                        fill="#222222"
+                        height="18px"
+                        stroke="transparent"
+                        viewBox="0 0 18 18"
+                        width="18px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                          fill="#222222"
+                        />
+                        <path
+                          d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                          fill="#222222"
+                        />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c15"
+            >
+              <div
+                class="c16"
+                style="width: 100%;"
+              >
+                <div>
+                  <button
+                    class="c17 c18"
+                  >
+                    <div
+                      class="c19"
+                    >
+                      <svg
+                        fill="#222222"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        width="18"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13 4.99092C13 4.09592 14.094 3.66096 14.709 4.31196L20.637 10.582C21.121 11.094 21.121 11.894 20.637 12.406L14.709 18.676C14.094 19.326 13 18.891 13 17.997V14.4919C5.437 14.4919 4.93602 16.962 4.96802 19.529C4.97402 20.019 4.32501 20.1811 4.08301 19.7561C3.46701 18.6751 3 17.1999 3 15.4909C3 8.99592 10 8.49702 13 8.49702V4.99092Z"
+                          fill="#222222"
+                        />
+                      </svg>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

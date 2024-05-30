@@ -1,0 +1,107 @@
+import IconButton from 'components/AccountDrawer/IconButton'
+import { useCloseAccountDrawer, useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import Column from 'components/Column'
+import { Settings } from 'components/Icons/Settings'
+import Row, { AutoRow } from 'components/Row'
+import { useConnectWithLogs } from 'connection/activate'
+import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
+import { Trans } from 'i18n'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { flexColumnNoWrap } from 'theme/styles'
+import { Text } from 'ui/src'
+import ConnectionErrorView from './ConnectionErrorView'
+import { Option } from './Option'
+import PrivacyPolicyNotice from './PrivacyPolicyNotice'
+import { UniswapWalletOptions } from './UniswapWalletOptions'
+import { useOrderedConnections } from './useOrderedConnections'
+
+const Wrapper = styled.div`
+  ${flexColumnNoWrap};
+  background-color: ${({ theme }) => theme.surface1};
+  width: 100%;
+  padding: 14px 16px 16px;
+  flex: 1;
+  gap: 16px;
+`
+
+const OptionGrid = styled.div`
+  display: grid;
+  flex: 1;
+  grid-gap: 2px;
+  border-radius: 12px;
+  overflow: hidden;
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
+    grid-template-columns: 1fr;
+  `};
+`
+
+const TextSectionWrapper = styled.div`
+  padding: 0 4px;
+`
+
+const Line = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${({ theme }) => theme.surface3};
+`
+
+export default function WalletModal({ openSettings }: { openSettings: () => void }) {
+  const showMoonpayText = useShowMoonpayText()
+
+  const closeAccountDrawer = useCloseAccountDrawer()
+  const connectWithLogs = useConnectWithLogs(closeAccountDrawer)
+  const { error } = connectWithLogs
+
+  const showUniswapWalletOptions = useUniswapWalletOptions()
+  const connectors = useOrderedConnections(showUniswapWalletOptions)
+
+  return (
+    <Wrapper data-testid="wallet-modal">
+      <AutoRow justify="space-between" width="100%">
+        <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
+        <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
+      </AutoRow>
+      {showUniswapWalletOptions && (
+        <>
+          <UniswapWalletOptions connectWithLogs={connectWithLogs} />
+          <Row align="center" padding="8px 0px">
+            <Line />
+            <Text variant="body3" color="$neutral2" mx={18} whiteSpace="nowrap">
+              <Trans>Other wallets</Trans>
+            </Text>
+            <Line />
+          </Row>
+        </>
+      )}
+      {error ? (
+        <ConnectionErrorView connectWithLogs={connectWithLogs} />
+      ) : (
+        <Column gap="md" flex="1">
+          <Row flex="1" align="flex-start">
+            <OptionGrid data-testid="option-grid">
+              {connectors.map((c) => (
+                <Option connector={c} key={c.uid} connectWithLogs={connectWithLogs} />
+              ))}
+            </OptionGrid>
+          </Row>
+          <Column gap="md">
+            <TextSectionWrapper>
+              <PrivacyPolicyNotice />
+            </TextSectionWrapper>
+            {showMoonpayText && (
+              <>
+                <Line />
+                <TextSectionWrapper>
+                  <ThemedText.Caption color="neutral3">
+                    <Trans>Fiat onramp powered by Swipelux OÜ</Trans>
+                  </ThemedText.Caption>
+                </TextSectionWrapper>
+              </>
+            )}
+          </Column>
+        </Column>
+      )}
+    </Wrapper>
+  )
+}

@@ -1,0 +1,144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  gap: 6px;
+}
+
+.c3 {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: #222222;
+  white-space: nowrap;
+  margin: 0;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        aria-current="page"
+        class="c0 c1 c2"
+        data-testid="current-breadcrumb"
+      >
+        <h1
+          class="c3"
+        >
+          ETH
+        </h1>
+         
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`BreadcrumbNav renders hover components correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c2 {
+  gap: 6px;
+}
+
+.c3 {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: #222222;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.c4 {
+  cursor: pointer;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        aria-current="page"
+        class="c0 c1 c2"
+        data-testid="current-breadcrumb"
+      >
+        <h1
+          class="c3"
+        >
+          WBTC
+        </h1>
+         
+        <div
+          class="c0 c1 c4"
+          data-testid="breadcrumb-token-address"
+        >
+          <div
+            class="c5"
+          >
+            0x2260...C599
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

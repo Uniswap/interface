@@ -1,0 +1,71 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    "@web3-react/eip1193",
+    "@web3-react/empty",
+    "@swc/core",
+    "@swc/jest",
+    "@swc/plugin-styled-components",
+    "@typechain/ethers-v5",
+    "@vanilla-extract/jest-transform",
+    "buffer",
+    "swc-loader",
+    "postinstall-postinstall",
+    "process",
+    "madge",
+    # Dependencies that depcheck thinks are missing but are actually present or never used
+    ## package.json scripts
+    "esbuild-register",
+    ## GraphQL
+    "@graphql-codegen/*",
+    "get-graphql-schema",
+    ## React Scripts and subpackages used from within it
+    "case-sensitive-paths-webpack-plugin",
+    "react-dev-utils",
+    "workbox-expiration",
+    "workbox-strategies",
+    ## Packages used in github actions
+    "start-server-and-test",
+    ## Polyfills
+    "resize-observer-polyfill",
+    ## Linting and Babel
+    "@babel/preset-env",
+    "eslint-plugin-import",
+    "prettier",
+    "terser-webpack-plugin",
+    ## Testing
+    "@types/testing-library__cypress",
+    ## i18n
+    "dotenv-cli",
+    "@crowdin/cli",
+    ## sub-packages
+    "@ethersproject/*",
+    "@walletconnect/ethereum-provider",
+    "@testing-library/dom",
+    ## Internal packages / workspaces
+    "utilities",
+    "ui",
+    ## Top level local file paths
+    "abis",
+    "analytics",
+    "assets",
+    "components",
+    "connection",
+    "constants",
+    "dev",
+    "featureFlags",
+    "hooks",
+    "lib",
+    "locales",
+    "nft",
+    "pages",
+    "polyfills",
+    "rpc",
+    "shared-cloud",
+    "state",
+    "test-utils",
+    "theme",
+    "tracing",
+    "types",
+    "utils",
+    "i18n",
+  ]

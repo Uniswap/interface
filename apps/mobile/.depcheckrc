@@ -1,0 +1,29 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    "@uniswap/ethers-rs-mobile",
+    "babel-loader",
+    "babel-jest",
+    "babel-plugin-react-native-web",
+    "babel-plugin-transform-remove-console",
+    "cross-fetch",
+    "expo-localization",
+    "expo-linking",
+    "madge",
+    "postinstall-postinstall",
+    ## React Native Usage
+    "@amplitude/analytics-react-native",
+    "@react-native-masked-view/masked-view",
+    "@react-native-firebase/app-check",
+    "react-native-image-colors",
+    # Dependencies that depcheck thinks are missing but are actually present or never used
+    ## Internal packages / workspaces
+    "e2e",
+    "src",
+    "ui",
+    "tsconfig",
+    ## Subpackages of installed packages
+    "@redux-saga/core",
+    "@ethersproject/constants",
+    "@react-navigation/elements",
+    "metro-config",
+  ]

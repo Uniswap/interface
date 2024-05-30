@@ -1,0 +1,886 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c1 {
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.c2 {
+  gap: 4px;
+  background: #F9F9F9;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  padding: 16px;
+}
+
+.c2:hover {
+  opacity: 0.6;
+}
+
+.c2:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  padding: 4px 6px;
+  background: #F9F9F9;
+}
+
+.c11 {
+  gap: 8px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin-right: 0;
+  margin-left: auto;
+  color: #7D7D7D;
+}
+
+.c13 {
+  gap: 10px;
+}
+
+.c14 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  white-space: nowrap;
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c15 {
+    display: none;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c0 c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+              size="16"
+            >
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+            <div
+              class="c7 css-n8z49y"
+            >
+              WETH/USDC
+            </div>
+            <div
+              class="c8 c9 css-1m65e73"
+            >
+              0.5%
+            </div>
+            <div
+              class="c3 c10 c11"
+            >
+              <div
+                class="c12 css-obwv3p"
+              >
+                Closed
+              </div>
+              <svg
+                fill="none"
+                height="12"
+                viewBox="0 0 12 12"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  clip-path="url(#clip0_2958_135280)"
+                >
+                  <path
+                    d="M6 11C8.76142 11 11 8.76142 11 6C11 3.23858 8.76142 1 6 1C3.23858 1 1 3.23858 1 6C1 8.76142 3.23858 11 6 11Z"
+                    stroke="#9B9B9B"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M2.46484 2.46509L9.53484 9.53509"
+                    stroke="#9B9B9B"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </g>
+                <defs>
+                  <clippath
+                    id="clip0_2958_135280"
+                  >
+                    <rect
+                      fill="white"
+                      height="12"
+                      width="12"
+                    />
+                  </clippath>
+                </defs>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="c3 c10 c13"
+          >
+            <div
+              class="c7 c14 css-obwv3p"
+              data-testid="position-min-0"
+            >
+              Min: 0 WETH per USDC
+            </div>
+            <svg
+              class="c15"
+              fill="none"
+              height="9"
+              viewBox="0 0 14 9"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.00284 8.5L0.184659 4.68182L4.00284 0.863636L4.65909 1.51136L1.95739 4.21307H12.1335L9.43182 1.51136L10.0881 0.863636L13.9062 4.68182L10.0881 8.5L9.43182 7.84375L12.1335 5.15057H1.95739L4.65909 7.84375L4.00284 8.5Z"
+                fill="#5E5E5E"
+              />
+            </svg>
+            <div
+              class="c7 c14 css-obwv3p"
+              data-testid="position-max-1"
+            >
+              Max: 1.00 WETH per USDC
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c1 {
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.c2 {
+  gap: 4px;
+  background: #F9F9F9;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  padding: 16px;
+}
+
+.c2:hover {
+  opacity: 0.6;
+}
+
+.c2:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  padding: 4px 6px;
+  background: #F9F9F9;
+}
+
+.c11 {
+  gap: 8px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin-right: 0;
+  margin-left: auto;
+  color: #40B66B;
+}
+
+.c14 {
+  gap: 10px;
+}
+
+.c15 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  white-space: nowrap;
+}
+
+.c13 {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #40B66B;
+}
+
+@media screen and (max-width:640px) {
+  .c14 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c16 {
+    display: none;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c0 c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+              size="16"
+            >
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+            <div
+              class="c7 css-n8z49y"
+            >
+              WETH/USDC
+            </div>
+            <div
+              class="c8 c9 css-1m65e73"
+            >
+              0.5%
+            </div>
+            <div
+              class="c3 c10 c11"
+            >
+              <div
+                class="c12 css-obwv3p"
+              >
+                In range
+              </div>
+              <div
+                class="c13"
+              />
+            </div>
+          </div>
+          <div
+            class="c3 c10 c14"
+          >
+            <div
+              class="c7 c15 css-obwv3p"
+              data-testid="position-min-0"
+            >
+              Min: 0 WETH per USDC
+            </div>
+            <svg
+              class="c16"
+              fill="none"
+              height="9"
+              viewBox="0 0 14 9"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.00284 8.5L0.184659 4.68182L4.00284 0.863636L4.65909 1.51136L1.95739 4.21307H12.1335L9.43182 1.51136L10.0881 0.863636L13.9062 4.68182L10.0881 8.5L9.43182 7.84375L12.1335 5.15057H1.95739L4.65909 7.84375L4.00284 8.5Z"
+                fill="#5E5E5E"
+              />
+            </svg>
+            <div
+              class="c7 c15 css-obwv3p"
+              data-testid="position-max-1"
+            >
+              Max: 1.00 WETH per USDC
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c1 {
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.c2 {
+  gap: 4px;
+  background: #F9F9F9;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  padding: 16px;
+}
+
+.c2:hover {
+  opacity: 0.6;
+}
+
+.c2:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  padding: 4px 6px;
+  background: #F9F9F9;
+}
+
+.c11 {
+  gap: 8px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin-right: 0;
+  margin-left: auto;
+  color: #EEB317;
+}
+
+.c13 {
+  gap: 10px;
+}
+
+.c14 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  white-space: nowrap;
+}
+
+@media screen and (max-width:640px) {
+  .c13 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c15 {
+    display: none;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c0 c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+              size="16"
+            >
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
+              <img
+                class="c6"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+            <div
+              class="c7 css-n8z49y"
+            >
+              WETH/USDC
+            </div>
+            <div
+              class="c8 c9 css-1m65e73"
+            >
+              0.5%
+            </div>
+            <div
+              class="c3 c10 c11"
+            >
+              <div
+                class="c12 css-obwv3p"
+              >
+                Out of range
+              </div>
+              <svg
+                fill="none"
+                height="12"
+                stroke="#EEB317"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="12"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                />
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="9"
+                  y2="13"
+                />
+                <line
+                  x1="12"
+                  x2="12.01"
+                  y1="17"
+                  y2="17"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="c3 c10 c13"
+          >
+            <div
+              class="c7 c14 css-obwv3p"
+              data-testid="position-min-0"
+            >
+              Min: 0 WETH per USDC
+            </div>
+            <svg
+              class="c15"
+              fill="none"
+              height="9"
+              viewBox="0 0 14 9"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.00284 8.5L0.184659 4.68182L4.00284 0.863636L4.65909 1.51136L1.95739 4.21307H12.1335L9.43182 1.51136L10.0881 0.863636L13.9062 4.68182L10.0881 8.5L9.43182 7.84375L12.1335 5.15057H1.95739L4.65909 7.84375L4.00284 8.5Z"
+                fill="#5E5E5E"
+              />
+            </svg>
+            <div
+              class="c7 c14 css-obwv3p"
+              data-testid="position-max-1"
+            >
+              Max: 1.00 WETH per USDC
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

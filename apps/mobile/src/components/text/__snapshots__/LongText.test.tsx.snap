@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LongText renders without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "gap": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    onTextLayout={[Function]}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Some very long text
+  </Text>
+</View>
+`;

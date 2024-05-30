@@ -1,0 +1,26 @@
+fragment SimpleTokenDetails on Token {
+  id
+  address
+  chain
+  symbol
+  name
+  decimals
+  standard
+  project {
+    id
+    name
+    logo {
+      id
+      url
+    }
+    safetyLevel
+    logoUrl
+    isSpam
+  }
+}
+
+query SimpleToken($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    ...SimpleTokenDetails
+  }
+}

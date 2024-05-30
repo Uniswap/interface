@@ -1,0 +1,198 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SortButton renders without error 1`] = `
+<ContextMenu
+  actions={
+    [
+      {
+        "orderBy": "VOLUME",
+        "systemIcon": "checkmark",
+        "title": "Uniswap volume (24H)",
+      },
+      {
+        "orderBy": "TOTAL_VALUE_LOCKED",
+        "systemIcon": "",
+        "title": "Uniswap TVL",
+      },
+      {
+        "orderBy": "MARKET_CAP",
+        "systemIcon": "",
+        "title": "Market cap",
+      },
+      {
+        "orderBy": "PriceChangePercentage24hDesc",
+        "systemIcon": "",
+        "title": "Price increase (24H)",
+      },
+      {
+        "orderBy": "PriceChangePercentage24hAsc",
+        "systemIcon": "",
+        "title": "Price decrease (24H)",
+      },
+    ]
+  }
+  dropdownMenuMode={true}
+  onPress={[Function]}
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onLongPress={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "flexDirection": "row",
+        "opacity": 1,
+        "paddingBottom": 8,
+        "paddingLeft": 16,
+        "paddingRight": 16,
+        "paddingTop": 8,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flexDirection": "row",
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={true}
+        lineBreakMode="clip"
+        maxFontSizeMultiplier={1.2}
+        numberOfLines={1}
+        style={
+          {
+            "color": "#7D7D7D",
+            "flexShrink": 1,
+            "fontFamily": "Basel-Medium",
+            "fontSize": 17,
+            "fontWeight": "500",
+            "lineHeight": 24,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        Volume
+      </Text>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "flexDirection": "column",
+            "justifyContent": "center",
+            "transform": [
+              {
+                "rotate": "270deg",
+              },
+            ],
+          }
+        }
+      >
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight="20"
+          bbWidth="20"
+          fill="none"
+          focusable={false}
+          meetOrSlice={0}
+          minX={0}
+          minY={0}
+          stroke="currentColor"
+          strokeWidth={8}
+          style={
+            [
+              {
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              {
+                "color": "#7D7D7D",
+                "height": 20,
+                "width": 20,
+              },
+              {
+                "flex": 0,
+                "height": 20,
+                "width": 20,
+              },
+            ]
+          }
+          tintColor="#7D7D7D"
+          vbHeight={24}
+          vbWidth={24}
+        >
+          <RNSVGGroup
+            fill={null}
+            propList={
+              [
+                "fill",
+                "stroke",
+                "strokeWidth",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeWidth="8"
+          >
+            <RNSVGPath
+              d="M15 6L9 12L15 18"
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
+                }
+              }
+              propList={
+                [
+                  "stroke",
+                  "strokeWidth",
+                  "strokeLinecap",
+                  "strokeLinejoin",
+                ]
+              }
+              stroke={
+                {
+                  "type": 2,
+                }
+              }
+              strokeLinecap={1}
+              strokeLinejoin={1}
+              strokeWidth="3"
+            />
+          </RNSVGGroup>
+        </RNSVGSvgView>
+      </View>
+    </View>
+  </View>
+</ContextMenu>
+`;

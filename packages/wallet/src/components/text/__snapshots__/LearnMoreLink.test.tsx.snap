@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LearnMoreLink renders without error 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.2}
+    style={
+      {
+        "color": "#FC72FF",
+        "fontFamily": "Basel-Medium",
+        "fontSize": 16,
+        "fontWeight": "500",
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Learn more
+  </Text>
+</View>
+`;

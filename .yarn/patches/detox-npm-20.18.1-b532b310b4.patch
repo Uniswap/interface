@@ -1,0 +1,14 @@
+diff --git a/android/rninfo.gradle b/android/rninfo.gradle
+index c09d2af1d219a4134dc0301e9270aef568730d2b..f1b887cf5dcf56c2f66fff3e6f1b674d48704dac 100644
+--- a/android/rninfo.gradle
++++ b/android/rninfo.gradle
+@@ -3,7 +3,8 @@ import groovy.json.JsonSlurper
+ def getRNVersion = { workingDir ->
+     println("RNInfo: workingDir=$workingDir")
+     def jsonSlurper = new JsonSlurper()
+-    def packageFile = "$workingDir/../node_modules/react-native/package.json"
++    // Fixes patch to node_modules in monorepo project
++    def packageFile = "$workingDir/../../../node_modules/react-native/package.json"
+     println("RNInfo: reading $packageFile")
+     Map<String, Object> packageJSON  = jsonSlurper.parse(new File(packageFile))
+     String rnVersion = packageJSON.get('version')

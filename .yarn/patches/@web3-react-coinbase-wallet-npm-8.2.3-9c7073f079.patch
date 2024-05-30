@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index f38d06e2de52b5035560d63d6889dc54d5ca021b..4f8fa194b60c73a901dbce4a742f598b1c95c026 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -62,7 +62,7 @@ class CoinbaseWallet extends types_1.Connector {
+         return __awaiter(this, void 0, void 0, function* () {
+             if (this.eagerConnection)
+                 return;
+-            yield (this.eagerConnection = Promise.resolve().then(() => __importStar(require('@coinbase/wallet-sdk'))).then((m) => {
++            yield (this.eagerConnection = Promise.resolve().then(async () => __importStar(await import('@coinbase/wallet-sdk'))).then((m) => {
+                 const _a = this.options, { url } = _a, options = __rest(_a, ["url"]);
+                 this.coinbaseWallet = new m.default(options);
+                 this.provider = this.coinbaseWallet.makeWeb3Provider(url);

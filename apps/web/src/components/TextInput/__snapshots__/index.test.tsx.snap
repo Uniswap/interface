@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResizableTextArea renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  font-size: 12;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 0;
+  resize: none;
+  background-color: #FFFFFF;
+  -webkit-transition: color 300ms step-start;
+  transition: color 300ms step-start;
+  color: #222222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 535;
+  width: 100%;
+  line-height: 1.2;
+  padding: 0px;
+  -webkit-appearance: textfield;
+}
+
+.c0::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-outer-spin-button,
+.c0::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-input-placeholder {
+  color: #7D7D7D;
+}
+
+.c0::-moz-placeholder {
+  color: #7D7D7D;
+}
+
+.c0:-ms-input-placeholder {
+  color: #7D7D7D;
+}
+
+.c0::placeholder {
+  color: #7D7D7D;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <textarea
+        autocapitalize="off"
+        autocomplete="off"
+        autocorrect="off"
+        class="c0 testing"
+        font-size="12"
+        placeholder="Test Placeholder"
+        spellcheck="false"
+        style="height: auto; min-height: 535px;"
+      >
+        My test input
+      </textarea>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TextInput renders correctly 1`] = `
+<DocumentFragment>
+  .c0 {
+  font-size: 12;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  width: 0;
+  background-color: #FFFFFF;
+  -webkit-transition: color 300ms step-start;
+  transition: color 300ms step-start;
+  color: #222222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 535;
+  width: 100%;
+  padding: 0px;
+  -webkit-appearance: textfield;
+}
+
+.c0::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-outer-spin-button,
+.c0::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c0::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c0::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c0:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c0::placeholder {
+  color: #CECECE;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="testing"
+      >
+        <input
+          autocapitalize="off"
+          autocomplete="off"
+          autocorrect="off"
+          class="c0"
+          font-size="12"
+          placeholder="Test Placeholder"
+          spellcheck="false"
+          type="text"
+          value="My test input"
+        />
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

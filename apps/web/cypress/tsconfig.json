@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": true,
+    "isolatedModules": false,
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "target": "ES6",
+    "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/cypress", // avoid clobbering the build tsbuildinfo
+    "types": ["cypress", "node"],
+  },
+  "include": ["**/*.ts"],
+}

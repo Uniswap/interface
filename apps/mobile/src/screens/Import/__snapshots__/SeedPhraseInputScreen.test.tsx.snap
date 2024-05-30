@@ -1,0 +1,696 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
+<View
+  sentry-label="Screen"
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "paddingBottom": undefined,
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        {
+          "flex": 1,
+          "justifyContent": "flex-end",
+        },
+        {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <RCTScrollView
+      bounces={false}
+      contentContainerStyle={
+        {
+          "flexGrow": 1,
+        }
+      }
+      keyboardShouldPersistTaps="handled"
+    >
+      <View>
+        <View
+          animatedStyle={
+            {
+              "value": {},
+            }
+          }
+          collapsable={false}
+          entering={[Function]}
+          exiting={[Function]}
+          style={
+            {
+              "flexDirection": "column",
+              "flexGrow": 1,
+              "gap": 16,
+              "minHeight": 0,
+              "paddingBottom": 12,
+              "paddingLeft": 16,
+              "paddingRight": 16,
+              "paddingTop": 200,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "flexDirection": "column",
+                "gap": 12,
+                "marginBottom": 12,
+                "marginLeft": 12,
+                "marginRight": 12,
+                "marginTop": 12,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.2}
+              style={
+                {
+                  "color": "#222222",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 25,
+                  "lineHeight": 32,
+                  "paddingTop": 0,
+                  "textAlign": "center",
+                }
+              }
+              suppressHighlighting={true}
+            >
+              Enter your recovery phrase
+            </Text>
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                {
+                  "color": "#7D7D7D",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 17,
+                  "lineHeight": 24,
+                  "textAlign": "center",
+                }
+              }
+              suppressHighlighting={true}
+            >
+              Your recovery phrase will only be stored locally on your device.
+            </Text>
+          </View>
+          <View
+            style={
+              {
+                "flexDirection": "column",
+                "flexGrow": 1,
+                "justifyContent": "space-between",
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "gap": 16,
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "flexDirection": "column",
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                  }
+                }
+              >
+                <View
+                  onStartShouldSetResponder={[Function]}
+                  onTouchEnd={[Function]}
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "gap": 12,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "backgroundColor": "#FFFFFF",
+                        "borderBottomColor": "#2222220D",
+                        "borderBottomLeftRadius": 20,
+                        "borderBottomRightRadius": 20,
+                        "borderBottomWidth": 1,
+                        "borderLeftColor": "#2222220D",
+                        "borderLeftWidth": 1,
+                        "borderRightColor": "#2222220D",
+                        "borderRightWidth": 1,
+                        "borderStyle": "solid",
+                        "borderTopColor": "#2222220D",
+                        "borderTopLeftRadius": 20,
+                        "borderTopRightRadius": 20,
+                        "borderTopWidth": 1,
+                        "flexDirection": "column",
+                        "flexShrink": 1,
+                        "minHeight": 120,
+                        "paddingBottom": 16,
+                        "paddingLeft": 24,
+                        "paddingRight": 24,
+                        "paddingTop": 16,
+                        "width": "100%",
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "alignItems": "flex-end",
+                          "flexDirection": "row",
+                          "justifyContent": "flex-start",
+                          "width": "100%",
+                        }
+                      }
+                    >
+                      <TextInput
+                        autoCapitalize="none"
+                        autoComplete="off"
+                        autoCorrect={false}
+                        autoFocus={true}
+                        blurOnSubmit={true}
+                        focusable={true}
+                        maxFontSizeMultiplier={1.4}
+                        multiline={true}
+                        onBlur={[Function]}
+                        onChangeText={[Function]}
+                        onFocus={[Function]}
+                        onSubmitEditing={[Function]}
+                        outlineWidth={0}
+                        placeholderTextColor="#CECECE"
+                        returnKeyType="done"
+                        scrollEnabled={false}
+                        selectionColor="#222222"
+                        spellCheck={false}
+                        style={
+                          {
+                            "backgroundColor": "transparent",
+                            "borderBottomColor": "transparent",
+                            "borderBottomLeftRadius": 12,
+                            "borderBottomRightRadius": 12,
+                            "borderBottomWidth": 1,
+                            "borderLeftColor": "transparent",
+                            "borderLeftWidth": 1,
+                            "borderRightColor": "transparent",
+                            "borderRightWidth": 1,
+                            "borderStyle": "solid",
+                            "borderTopColor": "transparent",
+                            "borderTopLeftRadius": 12,
+                            "borderTopRightRadius": 12,
+                            "borderTopWidth": 1,
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 17,
+                            "height": "auto",
+                            "justifyContent": "center",
+                            "lineHeight": 17,
+                            "minWidth": 0,
+                            "paddingBottom": 0,
+                            "paddingLeft": 0,
+                            "paddingRight": 0,
+                            "paddingTop": 0,
+                            "textAlign": "left",
+                            "width": 8,
+                          }
+                        }
+                        testID="import_account_form/input"
+                        textAlignVertical="bottom"
+                      />
+                    </View>
+                    <View
+                      onLayout={[Function]}
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "row",
+                          "flexGrow": 1,
+                          "gap": 8,
+                          "paddingLeft": 24,
+                          "paddingRight": 24,
+                          "paddingTop": 16,
+                          "position": "absolute",
+                          "width": "100%",
+                        }
+                      }
+                    >
+                      <Text
+                        adjustsFontSizeToFit={true}
+                        allowFontScaling={true}
+                        maxFontSizeMultiplier={1.4}
+                        numberOfLines={1}
+                        style={
+                          {
+                            "color": "#7D7D7D",
+                            "flexShrink": 1,
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 17,
+                            "lineHeight": 24,
+                          }
+                        }
+                        suppressHighlighting={true}
+                      >
+                        Type your recovery phrase
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        {
+                          "alignItems": "center",
+                          "flexDirection": "column",
+                          "justifyContent": "center",
+                          "width": "100%",
+                        }
+                      }
+                    >
+                      <View
+                        style={
+                          {
+                            "flexDirection": "column",
+                            "paddingTop": 64,
+                            "position": "absolute",
+                            "top": 0,
+                          }
+                        }
+                      >
+                        <View
+                          accessibilityState={
+                            {
+                              "busy": undefined,
+                              "checked": undefined,
+                              "disabled": undefined,
+                              "expanded": undefined,
+                              "selected": undefined,
+                            }
+                          }
+                          accessibilityValue={
+                            {
+                              "max": undefined,
+                              "min": undefined,
+                              "now": undefined,
+                              "text": undefined,
+                            }
+                          }
+                          accessible={true}
+                          collapsable={false}
+                          focusable={true}
+                          hitSlop={
+                            {
+                              "bottom": 5,
+                              "left": 5,
+                              "right": 5,
+                              "top": 5,
+                            }
+                          }
+                          onClick={[Function]}
+                          onResponderGrant={[Function]}
+                          onResponderMove={[Function]}
+                          onResponderRelease={[Function]}
+                          onResponderTerminate={[Function]}
+                          onResponderTerminationRequest={[Function]}
+                          onStartShouldSetResponder={[Function]}
+                          style={
+                            {
+                              "backgroundColor": "#FFEFFF",
+                              "borderBottomLeftRadius": 12,
+                              "borderBottomRightRadius": 12,
+                              "borderTopLeftRadius": 12,
+                              "borderTopRightRadius": 12,
+                              "onPressIn": [Function],
+                              "opacity": 1,
+                              "paddingBottom": 8,
+                              "paddingLeft": 8,
+                              "paddingRight": 8,
+                              "paddingTop": 8,
+                            }
+                          }
+                        >
+                          <View
+                            style={
+                              {
+                                "alignItems": "center",
+                                "flexDirection": "row",
+                                "gap": 4,
+                                "justifyContent": "center",
+                              }
+                            }
+                          >
+                            <Text
+                              allowFontScaling={true}
+                              maxFontSizeMultiplier={1.2}
+                              style={
+                                {
+                                  "color": "#FC72FF",
+                                  "fontFamily": "Basel-Medium",
+                                  "fontSize": 13,
+                                  "fontWeight": "500",
+                                  "lineHeight": 16,
+                                }
+                              }
+                              suppressHighlighting={true}
+                            >
+                              Paste
+                            </Text>
+                            <RNSVGSvgView
+                              align="xMidYMid"
+                              bbHeight="16"
+                              bbWidth="16"
+                              fill="currentColor"
+                              focusable={false}
+                              meetOrSlice={0}
+                              minX={0}
+                              minY={0}
+                              strokeWidth={8}
+                              style={
+                                [
+                                  {
+                                    "backgroundColor": "transparent",
+                                    "borderWidth": 0,
+                                  },
+                                  {
+                                    "color": "#FC72FF",
+                                    "height": 16,
+                                    "width": 16,
+                                  },
+                                  {
+                                    "flex": 0,
+                                    "height": 16,
+                                    "width": 16,
+                                  },
+                                ]
+                              }
+                              tintColor="#FC72FF"
+                              vbHeight={16}
+                              vbWidth={16}
+                            >
+                              <RNSVGGroup
+                                fill={
+                                  {
+                                    "type": 2,
+                                  }
+                                }
+                                propList={
+                                  [
+                                    "fill",
+                                    "strokeWidth",
+                                  ]
+                                }
+                                strokeWidth="8"
+                              >
+                                <RNSVGPath
+                                  d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
+                                  fill={
+                                    {
+                                      "type": 2,
+                                    }
+                                  }
+                                  propList={
+                                    [
+                                      "fill",
+                                    ]
+                                  }
+                                />
+                              </RNSVGGroup>
+                            </RNSVGSvgView>
+                          </View>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View
+                    style={
+                      {
+                        "flexDirection": "column",
+                      }
+                    }
+                  />
+                </View>
+              </View>
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "flexDirection": "column",
+                    "justifyContent": "center",
+                  }
+                }
+              >
+                <View
+                  accessibilityState={
+                    {
+                      "busy": undefined,
+                      "checked": undefined,
+                      "disabled": undefined,
+                      "expanded": undefined,
+                      "selected": undefined,
+                    }
+                  }
+                  accessibilityValue={
+                    {
+                      "max": undefined,
+                      "min": undefined,
+                      "now": undefined,
+                      "text": undefined,
+                    }
+                  }
+                  accessible={true}
+                  collapsable={false}
+                  focusable={true}
+                  hitSlop={
+                    {
+                      "bottom": 5,
+                      "left": 5,
+                      "right": 5,
+                      "top": 5,
+                    }
+                  }
+                  onClick={[Function]}
+                  onResponderGrant={[Function]}
+                  onResponderMove={[Function]}
+                  onResponderRelease={[Function]}
+                  onResponderTerminate={[Function]}
+                  onResponderTerminationRequest={[Function]}
+                  onStartShouldSetResponder={[Function]}
+                  style={
+                    {
+                      "flexDirection": "row",
+                      "gap": 8,
+                      "opacity": 1,
+                    }
+                  }
+                >
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight="20"
+                    bbWidth="20"
+                    fill="#CECECE"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
+                    style={
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "#FFFFFF",
+                          "height": 20,
+                          "width": 20,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 20,
+                          "width": 20,
+                        },
+                      ]
+                    }
+                    tintColor="#FFFFFF"
+                    vbHeight={24}
+                    vbWidth={24}
+                  >
+                    <RNSVGGroup
+                      fill={
+                        {
+                          "payload": 4291743438,
+                          "type": 0,
+                        }
+                      }
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
+                      }
+                      strokeWidth="8"
+                    >
+                      <RNSVGPath
+                        d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="1.5"
+                      />
+                      <RNSVGPath
+                        d="M9.08997 9.00001C9.32507 8.33167 9.78912 7.76811 10.3999 7.40914C11.0107 7.05016 11.7289 6.91894 12.4271 7.03872C13.1254 7.15849 13.7588 7.52153 14.215 8.06353C14.6713 8.60554 14.921 9.29153 14.92 10C14.92 12 11.92 13 11.92 13"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="1.5"
+                      />
+                      <RNSVGPath
+                        d="M12 17H12.01"
+                        fill={
+                          {
+                            "payload": 4278190080,
+                            "type": 0,
+                          }
+                        }
+                        propList={
+                          [
+                            "stroke",
+                            "strokeWidth",
+                            "strokeLinecap",
+                            "strokeLinejoin",
+                          ]
+                        }
+                        stroke={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        strokeLinecap={1}
+                        strokeLinejoin={1}
+                        strokeWidth="1.5"
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    style={
+                      {
+                        "color": "#CECECE",
+                        "fontFamily": "Basel-Book",
+                        "fontSize": 17,
+                        "lineHeight": 24,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    How do I find my recovery phrase?
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View
+              pointerEvents="none"
+              style={
+                {
+                  "alignItems": "center",
+                  "backgroundColor": "#FC72FF",
+                  "borderBottomColor": "transparent",
+                  "borderBottomLeftRadius": 16,
+                  "borderBottomRightRadius": 16,
+                  "borderBottomWidth": 1,
+                  "borderLeftColor": "transparent",
+                  "borderLeftWidth": 1,
+                  "borderRightColor": "transparent",
+                  "borderRightWidth": 1,
+                  "borderStyle": "solid",
+                  "borderTopColor": "transparent",
+                  "borderTopLeftRadius": 16,
+                  "borderTopRightRadius": 16,
+                  "borderTopWidth": 1,
+                  "flexDirection": "row",
+                  "gap": 8,
+                  "height": "auto",
+                  "justifyContent": "center",
+                  "opacity": 0.4,
+                  "paddingBottom": 12,
+                  "paddingLeft": 12,
+                  "paddingRight": 12,
+                  "paddingTop": 12,
+                }
+              }
+              testID="seed-input-submit"
+              userSelect="none"
+            >
+              <Text
+                maxFontSizeMultiplier={1.2}
+                style={
+                  {
+                    "color": "#FFFFFF",
+                    "fontFamily": "Basel-Medium",
+                    "fontSize": 19,
+                    "fontWeight": "500",
+                    "lineHeight": 24,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                Continue
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+  ExpoLinearGradient
+</View>
+`;

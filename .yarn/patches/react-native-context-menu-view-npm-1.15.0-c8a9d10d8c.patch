@@ -1,0 +1,19 @@
+diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+index 9fc8eeb9b6b66061fca818a17127ff6f21df3126..6a3c9f1addd4bd8bcea3afc2e60aca52cd4c8248 100644
+--- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
++++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+@@ -67,6 +67,14 @@ public class ContextMenuView extends ReactViewGroup implements View.OnCreateCont
+                     }
+                 }
+             }
++
++            @Override
++            public boolean onDoubleTap(MotionEvent e) {
++                if (dropdownMenuMode && !disabled) {
++                    showContextMenu(e.getX(), e.getY());
++                }
++                return super.onSingleTapConfirmed(e);
++            }
+         });
+     }
+ 
