@@ -12025,10 +12025,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ubeswap/default-token-list@npm:4.1.62":
-  version: 4.1.62
-  resolution: "@ubeswap/default-token-list@npm:4.1.62"
-  checksum: 6d3233e7681dcfaec68f31c79e00fe2836254c84334a07ad76bfb1b800e54f6627d41dba9ecc7b7e857a01955cd68d8aae425ef0d4803f001d5dab3ce6ae9e14
+"@ubeswap/default-token-list@npm:4.1.64":
+  version: 4.1.64
+  resolution: "@ubeswap/default-token-list@npm:4.1.64"
+  checksum: 54ad6505c27b37c00604af8f4ad08d0b8b5b001e25d19da58701581e2903a3170f6963afb0e49d6fe5131cbd204a00a8df0c868654f68357d6d27b6ae58ba133
   languageName: node
   linkType: hard
 
@@ -12108,7 +12108,7 @@ __metadata:
     "@types/node": 18.16.0
     "@types/sinon": ^10.0.2
     "@types/stats-lite": ^2.2.0
-    "@ubeswap/default-token-list": 4.1.62
+    "@ubeswap/default-token-list": 4.1.64
     "@ubeswap/eslint-config": "workspace:^"
     "@ubeswap/sdk-core": "workspace:^"
     "@uniswap/permit2-sdk": 1.2.0
@@ -12220,7 +12220,7 @@ __metadata:
     "@types/xml2js": 0.4.14
     "@ubeswap/analytics": "workspace:^"
     "@ubeswap/analytics-events": "workspace:^"
-    "@ubeswap/default-token-list": 4.1.62
+    "@ubeswap/default-token-list": 4.1.64
     "@ubeswap/eslint-config": "workspace:^"
     "@ubeswap/sdk-core": "workspace:^"
     "@ubeswap/smart-order-router": "workspace:^"
