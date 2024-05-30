@@ -38,7 +38,7 @@ import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import { ThemeProvider, ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
+// import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
@@ -52,7 +52,7 @@ function Updaters() {
       <Helmet>
         <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
       </Helmet>
-      <RadialGradientByChainUpdater />
+      {/* <RadialGradientByChainUpdater /> */}
       <ListsUpdater />
       <SystemThemeUpdater />
       <ThemeColorMetaUpdater />

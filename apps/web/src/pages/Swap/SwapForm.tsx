@@ -564,7 +564,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="xs">
+      <AutoColumn gap="sm">
         <div>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>

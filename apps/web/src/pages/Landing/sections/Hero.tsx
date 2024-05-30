@@ -36,7 +36,7 @@ const LandingSwap = styled(Swap)`
 `
 const StyledH1 = styled(H1)`
   @media (max-width: 768px) {
-    font-size: 52px;
+    font-size: 48px;
   }
   @media (max-width: 464px) {
     font-size: 36px;

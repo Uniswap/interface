@@ -1,4 +1,5 @@
 import { rootCssString } from 'nft/css/cssStringFromTheme'
+import { transparentize } from 'polished'
 import { PropsWithChildren, useMemo } from 'react'
 import { createGlobalStyle, css, ThemeProvider as StyledComponentsThemeProvider } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -152,7 +153,18 @@ export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildr
 export const ThemedGlobalStyle = createGlobalStyle`
   html {
     color: ${({ theme }) => theme.neutral1};
-    background-color: ${({ theme }) => theme.background} !important;
+    background-color: ${({ theme }) => theme.bg2} !important;
+  }
+
+  body {
+    background: transparent !important;
+    background-position: 0 -30vh !important;
+    background-repeat: no-repeat !important;
+    background-image: ${({ theme }) =>
+      `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
+        1,
+        theme.bg1
+      )} 100%)`} !important;
   }
 
  summary::-webkit-details-marker {
@@ -160,7 +172,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accent1}; 
+    color: ${({ theme }) => theme.accent1};
   }
 
   :root {
