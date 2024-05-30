@@ -2,7 +2,7 @@ import { t } from 'i18n'
 import { useAtom } from 'jotai'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, useLocation } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { shouldDisableExploreRoutesAtom, shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { SpinnerSVG } from 'theme/components'
 import { isBrowserRouterEnabled } from 'utils/env'
 
@@ -53,6 +53,7 @@ interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   shouldDisableNFTRoutes?: boolean
+  shouldDisableExploreRoutes?: boolean
 }
 
 /**
@@ -62,13 +63,15 @@ export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
   const [shouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+  const [shouldDisableExploreRoutes] = useAtom(shouldDisableExploreRoutesAtom)
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
       shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
+      shouldDisableExploreRoutes: Boolean(shouldDisableExploreRoutes),
     }),
-    [browserRouterEnabled, hash, shouldDisableNFTRoutes]
+    [browserRouterEnabled, hash, shouldDisableNFTRoutes, shouldDisableExploreRoutes]
   )
 }
 
@@ -121,6 +124,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore',
+    enabled: (args) => !args.shouldDisableExploreRoutes,
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
@@ -128,6 +132,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
+    enabled: (args) => !args.shouldDisableExploreRoutes,
     getTitle: () => t`Buy and sell on Uniswap`,
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <TokenDetails />,
@@ -152,6 +157,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore/pools/:chainName/:poolAddress',
+    enabled: (args) => !args.shouldDisableExploreRoutes,
     getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
     getDescription: () => StaticTitlesAndDescriptions.PDPDescription,
     getElement: () => (

@@ -58,7 +58,7 @@ export default function NotFound() {
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
         <SmallButtonPrimary as={Link} to="/">
-          <Trans>Oops, take me back to Swap</Trans>
+          <Trans>Oops, take me back to basecamp</Trans>
         </SmallButtonPrimary>
       </Trace>
     </PageWrapper>

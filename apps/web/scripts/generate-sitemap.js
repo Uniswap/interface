@@ -25,7 +25,7 @@ const getTopPoolsQuery = (v3Chain) => `
   }
 `
 
-const chains = ['ETHEREUM', 'ARBITRUM', 'OPTIMISM', 'POLYGON', 'BASE', 'BNB', 'CELO']
+const chains = ['ETHEREUM', 'ARBITRUM', 'OPTIMISM', 'POLYGON', 'BASE', 'BNB']
 
 const nftTopCollectionsQuery = `
   query {
