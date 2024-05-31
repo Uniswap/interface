@@ -73,6 +73,10 @@ const QUICKNODE_BNB_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
 if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
 }
+const QUICKNODE_BASE_RPC_URL = process.env.REACT_APP_BASE_MAINNET_RPC_URL
+if (typeof QUICKNODE_BASE_RPC_URL === 'undefined') {
+  throw new Error(`REACT_APP_BASE_MAINNET_RPC_URL must be a defined environment variable`)
+}
 
 export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.MAINNET,
@@ -230,7 +234,7 @@ const MAINNET = {
       http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
     },
     appOnly: {
-      http: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_MAINNET_RPC_URL],
+      http: [`https://mainnet.infura.io/v3/${INFURA_KEY}`],
     },
   },
   subgraphUrl: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
@@ -443,7 +447,7 @@ const ARBITRUM = {
   rpcUrls: {
     default: { http: ['https://arb1.arbitrum.io/rpc'] },
     fallback: { http: ['https://arbitrum.public-rpc.com'] },
-    appOnly: { http: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_ARBITRUM_RPC_URL] },
+    appOnly: { http: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`] },
   },
   subgraphUrl: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-arbitrum-one?source=uniswap',
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
@@ -676,7 +680,7 @@ const BASE = {
   rpcUrls: {
     default: { http: ['https://mainnet.base.org/'] },
     fallback: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
-    appOnly: { http: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`] },
+    appOnly: { http: [QUICKNODE_BASE_RPC_URL] },
   },
   subgraphUrl: 'https://api.studio.thegraph.com/query/48211/uniswap-v3-base/version/latest?source=uniswap',
   spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),

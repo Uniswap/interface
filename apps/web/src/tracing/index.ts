@@ -15,7 +15,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { beforeSend } from './errors'
 import { patchFetch } from './request'
 
-patchFetch(global)
+// we do not collect analytics atm
+const shouldAllowAnalytics = false
+
+if (shouldAllowAnalytics) {
+  patchFetch(global)
+}
 
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
@@ -55,4 +60,5 @@ getAnalyticsAtomDirect(true).then((allowAnalytics) => {
     allowAnalytics,
     process.env.REACT_APP_GIT_COMMIT_HASH
   )
+  analytics.setAllowAnalytics(shouldAllowAnalytics)
 })

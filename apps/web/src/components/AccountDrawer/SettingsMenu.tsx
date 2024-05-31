@@ -82,6 +82,9 @@ export default function SettingsMenu({
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
 
+  // we do not collect analytics atm
+  const shouldAllowAnalytics = false
+
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
       <Container>
@@ -93,7 +96,7 @@ export default function SettingsMenu({
             <ThemeToggle />
             <SmallBalanceToggle />
             <SpamToggle />
-            <AnalyticsToggle />
+            {shouldAllowAnalytics && <AnalyticsToggle />}
             <TestnetsToggle />
           </ToggleWrapper>
           {!currencyConversionEnabled && (

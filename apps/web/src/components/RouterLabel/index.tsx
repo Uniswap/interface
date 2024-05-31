@@ -18,5 +18,5 @@ export default function RouterLabel({ trade, color }: { trade: SubmittableTrade;
     return <ThemedText.BodySmall color={color}>Rigoblock Client</ThemedText.BodySmall>
   }
 
-  return <ThemedText.BodySmall color={color}>Uniswap API</ThemedText.BodySmall>
+  return <ThemedText.BodySmall color={color}>Rigoblock API</ThemedText.BodySmall>
 }
