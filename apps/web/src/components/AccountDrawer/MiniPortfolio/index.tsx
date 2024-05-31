@@ -1,17 +1,16 @@
-import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
-import { Trace, TraceEvent } from 'analytics'
+import { InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'
+import { atom, useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-
-import { atom, useAtom } from 'jotai'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ActivityTab } from './Activity'
 import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
@@ -68,31 +67,31 @@ interface Page {
   title: React.ReactNode
   key: string
   component: ({ account }: { account: string }) => JSX.Element
-  loggingElementName: string
+  loggingElementName: InterfaceElementName
 }
 
 // TODO: fix returned tokens loading and display values
 const Pages: Array<Page> = [
   {
-    title: <Trans>Tokens</Trans>,
+    title: <Trans i18nKey="common.tokens" />,
     key: 'tokens',
     component: Tokens,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
   },
   {
-    title: <Trans>NFTs</Trans>,
+    title: <Trans i18nKey="common.nfts" />,
     key: 'nfts',
     component: NFTs,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
   },
   {
-    title: <Trans>Pools</Trans>,
+    title: <Trans i18nKey="common.pools" />,
     key: 'pools',
     component: Pools,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
   },
   {
-    title: <Trans>Activity</Trans>,
+    title: <Trans i18nKey="common.activity" />,
     key: 'activity',
     component: ActivityTab,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_TAB,
@@ -115,7 +114,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
   const { hasPendingActivity } = usePendingActivity()
 
   useEffect(() => {
-    if (hasPendingActivity && currentKey !== 'activity') setActivityUnread(true)
+    if (hasPendingActivity && currentKey !== 'activity') {
+      setActivityUnread(true)
+    }
   }, [currentKey, hasPendingActivity])
 
   return (
@@ -123,20 +124,19 @@ export default function MiniPortfolio({ account }: { account: string }) {
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
           {Pages.map(({ title, loggingElementName, key }, index) => {
-            if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) return null
+            if (shouldDisableNFTRoutes && loggingElementName.includes('nft')) {
+              return null
+            }
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
             const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
             const handleNavItemClick = () => {
               setCurrentPage(index)
-              if (key === 'activity') setActivityUnread(false)
+              if (key === 'activity') {
+                setActivityUnread(false)
+              }
             }
             return (
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={SharedEventName.NAVBAR_CLICKED}
-                element={loggingElementName}
-                key={index}
-              >
+              <Trace logPress eventOnTrigger={SharedEventName.NAVBAR_CLICKED} element={loggingElementName} key={index}>
                 <NavItem onClick={handleNavItemClick} active={currentPage === index} key={key}>
                   <span>{title}</span>
                   {showActivityIndicator && (
@@ -152,7 +152,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                     </>
                   )}
                 </NavItem>
-              </TraceEvent>
+              </Trace>
             )
           })}
         </Nav>

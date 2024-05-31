@@ -144,7 +144,9 @@ export const MarketplaceRow = ({
   const setPrice = useCallback(
     (price?: number) => {
       showGlobalPrice ? setGlobalPrice(price) : setListPrice(price)
-      for (const marketplace of selectedMarkets) setAssetListPrice(asset, price, marketplace)
+      for (const marketplace of selectedMarkets) {
+        setAssetListPrice(asset, price, marketplace)
+      }
     },
     [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
   )
@@ -241,7 +243,7 @@ export const MarketplaceRow = ({
         >
           <FeeWrapper>
             <ThemedText.BodyPrimary color="neutral2">
-              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t`max` : ''}` : '--%'}
+              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t('max') : ''}` : '--%'}
             </ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>

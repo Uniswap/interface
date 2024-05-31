@@ -101,8 +101,12 @@ export const DiscreteNumberCell = ({ value }: CellProps) => {
 }
 
 const getDenominatedValue = (denomination: Denomination, inWei: boolean, value?: number, usdPrice?: number) => {
-  if (denomination === Denomination.ETH) return value
-  if (usdPrice && value) return usdPrice * (inWei ? parseFloat(formatEther(value)) : value)
+  if (denomination === Denomination.ETH) {
+    return value
+  }
+  if (usdPrice && value) {
+    return usdPrice * (inWei ? parseFloat(formatEther(value)) : value)
+  }
 
   return undefined
 }

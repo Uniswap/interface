@@ -6,12 +6,12 @@ import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-//import { Text } from 'ui/src'
+import { Text } from 'ui/src'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
 import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -64,6 +64,7 @@ interface VoteModalProps {
 
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
+  const theme = useTheme()
 
   // state for delegate input
   const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
@@ -106,7 +107,9 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
       const aprImpact =
         Number(poolInfo?.poolStake) / (Number(poolInfo?.poolStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
       return (Number(poolInfo?.apr) * aprImpact).toFixed(2)
-    } else return undefined
+    } else {
+      return undefined
+    }
   }, [poolInfo, parsedAmount])
 
   const newIrr = useMemo(() => {
@@ -115,11 +118,15 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         Number(poolInfo?.poolOwnStake) /
         (Number(poolInfo?.poolOwnStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
       return (Number(poolInfo?.irr) * irrImpact).toFixed(2)
-    } else return undefined
+    } else {
+      return undefined
+    }
   }, [poolInfo, parsedAmount])
 
   const stakeData = useMemo(() => {
-    if (!poolId) return
+    if (!poolId) {
+      return
+    }
     return {
       amount: parsedAmount?.quotient.toString(),
       pool: parsedAddress,
@@ -158,7 +165,9 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) return
+    if (!delegateCallback || !grgBalance || !stakeData || !currencyValue.isToken) {
+      return
+    }
 
     // try delegation and store hash
     const hash = await delegateCallback(stakeData)?.catch((error) => {
@@ -180,9 +189,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   async function onAttemptToApprove() {
     // TODO: check dep requirements
-    if (!approval || !approveCallback) return
+    if (!approval || !approveCallback) {
+      return
+    }
     //if (!provider) throw new Error('missing dependencies')
-    if (!grgBalance) throw new Error('missing GRG amount')
+    if (!grgBalance) {
+      throw new Error('missing GRG amount')
+    }
 
     await approveCallback()
   }
@@ -197,10 +210,10 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedBody>
-              <Trans>Actively staked GRG tokens represent voting power in Rigoblock governance.</Trans>
+              <Trans i18nKey="grg.votingShares" />
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
-              <Trans>By staking GRG to a Rigoblock Pool your activate your voting power. You keep 100% of votes.</Trans>
+              <Trans i18nKey="grg.voteOrDelegate" />
             </ThemedText.DeprecatedBody>
             <ThemedText.DeprecatedBody>
               <Trans>You may also stake GRG from a Rigoblock Pool operated by yourself.</Trans>
@@ -263,14 +276,14 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               onClick={onDelegate}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {usingDelegate ? <Trans>Stake From Pool</Trans> : <Trans>Stake From Wallet</Trans>}
+                {usingDelegate ? <Trans i18nKey="grg.stakeFromPool" /> : <Trans i18nKey="grg.selfStake" />}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             {poolInfo?.owner === account && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-                <ThemedText.DeprecatedMediumHeader>
-                  {usingDelegate ? <Trans>Stake From Wallet</Trans> : <Trans>Stake From Pool</Trans>}
-                </ThemedText.DeprecatedMediumHeader>
+                <Text color={theme.accent1}>
+                  {usingDelegate ? <Trans i18nKey="grg.selfStake" /> : <Trans i18nKey="grg.stakeFromWallet" />}
+                </Text>
               </TextButton>
             )}
           </AutoColumn>
@@ -280,7 +293,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? <Trans>Staking From Pool</Trans> : <Trans>Staking</Trans>}
+              {usingDelegate ? <Trans i18nKey="grg.stakingFromPool" /> : <Trans i18nKey="grg.staking" />}
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>
               {formatCurrencyAmount(parsedAmount, 4)} GRG
@@ -294,7 +307,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
             {!confirmed ? (
               <>
                 <ThemedText.DeprecatedLargeHeader>
-                  <Trans>Transaction Submitted</Trans>
+                  <Trans i18nKey="common.transactionSubmitted" />
                 </ThemedText.DeprecatedLargeHeader>
                 <ThemedText.DeprecatedMain fontSize={36}>
                   Staking {formatCurrencyAmount(stakeAmount, 4)} GRG

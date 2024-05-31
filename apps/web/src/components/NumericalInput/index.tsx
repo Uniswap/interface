@@ -60,14 +60,18 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
   maxDecimals?: number
 }
 
+export function isInputGreaterThanDecimals(value: string, maxDecimals?: number): boolean {
+  const decimalGroups = value.split('.')
+  return !!maxDecimals && decimalGroups.length > 1 && decimalGroups[1].length > maxDecimals
+}
+
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, prependSymbol, maxDecimals, ...rest }: InputProps, ref) => {
     const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
-        const decimalGroups = nextUserInput.split('.')
-        if (maxDecimals && decimalGroups.length > 1 && decimalGroups[1].length > maxDecimals) {
+        if (isInputGreaterThanDecimals(nextUserInput, maxDecimals)) {
           return
         }
 

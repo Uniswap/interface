@@ -47,19 +47,19 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
 export function formatHistoryDuration(duration: HistoryDuration): string {
   switch (duration) {
     case HistoryDuration.FiveMinute:
-      return t`Past five minutes`
+      return t('common.pastFiveMinutes')
     case HistoryDuration.Hour:
-      return t`Past hour`
+      return t('common.pastHour')
     case HistoryDuration.Day:
-      return t`Past day`
+      return t('common.pastDay')
     case HistoryDuration.Week:
-      return t`Past week`
+      return t('common.pastWeek')
     case HistoryDuration.Month:
-      return t`Past month`
+      return t('common.pastMonth')
     case HistoryDuration.Year:
-      return t`Past year`
+      return t('common.pastYear')
     case HistoryDuration.Max:
-      return t`All time`
+      return t('common.allTime')
   }
 }
 

@@ -94,7 +94,7 @@ export const approvedERC20: InteractiveToken[] = [
     chain: Chain.Polygon,
     standard: TokenStandard.ERC20,
     color: '#833ADD',
-    logoUrl: 'https://app.uniswap.org/static/media/matic-token-icon.efed2ee4e843195b44bf68ffc7439403.svg',
+    logoUrl: 'https://rigoblock.com/static/media/matic-token-icon.efed2ee4e843195b44bf68ffc7439403.svg',
   },
   {
     name: 'Moss Carbon Credit',

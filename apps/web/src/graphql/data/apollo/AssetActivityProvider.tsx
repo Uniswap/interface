@@ -112,7 +112,9 @@ export function useAssetActivity() {
   const subscribedActivities = useSubscribedActivities()
 
   const activities = useMemo(() => {
-    if (!fetchedActivities) return subscribedActivities
+    if (!fetchedActivities) {
+      return subscribedActivities
+    }
     return [...subscribedActivities, ...fetchedActivities]
   }, [subscribedActivities, fetchedActivities])
 

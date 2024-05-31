@@ -67,7 +67,9 @@ export default class AppJsonRpcProvider extends ConfiguredJsonRpcProvider {
     providers: JsonRpcProvider[],
     { minimumBackoffTime = AVERAGE_L1_BLOCK_TIME }: AppJsonRpcProviderOptions = {}
   ) {
-    if (providers.length === 0) throw new Error('Missing providers for AppJsonRpcProvider')
+    if (providers.length === 0) {
+      throw new Error('Missing providers for AppJsonRpcProvider')
+    }
     super(undefined, providers[0].network)
     // AppJsonRpcProvider configures its own pollingInterval, so the encapsulated providers do not need to poll.
     // providers.forEach((provider) => (provider.pollingInterval = Infinity))

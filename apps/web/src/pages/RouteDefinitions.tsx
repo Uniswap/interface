@@ -78,16 +78,16 @@ export function useRouterConfig(): RouterConfig {
 // SEO titles and descriptions sourced from https://docs.google.com/spreadsheets/d/1_6vSxGgmsx6QGEZ4mdHppv1VkuiJEro3Y_IopxUHGB4/edit#gid=0
 // getTitle and getDescription are used as static metatags for SEO. Dynamic metatags should be set in the page component itself
 const StaticTitlesAndDescriptions = {
-  UniswapTitle: t`Rigoblock | Trade crypto and NFTs safely in your Smart Pool`,
-  SwapTitle: t`Buy, sell & trade Ethereum and other top tokens on Rigoblock`,
-  SwapDescription: t`Swapping made simple. Buy and sell crypto on Ethereum, Base, Arbitrum, Polygon, and more.`,
-  DetailsPageBaseTitle: t`Buy and sell on Rigoblock`,
-  TDPDescription: t`Real-time prices, charts, transaction data, and more.`,
-  PDPDescription: t`Trade tokens and provide liquidity. Real-time prices, charts, transaction data, and more.`,
-  NFTTitle: t`Explore NFTs on Rigoblock`,
-  MigrateTitle: t`Migrate v2 pool liquidity to Uniswap v3`,
-  MigrateDescription: t`Easily remove your liquidity from Uniswap v2 and deposit into Uniswap v3.`,
-  AddLiquidityDescription: t`Earn fees when others swap on Uniswap by adding tokens to liquidity pools.`,
+  UniswapTitle: t('title.uniswapTradeCrypto'),
+  SwapTitle: t('title.buySellTradeEthereum'),
+  SwapDescription: t('title.swappingMadeSimple'),
+  DetailsPageBaseTitle: t('common.buyAndSell'),
+  TDPDescription: t('title.realTime'),
+  PDPDescription: t('title.tradeTokens'),
+  NFTTitle: t('title.explore'),
+  MigrateTitle: t('title.migratev2'),
+  MigrateDescription: t('title.easilyRemove'),
+  AddLiquidityDescription: t('title.earnFees'),
 }
 
 export interface RouteDefinition {
@@ -133,7 +133,7 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
     enabled: (args) => !args.shouldDisableExploreRoutes,
-    getTitle: () => t`Buy and sell on Uniswap`,
+    getTitle: () => t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <TokenDetails />,
   }),
@@ -168,9 +168,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/vote/*',
-    getTitle: () => t`Vote on governance proposals on Uniswap`,
-    getDescription: () =>
-      t`UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party.`,
+    getTitle: () => t('title.voteOnGov'),
+    getDescription: () => t('title.uniToken'),
     getElement: () => (
       <Suspense fallback={<LazyLoadSpinner />}>
         <Vote />
@@ -179,25 +178,24 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/create-proposal',
-    getTitle: () => t`Create a new governance proposal on Uniswap`,
-    getDescription: () =>
-      t`Create a new governance proposal to be voted on by UNI holders. UNI tokens represent voting shares in Uniswap governance.`,
+    getTitle: () => t('title.createGovernanceOn'),
+    getDescription: () => t('title.createGovernanceTo'),
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
-    getTitle: () => t`Send tokens on Uniswap`,
+    getTitle: () => t('title.sendTokens'),
   }),
   createRouteDefinition({
     path: '/limits',
     getElement: () => <Navigate to="/limit" replace />,
-    getTitle: () => t`Place limit orders on Uniswap`,
+    getTitle: () => t('title.placeLimit'),
   }),
   createRouteDefinition({
     path: '/limit',
     getElement: () => <Swap />,
-    getTitle: () => t`Place limit orders on Uniswap`,
+    getTitle: () => t('title.placeLimit'),
   }),
   createRouteDefinition({
     path: '/swap',
@@ -207,8 +205,8 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/pool/v2/find',
     getElement: () => <PoolFinder />,
-    getTitle: () => t`Import top liquidity pools (v2) on Uniswap`,
-    getDescription: () => t`Use this import tool to find v2 pools that don't automatically appear in the interface.`,
+    getTitle: () => t('title.importLiquidityv2'),
+    getDescription: () => t('title.useImportTool'),
   }),
   createRouteDefinition({
     path: '/pool/v2',
@@ -231,8 +229,8 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/pools/v2/find',
     getElement: () => <PoolFinder />,
-    getTitle: () => t`Import top liquidity pools (v2) on Uniswap`,
-    getDescription: () => t`Use this import tool to find v2 pools that don't automatically appear in the interface.`,
+    getTitle: () => t('title.importLiquidityv2'),
+    getDescription: () => t('title.useImportTool'),
   }),
   createRouteDefinition({
     path: '/pools/v2',
@@ -274,14 +272,14 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
     getElement: () => <RemoveLiquidity />,
-    getTitle: () => t`Remove pool liquidity (v2) on Uniswap`,
-    getDescription: () => t`Remove your tokens from v2 liquidity pools.`,
+    getTitle: () => t('title.removeLiquidityv2'),
+    getDescription: () => t('title.removeTokensv2'),
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
     getElement: () => <RemoveLiquidityV3 />,
-    getTitle: () => t`Remove pool liquidity on Uniswap`,
-    getDescription: () => t`Remove your tokens from v3 liquidity pools.`,
+    getTitle: () => t('title.removePoolLiquidity'),
+    getDescription: () => t('title.removev3Liquidity'),
   }),
   createRouteDefinition({
     path: '/migrate/v2',
@@ -303,9 +301,8 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => t`Explore and buy NFTs across top marketplaces on Uniswap`,
-    getDescription: () =>
-      t`Better prices. More listings. Buy, sell, and trade NFTs across top marketplaces like OpenSea. Explore trending collections.`,
+    getTitle: () => t('title.exploreNFTs'),
+    getDescription: () => t('title.betterPricesMoreListings'),
   }),
   createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',
@@ -326,8 +323,7 @@ export const routes: RouteDefinition[] = [
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
     getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
-    getDescription: () =>
-      t`Manage your NFT collection. View traits, trading activity, descriptions, and other details on your NFTs.`,
+    getDescription: () => t('title.manageNFT'),
   }),
   createRouteDefinition({
     path: '/nfts/collection/:contractAddress',

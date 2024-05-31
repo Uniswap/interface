@@ -68,7 +68,9 @@ export function useTokenTransactions(
           if (!fetchMoreResult) {
             return prev
           }
-          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) onComplete?.()
+          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) {
+            onComplete?.()
+          }
           const mergedData = {
             token: {
               ...prev.token,
@@ -87,8 +89,12 @@ export function useTokenTransactions(
             cursor: dataV2?.token?.v2Transactions?.[dataV2.token?.v2Transactions.length - 1]?.timestamp,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev
-            if (!loadingMoreV3.current) onComplete?.()
+            if (!fetchMoreResult) {
+              return prev
+            }
+            if (!loadingMoreV3.current) {
+              onComplete?.()
+            }
             const mergedData = {
               token: {
                 ...prev.token,
@@ -116,7 +122,7 @@ export function useTokenTransactions(
           if (!tx) {
             return false
           }
-          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const tokenBeingSold = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&
@@ -127,7 +133,7 @@ export function useTokenTransactions(
           if (!tx) {
             return false
           }
-          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const tokenBeingSold = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&

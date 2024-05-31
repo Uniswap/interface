@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
@@ -9,7 +10,6 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useChainId } from 'wagmi'
 import useAutoRouterSupported from './useAutoRouterSupported'
 import useDebounce from './useDebounce'
 
@@ -67,7 +67,7 @@ export function useDebouncedTrade(
   method?: QuoteMethod
   swapQuoteLatency?: number
 } {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const autoRouterSupported = useAutoRouterSupported()
 
   const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(
@@ -79,7 +79,9 @@ export function useDebouncedTrade(
   const isPreviewTradeDebouncing = useDebounce(inputs, DEBOUNCE_TIME_QUICKROUTE) !== inputs
 
   const isWrap = useMemo(() => {
-    if (!chainId || !amountSpecified || !otherCurrency) return false
+    if (!chainId || !amountSpecified || !otherCurrency) {
+      return false
+    }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return Boolean(
       (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||

@@ -1,13 +1,14 @@
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NetworkChangedNotification as NetworkChangedNotificationType } from 'wallet/src/features/notifications/types'
 
 export function NetworkChangedNotification({
-  notification: { chainId, flow, hideDelay },
+  notification: { chainId, flow, hideDelay = 2 * ONE_SECOND_MS },
 }: {
   notification: NetworkChangedNotificationType
 }): JSX.Element {

@@ -1,9 +1,5 @@
 import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/configs'
-import {
-  DEFAULT_EXPERIMENT_ENABLED_VALUE,
-  Experiments,
-  getExperimentDefinition,
-} from 'uniswap/src/features/gating/experiments'
+import { ExperimentProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import {
   DynamicConfig,
@@ -13,7 +9,6 @@ import {
   useGate,
   useGateWithExposureLoggingDisabled,
 } from 'uniswap/src/features/gating/sdk/statsig'
-import { logger } from 'utilities/src/logger/logger'
 
 export function useFeatureFlag(flag: FeatureFlags): boolean {
   const name = getFeatureFlagName(flag)
@@ -27,46 +22,31 @@ export function useFeatureFlagWithExposureLoggingDisabled(flag: FeatureFlags): b
   return value
 }
 
-export function useExperimentEnabled(
-  experiment: Experiments,
-  checkValue: string = DEFAULT_EXPERIMENT_ENABLED_VALUE
-): boolean {
-  const experimentDef = getExperimentDefinition(experiment)
-  const value = useExperiment(experimentDef.name).config.getValue(experimentDef.key)
-  return checkValue === value
+export function useExperimentGroupName(experiment: Experiments): string | null {
+  const statsigExperiment = useExperiment(experiment).config
+  return statsigExperiment.getGroupName()
 }
 
-export function useExperimentEnabledWithExposureLoggingDisabled(
-  experiment: Experiments,
-  checkValue: string = DEFAULT_EXPERIMENT_ENABLED_VALUE
-): boolean {
-  const experimentDef = getExperimentDefinition(experiment)
-  const value = useExperimentWithExposureLoggingDisabled(experimentDef.name).config.getValue(
-    experimentDef.key
-  )
-  return checkValue === value
+export function useExperimentValue<
+  Exp extends keyof ExperimentProperties,
+  Param extends ExperimentProperties[Exp],
+  ValType
+>(experiment: Exp, param: Param, defaultValue: ValType): ValType {
+  const statsigExperiment = useExperiment(experiment).config
+  return statsigExperiment.get(param, defaultValue, (value): value is ValType => {
+    return typeof value === typeof defaultValue
+  })
 }
 
-export function useExperimentValueWithExposureLoggingDisabled(experiment: Experiments): string {
-  const experimentDef = getExperimentDefinition(experiment)
-  const value = useExperimentWithExposureLoggingDisabled(experimentDef.name).config.getValue(
-    experimentDef.key
-  )
-
-  if (typeof value !== 'string') {
-    const err = new Error(
-      `Experiment ${Experiments[experiment]} does not have a properly mapped value`
-    )
-    logger.error(err, {
-      tags: {
-        file: 'hooks.ts',
-        function: 'useExperimentValueWithExposureLoggingDisabled',
-      },
-    })
-    throw err
-  }
-
-  return value
+export function useExperimentValueWithExposureLoggingDisabled<
+  Exp extends keyof ExperimentProperties,
+  Param extends ExperimentProperties[Exp],
+  ValType
+>(experiment: Exp, param: Param, defaultValue: ValType): ValType {
+  const statsigExperiment = useExperimentWithExposureLoggingDisabled(experiment).config
+  return statsigExperiment.get(param, defaultValue, (value): value is ValType => {
+    return typeof value === typeof defaultValue
+  })
 }
 
 export function useDynamicConfig(config: DynamicConfigs): DynamicConfig {

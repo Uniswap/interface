@@ -70,7 +70,7 @@ export default function RecentTransactions() {
                 <HeaderArrow direction={sortState.sortDirection} />
               )}
               <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
-                <Trans>Time</Trans>
+                <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
           </Cell>
@@ -98,7 +98,7 @@ export default function RecentTransactions() {
                 isSticky={true}
               />
               <ThemedText.BodySecondary>
-                <Trans>Type</Trans>
+                <Trans i18nKey="common.type.label" />
               </ThemedText.BodySecondary>
             </FilterHeaderRow>
           </Cell>
@@ -111,7 +111,11 @@ export default function RecentTransactions() {
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token0} />
               <ThemedText.BodySecondary>
-                {transaction.getValue?.().type === PoolTransactionType.Swap ? <Trans>for</Trans> : <Trans>and</Trans>}
+                {transaction.getValue?.().type === PoolTransactionType.Swap ? (
+                  <Trans i18nKey="common.for" />
+                ) : (
+                  <Trans i18nKey="common.and" />
+                )}
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token1} />
             </Row>
@@ -136,7 +140,7 @@ export default function RecentTransactions() {
         header: () => (
           <Cell minWidth={200}>
             <ThemedText.BodySecondary>
-              <Trans>Token amount</Trans>
+              <Trans i18nKey="common.tokenAmount" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -158,7 +162,7 @@ export default function RecentTransactions() {
         header: () => (
           <Cell minWidth={200}>
             <ThemedText.BodySecondary>
-              <Trans>Token amount</Trans>
+              <Trans i18nKey="common.tokenAmount" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -180,7 +184,7 @@ export default function RecentTransactions() {
         header: () => (
           <Cell minWidth={150}>
             <ThemedText.BodySecondary>
-              <Trans>Wallet</Trans>
+              <Trans i18nKey="common.wallet.label" />
             </ThemedText.BodySecondary>
           </Cell>
         ),

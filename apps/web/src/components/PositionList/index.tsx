@@ -74,7 +74,7 @@ export default function PositionList({
     <>
       <DesktopHeader>
         <div>
-          <Trans>Rigoblock Pool positions</Trans>
+          <Trans i18nKey="pool.smartPoolPosition" />
           {positions && ' (' + positions.length + ')'}
         </div>
 
@@ -84,18 +84,18 @@ export default function PositionList({
             setUserHideClosedPositions(!userHideClosedPositions)
           }}
         >
-          {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
+          {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
         </ToggleLabel>
       </DesktopHeader>
       <MobileHeader>
-        <Trans>Rigoblock Pool positions</Trans>
+        <Trans i18nKey="pool.smartPoolPosition" />
         <ToggleWrap>
           <ToggleLabel
             onClick={() => {
               setUserHideClosedPositions(!userHideClosedPositions)
             }}
           >
-            {userHideClosedPositions ? <Trans>Show closed positions</Trans> : <Trans>Hide closed positions</Trans>}
+            {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
           </ToggleLabel>
         </ToggleWrap>
       </MobileHeader>

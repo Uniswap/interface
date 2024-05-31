@@ -154,7 +154,9 @@ beforeEach(() => {
 
   // Prevent amplitude debugs from triggering failOnConsole
   console.debug = jest.fn((...args) => {
-    if (typeof args[0] === 'string' && args[0].includes('[amplitude(Identify)')) return
+    if (typeof args[0] === 'string' && args[0].includes('[amplitude(Identify)')) {
+      return
+    }
     originalConsoleDebug(...args)
   })
 })

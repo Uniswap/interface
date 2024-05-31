@@ -90,7 +90,9 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       const isCurrentTick = this._options.activeTick === stack.tick
       const isHoveredTick = this._options.hoveredTick === stack.tick
 
-      if (!column) return
+      if (!column) {
+        return
+      }
       const width = Math.min(
         Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),
         this._data.barSpacing * renderingScope.horizontalPixelRatio

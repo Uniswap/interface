@@ -59,11 +59,12 @@ export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTo
       }
     }
     const [tokenURI] = result as [string]
-    if (!tokenURI || !tokenURI.startsWith(STARTS_WITH))
+    if (!tokenURI || !tokenURI.startsWith(STARTS_WITH)) {
       return {
         valid: false,
         loading: false,
       }
+    }
 
     try {
       const json = JSON.parse(atob(tokenURI.slice(STARTS_WITH.length)))

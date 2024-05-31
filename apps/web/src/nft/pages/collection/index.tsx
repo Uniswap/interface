@@ -1,11 +1,11 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import Column from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { useIsMobile, useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import { t } from 'i18n'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
@@ -26,7 +26,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { useChainId } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const FILTER_WIDTH = 332
 const EMPTY_TRAIT_OBJ = {}
@@ -134,7 +134,7 @@ const Collection = () => {
   const setMarketCount = useCollectionFilters((state) => state.setMarketCount)
   const isBagExpanded = useBag((state) => state.bagExpanded)
   const setBagExpanded = useBag((state) => state.setBagExpanded)
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const screenSize = useScreenSize()
 
   const { data: collectionStats, loading } = useCollection(contractAddress as string)
@@ -175,7 +175,9 @@ const Collection = () => {
   }, [collectionStats?.marketplaceCount, setMarketCount])
 
   useEffect(() => {
-    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) setFiltersExpanded(false)
+    if (isBagExpanded && isFiltersExpanded && !screenSize['xl']) {
+      setFiltersExpanded(false)
+    }
   }, [isBagExpanded, isFiltersExpanded, screenSize, setFiltersExpanded])
 
   useEffect(() => {
@@ -183,8 +185,12 @@ const Collection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) return <CollectionPageSkeleton />
-  if (!collectionStats.name) return <UnavailableCollectionPage />
+  if (loading) {
+    return <CollectionPageSkeleton />
+  }
+  if (!collectionStats.name) {
+    return <UnavailableCollectionPage />
+  }
 
   const toggleActivity = () => {
     isActivityToggled
@@ -205,9 +211,9 @@ const Collection = () => {
         ))}
       </Helmet>
       <Trace
+        logImpression
         page={InterfacePageName.NFT_COLLECTION_PAGE}
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
-        shouldLogImpression
       >
         <AnimatedCollectionContainer
           style={{

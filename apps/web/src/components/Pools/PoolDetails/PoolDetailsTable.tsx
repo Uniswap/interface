@@ -57,14 +57,14 @@ export function PoolDetailsTableTab({
           onClick={() => setActiveTable(PoolDetailsTableTabs.TRANSACTIONS)}
           disabled={!positionsInThisPool.length}
         >
-          <Trans>Transactions</Trans>
+          <Trans i18nKey="common.transactions" />
         </TableHeader>
         {Boolean(positionsInThisPool.length) && (
           <TableHeader
             active={activeTable === PoolDetailsTableTabs.POSITIONS}
             onClick={() => setActiveTable(PoolDetailsTableTabs.POSITIONS)}
           >
-            <Trans>Positions</Trans>
+            <Trans i18nKey="pool.positions" />
             {` (${positionsInThisPool?.length})`}
           </TableHeader>
         )}

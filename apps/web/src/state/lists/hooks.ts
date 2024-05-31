@@ -42,10 +42,14 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
   return useMemo(() => {
-    if (!urls) return {}
+    if (!urls) {
+      return {}
+    }
     return urls.slice().reduce((allTokens, currentUrl) => {
       const current = lists?.[currentUrl]?.current
-      if (!current) return allTokens
+      if (!current) {
+        return allTokens
+      }
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
       } catch (error) {

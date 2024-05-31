@@ -78,12 +78,14 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
 
   return (
     <Wrapper>
-      <ThemedText.HeadlineSmall>{isProfilePage ? <Trans>Sell</Trans> : <Trans>Bag</Trans>}</ThemedText.HeadlineSmall>
+      <ThemedText.HeadlineSmall>
+        {isProfilePage ? <Trans i18nKey="common.sell.label" /> : <Trans i18nKey="nft.bag" />}
+      </ThemedText.HeadlineSmall>
       {numberOfAssets > 0 && (
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
           <ClearButton onClick={resetFlow}>
-            <Trans>Clear all</Trans>
+            <Trans i18nKey="common.clearAll" />
           </ClearButton>
         </>
       )}

@@ -1,8 +1,8 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { /*getTokenDetailsURL,*/ gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -12,10 +12,9 @@ import { /*useCallback,*/ useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
-
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
@@ -98,15 +97,18 @@ function TokenRow({
     return null
   }
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={SharedEventName.ELEMENT_CLICKED}
+    <Trace
+      logPress
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
-      properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
+      properties={{
+        chain_id: currency.chainId,
+        token_name: token?.project?.name ?? token?.name,
+        address: token?.address,
+      }}
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-        title={<TokenNameText>{token?.name}</TokenNameText>}
+        title={<TokenNameText>{token?.project?.name ?? token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber({
@@ -135,6 +137,6 @@ function TokenRow({
           )
         }
       />
-    </TraceEvent>
+    </Trace>
   )
 }

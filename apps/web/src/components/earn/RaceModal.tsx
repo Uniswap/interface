@@ -73,7 +73,9 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
 
   async function onRace() {
     // if callback not returned properly ignore
-    if (!raceCallback || !poolAddress || !poolName || !currencyValue.isToken) return
+    if (!raceCallback || !poolAddress || !poolName || !currencyValue.isToken) {
+      return
+    }
     setAttempting(true)
 
     // try credit reward and store hash

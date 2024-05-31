@@ -3,7 +3,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -14,12 +13,14 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
 import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { useAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 type Props = {
   accountAddress: Address
@@ -41,9 +42,18 @@ export function CloudBackupProcessingAnimation({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
+  const onboardingAccount = getOnboardingAccount()
+  const importedAccounts = getImportedAccounts()
   const colors = useSporeColors()
+  const activeAccount = useAccountIfExists(accountAddress)
 
-  const account = useAccount(accountAddress)
+  const account = activeAccount || onboardingAccount || importedAccounts?.[0]
+
+  if (!account) {
+    throw Error('No account available for backup')
+  }
+
   if (account.type !== AccountType.SignerMnemonic) {
     throw new Error('Account is not mnemonic account')
   }
@@ -66,14 +76,17 @@ export function CloudBackupProcessingAnimation({
     try {
       // Ensure processing state is shown for at least 1s
       await promiseMinDelay(backupMnemonicToCloudStorage(mnemonicId, password), ONE_SECOND_MS)
-
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.AddBackupMethod,
-          address: accountAddress,
-          backupMethod: BackupType.Cloud,
-        })
-      )
+      if (activeAccount) {
+        dispatch(
+          editAccountActions.trigger({
+            type: EditAccountAction.AddBackupMethod,
+            address: accountAddress,
+            backupMethod: BackupType.Cloud,
+          })
+        )
+      } else {
+        addBackupMethod(BackupType.Cloud)
+      }
     } catch (error) {
       logger.error(error, {
         tags: { file: 'CloudBackupProcessingScreen', function: 'onPressNext' },
@@ -93,7 +106,16 @@ export function CloudBackupProcessingAnimation({
         ]
       )
     }
-  }, [accountAddress, dispatch, mnemonicId, onErrorPress, password, t])
+  }, [
+    accountAddress,
+    activeAccount,
+    addBackupMethod,
+    dispatch,
+    mnemonicId,
+    onErrorPress,
+    password,
+    t,
+  ])
 
   /**
    * Delays cloud backup to avoid android oauth consent screen blocking navigation transition

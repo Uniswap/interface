@@ -3,12 +3,12 @@ import { BigintIsh, ChainId, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useRef } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
 import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
-import { useChainId } from 'wagmi'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 
@@ -31,7 +31,9 @@ class PoolCache {
     const { address: addressB } = tokenB
     const key = `${factoryAddress}:${addressA}:${addressB}:${fee.toString()}`
     const found = this.addresses.find((address) => address.key === key)
-    if (found) return found.address
+    if (found) {
+      return found.address
+    }
 
     const address = {
       key,
@@ -67,7 +69,9 @@ class PoolCache {
         JSBI.EQ(pool.liquidity, liquidity) &&
         pool.tickCurrent === tick
     )
-    if (found) return found
+    if (found) {
+      return found
+    }
 
     const pool = new Pool(tokenA, tokenB, fee, sqrtPriceX96, liquidity, tick)
     this.pools.unshift(pool)
@@ -85,16 +89,20 @@ export enum PoolState {
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][]
 ): [PoolState, Pool | null][] {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
-    if (!chainId) return new Array(poolKeys.length)
+    if (!chainId) {
+      return new Array(poolKeys.length)
+    }
 
     return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
       if (currencyA && currencyB && feeAmount) {
         const tokenA = currencyA.wrapped
         const tokenB = currencyB.wrapped
-        if (tokenA.equals(tokenB)) return undefined
+        if (tokenA.equals(tokenB)) {
+          return undefined
+        }
 
         return tokenA.sortsBefore(tokenB) ? [tokenA, tokenB, feeAmount] : [tokenB, tokenA, feeAmount]
       }
@@ -104,7 +112,9 @@ export function usePools(
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
-    if (!v3CoreFactoryAddress) return new Array(poolTokens.length)
+    if (!v3CoreFactoryAddress) {
+      return new Array(poolTokens.length)
+    }
 
     return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value))
   }, [chainId, poolTokens])
@@ -115,19 +125,33 @@ export function usePools(
   return useMemo(() => {
     return poolKeys.map((_key, index) => {
       const tokens = poolTokens[index]
-      if (!tokens) return [PoolState.INVALID, null]
+      if (!tokens) {
+        return [PoolState.INVALID, null]
+      }
       const [token0, token1, fee] = tokens
 
-      if (!slot0s[index]) return [PoolState.INVALID, null]
+      if (!slot0s[index]) {
+        return [PoolState.INVALID, null]
+      }
       const { result: slot0, loading: slot0Loading, valid: slot0Valid } = slot0s[index]
 
-      if (!liquidities[index]) return [PoolState.INVALID, null]
+      if (!liquidities[index]) {
+        return [PoolState.INVALID, null]
+      }
       const { result: liquidity, loading: liquidityLoading, valid: liquidityValid } = liquidities[index]
 
-      if (!tokens || !slot0Valid || !liquidityValid) return [PoolState.INVALID, null]
-      if (slot0Loading || liquidityLoading) return [PoolState.LOADING, null]
-      if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, null]
-      if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0)) return [PoolState.NOT_EXISTS, null]
+      if (!tokens || !slot0Valid || !liquidityValid) {
+        return [PoolState.INVALID, null]
+      }
+      if (slot0Loading || liquidityLoading) {
+        return [PoolState.LOADING, null]
+      }
+      if (!slot0 || !liquidity) {
+        return [PoolState.NOT_EXISTS, null]
+      }
+      if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0)) {
+        return [PoolState.NOT_EXISTS, null]
+      }
 
       try {
         const pool = PoolCache.getPool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)

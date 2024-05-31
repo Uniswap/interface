@@ -16,6 +16,7 @@ export function DappIconPlaceholder({
       backgroundColor="$surface2"
       borderRadius="$roundedFull"
       height={iconSize}
+      testID="dapp-icon-placeholder"
       width={iconSize}>
       <Text
         color="$neutral2"

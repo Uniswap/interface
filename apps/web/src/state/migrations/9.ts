@@ -10,7 +10,9 @@ export type PersistAppStateV9 = {
  * Migration to delete unused lists from the state.
  */
 export const migration9 = (state: PersistAppStateV9 | undefined) => {
-  if (!state) return state
+  if (!state) {
+    return state
+  }
 
   let updatedListsByUrl = state.lists?.byUrl
   if (state.lists?.byUrl) {

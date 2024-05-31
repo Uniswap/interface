@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { getChainInfo, useSupportedChainId } from 'constants/chains'
+import { getChain, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
-import { useChainId } from 'wagmi'
 
 /**
  * Returns the price in USDC of the input currency
@@ -12,7 +12,7 @@ import { useChainId } from 'wagmi'
  */
 export default function useStablecoinPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const chainId = useSupportedChainId(currency?.chainId)
-  const amountOut = chainId ? getChainInfo({ chainId }).spotPriceStablecoinAmount : undefined
+  const amountOut = chainId ? getChain({ chainId }).spotPriceStablecoinAmount : undefined
   const stablecoin = amountOut?.currency
 
   const { trade } = useRoutingAPITrade(
@@ -57,7 +57,9 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
   const price = useStablecoinPrice(currencyAmount?.currency)
 
   return useMemo(() => {
-    if (!price || !currencyAmount) return null
+    if (!price || !currencyAmount) {
+      return null
+    }
     try {
       return price.quote(currencyAmount)
     } catch (error) {
@@ -72,10 +74,10 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
  * @returns CurrencyAmount where currency is stablecoin on active chain
  */
 export function useStablecoinAmountFromFiatValue(fiatValue: number | null | undefined) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const supportedChainId = useSupportedChainId(chainId)
   const stablecoin = supportedChainId
-    ? getChainInfo({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
+    ? getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
     : undefined
 
   return useMemo(() => {

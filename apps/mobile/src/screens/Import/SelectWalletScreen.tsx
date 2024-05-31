@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { isEqual } from 'lodash'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Loader } from 'ui/src'
@@ -14,18 +14,13 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { useAppDispatch } from 'wallet/src/state'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
@@ -46,27 +41,23 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const { getImportedAccountsAddresses, selectImportedAccounts } = useOnboardingContext()
+  const importedAccountsAddresses = getImportedAccountsAddresses()
 
-  const pendingAccounts = usePendingAccounts()
-  const addresses = Object.values(pendingAccounts)
-    .filter((a) => a.type === AccountType.SignerMnemonic)
-    .sort(
-      (a, b) =>
-        (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
-    )
-    .map((account) => account.address)
+  if (!importedAccountsAddresses) {
+    throw new Error('There are no imported accounts addresses available on SelectWalletScreen')
+  }
 
-  const isImportingAccounts = addresses.length !== NUMBER_OF_WALLETS_TO_IMPORT
+  const isImportingAccounts = importedAccountsAddresses.length !== NUMBER_OF_WALLETS_TO_IMPORT
 
   const { data, loading, refetch, error } = useSelectWalletScreenQuery({
-    variables: { ownerAddresses: addresses },
+    variables: { ownerAddresses: importedAccountsAddresses },
     /*
      * Wait until all the addresses have been added to the store before querying.
      * Also prevents an extra API call when user navigates back and clears pending accounts.
      */
     skip: isImportingAccounts,
   })
-
   const onRetry = useCallback(() => refetch(), [refetch])
 
   const allAddressBalances = data?.portfolios
@@ -94,11 +85,11 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     }
 
     // if query for address balances returned null, show the first address
-    const firstPendingAddress = addresses[0]
+    const firstPendingAddress = importedAccountsAddresses[0]
     if (firstPendingAddress) {
       return [{ ownerAddress: firstPendingAddress, balance: undefined }]
     }
-  }, [addresses, allAddressBalances])
+  }, [importedAccountsAddresses, allAddressBalances])
 
   const initialSelectedAddresses = useMemo(
     () =>
@@ -112,13 +103,20 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   const showError = error && !initialShownAccounts?.length
 
-  const [selectedAddresses, setSelectedAddresses] = useReducer(
-    (currentAddresses: string[], addressToProcess: string) =>
-      currentAddresses.includes(addressToProcess)
-        ? currentAddresses.filter((address) => address !== addressToProcess)
-        : [...currentAddresses, addressToProcess],
-    initialSelectedAddresses
-  )
+  const [selectedAddresses, setSelectedAddresses] = useState(initialSelectedAddresses)
+
+  // stores the last value of data extracted from useSelectWalletScreenQuery
+  const initialSelectedAddressesRef = useRef(initialSelectedAddresses)
+
+  // selects all accounts in case when useSelectWalletScreenQuery returns extra accounts
+  // after selectedAddresses useState initialization
+  useEffect(() => {
+    if (isEqual(initialSelectedAddressesRef.current, initialSelectedAddresses)) {
+      return
+    }
+    initialSelectedAddressesRef.current = initialSelectedAddresses
+    setSelectedAddresses(initialSelectedAddresses)
+  }, [initialSelectedAddresses])
 
   useEffect(() => {
     const beforeRemoveListener = (): void => {
@@ -127,56 +125,24 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     }
     navigation.addListener('beforeRemove', beforeRemoveListener)
     return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
-  }, [dispatch, navigation, pendingAccounts])
-
-  useEffect(() => {
-    /*
-     * In the event that the initial state of `selectedAddresses` is empty due to
-     * delay in importAccountSaga, we need to set the fallback account as selected
-     */
-    if (isImportingAccounts || loading || selectedAddresses.length > 0) {
-      return
-    }
-
-    initialSelectedAddresses.forEach((address) => setSelectedAddresses(address))
-  }, [initialSelectedAddresses, isImportingAccounts, loading, selectedAddresses.length])
+  }, [dispatch, navigation])
 
   const onPress = (address: string): void => {
-    if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) {
+    // prevents the last selected wallet from being deselected
+    if (selectedAddresses.length === 1 && selectedAddresses.includes(address)) {
       return
     }
-    setSelectedAddresses(address)
+    if (selectedAddresses.includes(address)) {
+      setSelectedAddresses(
+        selectedAddresses.filter((selectedAddress) => selectedAddress !== address)
+      )
+    } else {
+      setSelectedAddresses([...selectedAddresses, address])
+    }
   }
 
-  const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
   const onSubmit = useCallback(() => {
-    addresses.forEach((address) => {
-      // Remove unselected accounts from store.
-      if (!selectedAddresses.includes(address)) {
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.Remove,
-            address,
-            notificationsEnabled: !!pendingAccounts[address]?.pushNotificationsEnabled,
-          })
-        )
-      } else {
-        if (!isFirstAccountActive.current) {
-          dispatch(setAccountAsActive(address))
-          isFirstAccountActive.current = true
-        }
-        const account = pendingAccounts[address]
-        if (account && !account.name && account.type !== AccountType.Readonly) {
-          dispatch(
-            editAccountActions.trigger({
-              type: EditAccountAction.Rename,
-              address,
-              newName: t('onboarding.wallet.defaultName', { number: account.derivationIndex + 1 }),
-            })
-          )
-        }
-      }
-    })
+    selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
       name:
@@ -186,7 +152,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       params,
       merge: true,
     })
-  }, [addresses, navigation, params, selectedAddresses, dispatch, pendingAccounts, t])
+  }, [selectImportedAccounts, selectedAddresses, navigation, params])
 
   // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
   const [isForcedLoading, setIsForcedLoading] = useState(true)

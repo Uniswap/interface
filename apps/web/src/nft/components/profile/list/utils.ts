@@ -151,7 +151,9 @@ export function useHandleGlobalPriceToggle(
   useEffect(() => {
     let price: number | undefined
     if (globalOverride) {
-      if (!listPrice) setListPrice(globalPrice)
+      if (!listPrice) {
+        setListPrice(globalPrice)
+      }
       price = globalPrice
     } else {
       price = listPrice
@@ -177,8 +179,9 @@ export function useSyncPriceWithGlobalMethod(
     } else if (globalPriceMethod === SetPriceMethod.LAST_PRICE) {
       setListPrice(asset.lastPrice)
       setGlobalPrice(asset.lastPrice)
-    } else if (globalPriceMethod === SetPriceMethod.SAME_PRICE)
+    } else if (globalPriceMethod === SetPriceMethod.SAME_PRICE) {
       listPrice && !globalPrice ? setGlobalPrice(listPrice) : setListPrice(globalPrice)
+    }
 
     setGlobalOverride(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,13 +198,15 @@ export function useUpdateInputAndWarnings(
     setWarningType(WarningType.NONE)
     const price = listPrice ?? 0
     inputRef.current.value = `${price}`
-    if (price < (asset?.floorPrice ?? 0) && price > 0) setWarningType(WarningType.BELOW_FLOOR)
-    else if (
+    if (price < (asset?.floorPrice ?? 0) && price > 0) {
+      setWarningType(WarningType.BELOW_FLOOR)
+    } else if (
       asset.floor_sell_order_price &&
       price >= asset.floor_sell_order_price &&
       asset.asset_contract.tokenType !== NftStandard.Erc1155
-    )
+    ) {
       setWarningType(WarningType.ALREADY_LISTED)
+    }
   }, [
     asset.asset_contract.tokenType,
     asset?.floorPrice,
@@ -243,15 +248,20 @@ export const findListingIssues = (sellAssets: WalletAsset[]) => {
   for (const asset of sellAssets) {
     if (asset.newListings) {
       for (const listing of asset.newListings) {
-        if (!listing.price) listingsMissingPrice.push([asset, listing])
-        else if (listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD && !listing.overrideFloorPrice)
+        if (!listing.price) {
+          listingsMissingPrice.push([asset, listing])
+        } else if (
+          listing.price < (asset?.floorPrice ?? 0) * BELOW_FLOOR_PRICE_THRESHOLD &&
+          !listing.overrideFloorPrice
+        ) {
           listingsBelowFloor.push([asset, listing])
-        else if (
+        } else if (
           asset.floor_sell_order_price &&
           listing.price >= asset.floor_sell_order_price &&
           asset.asset_contract.tokenType !== NftStandard.Erc1155
-        )
+        ) {
           listingsAboveSellOrderFloor.push([asset, listing])
+        }
       }
     }
   }

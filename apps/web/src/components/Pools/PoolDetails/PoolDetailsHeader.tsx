@@ -74,10 +74,10 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
   return (
     <BreadcrumbNavContainer aria-label="breadcrumb-nav">
       <BreadcrumbNavLink to={exploreOrigin}>
-        <Trans>Explore</Trans> <ChevronRight size={14} />
+        <Trans i18nKey="common.explore" /> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       <BreadcrumbNavLink to={poolsOrigin}>
-        <Trans>Pools</Trans> <ChevronRight size={14} />
+        <Trans i18nKey="common.pools" /> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       {loading || !poolAddress ? (
         <DetailBubble $width={200} />
@@ -204,7 +204,9 @@ const ContractsDropdownRow = ({
           ) : (
             <CurrencyLogo currency={currency} size={24} />
           )}
-          <ThemedText.BodyPrimary>{isPool ? <Trans>Pool</Trans> : tokens[0]?.symbol}</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary>
+            {isPool ? <Trans i18nKey="common.pool" /> : tokens[0]?.symbol}
+          </ThemedText.BodyPrimary>
           <ThemedText.BodySecondary>{shortenAddress(address)}</ThemedText.BodySecondary>
         </Row>
         <ExternalLinkIcon size="16px" stroke={theme.neutral2} />
@@ -259,7 +261,7 @@ const PoolDetailsHeaderActions = ({
               <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
             </>
           }
-          tooltipText={t`Explorers`}
+          tooltipText={t('pool.explorers')}
           hideChevron
           buttonCss={ActionButtonStyle}
           menuFlyoutCss={ContractsModalContainer}

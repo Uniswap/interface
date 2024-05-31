@@ -15,20 +15,31 @@ export type SearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTo
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
 function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
-  if (!existing) return current
+  if (!existing) {
+    return current
+  }
   invariant(current.project?.id === existing.project?.id, 'Cannot dedupe tokens within different tokenProjects')
 
   // Special case: always prefer Arbitrum ARB over Mainnet ARB
-  if (current.address?.toLowerCase() === ARB_ADDRESS) return current
-  if (existing.address?.toLowerCase() === ARB_ADDRESS) return existing
+  if (current.address?.toLowerCase() === ARB_ADDRESS) {
+    return current
+  }
+  if (existing.address?.toLowerCase() === ARB_ADDRESS) {
+    return existing
+  }
 
   // Always prioritize natives, and if both tokens are native, prefer native on current chain (i.e. Matic on Polygon over Matic on Mainnet )
-  if (current.standard === NATIVE_CHAIN_ID && (existing.standard !== NATIVE_CHAIN_ID || current.chain === searchChain))
+  if (
+    current.standard === NATIVE_CHAIN_ID &&
+    (existing.standard !== NATIVE_CHAIN_ID || current.chain === searchChain)
+  ) {
     return current
+  }
 
   // Prefer tokens on the searched chain, otherwise prefer mainnet tokens
-  if (current.chain === searchChain || (existing.chain !== searchChain && current.chain === Chain.Ethereum))
+  if (current.chain === searchChain || (existing.chain !== searchChain && current.chain === Chain.Ethereum)) {
     return current
+  }
 
   return existing
 }
@@ -42,14 +53,25 @@ function searchTokenSortFunction(
 ) {
   if (a.standard === NATIVE_CHAIN_ID) {
     if (b.standard === NATIVE_CHAIN_ID) {
-      if (a.chain === searchChain) return -1
-      else if (b.chain === searchChain) return 1
-      else return 0
-    } else return -1
-  } else if (b.standard === NATIVE_CHAIN_ID) return 1
-  else if (wrappedNativeAddress && a.address === wrappedNativeAddress) return -1
-  else if (wrappedNativeAddress && b.address === wrappedNativeAddress) return 1
-  else return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)
+      if (a.chain === searchChain) {
+        return -1
+      } else if (b.chain === searchChain) {
+        return 1
+      } else {
+        return 0
+      }
+    } else {
+      return -1
+    }
+  } else if (b.standard === NATIVE_CHAIN_ID) {
+    return 1
+  } else if (wrappedNativeAddress && a.address === wrappedNativeAddress) {
+    return -1
+  } else if (wrappedNativeAddress && b.address === wrappedNativeAddress) {
+    return 1
+  } else {
+    return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)
+  }
 }
 
 export function useSearchTokens(searchQuery: string | undefined, chainId: SupportedInterfaceChainId) {

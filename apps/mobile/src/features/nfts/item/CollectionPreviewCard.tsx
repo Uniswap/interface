@@ -22,12 +22,14 @@ interface CollectionPreviewCardProps {
   fallbackData?: NFTItem
   onPress: () => void
   loading: boolean
+  shouldDisableLink?: boolean
 }
 export function CollectionPreviewCard({
   collection,
   fallbackData,
   onPress,
   loading,
+  shouldDisableLink,
 }: CollectionPreviewCardProps): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -36,7 +38,8 @@ export function CollectionPreviewCard({
     return <Loader.Box borderRadius="$rounded16" height={spacing.spacing60} />
   }
 
-  const isViewableCollection = Boolean(collection || fallbackData?.contractAddress)
+  const isViewableCollection =
+    !shouldDisableLink && Boolean(collection || fallbackData?.contractAddress)
 
   return (
     <TouchableArea hapticFeedback disabled={!isViewableCollection} onPress={onPress}>

@@ -17,7 +17,9 @@ import { UniswapXDescription } from './GasBreakdownTooltip'
 // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
 function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
   const { formatNumber } = useFormatter()
-  if (!gasUseEstimateUSD || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(inputAmount.currency.chainId)) return undefined
+  if (!gasUseEstimateUSD || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(inputAmount.currency.chainId)) {
+    return undefined
+  }
 
   return gasUseEstimateUSD === 0 ? '<$0.01' : formatNumber({ input: gasUseEstimateUSD, type: NumberType.FiatGasPrice })
 }
@@ -36,7 +38,7 @@ function PriceImpactRow({ trade }: { trade: ClassicTrade }) {
   return (
     <ThemedText.BodySmall color="neutral2">
       <RowBetween>
-        <Trans>Price Impact</Trans>
+        <Trans i18nKey="swap.priceImpact.upperCase" />
         <div>{formatPercent(trade.priceImpact)}</div>
       </RowBetween>
     </ThemedText.BodySmall>
@@ -69,12 +71,9 @@ export function SwapRoute({ trade }: { trade: ClassicTrade }) {
     <Column gap="md">
       <RoutingDiagram routes={routes} currencyIn={inputAmount.currency} currencyOut={outputAmount.currency} />
       <ThemedText.Caption color="neutral2">
-        {Boolean(gasPrice) && <Trans>Best price route costs ~{{ gasPrice }} in gas. </Trans>}
+        {Boolean(gasPrice) && <Trans i18nKey="swap.bestRoute.cost" values={{ gasPrice }} />}
         {Boolean(gasPrice) && ' '}
-        <Trans>
-          This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each
-          step.
-        </Trans>
+        <Trans i18nKey="swap.route.optimizedGasCost" />
       </ThemedText.Caption>
     </Column>
   ) : (

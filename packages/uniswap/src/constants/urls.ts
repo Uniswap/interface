@@ -27,10 +27,12 @@ export const uniswapUrls = {
   helpRequestUrl: `${helpUrl}/hc/en-us/requests/new`,
   helpArticleUrls: {
     extensionWaitlist: `${helpUrl}/hc/en-us/articles/24458735271181-Get-started-with-the-Uniswap-Extension`,
+    extensionDappTroubleshooting: `${helpUrl}/hc/en-us/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/hc/en-us/articles/18673568523789-What-is-a-token-fee-`,
     moonpayHelp: `${helpUrl}/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
     networkFeeInfo: `${helpUrl}/hc/en-us/articles/8370337377805-What-is-a-network-fee-`,
     recoveryPhraseHelp: `${helpUrl}/hc/en-us/articles/11380692567949-How-to-import-my-recovery-phrase-`,
+    recoveryPhraseForgotten: `${helpUrl}/hc/en-us/articles/11306367118349`,
     supportedNetworks: `${helpUrl}/hc/en-us/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/hc/en-us/articles/20131678274957`,
     swapProtection: `${helpUrl}/hc/en-us/articles/18814993155853`,

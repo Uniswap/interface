@@ -14,7 +14,7 @@ const fadeAndTranslateUpIn = keyframes`
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 `
-const fadeInAnimation = css<{ $transitionDuration?: string }>`
+export const fadeInAnimation = css<{ $transitionDuration?: string }>`
   animation: ${fadeIn}
     ${({ theme, $transitionDuration }) =>
       `${$transitionDuration ?? theme.transition.duration.medium} ${theme.transition.timing.inOut}`}

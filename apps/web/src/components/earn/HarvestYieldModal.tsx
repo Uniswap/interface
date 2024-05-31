@@ -71,7 +71,9 @@ export default function HarvestYieldModal({
 
   async function onHarvest() {
     // if callback not returned properly ignore
-    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) return
+    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) {
+      return
+    }
     setAttempting(true)
     setFarmAmount(yieldAmount)
 

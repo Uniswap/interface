@@ -37,6 +37,7 @@ import { transactionStateActions } from 'wallet/src/features/transactions/transa
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
 import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
+import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
 import {
   DerivedTransferInfo,
   TokenSelectorFlow,
@@ -102,6 +103,8 @@ export function TransferTokenForm({
     exactAmountFiat,
     currencyIn ?? undefined
   )
+
+  useShowSendNetworkNotification({ chainId: currencyIn?.chainId })
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
 

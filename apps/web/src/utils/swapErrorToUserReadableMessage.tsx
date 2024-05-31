@@ -47,7 +47,9 @@ export function swapErrorToUserReadableMessage(error: any): string {
   }
 
   let reason = getReason(error)
-  if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
+  if (reason?.indexOf('execution reverted: ') === 0) {
+    reason = reason.substr('execution reverted: '.length)
+  }
 
   switch (reason) {
     case 'UniswapV2Router: EXPIRED':

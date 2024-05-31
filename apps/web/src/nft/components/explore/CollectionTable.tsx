@@ -19,8 +19,12 @@ export enum ColumnHeaders {
 const VOLUME_CHANGE_MAX_VALUE = 9999
 
 const compareFloats = (a?: number, b?: number): 1 | -1 => {
-  if (!a) return -1
-  if (!b) return 1
+  if (!a) {
+    return -1
+  }
+  if (!b) {
+    return 1
+  }
   return Math.round(a * 100000) >= Math.round(b * 100000) ? 1 : -1
 }
 

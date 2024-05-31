@@ -1,5 +1,4 @@
 import { providers } from 'ethers'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTransactionRequestInfo'
@@ -20,19 +19,12 @@ export function useSwapTxAndGasInfoTradingApi({
 }: {
   derivedSwapInfo: DerivedSwapInfo
 }): SwapTxAndGasInfo {
-  const {
-    chainId,
-    wrapType,
-    currencyAmounts,
-    trade: { trade },
-  } = derivedSwapInfo
+  const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo({
     chainId,
     wrapType,
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
-    // TODO: MOB-2773 https://linear.app/uniswap/issue/MOB-2773/deprecate-legacy-routing
-    skip: trade?.quoteData?.quoteType === QuoteType.RoutingApi,
   })
 
   const transactionRequestInfo = useTransactionRequestInfo({

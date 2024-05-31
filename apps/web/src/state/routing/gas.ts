@@ -21,10 +21,14 @@ export async function getApproveInfo(
   usdCostPerGas?: number
 ): Promise<ApproveInfo> {
   // native currencies do not need token approvals
-  if (currency.isNative) return { needsApprove: false }
+  if (currency.isNative) {
+    return { needsApprove: false }
+  }
 
   // If any of these arguments aren't provided, then we cannot generate approval cost info
-  if (!account || !usdCostPerGas) return { needsApprove: false }
+  if (!account || !usdCostPerGas) {
+    return { needsApprove: false }
+  }
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
@@ -38,7 +42,9 @@ export async function getApproveInfo(
   let approveGasUseEstimate
   try {
     const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
-    if (allowance.gte(amount)) return { needsApprove: false }
+    if (allowance.gte(amount)) {
+      return { needsApprove: false }
+    }
   } catch (_) {
     // If contract lookup fails (eg if Infura goes down), then don't show gas info for approving the token
     return { needsApprove: false }
@@ -62,13 +68,17 @@ export async function getWrapInfo(
   amount: string,
   usdCostPerGas?: number
 ): Promise<WrapInfo> {
-  if (!needsWrap) return { needsWrap: false }
+  if (!needsWrap) {
+    return { needsWrap: false }
+  }
 
   const provider = RPC_PROVIDERS[chainId]
   const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
 
   // If any of these arguments aren't provided, then we cannot generate wrap cost info
-  if (!wethAddress || !usdCostPerGas) return { needsWrap: false }
+  if (!wethAddress || !usdCostPerGas) {
+    return { needsWrap: false }
+  }
   let wrapGasUseEstimate
   try {
     const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth

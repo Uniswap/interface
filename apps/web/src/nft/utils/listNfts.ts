@@ -101,8 +101,11 @@ export async function approveCollection(
 
     tx.status === 1 ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
   } catch (error) {
-    if (error.code === 4001) setStatus(ListingStatus.REJECTED)
-    else setStatus(ListingStatus.FAILED)
+    if (error.code === 4001) {
+      setStatus(ListingStatus.REJECTED)
+    } else {
+      setStatus(ListingStatus.FAILED)
+    }
   }
 }
 
@@ -124,7 +127,9 @@ export async function signListing(
 
   const signerAddress = await signer.getAddress()
   const listingPrice = asset.newListings?.find((listing) => listing.marketplace.name === marketplace.name)?.price
-  if (!listingPrice || !asset.expirationTime || !asset.asset_contract.address || !asset.tokenId) return false
+  if (!listingPrice || !asset.expirationTime || !asset.asset_contract.address || !asset.tokenId) {
+    return false
+  }
   switch (marketplace.name) {
     case 'OpenSea':
       try {
@@ -159,8 +164,11 @@ export async function signListing(
         res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {
-        if (error.code === 4001) setStatus(ListingStatus.REJECTED)
-        else setStatus(ListingStatus.FAILED)
+        if (error.code === 4001) {
+          setStatus(ListingStatus.REJECTED)
+        } else {
+          setStatus(ListingStatus.FAILED)
+        }
         return false
       }
     case 'LooksRare': {
@@ -226,8 +234,11 @@ export async function signListing(
         res ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return res
       } catch (error) {
-        if (error.code === 4001) setStatus(ListingStatus.REJECTED)
-        else setStatus(ListingStatus.FAILED)
+        if (error.code === 4001) {
+          setStatus(ListingStatus.REJECTED)
+        } else {
+          setStatus(ListingStatus.FAILED)
+        }
         return false
       }
     }
@@ -261,8 +272,11 @@ export async function signListing(
         resp ? setStatus(ListingStatus.APPROVED) : setStatus(ListingStatus.FAILED)
         return resp
       } catch (error) {
-        if (error.code === 4001) setStatus(ListingStatus.REJECTED)
-        else setStatus(ListingStatus.FAILED)
+        if (error.code === 4001) {
+          setStatus(ListingStatus.REJECTED)
+        } else {
+          setStatus(ListingStatus.FAILED)
+        }
         return false
       }
     }

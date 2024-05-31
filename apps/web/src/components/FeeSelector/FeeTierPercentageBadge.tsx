@@ -19,11 +19,11 @@ export function FeeTierPercentageBadge({
     <Badge>
       <ThemedText.DeprecatedLabel fontSize={10}>
         {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
-          <Trans>Not created</Trans>
+          <Trans i18nKey="common.notCreated.label" />
         ) : distributions[feeAmount] !== undefined ? (
-          <Trans>{{ pct }}% select</Trans>
+          <Trans i18nKey="fee.selectPercent" values={{ pct }} />
         ) : (
-          <Trans>No data</Trans>
+          <Trans i18nKey="common.noData" />
         )}
       </ThemedText.DeprecatedLabel>
     </Badge>

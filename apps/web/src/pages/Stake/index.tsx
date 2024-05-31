@@ -1,7 +1,6 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader from 'components/Icons/LoadingSpinner'
 import { GRG } from 'constants/tokens'
@@ -11,6 +10,7 @@ import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 import { ButtonPrimary } from '../../components/Button'
 import { OutlineCard } from '../../components/Card'
@@ -110,7 +110,9 @@ export default function Stake() {
   const unclaimedRewards = useUnclaimedRewards(poolIds ?? [])
   // TODO: check if want to return null, but returning undefined will simplify displaying only if positive reward
   const yieldAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
-    if (!grg || !unclaimedRewards || unclaimedRewards?.length === 0) return undefined
+    if (!grg || !unclaimedRewards || unclaimedRewards?.length === 0) {
+      return undefined
+    }
     const yieldBigint = unclaimedRewards
       .map((reward) => reward.yieldAmount.quotient)
       .reduce((acc, value) => JSBI.add(acc, value))
@@ -125,7 +127,9 @@ export default function Stake() {
   // TODO: check PoolPositionDetails type as irr and apr are number not string
   //  also check why this typecheck does not return an error as poolOwnStake and poolDelegatedStake are not defined in PoolRegisteredLog
   const poolsWithStats: PoolRegisteredLog[] = useMemo(() => {
-    if (!allPools || !stakingPools) return []
+    if (!allPools || !stakingPools) {
+      return []
+    }
     return allPools
       .map((p, i) => {
         const apr = stakingPools?.[i]?.apr
@@ -183,124 +187,128 @@ export default function Stake() {
   }
 
   const items = useMemo(() => {
-    if (!orderedPools) return []
+    if (!orderedPools) {
+      return []
+    }
     return showItems(records, orderedPools)
   }, [records, orderedPools])
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <DataCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <ThemedText.DeprecatedWhite fontWeight={600}>
-                  <Trans>Staking Pools</Trans>
-                </ThemedText.DeprecatedWhite>
-              </RowBetween>
-              <RowBetween>
-                <ThemedText.DeprecatedWhite fontSize={14}>
-                  <Trans>Stake your GRGs, activate your voting power and earn rewards</Trans>
-                </ThemedText.DeprecatedWhite>
-              </RowBetween>{' '}
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </DataCard>
-      </TopSection>
+    <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
+      <PageWrapper gap="lg" justify="center">
+        <TopSection gap="md">
+          <DataCard>
+            <CardBGImage />
+            <CardNoise />
+            <CardSection>
+              <AutoColumn gap="md">
+                <RowBetween>
+                  <ThemedText.DeprecatedWhite fontWeight={600}>
+                    <Trans>Staking Pools</Trans>
+                  </ThemedText.DeprecatedWhite>
+                </RowBetween>
+                <RowBetween>
+                  <ThemedText.DeprecatedWhite fontSize={14}>
+                    <Trans>Stake your GRGs, activate your voting power and earn rewards</Trans>
+                  </ThemedText.DeprecatedWhite>
+                </RowBetween>{' '}
+              </AutoColumn>
+            </CardSection>
+            <CardBGImage />
+            <CardNoise />
+          </DataCard>
+        </TopSection>
 
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <HarvestYieldModal
-            isOpen={showHarvestYieldModal}
-            yieldAmount={yieldAmount}
-            poolIds={farmingPoolIds}
-            onDismiss={() => setShowHarvestYieldModal(false)}
-            title={<Trans>Harvest</Trans>}
-          />
-          <UnstakeModal
-            isOpen={showUnstakeModal}
-            freeStakeBalance={freeStakeBalance}
-            onDismiss={() => setShowUnstakeModal(false)}
-            title={<Trans>Withdraw</Trans>}
-          />
-          <WrapSmall>
-            <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
-              <Trans>All Pools</Trans>
-            </ThemedText.DeprecatedMediumHeader>
-            <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-              {yieldAmount && (
-                <ButtonPrimary
-                  style={{ width: 'fit-content', height: '40px' }}
-                  padding="8px"
-                  $borderRadius="8px"
-                  onClick={() => setShowHarvestYieldModal(true)}
-                >
-                  <Trans>Harvest</Trans>
-                </ButtonPrimary>
-              )}
-              {hasFreeStake && (
-                <ButtonPrimary
-                  style={{ width: 'fit-content', height: '40px' }}
-                  padding="8px"
-                  $borderRadius="8px"
-                  onClick={() => setShowUnstakeModal(true)}
-                >
-                  <Trans>Unstake</Trans>
-                </ButtonPrimary>
-              )}
-              {!account && (
-                <TraceEvent
-                  events={[BrowserEvent.onClick]}
-                  name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-                  properties={{ received_swap_quote: false }}
-                  element={InterfaceElementName.CONNECT_WALLET_BUTTON}
-                >
+        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <HarvestYieldModal
+              isOpen={showHarvestYieldModal}
+              yieldAmount={yieldAmount}
+              poolIds={farmingPoolIds}
+              onDismiss={() => setShowHarvestYieldModal(false)}
+              title={<Trans>Harvest</Trans>}
+            />
+            <UnstakeModal
+              isOpen={showUnstakeModal}
+              freeStakeBalance={freeStakeBalance}
+              onDismiss={() => setShowUnstakeModal(false)}
+              title={<Trans>Withdraw</Trans>}
+            />
+            <WrapSmall>
+              <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
+                <Trans>All Pools</Trans>
+              </ThemedText.DeprecatedMediumHeader>
+              <RowFixed gap="8px" style={{ marginRight: '4px' }}>
+                {yieldAmount && (
                   <ButtonPrimary
-                    style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                    onClick={toggleWalletDrawer}
+                    style={{ width: 'fit-content', height: '40px' }}
+                    padding="8px"
+                    $borderRadius="8px"
+                    onClick={() => setShowHarvestYieldModal(true)}
                   >
-                    <Trans>Connect Wallet</Trans>
+                    <Trans>Harvest</Trans>
                   </ButtonPrimary>
-                </TraceEvent>
-              )}
-            </RowFixed>
-          </WrapSmall>
-        </DataRow>
+                )}
+                {hasFreeStake && (
+                  <ButtonPrimary
+                    style={{ width: 'fit-content', height: '40px' }}
+                    padding="8px"
+                    $borderRadius="8px"
+                    onClick={() => setShowUnstakeModal(true)}
+                  >
+                    <Trans>Unstake</Trans>
+                  </ButtonPrimary>
+                )}
+                {!account && (
+                  <Trace
+                    logPress
+                    eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    properties={{ received_swap_quote: false }}
+                    element={InterfaceElementName.CONNECT_WALLET_BUTTON}
+                  >
+                    <ButtonPrimary
+                      style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                      onClick={toggleWalletDrawer}
+                    >
+                      <Trans i18nKey="common.connectAWallet.button" />
+                    </ButtonPrimary>
+                  </Trace>
+                )}
+              </RowFixed>
+            </WrapSmall>
+          </DataRow>
 
-        <MainContentWrapper>
-          {orderedPools?.length > 0 ? (
-            <InfiniteScroll
-              next={fetchMoreData}
-              hasMore={!!hasMore}
-              loader={
-                orderedPools?.length !== items?.length ? (
-                  <Center paddingY="20">
-                    <Loader style={{ margin: 'auto' }} />
-                  </Center>
-                ) : null
-              }
-              dataLength={orderedPools.length}
-              style={{ overflow: 'unset' }}
-            >
-              <PoolPositionList positions={items} filterByOperator={false} />
-            </InfiniteScroll>
-          ) : (loading || loadingPools) && account ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : !account || (!account && orderedPools?.length === 0) ? (
-            <OutlineCard>
-              <Trans>Please connect your wallet to view smart pools</Trans>
-            </OutlineCard>
-          ) : orderedPools?.length === 0 ? (
-            <OutlineCard>
-              <Trans>No pool found</Trans>
-            </OutlineCard>
-          ) : null}
-        </MainContentWrapper>
-      </AutoColumn>
-    </PageWrapper>
+          <MainContentWrapper>
+            {orderedPools?.length > 0 ? (
+              <InfiniteScroll
+                next={fetchMoreData}
+                hasMore={!!hasMore}
+                loader={
+                  orderedPools?.length !== items?.length ? (
+                    <Center paddingY="20">
+                      <Loader style={{ margin: 'auto' }} />
+                    </Center>
+                  ) : null
+                }
+                dataLength={orderedPools.length}
+                style={{ overflow: 'unset' }}
+              >
+                <PoolPositionList positions={items} filterByOperator={false} />
+              </InfiniteScroll>
+            ) : (loading || loadingPools) && account ? (
+              <Loader style={{ margin: 'auto' }} />
+            ) : !account || (!account && orderedPools?.length === 0) ? (
+              <OutlineCard>
+                <Trans>Please connect your wallet to view smart pools</Trans>
+              </OutlineCard>
+            ) : orderedPools?.length === 0 ? (
+              <OutlineCard>
+                <Trans>No pool found</Trans>
+              </OutlineCard>
+            ) : null}
+          </MainContentWrapper>
+        </AutoColumn>
+      </PageWrapper>
+    </Trace>
   )
 }

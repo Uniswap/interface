@@ -1,12 +1,21 @@
+import { ChainId } from '@uniswap/sdk-core'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import { isUniswapXSupportedChain } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Provider } from 'jotai'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
 
 jest.mock('constants/chains')
+jest.mock('hooks/useAccount')
 
 describe('Multiple routing options', () => {
+  beforeEach(() => {
+    mocked(useAccount).mockReturnValue({
+      chainId: ChainId.MAINNET,
+    } as unknown as ReturnType<typeof useAccount>)
+  })
+
   it('optimal routing is enabled by default', () => {
     mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(

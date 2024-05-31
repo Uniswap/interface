@@ -148,7 +148,7 @@ export const Suspicious = () => {
     <MouseoverTooltip
       text={
         <ThemedText.BodySmall>
-          <Trans>Blocked on OpenSea</Trans>
+          <Trans i18nKey="nft.blockedOpenSea" />
         </ThemedText.BodySmall>
       }
       placement="top"

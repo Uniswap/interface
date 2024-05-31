@@ -10,7 +10,9 @@ export default function useLast<T>(value: T, filterFn?: (value: T) => boolean): 
   useEffect(() => {
     setLast((last) => {
       const shouldUse: boolean = filterFn ? filterFn(value) : true
-      if (shouldUse) return value
+      if (shouldUse) {
+        return value
+      }
       return last
     })
   }, [filterFn, value])

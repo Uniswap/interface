@@ -78,7 +78,9 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setSpreadCallback || !parsedSpread) return
+    if (!account || !chainId || !setSpreadCallback || !parsedSpread) {
+      return
+    }
 
     // try set spread and store hash
     const hash = await setSpreadCallback(parsedSpread)?.catch((error) => {

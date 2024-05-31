@@ -58,17 +58,26 @@ export function* firebaseDataWatcher() {
 }
 
 function* syncNotificationsWithFirebase() {
-  const accounts = yield* select(selectNonPendingAccounts)
-  const addresses = Object.keys(accounts)
+  try {
+    const accounts = yield* select(selectNonPendingAccounts)
+    const addresses = Object.keys(accounts)
 
-  for (const address of addresses) {
-    const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
+    for (const address of addresses) {
+      const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
 
-    if (notificationsEnabled) {
-      yield* call(mapFirebaseUidToAddresses, [address])
-    } else {
-      yield* call(deleteFirebaseMetadata, address)
-      yield* call(disassociateFirebaseUidFromAddresses, [address])
+      if (notificationsEnabled) {
+        yield* call(mapFirebaseUidToAddresses, [address])
+      } else {
+        yield* call(deleteFirebaseMetadata, address)
+        yield* call(disassociateFirebaseUidFromAddresses, [address])
+      }
+    }
+  } catch (error) {
+    // Permission denied error is expected for syncing when notifications are disabled
+    if (!(error instanceof Error && error.message.includes('permission-denied'))) {
+      logger.error(error, {
+        tags: { file: 'firebaseDataSaga', function: 'syncNotificationsWithFirebase' },
+      })
     }
   }
 }

@@ -138,6 +138,7 @@ export function usePermit2Signature(
 
   return useAsyncData(permitSignatureFetcher)
 }
+
 // Used to sign permit messages where we already have the domain, types, and values.
 export function usePermit2SignatureWithData(
   currencyInAmount: Maybe<CurrencyAmount<Currency>>,

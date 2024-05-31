@@ -1,17 +1,17 @@
 import ms from 'ms'
-import { Expiry } from './types'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 const DAY_SECS = ms('1d') / 1000
 
-export function expiryToDeadlineSeconds(expiry: Expiry): number {
+export function expiryToDeadlineSeconds(expiry: LimitsExpiry): number {
   switch (expiry) {
-    case Expiry.Day:
+    case LimitsExpiry.Day:
       return DAY_SECS
-    case Expiry.Week:
+    case LimitsExpiry.Week:
       return DAY_SECS * 7
-    case Expiry.Month:
+    case LimitsExpiry.Month:
       return DAY_SECS * 30
-    case Expiry.Year:
+    case LimitsExpiry.Year:
       return DAY_SECS * 365
   }
 }

@@ -37,7 +37,9 @@ const transactionSlice = createSlice({
       transactions[chainId] = txs
     },
     clearAllTransactions(transactions, { payload: { chainId } }: { payload: { chainId: ChainId } }) {
-      if (!transactions[chainId]) return
+      if (!transactions[chainId]) {
+        return
+      }
       transactions[chainId] = {}
     },
     removeTransaction(transactions, { payload: { chainId, hash } }: { payload: { chainId: ChainId; hash: string } }) {

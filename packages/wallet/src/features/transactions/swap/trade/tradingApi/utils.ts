@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
@@ -19,7 +18,7 @@ import {
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { QuoteData, SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import {
   CurrencyField,
   TradeProtocolPreference,
@@ -65,7 +64,7 @@ export function transformTradingApiResponseToTrade(
       : undefined
 
   return new Trade({
-    quoteData: { quote: data, quoteType: QuoteType.TradingApi },
+    quote: data,
     deadline,
     slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
     v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
@@ -78,7 +77,7 @@ export function transformTradingApiResponseToTrade(
 }
 
 /**
- * Transforms a Routing API quote into an array of routes that can be used to
+ * Transforms a trading API quote into an array of routes that can be used to
  * create a `Trade`.
  */
 export function computeRoutesTradingApi(
@@ -273,12 +272,8 @@ export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
 }
 
 // TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
-// Check for trading api type data, then type check for classic quote (non uniswap x quote)
-export function getClassicQuoteFromResponse(quoteData?: QuoteData): ClassicQuote | undefined {
-  if (!quoteData || quoteData.quoteType === QuoteType.RoutingApi) {
-    return undefined
-  }
-  return isClassicQuote(quoteData.quote?.quote) ? quoteData?.quote.quote : undefined
+export function getClassicQuoteFromResponse(quote?: QuoteResponse): ClassicQuote | undefined {
+  return isClassicQuote(quote?.quote) ? quote.quote : undefined
 }
 
 /**
@@ -316,16 +311,11 @@ export function validateTrade({
 
   // TODO(MOB-3028): check if this logic needs any adjustments once we add UniswapX support.
   // Verify the amount specified in the quote response matches the exact amount from input state
-  const exactAmountFromQuote =
-    trade.quoteData?.quoteType === QuoteType.RoutingApi
-      ? exactCurrencyField === CurrencyField.INPUT
-        ? trade.quoteData.quote?.quote
-        : trade.quoteData.quote?.amount
-      : isClassicQuote(trade.quoteData?.quote?.quote)
-      ? exactCurrencyField === CurrencyField.INPUT
-        ? trade.quoteData.quote.quote.input?.amount
-        : trade.quoteData.quote.quote.output?.amount
-      : undefined
+  const exactAmountFromQuote = isClassicQuote(trade.quote?.quote)
+    ? exactCurrencyField === CurrencyField.INPUT
+      ? trade.quote.quote.input?.amount
+      : trade.quote.quote.output?.amount
+    : undefined
 
   const tokenAddressesMatch = inputsMatch && outputsMatch
   const exactAmountsMatch = exactAmount?.toExact() !== exactAmountFromQuote

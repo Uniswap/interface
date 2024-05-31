@@ -7,7 +7,7 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import {
+import Animated, {
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -39,6 +39,7 @@ import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {
@@ -60,6 +61,8 @@ type CurrentInputPanelProps = {
   showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
+  disabled?: boolean
+  onPressDisabled?: () => void
   resetSelection: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
 } & FlexProps
 
@@ -93,6 +96,8 @@ export const CurrencyInputPanel = memo(
       usdValue,
       resetSelection,
       value,
+      disabled = false,
+      onPressDisabled,
       ...rest
     },
     forwardedRef
@@ -205,6 +210,20 @@ export const CurrencyInputPanel = memo(
       [isLoading, loadingFlexProgress]
     )
 
+    const shakeValue = useSharedValue(0)
+
+    const shakeStyle = useAnimatedStyle(
+      () => ({
+        transform: [{ translateX: shakeValue.value }],
+      }),
+      [shakeValue.value]
+    )
+
+    const triggerShakeAnimation = (): void => {
+      onPressDisabled?.()
+      shakeValue.value = errorShakeAnimation(shakeValue)
+    }
+
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
     const handleSetMax = useCallback(
@@ -217,7 +236,9 @@ export const CurrencyInputPanel = memo(
     // TODO: Remove this when fiat mode is ready to be integrated, to small for feature flag.
     const fiatModeFeatureEnabled = false
     return (
-      <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
+      <TouchableArea
+        hapticFeedback
+        onPress={disabled ? triggerShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}>
         <Flex
           {...rest}
           overflow="hidden"
@@ -244,38 +265,47 @@ export const CurrencyInputPanel = memo(
                 </Text>
               )}
               {currencyInfo ? (
-                <AmountInput
-                  ref={inputRef}
-                  autoFocus={autoFocus ?? focus}
-                  backgroundColor="$transparent"
-                  borderWidth={0}
-                  color={inputColor}
-                  disabled={!currencyInfo}
-                  flex={1}
-                  focusable={Boolean(currencyInfo)}
-                  fontFamily="$heading"
-                  fontSize={fontSize}
-                  maxDecimals={currencyInfo.currency.decimals}
-                  maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-                  // This is a hacky workaround for Android to prevent text from being cut off
-                  // (the text input height is greater than the font size and the input is
-                  // centered vertically, so the caret is cut off but the text is not)
-                  minHeight={2 * MAX_INPUT_FONT_SIZE}
-                  overflow="visible"
-                  placeholder="0"
-                  placeholderTextColor={colors.neutral3.val}
-                  px="$none"
-                  py="$none"
-                  returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                  // Inline for better interaction with custom selection refs
-                  showCurrencySign={false}
-                  showSoftInputOnFocus={showSoftInputOnFocus}
-                  testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
-                  value={isLoading ? loadingTextValue : value}
-                  onChangeText={onSetExactAmount}
-                  onPressIn={onPressIn}
-                  onSelectionChange={onSelectionChange}
-                />
+                <Flex>
+                  {disabled && (
+                    // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
+                    <TouchableArea
+                      style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}
+                      onPress={triggerShakeAnimation}
+                    />
+                  )}
+                  <AmountInput
+                    ref={inputRef}
+                    autoFocus={autoFocus ?? focus}
+                    backgroundColor="$transparent"
+                    borderWidth={0}
+                    color={inputColor}
+                    disabled={disabled || !currencyInfo}
+                    flex={1}
+                    focusable={!disabled && Boolean(currencyInfo)}
+                    fontFamily="$heading"
+                    fontSize={fontSize}
+                    maxDecimals={currencyInfo.currency.decimals}
+                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+                    // This is a hacky workaround for Android to prevent text from being cut off
+                    // (the text input height is greater than the font size and the input is
+                    // centered vertically, so the caret is cut off but the text is not)
+                    minHeight={2 * MAX_INPUT_FONT_SIZE}
+                    overflow="visible"
+                    placeholder="0"
+                    placeholderTextColor={colors.neutral3.val}
+                    px="$none"
+                    py="$none"
+                    returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                    // Inline for better interaction with custom selection refs
+                    showCurrencySign={false}
+                    showSoftInputOnFocus={showSoftInputOnFocus}
+                    testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
+                    value={isLoading ? loadingTextValue : value}
+                    onChangeText={onSetExactAmount}
+                    onPressIn={onPressIn}
+                    onSelectionChange={onSelectionChange}
+                  />
+                </Flex>
               ) : (
                 <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
                   <Text color="$neutral3" fontSize={fontSize} variant="heading2">
@@ -284,21 +314,25 @@ export const CurrencyInputPanel = memo(
                 </TouchableArea>
               )}
             </AnimatedFlex>
-            <Flex row alignItems="center">
-              <SelectTokenButton
-                selectedCurrencyInfo={currencyInfo}
-                testID={
-                  currencyField === CurrencyField.INPUT
-                    ? ElementName.ChooseInputToken
-                    : ElementName.ChooseOutputToken
-                }
-                onPress={onShowTokenSelector}
-              />
-            </Flex>
+            <Animated.View style={shakeStyle}>
+              <Flex row alignItems="center">
+                <SelectTokenButton
+                  selectedCurrencyInfo={currencyInfo}
+                  testID={
+                    currencyField === CurrencyField.INPUT
+                      ? ElementName.ChooseInputToken
+                      : ElementName.ChooseOutputToken
+                  }
+                  onPress={onShowTokenSelector}
+                />
+              </Flex>
+            </Animated.View>
           </Flex>
           {currencyInfo && (
             <Flex row gap="$spacing8" justifyContent="space-between">
-              <TouchableArea disabled={fiatModeFeatureEnabled} onPress={_onToggleIsFiatMode}>
+              <TouchableArea
+                disabled={fiatModeFeatureEnabled}
+                onPress={disabled ? triggerShakeAnimation : _onToggleIsFiatMode}>
                 <Flex centered row shrink gap="$spacing4">
                   <Text color="$neutral2" numberOfLines={1} variant="body3">
                     {inputPanelFormattedValue}

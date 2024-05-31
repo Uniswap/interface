@@ -17,6 +17,7 @@ import { ChainId } from 'uniswap/src/types/chains'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { useENSName } from 'wallet/src/features/ens/api'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
@@ -48,6 +49,8 @@ export function ChooseProfilePictureScreen({
   const [claimError, setClaimError] = useState<string>()
   const [isClaiming, setIsClaiming] = useState(false)
 
+  const { addUnitagClaim } = useOnboardingContext()
+
   const openModal = (): void => {
     setShowModal(true)
   }
@@ -65,17 +68,13 @@ export function ChooseProfilePictureScreen({
 
   const onPressContinue = async (): Promise<void> => {
     if (entryPoint === OnboardingScreens.Landing) {
+      addUnitagClaim({ address, username: unitag, avatarUri: imageUri })
       // Handle case navigating from onboarding
       navigate(MobileScreens.OnboardingStack, {
         screen: OnboardingScreens.WelcomeWallet,
         params: {
           importType: ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-          unitagClaim: {
-            address,
-            username: unitag,
-            avatarUri: imageUri,
-          },
         },
       })
     } else {

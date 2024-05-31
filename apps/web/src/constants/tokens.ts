@@ -253,6 +253,7 @@ export const DAI_AVALANCHE = new Token(
 
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
+  [ChainId.OPTIMISM]: new Token(ChainId.OPTIMISM, UNI_ADDRESSES[ChainId.OPTIMISM], 18, 'UNI', 'Uniswap'),
   [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
   [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESSES[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
 }
@@ -383,14 +384,18 @@ class PolygonNativeCurrency extends NativeCurrency {
   }
 
   get wrapped(): Token {
-    if (!isPolygon(this.chainId)) throw new Error('Not Polygon')
+    if (!isPolygon(this.chainId)) {
+      throw new Error('Not Polygon')
+    }
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isPolygon(chainId)) throw new Error('Not Polygon')
+    if (!isPolygon(chainId)) {
+      throw new Error('Not Polygon')
+    }
     super(chainId, 18, 'MATIC', 'Matic')
   }
 }
@@ -405,14 +410,18 @@ class BscNativeCurrency extends NativeCurrency {
   }
 
   get wrapped(): Token {
-    if (!isBsc(this.chainId)) throw new Error('Not bnb')
+    if (!isBsc(this.chainId)) {
+      throw new Error('Not bnb')
+    }
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isBsc(chainId)) throw new Error('Not bnb')
+    if (!isBsc(chainId)) {
+      throw new Error('Not bnb')
+    }
     super(chainId, 18, 'BNB', 'BNB')
   }
 }
@@ -427,14 +436,18 @@ class AvaxNativeCurrency extends NativeCurrency {
   }
 
   get wrapped(): Token {
-    if (!isAvalanche(this.chainId)) throw new Error('Not avalanche')
+    if (!isAvalanche(this.chainId)) {
+      throw new Error('Not avalanche')
+    }
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     invariant(wrapped instanceof Token)
     return wrapped
   }
 
   public constructor(chainId: number) {
-    if (!isAvalanche(chainId)) throw new Error('Not avalanche')
+    if (!isAvalanche(chainId)) {
+      throw new Error('Not avalanche')
+    }
     super(chainId, 18, 'AVAX', 'AVAX')
   }
 }
@@ -442,7 +455,9 @@ class AvaxNativeCurrency extends NativeCurrency {
 class ExtendedEther extends NativeCurrency {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
-    if (wrapped) return wrapped
+    if (wrapped) {
+      return wrapped
+    }
     throw new Error(`Unsupported chain ID: ${this.chainId}`)
   }
 
@@ -463,7 +478,9 @@ class ExtendedEther extends NativeCurrency {
 
 const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
 export function nativeOnChain(chainId: number): NativeCurrency | Token {
-  if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
+  if (cachedNativeCurrency[chainId]) {
+    return cachedNativeCurrency[chainId]
+  }
   let nativeCurrency: NativeCurrency | Token
   if (isPolygon(chainId)) {
     nativeCurrency = new PolygonNativeCurrency(chainId)

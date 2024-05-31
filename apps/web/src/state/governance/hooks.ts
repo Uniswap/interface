@@ -4,7 +4,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
-import { useChainId } from 'wagmi'
 // eslint-disable-next-line no-restricted-imports
 //import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
@@ -15,6 +14,7 @@ import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
@@ -48,7 +48,7 @@ function useGovernanceProxyContract(): Contract | null {
 const useLatestGovernanceContract = useGovernanceProxyContract
 
 function useUniContract() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
   return useContract(uniAddress, UniJSON.abi, true)
 }
@@ -191,7 +191,9 @@ function useFormattedProposalCreatedLogs(
   // create filters for ProposalCreated events
   const filter = useMemo(() => {
     const filter = contract?.filters?.ProposalCreated()
-    if (!filter) return undefined
+    if (!filter) {
+      return undefined
+    }
     return {
       ...filter,
       fromBlock,
@@ -260,7 +262,9 @@ function useFormattedProposalCreatedLogs(
 
             const fourbyte = calldata.slice(0, 10)
             const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
-            if (!sig) throw new Error('Missing four byte sig')
+            if (!sig) {
+              throw new Error('Missing four byte sig')
+            }
             const [name, types] = sig.substring(0, sig.length - 1).split('(')
             calldata = `0x${calldata.slice(10)}`
 
@@ -282,7 +286,7 @@ function countToIndices(count: number | undefined, skip = 0) {
 
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const blockNumber = useBlockNumber()
   const gov = useGovernanceProxyContract()
 
@@ -314,10 +318,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     govStartBlock = 39249858
   } else if (chainId === ChainId.BASE) {
     // quicknode returns only a very limited number of logs, therefore we won't see proposal details
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : blockNumber //2570523
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //2570523
   } else if (chainId === ChainId.BNB) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //29095808
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //29095808
   }
 
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
@@ -361,7 +365,9 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
 
           const fourbyte = calldata.slice(0, 10)
           const sig = FOUR_BYTES_DIR[fourbyte] ?? 'UNKNOWN()'
-          if (!sig) throw new Error('Missing four byte sig')
+          if (!sig) {
+            throw new Error('Missing four byte sig')
+          }
           const [name, types] = sig.substring(0, sig.length - 1).split('(')
           calldata = `0x${calldata.slice(10)}`
 
@@ -376,8 +382,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
         // TODO: amend block to time
         return {
           id: (i + 1).toString(), //formattedLogs[i]?.proposalId?.toString(),
-          title: title ?? t`Untitled`,
-          description: description ?? t`No description.`,
+          title: title ?? t('common.untitled'),
+          description: description ?? t('common.noDescription'),
           proposer: formattedLogs[i]?.proposer, //proposal?.result?.proposer,
           status: proposalStatesCallData[i]?.result?.[0] ?? ProposalState.UNDETERMINED,
           forCount: CurrencyAmount.fromRawAmount(grg, proposal?.result?.proposalWrapper?.proposal?.votesFor),
@@ -403,7 +409,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   const latestGovernanceContract = useLatestGovernanceContract()
   const govParams = useSingleCallResult(latestGovernanceContract, 'governanceParameters')?.result?.[0]
   const quorumVotes = govParams?.params?.quorumThreshold
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 
   if (
@@ -412,8 +418,9 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
     //chainId !== ChainId.MAINNET ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
-  )
+  ) {
     return undefined
+  }
 
   return CurrencyAmount.fromRawAmount(grg, quorumVotes)
 }
@@ -461,8 +468,11 @@ export function usePoolIdByAddress(pool: string | undefined): {
   const stakingContract = useStakingContract()
   const stakingPool = useSingleCallResult(stakingContract ?? undefined, 'getStakingPool', [poolId])?.result?.[0]
   const stakingPoolExists = stakingPool !== undefined ? stakingPool?.operator !== ZERO_ADDRESS : false
-  if (!poolId) return { stakingPoolExists }
-  else return { poolId, stakingPoolExists }
+  if (!poolId) {
+    return { stakingPoolExists }
+  } else {
+    return { poolId, stakingPoolExists }
+  }
 }
 
 export function useStakeBalance(
@@ -488,7 +498,9 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+        return undefined
+      }
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       const stakeCall = stakingContract?.interface.encodeFunctionData('stake', [stakeData.amount])
@@ -500,13 +512,17 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
         stakeData.amount,
       ])
       const delegatee = stakeData.pool
-      if (!delegatee) return
+      if (!delegatee) {
+        return
+      }
       //const args = [delegatee]
       // if the staking pool does not exist, user creates it and becomes staking pal
       const args = !stakeData.stakingPoolExists
         ? [[createPoolCall, stakeCall, moveStakeCall]]
         : [[stakeCall, moveStakeCall]]
-      if (!stakingProxy) throw new Error('No Staking Contract!')
+      if (!stakingProxy) {
+        throw new Error('No Staking Contract!')
+      }
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy
           .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -529,15 +545,21 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+        return undefined
+      }
       //if (!stakeData.amount) return
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
-      if (!delegatee) return
+      if (!delegatee) {
+        return
+      }
       //const args = [delegatee]
       // Rigoblock executes move stake inside stake method, in just 1 call
       const args = [stakeData.amount]
-      if (!poolInstance) throw new Error('No Pool Contract!')
+      if (!poolInstance) {
+        throw new Error('No Pool Contract!')
+      }
       return poolInstance.estimateGas.stake(...args, {}).then((estimatedGasLimit) => {
         return poolInstance
           .stake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -562,8 +584,16 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !stakeData.fromPoolId || !isAddress(stakeData.pool ?? ''))
+      if (
+        !provider ||
+        !chainId ||
+        !account ||
+        !stakeData ||
+        !stakeData.fromPoolId ||
+        !isAddress(stakeData.pool ?? '')
+      ) {
         return undefined
+      }
       //if (!stakeData.amount) return
       const createPoolCall = stakingContract?.interface.encodeFunctionData('createStakingPool', [stakeData.pool])
       // until a staking implementation upgrade, moving delegated stake requires batching from pool deactivation
@@ -583,7 +613,9 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
         stakeData.amount,
       ])
       const delegatee = stakeData.pool
-      if (!delegatee) return
+      if (!delegatee) {
+        return
+      }
       //const args = [delegatee]
       // if the staking pool does not exist, user creates it and becomes staking pal
       const args = !stakeData.stakingPoolExists
@@ -593,7 +625,9 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
         : stakeData.fromPoolId !== stakeData.poolId
         ? [[deactivateCall, activateCall]]
         : [[activateCall]]
-      if (!stakingProxy) throw new Error('No Staking Contract!')
+      if (!stakingProxy) {
+        throw new Error('No Staking Contract!')
+      }
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy
           .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -618,7 +652,9 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) return undefined
+      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+        return undefined
+      }
       const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
       const deactivateToInfo: StakeInfo = { status: StakeStatus.UNDELEGATED, poolId: stakeData.poolId }
       //if (!stakeData.amount) return
@@ -631,12 +667,18 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
 
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
-      if (!delegatee) return
+      if (!delegatee) {
+        return
+      }
       // Rigoblock executes move stake inside stake method, in just 1 call
       const args = stakeData.isPoolMoving ? [stakeData.amount] : [[deactivateCall]]
-      if (!stakingProxy) throw new Error('No Staking Contract!')
-      if (stakeData.isPoolMoving && !poolInstance) throw new Error('No Pool Contract!')
-      if (stakeData.isPoolMoving && poolInstance)
+      if (!stakingProxy) {
+        throw new Error('No Staking Contract!')
+      }
+      if (stakeData.isPoolMoving && !poolInstance) {
+        throw new Error('No Pool Contract!')
+      }
+      if (stakeData.isPoolMoving && poolInstance) {
         return poolInstance.estimateGas.undelegateStake(...args, {}).then((estimatedGasLimit) => {
           return poolInstance
             .undelegateStake(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -649,6 +691,7 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
               return response.hash
             })
         })
+      }
       return stakingProxy.estimateGas.batchExecute(...args, {}).then((estimatedGasLimit) => {
         return stakingProxy
           .batchExecute(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -675,7 +718,9 @@ export function useVoteCallback(): (
 
   return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId, voteOption === VoteOption.For ? 0 : voteOption === VoteOption.Against ? 1 : 2]
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -703,7 +748,9 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.queue(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -729,7 +776,9 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) return
+      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+        return
+      }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.execute(...args, {}).then((estimatedGasLimit) => {
         return latestGovernanceContract
@@ -757,7 +806,9 @@ export function useCreateProposalCallback(): (
 
   return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
-      if (!account || !latestGovernanceContract || !createProposalData || !chainId) return undefined
+      if (!account || !latestGovernanceContract || !createProposalData || !chainId) {
+        return undefined
+      }
 
       const args = [
         createProposalData.actions,
@@ -789,7 +840,7 @@ export function useCreateProposalCallback(): (
 //}
 
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const latestGovernanceContract = useLatestGovernanceContract()
   const res = useSingleCallResult(latestGovernanceContract, 'governanceParameters')

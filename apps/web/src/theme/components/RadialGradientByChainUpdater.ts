@@ -2,8 +2,8 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { darkTheme, lightTheme } from '../colors'
 
 const initialStyles = {
@@ -36,7 +36,7 @@ function setDefaultBackground(backgroundRadialGradientElement: HTMLElement, dark
 }
 
 export default function RadialGradientByChainUpdater(): null {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const [darkMode] = useDarkModeManager()
   const isNftPage = useIsNftPage()
 
@@ -83,7 +83,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
         break
       }
-      case ChainId.CELO:
+      //case ChainId.CELO:
       case ChainId.CELO_ALFAJORES: {
         setBackground(backgroundResetStyles)
         const celoLightGradient =
@@ -102,15 +102,15 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? bscDarkGradient : bscLightGradient
         break
       }
-      case ChainId.AVALANCHE: {
-        setBackground(backgroundResetStyles)
-        const avaxLightGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0) 0%, rgba(255, 244, 249, 0.0) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
-        const avaxDarkGradient =
-          'radial-gradient(100% 100% at 50% 0%, rgba(62, 46, 56, 0) 0%, rgba(44, 31, 45, 0.0) 50.52%, rgba(31, 33, 40, 0) 100%), #0D0E0E'
-        backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
-        break
-      }
+      //case ChainId.AVALANCHE: {
+      //  setBackground(backgroundResetStyles)
+      //  const avaxLightGradient =
+      //    'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0) 0%, rgba(255, 244, 249, 0.0) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+      //  const avaxDarkGradient =
+      //    'radial-gradient(100% 100% at 50% 0%, rgba(62, 46, 56, 0) 0%, rgba(44, 31, 45, 0.0) 50.52%, rgba(31, 33, 40, 0) 100%), #0D0E0E'
+      //  backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
+      //  break
+      //}
       case ChainId.BASE: {
         setBackground(backgroundResetStyles)
         const baseLightGradient =

@@ -3,7 +3,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { getChainInfo, useSupportedChainId } from 'constants/chains'
+import { getChain, useSupportedChainId } from 'constants/chains'
 import useStablecoinPrice from './useStablecoinPrice'
 
 const NUM_DECIMALS_USD = 2
@@ -25,7 +25,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
       const stablecoinAmount = supportedChainId
         ? tryParseCurrencyAmount(
             exactAmountUSD,
-            getChainInfo({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
+            getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
           )
         : undefined
 

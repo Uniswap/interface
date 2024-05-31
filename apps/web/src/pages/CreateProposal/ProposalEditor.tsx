@@ -54,9 +54,9 @@ Insert your conclusion here
   return (
     <ProposalEditorContainer className={className}>
       <ProposalEditorHeader>
-        <Trans>Proposal</Trans>
+        <Trans i18nKey="vote.proposal.title" />
       </ProposalEditorHeader>
-      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t`Proposal Title`} fontSize="1.25rem" />
+      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t('proposal.title')} fontSize="1.25rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />
     </ProposalEditorContainer>

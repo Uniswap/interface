@@ -1,5 +1,4 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
@@ -10,6 +9,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 import { useAccountEffect, useConnect, useDisconnect } from 'wagmi'
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
@@ -55,7 +55,9 @@ export default function UniwalletModal() {
 
   useEffect(() => {
     function listener({ type, data }: { type: string; data?: unknown }) {
-      if (type === 'display_uniswap_uri' && typeof data === 'string') setUri(data)
+      if (type === 'display_uniswap_uri' && typeof data === 'string') {
+        setUri(data)
+      }
     }
 
     uniswapWalletConnectConnector.emitter.on('message', listener)
@@ -71,7 +73,9 @@ export default function UniwalletModal() {
   }, [disconnect])
 
   useEffect(() => {
-    if (open) sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
+    if (open) {
+      sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
+    }
   }, [open])
 
   const theme = useTheme()
@@ -80,7 +84,7 @@ export default function UniwalletModal() {
       <UniwalletConnectWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
-            <Trans>Scan with Uniswap Wallet</Trans>
+            <Trans i18nKey="account.drawer.modal.scan" />
           </ThemedText.SubHeader>
           <CloseIcon onClick={close} />
         </HeaderRow>
@@ -120,10 +124,10 @@ function InfoSection() {
     <InfoSectionWrapper>
       <AutoColumn gap="4px">
         <ThemedText.SubHeaderSmall color="neutral1">
-          <Trans>Don&apos;t have a Uniswap wallet?</Trans>
+          <Trans i18nKey="account.drawer.modal.dont" />
         </ThemedText.SubHeaderSmall>
         <ThemedText.BodySmall color="neutral2">
-          <Trans>Safely store and swap tokens with the Uniswap app. Available on iOS and Android.</Trans>
+          <Trans i18nKey="account.drawer.modal.body" />
         </ThemedText.BodySmall>
       </AutoColumn>
       <Column>

@@ -89,7 +89,9 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
         logical !== undefined
       ) {
         const item = param.seriesData.get(this.series) as TDataType | undefined
-        if (item) newHoverData = { item, x, y, logicalIndex: logical }
+        if (item) {
+          newHoverData = { item, x, y, logicalIndex: logical }
+        }
       }
 
       const prevHoverData = this._hoverData
@@ -114,7 +116,9 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   protected onSeriesHover(hoverData?: ChartHoverData<TDataType>) {
     this.onCrosshairMove?.(hoverData?.item, hoverData?.logicalIndex)
 
-    if (!hoverData) return
+    if (!hoverData) {
+      return
+    }
 
     // Tooltip positioning modified from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/tooltip/tooltip.ts
     const x = hoverData.x + this.api.priceScale('left').width() + 10
@@ -334,7 +338,7 @@ function StaleBanner() {
       <Row gap="sm">
         <MissingDataBars color={theme.neutral1} />
         <ThemedText.BodySmall>
-          <Trans>Data may be outdated</Trans>
+          <Trans i18nKey="common.dataOutdated" />
         </ThemedText.BodySmall>
       </Row>
     </StaleBannerWrapper>

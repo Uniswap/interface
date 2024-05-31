@@ -83,11 +83,11 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
         <PopupAlertTriangle />
         <ColumnContainer gap="sm">
           <ThemedText.SubHeader color="neutral2">
-            <Trans>Failed to switch networks</Trans>
+            <Trans i18nKey="common.failedSwitchNetwork" />
           </ThemedText.SubHeader>
 
           <ThemedText.BodySmall color="neutral2">
-            <Trans>To use Rigoblock on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
+            <Trans i18nKey="settings.switchNetwork.warning" values={{ label: chainInfo.label }} />
           </ThemedText.BodySmall>
         </ColumnContainer>
       </RowNoFlex>
@@ -148,7 +148,9 @@ export function TransactionPopupContent({
   const { formatNumber } = useFormatter()
   const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumber))
 
-  if (!transaction || !activity) return null
+  if (!transaction || !activity) {
+    return null
+  }
 
   const onClick = () =>
     window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
@@ -163,7 +165,9 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const { formatNumber } = useFormatter()
   const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumber))
 
-  if (!activity || !order) return null
+  if (!activity || !order) {
+    return null
+  }
 
   const onClick = () =>
     openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })

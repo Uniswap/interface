@@ -39,10 +39,14 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
 export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
   const lists = usePoolsList()
   return useMemo(() => {
-    if (!urls) return {}
+    if (!urls) {
+      return {}
+    }
     return urls.slice().reduce((allTokens, currentUrl) => {
       const current = lists?.[currentUrl]?.current
-      if (!current) return allTokens
+      if (!current) {
+        return allTokens
+      }
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
       } catch (error) {
@@ -57,7 +61,9 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
 export function usePoolsFromUrl(urls?: string[]) {
   const lists = usePoolsList()
   return useMemo(() => {
-    if (!urls) return []
+    if (!urls) {
+      return []
+    }
     return lists[urls[0]]?.current?.tokens
   }, [lists, urls])
 }

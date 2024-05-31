@@ -3,8 +3,13 @@ import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  Account,
+  AccountType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppSelector } from 'wallet/src/state'
@@ -39,12 +44,17 @@ export function useAccount(address: Address): Account {
   return account
 }
 
+export function useAccountIfExists(address: Address): Account | undefined {
+  const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
+  return account
+}
+
 export function usePendingAccounts(): AddressTo<Account> {
   return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
 }
 
-export function useSignerAccounts(): Account[] {
-  return useAppSelector<Account[]>(selectSignerMnemonicAccounts)
+export function useSignerAccounts(): SignerMnemonicAccount[] {
+  return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
 }
 
 export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
@@ -57,6 +67,11 @@ export function useViewOnlyAccounts(): Account[] {
 
 export function useActiveAccount(): Account | null {
   return useAppSelector(selectActiveAccount)
+}
+
+export function useActiveSignerAccount(): Account | null {
+  const activeAccount = useAppSelector(selectActiveAccount)
+  return activeAccount?.type === AccountType.SignerMnemonic ? activeAccount : null
 }
 
 export function useActiveAccountAddress(): Address | null {
@@ -143,11 +158,12 @@ export function useDisplayName(
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
   const { unitag } = useUnitagByAddress(validated ?? undefined)
+  const { getOnboardingAccount } = useOnboardingContext()
+  const onboardingAccount = getOnboardingAccount()
 
   // Need to account for pending accounts for use within onboarding
   const maybeLocalName = useAccounts()[address ?? '']?.name
-  const maybeLocalNamePending = usePendingAccounts()[address ?? '']?.name
-  const localName = maybeLocalName ?? maybeLocalNamePending
+  const localName = maybeLocalName ?? onboardingAccount?.name
 
   if (!address) {
     return

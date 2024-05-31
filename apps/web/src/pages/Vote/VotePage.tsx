@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -18,8 +18,7 @@ import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-
-import { NEVER_RELOAD } from '@uniswap/redux-multicall'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -279,7 +278,7 @@ export default function VotePage() {
   }
 
   return (
-    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
       <>
         <PageWrapper gap="lg" justify="center">
           <VoteModal
@@ -291,16 +290,19 @@ export default function VotePage() {
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={<Trans>Unlock votes</Trans>}
+            title={<Trans i18nKey="vote.votePage.unlockVotes" />}
           />
           <QueueModal isOpen={showQueueModal} onDismiss={toggleQueueModal} proposalId={proposalData?.id} />
           <ExecuteModal isOpen={showExecuteModal} onDismiss={toggleExecuteModal} proposalId={proposalData?.id} />
           <ProposalInfo gap="lg" justify="start">
             <RowBetween style={{ width: '100%' }}>
               <ArrowWrapper to="/vote">
-                <Trans>
-                  <ArrowLeft size={20} /> All Proposals
-                </Trans>
+                <Trans
+                  i18nKey="vote.votePage.allProposals"
+                  values={{
+                    arrow: <ArrowLeft size={20} />,
+                  }}
+                />
               </ArrowWrapper>
               {proposalData && <ProposalStatus status={proposalData.status} />}
             </RowBetween>
@@ -311,7 +313,12 @@ export default function VotePage() {
               <RowBetween>
                 <ThemedText.DeprecatedMain>
                   {startDate && startDate > now ? (
-                    <Trans>Voting starts approximately {{ date: startDate.toLocaleString(locale, dateFormat) }}</Trans>
+                    <Trans
+                      i18nKey="vote.votePage.votingStarts"
+                      values={{
+                        date: startDate.toLocaleString(locale, dateFormat),
+                      }}
+                    />
                   ) : null}
                 </ThemedText.DeprecatedMain>
               </RowBetween>
@@ -319,25 +326,39 @@ export default function VotePage() {
                 <ThemedText.DeprecatedMain>
                   {endDate &&
                     (endDate < now ? (
-                      <Trans>Voting ended {{ date: endDate.toLocaleString(locale, dateFormat) }}</Trans>
+                      <Trans
+                        i18nKey="vote.votePage.votingEnded"
+                        values={{
+                          date: endDate.toLocaleString(locale, dateFormat),
+                        }}
+                      />
                     ) : (
-                      <Trans>Voting ends approximately {{ date: endDate.toLocaleString(locale, dateFormat) }}</Trans>
+                      <Trans
+                        i18nKey="vote.votePage.votingEnds"
+                        values={{
+                          date: endDate.toLocaleString(locale, dateFormat),
+                        }}
+                      />
                     ))}
                 </ThemedText.DeprecatedMain>
               </RowBetween>
               {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
                 <GrayCard>
                   <ThemedText.DeprecatedBlack>
-                    <Trans>
-                      Only GRG tokens that were actively staked to a Rigoblock Pool before{' '}
-                      {startDate?.toLocaleString(locale, dateFormat)} are eligible for voting.
-                    </Trans>{' '}
+                    <Trans
+                      i18nKey="vote.votePage.onlyUniVotesBeforeBlockEligible"
+                      values={{
+                        startDate: startDate?.toLocaleString(locale, dateFormat),
+                      }}
+                    />{' '}
                     {showLinkForUnlock && (
                       <span>
-                        <Trans>
-                          <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
-                          proposal.
-                        </Trans>
+                        <Trans
+                          i18nKey="vote.votePage.unlockVotingLink"
+                          values={{
+                            link: <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink>,
+                          }}
+                        />
                       </span>
                     )}
                   </ThemedText.DeprecatedBlack>
@@ -354,7 +375,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote for</Trans>
+                  <Trans i18nKey="vote.votePage.voteFor" />
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -364,7 +385,7 @@ export default function VotePage() {
                     toggleVoteModal()
                   }}
                 >
-                  <Trans>Vote against</Trans>
+                  <Trans i18nKey="vote.votePage.voteAgainst" />
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -387,7 +408,7 @@ export default function VotePage() {
                     toggleExecuteModal()
                   }}
                 >
-                  <Trans>Execute</Trans>
+                  <Trans i18nKey="common.execute" />
                 </ButtonPrimary>
               </RowFixed>
             )}
@@ -397,9 +418,12 @@ export default function VotePage() {
                 {eta && (
                   <RowBetween>
                     <ThemedText.DeprecatedBlack>
-                      <Trans>
-                        This proposal may be executed after {{ eta: eta.toLocaleString(locale, dateFormat) }}.
-                      </Trans>
+                      <Trans
+                        i18nKey="vote.votePage.mayBeExecutedAfter"
+                        values={{
+                          eta: eta.toLocaleString(locale, dateFormat),
+                        }}
+                      />
                     </ThemedText.DeprecatedBlack>
                   </RowBetween>
                 )}
@@ -413,7 +437,7 @@ export default function VotePage() {
                     // can't execute until the eta has arrived
                     disabled={!currentTimestamp || !proposalData?.eta || currentTimestamp.lt(proposalData.eta)}
                   >
-                    <Trans>Execute</Trans>
+                    <Trans i18nKey="vote.votePage.execute" />
                   </ButtonPrimary>
                 </RowFixed>
               </>
@@ -425,7 +449,7 @@ export default function VotePage() {
                   <AutoColumn gap="md">
                     <WrapSmall>
                       <ThemedText.DeprecatedBlack fontWeight={535}>
-                        <Trans>For</Trans>
+                        <Trans i18nKey="common.for" />
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
                         <ThemedText.DeprecatedBlack fontWeight={535}>
@@ -454,7 +478,7 @@ export default function VotePage() {
                   <AutoColumn gap="md">
                     <WrapSmall>
                       <ThemedText.DeprecatedBlack fontWeight={535}>
-                        <Trans>Against</Trans>
+                        <Trans i18nKey="vote.votePage.against" />
                       </ThemedText.DeprecatedBlack>
                       {proposalData && (
                         <ThemedText.DeprecatedBlack fontWeight={535}>
@@ -476,7 +500,7 @@ export default function VotePage() {
             </CardWrapper>
             <AutoColumn gap="md">
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Details</Trans>
+                <Trans i18nKey="vote.votePage.details" />
               </ThemedText.DeprecatedMediumHeader>
               {proposalData?.details?.map((d, i) => {
                 return (
@@ -497,7 +521,7 @@ export default function VotePage() {
             </AutoColumn>
             <AutoColumn gap="md">
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Description</Trans>
+                <Trans i18nKey="vote.votePage.description" />
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
                 <ReactMarkdown
@@ -510,7 +534,7 @@ export default function VotePage() {
             </AutoColumn>
             <AutoColumn gap="md">
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Proposer</Trans>
+                <Trans i18nKey="vote.votePage.proposer" />
               </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink
                 href={

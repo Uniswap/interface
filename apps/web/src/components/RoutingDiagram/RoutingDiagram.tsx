@@ -86,7 +86,12 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   // TODO - link pool icon to info.uniswap.org via query params
   return (
     <MouseoverTooltip
-      text={<Trans>{{ pct: currency0?.symbol + '/' + currency1?.symbol + ' ' + feeAmount / 10000 }}% pool</Trans>}
+      text={
+        <Trans
+          i18nKey="pool.percent"
+          values={{ pct: currency0?.symbol + '/' + currency1?.symbol + ' ' + feeAmount / 10000 }}
+        />
+      }
       size={TooltipSize.ExtraSmall}
     >
       <PoolBadge>

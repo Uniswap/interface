@@ -94,12 +94,14 @@ const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: B
 }
 
 const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: PortfolioTokenBalancePartsFragment }) => {
-  if (!pageChainBalance || !pageChainBalance.token) return null
+  if (!pageChainBalance || !pageChainBalance.token) {
+    return null
+  }
   const currency = gqlToCurrency(pageChainBalance.token)
   return (
     <BalanceSection>
       <ThemedText.HeadlineSmall color="neutral1">
-        <Trans>Your balance</Trans>
+        <Trans i18nKey="tdp.balanceSummary.title" />
       </ThemedText.HeadlineSmall>
       <Balance currency={currency} chainId={currency?.chainId} gqlBalance={pageChainBalance} />
     </BalanceSection>
@@ -115,16 +117,18 @@ const OtherChainsBalanceSummary = ({
 }) => {
   const navigate = useNavigate()
 
-  if (!otherChainBalances.length) return null
+  if (!otherChainBalances.length) {
+    return null
+  }
   return (
     <BalanceSection>
       {hasPageChainBalance ? (
         <ThemedText.SubHeaderSmall>
-          <Trans>On other networks</Trans>
+          <Trans i18nKey="tdp.balanceSummary.otherNetworks">On other networks</Trans>
         </ThemedText.SubHeaderSmall>
       ) : (
         <ThemedText.HeadlineSmall>
-          <Trans>Balance on other networks</Trans>
+          <Trans i18nKey="tdp.balanceSummary.otherNetworksBalance">Balance on other networks</Trans>
         </ThemedText.HeadlineSmall>
       )}
       {otherChainBalances.map((balance) => {

@@ -1,3 +1,4 @@
+import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { UserPropertyValue } from './analytics'
 
@@ -15,27 +16,23 @@ export function generateAnalyticsLoggers(fileName: string): ErrorLoggers {
       logger.error(error, { tags: { file: fileName, function: 'init' } })
     },
     sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-      if (__DEV__) {
-        logger.info(
-          'analytics',
-          'sendEvent',
-          `[analytics(${eventName})]: ${JSON.stringify(eventProperties ?? {})}`
-        )
+      if (isNonJestDev) {
+        logger.info('analytics', 'sendEvent', `[Event: ${eventName}]`, eventProperties ?? {})
       }
     },
     setAllowAnalytics(allow: boolean): void {
-      if (__DEV__) {
+      if (isNonJestDev) {
         logger.info('analytics', 'setAnonymous', `user allows analytics: ${allow}`)
       }
     },
     flushEvents(): void {
-      if (__DEV__) {
+      if (isNonJestDev) {
         logger.info('analytics', 'flushEvents', 'flushing analytics events')
       }
     },
     setUserProperty(property: string, value: UserPropertyValue): void {
-      if (__DEV__) {
-        logger.info('analytics', 'setUserProperty', `property: ${property}, value: ${value}`)
+      if (isNonJestDev) {
+        logger.info('analytics', 'setUserProperty', `[Property: ${property}]: ${value}`)
       }
     },
   }

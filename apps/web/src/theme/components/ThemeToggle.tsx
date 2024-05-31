@@ -50,7 +50,9 @@ export function ThemeColorMetaUpdater() {
 
   useEffect(() => {
     const meta = document.querySelector('meta[name=theme-color]')
-    if (!meta) return
+    if (!meta) {
+      return
+    }
 
     if (isDark) {
       // this color comes from #background-radial-gradient
@@ -93,13 +95,13 @@ export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
     <Row align="center">
       <Row width="40%">
         <ThemedText.SubHeaderSmall color="primary">
-          <Trans>Theme</Trans>
+          <Trans i18nKey="themeToggle.theme" />
         </ThemedText.SubHeaderSmall>
       </Row>
       <Row style={{ flexGrow: 1 }} justify="flex-end" width="60%">
         <SegmentedControl selected={mode} onSelect={switchMode}>
           <Segment value={ThemeMode.AUTO} testId="theme-auto">
-            <Trans>Auto</Trans>
+            <Trans i18nKey="commmon.automatic" />
           </Segment>
           <Segment value={ThemeMode.LIGHT} Icon={Sun} testId="theme-lightmode" />
           <Segment value={ThemeMode.DARK} Icon={Moon} testId="theme-darkmode" />

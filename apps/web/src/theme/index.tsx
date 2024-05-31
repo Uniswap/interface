@@ -92,6 +92,7 @@ function getSettings(darkMode: boolean) {
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
     navHeight: navDimensions.height,
+    promoBannerHeight: 56,
     navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH,
@@ -120,12 +121,16 @@ export function getTheme(darkMode: boolean, overriddenColors?: Partial<ThemeColo
 }
 
 function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Partial<ThemeColors>) {
-  if (!overriddenColors) return defaultColors
+  if (!overriddenColors) {
+    return defaultColors
+  }
 
   // Remove any undefined values from the object such that no theme values are overridden by undefined
   const definedOverriddenColors = Object.keys(overriddenColors).reduce((acc, curr) => {
     const key = curr as keyof ThemeColors
-    if (overriddenColors[key] !== undefined) acc[key] = overriddenColors[key]
+    if (overriddenColors[key] !== undefined) {
+      acc[key] = overriddenColors[key]
+    }
     return acc
   }, {} as Partial<ThemeColors>)
 

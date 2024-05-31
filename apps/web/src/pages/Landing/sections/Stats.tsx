@@ -1,5 +1,5 @@
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
@@ -141,17 +141,12 @@ const LearnMoreArrow = styled(ArrowRightCircle)`
   stroke: ${({ theme }) => theme.surface2};
   fill: ${({ theme }) => theme.neutral1};
 `
-const ProtocolDescription = () => (
-  <Trans>
-    Uniswap products are powered by the Uniswap Protocol. The protocol is the largest onchain marketplace, with billions
-    of dollars in weekly volume across thousands of tokens on Ethereum and 7+ additional chains.
-  </Trans>
-)
+const ProtocolDescription = () => <Trans i18nKey="landing.protocolDescription" />
 function LearnMore() {
   return (
     <LearnMoreButton href="https://info.uniswap.org">
       <Row gap="sm" align="center">
-        <Trans>Learn more</Trans>
+        <Trans i18nKey="common.learnMore.link" />
         <LearnMoreArrow />
       </Row>
     </LearnMoreButton>
@@ -168,7 +163,7 @@ export function Stats() {
             <Left>
               <Box direction="column" justify-content="space-between" height="100%">
                 <H2>
-                  <Trans>Trusted by millions</Trans>
+                  <Trans i18nKey="landing.trusted" />
                 </H2>
                 <Box bottom="0" position="absolute" direction="column" maxWidth="480px" gap="24px">
                   <Body1>
@@ -185,7 +180,7 @@ export function Stats() {
         </HideWhenSmall>
         <HideWhenLarge maxWidth="1280px" direction="column" gap="32px">
           <H2>
-            <Trans>Trusted by millions</Trans>
+            <Trans i18nKey="landing.trusted" />
           </H2>
           <Cards inView={inView} />
           <Body1>
@@ -226,7 +221,7 @@ function Cards({ inView }: { inView: boolean }) {
     <CardLayout>
       <LeftTop>
         <StatCard
-          title={t`All time volume`}
+          title={t('stats.allTimeVolume')}
           value={formatNumber({ input: 2 * 10 ** 12, type: NumberType.FiatTokenStats })}
           delay={0}
           inView={inView}
@@ -234,7 +229,7 @@ function Cards({ inView }: { inView: boolean }) {
       </LeftTop>
       <RightTop>
         <StatCard
-          title={t`All time swappers`}
+          title={t('stats.allTimeSwappers')}
           value={formatNumber({ input: 16.6 * 10 ** 6, type: NumberType.TokenQuantityStats })}
           delay={0.2}
           inView={inView}
@@ -242,7 +237,7 @@ function Cards({ inView }: { inView: boolean }) {
       </RightTop>
       <LeftBottom>
         <StatCard
-          title={t`All time LP fees `}
+          title={t('stats.allTimeFees')}
           value={formatNumber({ input: 3.4 * 10 ** 9, type: NumberType.FiatTokenStats })}
           delay={0.4}
           inView={inView}
@@ -250,7 +245,7 @@ function Cards({ inView }: { inView: boolean }) {
       </LeftBottom>
       <RightBottom>
         <StatCard
-          title={t`24H volume`}
+          title={t('stats.24volume')}
           value={formatNumber({ input: totalVolume || 500000000, type: NumberType.FiatTokenStats })}
           live
           delay={0.6}

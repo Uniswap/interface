@@ -63,7 +63,9 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
 
   const displayPrice = useMemo(() => {
-    if (!amountsDefined) return undefined
+    if (!amountsDefined) {
+      return undefined
+    }
     const tradePrice = new Price({ baseAmount: amounts?.inputAmount, quoteAmount: amounts?.outputAmount })
     return tradePrice.quote(
       CurrencyAmount.fromRawAmount(
@@ -73,7 +75,9 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
     )
   }, [amounts?.inputAmount, amounts?.outputAmount, amountsDefined])
 
-  if (!offchainOrderDetails || !amountsDefined) return null
+  if (!offchainOrderDetails || !amountsDefined) {
+    return null
+  }
 
   const inputLogo = logos?.[0] ?? inputCurrencyInfo?.logoUrl
   const outputLogo = logos?.[1] ?? outputCurrencyInfo?.logoUrl
@@ -87,13 +91,14 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         title={
           cancelling ? (
             <ThemedText.LabelMicro fontWeight={500}>
-              <Trans>Pending cancellation</Trans>
+              <Trans i18nKey="common.pending.cancellation" />
             </ThemedText.LabelMicro>
           ) : offchainOrderDetails?.expiry ? (
             <ThemedText.LabelMicro fontWeight={500}>
-              <Trans>
-                Expires {{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
-              </Trans>
+              <Trans
+                i18nKey="common.limits.expires"
+                values={{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
+              />
             </ThemedText.LabelMicro>
           ) : undefined
         }
@@ -112,11 +117,14 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
             </TradeSummaryContainer>
             {displayPrice && (
               <ThemedText.SubHeaderSmall color={theme.neutral1}>
-                <Trans>
-                  when {{ price: formatReviewSwapCurrencyAmount(displayPrice) }}{' '}
-                  {{ outSymbol: amounts.outputAmount.currency.symbol }}/
-                  {{ inSymbol: amounts.inputAmount.currency.symbol }}
-                </Trans>
+                <Trans
+                  i18nKey="common.limits.when"
+                  values={{
+                    price: formatReviewSwapCurrencyAmount(displayPrice),
+                    outSymbol: amounts.outputAmount.currency.symbol,
+                    inSymbol: amounts.inputAmount.currency.symbol,
+                  }}
+                />
               </ThemedText.SubHeaderSmall>
             )}
           </Column>

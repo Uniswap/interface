@@ -36,7 +36,9 @@ export class SwapEventTimestampTracker {
   }
 
   public setElapsedTime(eventType: SwapEventType): number | undefined {
-    if (this.timestamps.has(eventType)) return undefined
+    if (this.timestamps.has(eventType)) {
+      return undefined
+    }
     const elapsedTime = calculateElapsedTimeWithPerformanceMarkMs(eventType, this.createdAt)
     if (elapsedTime) {
       this.timestamps.set(eventType, elapsedTime)
@@ -50,7 +52,9 @@ export class SwapEventTimestampTracker {
    */
   public getElapsedTime(eventType: SwapEventType, startEventType?: SwapEventType): number | undefined {
     const endTime = this.timestamps.get(eventType)
-    if (!endTime) return undefined
+    if (!endTime) {
+      return undefined
+    }
     let startTime = 0
     if (startEventType) {
       startTime = this.timestamps.get(startEventType) ?? 0

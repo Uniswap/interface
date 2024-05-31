@@ -10,6 +10,7 @@ import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
@@ -21,7 +22,6 @@ import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { useChainId } from 'wagmi'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from './utils'
 
@@ -42,12 +42,16 @@ function useTDPCurrency(
   currencyChainId: ChainId,
   isNative: boolean
 ) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const appChainId = chainId ?? ChainId.MAINNET
 
   const queryCurrency = useMemo(() => {
-    if (isNative) return nativeOnChain(currencyChainId)
-    if (tokenQuery.data?.token) return gqlToCurrency(tokenQuery.data.token)
+    if (isNative) {
+      return nativeOnChain(currencyChainId)
+    }
+    if (tokenQuery.data?.token) {
+      return gqlToCurrency(tokenQuery.data.token)
+    }
     return undefined
   }, [isNative, currencyChainId, tokenQuery.data?.token])
   // fetches on-chain token if query data is missing and page chain matches global chain (else fetch won't work)
@@ -66,10 +70,14 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
   return useMemo(() => {
     const tokenBalances = balanceQuery?.portfolios?.[0]?.tokenBalances
     const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
-    if (!tokensAcrossChains) return {}
+    if (!tokensAcrossChains) {
+      return {}
+    }
     return tokensAcrossChains.reduce<MultiChainMap>((map, current) => {
       if (current) {
-        if (!map[current.chain]) map[current.chain] = {}
+        if (!map[current.chain]) {
+          map[current.chain] = {}
+        }
         const update = map[current.chain] ?? {}
         update.address = current.address
         update.balance = tokenBalances?.find((tokenBalance) => tokenBalance?.token?.id === current.id)
@@ -82,7 +90,9 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const { tokenAddress } = useParams<{ tokenAddress: string }>()
-  if (!tokenAddress) throw new Error('Invalid token details route: token address URL param is undefined')
+  if (!tokenAddress) {
+    throw new Error('Invalid token details route: token address URL param is undefined')
+  }
   const currencyChainInfo = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
@@ -111,7 +121,11 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
   const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
   const tokenColor =
-    useSrcColor(extractedColorSrc, tokenQuery.data?.token?.name, theme.surface2).tokenColor ?? undefined
+    useSrcColor(
+      extractedColorSrc,
+      tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
+      theme.surface2
+    ).tokenColor ?? undefined
 
   return useMemo(() => {
     return {

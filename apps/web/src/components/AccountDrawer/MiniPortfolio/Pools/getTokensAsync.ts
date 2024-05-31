@@ -65,7 +65,9 @@ function parseTokens(addresses: string[], chainId: ChainId, returnData: CallResu
 
   return tokenDataSlices.reduce((acc: TokenMap, slice, index) => {
     const parsedToken = tryParseToken(addresses[index], chainId, slice)
-    if (parsedToken) acc[parsedToken.address] = parsedToken
+    if (parsedToken) {
+      acc[parsedToken.address] = parsedToken
+    }
     return acc
   }, {})
 }
@@ -92,7 +94,9 @@ export async function getTokensAsync(
   chainId: ChainId,
   multicall: UniswapInterfaceMulticall
 ): Promise<TokenMap> {
-  if (addresses.length === 0) return {}
+  if (addresses.length === 0) {
+    return {}
+  }
   const formattedAddresses: string[] = []
   const calls: Call[] = []
   const previouslyCalledTokens: Promise<Token | undefined>[] = []
@@ -104,7 +108,9 @@ export async function getTokensAsync(
       previouslyCalledTokens.push(previousCall)
     } else {
       const formattedAddress = isAddress(tokenAddress)
-      if (!formattedAddress) return
+      if (!formattedAddress) {
+        return
+      }
       formattedAddresses.push(formattedAddress)
       calls.push(...createCallsForToken(formattedAddress))
     }

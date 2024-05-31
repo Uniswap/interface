@@ -7,6 +7,7 @@ import {
   TextInput as NativeTextInput,
   StyleSheet,
 } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -73,82 +74,88 @@ export function SettingsWalletEdit({
 
   return (
     <Screen>
-      <KeyboardAvoidingView
-        enabled
-        behavior={isIOS ? 'padding' : undefined}
-        contentContainerStyle={styles.expand}
-        style={styles.base}>
-        <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
-        </BackHeader>
-        <Flex
-          grow
-          gap="$spacing36"
-          justifyContent="space-between"
-          pb="$spacing16"
-          pt="$spacing24"
-          px="$spacing24">
-          <Flex>
-            <Flex
-              grow
-              row
-              alignItems="center"
-              borderColor="$surface3"
-              borderRadius="$rounded16"
-              borderWidth="$spacing1"
-              justifyContent="space-between"
-              px="$spacing24"
-              py="$spacing12">
-              <TextInput
-                ref={inputRef}
-                autoCapitalize="none"
-                color={accountNameIsEditable ? '$neutral1' : '$neutral2'}
-                disabled={!accountNameIsEditable}
-                fontFamily="$subHeading"
-                fontSize={fonts.subheading1.fontSize}
-                m="$none"
-                maxLength={NICKNAME_MAX_LENGTH}
-                numberOfLines={1}
-                placeholder={t('settings.setting.wallet.label')}
-                placeholderTextColor="$neutral3"
-                px="$none"
-                py="$spacing12"
-                returnKeyType="done"
-                value={nickname}
-                onBlur={onFinishEditing}
-                onChangeText={setNickname}
-                onFocus={onEditButtonPress}
-                onSubmitEditing={onFinishEditing}
-              />
-              {showEditButton && accountNameIsEditable && (
-                <Button
-                  backgroundless
-                  icon={<PenLine color="$neutral3" />}
+      {/* This GestureDetector is used to consume all pan gestures and prevent
+      keyboard from flickering (see https://github.com/Uniswap/universe/pull/8242) */}
+      <GestureDetector gesture={Gesture.Pan()}>
+        <KeyboardAvoidingView
+          enabled
+          behavior={isIOS ? 'padding' : undefined}
+          contentContainerStyle={styles.expand}
+          style={styles.base}>
+          <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
+            <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
+          </BackHeader>
+          <Flex
+            grow
+            gap="$spacing36"
+            justifyContent="space-between"
+            pb="$spacing16"
+            pt="$spacing24"
+            px="$spacing24">
+            <Flex>
+              <Flex
+                grow
+                row
+                alignItems="center"
+                borderColor="$surface3"
+                borderRadius="$rounded16"
+                borderWidth="$spacing1"
+                justifyContent="space-between"
+                px="$spacing24"
+                py="$spacing12">
+                <TextInput
+                  ref={inputRef}
+                  autoCapitalize="none"
+                  color={accountNameIsEditable ? '$neutral1' : '$neutral2'}
+                  disabled={!accountNameIsEditable}
+                  fontFamily="$subHeading"
+                  fontSize={fonts.subheading1.fontSize}
                   m="$none"
-                  size="medium"
-                  onPress={onEditButtonPress}
+                  maxLength={NICKNAME_MAX_LENGTH}
+                  numberOfLines={1}
+                  placeholder={t('settings.setting.wallet.label')}
+                  placeholderTextColor="$neutral3"
+                  px="$none"
+                  py="$spacing12"
+                  returnKeyType="done"
+                  value={nickname}
+                  onBlur={onFinishEditing}
+                  onChangeText={setNickname}
+                  onFocus={onEditButtonPress}
+                  onSubmitEditing={onFinishEditing}
                 />
+                {showEditButton && accountNameIsEditable && (
+                  <Button
+                    backgroundless
+                    icon={<PenLine color="$neutral3" />}
+                    m="$none"
+                    size="medium"
+                    onPress={onEditButtonPress}
+                  />
+                )}
+              </Flex>
+              {accountNameIsEditable && (
+                <Flex px="$spacing8" py="$spacing12">
+                  <Text color="$neutral3">
+                    {t('settings.setting.wallet.editLabel.description')}
+                  </Text>
+                </Flex>
+              )}
+              {showUnitagBanner && (
+                <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />
               )}
             </Flex>
-            {accountNameIsEditable && (
-              <Flex px="$spacing8" py="$spacing12">
-                <Text color="$neutral3">{t('settings.setting.wallet.editLabel.description')}</Text>
-              </Flex>
-            )}
-            {showUnitagBanner && (
-              <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />
-            )}
+            <Button
+              hapticFeedback
+              disabled={nickname === displayName?.name}
+              size="medium"
+              theme="primary"
+              onPress={onPressSaveChanges}>
+              {t('settings.setting.wallet.editLabel.save')}
+            </Button>
           </Flex>
-          <Button
-            hapticFeedback
-            disabled={nickname === displayName?.name}
-            size="medium"
-            theme="primary"
-            onPress={onPressSaveChanges}>
-            {t('settings.setting.wallet.editLabel.save')}
-          </Button>
-        </Flex>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </GestureDetector>
     </Screen>
   )
 }

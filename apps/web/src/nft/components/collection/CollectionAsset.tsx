@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { Trans } from 'i18n'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { useCallback, useMemo } from 'react'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface CollectionAssetProps {
@@ -80,9 +81,9 @@ export const CollectionAsset = ({
       secondaryInfo: notForSale
         ? ''
         : `${formatEther({ input: asset.priceInfo.ETHPrice, type: NumberType.NFTToken })} ETH`,
-      selectedInfo: <Trans>Remove from bag</Trans>,
-      notSelectedInfo: <Trans>Add to bag</Trans>,
-      disabledInfo: <Trans>Not listed</Trans>,
+      selectedInfo: <Trans i18nKey="nft.removeFromBag" />,
+      notSelectedInfo: <Trans i18nKey="nft.addToBag" />,
+      disabledInfo: <Trans i18nKey="nft.notListed" />,
     }
   }, [
     asset.name,

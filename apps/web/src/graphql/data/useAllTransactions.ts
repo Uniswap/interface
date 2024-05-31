@@ -66,8 +66,12 @@ export function useAllTransactions(
           cursor: dataV3?.v3Transactions?.[dataV3.v3Transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev
-          if (!loadingMoreV2.current || (chain !== Chain.Ethereum && !v2ExploreEnabled)) onComplete?.()
+          if (!fetchMoreResult) {
+            return prev
+          }
+          if (!loadingMoreV2.current || (chain !== Chain.Ethereum && !v2ExploreEnabled)) {
+            onComplete?.()
+          }
           const mergedData = {
             v3Transactions: [...(prev.v3Transactions ?? []), ...(fetchMoreResult.v3Transactions ?? [])],
           }
@@ -81,7 +85,9 @@ export function useAllTransactions(
             cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) return prev
+            if (!fetchMoreResult) {
+              return prev
+            }
             !loadingMoreV3.current && onComplete?.()
             const mergedData = {
               v2Transactions: [...(prev.v2Transactions ?? []), ...(fetchMoreResult.v2Transactions ?? [])],

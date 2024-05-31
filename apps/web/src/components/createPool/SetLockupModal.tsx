@@ -76,7 +76,9 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setLockupCallback || !parsedLockup) return
+    if (!account || !chainId || !setLockupCallback || !parsedLockup) {
+      return
+    }
 
     // the minimum acceptable value is 2 seconds
     if (parsedLockup === '0') {

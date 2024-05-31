@@ -141,6 +141,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
           "overflow": "hidden",
         }
       }
+      testID="network-logo"
     >
       <Image
         resizeMode="contain"
@@ -157,99 +158,21 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         }
       />
     </View>
-    <View
-      collapsable={false}
-      jestAnimatedStyle={
-        {
-          "value": {
-            "transform": [
-              {
-                "rotateZ": "0deg",
-              },
-            ],
-          },
-        }
-      }
-      sentry-label="SpinningLoader"
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
       style={
         {
-          "flexDirection": "column",
-          "transform": [
-            {
-              "rotateZ": "0deg",
-            },
-          ],
+          "color": "#CECECE",
+          "fontFamily": "Basel-Book",
+          "fontSize": 14,
+          "lineHeight": 20,
         }
       }
+      suppressHighlighting={true}
     >
-      <RNSVGSvgView
-        align="xMidYMid"
-        bbHeight="16"
-        bbWidth="16"
-        fill="none"
-        focusable={false}
-        meetOrSlice={0}
-        minX={0}
-        minY={0}
-        strokeWidth={8}
-        style={
-          [
-            {
-              "backgroundColor": "transparent",
-              "borderWidth": 0,
-            },
-            {
-              "color": "#7D7D7D",
-              "height": 16,
-              "width": 16,
-            },
-            {
-              "flex": 0,
-              "height": 16,
-              "width": 16,
-            },
-          ]
-        }
-        tintColor="#7D7D7D"
-        vbHeight={24}
-        vbWidth={24}
-      >
-        <RNSVGGroup
-          fill={null}
-          propList={
-            [
-              "fill",
-              "strokeWidth",
-            ]
-          }
-          strokeWidth="8"
-        >
-          <RNSVGPath
-            d="M21 12C21 7.02944 16.9706 3 12 3"
-            fill={
-              {
-                "payload": 4278190080,
-                "type": 0,
-              }
-            }
-            propList={
-              [
-                "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-              ]
-            }
-            stroke={
-              {
-                "type": 2,
-              }
-            }
-            strokeLinecap={1}
-            strokeWidth="3"
-          />
-        </RNSVGGroup>
-      </RNSVGSvgView>
-    </View>
+      -
+    </Text>
   </View>
 </View>
 `;
@@ -395,6 +318,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           "overflow": "hidden",
         }
       }
+      testID="network-logo"
     >
       <Image
         resizeMode="contain"
@@ -571,6 +495,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           "overflow": "hidden",
         }
       }
+      testID="network-logo"
     >
       <Image
         resizeMode="contain"

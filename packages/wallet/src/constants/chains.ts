@@ -12,6 +12,7 @@ import {
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
+  ZORA_LOGO,
 } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 import { ChainId } from 'uniswap/src/types/chains'
@@ -54,6 +55,7 @@ export const L2_CHAIN_IDS = [
   ChainId.PolygonMumbai,
   ChainId.Bnb,
   ChainId.Blast,
+  ChainId.Zora,
 ] as const
 
 // Renamed from SupportedL2ChainId in web app
@@ -108,7 +110,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.ArbiscanLogoLight,
       logoDark: Logos.ArbiscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/arbitrum',
+    infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
     label: 'Arbitrum',
     logo: ARBITRUM_LOGO,
     nativeCurrency: {
@@ -135,7 +137,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/',
+    infoLink: 'https://app.uniswap.org/explore',
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
     nativeCurrency: {
@@ -162,7 +164,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/',
+    infoLink: 'https://app.uniswap.org/explore',
     label: 'Görli',
     logo: GOERLI_LOGO,
     nativeCurrency: {
@@ -189,7 +191,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/base',
+    infoLink: 'https://app.uniswap.org/explore/tokens/base',
     label: 'Base',
     logo: BASE_LOGO,
     nativeCurrency: {
@@ -217,7 +219,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/bnb',
+    infoLink: 'https://app.uniswap.org/explore/tokens/bnb',
     label: 'BNB',
     logo: BNB_LOGO,
     nativeCurrency: {
@@ -244,7 +246,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.OpEtherscanLogoLight,
       logoDark: Logos.OpEtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/optimism',
+    infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
     label: 'Optimism',
     logo: OPTIMISM_LOGO,
     nativeCurrency: {
@@ -273,7 +275,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.PolygonscanLogoLight,
       logoDark: Logos.PolygonscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/polygon/',
+    infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
     label: 'Polygon',
     logo: POLYGON_LOGO,
     nativeCurrency: {
@@ -300,7 +302,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.PolygonscanLogoLight,
       logoDark: Logos.PolygonscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/polygon/',
+    infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
     label: 'Polygon Mumbai',
     logo: MUMBAI_LOGO,
     nativeCurrency: {
@@ -327,7 +329,7 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://app.uniswap.org/explore/tokens/blast?chain=blast',
+    infoLink: 'https://app.uniswap.org/explore/tokens/blast',
     label: 'Blast',
     logo: BLAST_LOGO,
     nativeCurrency: {
@@ -343,5 +345,32 @@ export const CHAIN_INFO: ChainInfo = {
       address: '0x4300000000000000000000000000000000000004',
     },
     rpcUrls: { [RPCType.Public]: 'https://rpc.blast.io' },
+  },
+  [ChainId.Zora]: {
+    blockWaitMsBeforeWarning: 600000,
+    bridge: 'https://bridge.zora.energy/',
+    docs: 'https://docs.zora.co/',
+    explorer: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.energy/',
+      logoLight: Logos.EtherscanLogoLight,
+      logoDark: Logos.EtherscanLogoDark,
+    },
+    infoLink: 'https://app.uniswap.org/explore/tokens/zora?chain=zora',
+    label: 'Zora',
+    logo: ZORA_LOGO,
+    nativeCurrency: {
+      name: 'Zora ETH',
+      symbol: 'ETH',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Ether',
+      symbol: 'WETH',
+      decimals: 18,
+      address: '0x4200000000000000000000000000000000000006',
+    },
+    rpcUrls: { [RPCType.Public]: 'https://rpc.zora.energy/' },
   },
 }

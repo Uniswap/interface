@@ -101,7 +101,9 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
     for (let i = this._data.visibleRange.from; i < this._data.visibleRange.to; i++) {
       const stack = bars[i]
       const column = stack.column
-      if (!column) return
+      if (!column) {
+        return
+      }
       let previousY = zeroY
       const width = Math.min(
         Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),

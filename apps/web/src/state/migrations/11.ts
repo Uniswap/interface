@@ -9,7 +9,9 @@ type PersistAppStateV11 = {
  * Migration fixing an edgecase missed in migration10: delete recentConnectionMeta key even when undefined recentConnectionMeta = undefined.
  */
 export const migration11 = (state: PersistAppStateV11 | undefined) => {
-  if (!state?.user) return state
+  if (!state?.user) {
+    return state
+  }
   // Remove a previously-persisted variable
   delete state.user.recentConnectionMeta
 

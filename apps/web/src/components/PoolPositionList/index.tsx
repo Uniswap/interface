@@ -90,9 +90,14 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ?.map((result, i) => {
         const { result: pool, loading } = result
         // if pool is not correctly returned by endpoint it means endpoint is down, and we don't want to display pools
-        if (!chainId || loading || !pool) return
+        if (!chainId || loading || !pool) {
+          return
+        }
+
         const { decimals, owner } = pool[0]
-        if (!decimals || !owner) return
+        if (!decimals || !owner) {
+          return
+        }
         const shouldDisplay = filterByOperator
           ? Boolean(owner === account || Number(userBalances?.[i]?.result) > 0)
           : true

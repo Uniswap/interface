@@ -247,9 +247,9 @@ const NoContentContainer = ({ height }: { height?: number }) => (
   <>
     <NoContentContainerBackground $height={height}>
       <NoContentText>
-        <Trans>Content not</Trans>
+        <Trans i18nKey="nft.contentNot" />
         <br />
-        <Trans>available yet</Trans>
+        <Trans i18nKey="nft.availableYet" />
       </NoContentText>
     </NoContentContainerBackground>
   </>

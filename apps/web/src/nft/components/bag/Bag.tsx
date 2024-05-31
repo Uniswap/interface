@@ -1,5 +1,5 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
+import { useIsMobile } from 'hooks/screenSize'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
@@ -13,8 +13,7 @@ import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-
-import { useIsMobile } from 'hooks/screenSize'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import * as styles from './Bag.css'
 import { BagContent } from './BagContent'
 import { BagHeader } from './BagHeader'
@@ -127,7 +126,9 @@ const Bag = () => {
   }, [setBagExpanded])
 
   useEffect(() => {
-    if (bagIsLocked && !isModalOpen) setModalIsOpen(true)
+    if (bagIsLocked && !isModalOpen) {
+      setModalIsOpen(true)
+    }
   }, [bagIsLocked, isModalOpen])
 
   const hasAssetsToShow = itemsInBag.length > 0
@@ -178,7 +179,7 @@ const Bag = () => {
               })
             }}
           >
-            <Trans>Continue</Trans>
+            <Trans i18nKey="common.continue.button" />
           </ContinueButton>
         )}
       </BagContainer>

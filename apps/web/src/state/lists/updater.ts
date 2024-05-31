@@ -24,7 +24,9 @@ export default function Updater(): null {
 
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
-    if (!isWindowVisible) return
+    if (!isWindowVisible) {
+      return
+    }
     DEFAULT_INACTIVE_LIST_URLS.forEach((url) => {
       fetchList(url, false).catch((error) => console.debug('interval list fetching error', error))
     })
@@ -34,7 +36,9 @@ export default function Updater(): null {
   useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
   useEffect(() => {
-    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
+    if (!rehydrated || !lists) {
+      return
+    } // loaded lists will not be available until state is rehydrated
 
     // whenever a list is not loaded and not loading, try again to load it
     Object.keys(lists).forEach((listUrl) => {
@@ -55,7 +59,9 @@ export default function Updater(): null {
 
   // automatically update lists for every version update
   useEffect(() => {
-    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
+    if (!rehydrated || !lists) {
+      return
+    } // loaded lists will not be available until state is rehydrated
 
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]

@@ -62,3 +62,9 @@ export const usdcCurrencyInfo = createFixture<CurrencyInfo>()(() =>
     logoUrl: null,
   })
 )
+
+export const ETH_CURRENCY_INFO = ethCurrencyInfo()
+export const UNI_CURRENCY_INFO = uniCurrencyInfo()
+export const DAI_CURRENCY_INFO = daiCurrencyInfo()
+export const ARBITRUM_DAI_CURRENCY_INFO = arbitrumDaiCurrencyInfo()
+export const USDC_CURRENCY_INFO = usdcCurrencyInfo()

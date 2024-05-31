@@ -186,7 +186,9 @@ const ProfilePageNfts = ({
     },
   })
 
-  if (loading) return <ProfileBodyLoadingSkeleton />
+  if (loading) {
+    return <ProfileBodyLoadingSkeleton />
+  }
 
   return (
     <Column width="full">
@@ -286,7 +288,9 @@ const CollectionFilterItem = ({
   collection?: WalletCollection
   setCollectionFilters: (address: string) => void
 }) => {
-  if (!collection) return null
+  if (!collection) {
+    return null
+  }
   return (
     <Row
       justifyContent="center"

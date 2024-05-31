@@ -2,6 +2,8 @@ import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 
 export const DUMMY_KEY = '00000000000000000000000000000000'
 
+export const ALLOW_ANALYTICS_ATOM_KEY = 'allow_analytics'
+
 export const AMPLITUDE_SHARED_TRACKING_OPTIONS = {
   country: false,
   city: false,

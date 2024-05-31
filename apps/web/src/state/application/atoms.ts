@@ -10,4 +10,5 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 const storage = createJSONStorage(() => sessionStorage)
 
 export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', true, storage)
+export const hideMobileAppPromoBannerAtom = atomWithStorage('hideMobileAppPromoBanner', false, storage)
 export const shouldDisableExploreRoutesAtom = atomWithStorage('shouldDisableExploreRoutes', true, storage)

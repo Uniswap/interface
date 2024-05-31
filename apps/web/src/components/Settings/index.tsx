@@ -21,8 +21,8 @@ import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
 import RouterPreferenceSettings from './RouterPreferenceSettings'
@@ -117,7 +117,7 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const connectedChainId = useChainId()
+  const { chainId: connectedChainId } = useAccount()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
   const node = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
@@ -185,7 +185,7 @@ export default function SettingsTab({
                 </CloseButton>
                 <Row padding="0px 24px 0px 0px" justify="center">
                   <ThemedText.SubHeader>
-                    <Trans>Settings</Trans>
+                    <Trans i18nKey="common.settings" />
                   </ThemedText.SubHeader>
                 </Row>
               </MobileMenuHeader>

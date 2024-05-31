@@ -1,20 +1,13 @@
 import React from 'react'
-import { Accordion, Button, Flex, Separator, Text, isWeb, useSporeColors } from 'ui/src'
+import { Accordion, Button, Flex, Separator, Text, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
-import {
-  Experiments,
-  WALLET_EXPERIMENTS,
-  getExperimentDefinition,
-} from 'uniswap/src/features/gating/experiments'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import {
   FeatureFlags,
   WALLET_FEATURE_FLAG_NAMES,
   getFeatureFlagName,
 } from 'uniswap/src/features/gating/flags'
-import {
-  useExperimentValueWithExposureLoggingDisabled,
-  useFeatureFlagWithExposureLoggingDisabled,
-} from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 
@@ -25,8 +18,8 @@ export function GatingOverrides(): JSX.Element {
   }
 
   const experimentRows: JSX.Element[] = []
-  for (const [experiment, experimentDef] of WALLET_EXPERIMENTS.entries()) {
-    experimentRows.push(<ExperimentRow key={experimentDef.name} experiment={experiment} />)
+  for (const experiment of Object.values(Experiments)) {
+    experimentRows.push(<ExperimentRow key={experiment} experiment={experiment} />)
   }
 
   return (
@@ -111,51 +104,24 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
 }
 
 function ExperimentRow({ experiment }: { experiment: Experiments }): JSX.Element {
-  const experimentDef = getExperimentDefinition(experiment)
-
   return (
     <>
       <Separator />
       <Flex>
-        <Text variant="body1">{experimentDef.name}</Text>
+        <Text variant="body1">{experiment}</Text>
         <Flex gap="$spacing4">
           <Flex
-            key={experimentDef.name}
+            key={experiment}
             row
             alignItems="center"
             gap="$spacing16"
             justifyContent="space-between"
             paddingStart="$spacing16">
             <Text variant="body2" />
-            <ExperimentValueSwitch experiment={experiment} />
+            {/* TODO(WEB-4164): implement experiment groups overrides */}
           </Flex>
         </Flex>
       </Flex>
     </>
-  )
-}
-
-function ExperimentValueSwitch({ experiment }: { experiment: Experiments }): JSX.Element {
-  const colors = useSporeColors()
-  const experimentDef = getExperimentDefinition(experiment)
-  const currentValue = useExperimentValueWithExposureLoggingDisabled(experiment)
-
-  return (
-    <Flex gap="$spacing8">
-      {experimentDef.values.map((value) => (
-        <Flex
-          key={value}
-          gap="$spacing4"
-          onPressOut={() => {
-            Statsig.overrideConfig(experimentDef.name, {
-              [experimentDef.key]: value,
-            })
-          }}>
-          <Text color={value === currentValue ? colors.accent1.val : colors.neutral1.val}>
-            {value}
-          </Text>
-        </Flex>
-      ))}
-    </Flex>
   )
 }

@@ -1,3 +1,5 @@
+import { CustomUserProperties } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
 import { UserPropertyValue, analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 /**
@@ -44,8 +46,9 @@ export enum ExtensionUserPropertyName {
 }
 
 export function setUserProperty(
-  property: MobileUserPropertyName | ExtensionUserPropertyName,
-  value: UserPropertyValue
+  property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties,
+  value: UserPropertyValue,
+  insert?: boolean
 ): void {
-  analytics.setUserProperty(property, value)
+  analytics.setUserProperty(property, value, insert)
 }

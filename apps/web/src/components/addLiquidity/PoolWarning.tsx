@@ -53,7 +53,7 @@ export function PoolWarning({ title, subtitle, link }: PoolWarningProps) {
           </Text>
           <ExternalLink href={link}>
             <Text variant="buttonLabel4" color="$neutral1">
-              <Trans>Learn more</Trans>
+              <Trans i18nKey="common.learnMore.link" />
             </Text>
           </ExternalLink>
         </StyledColumn>

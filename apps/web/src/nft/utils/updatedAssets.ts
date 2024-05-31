@@ -2,7 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { UpdatedGenieAsset } from 'nft/types'
 
 const updatedAssetPriceDifference = (asset: UpdatedGenieAsset) => {
-  if (!asset.updatedPriceInfo) return BigNumber.from(0)
+  if (!asset.updatedPriceInfo) {
+    return BigNumber.from(0)
+  }
   return BigNumber.from(asset.updatedPriceInfo.ETHPrice).sub(BigNumber.from(asset.priceInfo.ETHPrice))
 }
 

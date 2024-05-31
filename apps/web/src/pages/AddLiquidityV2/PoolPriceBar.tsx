@@ -37,17 +37,19 @@ export function PoolPriceBar({
             {price?.toSignificant(6) ?? '-'}
           </ThemedText.DeprecatedBlack>
           <Text fontWeight={535} fontSize={14} color={theme.neutral2} pt={1}>
-            <Trans>
-              {{ symB: currencies[Field.CURRENCY_B]?.symbol }} per {{ symA: currencies[Field.CURRENCY_A]?.symbol }}
-            </Trans>
+            <Trans
+              i18nKey="common.feesEarnedPerBase"
+              values={{ symbolA: currencies[Field.CURRENCY_B]?.symbol, symbolB: currencies[Field.CURRENCY_A]?.symbol }}
+            />
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
           <ThemedText.DeprecatedBlack data-testid="currency-a-price">{invertedPrice ?? '-'}</ThemedText.DeprecatedBlack>
           <Text fontWeight={535} fontSize={14} color={theme.neutral2} pt={1}>
-            <Trans>
-              {{ symA: currencies[Field.CURRENCY_A]?.symbol }} per {{ symB: currencies[Field.CURRENCY_B]?.symbol }}
-            </Trans>
+            <Trans
+              i18nKey="common.feesEarnedPerBase"
+              values={{ symbolA: currencies[Field.CURRENCY_A]?.symbol, symbolB: currencies[Field.CURRENCY_B]?.symbol }}
+            />
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
@@ -58,7 +60,7 @@ export function PoolPriceBar({
             %
           </ThemedText.DeprecatedBlack>
           <Text fontWeight={535} fontSize={14} color={theme.neutral2} pt={1}>
-            <Trans>Share of pool</Trans>
+            <Trans i18nKey="addLiquidity.shareOfPool" />
           </Text>
         </AutoColumn>
       </AutoRow>

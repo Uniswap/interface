@@ -34,7 +34,7 @@ export const ProposalSubmissionModal = ({
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>Submitting proposal</Trans>
+              <Trans i18nKey="common.submitting.proposal" />
             </ThemedText.DeprecatedLargeHeader>
           </AutoColumn>
         </LoadingView>
@@ -43,31 +43,31 @@ export const ProposalSubmissionModal = ({
           <AutoColumn gap="md" justify="center">
             {!confirmed ? (
               <>
-                <Text fontWeight={500} fontSize={20} textAlign="center">
-                  <Trans>Proposal Submitted</Trans>
+                <Text fontWeight={535} fontSize={20} textAlign="center">
+                  <Trans i18nKey="vote.proposal.submitted" />
                 </Text>
               </>
             ) : transactionSuccess ? (
               <>
                 <Text fontWeight={500} fontSize={20} textAlign="center">
-                  <Trans>Transaction Success</Trans>
+                  <Trans i18nKey="common.transaction.success" />
                 </Text>
               </>
             ) : (
               <Text fontWeight={500} fontSize={20} textAlign="center">
-                <Trans>Transaction Failed</Trans>
+                <Trans i18nKey="common.transaction.failed" />
               </Text>
             )}
             {hash && chainId && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-                <Text fontWeight={500} fontSize={14} color={theme.accent1}>
-                  <Trans>View on Etherscan</Trans>
+                <Text fontWeight={535} fontSize={14} color={theme.accent1}>
+                  <Trans i18nKey="common.etherscan.link" />
                 </Text>
               </ExternalLink>
             )}
             <ButtonPrimary as={Link} to="/vote" onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
               <Text fontWeight={535} fontSize={20}>
-                <Trans>Return</Trans>
+                <Trans i18nKey="common.return.label" />
               </Text>
             </ButtonPrimary>
           </AutoColumn>

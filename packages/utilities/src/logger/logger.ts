@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { Extras, ScopeContext } from '@sentry/types'
+import { isWeb } from '@tamagui/constants'
 import { Sentry } from './Sentry'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -54,7 +55,7 @@ function logMessage(
   ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
   if (__DEV__) {
-    console[level](formatMessage(fileName, functionName, message), ...args)
+    console[level](...formatMessage(level, fileName, functionName, message), ...args)
     return
   }
 
@@ -108,7 +109,36 @@ function addErrorExtras(error: unknown, captureContext: LoggerErrorContext): Log
   return captureContext
 }
 
-function formatMessage(fileName: string, functionName: string, message: string): string {
+function pad(n: number, amount: number = 2): string {
+  return n.toString().padStart(amount, '0')
+}
+
+function formatMessage(
+  level: LogLevel,
+  fileName: string,
+  functionName: string,
+  message: string
+): (string | Record<string, unknown>)[] {
   const t = new Date()
-  return `${t.getHours()}:${t.getMinutes()}:${t.getSeconds()}:${t.getMilliseconds()}::${fileName}#${functionName}:${message}`
+  const timeString = `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(
+    t.getMilliseconds(),
+    3
+  )}`
+  if (isWeb) {
+    // Simpler printing for web logging
+    return [
+      level.toUpperCase(),
+      {
+        context: {
+          time: timeString,
+          fileName,
+          functionName,
+        },
+        message,
+      },
+    ]
+  } else {
+    // Specific printing style for mobile logging
+    return [`${timeString}::${fileName}#${functionName}`, message]
+  }
 }

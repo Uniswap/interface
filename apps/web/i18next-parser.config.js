@@ -22,7 +22,7 @@ module.exports = {
   keepRemoved: false,
 
   // Key separator used in your translation keys
-  keySeparator: '~~',
+  keySeparator: false,
 
   // see below for more details
   lexers: {

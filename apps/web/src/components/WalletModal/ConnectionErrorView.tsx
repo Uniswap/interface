@@ -31,7 +31,9 @@ export default function ConnectionErrorView({
   const { variables, connect, reset } = connectWithLogs
   const connector = variables?.connector
   const retry = useCallback(() => {
-    if (!connector) return
+    if (!connector) {
+      return
+    }
 
     if (typeof connector === 'function') {
       console.warn('a createConnectorFn was passed to the connect() function, rather than a Connector instance')
@@ -45,19 +47,17 @@ export default function ConnectionErrorView({
     <Wrapper>
       <AlertTriangleIcon />
       <ThemedText.HeadlineSmall marginBottom="8px">
-        <Trans>Error connecting</Trans>
+        <Trans i18nKey="common.errorConnecting.error" />
       </ThemedText.HeadlineSmall>
       <ThemedText.BodyPrimary fontSize={16} marginBottom={24} lineHeight="24px" textAlign="center">
-        <Trans>
-          The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
-        </Trans>
+        <Trans i18nKey="wallet.connectionFailed.message" />
       </ThemedText.BodyPrimary>
       <ButtonPrimary $borderRadius="16px" onClick={retry}>
-        <Trans>Try again</Trans>
+        <Trans i18nKey="common.tryAgain.error" />
       </ButtonPrimary>
       <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
         <ThemedText.Link onClick={reset} marginBottom={12}>
-          <Trans>Back to wallet selection</Trans>
+          <Trans i18nKey="wallet.backToSelection" />
         </ThemedText.Link>
       </ButtonEmpty>
     </Wrapper>

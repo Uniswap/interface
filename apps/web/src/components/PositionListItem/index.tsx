@@ -225,7 +225,8 @@ export default function PositionListItem({
         <RangeLineItem>
           <RangeText>
             <ExtentsText>
-              <Trans>Min: </Trans>
+              <Trans i18nKey="pool.min.label" />
+              &nbsp;
             </ExtentsText>
             <span>
               {formatTickPrice({
@@ -234,9 +235,13 @@ export default function PositionListItem({
                 direction: Bound.LOWER,
               })}{' '}
             </span>
-            <Trans>
-              <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
-            </Trans>
+            <Trans
+              i18nKey="common.xPerY"
+              components={{
+                x: <HoverInlineText text={currencyQuote?.symbol} />,
+                y: <HoverInlineText text={currencyBase?.symbol ?? ''} />,
+              }}
+            />
           </RangeText>{' '}
           <HideSmall>
             <DoubleArrow>↔</DoubleArrow>{' '}
@@ -246,7 +251,7 @@ export default function PositionListItem({
           </SmallOnly>
           <RangeText>
             <ExtentsText>
-              <Trans>Max:</Trans>
+              <Trans i18nKey="pool.max.label" />
             </ExtentsText>
             <span>
               {formatTickPrice({
@@ -255,10 +260,13 @@ export default function PositionListItem({
                 direction: Bound.UPPER,
               })}{' '}
             </span>
-            <Trans>
-              <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-            </Trans>
+            <Trans
+              i18nKey="common.xPerY"
+              components={{
+                x: <HoverInlineText text={currencyQuote?.symbol} />,
+                y: <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />,
+              }}
+            />
           </RangeText>
         </RangeLineItem>
       ) : (

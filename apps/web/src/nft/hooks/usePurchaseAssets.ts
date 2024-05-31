@@ -27,7 +27,9 @@ export function usePurchaseAssets(): (
 
   return useCallback(
     async (routingData: RouteResponse, assetsToBuy: UpdatedGenieAsset[], purchasingWithErc20 = false) => {
-      if (!signer) return
+      if (!signer) {
+        return
+      }
 
       const purchaseResponse = await sendTransaction(signer, assetsToBuy, routingData, purchasingWithErc20)
 

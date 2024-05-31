@@ -128,7 +128,7 @@ export function TransactionsTable({
             <Row gap="xs">
               {sortState.sortBy === Swap_OrderBy.Timestamp && <HeaderArrow direction={sortState.sortDirection} />}
               <HeaderSortText $active={sortState.sortBy === Swap_OrderBy.Timestamp}>
-                <Trans>Time</Trans>
+                <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
           </Cell>
@@ -155,7 +155,7 @@ export function TransactionsTable({
                 toggleFilterModal={toggleFilterModal}
               />
               <ThemedText.BodySecondary>
-                <Trans>Type</Trans>
+                <Trans i18nKey="common.type.label" />
               </ThemedText.BodySecondary>
             </FilterHeaderRow>
           </Cell>
@@ -165,7 +165,7 @@ export function TransactionsTable({
           return (
             <Cell loading={showLoadingSkeleton} minWidth={75} justifyContent="flex-start" grow>
               <ThemedText.BodyPrimary color={isBuy ? 'success' : 'critical'}>
-                {isBuy ? <Trans>Buy</Trans> : <Trans>Sell</Trans>}
+                {isBuy ? <Trans i18nKey="common.buy.label" /> : <Trans i18nKey="common.sell.label" />}
               </ThemedText.BodyPrimary>
             </Cell>
           )
@@ -214,7 +214,7 @@ export function TransactionsTable({
           header: () => (
             <Cell minWidth={160} justifyContent="flex-end">
               <ThemedText.BodySecondary>
-                <Trans>For</Trans>
+                <Trans i18nKey="common.for" />
               </ThemedText.BodySecondary>
             </Cell>
           ),
@@ -248,7 +248,7 @@ export function TransactionsTable({
         header: () => (
           <Cell minWidth={150} justifyContent="flex-end">
             <ThemedText.BodySecondary>
-              <Trans>Wallet</Trans>
+              <Trans i18nKey="common.wallet.label" />
             </ThemedText.BodySecondary>
           </Cell>
         ),

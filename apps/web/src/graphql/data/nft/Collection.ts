@@ -10,7 +10,9 @@ export function formatCollectionQueryData(
   address?: string
 ): GenieCollection {
   const market = queryCollection?.markets?.[0]
-  if (!address && !queryCollection?.nftContracts?.[0]?.address) return {} as GenieCollection
+  if (!address && !queryCollection?.nftContracts?.[0]?.address) {
+    return {} as GenieCollection
+  }
   const traits = {} as Record<string, Trait[]>
   if (queryCollection?.traits) {
     queryCollection?.traits.forEach((trait) => {

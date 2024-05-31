@@ -92,7 +92,9 @@ export function usePoolTransactions(
           cursor: transactions?.[transactions.length - 1]?.timestamp,
         },
         updateQuery: (prev, { fetchMoreResult }: any) => {
-          if (!fetchMoreResult) return prev
+          if (!fetchMoreResult) {
+            return prev
+          }
           onComplete?.()
           const mergedData =
             protocolVersion === ProtocolVersion.V3
@@ -138,7 +140,9 @@ export function usePoolTransactions(
             : tx.type === PoolTransactionType.Remove
             ? PoolTableTransactionType.BURN
             : PoolTableTransactionType.MINT
-        if (!filter.includes(type)) return undefined
+        if (!filter.includes(type)) {
+          return undefined
+        }
         return {
           timestamp: tx.timestamp,
           transaction: tx.hash,

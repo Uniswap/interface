@@ -38,7 +38,7 @@ export const TokenLogo = memo(function _TokenLogo({
   if (httpUri) {
     if (isSVGUri(httpUri)) {
       tokenImage = (
-        <Flex borderRadius={size / 2} overflow="hidden">
+        <Flex borderRadius={size / 2} overflow="hidden" testID="token-remote-svg">
           <RemoteSvg
             backgroundColor={colors.surface3.val}
             borderRadius={size / 2}
@@ -63,6 +63,7 @@ export const TokenLogo = memo(function _TokenLogo({
               borderWidth: 0.5,
             },
           ]}
+          testID="token-image"
         />
       )
     }
@@ -75,7 +76,12 @@ export const TokenLogo = memo(function _TokenLogo({
     : logolessColorScheme.light
 
   return (
-    <Flex alignItems="center" height={size} justifyContent="center" width={size}>
+    <Flex
+      alignItems="center"
+      height={size}
+      justifyContent="center"
+      testID="token-logo"
+      width={size}>
       {httpUri ? (
         tokenImage
       ) : (

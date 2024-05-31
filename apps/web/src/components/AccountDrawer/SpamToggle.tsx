@@ -11,7 +11,7 @@ export function SpamToggle() {
 
   return (
     <SettingsToggle
-      title={<Trans>Hide unknown tokens & NFTs</Trans>}
+      title={<Trans i18nKey="account.drawer.spamToggle" />}
       isActive={hideSpam}
       toggle={() => void updateHideSpam((value) => !value)}
     />

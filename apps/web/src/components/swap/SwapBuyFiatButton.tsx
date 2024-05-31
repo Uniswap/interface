@@ -1,13 +1,12 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
 import { ExternalLink } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
-
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { SwapHeaderTabButton } from './styled'
@@ -97,24 +96,19 @@ export default function SwapBuyFiatButton() {
     <MouseoverTooltip
       text={
         <div data-testid="fiat-on-ramp-unavailable-tooltip">
-          <Trans>Crypto purchases are not available in your region. </Trans>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}
-          >
+          <Trans i18nKey="fiatOnRamp.notAvailable.error" />
+          <Trace logPress element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}>
             <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-              <Trans>Learn more</Trans>
+              <Trans i18nKey="common.learnMore.link" />
             </ExternalLink>
-          </TraceEvent>
+          </Trace>
         </div>
       }
       placement="bottom"
       disabled={fiatOnRampsUnavailableTooltipDisabled}
     >
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={SharedEventName.ELEMENT_CLICKED}
+      <Trace
+        logPress
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
         properties={{ account_connected: !!account }}
       >
@@ -124,9 +118,9 @@ export default function SwapBuyFiatButton() {
           disabled={buyCryptoButtonDisabled}
           data-testid="buy-fiat-button"
         >
-          <Trans>Buy</Trans>
+          <Trans i18nKey="common.buy.label" />
         </SwapHeaderTabButton>
-      </TraceEvent>
+      </Trace>
     </MouseoverTooltip>
   )
 }

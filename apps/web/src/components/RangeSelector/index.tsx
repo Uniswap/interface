@@ -50,7 +50,7 @@ export default function RangeSelector({
         incrementDisabled={leftPrice === undefined || ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]}
         feeAmount={feeAmount}
         label={leftPrice ? `${currencyB?.symbol}` : '-'}
-        title={<Trans>Low price</Trans>}
+        title={<Trans i18nKey="common.lowPrice" />}
         tokenA={currencyA?.symbol}
         tokenB={currencyB?.symbol}
       />
@@ -65,7 +65,7 @@ export default function RangeSelector({
         label={rightPrice ? `${currencyB?.symbol}` : '-'}
         tokenA={currencyA?.symbol}
         tokenB={currencyB?.symbol}
-        title={<Trans>High price</Trans>}
+        title={<Trans i18nKey="common.highPrice" />}
       />
     </AutoRow>
   )

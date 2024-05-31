@@ -93,7 +93,9 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setValueCallback || !parsedValue) return
+    if (!account || !chainId || !setValueCallback || !parsedValue) {
+      return
+    }
 
     // try delegation and store hash
     const hash = await setValueCallback(parsedValue)?.catch((error) => {

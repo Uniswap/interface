@@ -1,8 +1,8 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Trace } from 'analytics'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
+import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -17,9 +17,8 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
-import { useChainId } from 'wagmi'
-
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
@@ -79,7 +78,7 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const theme = useTheme()
 
   // refs for fixed size lists
@@ -116,14 +115,18 @@ export function CurrencySearch({
         }
       }
       onCurrencySelect(currency, hasWarning)
-      if (!hasWarning) onDismiss()
+      if (!hasWarning) {
+        onDismiss()
+      }
     },
     [chainId, onCurrencySelect, onDismiss, selectChain]
   )
 
   // clear the input on open
   useEffect(() => {
-    if (isOpen) setSearchQuery('')
+    if (isOpen) {
+      setSearchQuery('')
+    }
   }, [isOpen])
 
   // manage focus on modal show
@@ -165,9 +168,9 @@ export function CurrencySearch({
   return (
     <ContentWrapper>
       <Trace
-        name={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+        logImpression
+        eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
         modal={InterfaceModalName.TOKEN_SELECTOR}
-        shouldLogImpression
       >
         <PaddedColumn gap="16px">
           {!filters?.onlyDisplaySmartPools ? (
@@ -179,7 +182,7 @@ export function CurrencySearch({
             </RowBetween>
           ) : (
             <Text fontWeight={535} fontSize={16}>
-              <Trans>Select a smart pool</Trans>
+              <Trans i18nKey="common.selectSmartPool.label" />
             </Text>
           )}
           <Row gap="4px">
@@ -260,7 +263,7 @@ export function CurrencySearch({
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
             <ThemedText.DeprecatedMain color={theme.neutral3} textAlign="center" mb="20px">
-              <Trans>No results found.</Trans>
+              <Trans i18nKey="common.noResults" />
             </ThemedText.DeprecatedMain>
           </Column>
         )}

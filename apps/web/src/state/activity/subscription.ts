@@ -62,13 +62,17 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
   return useCallback(
     async (activity: TransactionActivity) => {
       const chainId = supportedChainIdFromGQLChain(activity.chain)
-      if (activity.details.status === TransactionStatus.Pending || !chainId) return
+      if (activity.details.status === TransactionStatus.Pending || !chainId) {
+        return
+      }
 
       const pendingTransaction = pendingTransactions.current?.find(
         ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId
       )?.[0]
       // TODO(WEB-4007): Add transactions which were submitted from a different client (and are not already tracked).
-      if (!pendingTransaction) return
+      if (!pendingTransaction) {
+        return
+      }
 
       const updatedTransaction: TransactionUpdate['update'] = {
         status: activity.details.status,

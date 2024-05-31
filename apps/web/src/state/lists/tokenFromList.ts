@@ -54,10 +54,16 @@ export class TokenFromList implements Token {
 
   private _tags: TagInfo[] | null = null
   public get tags(): TagInfo[] {
-    if (this._tags !== null) return this._tags
-    if (!this.tokenInfo.tags) return (this._tags = [])
+    if (this._tags !== null) {
+      return this._tags
+    }
+    if (!this.tokenInfo.tags) {
+      return (this._tags = [])
+    }
     const listTags = this.list?.tags
-    if (!listTags) return (this._tags = [])
+    if (!listTags) {
+      return (this._tags = [])
+    }
 
     return (this._tags = this.tokenInfo.tags.map((tagId) => {
       return {
@@ -72,7 +78,9 @@ export class TokenFromList implements Token {
   }
 
   sortsBefore(other: Token): boolean {
-    if (this.equals(other)) throw new Error('Addresses should not be equal')
+    if (this.equals(other)) {
+      throw new Error('Addresses should not be equal')
+    }
     return this.address.toLowerCase() < other.address.toLowerCase()
   }
 

@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb`
-- CIDv1: `bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey`
+- CIDv0: `QmWe2TF9c45GQYs4stbUXrYQvX34xQaaNTdU3T24DiRwLe`
+- CIDv1: `bafybeid3kd2hknxwdz7hcsqrebostgihtwucjlonlzw6oaaxjlsbgmcqdm`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,55 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey.ipfs.dweb.link/
-- https://bafybeictz6ffben6zjcs6sk752jegq56ceo7m5nciosofntokzsthxrzey.ipfs.cf-ipfs.com/
-- [ipfs://QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb/](ipfs://QmTyp6ePbkJCs819zgUB4Pye4E2cTudcy4SZd5MJkk89Pb/)
+- https://bafybeid3kd2hknxwdz7hcsqrebostgihtwucjlonlzw6oaaxjlsbgmcqdm.ipfs.dweb.link/
+- https://bafybeid3kd2hknxwdz7hcsqrebostgihtwucjlonlzw6oaaxjlsbgmcqdm.ipfs.cf-ipfs.com/
+- [ipfs://QmWe2TF9c45GQYs4stbUXrYQvX34xQaaNTdU3T24DiRwLe/](ipfs://QmWe2TF9c45GQYs4stbUXrYQvX34xQaaNTdU3T24DiRwLe/)
 
-### 5.29.1 (2024-05-24)
+## 5.30.0 (2024-05-30)
+
+
+### Features
+
+* **web:** [multichain] handle default input token logic (#8209) 3eed0e3
+* **web:** 4131 default to token project name instead of token name (#8325) 1debde2
+* **web:** 4171 fix duplicate keys in currency search, show balance (#8320) 4c81e41
+* **web:** add Mobile App Promo Banner component (#8257) c03744d
+* **web:** Add Multichain Explore Feature Flag and Dropdown option (#8314) 27683d8
+* **web:** converge to single analytics implementation (#8161) 30558ba
+* **web:** convert all Trace elements to shared API (#8159) b340e9b
+* **web:** convert all TraceEvent usage to shared trace (#8053) 3631853
+* **web:** disable Liquidity Charts on V2 PDP (#8468) 66aad34
+* **web:** migrates to using shared analytics send + typing relevant events (#8051) 11c6325
+* **web:** Sitemap generation round 3?? (#8323) b6e42b6
+* **web:** unicon v2 education label (#8339) f92cd5e
+* **web:** use app-specific download links for competitor wallets (#8258) 399844e
+* **web:** use new chains with wagmi (#8083) dc14772
+* **web:** use new error dialog design (#6974) ae3628c
+* **web:** use Xv2 arbitrum experiment parameters for quote (#8251) 08ab621
 
 
 ### Bug Fixes
 
-* **web:** Check if WC getNamespaceChainsIds is empty rather than unde… (#8455) 40a9355
+* **web:** add liquidity title fix (#8298) b587de4
+* **web:** Check if WC getNamespaceChainsIds is empty rather than undefined (#8422) 2c76bff
+* **web:** dont fetch portfolio balances if multichain ux is not enabled (#8478) 35debe1
+* **web:** e2e test amplitude checks (#8391) ef3a9e5
+* **web:** enable base eth and usdc for moonpay (#8330) ac0ba90
+* **web:** failing e2e tests and wrong ethereum name (#8373) 1cd24a6
+* **web:** filtering out spam on send (#8386) 322551b
+* **web:** Fix blocking Testlio bugs - staging (#8592) 55a9345
+* **web:** fix broken translations (#8580) df6f23d
+* **web:** fix failing e2e tests (#8480) 1535f19
+* **web:** handle chainName passed as the tab param (#8317) 4555cfd
+* **web:** lowercase unicon flag (#8380) dbfe14a
+* **web:** mouseover position bug (#8384) 2d8cd91
+* **web:** prevent 1H time period on PDP price chart (#8315) ddc10ca
+* **web:** prevent connection from hanging when iframed (#8379) 2feccc4
+* **web:** Unicon loading state (#8415) 76f29f5
+
+
+### Continuous Integration
+
+* **web:** update sitemaps b837434
 
 

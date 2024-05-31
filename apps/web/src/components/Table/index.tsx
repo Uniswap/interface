@@ -8,8 +8,6 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
-import { TraceEvent, useTrace } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
 import useDebounce from 'hooks/useDebounce'
@@ -19,6 +17,8 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   CellContainer,
   DataRow,
@@ -63,8 +63,8 @@ function TableBody<Data extends RowData>({
         ))}
         {error && (
           <ErrorModal
-            header={<Trans>Error loading data</Trans>}
-            subtitle={<Trans>Data is unavailable at the moment; we&apos;re working on a fix</Trans>}
+            header={<Trans i18nKey="common.errorLoadingData.error" />}
+            subtitle={<Trans i18nKey="error.dataUnavailable" />}
           />
         )}
       </>
@@ -76,7 +76,7 @@ function TableBody<Data extends RowData>({
     return (
       <NoDataFoundTableRow>
         <ThemedText.BodySecondary>
-          <Trans>No data found</Trans>
+          <Trans i18nKey="error.noData" />
         </ThemedText.BodySecondary>
       </NoDataFoundTableRow>
     )
@@ -95,10 +95,8 @@ function TableBody<Data extends RowData>({
         const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
         const rowTestId = rowOriginal.testId
         return (
-          <TraceEvent
-            shouldLogImpression={Boolean(rowOriginal.analytics)}
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
+          <Trace
+            logPress
             element={rowOriginal.analytics?.elementName}
             properties={{
               ...rowOriginal.analytics?.properties,
@@ -113,7 +111,7 @@ function TableBody<Data extends RowData>({
             ) : (
               <DataRow data-testid={rowTestId}>{cells}</DataRow>
             )}
-          </TraceEvent>
+          </Trace>
         )
       })}
     </>
@@ -232,7 +230,7 @@ export function Table<Data extends RowData>({
                     }}
                   >
                     <ReturnIcon />
-                    <Trans>Return to top</Trans>
+                    <Trans i18nKey="common.returnToTop" />
                   </ReturnButton>
                 </ReturnButtonContainer>
               </FadePresence>
@@ -246,7 +244,7 @@ export function Table<Data extends RowData>({
           <LoadingIndicatorContainer show={loadingMore}>
             <LoadingIndicator>
               <Loader />
-              <Trans>Loading</Trans>
+              <Trans i18nKey="common.loading" />
             </LoadingIndicator>
           </LoadingIndicatorContainer>
         </TableContainer>

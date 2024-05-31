@@ -83,7 +83,9 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
     const xml = builder.buildObject(sitemap)
     const path = './public/tokens-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
-      if (error) throw error
+      if (error) {
+        throw error
+      }
       const stats = fs.statSync(path)
       const fileSizeBytes = stats.size
       const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
@@ -137,7 +139,9 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
     const xml = builder.buildObject(sitemap)
     const path = './public/nfts-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
-      if (error) throw error
+      if (error) {
+        throw error
+      }
       const stats = fs.statSync(path)
       const fileSizeBytes = stats.size
       const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
@@ -196,7 +200,9 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
     const xml = builder.buildObject(sitemap)
     const path = './public/pools-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
-      if (error) throw error
+      if (error) {
+        throw error
+      }
       const stats = fs.statSync(path)
       const fileSizeBytes = stats.size
       const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)

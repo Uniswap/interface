@@ -1,6 +1,7 @@
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
+import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
@@ -17,22 +18,18 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
 import { useSupportedChainId } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { getParsedChainId } from 'hooks/useSyncChainQuery'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { useAccount, useChainId } from 'wagmi'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
-import {
-  CurrencyState,
-  SerializedCurrencyState,
-  SwapAndLimitContext,
-  SwapContext,
-  SwapInfo,
-  SwapState,
-  parseIndependentFieldURLParameter,
-} from './types'
+import { CurrencyState, SerializedCurrencyState, SwapAndLimitContext, SwapContext, SwapInfo, SwapState } from './types'
 
 export function useSwapContext() {
   return useContext(SwapContext)
@@ -212,26 +209,44 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     let inputError: ReactNode | undefined
 
     if (!account) {
-      inputError = isDisconnected ? <Trans>Connect wallet</Trans> : <Trans>Connecting wallet...</Trans>
+      inputError = isDisconnected ? (
+        <Trans i18nKey="common.connectWallet.button" />
+      ) : (
+        <Trans i18nKey="common.connectingWallet" />
+      )
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-      inputError = inputError ?? <Trans>Select a token</Trans>
+      inputError = inputError ?? <Trans i18nKey="common.selectToken.label" />
     }
 
     if (!parsedAmount) {
-      inputError = inputError ?? <Trans>Enter an amount</Trans>
+      inputError = inputError ?? <Trans i18nKey="common.noAmount.error" />
     }
 
     if (insufficientGas) {
-      inputError = <Trans>Insufficient {{ symbol: nativeCurrency.symbol }} balance</Trans>
+      inputError = (
+        <Trans
+          i18nKey="common.insufficientTokenBalance.error"
+          values={{
+            tokenSymbol: nativeCurrency.symbol,
+          }}
+        />
+      )
     }
 
     // compare input balance to max input based on version
     const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
-      inputError = <Trans>Insufficient {{ symbol: balanceIn.currency.symbol }} balance</Trans>
+      inputError = (
+        <Trans
+          i18nKey="common.insufficientTokenBalance.error"
+          values={{
+            tokenSymbol: balanceIn.currency.symbol,
+          }}
+        />
+      )
     }
 
     return inputError
@@ -278,23 +293,22 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
-    if (valid) return valid
+    if (valid) {
+      return valid
+    }
     const upper = urlParam.toUpperCase()
-    if (upper === 'ETH') return 'ETH'
+    if (upper === 'ETH') {
+      return 'ETH'
+    }
   }
   return ''
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
+  const inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
-  const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
   const chainId = getParsedChainId(parsedQs)
-
-  if (inputCurrency === '' && outputCurrency === '' && independentField === Field.INPUT) {
-    // Defaults to having the native currency selected
-    inputCurrency = 'ETH'
-  } else if (inputCurrency === outputCurrency) {
+  if (inputCurrency === outputCurrency) {
     // clear output if identical
     outputCurrency = ''
   }
@@ -321,16 +335,72 @@ export function useInitialCurrencyState(): {
   initialOutputCurrency?: Currency
   chainId: ChainId
 } {
+  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+
   const parsedQs = useParsedQueryString()
   const parsedCurrencyState = useMemo(() => {
     return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
 
-  const connectedChainId = useChainId()
-  const chainId = useSupportedChainId(parsedCurrencyState.chainId ?? connectedChainId) ?? ChainId.MAINNET
+  const account = useAccount()
+  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? ChainId.MAINNET
 
-  const initialInputCurrency = useCurrency(parsedCurrencyState.inputCurrencyId, chainId)
-  const initialOutputCurrency = useCurrency(parsedCurrencyState.outputCurrencyId, chainId)
+  const { data: balanceQuery } = useTokenBalancesQuery({ cacheOnly: !multichainUXEnabled })
+  const balances = balanceQuery?.portfolios?.[0]?.tokenBalances
+  const { initialInputCurrencyAddress, chainId } = useMemo(() => {
+    // Handle query params or disconnected state
+    if (parsedCurrencyState.inputCurrencyId) {
+      return {
+        initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyId,
+        chainId: supportedChainId,
+      }
+    } else if (
+      !multichainUXEnabled ||
+      !account.isConnected ||
+      !balances ||
+      parsedCurrencyState.chainId ||
+      parsedCurrencyState.outputCurrencyId
+    ) {
+      return {
+        initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyId ? undefined : 'ETH',
+        chainId: supportedChainId,
+      }
+    }
+    // If no query params & connected, return the native token where user has the highest USD value
+    let highestBalance = 0
+    let highestBalanceNativeTokenAddress = 'ETH'
+    let highestBalanceChainId = ChainId.MAINNET
+    balances.forEach((balance) => {
+      if (
+        balance?.token?.standard === NATIVE_CHAIN_ID &&
+        balance?.denominatedValue?.value &&
+        balance?.denominatedValue?.value > highestBalance
+      ) {
+        highestBalance = balance.denominatedValue.value
+        highestBalanceNativeTokenAddress = balance?.token.address ?? 'ETH'
+        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? ChainId.MAINNET
+      }
+    })
+    return { initialInputCurrencyAddress: highestBalanceNativeTokenAddress, chainId: highestBalanceChainId }
+  }, [
+    account.isConnected,
+    balances,
+    multichainUXEnabled,
+    parsedCurrencyState.chainId,
+    parsedCurrencyState.inputCurrencyId,
+    parsedCurrencyState.outputCurrencyId,
+    supportedChainId,
+  ])
+
+  const initialOutputCurrencyAddress = useMemo(
+    () =>
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId // clear output if identical
+        ? undefined
+        : parsedCurrencyState.outputCurrencyId,
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId]
+  )
+  const initialInputCurrency = useCurrency(initialInputCurrencyAddress, chainId)
+  const initialOutputCurrency = useCurrency(initialOutputCurrencyAddress, chainId)
 
   return { initialInputCurrency, initialOutputCurrency, chainId }
 }

@@ -2,16 +2,18 @@ import 'zone.js'
 
 import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { SharedEventName } from '@uniswap/analytics-events'
-import { initializeAnalytics, OriginApplication } from 'analytics'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { OriginApplication } from '@uniswap/analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
-import { isDevEnv, isProdEnv } from 'uniswap/src/utils/env'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 import { getEnvName, isSentryEnabled } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
-import { patchFetch } from './request'
-
 import { beforeSend } from './errors'
+import { patchFetch } from './request'
 
 patchFetch(global)
 
@@ -20,9 +22,6 @@ window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
 
 // This is used to identify the user in Sentry.
 const SENTRY_USER_ID_KEY = 'sentry-user-id'
-
-// Actual KEYs are set by proxy servers.
-const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -46,11 +45,14 @@ if (!sentryUserId) {
 }
 Sentry.setUser({ id: sentryUserId })
 
-initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
-  defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-  isProductionEnv: isProdEnv(),
-  debug: isDevEnv(),
-  reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
+getAnalyticsAtomDirect(true).then((allowAnalytics) => {
+  analytics.init(
+    new ApplicationTransport({
+      serverUrl: uniswapUrls.amplitudeProxyUrl,
+      appOrigin: OriginApplication.INTERFACE,
+      reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
+    }),
+    allowAnalytics,
+    process.env.REACT_APP_GIT_COMMIT_HASH
+  )
 })

@@ -3,7 +3,7 @@ import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useCallback, useState } from 'react'
 import { Copy } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -79,7 +79,7 @@ export const CurrentPageBreadcrumb = ({
   }, [address, setCopied])
 
   const isNative = currency?.isNative
-  const tokenSymbolName = currency?.symbol ?? <Trans>Symbol not found</Trans>
+  const tokenSymbolName = currency?.symbol ?? <Trans i18nKey="tdp.symbolNotFound" />
 
   const shouldEnableCopy = screenSize['sm']
   const shouldShowActions = shouldEnableCopy && hover && !isCopied
@@ -98,7 +98,7 @@ export const CurrentPageBreadcrumb = ({
           isDisabled={!shouldEnableCopy}
           onClick={shouldEnableCopy ? copy : undefined}
         >
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             {shortenAddress(address)}
           </Tooltip>
           {shouldShowActions && (

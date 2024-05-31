@@ -71,8 +71,11 @@ export function useRecentlySearchedAssets() {
   //const queryDataWithPools = [queryData, pools].flat().filter(i => i !== undefined)
 
   const data = useMemo(() => {
-    if (shortenedHistory.length === 0) return []
-    else if (!queryData && !pools) return undefined
+    if (shortenedHistory.length === 0) {
+      return []
+    } else if (!queryData && !pools) {
+      return undefined
+    }
     // Collects both tokens and collections in a map, so they can later be returned in original order
     const resultsMap: { [key: string]: GenieCollection | SearchToken } = {}
 
@@ -114,10 +117,14 @@ export function useRecentlySearchedAssets() {
         const native = nativeOnChain(chain)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
-        if (result) data.push({ ...result, address: NATIVE_CHAIN_ID, ...native })
+        if (result) {
+          data.push({ ...result, address: NATIVE_CHAIN_ID, ...native })
+        }
       } else if (!asset.isPool) {
         const result = resultsMap[asset.address]
-        if (result) data.push(result)
+        if (result) {
+          data.push(result)
+        }
       } else {
         const result = pools[i]
         // TODO: check why we do not store result for pool and console log instead

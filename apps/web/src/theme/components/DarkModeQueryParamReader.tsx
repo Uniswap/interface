@@ -9,8 +9,12 @@ export default function DarkModeQueryParamReader(): null {
   const [, updateMode] = useDarkModeManager()
 
   useEffect(() => {
-    if (!search) return
-    if (search.length < 2) return
+    if (!search) {
+      return
+    }
+    if (search.length < 2) {
+      return
+    }
 
     const parsed = parse(search, {
       parseArrays: false,
@@ -19,7 +23,9 @@ export default function DarkModeQueryParamReader(): null {
 
     const theme = parsed.theme
 
-    if (typeof theme !== 'string') return
+    if (typeof theme !== 'string') {
+      return
+    }
 
     if (theme.toLowerCase() === 'light') {
       updateMode(ThemeMode.LIGHT)

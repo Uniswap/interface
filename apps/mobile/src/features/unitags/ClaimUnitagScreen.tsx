@@ -36,12 +36,15 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { Pill } from 'wallet/src/components/text/Pill'
 import {
+  useCreateOnboardingAccountIfNone,
+  useOnboardingContext,
+} from 'wallet/src/features/onboarding/OnboardingContext'
+import {
   UNITAG_SUFFIX,
   UNITAG_SUFFIX_NO_LEADING_DOT,
   UNITAG_VALID_REGEX,
 } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
-import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -67,13 +70,13 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   useAddBackButton(navigation)
   const { t } = useTranslation()
   const colors = useSporeColors()
+  useCreateOnboardingAccountIfNone()
+  const { getOnboardingAccountAddress } = useOnboardingContext()
+  const onboardingAccountAddress = getOnboardingAccountAddress()
 
   const inputPlaceholder = getYourNameString(t('unitags.claim.username.default'))
 
-  // In onboarding flow, delete pending accounts and create account actions happen right before navigation
-  // So pendingAccountAddress must be fetched in this component and can't be passed in params
-  const pendingAccountAddress = Object.values(usePendingAccounts())?.[0]?.address
-  const unitagAddress = address || pendingAccountAddress
+  const unitagAddress = address || onboardingAccountAddress
 
   const [showInfoModal, setShowInfoModal] = useState(false)
   const [showClaimPeriodInfoModal, setShowClaimPeriodInfoModal] = useState(false)

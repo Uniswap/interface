@@ -139,7 +139,6 @@
 		2F50877AC4F0BB2556A74B60 /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A1B8962666C68EE8B75C18 /* libPods-Uniswap-UniswapTests.a */; };
 		5EFB78362B1E585000E77EAC /* ConvertQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFB78352B1E585000E77EAC /* ConvertQuery.graphql.swift */; };
 		5FF6D300AEE2EB390A272D0E /* libPods-WidgetIntentExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71A42CE7FF1299C666E6FC79 /* libPods-WidgetIntentExtension.a */; };
-		681301B12A3726EE00A5BF43 /* onboarding_dark.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AD2A3726EE00A5BF43 /* onboarding_dark.riv */; };
 		681301B22A3726EE00A5BF43 /* pending_send.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301AE2A3726EE00A5BF43 /* pending_send.riv */; };
 		681301B42A3726EE00A5BF43 /* pending_swap.riv in Resources */ = {isa = PBXBuildFile; fileRef = 681301B02A3726EE00A5BF43 /* pending_swap.riv */; };
 		6BC7D07E2B5FF02400617C95 /* ScantasticEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07B2B5FF02400617C95 /* ScantasticEncryption.m */; };
@@ -187,6 +186,7 @@
 		9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
+		A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */; };
 		AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */; };
 		AEE498F72A85AD86000DDF8E /* Basel-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEE498F52A85AD86000DDF8E /* Basel-Book.ttf */; };
 		AEE498F82A85AD86000DDF8E /* Basel-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEE498F62A85AD86000DDF8E /* Basel-Medium.ttf */; };
@@ -442,7 +442,6 @@
 		56FE9C9AF785221B7E3F4C04 /* Pods-Uniswap.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.dev.xcconfig"; sourceTree = "<group>"; };
 		5EFB78352B1E585000E77EAC /* ConvertQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertQuery.graphql.swift; sourceTree = "<group>"; };
 		62CEA9F2D5176D20A6402A3E /* Pods-Uniswap.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.beta.xcconfig"; sourceTree = "<group>"; };
-		681301AD2A3726EE00A5BF43 /* onboarding_dark.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = onboarding_dark.riv; sourceTree = "<group>"; };
 		681301AE2A3726EE00A5BF43 /* pending_send.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = pending_send.riv; sourceTree = "<group>"; };
 		681301B02A3726EE00A5BF43 /* pending_swap.riv */ = {isa = PBXFileReference; lastKnownFileType = file; path = pending_swap.riv; sourceTree = "<group>"; };
 		6BC7D07B2B5FF02400617C95 /* ScantasticEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScantasticEncryption.m; sourceTree = "<group>"; };
@@ -495,6 +494,7 @@
 		9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
+		A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeData.graphql.swift; path = MobileSchema/Schema/Objects/FeeData.graphql.swift; sourceTree = "<group>"; };
 		A7C9F415D0E128A43003E071 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Uniswap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AEE498F52A85AD86000DDF8E /* Basel-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Book.ttf"; path = "../src/assets/fonts/Basel-Book.ttf"; sourceTree = "<group>"; };
@@ -634,6 +634,7 @@
 		072E23872A44D5BD006AD6C9 /* WidgetsCore */ = {
 			isa = PBXGroup;
 			children = (
+				A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */,
 				07F0C28E2A5F3E2E00D5353E /* Env.swift */,
 				073C67F42A5C8FBE00F6DAD8 /* MobileSchema */,
 				072E23882A44D5BD006AD6C9 /* WidgetsCore.h */,
@@ -1840,6 +1841,7 @@
 				0743223B2A83E3CA00F8518D /* NftAssetsFilterInput.graphql.swift in Sources */,
 				0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */,
 				074322282A83E3CA00F8518D /* TokenProjectMarket.graphql.swift in Sources */,
+				A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */,
 				0743220F2A83E3CA00F8518D /* NftApproveForAll.graphql.swift in Sources */,
 				0743223C2A83E3CA00F8518D /* SchemaMetadata.graphql.swift in Sources */,
 				074321FA2A83E3CA00F8518D /* PortfolioBalancesQuery.graphql.swift in Sources */,
@@ -2953,7 +2955,8 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -3019,7 +3022,8 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -3172,7 +3176,8 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
@@ -3346,7 +3351,8 @@
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
-					" ",
+					"-Wl",
+					"-ld_classic",
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;

@@ -52,7 +52,9 @@ export function getDefaultCurrencyCode(
   address: string | undefined,
   gqlChain?: InterfaceGqlChain
 ): MoonpaySupportedCurrencyCode {
-  if (!address || !gqlChain) return 'eth'
+  if (!address || !gqlChain) {
+    return 'eth'
+  }
   if (isMoonpaySupportedChain(gqlChain)) {
     const code = CURRENCY_CODES[gqlChain]?.[address.toLowerCase()]
     return code ?? 'eth'

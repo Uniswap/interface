@@ -13,7 +13,9 @@ const signatureSlice = createSlice({
   initialState,
   reducers: {
     addSignature(signatures, { payload }: { payload: SignatureDetails }) {
-      if (signatures[payload.offerer]?.[payload.id]) return
+      if (signatures[payload.offerer]?.[payload.id]) {
+        return
+      }
 
       const accountSignatures = signatures[payload.offerer] ?? {}
       accountSignatures[payload.id] = payload
@@ -21,12 +23,16 @@ const signatureSlice = createSlice({
       signatures[payload.offerer] = accountSignatures
     },
     updateSignature(signatures, { payload }: { payload: SignatureDetails }) {
-      if (!signatures[payload.offerer]?.[payload.id]) throw Error('Attempted to update non-existent signature.')
+      if (!signatures[payload.offerer]?.[payload.id]) {
+        throw Error('Attempted to update non-existent signature.')
+      }
 
       signatures[payload.offerer][payload.id] = payload
     },
     removeSignature(signatures, { payload }: { payload: { offerer: string; id: string } }) {
-      if (signatures[payload.offerer][payload.id]) delete signatures[payload.offerer][payload.id]
+      if (signatures[payload.offerer][payload.id]) {
+        delete signatures[payload.offerer][payload.id]
+      }
     },
   },
 })

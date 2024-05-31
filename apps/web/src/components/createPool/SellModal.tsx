@@ -102,8 +102,12 @@ export default function SellModal({
 
   // it is possible that user is requesting more that its balance
   const poolHoldsEnough: boolean = useMemo(() => {
-    if (!poolBaseTokenBalance || !expectedBaseTokens || !parsedAmount || !poolInfo) return true
-    if (JSBI.greaterThanOrEqual(parsedAmount.quotient, poolInfo?.userPoolBalance.quotient)) return false
+    if (!poolBaseTokenBalance || !expectedBaseTokens || !parsedAmount || !poolInfo) {
+      return true
+    }
+    if (JSBI.greaterThanOrEqual(parsedAmount.quotient, poolInfo?.userPoolBalance.quotient)) {
+      return false
+    }
     return JSBI.greaterThanOrEqual(poolBaseTokenBalance.quotient, expectedBaseTokens.quotient)
   }, [poolBaseTokenBalance, expectedBaseTokens, parsedAmount, poolInfo])
 

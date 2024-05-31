@@ -164,7 +164,9 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart
     for (let i = visibleRange.from - 1; i < visibleRange.to + 1; i++) {
-      if (i >= bars.length || i < 0) continue
+      if (i >= bars.length || i < 0) {
+        continue
+      }
 
       const stack = bars[i]
       let lineIndex = 0
@@ -200,7 +202,9 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     firstBar = true
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart
     for (let i = visibleRange.to + 1; i >= visibleRange.from - 1; i--) {
-      if (i >= bars.length || i < 0) continue
+      if (i >= bars.length || i < 0) {
+        continue
+      }
       const stack = bars[i]
       let lineIndex = 0
       stack.ys.forEach((yMedia, index) => {

@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -23,6 +22,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 //import { shortenAddress } from 'utilities/src/addresses'
 //import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -120,12 +120,18 @@ export default function Landing() {
   const showUnlockVoting = availableVotes && Boolean(JSBI.equal(availableVotes.quotient, JSBI.BigInt(0)))
   return (
     <>
-      <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+      <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}
-            title={showUnlockVoting ? <Trans>Unlock votes</Trans> : <Trans>Update delegation</Trans>}
+            title={
+              showUnlockVoting ? (
+                <Trans i18nKey="vote.votePage.unlockVotes" />
+              ) : (
+                <Trans i18nKey="vote.votePage.updateDelegation" />
+              )
+            }
           />
           <TopSection gap="md">
             <VoteCard>
@@ -135,15 +141,12 @@ export default function Landing() {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Header>
-                      <Trans>Rigoblock Governance</Trans>
+                      <Trans i18nKey="vote.landing.rigoblockGovernance" />
                     </Header>
                   </RowBetween>
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontSize={14}>
-                      <Trans>
-                        Actively staked GRG tokens represent voting power in Rigoblock governance. You can vote on each
-                        proposal yourself or for a Rigoblock pool operated by yourself.
-                      </Trans>
+                      <Trans i18nKey="grg.votingShares" />
                     </ThemedText.DeprecatedWhite>
                   </RowBetween>
                   <ExternalLink
@@ -155,7 +158,7 @@ export default function Landing() {
                     target="_blank"
                   >
                     <ThemedText.DeprecatedWhite fontSize={14}>
-                      <Trans>Read more about Rigoblock governance</Trans>
+                      <Trans i18nKey="vote.landing.readMoreAboutRigoblockGovernance.link" />
                     </ThemedText.DeprecatedWhite>
                   </ExternalLink>
                 </AutoColumn>
@@ -167,7 +170,7 @@ export default function Landing() {
           <TopSection gap="2px">
             <WrapSmall>
               <ThemedText.DeprecatedMediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
-                <Trans>Proposals</Trans>
+                <Trans i18nKey="vote.landing.proposals" />
               </ThemedText.DeprecatedMediumHeader>
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? (
@@ -179,13 +182,16 @@ export default function Landing() {
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
-                    <Trans>Unlock voting</Trans>
+                    <Trans i18nKey="vote.landing.unlockVoting" />
                   </ButtonPrimary>
                 ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
                   <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
-                    <Trans>
-                      <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                    </Trans>
+                    <Trans
+                      i18nKey="vote.landing.voteAmount"
+                      values={{
+                        amount: <FormattedCurrencyAmount currencyAmount={availableVotes} />,
+                      }}
+                    />
                   </ThemedText.DeprecatedBody>
                 ) : (
                   ''
@@ -196,7 +202,7 @@ export default function Landing() {
                   style={{ width: 'fit-content', borderRadius: '8px', height: '40px' }}
                   padding="8px"
                 >
-                  <Trans>Create proposal</Trans>
+                  <Trans i18nKey="vote.landing.createProposal" />
                 </ButtonPrimary>
               </AutoRow>
             </WrapSmall>
@@ -208,7 +214,7 @@ export default function Landing() {
                 <RowBetween></RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Show cancelled</Trans>
+                    <Trans i18nKey="vote.landing.showCancelled" />
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     isActive={!hideCancelled}
@@ -236,7 +242,7 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>Minimum threshold required to submit proposals: 105k GRG on L1; 50k GRG on L2s</Trans>
+            <Trans i18nKey="vote.landing.minThresholdRequired.error" />
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

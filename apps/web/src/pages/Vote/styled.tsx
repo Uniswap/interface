@@ -24,25 +24,25 @@ const handleColorType = (status: ProposalState, theme: DefaultTheme) => {
 function StatusText({ status }: { status: ProposalState }) {
   switch (status) {
     case ProposalState.PENDING:
-      return <Trans>Pending</Trans>
+      return <Trans i18nKey="common.pending" />
     case ProposalState.ACTIVE:
-      return <Trans>Active</Trans>
+      return <Trans i18nKey="vote.styled.active" />
     case ProposalState.QUALIFIED:
-      return <Trans>Qualified</Trans>
+      return <Trans i18nKey="vote.styled.qualified" />
     case ProposalState.SUCCEEDED:
-      return <Trans>Succeeded</Trans>
+      return <Trans i18nKey="vote.styled.succeeded" />
     case ProposalState.EXECUTED:
-      return <Trans>Executed</Trans>
+      return <Trans i18nKey="common.executed" />
     case ProposalState.DEFEATED:
-      return <Trans>Defeated</Trans>
+      return <Trans i18nKey="vote.styled.defeated" />
     case ProposalState.QUEUED:
-      return <Trans>Queued</Trans>
+      return <Trans i18nKey="common.queued" />
     case ProposalState.CANCELED:
-      return <Trans>Canceled</Trans>
+      return <Trans i18nKey="common.cancelled" />
     case ProposalState.EXPIRED:
-      return <Trans>Expired</Trans>
+      return <Trans i18nKey="common.expired" />
     default:
-      return <Trans>Undetermined</Trans>
+      return <Trans i18nKey="vote.styled.undetermined" />
   }
 }
 

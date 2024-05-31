@@ -54,15 +54,10 @@ export function BlastRebasingModal({ currencyIdA, currencyIdB, onContinue }: Bla
       icon={<StyledAlertIcon size="28px" />}
       title={
         <ThemedText.HeadlineMedium fontSize="24px">
-          <Trans>Rebasing is unavailable on v3</Trans>
+          <Trans i18nKey="v3.rebase.unavailable" />
         </ThemedText.HeadlineMedium>
       }
-      description={
-        <Trans>
-          On Blast, USDB and WETH are rebasing tokens that automatically earn yield. Due to incompatibility with Uniswap
-          v3, LP positions with USDB or WETH won&apos;t earn rebasing yield, but will in Uniswap v2.
-        </Trans>
-      }
+      description={<Trans i18nKey="v3.blast.yield.usdbAndWeth" />}
       body={
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
           <ThemedText.BodyPrimary fontWeight={535} lineHeight="24px">
@@ -73,11 +68,11 @@ export function BlastRebasingModal({ currencyIdA, currencyIdB, onContinue }: Bla
       onCancel={onContinue}
       buttonsConfig={{
         left: {
-          title: <Trans>Continue on v3</Trans>,
+          title: <Trans i18nKey="v3.continue" />,
           onClick: onContinue,
         },
         right: {
-          title: <Trans>Switch to v2</Trans>,
+          title: <Trans i18nKey="v2.switchTo" />,
           onClick: () => navigate(`/add/v2/${currencyIdA ?? 'ETH'}/${currencyIdB ?? ''}`),
           type: DialogButtonType.Accent,
         },
@@ -126,16 +121,13 @@ export function BlastRebasingAlert() {
       </AlertIconContainer>
       <Column gap="xs">
         <ThemedText.SubHeader lineHeight="24px">
-          <Trans>Rebasing unavailable on v3</Trans>
+          <Trans i18nKey="v3.rebase.unavailable" />
         </ThemedText.SubHeader>
         <TextWrapper lineHeight="20px" $expanded={expanded}>
-          <Trans>
-            On Blast, USDB and WETH are rebasing tokens that automatically earn yield. Due to incompatibility with
-            Uniswap v3, LP positions with USDB or WETH won&apos;t earn rebasing yield, but will in Uniswap v2.
-          </Trans>{' '}
+          <Trans i18nKey="v3.blast.yield.usdbAndWeth" />{' '}
           <StyledLearnMore href="https://support.uniswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
             <ThemedText.SubHeaderSmall fontWeight={535} lineHeight="20px" color="neutral1">
-              <Trans>Learn more</Trans>
+              <Trans i18nKey="common.learnMore.link" />
             </ThemedText.SubHeaderSmall>
           </StyledLearnMore>
         </TextWrapper>

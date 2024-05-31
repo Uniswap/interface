@@ -140,8 +140,12 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!poolContract || !provider /*|| !deadline*/) throw new Error('missing dependencies')
-    if (!parsedAmount) throw new Error('missing liquidity amount')
+    if (!poolContract || !provider /*|| !deadline*/) {
+      throw new Error('missing dependencies')
+    }
+    if (!parsedAmount) {
+      throw new Error('missing liquidity amount')
+    }
 
     await approveCallback()
   }

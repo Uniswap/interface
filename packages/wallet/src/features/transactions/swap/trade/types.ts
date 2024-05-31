@@ -5,16 +5,9 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/index'
-import { QuoteResult } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
-
-// Response data from either legacy for trading api quote request
-export type QuoteData =
-  | { quote?: QuoteResult; quoteType: QuoteType.RoutingApi }
-  | { quote?: QuoteResponse; quoteType: QuoteType.TradingApi }
 
 // TODO: [MOB-238] use composition instead of inheritance
 export class Trade<
@@ -22,19 +15,19 @@ export class Trade<
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
-  readonly quoteData?: QuoteData
+  readonly quote?: QuoteResponse
   readonly deadline: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
 
   constructor({
-    quoteData,
+    quote,
     deadline,
     slippageTolerance,
     swapFee,
     ...routes
   }: {
-    readonly quoteData?: QuoteData
+    readonly quote?: QuoteResponse
     readonly swapFee?: SwapFee
     readonly deadline: number
     readonly slippageTolerance: number
@@ -56,7 +49,7 @@ export class Trade<
     readonly tradeType: TTradeType
   }) {
     super(routes)
-    this.quoteData = quoteData
+    this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = slippageTolerance
     this.swapFee = swapFee

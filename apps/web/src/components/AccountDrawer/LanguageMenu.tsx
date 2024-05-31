@@ -39,7 +39,7 @@ export function LanguageMenuItems() {
 
 export default function LanguageMenu({ onClose }: { onClose: () => void }) {
   return (
-    <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
+    <SlideOutMenu title={<Trans i18nKey="common.language" />} onClose={onClose}>
       <MenuColumn>
         <LanguageMenuItems />
       </MenuColumn>

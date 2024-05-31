@@ -35,6 +35,7 @@ query TokenWeb($chain: Chain!, $address: String = null) {
     }
     project {
       id
+      name
       description
       homepageUrl
       twitterName

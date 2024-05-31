@@ -1,58 +1,52 @@
-import {
-  BrowserEvent,
-  InterfaceElementName,
-  InterfaceSectionName,
-  SharedEventName,
-  SwapEventName,
-} from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Trace, TraceEvent } from 'analytics'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
+import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
+import {
+  LimitPriceErrorType,
+  useCurrentPriceAdjustment,
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import Row from 'components/Row'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { getChainInfo, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
+import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
+import { SupportArticleURL } from 'constants/supportArticles'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
+import { useAtom } from 'jotai'
+import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
+import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitState } from 'state/limit/types'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers, useSwapAndLimitContext } from 'state/swap/hooks'
+import { CurrencyState } from 'state/swap/types'
 import styled, { useTheme } from 'styled-components'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { AlertTriangle } from 'ui/src/components/icons'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import {
   NumberType,
   formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
   useFormatter,
 } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
-import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import {
-  LimitPriceErrorType,
-  useCurrentPriceAdjustment,
-} from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import Row from 'components/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { SupportArticleURL } from 'constants/supportArticles'
-import { useAtom } from 'jotai'
-import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
-import { getDefaultPriceInverted } from 'state/limit/hooks'
-import { CurrencyState } from 'state/swap/types'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { AlertTriangle } from 'ui/src/components/icons'
 import { LimitExpirySection } from './LimitExpirySection'
 
 const CustomHeightSwapSection = styled(SwapSection)`
@@ -118,7 +112,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   })
 
   useEffect(() => {
-    if (limitState.limitPriceEdited || !marketPrice || !inputCurrency || !outputCurrency) return
+    if (limitState.limitPriceEdited || !marketPrice || !inputCurrency || !outputCurrency) {
+      return
+    }
 
     const marketPriceString = formatCurrencyAmountWithoutUserLocale({
       amount: (() => {
@@ -197,7 +193,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   useEffect(() => {
     if (!outputCurrency && isSupportedChain) {
-      onSelectCurrency('outputCurrency', getChainInfo({ chainId }).spotPriceStablecoinAmount.currency)
+      onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
     }
   }, [chainId, onSelectCurrency, outputCurrency, isSupportedChain])
 
@@ -207,7 +203,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', getChainInfo({ chainId }).spotPriceStablecoinAmount.currency)
+        onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -303,7 +299,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       <SwapSection>
         <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
           <SwapCurrencyInputPanel
-            label={<Trans>Sell</Trans>}
+            label={<Trans i18nKey="common.sell.label" />}
             value={formattedAmounts[Field.INPUT]}
             showMaxButton={showMaxButton}
             currency={inputCurrency ?? null}
@@ -318,20 +314,20 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         </Trace>
       </SwapSection>
       <ShortArrowWrapper clickable={isSupportedChain}>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={SwapEventName.SWAP_TOKENS_REVERSED}
+        <Trace
+          logPress
+          eventOnTrigger={SwapEventName.SWAP_TOKENS_REVERSED}
           element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
         >
           <ArrowContainer data-testid="swap-currency-button" onClick={switchTokens} color={theme.neutral1}>
             <ArrowDown size="16" color={theme.neutral1} />
           </ArrowContainer>
-        </TraceEvent>
+        </Trace>
       </ShortArrowWrapper>
       <SwapSection>
         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
           <SwapCurrencyInputPanel
-            label={<Trans>Buy</Trans>}
+            label={<Trans i18nKey="common.buy.label" />}
             value={formattedAmounts[Field.OUTPUT]}
             showMaxButton={false}
             currency={outputCurrency ?? null}
@@ -376,17 +372,15 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
         <DisclaimerText>
           {!isUniswapXSupportedChain(chainId) ? (
-            <Trans>
-              Only Ethereum mainnet tokens are available for limits.{' '}
+            <Trans i18nKey="limits.onlyMainnet">
               <ExternalLink href={SupportArticleURL.LIMITS_SUPPORTED_NETWORKS}>
-                <Trans>Learn more</Trans>
+                <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>
           ) : (
-            <Trans>
-              Limits may not execute exactly when tokens reach the specified price.{' '}
+            <Trans i18nKey="limits.priceWarning">
               <ExternalLink href={SupportArticleURL.LIMIT_FAILURE}>
-                <Trans>Learn more</Trans>
+                <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>
           )}
@@ -439,7 +433,7 @@ function SubmitOrderButton({
   if (!isUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
-        <Trans>Select supported tokens</Trans>
+        <Trans i18nKey="limits.selectSupportedTokens" />
       </ButtonError>
     )
   }
@@ -447,7 +441,7 @@ function SubmitOrderButton({
   if (!account) {
     return (
       <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
-        <Trans>Connect wallet</Trans>
+        <Trans i18nKey="common.connectWallet.button" />
       </ButtonLight>
     )
   }
@@ -457,9 +451,9 @@ function SubmitOrderButton({
       <ButtonError disabled>
         <Text fontSize={20}>
           {inputCurrency ? (
-            <Trans>Insufficient {{ sym: inputCurrency.symbol }} balance</Trans>
+            <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: inputCurrency.symbol }} />
           ) : (
-            <Trans>Insufficient balance</Trans>
+            <Trans i18nKey="common.insufficientBalance.error" />
           )}
         </Text>
       </ButtonError>
@@ -467,22 +461,24 @@ function SubmitOrderButton({
   }
 
   return (
-    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element="limit-order-button">
+    <Trace logPress element={ElementName.LimitOrderButton}>
       <ButtonError
         onClick={handleContinueToReview}
         id="submit-order-button"
         data-testid="submit-order-button"
         disabled={!trade || !!limitPriceError}
       >
-        <Text fontSize={20}>Confirm</Text>
+        <Text fontSize={20}>
+          <Trans i18nKey="common.confirm" />
+        </Text>
       </ButtonError>
-    </TraceEvent>
+    </Trace>
   )
 }
 
 export function LimitFormWrapper(props: LimitFormProps) {
   return (
-    <Trace page="limit-page">
+    <Trace page={InterfacePageNameLocal.Limit}>
       <LimitContextProvider>
         <LimitForm {...props} />
       </LimitContextProvider>

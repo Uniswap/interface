@@ -25,20 +25,20 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
       <ContentWrapper>
         <BlockedIcon size="22px" />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
-          <Trans>Blocked address</Trans>
+          <Trans i18nKey="common.blockedAddress" />
         </ThemedText.DeprecatedLargeHeader>
         <Text color="$neutral2" fontSize={12} mb={12}>
           {props.account}
         </Text>
         <ThemedText.DeprecatedMain fontSize={14} marginBottom={12}>
-          <Trans>This address is blocked on the Rigoblock interface because it is associated with one or more</Trans>{' '}
+          <Trans i18nKey="common.blocked.reason" />{' '}
           <ExternalLink href="https://help.uniswap.org/en/articles/6149816">
-            <Trans>blocked activities</Trans>
+            <Trans i18nKey="common.blocked.activities" />
           </ExternalLink>
           .
         </ThemedText.DeprecatedMain>
         <ThemedText.DeprecatedMain fontSize={12}>
-          <Trans>If you believe this is an error, please send an email including your address to </Trans>{' '}
+          <Trans i18nKey="common.blocked.ifError" />{' '}
         </ThemedText.DeprecatedMain>
 
         <CopyHelper

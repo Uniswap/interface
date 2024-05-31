@@ -2,8 +2,8 @@ import { Trans } from 'i18n'
 import { ArrowUpCircle, CheckCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -32,7 +32,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       <AutoColumn gap="100px" justify="center">
         {children}
         <ThemedText.DeprecatedSubHeader>
-          <Trans>Confirm this transaction in your wallet</Trans>
+          <Trans i18nKey="common.confirmTransaction.button" />
         </ThemedText.DeprecatedSubHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
@@ -51,7 +51,7 @@ export function SubmittedView({
   hash?: string
 }) {
   const theme = useTheme()
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   return (
     <ConfirmOrLoadingWrapper>
@@ -74,7 +74,7 @@ export function SubmittedView({
             style={{ marginLeft: '4px' }}
           >
             <ThemedText.DeprecatedSubHeader>
-              <Trans>View transaction on Explorer</Trans>
+              <Trans i18nKey="common.viewTransactionExplorer.link" />
             </ThemedText.DeprecatedSubHeader>
           </ExternalLink>
         )}

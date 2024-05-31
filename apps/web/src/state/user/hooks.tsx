@@ -7,9 +7,9 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
-import { useChainId } from 'wagmi'
 
 import { gqlToCurrency } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import { deserializeToken, serializeToken } from 'state/user/utils'
 import {
   Chain,
@@ -130,7 +130,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const dispatch = useAppDispatch()
   const userDeadline = useAppSelector((state) => state.user.userDeadline)
   const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
@@ -180,9 +180,15 @@ export function usePairAdder(): (pair: Pair) => void {
  * @param tokenB the other token
  */
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  if (tokenA.chainId !== tokenB.chainId) throw new Error('Not matching chain IDs')
-  if (tokenA.equals(tokenB)) throw new Error('Tokens cannot be equal')
-  if (!V2_FACTORY_ADDRESSES[tokenA.chainId]) throw new Error('No V2 factory address on this chain')
+  if (tokenA.chainId !== tokenB.chainId) {
+    throw new Error('Not matching chain IDs')
+  }
+  if (tokenA.equals(tokenB)) {
+    throw new Error('Tokens cannot be equal')
+  }
+  if (!V2_FACTORY_ADDRESSES[tokenA.chainId]) {
+    throw new Error('No V2 factory address on this chain')
+  }
 
   return new Token(
     tokenA.chainId,
@@ -197,7 +203,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const supportedChainId = useSupportedChainId(chainId)
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection
@@ -218,7 +224,9 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     () =>
       chainId && popularTokens?.topTokens
         ? popularTokens.topTokens.flatMap((gqlToken) => {
-            if (!gqlToken) return []
+            if (!gqlToken) {
+              return []
+            }
             const token = gqlToCurrency(gqlToken)
             // for each token on the current chain,
             return (
@@ -243,9 +251,13 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
 
   const userPairs: [Token, Token][] = useMemo(() => {
-    if (!chainId || !savedSerializedPairs) return []
+    if (!chainId || !savedSerializedPairs) {
+      return []
+    }
     const forChain = savedSerializedPairs[chainId]
-    if (!forChain) return []
+    if (!forChain) {
+      return []
+    }
 
     return Object.keys(forChain).map((pairId) => {
       return [deserializeToken(forChain[pairId].token0), deserializeToken(forChain[pairId].token1)]
@@ -262,7 +274,9 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     const keyed = combinedList.reduce<{ [key: string]: [Token, Token] }>((memo, [tokenA, tokenB]) => {
       const sorted = tokenA.sortsBefore(tokenB)
       const key = sorted ? `${tokenA.address}:${tokenB.address}` : `${tokenB.address}:${tokenA.address}`
-      if (memo[key]) return memo
+      if (memo[key]) {
+        return memo
+      }
       memo[key] = sorted ? [tokenA, tokenB] : [tokenB, tokenA]
       return memo
     }, {})

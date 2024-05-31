@@ -6,7 +6,9 @@ export function useHeaderDateFormatter() {
   const locale = useActiveLocale()
   return useCallback(
     (time?: UTCTimestamp) => {
-      if (!time) return '-'
+      if (!time) {
+        return '-'
+      }
       const headerTimeFormatOptions: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'short',

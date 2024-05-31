@@ -1,13 +1,12 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { Trace } from 'analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
-import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
 import { useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import { SendForm } from 'pages/Swap/Send/SendForm'
 import { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -16,7 +15,8 @@ import { isPreviewTrade } from 'state/routing/utils'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
-import { useChainId } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { LimitFormWrapper } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
@@ -26,9 +26,13 @@ export function getIsReviewableQuote(
   tradeState: TradeState,
   swapInputError?: ReactNode
 ): boolean {
-  if (swapInputError) return false
+  if (swapInputError) {
+    return false
+  }
   // if the current quote is a preview quote, allow the user to progress to the Swap review screen
-  if (isPreviewTrade(trade)) return true
+  if (isPreviewTrade(trade)) {
+    return true
+  }
 
   return Boolean(trade && tradeState === TradeState.VALID)
 }
@@ -37,10 +41,10 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
   const { initialInputCurrency, initialOutputCurrency, chainId } = useInitialCurrencyState()
-  const shouldDisableTokenInputs = useSupportedChainId(useChainId()) === undefined
+  const shouldDisableTokenInputs = useSupportedChainId(useAccount().chainId) === undefined
 
   return (
-    <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.SWAP_PAGE}>
       <PageWrapper>
         <Swap
           className={className}

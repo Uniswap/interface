@@ -45,7 +45,7 @@ export function UkDisclaimerModal() {
         </CloseIconWrapper>
         <Column gap="sm">
           <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px">
-            <Trans>Disclaimer for UK residents</Trans>
+            <Trans i18nKey="search.ukDisclaimer" />
           </ThemedText.HeadlineLarge>
           <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
             {bannerText}
@@ -53,7 +53,7 @@ export function UkDisclaimerModal() {
         </Column>
         <ButtonContainer gap="md">
           <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.medium} onClick={() => closeModal()}>
-            <Trans>Dismiss</Trans>
+            <Trans i18nKey="common.dismiss" />
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>
