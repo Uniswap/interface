@@ -6,7 +6,7 @@ import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -64,6 +64,7 @@ interface VoteModalProps {
 
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
   const { account, chainId } = useWeb3React()
+  const theme = useTheme()
 
   // state for delegate input
   const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
@@ -280,7 +281,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
             </ButtonPrimary>
             {poolInfo?.owner === account && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-                <Text color="$accent1">
+                <Text color={theme.accent1}>
                   {usingDelegate ? <Trans i18nKey="grg.selfStake" /> : <Trans i18nKey="grg.stakeFromWallet" />}
                 </Text>
               </TextButton>
