@@ -18,8 +18,11 @@ export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
       return apiFetch(input, init)
     }
 
+    // we do not collect analytics atm
+    const shouldAllowAnalytics = false
+
     const traceContext = getTraceContext(url, init, isTracing())
-    if (traceContext) {
+    if (traceContext && shouldAllowAnalytics) {
       return trace(traceContext, async (trace) => {
         const response = await apiFetch(input, init)
         trace.setHttpStatus(response.status)
