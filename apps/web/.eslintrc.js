@@ -77,6 +77,11 @@ module.exports = {
                 message:
                   'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
               },
+              {
+                name: 'wagmi',
+                importNames: ['useChainId', 'useAccount'],
+                message: 'Import properly typed account data from `hooks/useAccount` instead.',
+              },
             ],
           },
         ],
@@ -108,20 +113,7 @@ module.exports = {
     {
       files: ['**/*.ts', '**/*.tsx'],
       excludedFiles: ['src/analytics/*'],
-      rules: {
-        // Uses 'no-restricted-imports' to avoid overriding the above rules in '@typescript-eslint/no-restricted-imports'
-        'no-restricted-imports': [
-          'error',
-          {
-            paths: [
-              {
-                name: '@uniswap/analytics',
-                message: `Do not import from '@uniswap/analytics' directly. Use 'analytics' instead.`,
-              },
-            ],
-          },
-        ],
-      },
+      rules: {},
     },
   ],
 }

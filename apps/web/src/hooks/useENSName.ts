@@ -15,7 +15,9 @@ import useENSAddress from './useENSAddress'
 export default function useENSName(address?: string): { ENSName: string | null; loading: boolean } {
   const debouncedAddress = useDebounce(address, 200)
   const ensNodeArgument = useMemo(() => {
-    if (!debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
+    if (!debouncedAddress || !isAddress(debouncedAddress)) {
+      return [undefined]
+    }
     return [safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
   }, [debouncedAddress])
   const registrarContract = useENSRegistrarContract()

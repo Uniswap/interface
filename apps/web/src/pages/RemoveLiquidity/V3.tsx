@@ -3,7 +3,6 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
@@ -17,8 +16,11 @@ import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
 import { Break } from 'components/earn/styled'
 import { useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { useEthersSigner } from 'hooks/useEthersSigner'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -29,13 +31,11 @@ import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 's
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
-import { Text } from 'ui/src'
-import { useAccount } from 'wagmi'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
@@ -48,8 +48,8 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
-  const account = useAccount()
-  const isSupportedChain = useIsSupportedChainId(account.chainId)
+  const { chainId } = useAccount()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
   const parsedTokenId = useMemo(() => {
@@ -124,7 +124,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     }
 
     const deadline = await getDeadline()
-    if (!deadline) throw new Error('could not get deadline')
+    if (!deadline) {
+      throw new Error('could not get deadline')
+    }
 
     // we fall back to expecting 0 fees in case the fetch fails, which is safe in the
     // vast majority of cases
@@ -147,7 +149,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     }
 
     const connectedChainId = await signer.getChainId()
-    if (account.chainId !== connectedChainId) throw new WrongChainError()
+    if (account.chainId !== connectedChainId) {
+      throw new WrongChainError()
+    }
 
     signer
       .estimateGas(txn)
@@ -208,10 +212,15 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   }, [onPercentSelectForSlider, txnHash])
 
   const pendingText = (
-    <Trans>
-      Removing {{ amt: liquidityValue0?.toSignificant(6) }} {{ sym: liquidityValue0?.currency?.symbol }} and{' '}
-      {{ amt2: liquidityValue1?.toSignificant(6) }} {{ sym2: liquidityValue1?.currency?.symbol }}
-    </Trans>
+    <Trans
+      i18nKey="removeLiquidity.removing"
+      values={{
+        amt1: liquidityValue0?.toSignificant(6),
+        symbol1: liquidityValue0?.currency?.symbol,
+        amt2: liquidityValue1?.toSignificant(6),
+        symbol2: liquidityValue1?.currency?.symbol,
+      }}
+    />
   )
 
   function modalHeader() {
@@ -219,7 +228,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       <AutoColumn gap="sm" style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight="$medium">
-            <Trans>Pooled {{ sym: liquidityValue0?.currency?.symbol }}:</Trans>
+            <Trans
+              i18nKey="removeLiquidity.pooled"
+              values={{
+                symbol: liquidityValue0?.currency?.symbol,
+              }}
+            />
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -230,7 +244,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight="$medium">
-            <Trans>Pooled {{ sym: liquidityValue1?.currency?.symbol }}:</Trans>
+            <Trans
+              i18nKey="removeLiquidity.pooled"
+              values={{
+                symbol: liquidityValue1?.currency?.symbol,
+              }}
+            />
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -242,11 +261,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
             <Text fontSize={12} color="$neutral2" textAlign="left" pt={8}>
-              <Trans>You will also collect fees earned from this position.</Trans>
+              <Trans i18nKey="removeLiquidity.collectFees" />
             </Text>
             <RowBetween>
               <Text fontSize={16} fontWeight="$medium">
-                <Trans>{{ sym: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
+                <Trans i18nKey="common.feesEarned.label" values={{ symbol: feeValue0?.currency?.symbol }} />
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -257,7 +276,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             </RowBetween>
             <RowBetween>
               <Text fontSize={16} fontWeight="$medium">
-                <Trans>{{ sym: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
+                <Trans i18nKey="common.feesEarned.label" values={{ symbol: feeValue1?.currency?.symbol }} />
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -269,7 +288,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           </>
         ) : null}
         <ButtonPrimary mt="16px" onClick={burn}>
-          <Trans>Remove</Trans>
+          <Trans i18nKey="common.remove.label" />
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -292,7 +311,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         hash={txnHash ?? ''}
         reviewContent={() => (
           <ConfirmationModalContent
-            title={<Trans>Remove liquidity</Trans>}
+            title={<Trans i18nKey="pool.removeLiquidity" />}
             onDismiss={handleDismissConfirmation}
             topContent={modalHeader}
           />
@@ -318,24 +337,29 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <ThemedText.DeprecatedMain fontWeight={485}>
-                    <Trans>Amount</Trans>
+                    <Trans i18nKey="common.amount.label" />
                   </ThemedText.DeprecatedMain>
                   <RowBetween>
                     <ResponsiveHeaderText>
-                      <Trans>{{ percentForSlider }}%</Trans>
+                      <Trans
+                        i18nKey="common.percentage"
+                        values={{
+                          pct: percentForSlider,
+                        }}
+                      />
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
-                        <Trans>25%</Trans>
+                        <Trans i18nKey="common.percentage" pct="25" />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
-                        <Trans>50%</Trans>
+                        <Trans i18nKey="common.percentage" pct="50" />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
-                        <Trans>75%</Trans>
+                        <Trans i18nKey="common.percentage" pct="75" />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
-                        <Trans>Max</Trans>
+                        <Trans i18nKey="common.max" />
                       </SmallMaxButton>
                     </AutoRow>
                   </RowBetween>
@@ -346,7 +370,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Text fontSize={16} fontWeight="$medium" id="remove-pooled-tokena-symbol">
-                      <Trans>Pooled {{ symbol: liquidityValue0?.currency?.symbol }}:</Trans>
+                      <Trans
+                        i18nKey="removeLiquidity.pooled"
+                        values={{
+                          symbol: liquidityValue0?.currency?.symbol,
+                        }}
+                      />
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -357,7 +386,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   </RowBetween>
                   <RowBetween>
                     <Text fontSize={16} fontWeight="$medium" id="remove-pooled-tokenb-symbol">
-                      <Trans>Pooled {{ symbol: liquidityValue1?.currency?.symbol }}:</Trans>
+                      <Trans
+                        i18nKey="removeLiquidity.pooled"
+                        values={{
+                          symbol: liquidityValue1?.currency?.symbol,
+                        }}
+                      />
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -371,7 +405,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Break />
                       <RowBetween>
                         <Text fontSize={16} fontWeight="$medium">
-                          <Trans>{{ symbol: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
+                          <Trans
+                            i18nKey="common.feesEarned.label"
+                            values={{
+                              symbol: feeValue0?.currency?.symbol,
+                            }}
+                          />
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -382,7 +421,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       </RowBetween>
                       <RowBetween>
                         <Text fontSize={16} fontWeight="$medium">
-                          <Trans>{{ symbol: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
+                          <Trans
+                            i18nKey="common.feesEarned.label"
+                            values={{
+                              symbol: feeValue1?.currency?.symbol,
+                            }}
+                          />
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight="$medium" ml={6}>
@@ -399,7 +443,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               {showCollectAsWeth && (
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Collect as {{ nativeWrappedSymbol }}</Trans>
+                    <Trans
+                      i18nKey="pool.collectAs"
+                      values={{
+                        nativeWrappedSymbol,
+                      }}
+                    />
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     id="receive-as-weth"
@@ -416,7 +465,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     disabled={removed || percent === 0 || !liquidityValue0}
                     onClick={() => setShowConfirm(true)}
                   >
-                    {removed ? <Trans>Closed</Trans> : error ?? <Trans>Remove</Trans>}
+                    {removed ? <Trans i18nKey="common.closed" /> : error ?? <Trans i18nKey="common.remove.label" />}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

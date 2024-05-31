@@ -8,8 +8,6 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 import {
   Button,
   Flex,
@@ -21,24 +19,22 @@ import {
 } from 'ui/src'
 import { Plus } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  createAccountActions,
-  createAccountSagaName,
-} from 'wallet/src/features/wallet/create/createAccountSaga'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
+import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
-import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
+import {
+  selectAllAccountsSorted,
+  selectSortedSignerMnemonicAccounts,
+} from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -74,13 +70,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
-  const onCompleteOnboarding = useCompleteOnboardingCallback({
-    entryPoint: OnboardingEntryPoint.Sidebar,
-    importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
-  })
+  const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
-  const [createdAdditionalAccount, setCreatedAdditionalAccount] = useState(false)
 
   const accounts = useAppSelector(selectAllAccountsSorted)
 
@@ -115,22 +107,33 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     })
   }
 
-  // Pick up account creation and activate
-  useSagaStatus(createAccountSagaName, async () => {
-    if (createdAdditionalAccount) {
-      setCreatedAdditionalAccount(false)
-      await onCompleteOnboarding()
-    }
-  })
-
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressCreateNewWallet = (): void => {
-      // Ensure no pending accounts
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
-      dispatch(createAccountActions.trigger())
+    const createAdditionalAccount = async (): Promise<void> => {
+      // Generate new account
+      const newAccount = await createOnboardingAccount(sortedMnemonicAccounts)
 
+      // Create new account in redux
+      dispatch(
+        createAccountsActions.trigger({
+          accounts: [newAccount],
+          activateFirst: true,
+        })
+      )
+
+      // Log analytics event
+      sendAnalyticsEvent(MobileEventName.WalletAdded, {
+        wallet_type: ImportType.CreateAdditional,
+        accounts_imported_count: 1,
+        wallets_imported: [newAccount.address],
+        cloud_backup_used: newAccount.backups?.includes(BackupType.Cloud) ?? false,
+      })
+    }
+
+    const onPressCreateNewWallet = async (): Promise<void> => {
+      setShowAddWalletModal(false)
+      onClose()
       if (hasImportedSeedPhrase) {
-        setCreatedAdditionalAccount(true)
+        await createAdditionalAccount()
       } else {
         // create pending account and place into welcome flow
         navigate(MobileScreens.OnboardingStack, {
@@ -141,9 +144,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           },
         })
       }
-
-      setShowAddWalletModal(false)
-      onClose()
     }
 
     const onPressAddViewOnlyWallet = (): void => {
@@ -254,7 +254,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, sortedMnemonicAccounts, t])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 

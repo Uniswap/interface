@@ -15,7 +15,6 @@
     "i18n:upload": "./scripts/crowdin.sh upload",
     "i18n:download": "./scripts/crowdin.sh download",
     "i18n:download:if-missing": "ONLY_IF_MISSING=1 ./scripts/crowdin.sh download",
-    "i18n:extract": "i18next && node ./scripts/fix-empty-i18n-values.js",
     "start": "craco start",
     "start:cloud": "NODE_OPTIONS=--dns-result-order=ipv4first PORT=3001 REACT_APP_SKIP_CSP=1 npx wrangler pages dev --compatibility-flags=nodejs_compat --compatibility-date=2023-08-01 --proxy=3001 --port=3000 -- yarn start",
     "build:production": "yarn i18n:download:if-missing && craco build",
@@ -131,7 +130,6 @@
     "eslint-plugin-rulesdir": "0.2.2",
     "hardhat": "2.14.0",
     "husky": "^8.0.3",
-    "i18next-parser": "8.6.0",
     "jest": "29.7.0",
     "jest-extended": "4.0.1",
     "jest-fail-on-console": "3.1.1",
@@ -162,6 +160,7 @@
     "yarn-deduplicate": "6.0.0"
   },
   "dependencies": {
+    "@amplitude/analytics-browser": "1.12.1",
     "@apollo/client": "3.9.6",
     "@graphql-codegen/cli": "^3.3.1",
     "@graphql-codegen/client-preset": "^3.0.1",

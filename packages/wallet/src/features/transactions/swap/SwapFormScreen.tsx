@@ -3,9 +3,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import {
+  AnimatePresence,
+  Flex,
+  Text,
+  TouchableArea,
+  isWeb,
+  useIsShortMobileDevice,
+  useSporeColors,
+} from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
@@ -21,13 +30,14 @@ import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndW
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
 import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHeader'
 import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
-import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
+import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
+import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {
@@ -112,6 +122,20 @@ function SwapFormContent(): JSX.Element {
     }
     openWalletRestoreModal()
   }
+
+  const { outputTokenHasBuyTax, exactOutputWillFail, exactOutputWouldFailIfCurrenciesSwitched } =
+    useExactOutputWillFail({ currencies })
+
+  useEffect(() => {
+    if (exactOutputWillFail) {
+      updateSwapForm({
+        exactCurrencyField: CurrencyField.INPUT,
+        focusOnCurrencyField: CurrencyField.INPUT,
+      })
+    }
+    // Since we only want to run this on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const exactFieldIsInput = exactCurrencyField === CurrencyField.INPUT
   const exactFieldIsOutput = exactCurrencyField === CurrencyField.OUTPUT
@@ -345,14 +369,34 @@ function SwapFormContent(): JSX.Element {
   )
 
   const onSwitchCurrencies = useCallback(() => {
-    const newExactCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT
+    // If exact output would fail if currencies switch, we never want to have OUTPUT as exact field / focused field
+    const newExactCurrencyField = exactOutputWouldFailIfCurrenciesSwitched
+      ? CurrencyField.INPUT
+      : exactFieldIsInput
+      ? CurrencyField.OUTPUT
+      : CurrencyField.INPUT
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
       focusOnCurrencyField: newExactCurrencyField,
       input: output,
       output: input,
+      // Preserve the derived output amount if we force exact field to be input to keep USD value of the trade constant after switching
+      ...(exactOutputWouldFailIfCurrenciesSwitched && exactFieldIsInput && !isFiatMode
+        ? { exactAmountToken: formattedDerivedValueRef.current }
+        : undefined),
     })
-  }, [exactFieldIsInput, input, output, updateSwapForm])
+
+    // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies
+    setTimeout(() => moveCursorToEnd(), 0)
+  }, [
+    exactOutputWouldFailIfCurrenciesSwitched,
+    exactFieldIsInput,
+    updateSwapForm,
+    output,
+    input,
+    isFiatMode,
+    moveCursorToEnd,
+  ])
 
   // Swap input requires numeric values, not localized ones
   const formattedDerivedValue = formatCurrencyAmount({
@@ -400,6 +444,19 @@ function SwapFormContent(): JSX.Element {
         zIndex: 2,
       }
     : undefined
+
+  const [showWarning, setShowWarning] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const showTemporaryFoTWarning = (): void => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    setShowWarning(true)
+    timeoutRef.current = setTimeout(() => {
+      setShowWarning(false)
+      timeoutRef.current = null
+    }, 3000)
+  }
 
   return (
     <Flex
@@ -492,6 +549,7 @@ function SwapFormContent(): JSX.Element {
                     currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                     currencyField={CurrencyField.OUTPUT}
                     currencyInfo={currencies[CurrencyField.OUTPUT]}
+                    disabled={exactOutputWillFail} // If exact output will fail due to FoT tokens, the input field should be disabled and un-focusable
                     focus={focusOnCurrencyField === CurrencyField.OUTPUT}
                     isFiatMode={isFiatMode && exactFieldIsOutput}
                     isLoading={!exactFieldIsOutput && isSwapDataLoading}
@@ -499,6 +557,7 @@ function SwapFormContent(): JSX.Element {
                     showSoftInputOnFocus={false}
                     usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
                     value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
+                    onPressDisabled={showTemporaryFoTWarning}
                     onPressIn={onFocusOutput}
                     onSelectionChange={onOutputSelectionChange}
                     onSetExactAmount={onSetExactAmountOutput}
@@ -540,7 +599,15 @@ function SwapFormContent(): JSX.Element {
                   </Flex>
                 )}
                 <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
-                  <GasAndWarningRows renderEmptyRows={!isWeb} />
+                  <AnimatePresence>
+                    {showWarning && (
+                      <FoTWarningRow
+                        currencies={currencies}
+                        outputTokenHasBuyTax={outputTokenHasBuyTax}
+                      />
+                    )}
+                  </AnimatePresence>
+                  {!showWarning && <GasAndWarningRows renderEmptyRows={!isWeb} />}
                 </Flex>
               </Flex>
             )}
@@ -622,6 +689,31 @@ const SwitchCurrenciesButton = ({
           </Trace>
         </Flex>
       </Flex>
+    </Flex>
+  )
+}
+
+type FoTWarningRowProps = {
+  currencies: {
+    input: Maybe<CurrencyInfo>
+    output: Maybe<CurrencyInfo>
+  }
+  outputTokenHasBuyTax: boolean
+}
+
+function FoTWarningRow({ currencies, outputTokenHasBuyTax }: FoTWarningRowProps): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }}>
+      <Text color="$statusCritical" textAlign="center" variant="body3">
+        {t('swap.form.warning.output.fotFees', {
+          fotCurrencySymbol:
+            (outputTokenHasBuyTax
+              ? currencies[CurrencyField.OUTPUT]?.currency.symbol
+              : currencies[CurrencyField.INPUT]?.currency.symbol) ?? 'Token',
+          inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol ?? 'input',
+        })}
+      </Text>
     </Flex>
   )
 }

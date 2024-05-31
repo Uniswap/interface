@@ -114,9 +114,9 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
   if (isSmallScreen) {
     return (
       <MinimalStatDisplay
-        title={<Trans>Uniswap volume</Trans>}
+        title={<Trans i18nKey="explore.uniVolume" />}
         value={cumulativeVolume}
-        time={<Trans>Past month</Trans>}
+        time={<Trans i18nKey="common.pastMonth" />}
       />
     )
   }
@@ -125,7 +125,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
     <SectionContainer>
       <RowBetween>
         <SectionTitle>
-          <Trans>Uniswap volume</Trans>
+          <Trans i18nKey="explore.uniVolume" />
         </SectionTitle>
         <div style={{ position: 'absolute', right: 0 }}>
           <StyledTimePeriodSelector
@@ -137,9 +137,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
       </RowBetween>
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
-          const errorText = loading ? undefined : (
-            <Trans>Unable to display historical volume data for the current chain.</Trans>
-          )
+          const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistorical" />
           return (
             <ChartSkeleton hideYAxis type={ChartType.VOLUME} height={EXPLORE_CHART_HEIGHT_PX} errorText={errorText} />
           )
@@ -177,19 +175,17 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const isSmallScreen = !useScreenSize()['sm']
   if (isSmallScreen) {
     const currentTVL = lastEntry?.values.reduce((acc, curr) => acc + curr, 0)
-    return <MinimalStatDisplay title={<Trans>Uniswap TVL</Trans>} value={currentTVL} />
+    return <MinimalStatDisplay title={<Trans i18nKey="common.uniswapTVL" />} value={currentTVL} />
   }
 
   return (
     <SectionContainer>
       <SectionTitle>
-        <Trans>Uniswap TVL</Trans>
+        <Trans i18nKey="common.uniswapTVL" />
       </SectionTitle>
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
-          const errorText = loading ? undefined : (
-            <Trans>Unable to display historical TVL data for the current chain.</Trans>
-          )
+          const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistoricalTVL" />
           return <ChartSkeleton hideYAxis type={ChartType.TVL} height={EXPLORE_CHART_HEIGHT_PX} errorText={errorText} />
         }
 

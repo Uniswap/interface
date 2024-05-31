@@ -104,7 +104,7 @@ export default function MobileBalanceSummaryFooter() {
     <Wrapper>
       {Boolean(account && pageChainBalance) && (
         <BalanceInfo>
-          <Trans>Your balance</Trans>
+          <Trans i18nKey="tdp.balanceSummary.title" />
           <Balance>
             <BalanceValue>
               {formattedGqlBalance} {currency.symbol}
@@ -114,7 +114,7 @@ export default function MobileBalanceSummaryFooter() {
         </BalanceInfo>
       )}
       <SwapButton to={`/swap?chain=${chain}&outputCurrency=${currency.isNative ? NATIVE_CHAIN_ID : currency.address}`}>
-        <Trans>Swap</Trans>
+        <Trans i18nKey="common.swap" />
       </SwapButton>
     </Wrapper>
   )

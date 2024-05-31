@@ -54,7 +54,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
   }
 
   return (
-    <SlideOutMenu title={<Trans>Open limits</Trans>} onClose={onClose}>
+    <SlideOutMenu title={<Trans i18nKey="common.limits.open" />} onClose={onClose}>
       <StyledLimitsDisclaimer />
       <Container data-testid="LimitsMenuContainer">
         {openLimitOrders.map((order) => (
@@ -74,8 +74,8 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
           >
             <Plural
               value={selectedOrders.length}
-              one={t`Cancel limit`}
-              other={t(`Cancel {{count}} limits`, { count: selectedOrders.length })}
+              one={t('common.limit.cancel')}
+              other={t('common.limit.cancel.amount', { count: selectedOrders.length })}
             />
           </StyledCancelButton>
         )}

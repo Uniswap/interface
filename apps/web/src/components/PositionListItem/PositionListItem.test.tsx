@@ -16,7 +16,9 @@ jest.mock('utils/unwrappedToken')
 
 beforeEach(() => {
   mocked(useToken).mockImplementation((tokenAddress?: string) => {
-    if (!tokenAddress) return undefined
+    if (!tokenAddress) {
+      return undefined
+    }
     return new Token(1, tokenAddress, 6, 'symbol', 'name')
   })
   mocked(usePool).mockReturnValue([

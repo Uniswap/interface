@@ -50,15 +50,8 @@ export function SwapFormButton(): JSX.Element {
 
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
 
-  const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
-
   const reviewButtonDisabled =
-    isSwapDataLoading ||
-    noValidSwap ||
-    !!blockingWarning ||
-    isBlocked ||
-    isBlockedLoading ||
-    walletNeedsRestore
+    noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap || isSubmitting
 

@@ -27,6 +27,7 @@ import {
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import {
   claimUnitag,
   getUnitagAvatarUploadUrl,
@@ -47,7 +48,6 @@ import {
   useAccounts,
   useActiveAccount,
   useActiveAccountAddressWithThrow,
-  usePendingAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
@@ -161,6 +161,10 @@ export const useCanClaimUnitagName = (
   return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
 }
 
+/**
+ * A custom async hook that handles the process of claiming a Unitag
+ * Hook must be used inside the OnboardingContext
+ */
 export const useClaimUnitag = (): ((
   claim: UnitagClaim,
   context: UnitagClaimContext
@@ -169,13 +173,16 @@ export const useClaimUnitag = (): ((
   const dispatch = useAppDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const accounts = useAccounts()
-  const pendingAccounts = usePendingAccounts()
   const signerManager = useWalletSigners()
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const unitagsDeviceAttestationEnabled = useFeatureFlag(FeatureFlags.UnitagsDeviceAttestation)
 
+  const { getOnboardingAccount } = useOnboardingContext()
+  // If used outside of the context, this will return undefined and be ignored
+  const onboardingAccount = getOnboardingAccount()
+
   return async (claim: UnitagClaim, context: UnitagClaimContext) => {
-    const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]
+    const claimAccount = onboardingAccount || accounts[claim.address]
     if (!claimAccount || !deviceId) {
       return { claimError: t('unitags.claim.error.default') }
     }

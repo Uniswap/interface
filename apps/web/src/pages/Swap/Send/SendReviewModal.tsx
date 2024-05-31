@@ -7,6 +7,7 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
@@ -16,7 +17,6 @@ import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/componen
 import { Unitag } from 'ui/src/components/icons'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useChainId } from 'wagmi'
 
 const ModalWrapper = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -64,7 +64,7 @@ const SendModalHeader = ({
 }
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
@@ -98,7 +98,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
         <Row width="100%" padding="8px 12px 4px" align="center">
           <Row justify="left">
             <ThemedText.SubHeader>
-              <Trans>Review send</Trans>
+              <Trans i18nKey="sendReviewModal.title" />
             </ThemedText.SubHeader>
           </Row>
           <Row justify="right" gap="10px">
@@ -109,13 +109,13 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
         <ReviewContentContainer>
           <Column gap="lg">
             <SendModalHeader
-              label={<Trans>You&apos;re sending</Trans>}
+              label={<Trans i18nKey="common.youreSending" />}
               header={primaryInputView}
               subheader={secondaryInputView}
               image={<PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />}
             />
             <SendModalHeader
-              label={<Trans>To</Trans>}
+              label={<Trans i18nKey="common.to.caps" />}
               header={
                 recipientData?.unitag || recipientData?.ensName ? (
                   <Row gap="xs">
@@ -133,7 +133,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
           <Separator />
           <Row width="100%" justify="space-between">
             <ThemedText.BodySmall color="neutral2" lineHeight="20px">
-              <Trans>Network cost</Trans>
+              <Trans i18nKey="common.networkCost" />
             </ThemedText.BodySmall>
             <Row width="min-content" gap="xs">
               <ChainLogo chainId={chainId ?? ChainId.MAINNET} size={16} />
@@ -142,7 +142,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
           </Row>
         </ReviewContentContainer>
         <ButtonPrimary onClick={onConfirm}>
-          <Trans>Confirm send</Trans>
+          <Trans i18nKey="common.confirmSend.button" />
         </ButtonPrimary>
       </ModalWrapper>
     </Modal>

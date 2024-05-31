@@ -91,7 +91,9 @@ export const NftCard = ({
       detailsHref={onCardClick ? undefined : detailsHref(asset)}
       testId={testId}
       onClick={() => {
-        if (bagExpanded) setBagExpanded({ bagExpanded: false })
+        if (bagExpanded) {
+          setBagExpanded({ bagExpanded: false })
+        }
         onCardClick?.()
         sendAnalyticsEvent?.()
       }}

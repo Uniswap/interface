@@ -1,4 +1,4 @@
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
@@ -58,23 +58,17 @@ const ReadMoreWrapper = styled(ButtonText)`
   }
 `
 
-export const bannerText = t`
-  This web application is provided as a tool for users to interact with the Uniswap Protocol on
-  their own initiative, with no endorsement or recommendation of cryptocurrency trading activities. In doing so,
-  Uniswap is not recommending that users or potential users engage in cryptoasset trading activity, and users or
-  potential users of the web application should not regard this webpage or its contents as involving any form of
-  recommendation, invitation or inducement to deal in cryptoassets.
-`
+export const bannerText = t('notice.uk')
 
 export function UkBanner() {
   const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
 
   return (
     <BannerWrapper>
-      <BannerTextWrapper lineHeight="24px">{t`UK disclaimer:` + ' ' + bannerText}</BannerTextWrapper>
+      <BannerTextWrapper lineHeight="24px">{t('notice.uk.label') + ' ' + bannerText}</BannerTextWrapper>
       <ReadMoreWrapper>
         <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
-          <Trans>Read more</Trans>
+          <Trans i18nKey="common.readMore" />
         </ThemedText.BodySecondary>
       </ReadMoreWrapper>
     </BannerWrapper>

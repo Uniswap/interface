@@ -1,5 +1,4 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
@@ -7,7 +6,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import darkImage from '../../assets/images/404-page-dark.png'
 import lightImage from '../../assets/images/404-page-light.png'
 
@@ -47,18 +46,18 @@ export default function NotFound() {
 
   return (
     <PageWrapper>
-      <Trace page={InterfacePageName.NOT_FOUND} shouldLogImpression>
+      <Trace logImpression page={InterfacePageName.NOT_FOUND}>
         <Header>
           <Container>
             <Title>404</Title>
             <Paragraph color="neutral2">
-              <Trans>Page not found!</Trans>
+              <Trans i18nKey="common.pageNotFound" />
             </Paragraph>
           </Container>
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
         <SmallButtonPrimary as={Link} to="/">
-          <Trans>Oops, take me back to Swap</Trans>
+          <Trans i18nKey="notFound.oops" />
         </SmallButtonPrimary>
       </Trace>
     </PageWrapper>

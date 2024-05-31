@@ -277,6 +277,7 @@ export const colorsLight = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
+  chain_7777777: sporeLight.neutral1,
   chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
 }
@@ -341,6 +342,7 @@ export const colorsDark = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
+  chain_7777777: sporeDark.neutral1,
   chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
 }

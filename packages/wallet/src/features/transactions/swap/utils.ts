@@ -11,12 +11,11 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { NumberType } from 'utilities/src/format/types'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   CurrencyField,
@@ -81,9 +80,9 @@ export function tradeToTransactionInfo(
   trade: Trade
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-  const { quoteData, slippageTolerance } = trade
 
-  const { quoteId, gasUseEstimate, routeString } = parseQuoteTypeSpecificParms(quoteData)
+  const { quote, slippageTolerance } = trade
+  const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
   const baseTransactionInfo = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
@@ -93,7 +92,6 @@ export function tradeToTransactionInfo(
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
-    quoteType: quoteData?.quoteType,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
@@ -117,29 +115,6 @@ export function tradeToTransactionInfo(
           .maximumAmountIn(slippageTolerancePercent)
           .quotient.toString(),
       }
-}
-
-function parseQuoteTypeSpecificParms(quoteData: QuoteData | undefined): {
-  gasUseEstimate: string | undefined
-  routeString: string | undefined
-  quoteId: string | undefined
-} {
-  const isLegacyQuote = quoteData?.quoteType === QuoteType.RoutingApi
-  const maybeTradingApiQuote = !isLegacyQuote
-    ? isClassicQuote(quoteData?.quote?.quote)
-      ? quoteData?.quote?.quote
-      : undefined
-    : undefined
-
-  const quoteId = isLegacyQuote ? quoteData?.quote?.quoteId : maybeTradingApiQuote?.quoteId
-  const gasUseEstimate = isLegacyQuote
-    ? quoteData.quote?.gasUseEstimate
-    : maybeTradingApiQuote?.gasFeeUSD
-  const routeString = isLegacyQuote
-    ? quoteData?.quote?.routeString
-    : maybeTradingApiQuote?.routeString
-
-  return { quoteId, gasUseEstimate, routeString }
 }
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user

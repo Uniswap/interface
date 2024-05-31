@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react'
-
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { useDerivedLimitInfo } from './hooks'
-import { Expiry, LimitContextType, LimitState } from './types'
+import { LimitContextType, LimitState } from './types'
 
 const DEFAULT_LIMIT_STATE = {
   inputAmount: '',
@@ -9,7 +9,7 @@ const DEFAULT_LIMIT_STATE = {
   limitPriceEdited: false,
   limitPriceInverted: false,
   outputAmount: '',
-  expiry: Expiry.Week,
+  expiry: LimitsExpiry.Week,
   isInputAmountFixed: true,
 }
 

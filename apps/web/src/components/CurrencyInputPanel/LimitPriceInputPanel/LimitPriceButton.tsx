@@ -85,7 +85,7 @@ export function LimitPresetPriceButton({
     >
       {priceAdjustmentPercentage === 0 ? (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
-          <Trans>Market</Trans>
+          <Trans i18nKey="common.market.label" />
         </ThemedText.BodySecondary>
       ) : (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
@@ -121,7 +121,7 @@ export function LimitCustomMarketPriceButton({
       >
         {!customAdjustmentPercentage ? (
           <ThemedText.BodySecondary color="inherit" fontWeight={535}>
-            <Trans>Market</Trans>
+            <Trans i18nKey="common.market.label" />
           </ThemedText.BodySecondary>
         ) : (
           <ThemedText.BodySecondary color="inherit" fontWeight={535}>

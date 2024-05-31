@@ -32,7 +32,9 @@ export type PersistAppStateV12 = {
  * Migration for the change that refactored TransactionDetails into a union discriminated by `status` and removed `receipt`.
  */
 export const migration12 = (state: PersistAppStateV12 | undefined) => {
-  if (!state?.transactions) return state
+  if (!state?.transactions) {
+    return state
+  }
 
   for (const chainId in state.transactions) {
     const transactionsForChain = state.transactions[chainId]

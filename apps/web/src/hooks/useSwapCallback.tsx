@@ -25,8 +25,12 @@ export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 type UniversalRouterFeeField = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
 
 function getUniversalRouterFeeFields(trade?: InterfaceTrade): UniversalRouterFeeField | undefined {
-  if (!isClassicTrade(trade)) return undefined
-  if (!trade.swapFee) return undefined
+  if (!isClassicTrade(trade)) {
+    return undefined
+  }
+  if (!trade.swapFee) {
+    return undefined
+  }
 
   if (trade.tradeType === TradeType.EXACT_INPUT) {
     return { feeOptions: { fee: trade.swapFee.percent, recipient: trade.swapFee.recipient } }
@@ -66,8 +70,12 @@ export function useSwapCallback(
   const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
 
   return useCallback(async () => {
-    if (!trade) throw new Error('missing trade')
-    if (!account || !chainId) throw new Error('wallet must be connected to swap')
+    if (!trade) {
+      throw new Error('missing trade')
+    }
+    if (!account || !chainId) {
+      throw new Error('wallet must be connected to swap')
+    }
 
     const result = await swapCallback()
 

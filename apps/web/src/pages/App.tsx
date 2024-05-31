@@ -1,8 +1,8 @@
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
+import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/NavBar/MobileAppPromoBanner'
 import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
 import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
@@ -18,8 +18,11 @@ import { useRouterPreference } from 'state/user/hooks'
 import styled from 'styled-components'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { flexRowNoWrap } from 'theme/styles'
+import { flexColumnNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
@@ -30,22 +33,24 @@ import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './Rou
 // Annotating it with webpackPreload allows it to be ready when requested.
 const AppChrome = lazy(() => import(/* webpackPreload: true */ './AppChrome'))
 
-const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
+const BodyWrapper = styled.div<{ ukBannerVisible?: boolean; mobileAppPromoBannerVisible?: boolean }>`
   display: flex;
   flex-direction: column;
   position: relative;
   width: 100%;
-  min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT : 0)}px);
-  padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
+  min-height: calc(100vh - ${({ ukBannerVisible }) => (ukBannerVisible ? UK_BANNER_HEIGHT : 0)}px);
+  padding: ${({ theme, mobileAppPromoBannerVisible }) =>
+      theme.navHeight + (mobileAppPromoBannerVisible ? theme.promoBannerHeight : 0)}px
+    0px 5rem 0px;
   align-items: center;
   flex: 1;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT_MD : 0)}px);
+    min-height: calc(100vh - ${({ ukBannerVisible }) => (ukBannerVisible ? UK_BANNER_HEIGHT_MD : 0)}px);
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT_SM : 0)}px);
+    min-height: calc(100vh - ${({ ukBannerVisible }) => (ukBannerVisible ? UK_BANNER_HEIGHT_SM : 0)}px);
   }
 `
 
@@ -70,22 +75,22 @@ const MobileBottomBar = styled.div`
   }
 `
 
-const HeaderWrapper = styled.div<{ transparent?: boolean; bannerIsVisible?: boolean; scrollY: number }>`
-  ${flexRowNoWrap};
+const HeaderWrapper = styled.div<{ transparent?: boolean; ukBannerVisible?: boolean; scrollY: number }>`
+  ${flexColumnNoWrap}
   background-color: ${({ theme, transparent }) => !transparent && theme.surface1};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.surface3}`};
   width: 100%;
   justify-content: space-between;
   position: fixed;
-  top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT - scrollY, 0) : 0)}px;
+  top: ${({ ukBannerVisible }) => (ukBannerVisible ? Math.max(UK_BANNER_HEIGHT - scrollY, 0) : 0)}px;
   z-index: ${Z_INDEX.sticky};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT_MD - scrollY, 0) : 0)}px;
+    top: ${({ ukBannerVisible }) => (ukBannerVisible ? Math.max(UK_BANNER_HEIGHT_MD - scrollY, 0) : 0)}px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT_SM - scrollY, 0) : 0)}px;
+    top: ${({ ukBannerVisible }) => (ukBannerVisible ? Math.max(UK_BANNER_HEIGHT_SM - scrollY, 0) : 0)}px;
   }
 `
 
@@ -166,9 +171,10 @@ export default function App() {
 const Body = memo(function Body() {
   const routerConfig = useRouterConfig()
   const renderUkBanner = useRenderUkBanner()
+  const mobileAppPromoBannerEligible = useMobileAppPromoBannerEligible()
 
   return (
-    <BodyWrapper bannerIsVisible={renderUkBanner}>
+    <BodyWrapper ukBannerVisible={renderUkBanner} mobileAppPromoBannerVisible={mobileAppPromoBannerEligible}>
       <Suspense>
         <AppChrome />
       </Suspense>
@@ -229,7 +235,8 @@ const Header = memo(function Header() {
   }, [])
 
   return (
-    <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderUkBanner} scrollY={scrollY}>
+    <HeaderWrapper transparent={isHeaderTransparent} ukBannerVisible={renderUkBanner} scrollY={scrollY}>
+      <MobileAppPromoBanner />
       <NavBar blur={isHeaderTransparent} />
     </HeaderWrapper>
   )
@@ -244,11 +251,11 @@ function UserPropertyUpdater() {
   useEffect(() => {
     // User properties *must* be set before sending corresponding event properties,
     // so that the event contains the correct and up-to-date user properties.
-    user.set(CustomUserProperties.USER_AGENT, navigator.userAgent)
-    user.set(CustomUserProperties.BROWSER, getBrowser())
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
-    user.set(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
-    user.set(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
+    setUserProperty(CustomUserProperties.USER_AGENT, navigator.userAgent)
+    setUserProperty(CustomUserProperties.BROWSER, getBrowser())
+    setUserProperty(CustomUserProperties.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    setUserProperty(CustomUserProperties.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    setUserProperty(CustomUserProperties.GIT_COMMIT_HASH, process.env.REACT_APP_GIT_COMMIT_HASH ?? 'unknown')
 
     // Service Worker analytics
     const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
@@ -269,7 +276,7 @@ function UserPropertyUpdater() {
     }
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty, cache }
-    sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
+    sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>
@@ -281,12 +288,14 @@ function UserPropertyUpdater() {
   }, [])
 
   useEffect(() => {
-    user.set(CustomUserProperties.DARK_MODE, isDarkMode)
+    setUserProperty(CustomUserProperties.DARK_MODE, isDarkMode)
   }, [isDarkMode])
 
   useEffect(() => {
-    if (!rehydrated) return
-    user.set(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
+    if (!rehydrated) {
+      return
+    }
+    setUserProperty(CustomUserProperties.ROUTER_PREFERENCE, routerPreference)
   }, [routerPreference, rehydrated])
   return null
 }

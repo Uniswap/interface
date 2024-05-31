@@ -3,14 +3,16 @@ import { useMemo } from 'react'
 import store from 'state'
 import { useUserLocale } from 'state/user/hooks'
 
-import useParsedQueryString, { parsedQueryString } from './useParsedQueryString'
+import useParsedQueryString from './useParsedQueryString'
 
 /**
  * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale
  * @param maybeSupportedLocale the fuzzy locale identifier
  */
-function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined {
-  if (typeof maybeSupportedLocale !== 'string') return undefined
+export function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined {
+  if (typeof maybeSupportedLocale !== 'string') {
+    return undefined
+  }
   const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
   return SUPPORTED_LOCALES.find(
     (locale) => locale.toLowerCase() === lowerMaybeSupportedLocale || locale.split('-')[0] === lowerMaybeSupportedLocale
@@ -21,7 +23,9 @@ function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined
  * Returns the supported locale read from the user agent (navigator)
  */
 export function navigatorLocale(): SupportedLocale | undefined {
-  if (!navigator.language) return undefined
+  if (!navigator.language) {
+    return undefined
+  }
 
   const [language, region] = navigator.language.split('-')
 
@@ -32,12 +36,9 @@ export function navigatorLocale(): SupportedLocale | undefined {
   return parseLocale(language)
 }
 
-function storeLocale(): SupportedLocale | undefined {
+export function storeLocale(): SupportedLocale | undefined {
   return store.getState().user.userLocale ?? undefined
 }
-
-export const initialLocale =
-  parseLocale(parsedQueryString().lng) ?? storeLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
 
 function useUrlLocale() {
   const parsed = useParsedQueryString()

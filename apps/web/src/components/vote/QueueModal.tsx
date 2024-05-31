@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -40,7 +40,7 @@ interface QueueModalProps {
 }
 
 export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModalProps) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const queueCallback = useQueueCallback()
 
   // monitor call to help UI loading state
@@ -61,7 +61,9 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!queueCallback) return
+    if (!queueCallback) {
+      return
+    }
 
     // try delegation and store hash
     const hash = await queueCallback(proposalId)?.catch((error) => {
@@ -81,18 +83,18 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Queue proposal {{ proposalId }}</Trans>
+                <Trans i18nKey="proposal.queueId" values={{ proposalId }} />
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
               <ThemedText.DeprecatedBody>
-                <Trans>Adding this proposal to the queue will allow it to be executed, after a delay.</Trans>
+                <Trans i18nKey="proposal.queue.delay" />
               </ThemedText.DeprecatedBody>
             </RowBetween>
             <ButtonPrimary onClick={onQueue}>
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Queue</Trans>
+                <Trans i18nKey="common.queue" />
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
@@ -110,11 +112,11 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Queueing</Trans>
+                <Trans i18nKey="proposal.queueing" />
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans>Confirm this transaction in your wallet</Trans>
+              <Trans i18nKey="common.confirmTransaction.button" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
@@ -131,7 +133,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction submitted</Trans>
+                <Trans i18nKey="common.transactionSubmitted" />
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (
@@ -140,7 +142,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
                 style={{ marginLeft: '4px' }}
               >
                 <ThemedText.DeprecatedSubHeader>
-                  <Trans>View transaction on Explorer</Trans>
+                  <Trans i18nKey="common.viewTransactionExplorer.link" />
                 </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}

@@ -2,7 +2,23 @@
 
 exports[`TDPPoolTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c29 {
+  height: 16px;
+  width: 16px;
+}
+
+.c29 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c30 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -96,22 +112,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c29 {
-  height: 16px;
-  width: 16px;
-}
-
-.c29 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c30 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c0 {
@@ -732,7 +732,23 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 
 exports[`TDPPoolTable renders error state 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c25 {
+  height: 16px;
+  width: 16px;
+}
+
+.c25 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c26 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -769,22 +785,6 @@ exports[`TDPPoolTable renders error state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c25 {
-  height: 16px;
-  width: 16px;
-}
-
-.c25 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c26 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c0 {
@@ -1864,7 +1864,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   <div
                     class="c9 css-142zc9n"
                   >
-                    Data is unavailable at the moment; we're working on a fix
+                    Data is unavailable at the moment; we’re working on a fix
                   </div>
                 </div>
               </div>
@@ -1902,7 +1902,23 @@ exports[`TDPPoolTable renders error state 1`] = `
 
 exports[`TDPPoolTable renders loading state 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c23 {
+  height: 16px;
+  width: 16px;
+}
+
+.c23 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c24 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1931,22 +1947,6 @@ exports[`TDPPoolTable renders loading state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c23 {
-  height: 16px;
-  width: 16px;
-}
-
-.c23 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c24 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c0 {

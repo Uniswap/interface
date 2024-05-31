@@ -12,7 +12,7 @@ import {
   USDC_POLYGON,
   USDT_BNB,
 } from 'wallet/src/constants/tokens'
-import { useTrade } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useTrade'
+import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -47,7 +47,7 @@ export function useUSDCPrice(
   )
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { trade } = useTrade({
+  const { trade } = useTradingApiTrade({
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,

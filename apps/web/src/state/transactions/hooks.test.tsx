@@ -2,11 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useAccount } from 'wagmi'
 import {
   useHasPendingApproval,
   useHasPendingRevocation,
@@ -44,10 +44,7 @@ const mockRevocationTransactionInfo: TransactionInfo = {
   amount: '0',
 }
 
-jest.mock('wagmi', () => ({
-  ...jest.requireActual('wagmi'),
-  useAccount: jest.fn(),
-}))
+jest.mock('hooks/useAccount')
 
 describe('Transactions hooks', () => {
   beforeEach(() => {
@@ -121,7 +118,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending approval but it is not for the current chain', () => {
-      mocked(useAccount).mockReturnValue({ chainId: 2 } as ReturnType<typeof useAccount>)
+      mocked(useAccount).mockReturnValue({ chainId: ChainId.BASE } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockApprovalTransactionInfo)
       const { result } = renderHook(() => useHasPendingApproval(USDC_MAINNET, PERMIT2_ADDRESS))
       expect(result.current).toBe(false)
@@ -161,7 +158,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending revocation but it is not for the current chain', () => {
-      mocked(useAccount).mockReturnValue({ chainId: 2 } as ReturnType<typeof useAccount>)
+      mocked(useAccount).mockReturnValue({ chainId: ChainId.BASE } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockRevocationTransactionInfo)
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS))
       expect(result.current).toBe(false)

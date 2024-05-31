@@ -193,16 +193,16 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   let prompt
   switch (globalPriceMethod) {
     case SetPriceMethod.CUSTOM:
-      prompt = <Trans>Custom</Trans>
+      prompt = <Trans i18nKey="common.custom" />
       break
     case SetPriceMethod.FLOOR_PRICE:
-      prompt = <Trans>Floor price</Trans>
+      prompt = <Trans i18nKey="common.floorPrice" />
       break
     case SetPriceMethod.LAST_PRICE:
-      prompt = <Trans>Last price</Trans>
+      prompt = <Trans i18nKey="common.lastPrice" />
       break
     case SetPriceMethod.SAME_PRICE:
-      prompt = <Trans>Same price</Trans>
+      prompt = <Trans i18nKey="common.samePrice" />
       break
     default:
       break
@@ -212,18 +212,18 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
     <Column>
       <TableHeader>
         <NFTHeader>
-          <Trans>NFT</Trans>
+          <Trans i18nKey="nft" />
         </NFTHeader>
         <PriceHeaders>
           <FloorPriceHeader>
-            <Trans>Floor</Trans>
+            <Trans i18nKey="common.floor" />
           </FloorPriceHeader>
           <LastPriceHeader>
-            <Trans>Last</Trans>
+            <Trans i18nKey="nft.last" />
           </LastPriceHeader>
 
           <DropdownAndHeaderWrapper ref={dropdownRef}>
-            <Trans>Price</Trans>
+            <Trans i18nKey="common.price" />
             <DropdownPromptContainer>
               <DropdownPrompt onClick={toggleShowDropdown}>
                 {prompt} <DropdownChevron isOpen={showDropdown} />
@@ -237,10 +237,10 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
           </DropdownAndHeaderWrapper>
 
           <FeeHeader>
-            <Trans>Fees</Trans>
+            <Trans i18nKey="common.fees" />
           </FeeHeader>
           <UserReceivesHeader>
-            <Trans>You receive</Trans>
+            <Trans i18nKey="common.youRecieve" />
           </UserReceivesHeader>
         </PriceHeaders>
       </TableHeader>

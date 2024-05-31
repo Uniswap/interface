@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
@@ -18,16 +18,16 @@ import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
   LoadingIndicatorOverlay,
   LogoContainer,
 } from '../AccountDrawer/MiniPortfolio/Activity/Logos'
-import { slideInAnimation, slideOutAnimation } from './animations'
 import { TradeSummary } from './TradeSummary'
+import { slideInAnimation, slideOutAnimation } from './animations'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -73,16 +73,24 @@ function getTitle({
   swapConfirmed: boolean
 }): ReactNode {
   if (isLimitTrade(trade)) {
-    if (swapPending) return t`Limit submitted`
-    if (swapConfirmed) return t`Limit filled!`
+    if (swapPending) {
+      return t('swap.limitSubmitted')
+    }
+    if (swapConfirmed) {
+      return t('swap.limitFilled')
+    }
 
-    return t`Confirm limit`
+    return t('swap.confirmLimit')
   }
 
-  if (swapPending) return t`Swap submitted`
-  if (swapConfirmed) return t`Swap success!`
+  if (swapPending) {
+    return t('swap.submitted')
+  }
+  if (swapConfirmed) {
+    return t('swap.success')
+  }
 
-  return t`Confirm swap`
+  return t('swap.confirmSwap')
 }
 
 export function Pending({
@@ -103,7 +111,7 @@ export function Pending({
   // price that the user actually submitted.
   // TODO(WEB-3854): Stop requesting new swap quotes after the user submits the transaction.
   const initialTrade = useRef(trade).current
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
   const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
@@ -171,7 +179,7 @@ export function Pending({
         {/* Display while waiting for user to make final submission by confirming in wallet */}
         {!swapPending && !swapConfirmed && (
           <Row justify="center" marginTop="32px" minHeight="24px">
-            <ThemedText.BodySmall color="neutral2">{t`Proceed in your wallet`}</ThemedText.BodySmall>
+            <ThemedText.BodySmall color="neutral2">{t('common.proceedInWallet')}</ThemedText.BodySmall>
           </Row>
         )}
         {/* Display while UniswapX order is still pending */}
@@ -186,9 +194,9 @@ export function Pending({
                 }
               >
                 {isLimitTrade(initialTrade) ? (
-                  <Trans>Learn more about limits</Trans>
+                  <Trans i18nKey="limits.learnMore" />
                 ) : (
-                  <Trans>Learn more about swapping with UniswapX</Trans>
+                  <Trans i18nKey="uniswapX.learnMore" />
                 )}
               </ExternalLink>
             </ThemedText.BodySmall>
@@ -199,7 +207,7 @@ export function Pending({
           <Row justify="center" marginTop="32px" minHeight="24px">
             <ThemedText.BodySmall color="neutral2">
               <ExternalLink href={explorerLink} color="neutral2">
-                <Trans>View on Explorer</Trans>
+                <Trans i18nKey="common.viewOnExplorer" />
               </ExternalLink>
             </ThemedText.BodySmall>
           </Row>

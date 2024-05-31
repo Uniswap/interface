@@ -1,7 +1,7 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { Trans } from 'i18n'
@@ -11,8 +11,7 @@ import { Plus } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { StyledInternalLink, ThemedText } from 'theme/components'
-
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ButtonDropdownLight } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -92,20 +91,18 @@ export default function PoolFinder() {
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
       <Text textAlign="center">
-        {!account ? (
-          <Trans>Connect to a wallet to find pools</Trans>
-        ) : (
-          <Trans>Select a token to find your v2 liquidity.</Trans>
-        )}
+        {!account ? <Trans i18nKey="poolFinder.connect" /> : <Trans i18nKey="poolFinder.selectToken" />}
       </Text>
     </LightCard>
   )
 
   const networkSupportsV2 = useNetworkSupportsV2()
-  if (!networkSupportsV2) return <V2Unsupported />
+  if (!networkSupportsV2) {
+    return <V2Unsupported />
+  }
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
       <>
         <AppBody>
           <FindPoolTabs origin={query.get('origin') ?? '/pools/v2'} />
@@ -113,9 +110,7 @@ export default function PoolFinder() {
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans>
-                    <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
-                  </Trans>
+                  <Trans i18nKey="poolFinder.tip" />
                 </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>
@@ -134,7 +129,7 @@ export default function PoolFinder() {
                 </Row>
               ) : (
                 <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                  <Trans>Select a token</Trans>
+                  <Trans i18nKey="common.selectToken.label" />
                 </Text>
               )}
             </ButtonDropdownLight>
@@ -158,7 +153,7 @@ export default function PoolFinder() {
                 </Row>
               ) : (
                 <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                  <Trans>Select a token</Trans>
+                  <Trans i18nKey="common.selectToken.label" />
                 </Text>
               )}
             </ButtonDropdownLight>
@@ -168,11 +163,11 @@ export default function PoolFinder() {
                 style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
               >
                 <Text textAlign="center" fontWeight={535}>
-                  <Trans>Pool found!</Trans>
+                  <Trans i18nKey="poolFinder.found" />
                 </Text>
                 <StyledInternalLink to="pools/v2">
                   <Text textAlign="center">
-                    <Trans>Manage this pool.</Trans>
+                    <Trans i18nKey="poolFinder.managePool" />
                   </Text>
                 </StyledInternalLink>
               </ColumnCenter>
@@ -186,11 +181,11 @@ export default function PoolFinder() {
                   <LightCard padding="45px 10px">
                     <AutoColumn gap="sm" justify="center">
                       <Text textAlign="center">
-                        <Trans>You don’t have liquidity in this pool yet.</Trans>
+                        <Trans i18nKey="poolFinder.noLiquidity" />
                       </Text>
                       <StyledInternalLink to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}>
                         <Text textAlign="center">
-                          <Trans>Add liquidity.</Trans>
+                          <Trans i18nKey="common.addLiquidity" />
                         </Text>
                       </StyledInternalLink>
                     </AutoColumn>
@@ -200,10 +195,10 @@ export default function PoolFinder() {
                 <LightCard padding="45px 10px">
                   <AutoColumn gap="sm" justify="center">
                     <Text textAlign="center">
-                      <Trans>No pool found.</Trans>
+                      <Trans i18nKey="poolFinder.noPoolFound" />
                     </Text>
                     <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                      <Trans>Create pool.</Trans>
+                      <Trans i18nKey="poolFinder.create" />
                     </StyledInternalLink>
                   </AutoColumn>
                 </LightCard>
@@ -211,7 +206,7 @@ export default function PoolFinder() {
                 <LightCard padding="45px 10px">
                   <AutoColumn gap="sm" justify="center">
                     <Text textAlign="center" fontWeight={535}>
-                      <Trans>Invalid pair.</Trans>
+                      <Trans i18nKey="common.invalidPair" />
                     </Text>
                   </AutoColumn>
                 </LightCard>
@@ -219,7 +214,7 @@ export default function PoolFinder() {
                 <LightCard padding="45px 10px">
                   <AutoColumn gap="sm" justify="center">
                     <Text textAlign="center">
-                      <Trans>Loading</Trans>
+                      <Trans i18nKey="common.loading" />
                       <Dots />
                     </Text>
                   </AutoColumn>

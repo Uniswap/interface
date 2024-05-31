@@ -29,7 +29,7 @@ export function ConfirmAddModalBottom({
     <>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>{{ depositedAmtA }} Deposited</Trans>
+          <Trans i18nKey="common.amountDeposited.label" values={{ amount: depositedAmtA }} />
         </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
@@ -38,7 +38,7 @@ export function ConfirmAddModalBottom({
       </RowBetween>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>{{ depositedAmtB }} Deposited</Trans>
+          <Trans i18nKey="common.amountDeposited.label" values={{ amount: depositedAmtB }} />
         </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
@@ -47,7 +47,7 @@ export function ConfirmAddModalBottom({
       </RowBetween>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>Rates</Trans>
+          <Trans i18nKey="pool.rates" />
         </ThemedText.DeprecatedBody>
         <ThemedText.DeprecatedBody>
           {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
@@ -64,15 +64,18 @@ export function ConfirmAddModalBottom({
       </RowBetween>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>Share of Pool:</Trans>
+          <Trans i18nKey="pool.shareOf" />
         </ThemedText.DeprecatedBody>
         <ThemedText.DeprecatedBody>
-          <Trans>{{ pct: noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4) }}%</Trans>
+          <Trans
+            i18nKey="common.percentage"
+            values={{ pct: noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4) }}
+          />
         </ThemedText.DeprecatedBody>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={535} fontSize={20}>
-          {noLiquidity ? <Trans>Create pool & supply</Trans> : <Trans>Confirm supply</Trans>}
+          {noLiquidity ? <Trans i18nKey="pool.createAndSupply" /> : <Trans i18nKey="pool.confirmSupply" />}
         </Text>
       </ButtonPrimary>
     </>

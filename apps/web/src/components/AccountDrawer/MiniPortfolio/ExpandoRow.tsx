@@ -32,8 +32,10 @@ const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
 
 // TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
 type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
-export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
-  if (numItems === 0) return null
+export function ExpandoRow({ title = t('common.hidden'), numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+  if (numItems === 0) {
+    return null
+  }
   return (
     <>
       <Row align="center" justify="space-between" padding="16px">
@@ -42,7 +44,7 @@ export function ExpandoRow({ title = t`Hidden`, numItems, isExpanded, toggle, ch
         </ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
           <ThemedText.LabelSmall color="neutral2" variant="buttonLabelSmall">
-            {isExpanded ? t`Hide` : t`Show`}
+            {isExpanded ? t('common.hide.button') : t('common.show.button')}
           </ThemedText.LabelSmall>
           <ExpandIcon $expanded={isExpanded} />
         </ToggleButton>

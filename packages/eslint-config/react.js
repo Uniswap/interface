@@ -14,6 +14,7 @@ module.exports = {
     },
   },
   rules: {
+    curly: 'error',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
   },

@@ -56,7 +56,7 @@ interface NFTStatusProps extends LogoWithTxStatusBaseProps {
   nftTradeType?: NFTTradeType
 }
 
-type LogoWithTxStatusProps = (CurrencyStatusProps | NFTStatusProps) & {
+export type LogoWithTxStatusProps = (CurrencyStatusProps | NFTStatusProps) & {
   serviceProviderLogoUrl?: string
   institutionLogoUrl?: string
 }
@@ -79,7 +79,7 @@ function getLogo(props: LogoWithTxStatusProps): JSX.Element {
         />
       )
     }
-    return <MoonpayLogo height={size} width={size} />
+    return <MoonpayLogo height={size} testID="moonpay-logo" width={size} />
   }
 
   return assetType === AssetType.Currency ? (
@@ -91,6 +91,7 @@ function getLogo(props: LogoWithTxStatusProps): JSX.Element {
       borderRadius="$rounded4"
       height={size}
       overflow="hidden"
+      testID="nft-viewer"
       width={size}>
       {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
     </Flex>
@@ -141,10 +142,10 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         break
     }
     if (Icon) {
-      icon = <Icon color={color.val} fill={fill.val} size={statusSize} />
+      icon = <Icon color={color.val} fill={fill.val} size={statusSize} testID="status-icon" />
       // If logo is missing, we render the icon instead
       if (!logo) {
-        icon = <Icon color={color.val} fill={fill.val} size={size} />
+        icon = <Icon color={color.val} fill={fill.val} size={size} testID="status-icon" />
       }
     }
   }
@@ -195,16 +196,16 @@ export function DappLogoWithTxStatus({
           <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} />
         ) : undefined
       case WalletConnectEvent.TransactionConfirmed:
-        return <Approve color={green} fill={fill} size={statusSize} />
+        return <Approve color={green} fill={fill} size={statusSize} testID="icon-approve" />
       case WalletConnectEvent.TransactionFailed:
-        return <AlertTriangle color={yellow} fill={fill} size={statusSize} />
+        return <AlertTriangle color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
     }
   }
 
   const statusIcon = getStatusIcon()
 
   const fallback = (
-    <Flex height={dappImageSize}>
+    <Flex height={dappImageSize} testID="image-fallback">
       <DappIconPlaceholder iconSize={dappImageSize} name={dappName} />
     </Flex>
   )
@@ -226,6 +227,7 @@ export function DappLogoWithTxStatus({
       fallback={fallback}
       imageStyle={style.icon}
       loadingContainerStyle={{ ...style.icon, ...style.loaderContainer }}
+      testID="dapp-image"
       uri={dappImageUrl}
     />
   ) : (
@@ -265,6 +267,7 @@ export function DappLogoWithWCBadge({
     <RemoteImage
       borderRadius={borderRadii.rounded4}
       height={dappImageSize}
+      testID="dapp-image"
       uri={dappImageUrl}
       width={dappImageSize}
     />
@@ -290,7 +293,7 @@ export function DappLogoWithWCBadge({
           bottom={-2}
           position="absolute"
           right={-2}>
-          <WalletConnectLogo height={statusSize} width={statusSize} />
+          <WalletConnectLogo height={statusSize} testID="wallet-connect-logo" width={statusSize} />
         </Flex>
       )}
     </Flex>

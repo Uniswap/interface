@@ -62,5 +62,11 @@ export const ACCOUNT2 = signerMnemonicAccount({
 })
 
 export const ACCOUNT3 = signerMnemonicAccount({
+  type: AccountType.SignerMnemonic,
   address: SAMPLE_SEED_ADDRESS_3,
+  derivationIndex: 2,
+  name: 'Test Account 3',
+  timeImportedMs: 100,
+  mnemonicId: SAMPLE_SEED_ADDRESS_1,
+  backups: [BackupType.Manual],
 })

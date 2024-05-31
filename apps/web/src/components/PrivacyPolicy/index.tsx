@@ -1,5 +1,4 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import Card, { DarkGrayCard } from 'components/Card'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { Trans } from 'i18n'
@@ -7,8 +6,9 @@ import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobile } from 'uniswap/src/utils/platform'
-
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
@@ -50,33 +50,30 @@ const StyledLinkOut = styled(ArrowDown)`
 const EXTERNAL_APIS = [
   {
     name: 'Auto Router',
-    description: <Trans>The app fetches the optimal trade route from a Uniswap Labs server.</Trans>,
+    description: <Trans i18nKey="privacy.autoRouter" />,
   },
   {
     name: 'Infura',
-    description: <Trans>The app fetches on-chain data and constructs contract calls with an Infura API.</Trans>,
+    description: <Trans i18nKey="privacy.infura" />,
   },
   {
     name: 'TRM Labs',
     description: (
       <>
-        <Trans>
-          The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance
-          reasons.
-        </Trans>{' '}
+        <Trans i18nKey="privacy.trm" />{' '}
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
-          <Trans>Learn more</Trans>
+          <Trans i18nKey="common.learnMore.link" />
         </ExternalLink>
       </>
     ),
   },
   {
     name: 'Google Analytics & Amplitude',
-    description: <Trans>The app logs anonymized usage statistics in order to improve over time.</Trans>,
+    description: <Trans i18nKey="privacy.anonymizedLogs" />,
   },
   {
     name: 'The Graph',
-    description: <Trans>The app fetches blockchain data from The Graph’s hosted service.</Trans>,
+    description: <Trans i18nKey="privacy.theGraph" />,
   },
 ]
 
@@ -86,11 +83,12 @@ export function PrivacyPolicyModal() {
   const toggle = useTogglePrivacyPolicy()
 
   useEffect(() => {
-    if (!open) return
+    if (!open) {
+      return
+    }
 
     sendAnalyticsEvent(SharedEventName.PAGE_VIEWED, {
-      category: 'Modal',
-      action: 'Show Legal',
+      modal: ModalName.Legal,
     })
   }, [open])
 
@@ -99,7 +97,7 @@ export function PrivacyPolicyModal() {
       <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
           <ThemedText.DeprecatedMediumHeader>
-            <Trans>Legal & Privacy</Trans>
+            <Trans i18nKey="common.legalAndPrivacy" />
           </ThemedText.DeprecatedMediumHeader>
           <HoverText onClick={() => toggle()}>
             <X size={24} />
@@ -130,7 +128,7 @@ function PrivacyPolicy() {
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    <Trans>Uniswap Labs&apos; Terms of Service</Trans>
+                    <Trans i18nKey="privacy.uniswaptos" />
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -143,7 +141,7 @@ function PrivacyPolicy() {
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    <Trans>Privacy Policy</Trans>
+                    <Trans i18nKey="common.privacyPolicy" />
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -152,7 +150,7 @@ function PrivacyPolicy() {
           </StyledExternalCard>
         </AutoColumn>
         <ThemedText.DeprecatedMain fontSize={14}>
-          <Trans>This app uses the following third-party APIs:</Trans>
+          <Trans i18nKey="privacy.thirdPartyApis" />
         </ThemedText.DeprecatedMain>
         <AutoColumn gap="md">
           {EXTERNAL_APIS.map(({ name, description }, i) => (
@@ -171,7 +169,7 @@ function PrivacyPolicy() {
           <ThemedText.DeprecatedBody fontSize={12}>
             <Row justify="center" marginBottom="1rem">
               <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-                <Trans>Learn more</Trans>
+                <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Row>
           </ThemedText.DeprecatedBody>

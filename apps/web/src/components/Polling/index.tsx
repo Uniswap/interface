@@ -12,8 +12,8 @@ import styled, { keyframes } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
@@ -113,7 +113,7 @@ const Spinner = styled.div<{ warning: boolean }>`
 `
 
 export default function Polling() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
@@ -158,7 +158,9 @@ export default function Polling() {
   //TODO - chainlink gas oracle is really slow. Can we get a better data source?
 
   const blockExternalLinkHref = useMemo(() => {
-    if (!chainId || !blockNumber) return ''
+    if (!chainId || !blockNumber) {
+      return ''
+    }
     return getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK)
   }, [blockNumber, chainId])
 
@@ -171,11 +173,7 @@ export default function Polling() {
       <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <StyledPollingBlockNumber breathe={isMounting} hovering={isHover} warning={warning}>
           <ExternalLink href={blockExternalLinkHref}>
-            <MouseoverTooltip
-              text={<Trans>The most recent block number on this network. Prices update on every block.</Trans>}
-            >
-              {blockNumber}&ensp;
-            </MouseoverTooltip>
+            <MouseoverTooltip text={<Trans i18nKey="polling.recentBlock" />}>{blockNumber}&ensp;</MouseoverTooltip>
           </ExternalLink>
         </StyledPollingBlockNumber>
         <StyledPollingDot warning={warning}>{isMounting && <Spinner warning={warning} />}</StyledPollingDot>{' '}

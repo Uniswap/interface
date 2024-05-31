@@ -29,14 +29,18 @@ export function getOSCollectionsInfiniteQueryOptions(address: string) {
 const OSCollectionsFetcher = async ({ params }: any): Promise<WalletCollection[]> => {
   let hasEmptyFields = false
 
-  if (!params) return []
+  if (!params) {
+    return []
+  }
 
   for (const v of Object.values(params)) {
     if (v === undefined) {
       hasEmptyFields = true
     }
   }
-  if (hasEmptyFields) return []
+  if (hasEmptyFields) {
+    return []
+  }
 
   const r = await fetch(`https://api.opensea.io/api/v1/collections?${new URLSearchParams(params).toString()}`)
   const walletCollections = await r.json()

@@ -45,7 +45,7 @@ export function GetTheAppButton() {
             display: 'none',
           }}
         >
-          <Trans>Get the app</Trans>
+          <Trans i18nKey="common.getTheApp" />
         </Text>
         <WiggleIcon>
           <AppleLogo fill={theme.neutral1} />

@@ -157,11 +157,19 @@ const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as cons
 const uxSupportedGQLChains = [...GQLMainnetChains, ...GQL_TESTNET_CHAINS] as const
 
 test.each(GQLMainnetChains)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
+  if (chain === Chain.Zora) {
+    // TODO: Remove when Zora chain is supported
+    return
+  }
   expect(GQL_MAINNET_CHAINS.includes(chain)).toBe(true)
   expect(GQL_MAINNET_CHAINS.length).toEqual(GQLMainnetChains.length)
 })
 
 test.each(uxSupportedGQLChains)('UX_SUPPORTED_GQL_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
+  if (chain === Chain.Zora) {
+    // TODO: Remove when Zora chain is supported
+    return
+  }
   expect(UX_SUPPORTED_GQL_CHAINS.includes(chain)).toBe(true)
   expect(UX_SUPPORTED_GQL_CHAINS.length).toEqual(uxSupportedGQLChains.length)
 })
@@ -209,6 +217,10 @@ const chainToChainId = {
 test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(
   'CHAIN_NAME_TO_CHAIN_ID generates the correct chains',
   (chain) => {
+    if (chain === Chain.Zora) {
+      // TODO: Remove when Zora chain is supported
+      return
+    }
     const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
     expect(chainId).toBe(chainToChainId[chain])
   }

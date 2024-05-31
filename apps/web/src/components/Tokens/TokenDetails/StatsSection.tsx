@@ -108,28 +108,21 @@ export default function StatsSection(props: StatsSectionProps) {
     return (
       <StatsWrapper data-testid="token-details-stats">
         <Header>
-          <Trans>Stats</Trans>
+          <Trans i18nKey="common.stats" />
         </Header>
         <TokenStatsSection>
           <StatPair>
             <Stat
               dataCy="tvl"
               value={TVL}
-              description={
-                <Trans>
-                  Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3
-                  liquidity pools.
-                </Trans>
-              }
-              title={<Trans>TVL</Trans>}
+              description={<Trans i18nKey="common.totalValueLocked.description" />}
+              title={<Trans i18nKey="common.totalValueLocked" />}
             />
             <Stat
               dataCy="market-cap"
               value={marketCap}
-              description={
-                <Trans>Market capitalization is the total market value of an asset&apos;s circulating supply.</Trans>
-              }
-              title={<Trans>Market cap</Trans>}
+              description={<Trans i18nKey="stats.marketCap.description" />}
+              title={<Trans i18nKey="stats.marketCap" />}
             />
           </StatPair>
           <StatPair>
@@ -137,17 +130,13 @@ export default function StatsSection(props: StatsSectionProps) {
               dataCy="fdv"
               value={FDV}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
-              title={<Trans>FDV</Trans>}
+              title={<Trans i18nKey="stats.fdv" />}
             />
             <Stat
               dataCy="volume-24h"
               value={volume24H}
-              description={
-                <Trans>
-                  1 day volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>
-              }
-              title={<Trans>1 day volume</Trans>}
+              description={<Trans i18nKey="stats.volume.1d.description" />}
+              title={<Trans i18nKey="stats.volume.1d" />}
             />
           </StatPair>
         </TokenStatsSection>
@@ -157,15 +146,20 @@ export default function StatsSection(props: StatsSectionProps) {
     return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
       <>
         <Header>
-          <Trans>Stats</Trans>
+          <Trans i18nKey="common.stats" />
         </Header>
         <ThemedText.BodySecondary pt="12px">
-          <Trans>
-            Token stats and charts for {{ label }} are available on{' '}
-            <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
-              info.uniswap.org
-            </ExternalLink>
-          </Trans>
+          <Trans
+            i18nKey="tdp.stats.unsupportedChainDescription"
+            values={{
+              chain: label,
+              infoLink: (
+                <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
+                  info.uniswap.org
+                </ExternalLink>
+              ),
+            }}
+          />
         </ThemedText.BodySecondary>
       </>
     ) : (

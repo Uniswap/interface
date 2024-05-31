@@ -53,12 +53,12 @@ export function UniswapWalletOptions({
             <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
             <Row gap="xs">
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                <Trans>Uniswap Extension</Trans>
+                <Trans i18nKey="common.extension" />
               </Text>
             </Row>
             <TagContainer>
               <Text lineHeight={16} fontSize={12} color="$neutral2">
-                <Trans>Detected</Trans>
+                <Trans i18nKey="common.detected" />
               </Text>
             </TagContainer>
           </OptionContainer>
@@ -68,10 +68,10 @@ export function UniswapWalletOptions({
           <Row gap="xs">
             <Column>
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                <Trans>Mobile Wallet</Trans>
+                <Trans i18nKey="common.mobileWallet" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                <Trans>Scan QR code to connect</Trans>
+                <Trans i18nKey="wallet.scanToConnect" />
               </Text>
             </Column>
           </Row>

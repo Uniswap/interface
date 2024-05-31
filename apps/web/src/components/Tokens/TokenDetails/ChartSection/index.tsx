@@ -81,7 +81,7 @@ export type TDPChartState = {
   disableCandlestickUI: boolean
 }
 
-const InvalidChartMessage = () => <Trans>Unable to display historical data for the current token.</Trans>
+const InvalidChartMessage = () => <Trans i18nKey="chart.error.tokens" />
 
 /** Exported to `TDPContext` to fire queries on pageload. `TDPChartState` should be accessed through `useTDPContext` rather than this hook. */
 export function useCreateTDPChartState(tokenDBAddress: string | undefined, currencyChainName: Chain): TDPChartState {
@@ -188,7 +188,9 @@ function ChartControls() {
           currentChartType={activeQuery.chartType}
           onSelectOption={(c) => {
             setChartType(c)
-            if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
+            if (c === ChartType.PRICE) {
+              setPriceChartType(PriceChartType.LINE)
+            }
           }}
         />
       </ChartTypeSelectorContainer>

@@ -1,16 +1,22 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
+import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { CHAIN_INFO, isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersSigner } from 'hooks/useEthersSigner'
+import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import usePrevious from 'hooks/usePrevious'
 import { Trans, t } from 'i18n'
+import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -26,17 +32,12 @@ import {
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
-import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
-import { useEthersSigner } from 'hooks/useEthersSigner'
-import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
-import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
-import { useAccount } from 'wagmi'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -90,8 +91,8 @@ const BLAST_REBASING_TOKENS = [
 ]
 
 export default function AddLiquidityWrapper() {
-  const account = useAccount()
-  const isSupportedChain = useIsSupportedChainId(account.chainId)
+  const { chainId } = useAccount()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   if (isSupportedChain) {
     return <AddLiquidity />
   } else {
@@ -229,11 +230,15 @@ function AddLiquidity() {
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    account.status === 'connected' && account.chainId
+      ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
+      : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
-    account.status === 'connected' ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined
+    account.status === 'connected' && account.chainId
+      ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
+      : undefined
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
@@ -241,7 +246,9 @@ function AddLiquidity() {
   )
 
   async function onAdd() {
-    if (account.status !== 'connected' || !signer) return
+    if (account.status !== 'connected' || !signer || !account.chainId) {
+      return
+    }
 
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
@@ -298,7 +305,9 @@ function AddLiquidity() {
       }
 
       const connectedChainId = await signer.getChainId()
-      if (account.chainId !== connectedChainId) throw new WrongChainError()
+      if (account.chainId !== connectedChainId) {
+        throw new WrongChainError()
+      }
 
       setAttemptingTxn(true)
 
@@ -354,11 +363,15 @@ function AddLiquidity() {
         // prevent weth + eth
         const isETHOrWETHNew =
           currencyIdNew === 'ETH' ||
-          (account.status === 'connected' && currencyIdNew === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address)
+          (account.status === 'connected' &&
+            account.chainId &&
+            currencyIdNew === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address)
         const isETHOrWETHOther =
           currencyIdOther !== undefined &&
           (currencyIdOther === 'ETH' ||
-            (account.status === 'connected' && currencyIdOther === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address))
+            (account.status === 'connected' &&
+              account.chainId &&
+              currencyIdOther === WRAPPED_NATIVE_CURRENCY[account.chainId]?.address))
 
         if (isETHOrWETHNew && isETHOrWETHOther) {
           return [currencyIdNew, undefined]
@@ -449,9 +462,13 @@ function AddLiquidity() {
     getSetFullRange()
 
     const minPrice = pricesAtLimit[Bound.LOWER]
-    if (minPrice) searchParams.set('minPrice', minPrice.toSignificant(5))
+    if (minPrice) {
+      searchParams.set('minPrice', minPrice.toSignificant(5))
+    }
     const maxPrice = pricesAtLimit[Bound.UPPER]
-    if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    if (maxPrice) {
+      searchParams.set('maxPrice', maxPrice.toSignificant(5))
+    }
     setSearchParams(searchParams)
   }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
 
@@ -493,21 +510,21 @@ function AddLiquidity() {
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
-        <ThemedText.DeprecatedMain mb="4px">
-          <Trans>Unsupported Asset</Trans>
+        <ThemedText.DeprecatedMain mb="4px" style={{ textTransform: 'capitalize' }}>
+          <Trans i18nKey="common.unsupportedAsset_one" />
         </ThemedText.DeprecatedMain>
       </ButtonPrimary>
     ) : account.status !== 'connected' ? (
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+      <Trace
+        logPress
+        eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
-          <Trans>Connect wallet</Trans>
+          <Trans i18nKey="common.connectWallet.button" />
         </ButtonLight>
-      </TraceEvent>
+      </Trace>
     ) : (
       <AutoColumn gap="md">
         {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -524,10 +541,16 @@ function AddLiquidity() {
                 >
                   {approvalA === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                      <Trans
+                        i18nKey="pools.approving.amount"
+                        values={{ amount: currencies[Field.CURRENCY_A]?.symbol }}
+                      />
                     </Dots>
                   ) : (
-                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                    <Trans
+                      i18nKey="account.transactionSummary.approve"
+                      values={{ sym: currencies[Field.CURRENCY_A]?.symbol }}
+                    />
                   )}
                 </ButtonPrimary>
               )}
@@ -539,10 +562,16 @@ function AddLiquidity() {
                 >
                   {approvalB === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                      <Trans
+                        i18nKey="pools.approving.amount"
+                        values={{ amount: currencies[Field.CURRENCY_B]?.symbol }}
+                      />
                     </Dots>
                   ) : (
-                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                    <Trans
+                      i18nKey="account.transactionSummary.approve"
+                      values={{ sym: currencies[Field.CURRENCY_B]?.symbol }}
+                    />
                   )}
                 </ButtonPrimary>
               )}
@@ -559,7 +588,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight="$medium">{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight="$medium">{errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -603,8 +632,11 @@ function AddLiquidity() {
     <>
       <Helmet>
         <title>
-          {t(`Add liquidity to {{token pair}} ({{chain}}) on Uniswap`, {
-            tokenPair: `${quoteCurrency?.symbol}/${baseCurrency?.symbol}`,
+          {t('pool.addLiquidity.seoTitle', {
+            tokenPair:
+              quoteCurrency?.symbol && baseCurrency?.symbol
+                ? `${quoteCurrency.symbol}/${baseCurrency.symbol}`
+                : quoteCurrency?.symbol ?? baseCurrency?.symbol ?? 'pools',
             chain: CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : ChainId.MAINNET].label,
           })}
         </title>
@@ -617,7 +649,7 @@ function AddLiquidity() {
           hash={txHash}
           reviewContent={() => (
             <ConfirmationModalContent
-              title={<Trans>Add Liquidity</Trans>}
+              title={<Trans i18nKey="common.addLiquidity" />}
               onDismiss={handleDismissConfirmation}
               topContent={() => (
                 <Review
@@ -633,7 +665,7 @@ function AddLiquidity() {
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
                   <Text fontWeight="$medium" fontSize={20}>
-                    <Trans>Add</Trans>
+                    <Trans i18nKey="common.add.label" />
                   </Text>
                 </ButtonPrimary>
               )}
@@ -645,6 +677,7 @@ function AddLiquidity() {
           <AddRemoveTabs
             creating={false}
             adding={true}
+            positionID={tokenId}
             autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={!hasExistingPosition}
           >
@@ -653,7 +686,7 @@ function AddLiquidity() {
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
                     <Text color="$accent1" fontSize="12px">
-                      <Trans>Clear all</Trans>
+                      <Trans i18nKey="common.clearAll" />
                     </Text>
                   </ButtonText>
                 </MediumOnly>
@@ -678,7 +711,7 @@ function AddLiquidity() {
                       )}
                       <RowBetween paddingBottom="20px">
                         <ThemedText.DeprecatedLabel>
-                          <Trans>Select pair</Trans>
+                          <Trans i18nKey="pool.selectPair" />
                         </ThemedText.DeprecatedLabel>
                       </RowBetween>
                       <RowBetween gap="md">
@@ -722,7 +755,7 @@ function AddLiquidity() {
                 {hasExistingPosition && existingPosition && (
                   <PositionPreview
                     position={existingPosition}
-                    title={<Trans>Selected range</Trans>}
+                    title={<Trans i18nKey="pool.selectedRange" />}
                     inRange={!outOfRange}
                     ticksAtLimit={ticksAtLimit}
                     showBlastAlert={showBlastRebasingWarning}
@@ -735,7 +768,7 @@ function AddLiquidity() {
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
                     <RowBetween>
                       <ThemedText.DeprecatedLabel>
-                        <Trans>Set price range</Trans>
+                        <Trans i18nKey="migrate.setRange" />
                       </ThemedText.DeprecatedLabel>
 
                       {Boolean(baseCurrency && quoteCurrency) && (
@@ -785,10 +818,7 @@ function AddLiquidity() {
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                           <Text color="$yellow600" ml="12px" fontSize="12px">
-                            <Trans>
-                              Your position will not earn fees or be used in trades until the market price moves into
-                              your range.
-                            </Trans>
+                            <Trans i18nKey="migrate.positionNoFees" />
                           </Text>
                         </RowBetween>
                       </YellowCard>
@@ -799,7 +829,7 @@ function AddLiquidity() {
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                           <Text color="$yellow600" ml="12px" fontSize="12px">
-                            <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
+                            <Trans i18nKey="migrate.invalidRange" />
                           </Text>
                         </RowBetween>
                       </YellowCard>
@@ -812,14 +842,14 @@ function AddLiquidity() {
                         {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
                             <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                              <Trans>Current price:</Trans>
+                              <Trans i18nKey="common.currentPrice.label" />
                             </ThemedText.DeprecatedMain>
                             <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
                               {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
                             </ThemedText.DeprecatedBody>
                             {baseCurrency && (
                               <ThemedText.DeprecatedBody color="text2" fontSize={12}>
-                                {quoteCurrency?.symbol} <Trans>per</Trans> {baseCurrency.symbol}
+                                {quoteCurrency?.symbol} <Trans i18nKey="common.per" /> {baseCurrency.symbol}
                               </ThemedText.DeprecatedBody>
                             )}
                           </AutoColumn>
@@ -856,11 +886,7 @@ function AddLiquidity() {
                               textAlign="left"
                               color={theme.accent1}
                             >
-                              <Trans>
-                                This pool must be initialized before you can add liquidity. To initialize, select a
-                                starting price for the pool. Then, enter your liquidity price range and deposit amount.
-                                Gas fees will be higher than usual due to the initialization transaction.
-                              </Trans>
+                              <Trans i18nKey="pool.mustBeInitialized" />
                             </ThemedText.DeprecatedBody>
                           </BlueCard>
                         )}
@@ -879,7 +905,7 @@ function AddLiquidity() {
                           }}
                         >
                           <ThemedText.DeprecatedMain>
-                            <Trans>Starting {{ sym: baseCurrency?.symbol }} Price:</Trans>
+                            <Trans i18nKey="pool.startingPrice" values={{ sym: baseCurrency?.symbol }} />
                           </ThemedText.DeprecatedMain>
                           <ThemedText.DeprecatedMain>
                             {price ? (
@@ -890,7 +916,10 @@ function AddLiquidity() {
                                     text={invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}
                                   />{' '}
                                   <span style={{ marginLeft: '4px' }}>
-                                    {quoteCurrency?.symbol} per {baseCurrency?.symbol}
+                                    <Trans
+                                      i18nKey="common.feesEarnedPerBase"
+                                      values={{ symbolA: quoteCurrency?.symbol, symbolB: baseCurrency?.symbol }}
+                                    />
                                   </span>
                                 </RowFixed>
                               </ThemedText.DeprecatedMain>
@@ -908,7 +937,11 @@ function AddLiquidity() {
                 <DynamicSection disabled={invalidPool || invalidRange || (noLiquidity && !startPriceTypedValue)}>
                   <AutoColumn gap="md">
                     <ThemedText.DeprecatedLabel>
-                      {hasExistingPosition ? <Trans>Add more liquidity</Trans> : <Trans>Deposit amounts</Trans>}
+                      {hasExistingPosition ? (
+                        <Trans i18nKey="pool.addMoreLiquidity" />
+                      ) : (
+                        <Trans i18nKey="pool.depositAmounts" />
+                      )}
                     </ThemedText.DeprecatedLabel>
 
                     <CurrencyInputPanel

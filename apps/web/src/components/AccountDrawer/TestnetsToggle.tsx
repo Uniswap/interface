@@ -11,7 +11,7 @@ export function TestnetsToggle() {
 
   return (
     <SettingsToggle
-      title={t`Show testnets`}
+      title={t('settings.showTestNets')}
       dataid="testnets-toggle"
       isActive={showTestnets}
       toggle={() => void updateShowTestnets((value) => !value)}

@@ -1,10 +1,10 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, useTrace, user } from 'analytics'
 import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
 import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmi'
 import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
+import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
@@ -13,9 +13,12 @@ import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
-import { WagmiProvider, useAccount } from 'wagmi'
+import { WagmiProvider } from 'wagmi'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
@@ -42,7 +45,9 @@ function Updater() {
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {
-    if (connector) updateRecentConnectorId(connector.id)
+    if (connector) {
+      updateRecentConnectorId(connector.id)
+    }
   }, [connector, updateRecentConnectorId])
 
   // Trace RPC calls (for debugging).
@@ -90,7 +95,7 @@ function Updater() {
       provider
         ?.send('web3_clientVersion', [])
         .then((clientVersion) => {
-          user.set(CustomUserProperties.WALLET_VERSION, clientVersion)
+          setUserProperty(CustomUserProperties.WALLET_VERSION, clientVersion)
         })
         .catch((error) => {
           console.warn('Failed to get client version', error)
@@ -98,14 +103,14 @@ function Updater() {
 
       // User properties *must* be set before sending corresponding event properties,
       // so that the event contains the correct and up-to-date user properties.
-      user.set(CustomUserProperties.WALLET_ADDRESS, account)
-      user.postInsert(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account)
+      setUserProperty(CustomUserProperties.WALLET_ADDRESS, account)
+      setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account, true)
 
-      user.set(CustomUserProperties.WALLET_TYPE, walletType)
-      user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
+      setUserProperty(CustomUserProperties.WALLET_TYPE, walletType)
+      setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (chainId) {
-        user.set(CustomUserProperties.CHAIN_ID, chainId)
-        user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
+        setUserProperty(CustomUserProperties.CHAIN_ID, chainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId, true)
       }
 
       sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
@@ -125,7 +130,9 @@ function Updater() {
 }
 
 function trace(event: any) {
-  if (!event?.request) return
+  if (!event?.request) {
+    return
+  }
   const { method, id, params } = event.request
   console.groupCollapsed(method, id)
   console.debug(params)

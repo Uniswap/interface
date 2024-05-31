@@ -3,8 +3,8 @@ import { useCallback, useMemo } from 'react'
 import {
   ContractInput,
   IAmount,
-  Portfolio,
   PortfolioBalanceDocument,
+  PortfolioBalancesQuery,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -423,12 +423,12 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         return
       }
 
-      const cachedPortfolio = apolloClient.readQuery<{ portfolios: Portfolio[] }>({
+      const cachedPortfolio = apolloClient.readQuery<PortfolioBalancesQuery>({
         query: PortfolioBalanceDocument,
         variables: {
           owner: address,
         },
-      })?.portfolios[0]
+      })?.portfolios?.[0]
 
       if (!cachedPortfolio) {
         return

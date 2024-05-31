@@ -39,7 +39,7 @@ export function DirectToDefi() {
     <SectionLayout>
       <SectionCol direction="column" gap="40px" maxWidth="1280px">
         <H2>
-          <Trans>Go direct to DeFi</Trans>
+          <Trans i18nKey="landing.directToDeFi" />
         </H2>
         <Box direction="column" gap="16px">
           <RowToCol direction="row" gap="16px">

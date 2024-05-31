@@ -1,5 +1,5 @@
+import { useAccount } from 'hooks/useAccount'
 import { Navigate, useParams } from 'react-router-dom'
-import { useChainId } from 'wagmi'
 
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import AddLiquidity from './index'
@@ -7,7 +7,7 @@ import AddLiquidity from './index'
 export default function AddLiquidityWithTokenRedirects() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>()
 
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   // prevent weth + eth
   const isETHOrWETHA =

@@ -112,60 +112,60 @@ export function Footer() {
               <Box direction="column" gap="10px">
                 <Body1>App</Body1>
                 <StyledInternalLink to="/swap">
-                  <Trans>Swap</Trans>
+                  <Trans i18nKey="common.swap" />
                 </StyledInternalLink>
                 <StyledInternalLink to="/tokens/ethereum">
-                  <Trans>Tokens</Trans>
+                  <Trans i18nKey="common.tokens" />
                 </StyledInternalLink>
                 <StyledInternalLink to="/nfts">
-                  <Trans>NFTs</Trans>
+                  <Trans i18nKey="common.nfts" />
                 </StyledInternalLink>
                 <StyledInternalLink to="/pool">
-                  <Trans>Pool</Trans>
+                  <Trans i18nKey="common.pool" />
                 </StyledInternalLink>
               </Box>
               <Box direction="column" gap="10px">
                 <Body1>
-                  <Trans>Protocol</Trans>
+                  <Trans i18nKey="common.protocol" />
                 </Body1>
                 <StyledExternalLink href="https://uniswap.org/governance">
-                  <Trans>Governance</Trans>
+                  <Trans i18nKey="common.governance" />
                 </StyledExternalLink>
                 <StyledExternalLink href="https://uniswap.org/developers">
-                  <Trans>Developers</Trans>
+                  <Trans i18nKey="common.developers" />
                 </StyledExternalLink>
               </Box>
             </Box>
             <Box direction="row" gap="16px">
               <Box direction="column" gap="10px">
                 <Body1>
-                  <Trans>Company</Trans>
+                  <Trans i18nKey="common.company" />
                 </Body1>
                 <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
-                  <Trans>Careers</Trans>
+                  <Trans i18nKey="common.careers" />
                 </StyledExternalLink>
                 <StyledExternalLink href="https://blog.uniswap.org/">
-                  <Trans>Blog</Trans>
+                  <Trans i18nKey="common.blog" />
                 </StyledExternalLink>
                 <DownloadLink href="https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip">
-                  <Trans>Brand Assets</Trans>
+                  <Trans i18nKey="common.brandAssets" />
                 </DownloadLink>
                 <ModalItem onClick={togglePrivacyPolicy}>
-                  <Trans>Terms & Privacy</Trans>
+                  <Trans i18nKey="common.termsPrivacy" />
                 </ModalItem>
                 <StyledExternalLink href="https://uniswap.org/trademark">
-                  <Trans>Trademark Policy</Trans>
+                  <Trans i18nKey="common.trademarkPolicy" />
                 </StyledExternalLink>
               </Box>
               <Box direction="column" gap="10px">
                 <Body1>
-                  <Trans>Need help?</Trans>
+                  <Trans i18nKey="common.needHelp" />
                 </Body1>
                 <StyledExternalLink href="https://support.uniswap.org/hc/en-us/requests/new">
-                  <Trans>Contact us</Trans>
+                  <Trans i18nKey="common.contactUs.button" />
                 </StyledExternalLink>
                 <StyledExternalLink href="https://support.uniswap.org/hc/en-us">
-                  <Trans>Help Center</Trans>
+                  <Trans i18nKey="common.helpCenter" />
                 </StyledExternalLink>
               </Box>
             </Box>

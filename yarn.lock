@@ -13514,6 +13514,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@uniswap/interface@workspace:apps/web"
   dependencies:
+    "@amplitude/analytics-browser": 1.12.1
     "@apollo/client": 3.9.6
     "@babel/preset-env": 7.23.3
     "@cloudflare/workers-types": 4.20231025.0
@@ -13639,7 +13640,6 @@ __metadata:
     hardhat: 2.14.0
     husky: ^8.0.3
     i18next: 23.10.0
-    i18next-parser: 8.6.0
     i18next-resources-to-backend: ^1.2.0
     immer: 9.0.6
     inter-ui: 3.19.3
@@ -13878,6 +13878,7 @@ __metadata:
     react-native-pager-view: 6.0.1
     react-native-permissions: 3.6.0
     react-native-reanimated: 3.8.1
+    react-native-restart: 0.0.27
     react-native-safe-area-context: 4.9.0
     react-native-screens: 3.30.1
     react-native-splash-screen: 3.3.0
@@ -43124,8 +43125,10 @@ __metadata:
     "@sentry/react": 7.80.0
     "@sentry/react-native": 5.5.0
     "@sentry/types": 7.80.0
+    "@tamagui/constants": 1.95.1
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
+    "@types/chrome": 0.0.254
     "@types/react": ^18.0.15
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.32.0
@@ -43646,7 +43649,6 @@ __metadata:
   resolution: "wallet@workspace:packages/wallet"
   dependencies:
     "@apollo/client": 3.9.6
-    "@ethersproject/bignumber": 5.7.0
     "@ethersproject/constants": 5.7.0
     "@ethersproject/contracts": 5.7.0
     "@ethersproject/providers": 5.7.2

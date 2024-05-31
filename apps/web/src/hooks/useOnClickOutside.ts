@@ -23,7 +23,9 @@ export function useOnClickOutside<T extends HTMLElement>(
         return
       }
 
-      if (handlerRef.current) handlerRef.current()
+      if (handlerRef.current) {
+        handlerRef.current()
+      }
     }
 
     document.addEventListener('mousedown', handleClickOutside)

@@ -1,8 +1,8 @@
-import { SwapTab } from 'components/swap/constants'
 import { DAI } from 'constants/tokens'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
 import { SendRecipientForm } from './SendRecipientForm'
 

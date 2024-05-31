@@ -64,7 +64,9 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
   }
 
   draw(target: CanvasRenderingTarget2D) {
-    if (!this._data.visible) return
+    if (!this._data.visible) {
+      return
+    }
     target.useBitmapCoordinateSpace((scope) => {
       const ctx = scope.context
       const crosshairPos = positionsLine(this._data.x, scope.horizontalPixelRatio, Math.max(1, this._data.barSpacing))
@@ -207,10 +209,14 @@ export class CrosshairHighlightPrimitive implements ISeriesPrimitive<Time> {
 
   private _barSpacing(): number {
     const chart = this.chart()
-    if (!chart) return 6
+    if (!chart) {
+      return 6
+    }
     const ts = chart.timeScale()
     const visibleLogicalRange = ts.getVisibleLogicalRange()
-    if (!visibleLogicalRange) return 6
+    if (!visibleLogicalRange) {
+      return 6
+    }
     return ts.width() / (visibleLogicalRange.to + 1 - visibleLogicalRange.from)
   }
 

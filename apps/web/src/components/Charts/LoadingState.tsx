@@ -37,7 +37,7 @@ function ChartErrorView({ children }: PropsWithChildren) {
       </div>
       <ErrorTextColumn gap="xs">
         <ThemedText.SubHeader color="neutral1">
-          <Trans>Missing chart data</Trans>
+          <Trans i18nKey="chart.missingData" />
         </ThemedText.SubHeader>
         <ThemedText.BodySmall color="neutral2">{children}</ThemedText.BodySmall>
       </ErrorTextColumn>

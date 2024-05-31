@@ -1,15 +1,15 @@
 import { Trans } from 'i18n'
-import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
-import styled from 'styled-components'
-
-import { sendAnalyticsEvent } from 'analytics'
 import { useCallback, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
+import styled from 'styled-components'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isIFramed } from 'utils/isIFramed'
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
-import { SwapTab } from './constants'
 import { SwapHeaderTabButton } from './styled'
 
 const StyledSwapHeader = styled(RowBetween)`
@@ -46,7 +46,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
-      sendAnalyticsEvent('Swap Tab Clicked', { tab })
+      sendAnalyticsEvent(InterfaceEventNameLocal.SwapTabClicked, { tab })
       if (syncTabToUrl) {
         navigate(`/${tab}`, { replace: true })
       } else {
@@ -68,7 +68,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             onTabClick(SwapTab.Swap)
           }}
         >
-          <Trans>Swap</Trans>
+          <Trans i18nKey="common.swap" />
         </SwapHeaderTabButton>
         <SwapHeaderTabButton
           $isActive={currentTab === SwapTab.Limit}
@@ -76,7 +76,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             onTabClick(SwapTab.Limit)
           }}
         >
-          <Trans>Limit</Trans>
+          <Trans i18nKey="swap.limit" />
         </SwapHeaderTabButton>
         {!isIFramed() && (
           <SwapHeaderTabButton
@@ -85,7 +85,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
               onTabClick(SwapTab.Send)
             }}
           >
-            <Trans>Send</Trans>
+            <Trans i18nKey="common.send.button" />
           </SwapHeaderTabButton>
         )}
         <SwapBuyFiatButton />

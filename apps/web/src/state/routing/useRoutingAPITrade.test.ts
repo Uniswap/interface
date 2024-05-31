@@ -9,6 +9,7 @@ import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from
 import { useRouterPreference } from 'state/user/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
+import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import { useRoutingAPITrade } from './useRoutingAPITrade'
 import { currencyAddressForSwapQuote } from './utils'
@@ -24,6 +25,12 @@ jest.mock('./slice', () => {
   }
 })
 jest.mock('state/user/hooks')
+jest.mock('uniswap/src/features/gating/hooks', () => {
+  return {
+    useFeatureFlag: jest.fn(),
+    useExperimentValue: jest.fn(),
+  }
+})
 
 beforeEach(() => {
   mocked(useIsWindowVisible).mockReturnValue(true)
@@ -36,6 +43,18 @@ beforeEach(() => {
     data: undefined,
     error: false,
     currentData: undefined,
+  })
+  mocked(useExperimentValue).mockImplementation((experiment, param) => {
+    switch (param) {
+      case 'deadlineBufferSecs':
+        return 0
+      case 'forceOpenOrders':
+        return false
+      case 'priceImprovementBps':
+        return 0
+      default:
+        return undefined
+    }
   })
 })
 
@@ -56,6 +75,10 @@ const MOCK_ARGS: GetQuoteArgs = {
   uniswapXForceSyntheticQuotes: false,
   sendPortionEnabled: true,
   isXv2: false,
+  isXv2Arbitrum: false,
+  priceImprovementBps: 0,
+  forceOpenOrders: false,
+  deadlineBufferSecs: 0,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

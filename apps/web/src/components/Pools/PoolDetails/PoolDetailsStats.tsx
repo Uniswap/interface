@@ -212,11 +212,11 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   return (
     <StatsWrapper loaded>
       <HeaderText>
-        <Trans>Stats</Trans>
+        <Trans i18nKey="common.stats" />
       </HeaderText>
       <StatItemColumn>
         <ThemedText.BodySecondary>
-          <Trans>Pool balances</Trans>
+          <Trans i18nKey="pool.balances" />
         </ThemedText.BodySecondary>
         <PoolBalanceSymbols>
           <PoolBalanceTokenNames token={token0} chainId={chainId} />
@@ -230,13 +230,24 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         )}
       </StatItemColumn>
       {poolData?.tvlUSD && (
-        <StatItem title={<Trans>TVL</Trans>} value={poolData.tvlUSD} delta={poolData.tvlUSDChange} />
+        <StatItem
+          title={<Trans i18nKey="common.totalValueLocked" />}
+          value={poolData.tvlUSD}
+          delta={poolData.tvlUSDChange}
+        />
       )}
       {poolData?.volumeUSD24H !== undefined && (
-        <StatItem title={<Trans>24H volume</Trans>} value={poolData.volumeUSD24H} delta={poolData.volumeUSD24HChange} />
+        <StatItem
+          title={<Trans i18nKey="stats.24volume" />}
+          value={poolData.volumeUSD24H}
+          delta={poolData.volumeUSD24HChange}
+        />
       )}
       {poolData?.volumeUSD24H !== undefined && poolData?.feeTier !== undefined && (
-        <StatItem title={<Trans>24H fees</Trans>} value={poolData.volumeUSD24H * (poolData.feeTier / 1000000)} />
+        <StatItem
+          title={<Trans i18nKey="stats.24fees" />}
+          value={poolData.volumeUSD24H * (poolData.feeTier / 1000000)}
+        />
       )}
     </StatsWrapper>
   )

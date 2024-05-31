@@ -2,11 +2,11 @@ import { useWeb3React } from '@web3-react/core'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
+import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
-
-import { sendAnalyticsEvent } from 'analytics'
-import { atom, useAtom } from 'jotai'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import AuthenticatedHeader from './AuthenticatedHeader'
 import LanguageMenu from './LanguageMenu'
 import LocalCurrencyMenu from './LocalCurrencyMenu'
@@ -50,9 +50,11 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   }, [drawerOpen, menu, closeSettings])
 
   useEffect(() => {
-    if (menu === MenuState.DEFAULT) return // menu is closed, don't log
+    if (menu === MenuState.DEFAULT) {
+      return
+    } // menu is closed, don't log
 
-    sendAnalyticsEvent('Portfolio Menu Opened', { name: menu })
+    sendAnalyticsEvent(InterfaceEventNameLocal.PortfolioMenuOpened, { name: menu })
   }, [menu])
 
   const SubMenu = useMemo(() => {

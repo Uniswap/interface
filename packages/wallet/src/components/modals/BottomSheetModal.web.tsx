@@ -112,7 +112,11 @@ function WebTopSheetModal({
               opacity: 1,
               y: 0,
             })}>
-          {children}
+          {/*
+            To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open.
+            It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.
+          */}
+          {isModalOpen ? children : null}
         </Flex>
       </Flex>
     </Portal>
@@ -195,7 +199,10 @@ function WebBottomSheetModal({
               p="$spacing12"
               pointerEvents="auto"
               width="100%">
-              {/* To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open. */}
+              {/*
+                To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open.
+                It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.
+              */}
               {fullyClosed ? null : children}
             </Flex>
           </Sheet.Frame>

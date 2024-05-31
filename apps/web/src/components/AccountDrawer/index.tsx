@@ -1,5 +1,4 @@
-import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ScrollBarStyles } from 'components/Common'
 import { useWindowSize } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -11,8 +10,8 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobile } from 'uniswap/src/utils/platform'
-
 import DefaultMenu from './DefaultMenu'
 import { useAccountDrawer } from './MiniPortfolio/hooks'
 
@@ -51,7 +50,9 @@ export const Scrim = (props: ScrimBackgroundProps) => {
   const { width } = useWindowSize()
 
   useEffect(() => {
-    if (width && width < BREAKPOINTS.sm && props.$open) document.body.style.overflow = 'hidden'
+    if (width && width < BREAKPOINTS.sm && props.$open) {
+      document.body.style.overflow = 'hidden'
+    }
     return () => {
       document.body.style.overflow = 'visible'
     }
@@ -227,15 +228,11 @@ function AccountDrawer() {
   return (
     <Container>
       {walletDrawerOpen && (
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={InterfaceEventName.MINI_PORTFOLIO_TOGGLED}
-          properties={{ type: 'close' }}
-        >
+        <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
           <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
             <CloseIcon />
           </CloseDrawer>
-        </TraceEvent>
+        </Trace>
       )}
       <Scrim onClick={toggleWalletDrawer} $open={walletDrawerOpen} />
       <AccountDrawerWrapper

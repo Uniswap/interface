@@ -28,14 +28,14 @@ export function LimitPriceInputLabel({
   if (!currency || !showCurrencyMessage) {
     return (
       <ThemedText.LabelSmall style={{ userSelect: 'none' }}>
-        <Trans>Limit price</Trans>
+        <Trans i18nKey="limits.price.label" />
       </ThemedText.LabelSmall>
     )
   }
   return (
     <Text variant="body3" userSelect="none" color="$neutral2">
       <Row align="center">
-        <Trans>When 1</Trans>{' '}
+        <Trans i18nKey="limits.whenOne" />{' '}
         <CurrencySymbolContainer>
           <PrefetchBalancesWrapper>
             <TokenSelectorRow gap="xs" align="center" height="100%" onClick={openCurrencySearchModal}>
@@ -44,7 +44,7 @@ export function LimitPriceInputLabel({
             </TokenSelectorRow>
           </PrefetchBalancesWrapper>
         </CurrencySymbolContainer>{' '}
-        <Trans>is worth</Trans>
+        <Trans i18nKey="limits.isWorth" />
       </Row>
     </Text>
   )

@@ -180,13 +180,17 @@ export function calculateColumnPositionsInPlace(
   let previous: ColumnPositionItem | undefined = undefined
   for (let i = startIndex; i < Math.min(endIndex, items.length); i++) {
     // Modification fix: is possible for previous column to not be directly behind the current column, i.e. if whitespace in between
-    if (previous?.x && items[i].x - previous?.x > barSpacingMedia) previous = undefined
+    if (previous?.x && items[i].x - previous?.x > barSpacingMedia) {
+      previous = undefined
+    }
     items[i].column = calculateColumnPosition(items[i].x, common, previous?.column)
     previous = items[i]
   }
   const minColumnWidth = (items as ColumnPositionItem[]).reduce(
     (smallest: number, item: ColumnPositionItem, index: number) => {
-      if (!item.column || index < startIndex || index > endIndex) return smallest
+      if (!item.column || index < startIndex || index > endIndex) {
+        return smallest
+      }
       if (item.column.right < item.column.left) {
         item.column.right = item.column.left
       }
@@ -197,9 +201,13 @@ export function calculateColumnPositionsInPlace(
   )
   if (common.spacing > 0 && minColumnWidth < alignToMinimalWidthLimit) {
     ;(items as ColumnPositionItem[]).forEach((item: ColumnPositionItem, index: number) => {
-      if (!item.column || index < startIndex || index > endIndex) return
+      if (!item.column || index < startIndex || index > endIndex) {
+        return
+      }
       const width = item.column.right - item.column.left + 1
-      if (width <= minColumnWidth) return item
+      if (width <= minColumnWidth) {
+        return item
+      }
       if (item.column.shiftLeft) {
         item.column.right -= 1
       } else {

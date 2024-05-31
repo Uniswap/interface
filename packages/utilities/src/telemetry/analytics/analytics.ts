@@ -4,16 +4,24 @@ import { ApplicationTransport } from 'utilities/src/telemetry/analytics/Applicat
 // matches amplitude supported values, not using amplitude's type to decouple from underlying library
 export type UserPropertyValue = number | string | boolean | Array<string | number>
 
+export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
+  throw new NotImplementedError('getAnalyticsAtomDirect')
+}
+
 export interface Analytics {
-  init(transportProvider: ApplicationTransport, allowed: boolean): Promise<void>
+  init(transportProvider: ApplicationTransport, allowed: boolean, initHash?: string): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
   flushEvents(): void
-  setUserProperty(property: string, value: UserPropertyValue): void
+  setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void
 }
 
 export const analytics: Analytics = {
-  init(_transportProvider: ApplicationTransport, _allowed: boolean): Promise<void> {
+  init(
+    _transportProvider: ApplicationTransport,
+    _allowed: boolean,
+    _initHash?: string
+  ): Promise<void> {
     throw new NotImplementedError('initAnalytics')
   },
   setAllowAnalytics(_allowed: boolean): Promise<void> {

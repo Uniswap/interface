@@ -68,7 +68,7 @@ export default function TimeSelector() {
         toggleOpen={toggleMenu}
         menuLabel={
           <>
-            {DISPLAYS[activeTime]} {isLargeScreen && <Trans>volume</Trans>}
+            {DISPLAYS[activeTime]} {isLargeScreen && <Trans i18nKey="common.volume.lowercase" />}
           </>
         }
         internalMenuItems={
@@ -83,7 +83,7 @@ export default function TimeSelector() {
                 }}
               >
                 <div>
-                  {DISPLAYS[time]} <Trans>volume</Trans>
+                  {DISPLAYS[time]} <Trans i18nKey="common.volume.lowercase" />
                 </div>
                 {time === activeTime && <Check color={theme.accent1} size={16} />}
               </InternalMenuItem>

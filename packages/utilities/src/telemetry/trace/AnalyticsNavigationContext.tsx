@@ -7,7 +7,7 @@ interface AnalyticsNavigationContext {
 
 const defaultState: AnalyticsNavigationContext = {
   useIsPartOfNavigationTree: () => false,
-  shouldLogScreen: (_direct?: boolean, _screen?: string) => false,
+  shouldLogScreen: (_direct?: boolean, _screen?: string) => true,
 }
 
 const context = createContext(defaultState)

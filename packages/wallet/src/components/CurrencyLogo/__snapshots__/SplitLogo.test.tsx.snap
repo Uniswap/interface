@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SplitLogo renders without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "height": 10,
+      "width": 10,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+        "left": 0,
+        "overflow": "hidden",
+        "position": "absolute",
+        "top": 0,
+        "width": 4,
+      }
+    }
+    testID="input-currency-logo-container"
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "height": 10,
+          "justifyContent": "center",
+          "width": 10,
+        }
+      }
+      testID="token-logo"
+    >
+      <Image
+        resizeMode="contain"
+        source={
+          {
+            "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
+          }
+        }
+        style={
+          [
+            {
+              "backgroundColor": "#2222220D",
+              "borderColor": "#2222220D",
+              "borderRadius": 5,
+              "borderWidth": 0.5,
+              "height": 10,
+              "width": 10,
+            },
+          ]
+        }
+        testID="token-image"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "row-reverse",
+        "overflow": "hidden",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "width": 4,
+      }
+    }
+    testID="output-currency-logo-container"
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "height": 10,
+          "justifyContent": "center",
+          "width": 10,
+        }
+      }
+      testID="token-logo"
+    >
+      <Image
+        resizeMode="contain"
+        source={
+          {
+            "uri": "https://token-icons.s3.amazonaws.com/eth.png",
+          }
+        }
+        style={
+          [
+            {
+              "backgroundColor": "#2222220D",
+              "borderColor": "#2222220D",
+              "borderRadius": 5,
+              "borderWidth": 0.5,
+              "height": 10,
+              "width": 10,
+            },
+          ]
+        }
+        testID="token-image"
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "bottom": -4,
+        "flexDirection": "column",
+        "position": "absolute",
+        "right": -4,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "borderBottomColor": "#FFFFFF",
+          "borderLeftColor": "#FFFFFF",
+          "borderRadius": 7,
+          "borderRightColor": "#FFFFFF",
+          "borderStyle": "solid",
+          "borderTopColor": "#FFFFFF",
+          "borderWidth": 2,
+          "flexDirection": "column",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "borderColor": "#FFFFFF",
+            "borderRadius": 6,
+            "flexDirection": "column",
+            "overflow": "hidden",
+          }
+        }
+        testID="network-logo"
+      >
+        <Image
+          resizeMode="contain"
+          source={
+            {
+              "process": [Function],
+            }
+          }
+          style={
+            {
+              "height": 4,
+              "width": 4,
+            }
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;

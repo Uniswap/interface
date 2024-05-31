@@ -1,5 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback } from 'react'
@@ -9,7 +10,6 @@ import { trace } from 'tracing/trace'
 import { currencyId } from 'utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { useAccount } from 'wagmi'
 
 export function useSendCallback({
   currencyAmount,
@@ -29,11 +29,21 @@ export function useSendCallback({
   return useCallback(
     () =>
       trace({ name: 'Send', op: 'send' }, async (trace) => {
-        if (account.status !== 'connected') throw new Error('wallet must be connected to send')
-        if (!signer) throw new Error('missing signer')
-        if (!transactionRequest) throw new Error('missing to transaction to execute')
-        if (!currencyAmount) throw new Error('missing currency amount to send')
-        if (!recipient) throw new Error('missing recipient')
+        if (account.status !== 'connected') {
+          throw new Error('wallet must be connected to send')
+        }
+        if (!signer) {
+          throw new Error('missing signer')
+        }
+        if (!transactionRequest) {
+          throw new Error('missing to transaction to execute')
+        }
+        if (!currencyAmount) {
+          throw new Error('missing currency amount to send')
+        }
+        if (!recipient) {
+          throw new Error('missing recipient')
+        }
 
         try {
           const response = await trace.child(

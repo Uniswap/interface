@@ -1,7 +1,6 @@
-import { useIsSupportedChainId } from 'constants/chains'
-import { useChainId } from 'wagmi'
+import { useAccount } from 'hooks/useAccount'
 
 export default function useAutoRouterSupported(): boolean {
-  const chainId = useChainId()
-  return useIsSupportedChainId(chainId)
+  const { chainId } = useAccount()
+  return !!chainId
 }

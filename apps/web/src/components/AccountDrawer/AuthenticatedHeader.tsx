@@ -1,6 +1,5 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
@@ -20,6 +19,8 @@ import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -167,11 +168,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             onClick={openSettings}
             Icon={Settings}
           />
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
-          >
+          <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
             <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
@@ -180,7 +177,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               text="Disconnect"
               dismissOnHoverOut
             />
-          </TraceEvent>
+          </Trace>
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
@@ -217,20 +214,20 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <ActionTile
               dataTestId="wallet-buy-crypto"
               Icon={<CreditCardIcon />}
-              name={t`Buy`}
+              name={t('common.buy.label')}
               onClick={handleBuyCryptoClick}
               disabled={disableBuyCryptoButton}
               loading={fiatOnrampAvailabilityLoading}
               error={Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked)}
-              errorMessage={t`Restricted region`}
-              errorTooltip={t`Moonpay is not available in some regions. Click to learn more.`}
+              errorMessage={t('common.restricted.region')}
+              errorTooltip={t('moonpay.restricted.region')}
             />
           )}
           {!shouldDisableNFTRoutes && (
             <ActionTile
               dataTestId="nft-view-self-nfts"
               Icon={<ImagesIcon />}
-              name={t`View NFTs`}
+              name={t('nft.view')}
               onClick={navigateToProfile}
             />
           )}
@@ -238,7 +235,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         <MiniPortfolio account={account} />
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans>Claim {{ amount }} reward</Trans>
+            <Trans i18nKey="account.authHeader.claimReward" values={{ amount }} />
           </UNIButton>
         )}
       </PortfolioDrawerContainer>

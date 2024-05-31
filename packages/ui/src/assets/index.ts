@@ -5,6 +5,7 @@ export const BASE_LOGO = require('./logos/png/base-logo.png')
 export const BNB_LOGO = require('./logos/png/bnb-logo.png')
 export const POLYGON_LOGO = require('./logos/png/polygon-logo.png')
 export const BLAST_LOGO = require('./logos/png/blast-logo.png')
+export const ZORA_LOGO = require('./logos/png/zora-logo.png') // TODO
 export const GOERLI_LOGO = require('./logos/png/goerli-logo.png')
 export const MUMBAI_LOGO = require('./logos/png/mumbai-logo.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')

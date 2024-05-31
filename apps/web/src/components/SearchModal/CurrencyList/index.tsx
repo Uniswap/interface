@@ -1,9 +1,10 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
+import { useTokenWarning } from 'constants/tokenSafety'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback } from 'react'
@@ -11,11 +12,10 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useTokenWarning } from 'constants/tokenSafety'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
@@ -100,7 +100,9 @@ function TokenTags({ currency }: { currency: Currency }) {
   }
 
   const tags = currency.tags
-  if (!tags || tags.length === 0) return <span />
+  if (!tags || tags.length === 0) {
+    return <span />
+  }
 
   const tag = tags[0]
 
@@ -164,9 +166,10 @@ export function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-      name={InterfaceEventName.TOKEN_SELECTED}
+    <Trace
+      logPress
+      logKeyPress
+      eventOnTrigger={WalletEventName.TokenSelected}
       properties={{ is_imported_by_user: customAdded, ...eventProperties, total_balances_usd: portfolioBalanceUsd }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
@@ -219,7 +222,7 @@ export function CurrencyRow({
           )}
         </MenuItem>
       </Wrapper>
-    </TraceEvent>
+    </Trace>
   )
 }
 

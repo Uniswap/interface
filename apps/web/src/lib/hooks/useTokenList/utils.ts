@@ -13,7 +13,9 @@ const mapCache = typeof WeakMap !== 'undefined' ? new WeakMap<TokenList | TokenI
 
 export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): TokenAddressMap {
   const cached = mapCache?.get(tokens)
-  if (cached) return cached
+  if (cached) {
+    return cached
+  }
 
   const [list, infos] = Array.isArray(tokens) ? [undefined, tokens] : [tokens, tokens.tokens]
   const map = infos.reduce<Mutable<TokenAddressMap>>((map, info) => {

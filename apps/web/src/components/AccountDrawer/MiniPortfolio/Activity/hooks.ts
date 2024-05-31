@@ -13,10 +13,14 @@ import { Activity, ActivityMap } from './types'
 /** Detects transactions from same account with the same nonce and different hash */
 function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: string): string | undefined {
   // handles locally cached tx's that were stored before we started tracking nonces
-  if (!localActivity.nonce || localActivity.status !== TransactionStatus.Pending) return undefined
+  if (!localActivity.nonce || localActivity.status !== TransactionStatus.Pending) {
+    return undefined
+  }
 
   for (const remoteTx of Object.values(remoteMap)) {
-    if (!remoteTx) continue
+    if (!remoteTx) {
+      continue
+    }
 
     // A pending tx is 'cancelled' when another tx with the same account & nonce but different hash makes it on chain
     if (
@@ -70,14 +74,20 @@ export function useAllActivities(account: string) {
 
   /* Updates locally stored pendings tx's when remote data contains a conflicting cancellation tx */
   useEffect(() => {
-    if (!remoteMap) return
+    if (!remoteMap) {
+      return
+    }
 
     Object.values(localMap).forEach((localActivity) => {
-      if (!localActivity) return
+      if (!localActivity) {
+        return
+      }
 
       const cancelHash = findCancelTx(localActivity, remoteMap, account)
 
-      if (cancelHash) updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
+      if (cancelHash) {
+        updateCancelledTx(localActivity.hash, localActivity.chainId, cancelHash)
+      }
     })
   }, [account, localMap, remoteMap, updateCancelledTx])
 

@@ -13,7 +13,9 @@ import './setupTests'
 // TODO(https://github.com/cypress-io/cypress/issues/26069): Squelch only wildcard logs once Cypress allows it.
 const log = Cypress.log
 Cypress.log = function (options, ...args) {
-  if (options.displayName === 'script' || options.name === 'request') return
+  if (options.displayName === 'script' || options.name === 'request') {
+    return
+  }
   return log(options, ...args)
 } as typeof log
 

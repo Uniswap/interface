@@ -1,10 +1,10 @@
 import { ChainId, Percent } from '@uniswap/sdk-core'
-import { Field, SwapTab } from 'components/swap/constants'
+import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
-import { render } from 'test-utils/render'
-
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
+import { render } from 'test-utils/render'
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { SwapAndLimitContextProvider, SwapContextProvider } from './SwapContext'
 
 jest.mock('hooks/useContract', () => ({

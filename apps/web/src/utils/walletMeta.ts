@@ -82,7 +82,9 @@ function getInjectedMeta(provider: ExternalProvider & Record<string, unknown>): 
 }
 
 export function getWalletMeta(provider: JsonRpcProvider | FallbackProvider): WalletMeta | undefined {
-  if (!isWeb3Provider(provider)) return undefined
+  if (!isWeb3Provider(provider)) {
+    return undefined
+  }
 
   if (isWalletConnectProvider(provider.provider)) {
     return getWalletConnectMeta(provider.provider)

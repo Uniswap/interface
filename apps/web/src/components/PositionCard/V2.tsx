@@ -86,10 +86,10 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
-                  <Trans>Loading</Trans>
+                  <Trans i18nKey="common.loading" />
                 </Dots>
               ) : (
-                `${{ sym0: currency0.symbol }}/${{ sym1: currency1.symbol }}`
+                `${currency0.symbol}/${currency1.symbol}`
               )}
             </Text>
           </AutoRow>
@@ -102,12 +102,12 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             >
               {showMore ? (
                 <>
-                  <Trans>Manage</Trans>
+                  <Trans i18nKey="common.manage" />
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  <Trans>Manage</Trans>
+                  <Trans i18nKey="common.manage" />
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -119,7 +119,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
           <AutoColumn gap="sm">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>Your total pool tokens:</Trans>
+                <Trans i18nKey="pool.totalTokens" />
               </Text>
               <Text fontSize={16} fontWeight={535}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
@@ -128,7 +128,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             {stakedBalance && (
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pool tokens in rewards pool:</Trans>
+                  <Trans i18nKey="pool.rewardsPool.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {stakedBalance.toSignificant(4)}
@@ -138,7 +138,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {{ sym: currency0.symbol }}:</Trans>
+                  <Trans i18nKey="removeLiquidity.pooled" values={{ symbol: currency0.symbol }} />
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -156,7 +156,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {{ sym: currency1.symbol }}:</Trans>
+                  <Trans i18nKey="pool.pooled" values={{ sym: currency1.symbol }} />
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -173,7 +173,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
 
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>Your pool share:</Trans>
+                <Trans i18nKey="pool.share.label" />
               </Text>
               <Text fontSize={16} fontWeight={535}>
                 {poolTokenPercentage
@@ -191,7 +191,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   to={`/migrate/v2/${pair.liquidityToken.address}`}
                   width="64%"
                 >
-                  <Trans>Migrate</Trans>
+                  <Trans i18nKey="common.migrate" />
                 </ButtonPrimary>
                 <ButtonSecondary
                   padding="8px"
@@ -200,7 +200,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
-                  <Trans>Remove</Trans>
+                  <Trans i18nKey="common.remove.label" />
                 </ButtonSecondary>
               </RowBetween>
             )}

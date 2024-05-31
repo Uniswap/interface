@@ -196,7 +196,7 @@ export function isAllowedUwuLinkRequest(
   // generic transactions
   const { to, value } = request.value
   const belowMaximumValue =
-    value && parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
+    !value || parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
   const isAllowedContractAddress =
     to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
 

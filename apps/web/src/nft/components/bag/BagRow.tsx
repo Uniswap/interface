@@ -291,7 +291,9 @@ export const UnavailableAssetsHeaderRow = ({
     return () => clearInterval(intervalId)
   }, [timeLeft, clearUnavailableAssets, didOpenUnavailableAssets, setDidOpenUnavailableAssets])
 
-  if (!assets || assets.length === 0) return null
+  if (!assets || assets.length === 0) {
+    return null
+  }
 
   const moreThanOneUnavailable = assets.length > 1
   const isShowingAssets = isOpen || !moreThanOneUnavailable

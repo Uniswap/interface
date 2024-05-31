@@ -21,11 +21,6 @@ import { isDevEnv } from 'uniswap/src/utils/env'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
-import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
@@ -50,9 +45,6 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const { canClaimUnitag } = useCanAddressClaimUnitag()
 
   const onPressCreateWallet = useCallback((): void => {
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-    dispatch(createAccountActions.trigger())
-
     if (canClaimUnitag) {
       navigation.navigate(UnitagScreens.ClaimUnitag, {
         entryPoint: OnboardingScreens.Landing,
@@ -64,7 +56,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
       })
     }
-  }, [canClaimUnitag, dispatch, navigation])
+  }, [canClaimUnitag, navigation])
 
   const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {

@@ -55,5 +55,7 @@ export const getSuccessfulImageSize = (numSuccessful: number, isMobile: boolean)
     return 136 / sizeModifier
   } else if (numSuccessful >= 13 && numSuccessful < 21) {
     return 108 / sizeModifier
-  } else return isMobile ? 39 : 64
+  } else {
+    return isMobile ? 39 : 64
+  }
 }

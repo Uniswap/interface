@@ -3,7 +3,6 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { logger } from 'utilities/src/logger/logger'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -12,7 +11,7 @@ import { selectSwapStartTimestamp } from 'wallet/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SwapParams, swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
-import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -65,12 +64,7 @@ export function useSwapCallback(
       appDispatch(swapActions.trigger(params))
       onSubmit()
 
-      const blockNumber =
-        trade.quoteData?.quoteType === QuoteType.TradingApi
-          ? isClassicQuote(trade.quoteData?.quote?.quote)
-            ? trade.quoteData?.quote?.quote?.blockNumber?.toString()
-            : undefined
-          : trade.quoteData?.quote?.blockNumber
+      const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
 
       sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties({ formatter, trade }),

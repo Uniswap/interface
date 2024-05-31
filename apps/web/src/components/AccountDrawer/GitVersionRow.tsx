@@ -19,7 +19,7 @@ export function GitVersionRow() {
     >
       <Tooltip text="Copied" show={isCopied}>
         <ThemedText.BodySmall color="neutral3">
-          <Trans>Version: </Trans>
+          <Trans i18nKey="account.drawer.gitVersion" />
           {' ' + process.env.REACT_APP_GIT_COMMIT_HASH.substring(0, 6)}
         </ThemedText.BodySmall>
       </Tooltip>

@@ -19,6 +19,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { removeWalletIsUnlockedState } from 'wallet/src/state/sharedMigrations'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
@@ -876,10 +877,7 @@ export const migrations = {
     return newState
   },
 
-  63: function removeWalletIsUnlockedState(state: any) {
-    const newState = { ...state }
-    delete newState.wallet.isUnlocked
-
-    return newState
-  },
+  63: removeWalletIsUnlockedState,
 }
+
+export const MOBILE_STATE_VERSION = 63

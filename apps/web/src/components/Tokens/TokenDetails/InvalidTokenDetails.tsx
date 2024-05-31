@@ -6,8 +6,8 @@ import { Trans } from 'i18n'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { ReactComponent as EyeIcon } from '../../../assets/svg/eye.svg'
 
 const InvalidDetailsContainer = styled.div`
@@ -46,7 +46,7 @@ export default function InvalidTokenDetails({
   pageChainId: ChainId
   isInvalidAddress?: boolean
 }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const pageChainIsSupported = useIsSupportedChainId(pageChainId)
   const navigate = useNavigate()
@@ -63,11 +63,11 @@ export default function InvalidTokenDetails({
       {isInvalidAddress || isNonExistentToken ? (
         <>
           <InvalidDetailsText>
-            <Trans>This token doesn&apos;t exist</Trans>
+            <Trans i18nKey="tdp.invalidTokenPage.title" />
           </InvalidDetailsText>
           <TokenExploreButton onClick={() => navigate('/tokens')}>
             <ThemedText.SubHeader>
-              <Trans>Explore tokens</Trans>
+              <Trans i18nKey="common.exploreTokens" />
             </ThemedText.SubHeader>
           </TokenExploreButton>
         </>
@@ -75,12 +75,15 @@ export default function InvalidTokenDetails({
         <>
           {connectedChainLabel && (
             <InvalidDetailsText>
-              <Trans>This token doesn&apos;t exist on {{ connectedChainLabel }}</Trans>
+              <Trans i18nKey="tdp.invalidTokenPage.titleWithChain" values={{ network: connectedChainLabel }} />
             </InvalidDetailsText>
           )}
           <TokenExploreButton onClick={() => selectChain(pageChainId)}>
             <ThemedText.SubHeader>
-              <Trans>Switch to {{ label: pageChainIsSupported ? CHAIN_INFO[pageChainId].label : '' }}</Trans>
+              <Trans
+                i18nKey="tdp.invalidTokenPage.switchChainPrompt"
+                values={{ network: pageChainIsSupported ? CHAIN_INFO[pageChainId].label : '' }}
+              />
             </ThemedText.SubHeader>
           </TokenExploreButton>
         </>

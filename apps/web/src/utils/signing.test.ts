@@ -48,11 +48,15 @@ describe('signing', () => {
         const send = jest
           .spyOn(signer.provider, 'send')
           .mockImplementationOnce((method) => {
-            if (method === signingMethod) return Promise.reject({ message: `method ${message}` })
+            if (method === signingMethod) {
+              return Promise.reject({ message: `method ${message}` })
+            }
             throw new Error('Unimplemented')
           })
           .mockImplementationOnce((method) => {
-            if (method === 'eth_sign') return Promise.resolve()
+            if (method === 'eth_sign') {
+              return Promise.resolve()
+            }
             throw new Error('Unimplemented')
           })
         jest.spyOn(console, 'warn').mockImplementation(() => undefined)
@@ -73,7 +77,9 @@ describe('signing', () => {
     function itFailsIfRejected(signingMethod: string) {
       it('fails if rejected', async () => {
         const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
-          if (method === signingMethod) return Promise.reject(new Error('User rejected'))
+          if (method === signingMethod) {
+            return Promise.reject(new Error('User rejected'))
+          }
           throw new Error('Unimplemented')
         })
 
@@ -87,7 +93,9 @@ describe('signing', () => {
 
     it('signs using eth_signTypedData_v4', async () => {
       const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
-        if (method === 'eth_signTypedData_v4') return Promise.resolve()
+        if (method === 'eth_signTypedData_v4') {
+          return Promise.resolve()
+        }
         throw new Error('Unimplemented')
       })
 
@@ -113,7 +121,9 @@ describe('signing', () => {
 
         it('signs using eth_signTypedData', async () => {
           const send = jest.spyOn(signer.provider, 'send').mockImplementationOnce((method) => {
-            if (method === 'eth_signTypedData') return Promise.resolve()
+            if (method === 'eth_signTypedData') {
+              return Promise.resolve()
+            }
             throw new Error('Unimplemented')
           })
 
@@ -141,7 +151,9 @@ describe('signing', () => {
       it('signs using eth_sign', async () => {
         jest.spyOn(console, 'warn').mockReturnValue()
         const send = jest.spyOn(signer.provider, 'send').mockImplementation((method) => {
-          if (method === 'eth_sign') return Promise.resolve()
+          if (method === 'eth_sign') {
+            return Promise.resolve()
+          }
           throw new Error('TrustWalletConnect.WCError error 1')
         })
 

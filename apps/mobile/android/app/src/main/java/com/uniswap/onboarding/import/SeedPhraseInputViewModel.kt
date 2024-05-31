@@ -109,6 +109,10 @@ class SeedPhraseInputViewModel(
       // TODO gary add production logging and update rust code to convert to Java exceptions
       Log.d("SeedPhraseInputViewModel", "Storing mnemonic caused error ${e.message}")
     }
+
+    if (status is Status.Error) {
+      onInputValidated(false)
+    }
   }
 
   private fun submitMnemonic(mnemonic: String) {

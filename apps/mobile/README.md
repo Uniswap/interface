@@ -176,18 +176,7 @@ These are some tools you might want to familiarize yourself with to understand t
 
 ## Migrations
 
-We use `redux-persist` to persist Redux state between user sessions. When the Redux state schema is altered, a migration may be needed to transfer the existing persisted state to the new Redux schema. Failing to define a migration results in the app defaulting to the persisted schema, which will very likely cause `undefined` errors because the code has references to Redux state properties that were dropped in favor the persisted schema.
-
-### When to define a migration
-
-Anytime a required property is added or any property is renamed or deleted to/from Redux state. Migrations are not necessary when optional properties are added to an existing slice. Make sure to always add new required properties to the `schema.ts` file as well.
-
-### How to migrate
-
-1. Increment the `version` of `persistConfig` defined within `store.ts`
-2. Create a migration function within `migrations.ts`. The migration key should be the same as the `version` defined in the previous step
-3. Write a test for your migration within `migrations.test.ts`
-4. Create a new schema within `schema.ts` and ensure it is being exported by the `getSchema` function at the bottom of the file
+We use `redux-persist` to persist the Redux state between user sessions. Most of this state is shared between the mobile app and the extension. Please review the [Wallet Migrations README](../../packages/wallet/src/state//README.md) for details on how to write migrations when you add or remove anything from the Redux state structure.
 
 ## Troubleshooting
 
@@ -198,6 +187,9 @@ This means whichever package you're trying to run (`[package name]`) wasn’t co
 
 - `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`.
 Resolve this issue by navigating to the `ios/` directory and running `pod update`.
+
+- `Build target hermes-engine: Command PhaseScriptExecution failed with a nonzero exit code`
+Node isn't being located correctly during the build phase.  Run `which node` and copy the resulting path into `.xcode.env.local`.  More context [here](https://github.com/facebook/react-native/issues/42221).
 
 ### Common fixes
 

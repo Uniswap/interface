@@ -1,18 +1,17 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useChainId } from 'wagmi'
-
 import { GasBreakdownTooltip } from './GasBreakdownTooltip'
 
 const StyledGasIcon = styled(Gas)`
@@ -25,7 +24,7 @@ const StyledGasIcon = styled(Gas)`
 `
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const { formatNumber } = useFormatter()
 
   if (!trade || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {

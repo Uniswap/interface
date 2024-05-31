@@ -24,8 +24,12 @@ export function useUpdateManualOutage({
   const setManualOutage = useUpdateAtom(manualChainOutageAtom)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
   resetManualOutage()
-  if (errorV3 && chainId) setManualOutage({ chainId })
-  if (errorV2 && chainId) setManualOutage({ chainId, version: ProtocolVersion.V2 })
+  if (errorV3 && chainId) {
+    setManualOutage({ chainId })
+  }
+  if (errorV2 && chainId) {
+    setManualOutage({ chainId, version: ProtocolVersion.V2 })
+  }
 }
 
 export function useOutageBanners(): Partial<Record<SupportedInterfaceChainId, boolean>> {

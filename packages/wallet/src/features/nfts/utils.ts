@@ -28,6 +28,7 @@ export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | unde
                 height: item?.ownedAsset?.image.dimensions.height,
               }
             : undefined,
+        chain: item?.ownedAsset?.chain,
       }
     })
   return nfts

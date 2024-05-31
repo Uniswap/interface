@@ -29,9 +29,12 @@ class RnEthersRs(applicationContext: Context) {
   }
 
   val mnemonicIds: List<String>
-    get() = keychain.all.keys.map {
-        key -> key.replace(ENTIRE_MNEMONIC_PREFIX, "")
-    }
+    get() = keychain.all.keys.filter {
+        // MOB-3453 this will need to be updated after fixing prefixes
+        it.startsWith(MNEMONIC_PREFIX)
+      }.map {
+        key -> key.replace(MNEMONIC_PREFIX, "")
+      }
 
   /**
    * Imports a mnemonic and returns the associated address.
@@ -187,6 +190,7 @@ class RnEthersRs(applicationContext: Context) {
     private const val PREFIX = "com.uniswap"
     private const val MNEMONIC_PREFIX = ".mnemonic."
     private const val PRIVATE_KEY_PREFIX = ".privateKey."
+    // MOB-3453 Android is currently not storing keys with PREFIX
     private const val ENTIRE_MNEMONIC_PREFIX = PREFIX + MNEMONIC_PREFIX
   }
 }

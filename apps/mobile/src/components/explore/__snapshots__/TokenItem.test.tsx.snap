@@ -97,6 +97,7 @@ exports[`TokenItem renders without error 1`] = `
               "width": 40,
             }
           }
+          testID="token-logo"
         >
           <Image
             resizeMode="contain"
@@ -117,6 +118,7 @@ exports[`TokenItem renders without error 1`] = `
                 },
               ]
             }
+            testID="token-image"
           />
         </View>
       </View>

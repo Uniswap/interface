@@ -1,5 +1,4 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import Column from 'components/Column'
 import ChartSection from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
@@ -22,6 +21,7 @@ import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemeProvider } from 'theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
 
 const PageWrapper = styled(Row)`
@@ -142,7 +142,9 @@ export default function PoolDetailsPage() {
   }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol])
   const metatags = useDynamicMetatags(metatagProperties)
 
-  if (poolNotFound) return <NotFound />
+  if (poolNotFound) {
+    return <NotFound />
+  }
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
@@ -152,6 +154,7 @@ export default function PoolDetailsPage() {
         ))}
       </Helmet>
       <Trace
+        logImpression={!loading}
         page={InterfacePageName.POOL_DETAILS_PAGE}
         properties={{
           poolAddress,
@@ -164,7 +167,6 @@ export default function PoolDetailsPage() {
           token0Name: poolData?.token0.name,
           token1Name: poolData?.token1.name,
         }}
-        shouldLogImpression={!loading}
       >
         <PageWrapper>
           <LeftColumn>
@@ -214,7 +216,7 @@ export default function PoolDetailsPage() {
             <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>
-                <Trans>Links</Trans>
+                <Trans i18nKey="common.links" />
               </TokenDetailsHeader>
               <LinksContainer>
                 <PoolDetailsLink

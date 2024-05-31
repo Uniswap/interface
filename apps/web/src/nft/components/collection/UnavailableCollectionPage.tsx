@@ -31,13 +31,13 @@ export function UnavailableCollectionPage({ isBlocked }: { isBlocked?: boolean }
           data-testid="alert-icon"
         />
         <ThemedText.HeadlineMedium>
-          <Trans>This collection is blocked</Trans>
+          <Trans i18nKey="nft.blockedCollection" />
         </ThemedText.HeadlineMedium>
         <StyledInternalLink to="/nfts">
-          <Trans>Return to NFT Explore</Trans>
+          <Trans i18nKey="nft.returnToExplore" />
         </StyledInternalLink>
         <StyledExternalLink href={SupportArticleURL.UNSUPPORTED_TOKEN_AND_NFT_POLICY}>
-          <Trans>Learn why</Trans>
+          <Trans i18nKey="nft.learnWhy" />
         </StyledExternalLink>
       </Container>
     )
@@ -46,10 +46,10 @@ export function UnavailableCollectionPage({ isBlocked }: { isBlocked?: boolean }
   return (
     <Container>
       <ThemedText.HeadlineMedium>
-        <Trans>No collection assets exist at this address</Trans>
+        <Trans i18nKey="nft.noneAtAddress" />
       </ThemedText.HeadlineMedium>
       <StyledInternalLink to="/nfts">
-        <Trans>Return to NFT Explore</Trans>
+        <Trans i18nKey="nft.returnToExplore" />
       </StyledInternalLink>
     </Container>
   )

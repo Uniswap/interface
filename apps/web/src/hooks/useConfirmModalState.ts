@@ -1,21 +1,21 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { Field, RESET_APPROVAL_TOKENS } from 'components/swap/constants'
+import { useAccount } from 'hooks/useAccount'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
-import { useChainId } from 'wagmi'
-
-import { isUniswapXTrade } from 'state/routing/utils'
 import { useMaxAmountIn } from './useMaxAmountIn'
 import { Allowance, AllowanceState } from './usePermit2Allowance'
 import usePrevious from './usePrevious'
@@ -76,7 +76,7 @@ export function useConfirmModalState({
     return steps
   }, [allowance, trade])
 
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
@@ -95,7 +95,9 @@ export function useConfirmModalState({
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
   const catchUserReject = async (e: any, errorType: PendingModalError) => {
     setConfirmModalState(ConfirmModalState.REVIEWING)
-    if (didUserReject(e)) return
+    if (didUserReject(e)) {
+      return
+    }
     console.error(e)
     setApprovalError(errorType)
   }

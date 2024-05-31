@@ -103,11 +103,11 @@ export function TokenDescription() {
   return (
     <TokenInfoSection data-testid="token-details-info-section">
       <InfoSectionHeader>
-        <Trans>Info</Trans>
+        <Trans i18nKey="common.info.label" />
       </InfoSectionHeader>
       <TokenButtonRow data-testid="token-details-info-links">
         {!currency.isNative && (
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             <TokenInfoButton onClick={copy}>
               <Copy width="18px" height="18px" color={neutral2} />
               {shortenAddress(currency.address)}
@@ -117,14 +117,18 @@ export function TokenDescription() {
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
             <EtherscanLogo width="18px" height="18px" fill={neutral2} />
-            {currency.chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
+            {currency.chainId === ChainId.MAINNET ? (
+              <Trans i18nKey="common.etherscan" />
+            ) : (
+              <Trans i18nKey="common.explorer" />
+            )}
           </TokenInfoButton>
         </ExternalLink>
         {homepageUrl && (
           <ExternalLink href={homepageUrl}>
             <TokenInfoButton>
               <Globe width="18px" height="18px" fill={neutral2} />
-              <Trans>Website</Trans>
+              <Trans i18nKey="common.website" />
             </TokenInfoButton>
           </ExternalLink>
         )}
@@ -132,7 +136,7 @@ export function TokenDescription() {
           <ExternalLink href={`https://x.com/${twitterName}`}>
             <TokenInfoButton>
               <TwitterXLogo width="18px" height="18px" fill={neutral2} />
-              <Trans>Twitter</Trans>
+              <Trans i18nKey="common.twitter" />
             </TokenInfoButton>
           </ExternalLink>
         )}
@@ -140,7 +144,7 @@ export function TokenDescription() {
       <TokenDescriptionContainer>
         {!description && (
           <NoInfoAvailable>
-            <Trans>No token information available</Trans>
+            <Trans i18nKey="tdp.noInfoAvailable" />
           </NoInfoAvailable>
         )}
         {description && (
@@ -158,7 +162,11 @@ export function TokenDescription() {
             onClick={toggleIsDescriptionTruncated}
             data-testid="token-description-show-more-button"
           >
-            {isDescriptionTruncated ? <Trans>Show more</Trans> : <Trans>Hide</Trans>}
+            {isDescriptionTruncated ? (
+              <Trans i18nKey="common.showMore.button" />
+            ) : (
+              <Trans i18nKey="common.hide.button" />
+            )}
           </TruncateDescriptionButton>
         )}
       </TokenDescriptionContainer>
@@ -176,17 +184,20 @@ export function TokenDescription() {
             {sameFee ? (
               <ThemedText.BodyPrimary>
                 {currency.symbol}&nbsp;
-                <Trans>fee:</Trans>&nbsp;{sellFeeString}
+                <Trans i18nKey="token.fee.label" />
+                &nbsp;{sellFeeString}
               </ThemedText.BodyPrimary>
             ) : (
               <>
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
-                  <Trans>buy fee:</Trans>&nbsp;{buyFeeString}
+                  <Trans i18nKey="token.fee.buy.label" />
+                  &nbsp;{buyFeeString}
                 </ThemedText.BodyPrimary>{' '}
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
-                  <Trans>sell fee:</Trans>&nbsp;{sellFeeString}
+                  <Trans i18nKey="token.fee.sell.label" />
+                  &nbsp;{sellFeeString}
                 </ThemedText.BodyPrimary>{' '}
               </>
             )}

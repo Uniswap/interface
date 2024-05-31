@@ -206,12 +206,7 @@ export function getLoadingTitle(
       {tokenName}
     </LoadingFooterLink>
   )
-  return (
-    <Trans>
-      token data for {{ tokenLink }}
-      {{ chainSuffix }}
-    </Trans>
-  )
+  return <Trans i18nKey="tdp.loading.title" values={{ tokenLink, chainSuffix }} />
 }
 
 export function LoadingChart() {
@@ -258,10 +253,10 @@ function TokenDetailsSkeleton() {
     <LeftPanel>
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
         <BreadcrumbNavLink to={`/explore/${chain.urlParam}`}>
-          <Trans>Explore</Trans> <ChevronRight size={14} />
+          <Trans i18nKey="common.explore" /> <ChevronRight size={14} />
         </BreadcrumbNavLink>
         <BreadcrumbNavLink to={`/explore/tokens/${chain.urlParam}`}>
-          <Trans>Tokens</Trans> <ChevronRight size={14} />
+          <Trans i18nKey="common.tokens" /> <ChevronRight size={14} />
         </BreadcrumbNavLink>
         <NavBubble />
       </BreadcrumbNavContainer>
@@ -294,7 +289,7 @@ function TokenDetailsSkeleton() {
       </ExtraDetailsContainer>
       {tokenAddress && (
         <LoadingFooterHeaderContainer gap="xs">
-          <Trans>Loading</Trans>
+          <Trans i18nKey="common.loading" />
           <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chain.id, chain.urlParam)}</LoadingFooterHeader>
         </LoadingFooterHeaderContainer>
       )}

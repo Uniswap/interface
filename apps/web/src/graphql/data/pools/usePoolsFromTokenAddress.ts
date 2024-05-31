@@ -61,8 +61,12 @@ export function usePoolsFromTokenAddress(
           cursor: dataV3?.topV3Pools?.[dataV3.topV3Pools.length - 1]?.totalLiquidity?.value,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) return prev
-          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) onComplete?.()
+          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+            return prev
+          }
+          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) {
+            onComplete?.()
+          }
           const mergedData = {
             topV3Pools: [...(prev.topV3Pools ?? []).slice(), ...(fetchMoreResult.topV3Pools ?? []).slice()],
           }
@@ -76,8 +80,12 @@ export function usePoolsFromTokenAddress(
             cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult || !prev || !Object.keys(prev).length) return prev
-            if (!loadingMoreV3.current) onComplete?.()
+            if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+              return prev
+            }
+            if (!loadingMoreV3.current) {
+              onComplete?.()
+            }
             const mergedData = {
               topV2Pairs: [...(prev.topV2Pairs ?? []).slice(), ...(fetchMoreResult.topV2Pairs ?? []).slice()],
             }

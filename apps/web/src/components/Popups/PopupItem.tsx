@@ -1,6 +1,6 @@
 import { useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useEffect } from 'react'
-import { useChainId } from 'wagmi'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent, PopupType } from '../../state/application/reducer'
@@ -19,7 +19,9 @@ export default function PopupItem({
   const onClose = () => removePopup(popKey)
 
   useEffect(() => {
-    if (removeAfterMs === null) return undefined
+    if (removeAfterMs === null) {
+      return undefined
+    }
 
     const timeout = setTimeout(() => {
       removePopup(popKey)
@@ -30,7 +32,7 @@ export default function PopupItem({
     }
   }, [popKey, removeAfterMs, removePopup])
 
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const supportedChainId = useSupportedChainId(chainId)
 
   switch (content.type) {

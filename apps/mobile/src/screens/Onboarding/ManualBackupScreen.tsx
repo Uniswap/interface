@@ -3,7 +3,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
@@ -18,12 +17,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ManualPageViewScreen, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -34,13 +29,17 @@ enum View {
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props): JSX.Element | null {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const media = useMedia()
+  const { getOnboardingAccount, addBackupMethod } = useOnboardingContext()
+  const onboardingAccount = getOnboardingAccount()
 
   useLockScreenOnBlur()
 
-  const activeAccount = useActiveAccount()
-  const mnemonicId = (activeAccount as SignerMnemonicAccount)?.mnemonicId
+  if (!onboardingAccount) {
+    throw Error('pendingAccount needs to be defined on ManualBackupScreen')
+  }
+
+  const mnemonicId = onboardingAccount.mnemonicId
 
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.SeedPhrase)
@@ -52,16 +51,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   const [seedWarningAcknowledged, setSeedWarningAcknowledged] = useState(false)
 
   const onValidationSuccessful = (): void => {
-    if (activeAccount) {
-      setContinueButtonPressed(true)
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.AddBackupMethod,
-          address: activeAccount.address,
-          backupMethod: BackupType.Manual,
-        })
-      )
-    }
+    setContinueButtonPressed(true)
+    addBackupMethod(BackupType.Manual)
   }
 
   useEffect(() => {
@@ -74,10 +65,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   }, [view])
 
   useEffect(() => {
-    if (continueButtonPressed && activeAccount?.backups?.includes(BackupType.Manual)) {
+    if (continueButtonPressed && onboardingAccount?.backups?.includes(BackupType.Manual)) {
       navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
-  }, [continueButtonPressed, activeAccount?.backups, navigation, params])
+  }, [continueButtonPressed, navigation, params, onboardingAccount?.backups])
 
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {

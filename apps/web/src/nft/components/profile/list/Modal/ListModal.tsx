@@ -1,5 +1,6 @@
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
-import { Trace, sendAnalyticsEvent, useTrace } from 'analytics'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -15,10 +16,10 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import { useAccount } from 'wagmi'
 import { TitleRow } from '../shared'
 import { ListModalSection, Section } from './ListModalSection'
 import { SuccessScreen } from './SuccessScreen'
@@ -93,7 +94,9 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
   )
 
   const signListings = async () => {
-    if (!signer || !provider) return
+    if (!signer || !provider) {
+      return
+    }
     // sign listings
     for (const listing of listings) {
       await signListingRow(listing, signer, provider, getLooksRareNonce, setLooksRareNonce, setListingStatusAndCallback)
@@ -135,7 +138,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             <>
               <TitleRow>
                 <ThemedText.HeadlineSmall lineHeight="28px">
-                  <Trans>List NFTs</Trans>
+                  <Trans i18nKey="nft.list" />
                 </ThemedText.HeadlineSmall>
                 <X size={24} cursor="pointer" onClick={closeModalOnClick} />
               </TitleRow>

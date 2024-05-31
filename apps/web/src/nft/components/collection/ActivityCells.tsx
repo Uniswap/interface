@@ -1,6 +1,5 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
@@ -34,10 +33,11 @@ import {
   NftMarketplace,
   OrderStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
 import * as styles from './Activity.css'
 
 const AddressLink = styled(ExternalLink)`
@@ -62,7 +62,9 @@ const AddressLink = styled(ExternalLink)`
 `
 
 const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): boolean => {
-  if (!marketplace || !orderStatus) return false
+  if (!marketplace || !orderStatus) {
+    return false
+  }
   const purchasableMarkets = Object.keys(NftMarketplace).map((market) => market.toLowerCase())
 
   const validOrder = orderStatus === OrderStatus.Valid
@@ -72,18 +74,18 @@ const isPurchasableOrder = (orderStatus?: OrderStatus, marketplace?: string): bo
 
 const formatListingStatus = (status: OrderStatus, orderIsPurchasable: boolean, isSelected: boolean): ReactNode => {
   if (orderIsPurchasable) {
-    return isSelected ? <Trans>Remove</Trans> : <Trans>Add to bag</Trans>
+    return isSelected ? <Trans i18nKey="common.remove.label" /> : <Trans i18nKey="nft.addToBag" />
   }
 
   switch (status) {
     case OrderStatus.Executed:
-      return <Trans>Sold</Trans>
+      return <Trans i18nKey="common.sold" />
     case OrderStatus.Cancelled:
-      return <Trans>Cancelled</Trans>
+      return <Trans i18nKey="common.cancelled" />
     case OrderStatus.Expired:
-      return <Trans>Expired</Trans>
+      return <Trans i18nKey="common.expired" />
     case OrderStatus.Valid:
-      return <Trans>Unavailable</Trans>
+      return <Trans i18nKey="common.unavailable" />
     default:
       return null
   }
@@ -139,7 +141,7 @@ export const BuyCell = ({
             e.preventDefault()
             isSelected ? removeAsset([asset]) : selectAsset([asset])
             !isSelected && !cartExpanded && !isMobile && toggleCart()
-            !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, { eventProperties })
+            !isSelected && sendAnalyticsEvent(NFTEventName.NFT_BUY_ADDED, eventProperties)
           }}
           disabled={!orderIsPurchasable}
         >
@@ -332,7 +334,9 @@ const Ranking = ({ rarity, collectionName, rarityVerified }: RankingProps) => {
   const { formatNumber } = useFormatter()
   const rank = (rarity as TokenRarity).rank || (rarity as Rarity).providers?.[0].rank
 
-  if (!rank) return null
+  if (!rank) {
+    return null
+  }
 
   return (
     <Box>

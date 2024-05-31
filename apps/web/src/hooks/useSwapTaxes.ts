@@ -2,13 +2,12 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
+import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
 import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
-import { useChainId } from 'wagmi'
-
-import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useContract } from './useContract'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
@@ -97,10 +96,12 @@ async function getSwapTaxes(
 export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string) {
   const fotDetector = useFeeOnTransferDetectorContract()
   const [{ inputTax, outputTax }, setTaxes] = useState({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   useEffect(() => {
-    if (!fotDetector || !chainId) return
+    if (!fotDetector || !chainId) {
+      return
+    }
     getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress, chainId).then(setTaxes)
   }, [fotDetector, inputTokenAddress, outputTokenAddress, chainId])
 

@@ -16,7 +16,7 @@ export default function UniswapXBrandMark({ fontWeight, ...props }: UniswapXBran
           fontWeight: 535,
         })}
       >
-        <Trans>UniswapX</Trans>
+        <Trans i18nKey="common.uniswapX" />
       </ThemedText.BodySecondary>
     </UniswapXRouterLabel>
   )

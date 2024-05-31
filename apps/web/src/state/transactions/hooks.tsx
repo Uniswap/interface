@@ -8,7 +8,7 @@ import { TradeFillType } from 'state/routing/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
-import { useAccount } from 'wagmi'
+import { useAccount } from 'hooks/useAccount'
 import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
 import {
   ConfirmedTransactionDetails,
@@ -29,7 +29,9 @@ export function useTransactionAdder(): (
 
   return useCallback(
     (response: TransactionResponse, info: TransactionInfo, deadline?: number) => {
-      if (account.status !== 'connected') return
+      if (account.status !== 'connected' || !account.chainId) {
+        return
+      }
 
       const { hash, nonce } = response
       if (!hash) {
@@ -47,7 +49,9 @@ export function useTransactionRemover() {
 
   return useCallback(
     (hash: string) => {
-      if (account.status !== 'connected') return
+      if (account.status !== 'connected' || !account.chainId) {
+        return
+      }
 
       dispatch(removeTransaction({ hash, chainId: account.chainId }))
     },
@@ -81,7 +85,7 @@ function useAllTransactions(): { [txHash: string]: TransactionDetails } {
 
   const state = useAppSelector((state) => state.transactions)
 
-  return account.status === 'connected' ? state[account.chainId] ?? {} : {}
+  return account.status === 'connected' && account.chainId ? state[account.chainId] ?? {} : {}
 }
 
 export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
@@ -97,7 +101,9 @@ export function useTransaction(transactionHash?: string): TransactionDetails | u
 export function useIsTransactionPending(transactionHash?: string): boolean {
   const transactions = useAllTransactions()
 
-  if (!transactionHash || !transactions[transactionHash]) return false
+  if (!transactionHash || !transactions[transactionHash]) {
+    return false
+  }
 
   return isPendingTx(transactions[transactionHash])
 }
@@ -105,14 +111,18 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
 export function useIsTransactionConfirmed(transactionHash?: string): boolean {
   const transactions = useAllTransactions()
 
-  if (!transactionHash || !transactions[transactionHash]) return false
+  if (!transactionHash || !transactions[transactionHash]) {
+    return false
+  }
 
   return isConfirmedTx(transactions[transactionHash])
 }
 
 export function useSwapTransactionStatus(swapResult: SwapResult | undefined): TransactionStatus | undefined {
   const transaction = useTransaction(swapResult?.type === TradeFillType.Classic ? swapResult.response.hash : undefined)
-  if (!transaction) return undefined
+  if (!transaction) {
+    return undefined
+  }
   return transaction.status
 }
 
@@ -132,7 +142,9 @@ function usePendingApprovalAmount(token?: Token, spender?: string): BigNumber | 
     }
     for (const txHash in allTransactions) {
       const tx = allTransactions[txHash]
-      if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) continue
+      if (!tx || isConfirmedTx(tx) || tx.info.type !== TransactionType.APPROVAL) {
+        continue
+      }
       if (tx.info.spender === spender && tx.info.tokenAddress === token.address && isTransactionRecent(tx)) {
         return BigNumber.from(tx.info.amount)
       }

@@ -85,9 +85,11 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
     // collections
     if (isCollectionApprovalSection) {
       const collectionRow = row as CollectionRow
-      for (const asset of sellAssets)
-        if (asset.asset_contract.address === collectionRow.collectionAddress)
+      for (const asset of sellAssets) {
+        if (asset.asset_contract.address === collectionRow.collectionAddress) {
           removeAssetMarketplace(asset, collectionRow.marketplace)
+        }
+      }
     }
     // listings
     else {
@@ -107,13 +109,14 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           <SectionTitle active={active} marginLeft="12px" approved={allContentApproved}>
             {isCollectionApprovalSection ? (
               <>
-                <Trans>Approve</Trans>&nbsp;
-                <Plural value={uniqueCollections ?? 1} one={t`collection`} other={t`collections`} />
+                <Trans i18nKey="common.approve" />
+                &nbsp;
+                <Plural value={uniqueCollections ?? 1} one={t('common.collection')} other={t('common.collections')} />
               </>
             ) : (
               <>
-                <Trans>Sign</Trans> &nbsp;{content.length}&nbsp;{' '}
-                <Plural value={content.length} one={t`listing`} other={t`listings`} />
+                <Trans i18nKey="common.sign.action" /> &nbsp;{content.length}&nbsp;{' '}
+                <Plural value={content.length} one={t('common.listing')} other={t('common.listings')} />
               </>
             )}
           </SectionTitle>
@@ -129,11 +132,9 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
           {isCollectionApprovalSection && (
             <Row height="16px" marginBottom="16px">
               <ThemedText.BodySmall lineHeight="16px" color="neutral2">
-                <Trans>Why is a transaction required?</Trans>
+                <Trans i18nKey="nft.whyTransaction" />
               </ThemedText.BodySmall>
-              <MouseoverTooltip
-                text={<Trans>Listing an NFT requires a one-time marketplace approval for each NFT collection.</Trans>}
-              >
+              <MouseoverTooltip text={<Trans i18nKey="nft.whyTransaction.reason" />}>
                 <StyledInfoIcon />
               </MouseoverTooltip>
             </Row>

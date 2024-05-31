@@ -131,7 +131,9 @@ export const L2LogoContainer = styled.div<{ $size: number }>`
 `
 
 function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
-  if (chainId === ChainId.MAINNET) return null
+  if (chainId === ChainId.MAINNET) {
+    return null
+  }
 
   return (
     <L2LogoContainer $size={size}>

@@ -3,14 +3,13 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { QuoteType } from 'uniswap/src/types/quote'
 import { NumberType } from 'utilities/src/format/types'
 import {
   LocalizationContextState,
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
-import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
@@ -23,7 +22,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     trade: { trade },
   } = derivedSwapInfo
 
-  const quoteId = getQuoteIdFromQuoteData(trade?.quoteData)
+  const quoteId = trade?.quote?.requestId
 
   useEffect(() => {
     if (!trade) {
@@ -48,7 +47,7 @@ export function getBaseTradeAnalyticsProperties({
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
 }): SwapTradeBaseProperties {
-  const portionAmount = getPortionAmountFromQuoteData(trade.quoteData)
+  const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -56,7 +55,7 @@ export function getBaseTradeAnalyticsProperties({
     currency: trade.outputAmount.currency,
   })
 
-  const quoteId = getQuoteIdFromQuoteData(trade?.quoteData)
+  const quoteId = getClassicQuoteFromResponse(trade?.quote)?.quoteId
 
   const finalOutputAmount = feeCurrencyAmount
     ? trade.outputAmount.subtract(feeCurrencyAmount)
@@ -78,8 +77,7 @@ export function getBaseTradeAnalyticsProperties({
     }),
     allowed_slippage_basis_points: trade.slippageTolerance * 100,
     fee_amount: portionAmount,
-    quoteType: trade.quoteData?.quoteType,
-    requestId: trade.quoteData?.quote?.requestId,
+    requestId: trade.quote?.requestId,
     quoteId,
   }
 }
@@ -97,7 +95,9 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   const slippageTolerance =
     derivedSwapInfo.customSlippageTolerance ?? derivedSwapInfo.autoSlippageTolerance
 
-  const portionAmount = getPortionAmountFromQuoteData(derivedSwapInfo.trade.trade?.quoteData)
+  const portionAmount = getClassicQuoteFromResponse(
+    derivedSwapInfo.trade?.trade?.quote
+  )?.portionAmount
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -132,39 +132,4 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
   }
-}
-
-// Index into the quote response for portion amount based on the response type
-function getPortionAmountFromQuoteData(quoteData?: QuoteData): string | undefined {
-  if (!quoteData?.quote) {
-    return undefined
-  }
-
-  if (quoteData.quoteType === QuoteType.RoutingApi) {
-    return quoteData.quote.portionAmount
-  }
-
-  // TODO MOB-2438: remove quote type check when other quote types are supported
-  if (!isClassicQuote(quoteData.quote.quote)) {
-    return undefined
-  }
-
-  return quoteData.quote.quote.portionAmount
-}
-
-function getQuoteIdFromQuoteData(quoteData?: QuoteData): string | undefined {
-  if (!quoteData?.quote) {
-    return undefined
-  }
-
-  if (quoteData.quoteType === QuoteType.RoutingApi) {
-    return quoteData.quote.quoteId
-  }
-
-  // TODO MOB-2438: remove quote type check when other quote types are supported
-  if (!isClassicQuote(quoteData.quote.quote)) {
-    return undefined
-  }
-
-  return quoteData.quote.quote.quoteId
 }

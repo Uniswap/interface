@@ -800,6 +800,17 @@ exports[`OrderContent should render without error, limit order 1`] = `
   overflow-wrap: break-word;
 }
 
+.c27 {
+  background-color: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.c28 {
+  line-height: 16px;
+}
+
 .c15 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -876,17 +887,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c27 {
-  background-color: #F9F9F9;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
-}
-
-.c28 {
-  line-height: 16px;
 }
 
 .c22 {

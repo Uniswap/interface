@@ -1,15 +1,11 @@
 import StatusIcon from 'components/Identicon/StatusIcon'
+import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, waitFor } from 'test-utils/render'
-import { useAccount } from 'wagmi'
 
 const ACCOUNT = '0x0'
 
-jest.mock('wagmi', () => ({
-  ...jest.requireActual('wagmi'),
-  useAccount: jest.fn(),
-}))
-
+jest.mock('hooks/useAccount')
 jest.mock('uniswap/src/features/unitags/hooks', () => ({
   useUnitagByAddress: () => ({ unitag: undefined, loading: false }),
 }))

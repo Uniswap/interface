@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
-
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -41,7 +41,18 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference, protocolPreferences, isXv2 } = args
+  const {
+    account,
+    tokenInChainId,
+    uniswapXForceSyntheticQuotes,
+    routerPreference,
+    protocolPreferences,
+    isXv2,
+    priceImprovementBps,
+    forceOpenOrders,
+    deadlineBufferSecs,
+    isXv2Arbitrum,
+  } = args
 
   const uniswapX: UniswapXConfig = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -53,6 +64,13 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
     swapper: account,
     routingType: URAQuoteType.DUTCH_V2,
+    ...(isXv2Arbitrum
+      ? {
+          priceImprovementBps,
+          forceOpenOrders,
+          deadlineBufferSecs,
+        }
+      : {}),
   }
 
   const classic: ClassicAPIConfig = {
@@ -67,12 +85,12 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
     routerPreference === RouterPreference.API ||
     routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
-    !isUniswapXSupportedChain(tokenInChainId)
+    (!isUniswapXSupportedChain(tokenInChainId) && !isXv2Arbitrum)
   ) {
     return [classic]
   }
 
-  return [isXv2 ? uniswapXv2 : uniswapX, classic]
+  return [isXv2 || isXv2Arbitrum ? uniswapXv2 : uniswapX, classic]
 }
 
 export const routingApi = createApi({
@@ -128,7 +146,7 @@ export const routingApi = createApi({
                     typeof errorData === 'object' &&
                     (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                   ) {
-                    sendAnalyticsEvent('No quote received from routing API', {
+                    sendAnalyticsEvent(InterfaceEventNameLocal.NoQuoteReceivedFromRoutingAPI, {
                       requestBody,
                       response,
                       routerPreference: args.routerPreference,

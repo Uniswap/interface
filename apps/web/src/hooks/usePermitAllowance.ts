@@ -1,5 +1,6 @@
 import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -11,7 +12,6 @@ import { Permit2 } from 'uniswap/src/abis/types'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { useAccount } from 'wagmi'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
@@ -64,11 +64,24 @@ export function useUpdatePermitAllowance(
     () =>
       trace({ name: 'Permit2', op: 'permit.permit2.signature' }, async (trace) => {
         try {
-          if (account.status !== 'connected') throw new Error('wallet not connected')
-          if (!signer) throw new Error('missing signer')
-          if (!token) throw new Error('missing token')
-          if (!spender) throw new Error('missing spender')
-          if (nonce === undefined) throw new Error('missing nonce')
+          if (account.status !== 'connected') {
+            throw new Error('wallet not connected')
+          }
+          if (!account.chainId) {
+            throw new Error('connected to an unsupported network')
+          }
+          if (!signer) {
+            throw new Error('missing signer')
+          }
+          if (!token) {
+            throw new Error('missing token')
+          }
+          if (!spender) {
+            throw new Error('missing spender')
+          }
+          if (nonce === undefined) {
+            throw new Error('missing nonce')
+          }
 
           const permit: Permit = {
             details: {

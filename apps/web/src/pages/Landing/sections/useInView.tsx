@@ -7,7 +7,9 @@ export const useInView = () => {
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => {
-        if (!entries.length) return
+        if (!entries.length) {
+          return
+        }
         const [firstEntry] = entries
         if (firstEntry.isIntersecting) {
           setInView(true)

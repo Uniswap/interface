@@ -7,24 +7,18 @@ import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const ExactInMessage = ({ amount }: { amount: string }) => (
-  <Trans>
-    If the price moves so that you will receive less than {{ amount }}, your transaction will be reverted. This is the
-    minimum amount you are guaranteed to receive.
-  </Trans>
+  <Trans i18nKey="swap.slippage.exactIn.revert" values={{ amount }} />
 )
 
 const ExactOutMessage = ({ amount }: { amount: string }) => (
-  <Trans>
-    If the price moves so that you will pay more than {{ amount }}, your transaction will be reverted. This is the
-    maximum amount you are guaranteed to pay.
-  </Trans>
+  <Trans i18nKey="swap.slippage.exactOut.revert" values={{ amount }} />
 )
 
 function SlippageHeader({ amount, isExactIn }: { amount: string; isExactIn: boolean }) {
   return (
     <RowBetween>
       <ThemedText.Caption color="neutral1">
-        {isExactIn ? <Trans>Receive at least</Trans> : <Trans>Pay at most</Trans>}
+        {isExactIn ? <Trans i18nKey="swap.receive.atLeast" /> : <Trans i18nKey="swap.payAtMost" />}
       </ThemedText.Caption>
       <ThemedText.Caption color="neutral1">{amount}</ThemedText.Caption>
     </RowBetween>
@@ -45,7 +39,7 @@ export function MaxSlippageTooltip({ trade, allowedSlippage }: { trade: Interfac
       <div>
         {isExactIn ? <ExactInMessage amount={displayAmount} /> : <ExactOutMessage amount={displayAmount} />}{' '}
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-">
-          Learn more
+          <Trans i18nKey="common.learnMore.link" />
         </ExternalLink>
       </div>
     </Column>

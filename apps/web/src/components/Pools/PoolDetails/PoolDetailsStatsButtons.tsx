@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { Scrim } from 'components/AccountDrawer'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
@@ -14,12 +13,13 @@ import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/to
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useMemo, useReducer } from 'react'
 import { Plus, X } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -153,12 +153,13 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
 }
 
 export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
-  const { chainId: walletChainId, account } = useWeb3React()
-  const { positions: userOwnedPositions } = useMultiChainPositions(account ?? '', chainId ? [chainId] : undefined)
+  const { chainId: walletChainId, address } = useAccount()
+  const { positions: userOwnedPositions } = useMultiChainPositions(address ?? '', chainId ? [chainId] : undefined)
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
+  const location = useLocation()
   const currency0 = token0 && gqlToCurrency(token0)
   const currency1 = token1 && gqlToCurrency(token1)
 
@@ -194,8 +195,12 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
 
   const handleAddLiquidity = async () => {
     if (currency0 && currency1) {
-      if (walletChainId !== chainId && chainId) await switchChain(chainId)
-      navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`)
+      if (walletChainId !== chainId && chainId) {
+        await switchChain(chainId)
+      }
+      navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
+        state: { from: location.pathname },
+      })
     }
   }
   const [swapModalOpen, toggleSwapModalOpen] = useReducer((state) => !state, false)
@@ -206,7 +211,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const token1Warning = useTokenWarning(token1?.address, chainId)
   const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
 
-  if (loading || !currency0 || !currency1)
+  if (loading || !currency0 || !currency1) {
     return (
       <PoolDetailsStatsButtonsRow data-testid="pdp-buttons-loading-skeleton">
         <MobileBalance>
@@ -216,14 +221,15 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         <ButtonBubble />
       </PoolDetailsStatsButtonsRow>
     )
+  }
 
   return (
     <Column gap="lg">
       <PoolDetailsStatsButtonsRow>
-        {account && (
+        {address && (
           <MobileBalance>
             <ThemedText.SubHeaderSmall>
-              <Trans>Your balances</Trans>
+              <Trans i18nKey="pool.yourBalances" />
             </ThemedText.SubHeaderSmall>
             <Row gap="8px">
               <ThemedText.HeadlineSmall>
@@ -240,21 +246,21 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         <PoolButton
           onClick={toggleSwapModalOpen}
           $open={swapModalOpen}
-          $fixedWidth={Boolean(account)}
+          $fixedWidth={Boolean(address)}
           data-testid={`pool-details-${swapModalOpen ? 'close' : 'swap'}-button`}
         >
           {swapModalOpen ? (
             <>
               {screenSizeLargerThanTablet && <X size={20} />}
               <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-                <Trans>Close</Trans>
+                <Trans i18nKey="common.close" />
               </ThemedText.BodyPrimary>
             </>
           ) : (
             <>
               {screenSizeLargerThanTablet && <SwapIcon />}
               <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-                <Trans>Swap</Trans>
+                <Trans i18nKey="common.swap" />
               </ThemedText.BodyPrimary>
             </>
           )}
@@ -262,12 +268,12 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         <PoolButton
           onClick={handleAddLiquidity}
           data-testid="pool-details-add-liquidity-button"
-          $fixedWidth={Boolean(account)}
+          $fixedWidth={Boolean(address)}
           $hideOnMobile
         >
           {screenSizeLargerThanTablet && <Plus size={20} />}
           <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
-            <Trans>Add liquidity</Trans>
+            <Trans i18nKey="common.addLiquidity" />
           </ThemedText.BodyPrimary>
         </PoolButton>
       </PoolDetailsStatsButtonsRow>

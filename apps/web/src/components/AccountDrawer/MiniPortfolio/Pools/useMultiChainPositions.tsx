@@ -161,7 +161,9 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         const pm = pms[chainId]
         const multicall = multicalls[chainId]
         const balance = await pm?.balanceOf(account)
-        if (!pm || !multicall || balance.lt(1)) return []
+        if (!pm || !multicall || balance.lt(1)) {
+          return []
+        }
 
         const positionIds = await fetchPositionIds(pm, balance)
         // Fetches fees in the background and stores them separetely from the results of this function
@@ -186,8 +188,9 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
 
   // Fetches positions when existing positions are stale and the document has focus
   useEffect(() => {
-    if (positionsFetching.current || cachedPositions?.stale === false) return
-    else if (document.hasFocus()) {
+    if (positionsFetching.current || cachedPositions?.stale === false) {
+      return
+    } else if (document.hasFocus()) {
       fetchAllPositions()
     } else {
       // Avoids refetching positions until the user returns to Interface to avoid polling unnused rpc data

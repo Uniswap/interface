@@ -1,6 +1,6 @@
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -67,7 +67,7 @@ const ButtonContent = ({ trade, compact }: { trade?: InterfaceTrade; compact: bo
         {compact ? (
           formatPercent(userSlippageTolerance)
         ) : (
-          <Trans>{{ amt: formatPercent(userSlippageTolerance) }} slippage</Trans>
+          <Trans i18nKey="swap.slippage.amt" values={{ amt: formatPercent(userSlippageTolerance) }} />
         )}
       </ThemedText.Caption>
       <Icon />
@@ -95,7 +95,7 @@ export default function MenuButton({
       isActive={isActive}
       id="open-settings-dialog-button"
       data-testid="open-settings-dialog-button"
-      aria-label={t`Transaction Settings`}
+      aria-label={t('common.transactionSettings')}
     >
       <ButtonContent trade={trade} compact={compact} />
     </Button>

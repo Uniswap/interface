@@ -15,12 +15,12 @@ export enum ChartType {
 }
 
 export const CHART_TYPE_LABELS: Record<ChartType | PriceChartType, JSX.Element> = {
-  [ChartType.PRICE]: <Trans>Price</Trans>,
-  [ChartType.VOLUME]: <Trans>Volume</Trans>,
-  [ChartType.TVL]: <Trans>TVL</Trans>,
-  [ChartType.LIQUIDITY]: <Trans>Liquidity</Trans>,
-  [PriceChartType.LINE]: <Trans>Line chart</Trans>,
-  [PriceChartType.CANDLESTICK]: <Trans>Candlestick</Trans>,
+  [ChartType.PRICE]: <Trans i18nKey="common.price" />,
+  [ChartType.VOLUME]: <Trans i18nKey="common.volume" />,
+  [ChartType.TVL]: <Trans i18nKey="common.totalValueLocked" />,
+  [ChartType.LIQUIDITY]: <Trans i18nKey="common.liquidity" />,
+  [PriceChartType.LINE]: <Trans i18nKey="chart.line" />,
+  [PriceChartType.CANDLESTICK]: <Trans i18nKey="chart.candlestick" />,
 }
 
 /**

@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo } from 'react'
 
 export interface ITraceContext {
   // Hierarchical context of where an element is
+  page?: string
   screen?: string
   section?: string
   modal?: string

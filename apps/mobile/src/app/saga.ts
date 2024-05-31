@@ -36,6 +36,12 @@ import {
   createAccountSaga,
   createAccountSagaName,
 } from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  createAccountsActions,
+  createAccountsReducer,
+  createAccountsSaga,
+  createAccountsSagaName,
+} from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { pendingAccountSaga } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   importAccountActions,
@@ -69,6 +75,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: createAccountSaga,
     reducer: createAccountReducer,
     actions: createAccountActions,
+  },
+  [createAccountsSagaName]: {
+    name: createAccountsSagaName,
+    wrappedSaga: createAccountsSaga,
+    reducer: createAccountsReducer,
+    actions: createAccountsActions,
   },
   [editAccountSagaName]: {
     name: editAccountSagaName,

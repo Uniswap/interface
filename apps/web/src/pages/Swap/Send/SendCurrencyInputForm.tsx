@@ -5,10 +5,10 @@ import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { Input as NumericalInput } from 'components/NumericalInput'
+import { Input as NumericalInput, isInputGreaterThanDecimals } from 'components/NumericalInput'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { getChainInfo, useSupportedChainId } from 'constants/chains'
+import { getChain, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -200,8 +200,8 @@ const StyledErrorText = styled(ThemedText.Caption)`
 `
 
 const InputErrorLookup = {
-  [SendInputError.INSUFFICIENT_FUNDS]: <Trans>Insufficient funds</Trans>,
-  [SendInputError.INSUFFICIENT_FUNDS_FOR_GAS]: <Trans>Insufficient funds to cover network fee</Trans>,
+  [SendInputError.INSUFFICIENT_FUNDS]: <Trans i18nKey="common.insufficient.funds" />,
+  [SendInputError.INSUFFICIENT_FUNDS_FOR_GAS]: <Trans i18nKey="common.insufficientFundsForNetworkFee.error" />,
 }
 
 const InputError = () => {
@@ -241,7 +241,7 @@ export default function SendCurrencyInputForm({
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
-    () => getChainInfo({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
+    () => getChain({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
     [supportedChain]
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
@@ -277,13 +277,20 @@ export default function SendCurrencyInputForm({
       onCurrencyChange?.({ inputCurrency: currency, outputCurrency: undefined })
 
       if (fiatCurrency.equals(currency)) {
-        setSendState((prev) => ({
-          ...prev,
-          exactAmountToken: exactAmountToken ?? exactAmountFiat,
-          exactAmountFiat: undefined,
-          inputInFiat: false,
-          inputCurrency: currency,
-        }))
+        setSendState((prev) => {
+          let updatedExactAmountToken = exactAmountToken ?? exactAmountFiat
+          const maxDecimals = inputInFiat ? 6 : currency.decimals
+          if (isInputGreaterThanDecimals(updatedExactAmountToken, maxDecimals)) {
+            updatedExactAmountToken = parseFloat(updatedExactAmountToken).toFixed(maxDecimals)
+          }
+          return {
+            ...prev,
+            exactAmountToken: updatedExactAmountToken,
+            exactAmountFiat: undefined,
+            inputInFiat: false,
+            inputCurrency: currency,
+          }
+        })
         return
       }
 
@@ -292,7 +299,7 @@ export default function SendCurrencyInputForm({
         inputCurrency: currency,
       }))
     },
-    [exactAmountFiat, exactAmountToken, fiatCurrency, onCurrencyChange, setSendState]
+    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState]
   )
 
   const toggleFiatInputAmountEnabled = useCallback(() => {
@@ -336,7 +343,7 @@ export default function SendCurrencyInputForm({
       <InputWrapper>
         <InputLabelContainer>
           <Text variant="body3" userSelect="none" color="$neutral2">
-            <Trans>You&apos;re sending</Trans>
+            <Trans i18nKey="common.youreSending" />
           </Text>
         </InputLabelContainer>
         <NumericalInputWrapper>
@@ -390,7 +397,7 @@ export default function SendCurrencyInputForm({
         </ClickableRowBetween>
         {showMaxButton && (
           <MaxButton onClick={handleMaxInput}>
-            <Trans>Max</Trans>
+            <Trans i18nKey="common.max" />
           </MaxButton>
         )}
       </CurrencyInputWrapper>

@@ -24,12 +24,13 @@ export default function NFTs({ account }: { account: string }) {
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
 
-  if (loading && !walletAssets)
+  if (loading && !walletAssets) {
     return (
       <AssetsContainer>
         <LoadingAssets count={2} />
       </AssetsContainer>
     )
+  }
 
   if (!walletAssets || walletAssets?.length === 0) {
     return <EmptyWalletModule onNavigateClick={toggleWalletDrawer} />

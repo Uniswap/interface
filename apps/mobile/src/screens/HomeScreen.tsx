@@ -810,7 +810,7 @@ function ActionButton({
   const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon28
 
   return (
-    <Trace logPress element={name} pressEvent={eventName}>
+    <Trace logPress element={name} eventOnTrigger={eventName}>
       <TouchableArea hapticFeedback flex={flex} scaleTo={activeScale} onPress={onPress}>
         <AnimatedFlex
           centered

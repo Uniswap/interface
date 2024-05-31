@@ -6,6 +6,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
 import { AutoRow, RowBetween } from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -13,7 +14,6 @@ import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useChainId } from 'wagmi'
 
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
@@ -56,7 +56,7 @@ export default function UnsupportedCurrencyFooter({
   show: boolean
   currencies: (Currency | undefined | null)[]
 }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const [showDetails, setShowDetails] = useState(false)
 
   const tokens =
@@ -73,7 +73,7 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader>
-                <Trans>Unsupported assets</Trans>
+                <Trans i18nKey="common.unsupportedAsset_other" />
               </ThemedText.DeprecatedMediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} data-testid="close-icon" />
             </RowBetween>
@@ -84,10 +84,7 @@ export default function UnsupportedCurrencyFooter({
             })}
             <AutoColumn gap="lg">
               <ThemedText.DeprecatedBody fontWeight={535}>
-                <Trans>
-                  Some assets are not available through this interface because they may not work well with the smart
-                  contracts or we are unable to allow trading for legal reasons.
-                </Trans>
+                <Trans i18nKey="swap.limitedAssets.warning" />
               </ThemedText.DeprecatedBody>
             </AutoColumn>
           </AutoColumn>
@@ -95,7 +92,7 @@ export default function UnsupportedCurrencyFooter({
       </Modal>
       <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
         <Text color="$accent1">
-          <Trans>Read more about unsupported assets</Trans>
+          <Trans i18nKey="swap.unsupportedAssets.readMore" />
         </Text>
       </StyledButtonEmpty>
     </DetailsFooter>

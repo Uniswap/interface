@@ -145,10 +145,16 @@ export default function LiquidityChartRangeInput({
   const { formatDelta } = useFormatter()
   const brushLabelValue = useCallback(
     (d: 'w' | 'e', x: number) => {
-      if (!price) return ''
+      if (!price) {
+        return ''
+      }
 
-      if (d === 'w' && ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]) return '0'
-      if (d === 'e' && ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]) return '∞'
+      if (d === 'w' && ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]) {
+        return '0'
+      }
+      if (d === 'e' && ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]) {
+        return '∞'
+      }
 
       const percent = (x < price ? -1 : 1) * ((Math.max(x, price) - Math.min(x, price)) / price) * 100
 
@@ -162,20 +168,17 @@ export default function LiquidityChartRangeInput({
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
       {isUninitialized ? (
-        <InfoBox
-          message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.neutral1} />}
-        />
+        <InfoBox message={<Trans i18nKey="position.appearHere" />} icon={<Inbox size={56} stroke={theme.neutral1} />} />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.neutral2} />} />
       ) : error ? (
         <InfoBox
-          message={<Trans>Liquidity data not available.</Trans>}
+          message={<Trans i18nKey="position.noLiquidity" />}
           icon={<CloudOff size={56} stroke={theme.neutral2} />}
         />
       ) : !formattedData || formattedData.length === 0 || !price ? (
         <InfoBox
-          message={<Trans>There is no liquidity data.</Trans>}
+          message={<Trans i18nKey="position.noLiquidityData" />}
           icon={<BarChart2 size={56} stroke={theme.neutral2} />}
         />
       ) : (

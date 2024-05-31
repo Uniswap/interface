@@ -1,7 +1,6 @@
 import 'rc-slider/assets/index.css'
 
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -15,6 +14,7 @@ import { FocusEventHandler, FormEvent, useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { darkDeprecatedTheme } from 'theme/deprecatedColors'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 import * as styles from './PriceRange.css'
 import { TraitsHeader } from './TraitsHeader'
@@ -54,8 +54,9 @@ export const PriceRange = () => {
   const handleBlur: FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.placeholder = placeholderText
     setPlaceholderText('')
-    if (minPrice || maxPrice)
+    if (minPrice || maxPrice) {
       sendAnalyticsEvent(NFTEventName.NFT_FILTER_SELECTED, { filter_type: NFTFilterTypes.PRICE_RANGE })
+    }
   }
 
   const updateMinPriceRange = (v: FormEvent<HTMLInputElement>) => {
@@ -106,7 +107,9 @@ export const PriceRange = () => {
   }
 
   const handleSliderLogic = (minMax: number | Array<number>) => {
-    if (typeof minMax === 'number') return
+    if (typeof minMax === 'number') {
+      return
+    }
 
     const [newMin, newMax] = minMax
 

@@ -31,7 +31,7 @@ export function SwapPreview({
       <Column gap="lg">
         <SwapModalHeaderAmount
           field={Field.INPUT}
-          label={<Trans>Sell</Trans>}
+          label={<Trans i18nKey="common.sell.label" />}
           amount={trade.inputAmount}
           currency={inputCurrency ?? trade.inputAmount.currency}
           usdAmount={fiatValueInput.data}
@@ -39,7 +39,7 @@ export function SwapPreview({
         />
         <SwapModalHeaderAmount
           field={Field.OUTPUT}
-          label={<Trans>Buy</Trans>}
+          label={<Trans i18nKey="common.buy.label" />}
           amount={trade.outputAmount}
           currency={trade.outputAmount.currency}
           usdAmount={fiatValueOutput.data}
@@ -47,31 +47,29 @@ export function SwapPreview({
           tooltipText={
             trade.tradeType === TradeType.EXACT_INPUT ? (
               <ThemedText.Caption>
-                <Trans>
-                  Output is estimated. You will receive at least{' '}
-                  {{
+                <Trans
+                  i18nKey="swap.outputEstimated.atLeast"
+                  components={{
                     amount: (
                       <b>
                         {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
                       </b>
                     ),
-                  }}{' '}
-                  or the transaction will revert.
-                </Trans>
+                  }}
+                />
               </ThemedText.Caption>
             ) : (
               <ThemedText.Caption>
-                <Trans>
-                  Input is estimated. You will sell at most{' '}
-                  {{
+                <Trans
+                  i18nKey="swap.inputEstimated.atMost"
+                  components={{
                     amount: (
                       <b>
                         {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
                       </b>
                     ),
-                  }}{' '}
-                  or the transaction will revert.
-                </Trans>
+                  }}
+                />
               </ThemedText.Caption>
             )
           }

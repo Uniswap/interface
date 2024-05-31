@@ -1,28 +1,28 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import Row from 'components/Row'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { parseUnits } from 'ethers/lib/utils'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import JSBI from 'jsbi'
+import { ReversedArrowsIcon } from 'nft/components/icons'
+import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { CurrencyState } from 'state/swap/types'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   NumberType,
   formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
   useFormatter,
 } from 'utils/formatNumbers'
-
-import { sendAnalyticsEvent } from 'analytics'
-import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { ReversedArrowsIcon } from 'nft/components/icons'
-import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { CurrencyState } from 'state/swap/types'
 import { formatCurrencySymbol } from '../utils'
 import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
 import { LimitPriceInputLabel } from './LimitPriceInputLabel'
@@ -89,9 +89,13 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
 
   const formattedLimitPriceOutputAmount: string = useMemo(() => {
     // If the user has manually typed in a limit price, use that.
-    if (limitPrice) return limitPrice
+    if (limitPrice) {
+      return limitPrice
+    }
     // Otherwise, use parsedLimitPrice which may have been calculated from input/output amounts.
-    if (!baseCurrency) return ''
+    if (!baseCurrency) {
+      return ''
+    }
     return formatCurrencyAmount({
       amount: parsedLimitPrice?.quote(CurrencyAmount.fromRawAmount(baseCurrency, 1)),
       type: NumberType.SwapTradeAmount,
@@ -100,7 +104,9 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
   }, [limitPrice, baseCurrency, formatCurrencyAmount, parsedLimitPrice])
 
   const adjustedPrices = useMemo(() => {
-    if (!marketPrice || !baseCurrency || !quoteCurrency) return undefined
+    if (!marketPrice || !baseCurrency || !quoteCurrency) {
+      return undefined
+    }
     const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
       baseCurrency,
       JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
@@ -131,7 +137,9 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
 
   const onSelectLimitPrice = useCallback(
     (adjustedPrice: Price<Currency, Currency> | undefined, adjustmentPercentage: number) => {
-      if (!baseCurrency) return
+      if (!baseCurrency) {
+        return
+      }
       const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
         baseCurrency,
         JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
@@ -146,7 +154,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         })
       )
       setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
-      sendAnalyticsEvent('Limit Preset Rate Selected', { value: adjustmentPercentage })
+      sendAnalyticsEvent(InterfaceEventNameLocal.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
     [baseCurrency, limitPrice, setLimitPrice, setLimitState]
   )
@@ -186,7 +194,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
               )
             }
             setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
-            sendAnalyticsEvent('Limit Price Reversed')
+            sendAnalyticsEvent(InterfaceEventNameLocal.LimitPriceReversed)
           }}
         >
           <ReversedArrowsIcon size="16px" />
@@ -248,7 +256,9 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         isOpen={Boolean(currencySelectModalField)}
         onDismiss={() => setCurrencySelectModalField(undefined)}
         onCurrencySelect={(currency) => {
-          if (!currencySelectModalField) return
+          if (!currencySelectModalField) {
+            return
+          }
           onCurrencySelect(
             limitPriceInverted ? invertCurrencyField(currencySelectModalField) : currencySelectModalField,
             currency

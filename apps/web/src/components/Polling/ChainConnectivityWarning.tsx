@@ -1,11 +1,11 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { L2ChainInfo, getChainInfo, useSupportedChainId } from 'constants/chains'
+import { getChain, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { ExternalLink } from 'theme/components'
-import { useChainId } from 'wagmi'
 
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -51,9 +51,9 @@ const Wrapper = styled.div`
 `
 
 export function ChainConnectivityWarning() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const supportedChain = useSupportedChainId(chainId)
-  const info = getChainInfo({ chainId: supportedChain, withFallback: true })
+  const info = getChain({ chainId: supportedChain, withFallback: true })
   const label = info.label
 
   return (
@@ -61,19 +61,19 @@ export function ChainConnectivityWarning() {
       <TitleRow>
         <CautionTriangle />
         <TitleText>
-          <Trans>Network warning</Trans>
+          <Trans i18nKey="network.warning" />
         </TitleText>
       </TitleRow>
       <BodyRow>
         {chainId === ChainId.MAINNET ? (
-          <Trans>You may have lost your network connection.</Trans>
+          <Trans i18nKey="network.lostConnection" />
         ) : (
-          <Trans>{{ label }} might be down right now, or you may have lost your network connection.</Trans>
+          <Trans i18nKey="network.mightBeDown" values={{ label }} />
         )}{' '}
-        {(info as L2ChainInfo).statusPage !== undefined && (
+        {info.statusPage !== undefined && (
           <span>
-            <Trans>Check network status</Trans>{' '}
-            <Link href={(info as L2ChainInfo).statusPage || ''}>
+            <Trans i18nKey="common.checkNetwork" />{' '}
+            <Link href={info.statusPage || ''}>
               <Trans>here.</Trans>
             </Link>
           </span>

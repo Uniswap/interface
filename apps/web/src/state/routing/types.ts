@@ -65,6 +65,10 @@ export interface GetQuoteArgs {
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
   isXv2: boolean
+  isXv2Arbitrum: boolean
+  priceImprovementBps: number
+  forceOpenOrders: boolean
+  deadlineBufferSecs: number
 }
 
 export type GetQuickQuoteArgs = {
@@ -290,7 +294,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 
   public get executionPrice(): Price<Currency, Currency> {
-    if (this.tradeType === TradeType.EXACT_INPUT || !this.swapFee) return super.executionPrice
+    if (this.tradeType === TradeType.EXACT_INPUT || !this.swapFee) {
+      return super.executionPrice
+    }
 
     // Fix inaccurate price calculation for exact output trades
     return new Price({ baseAmount: this.inputAmount, quoteAmount: this.postSwapFeeOutputAmount })
@@ -298,7 +304,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
 
   public get postSwapFeeOutputAmount(): CurrencyAmount<Currency> {
     // Routing api already applies the swap fee to the output amount for exact-in
-    if (this.tradeType === TradeType.EXACT_INPUT) return this.outputAmount
+    if (this.tradeType === TradeType.EXACT_INPUT) {
+      return this.outputAmount
+    }
 
     const swapFeeAmount = CurrencyAmount.fromRawAmount(this.outputAmount.currency, this.swapFee?.amount ?? 0)
     return this.outputAmount.subtract(swapFeeAmount)
@@ -393,8 +401,12 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
       return this.wrapInfo.wrapGasEstimateUSD + this.approveInfo.approveGasEstimateUSD
     }
 
-    if (this.wrapInfo.needsWrap) return this.wrapInfo.wrapGasEstimateUSD
-    if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
+    if (this.wrapInfo.needsWrap) {
+      return this.wrapInfo.wrapGasEstimateUSD
+    }
+    if (this.approveInfo.needsApprove) {
+      return this.approveInfo.approveGasEstimateUSD
+    }
 
     return 0
   }
@@ -424,6 +436,7 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
   inputTax = ZERO_PERCENT
   outputTax = ZERO_PERCENT
   swapFee: SwapFeeInfo | undefined
+  forceOpenOrder?: boolean
 
   constructor({
     currencyIn,
@@ -438,6 +451,7 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
     deadlineBufferSecs,
     slippageTolerance,
     swapFee,
+    forceOpenOrder,
   }: {
     currencyIn: Currency
     currenciesOut: Currency[]
@@ -451,6 +465,7 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
     deadlineBufferSecs: number
     slippageTolerance: Percent
     swapFee?: SwapFeeInfo
+    forceOpenOrder?: boolean
   }) {
     super({ currencyIn, currenciesOut, orderInfo, tradeType })
     this.quoteId = quoteId
@@ -461,6 +476,7 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
     this.deadlineBufferSecs = deadlineBufferSecs
     this.slippageTolerance = slippageTolerance
     this.swapFee = swapFee
+    this.forceOpenOrder = forceOpenOrder
   }
 
   public get totalGasUseEstimateUSD(): number {
@@ -468,8 +484,12 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
       return this.wrapInfo.wrapGasEstimateUSD + this.approveInfo.approveGasEstimateUSD
     }
 
-    if (this.wrapInfo.needsWrap) return this.wrapInfo.wrapGasEstimateUSD
-    if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
+    if (this.wrapInfo.needsWrap) {
+      return this.wrapInfo.wrapGasEstimateUSD
+    }
+    if (this.approveInfo.needsApprove) {
+      return this.approveInfo.approveGasEstimateUSD
+    }
 
     return 0
   }
@@ -524,7 +544,9 @@ export class PreviewTrade {
    */
   public get inputTax(): Percent {
     const inputCurrency = this.inputAmount.currency
-    if (inputCurrency.isNative || !inputCurrency.wrapped.sellFeeBps) return ZERO_PERCENT
+    if (inputCurrency.isNative || !inputCurrency.wrapped.sellFeeBps) {
+      return ZERO_PERCENT
+    }
 
     return new Percent(inputCurrency.wrapped.sellFeeBps.toNumber(), 10000)
   }
@@ -534,7 +556,9 @@ export class PreviewTrade {
    */
   public get outputTax(): Percent {
     const outputCurrency = this.outputAmount.currency
-    if (outputCurrency.isNative || !outputCurrency.wrapped.buyFeeBps) return ZERO_PERCENT
+    if (outputCurrency.isNative || !outputCurrency.wrapped.buyFeeBps) {
+      return ZERO_PERCENT
+    }
 
     return new Percent(outputCurrency.wrapped.buyFeeBps.toNumber(), 10000)
   }
@@ -815,6 +839,8 @@ export type UniswapXConfig = {
   deadlineBufferSecs?: number
   slippageTolerance?: number
   useSyntheticQuotes?: boolean
+  priceImprovementBps?: number
+  forceOpenOrders?: boolean
 }
 
 export type UniswapXv2Config = {

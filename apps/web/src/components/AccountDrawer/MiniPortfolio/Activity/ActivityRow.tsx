@@ -1,5 +1,4 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
@@ -10,9 +9,9 @@ import { SignatureType } from 'state/signatures/types'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow from '../PortfolioRow'
 import { useOpenOffchainActivityModal } from './OffchainActivityModal'
@@ -35,7 +34,9 @@ function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails }
 
   switch (status) {
     case TransactionStatus.Pending:
-      if (offchainOrderDetails?.type === SignatureType.SIGN_LIMIT) return null
+      if (offchainOrderDetails?.type === SignatureType.SIGN_LIMIT) {
+        return null
+      }
       return <LoaderV2 />
     case TransactionStatus.Confirmed:
       return <StyledTimestamp>{timeSince}</StyledTimestamp>
@@ -66,9 +67,8 @@ export function ActivityRow({ activity }: { activity: Activity }) {
   }, [activity?.logos, chainId, hash, offchainOrderDetails, openOffchainActivityModal])
 
   return (
-    <TraceEvent
-      events={[BrowserEvent.onClick]}
-      name={SharedEventName.ELEMENT_CLICKED}
+    <Trace
+      logPress
       element={InterfaceElementName.MINI_PORTFOLIO_ACTIVITY_ROW}
       properties={{ hash, chain_id: chainId, explorer_url: explorerUrl }}
     >
@@ -93,6 +93,6 @@ export function ActivityRow({ activity }: { activity: Activity }) {
         right={<StatusIndicator activity={activity} />}
         onClick={onClick}
       />
-    </TraceEvent>
+    </Trace>
   )
 }

@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { getChainInfo, isSupportedChainId } from 'constants/chains'
+import { getChain, isSupportedChainId } from 'constants/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -27,7 +27,7 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
 }
 
 export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
-  const networkName = isSupportedChainId(chainId) ? getChainInfo({ chainId }).assetRepoNetworkName : undefined
+  const networkName = isSupportedChainId(chainId) ? getChain({ chainId }).assetRepoNetworkName : undefined
 
   if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CeloLogo

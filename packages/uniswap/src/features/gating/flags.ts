@@ -23,7 +23,6 @@ export enum FeatureFlags {
   Scantastic,
   SeedPhraseRefactorNative,
   SendRewrite,
-  TradingApi,
   UnitagsDeviceAttestation,
   UwULink,
 
@@ -35,6 +34,7 @@ export enum FeatureFlags {
   GqlTokenLists,
   LimitsFees,
   MultichainUX,
+  MultichainExplore,
   MultipleRoutingOptions,
   QuickRouteMainnet,
   Realtime,
@@ -61,6 +61,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.MultichainUX, 'multichain_ux'],
+  [FeatureFlags.MultichainExplore, 'multichain_explore'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
@@ -93,7 +94,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SeedPhraseRefactorNative, 'refactor-seed-phrase-native'],
   [FeatureFlags.SendRewrite, 'send-rewrite'],
-  [FeatureFlags.TradingApi, 'trading-api'],
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])

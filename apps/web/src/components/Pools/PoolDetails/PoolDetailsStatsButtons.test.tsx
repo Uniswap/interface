@@ -1,12 +1,12 @@
-import 'test-utils/tokens/mocks'
-
 import userEvent from '@testing-library/user-event'
+import { ChainId } from '@uniswap/sdk-core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
+import 'test-utils/tokens/mocks'
 
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
@@ -14,11 +14,11 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
-    chainId: 1,
+    chainId: ChainId.MAINNET,
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     feeTier: 500,
-  }
+  } as const
 
   const mockPropsTokensReversed = {
     ...mockProps,

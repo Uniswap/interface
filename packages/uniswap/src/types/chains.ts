@@ -10,4 +10,5 @@ export enum ChainId {
   PolygonMumbai = 80001,
   Blast = 81457,
   Bnb = 56,
+  Zora = 7777777,
 }

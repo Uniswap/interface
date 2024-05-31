@@ -11,6 +11,7 @@ exports[`renders a currency logo with network logo 1`] = `
       "width": 20,
     }
   }
+  testID="token-logo"
 >
   <Image
     resizeMode="contain"
@@ -31,6 +32,7 @@ exports[`renders a currency logo with network logo 1`] = `
         },
       ]
     }
+    testID="token-image"
   />
   <View
     style={
@@ -69,6 +71,7 @@ exports[`renders a currency logo without network logo 1`] = `
       "width": 20,
     }
   }
+  testID="token-logo"
 >
   <Image
     resizeMode="contain"
@@ -89,6 +92,7 @@ exports[`renders a currency logo without network logo 1`] = `
         },
       ]
     }
+    testID="token-image"
   />
 </View>
 `;

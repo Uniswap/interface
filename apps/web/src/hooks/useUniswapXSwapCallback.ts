@@ -5,12 +5,11 @@ import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrder, DutchOrderBuilder, UnsignedV2DutchOrder, V2DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-
 import {
   DutchOrderTrade,
   LimitOrderTrade,
@@ -19,11 +18,13 @@ import {
   V2DutchOrderTrade,
 } from 'state/routing/types'
 import { trace } from 'tracing/trace'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { SignatureExpiredError, UniswapXv2HardQuoteError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
-import { useAccount } from 'wagmi'
 
 type DutchAuctionOrderError = { errorCode?: number; detail?: string }
 type DutchAuctionOrderSuccess = { hash: string }
@@ -83,11 +84,17 @@ export function useUniswapXSwapCallback({
   return useCallback(
     () =>
       trace({ name: 'Swap (Dutch)', op: 'swap.x.dutch' }, async (trace) => {
-        if (account.status !== 'connected') throw new Error('wallet not connected')
-        if (!provider) throw new Error('missing provider')
-        if (!trade) throw new Error('missing trade')
+        if (account.status !== 'connected') {
+          throw new Error('wallet not connected')
+        }
+        if (!provider) {
+          throw new Error('missing provider')
+        }
+        if (!trade) {
+          throw new Error('missing trade')
+        }
 
-        sendAnalyticsEvent('UniswapX Signature Requested', {
+        sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureRequested, {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,
@@ -184,6 +191,7 @@ export function useUniswapXSwapCallback({
               tokenInChainId: updatedOrder.chainId,
               tokenOutChainId: updatedOrder.chainId,
               requestId: trade.requestId,
+              forceOpenOrder: trade.forceOpenOrder,
             }
           } else {
             endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
@@ -205,7 +213,7 @@ export function useUniswapXSwapCallback({
           // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
           // check for status code and perform this type narrowing.
           if (isErrorResponse(res, responseBody)) {
-            sendAnalyticsEvent('UniswapX Order Post Error', {
+            sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderPostError, {
               ...formatSwapSignedAnalyticsEventProperties({
                 trade,
                 allowedSlippage,
@@ -226,7 +234,7 @@ export function useUniswapXSwapCallback({
             // backend team provides a list of error codes and potential messages
             throw new Error(`${responseBody.errorCode ?? responseBody.detail ?? 'Unknown error'}`)
           }
-          sendAnalyticsEvent('UniswapX Order Submitted', {
+          sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderSubmitted, {
             ...formatSwapSignedAnalyticsEventProperties({
               trade,
               allowedSlippage,

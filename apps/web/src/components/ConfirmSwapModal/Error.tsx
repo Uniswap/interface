@@ -4,7 +4,6 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useTheme } from 'styled-components'
 
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
@@ -24,6 +23,7 @@ export enum PendingModalError {
 interface ErrorModalContentProps {
   errorType: PendingModalError
   trade?: InterfaceTrade
+  showTrade?: boolean
   swapResult?: SwapResult
   onRetry: () => void
 }
@@ -36,41 +36,32 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
   switch (errorType) {
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
-        title: <Trans>Token approval failed</Trans>,
-        message: (
-          <Trans>
-            This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
-          </Trans>
-        ),
+        title: <Trans i18nKey="error.tokenApproval" />,
+        message: <Trans i18nKey="error.access.expiry" />,
         supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
     case PendingModalError.PERMIT_ERROR:
       return {
-        title: <Trans>Permit approval failed</Trans>,
-        message: <Trans>Permit2 allows token approvals to be shared and managed across different applications.</Trans>,
+        title: <Trans i18nKey="permit.approval.fail" />,
+        message: <Trans i18nKey="permit.approval.fail.message" />,
         supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
     case PendingModalError.XV2_HARD_QUOTE_ERROR:
       return {
-        title: <Trans>Swap failed</Trans>,
-        message: (
-          <Trans>
-            Swap couldn&apos;t be completed with UniswapX. Try your swap again to route it through the classic Uniswap
-            API.
-          </Trans>
-        ),
+        title: <Trans i18nKey="common.swap.failed" />,
+        message: <Trans i18nKey="swap.fail.uniswapX" />,
         supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
       }
     case PendingModalError.CONFIRMATION_ERROR:
       if (isLimitTrade(trade)) {
         return {
-          title: <Trans>Limit failed</Trans>,
+          title: <Trans i18nKey="common.limit.failed" />,
           supportArticleURL: SupportArticleURL.LIMIT_FAILURE,
         }
       } else {
         return {
-          title: <Trans>Swap failed</Trans>,
-          message: <Trans>Try adjusting slippage to a higher value.</Trans>,
+          title: <Trans i18nKey="common.swap.failed" />,
+          message: <Trans i18nKey="swap.fail.message" />,
           supportArticleURL: isUniswapXTrade(trade)
             ? SupportArticleURL.UNISWAP_X_FAILURE
             : SupportArticleURL.TRANSACTION_FAILURE,
@@ -78,42 +69,33 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
       }
     case PendingModalError.WRAP_ERROR:
       return {
-        title: <Trans>Wrap failed</Trans>,
-        message: (
-          <Trans>
-            Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
-          </Trans>
-        ),
+        title: <Trans i18nKey="common.wrap.failed" />,
+        message: <Trans i18nKey="token.wrap.fail.message" />,
         supportArticleURL: SupportArticleURL.WETH_EXPLAINER,
       }
     default:
       return {
-        title: <Trans>Unknown Error</Trans>,
-        message: (
-          <Trans>
-            Your swap could not be executed. Please check your network connection and your slippage settings.
-          </Trans>
-        ),
+        title: <Trans i18nKey="common.unknownError.error" />,
+        message: <Trans i18nKey="common.swap.failed" />,
       }
   }
 }
 
-export default function Error({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
-  const theme = useTheme()
+export default function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
   const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
 
   return (
     <DialogContent
       isVisible={true}
-      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" fill={theme.neutral2} size="24px" />}
+      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" size="24px" />}
       title={title}
       description={message}
       body={
-        <ColumnCenter gap="md">
-          {trade && <TradeSummary trade={trade} />}
+        <ColumnCenter gap="sm">
+          {showTrade && trade && <TradeSummary trade={trade} />}
           {supportArticleURL && (
             <ExternalLink href={supportArticleURL}>
-              <Trans>Learn more</Trans>
+              <Trans i18nKey="common.learnMore.link" />
             </ExternalLink>
           )}
           {swapResult && swapResult.type === TradeFillType.Classic && (
@@ -125,15 +107,15 @@ export default function Error({ errorType, trade, swapResult, onRetry }: ErrorMo
               )}
               color="neutral2"
             >
-              <Trans>View on Explorer</Trans>
+              <Trans i18nKey="common.viewOnExplorer" />
             </ExternalLink>
           )}
         </ColumnCenter>
       }
       buttonsConfig={{
         left: {
-          type: DialogButtonType.Accent,
-          title: <Trans>Try again</Trans>,
+          type: DialogButtonType.Primary,
+          title: <Trans i18nKey="common.tryAgain.error" />,
           onClick: onRetry,
         },
       }}

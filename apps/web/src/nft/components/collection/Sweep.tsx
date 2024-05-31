@@ -195,9 +195,15 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
 
     let jointCollections: GenieAsset[] = []
 
-    if (sudoSwapAssets) jointCollections = [...jointCollections, ...sudoSwapAssets]
-    if (nftxAssets) jointCollections = [...jointCollections, ...nftxAssets]
-    if (nft20Assets) jointCollections = [...jointCollections, ...nft20Assets]
+    if (sudoSwapAssets) {
+      jointCollections = [...jointCollections, ...sudoSwapAssets]
+    }
+    if (nftxAssets) {
+      jointCollections = [...jointCollections, ...nftxAssets]
+    }
+    if (nft20Assets) {
+      jointCollections = [...jointCollections, ...nft20Assets]
+    }
 
     const sudoSwapAssetsInJointCollections = jointCollections.filter(
       (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap && !sweepAsset.susFlag
@@ -267,7 +273,9 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   }, [itemsInBag, contractAddress])
 
   useEffect(() => {
-    if (sweepItemsInBag.length === 0) setSweepAmount('')
+    if (sweepItemsInBag.length === 0) {
+      setSweepAmount('')
+    }
   }, [sweepItemsInBag])
 
   useEffect(() => {
@@ -282,7 +290,9 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
   const handleSweep = (value: number) => {
     if (sortedAssets) {
       if (isItemsToggled) {
-        if (sweepItemsInBag.length === 0 && value > 0) setBagExpanded({ bagExpanded: true })
+        if (sweepItemsInBag.length === 0 && value > 0) {
+          setBagExpanded({ bagExpanded: true })
+        }
 
         if (sweepItemsInBag.length < value) {
           addAssetsToBag(sortedAssets.slice(sweepItemsInBag.length, value), true)
@@ -307,7 +317,9 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
           }
 
           if (wishAssets.length > 0) {
-            if (sweepItemsInBag.length === 0) setBagExpanded({ bagExpanded: true })
+            if (sweepItemsInBag.length === 0) {
+              setBagExpanded({ bagExpanded: true })
+            }
             addAssetsToBag(wishAssets, true)
           }
         } else {
@@ -335,8 +347,9 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     if (typeof value === 'number') {
       if (sortedAssets) {
         if (isItemsToggled) {
-          if (Math.floor(value) !== Math.floor(sweepAmount !== '' ? parseFloat(sweepAmount) : 0))
+          if (Math.floor(value) !== Math.floor(sweepAmount !== '' ? parseFloat(sweepAmount) : 0)) {
             handleSweep(Math.floor(value))
+          }
           setSweepAmount(value < 1 ? '' : value.toString())
         } else {
           handleSweep(value)
@@ -369,7 +382,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
       <SweepLeftmostContainer>
         <SweepHeaderContainer>
           <ThemedText.SubHeader lineHeight="20px" paddingTop="6px" paddingBottom="6px">
-            <Trans>Sweep</Trans>
+            <Trans i18nKey="nft.sweep" />
           </ThemedText.SubHeader>
         </SweepHeaderContainer>
         <SweepSubContainer>
@@ -468,7 +481,9 @@ function useSweepFetcherParams(
           return { contractAddress: '', traits: [], markets: [] }
         }
       }
-      if (!markets.includes(market)) return { contractAddress: '', traits: [], markets: [] }
+      if (!markets.includes(market)) {
+        return { contractAddress: '', traits: [], markets: [] }
+      }
     }
 
     switch (market) {

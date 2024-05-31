@@ -60,7 +60,9 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   useEffect(() => {
     let timeout: NodeJS.Timeout
     async function getOrderStatuses() {
-      if (!account || pendingOrders.length === 0) return
+      if (!account || pendingOrders.length === 0) {
+        return
+      }
 
       // Stop polling if all orders in our queue have "finalized" states
       if (pendingOrders.every((order) => isFinalizedOrder(order))) {
@@ -74,7 +76,9 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
 
         pendingOrders.forEach(async (pendingOrder) => {
           const updatedOrder = statuses.find((order) => order.orderHash === pendingOrder.orderHash)
-          if (!updatedOrder) return
+          if (!updatedOrder) {
+            return
+          }
 
           const update: OrderUpdate['update'] = {
             ...(updatedOrder.orderStatus === UniswapXOrderStatus.FILLED

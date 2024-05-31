@@ -131,7 +131,7 @@ export const TokenDetailsHeader = () => {
   const shareMenuRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(shareMenuRef, isShareModalOpen ? toggleShareModal : undefined)
 
-  const tokenSymbolName = currency.symbol ?? <Trans>Symbol not found</Trans>
+  const tokenSymbolName = currency.symbol ?? <Trans i18nKey="tdp.symbolNotFound" />
 
   const explorerUrl = getExplorerLink(
     currency.chainId,
@@ -156,7 +156,7 @@ export const TokenDetailsHeader = () => {
       <TokenNameCell>
         <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />
         <TokenTitle>
-          <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
+          <TokenName>{currency.name ?? <Trans i18nKey="tdp.nameNotFound" />}</TokenName>
           <TokenSymbol>{tokenSymbolName}</TokenSymbol>
         </TokenTitle>
       </TokenNameCell>
@@ -165,7 +165,12 @@ export const TokenDetailsHeader = () => {
         {!isMobileScreen || (isMobileScreen && actionsModalIsOpen) ? (
           <HeaderActionsContainer>
             {explorerUrl && (
-              <MouseoverTooltip text={t`Explorer`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+              <MouseoverTooltip
+                text={t('common.explorer')}
+                placement="top"
+                size={TooltipSize.Max}
+                disabled={isMobileScreen}
+              >
                 <StyledExternalLink href={explorerUrl}>
                   <ActionButton>
                     {currency.chainId === ChainId.MAINNET ? (
@@ -175,7 +180,7 @@ export const TokenDetailsHeader = () => {
                     )}
                     {isMobileScreen && (
                       <ThemedText.BodyPrimary>
-                        <Trans>Explorer</Trans>
+                        <Trans i18nKey="common.explorer" />
                       </ThemedText.BodyPrimary>
                     )}
                   </ActionButton>
@@ -183,13 +188,18 @@ export const TokenDetailsHeader = () => {
               </MouseoverTooltip>
             )}
             {homepageUrl && (
-              <MouseoverTooltip text={t`Website`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+              <MouseoverTooltip
+                text={t('common.website')}
+                placement="top"
+                size={TooltipSize.Max}
+                disabled={isMobileScreen}
+              >
                 <StyledExternalLink href={homepageUrl}>
                   <ActionButton>
                     <Globe width="18px" height="18px" fill={theme.neutral1} />
                     {isMobileScreen && (
                       <ThemedText.BodyPrimary>
-                        <Trans>Website</Trans>
+                        <Trans i18nKey="common.website" />
                       </ThemedText.BodyPrimary>
                     )}
                   </ActionButton>
@@ -197,13 +207,18 @@ export const TokenDetailsHeader = () => {
               </MouseoverTooltip>
             )}
             {twitterUrl && (
-              <MouseoverTooltip text={t`Twitter`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+              <MouseoverTooltip
+                text={t('common.twitter')}
+                placement="top"
+                size={TooltipSize.Max}
+                disabled={isMobileScreen}
+              >
                 <StyledExternalLink href={twitterUrl}>
                   <ActionButton>
                     <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
                     {isMobileScreen && (
                       <ThemedText.BodyPrimary>
-                        <Trans>Twitter</Trans>
+                        <Trans i18nKey="common.twitter" />
                       </ThemedText.BodyPrimary>
                     )}
                   </ActionButton>
@@ -219,7 +234,7 @@ export const TokenDetailsHeader = () => {
                     <Link width="18px" height="18px" color={theme.neutral1} />
                   )}
                   <ThemedText.BodyPrimary>
-                    {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
+                    {isCopied ? <Trans i18nKey="common.copied" /> : <Trans i18nKey="common.copyLink.button" />}
                   </ThemedText.BodyPrimary>
                 </ActionButton>
                 <ActionButton
@@ -230,7 +245,7 @@ export const TokenDetailsHeader = () => {
                 >
                   <ShareIcon fill={theme.neutral1} width={18} height={18} />
                   <ThemedText.BodyPrimary>
-                    <Trans>Share to Twitter</Trans>
+                    <Trans i18nKey="common.share.shareToTwitter" />
                   </ThemedText.BodyPrimary>
                 </ActionButton>
               </>

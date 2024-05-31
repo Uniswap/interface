@@ -48,7 +48,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
             <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
-                  <Trans>Loading</Trans>
+                  <Trans i18nKey="common.loading" />
                 </Dots>
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
@@ -65,7 +65,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
               as={Link}
               to={`/migrate/v2/${liquidityToken.address}`}
             >
-              <Trans>Migrate</Trans>
+              <Trans i18nKey="common.migrate" />
             </ButtonEmpty>
           </RowFixed>
         </FixedHeightRow>

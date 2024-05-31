@@ -241,7 +241,9 @@ export function useLiquidityBarData({
   useEffect(() => {
     async function formatData() {
       const ticksProcessed = activePoolData.data
-      if (!ticksProcessed) return
+      if (!ticksProcessed) {
+        return
+      }
 
       let activeRangePercentage: number | undefined = undefined
       let activeRangeIndex: number | undefined = undefined
