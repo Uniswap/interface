@@ -23,7 +23,9 @@ export default function Updater(): null {
 
   const fetchList = useFetchPoolListCallback()
   const fetchAllListsCallback = useCallback(() => {
-    if (!isWindowVisible) return
+    if (!isWindowVisible) {
+      return
+    }
     POOLS_LIST.forEach((url) => {
       // Skip validation on unsupported lists
       const isUnsupportedList = false
@@ -35,7 +37,9 @@ export default function Updater(): null {
   useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
   useEffect(() => {
-    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
+    if (!rehydrated || !lists) {
+      return
+    } // loaded lists will not be available until state is rehydrated
 
     // whenever a list is not loaded and not loading, try again to load it
     Object.keys(lists).forEach((listUrl) => {
@@ -56,7 +60,9 @@ export default function Updater(): null {
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
-    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
+    if (!rehydrated || !lists) {
+      return
+    } // loaded lists will not be available until state is rehydrated
 
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]

@@ -3,6 +3,7 @@ export const MOONPAY_SUPPORTED_CURRENCY_CODES = [
   'eth_arbitrum',
   'eth_optimism',
   'eth_polygon',
+  'eth_base',
   'weth',
   'wbtc',
   'matic_polygon',
@@ -10,6 +11,7 @@ export const MOONPAY_SUPPORTED_CURRENCY_CODES = [
   'usdc_arbitrum',
   'usdc_optimism',
   'usdc_polygon',
+  'usdc_base',
   'usdc',
   'usdt',
 ] as const

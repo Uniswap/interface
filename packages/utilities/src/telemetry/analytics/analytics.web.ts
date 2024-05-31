@@ -3,16 +3,64 @@ import { flush, Identify, identify, init, setDeviceId, track } from '@amplitude/
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
-import { AMPLITUDE_SHARED_TRACKING_OPTIONS, ANONYMOUS_EVENT_NAMES, DUMMY_KEY } from './constants'
+import {
+  ALLOW_ANALYTICS_ATOM_KEY,
+  AMPLITUDE_SHARED_TRACKING_OPTIONS,
+  ANONYMOUS_EVENT_NAMES,
+  DUMMY_KEY,
+} from './constants'
 import { generateAnalyticsLoggers } from './logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
+let allowAnalytics: boolean = true
+let commitHash: string | undefined
 
-let allowAnalytics: Maybe<boolean>
+async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
+  try {
+    window.localStorage.setItem(ALLOW_ANALYTICS_ATOM_KEY, JSON.stringify(allowed))
+    document.dispatchEvent(new Event('analyticsToggled'))
+  } catch {
+    await chrome.storage.local.set({ ALLOW_ANALYTICS_ATOM_KEY: JSON.stringify(allowed) })
+  }
+}
+
+async function getAnalyticsAtomFromStorage(): Promise<boolean> {
+  try {
+    return window.localStorage.getItem(ALLOW_ANALYTICS_ATOM_KEY) !== 'false'
+  } catch {
+    const res = await chrome.storage.local.get(ALLOW_ANALYTICS_ATOM_KEY)
+    return res[ALLOW_ANALYTICS_ATOM_KEY] !== 'false'
+  }
+}
+
+export async function getAnalyticsAtomDirect(forceRead?: boolean): Promise<boolean> {
+  if (forceRead) {
+    allowAnalytics = await getAnalyticsAtomFromStorage()
+  }
+
+  return allowAnalytics
+}
+
+// Listen for changes from other areas
+const updateLocalVar = async (): Promise<void> => {
+  allowAnalytics = await getAnalyticsAtomFromStorage()
+}
+try {
+  window.document.addEventListener('analyticsToggled', updateLocalVar, false)
+} catch {
+  chrome.storage.local.onChanged.addListener(updateLocalVar)
+}
 
 export const analytics: Analytics = {
-  async init(transportProvider: ApplicationTransport, allowed: boolean): Promise<void> {
-    allowAnalytics = allowed
+  async init(
+    transportProvider: ApplicationTransport,
+    allowed: boolean,
+    initHash?: string
+  ): Promise<void> {
+    // Set properties
+    commitHash = initHash
+    await setAnalyticsAtomDirect(allowed)
+
     try {
       init(
         DUMMY_KEY, // Amplitude custom reverse proxy takes care of API key
@@ -28,7 +76,7 @@ export const analytics: Analytics = {
     }
   },
   async setAllowAnalytics(allowed: boolean): Promise<void> {
-    allowAnalytics = allowed
+    await setAnalyticsAtomDirect(allowed)
     if (allowed) {
       // TODO: handle setting device id to a new or existing old id here
     } else {
@@ -37,22 +85,35 @@ export const analytics: Analytics = {
       setDeviceId(ANONYMOUS_DEVICE_ID)
     }
   },
-  sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+  async sendEvent(eventName: string, eventProperties?: Record<string, unknown>): Promise<void> {
+    if (!(await getAnalyticsAtomDirect()) && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
-    loggers.sendEvent(eventName, eventProperties)
-    track(eventName, eventProperties)
+    const finalProperties = {
+      ...eventProperties,
+      ...(commitHash ? { git_commit_hash: commitHash } : {}),
+    }
+    loggers.sendEvent(eventName, finalProperties)
+    track(eventName, finalProperties)
   },
   flushEvents(): void {
     loggers.flushEvents()
     flush()
   },
-  setUserProperty(property: string, value: UserPropertyValue): void {
-    if (!allowAnalytics) {
+  async setUserProperty(
+    property: string,
+    value: UserPropertyValue,
+    insert?: boolean
+  ): Promise<void> {
+    if (!(await getAnalyticsAtomDirect())) {
       return
     }
-    loggers.setUserProperty(property, value)
-    identify(new Identify().set(property, value))
+
+    if (insert) {
+      identify(new Identify().postInsert(property, value))
+    } else {
+      loggers.setUserProperty(property, value)
+      identify(new Identify().set(property, value))
+    }
   },
 }

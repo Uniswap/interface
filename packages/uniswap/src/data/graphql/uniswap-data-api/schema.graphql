@@ -182,6 +182,7 @@ enum Chain {
   BNB
   BASE
   BLAST
+  ZORA
   UNKNOWN_CHAIN
 }
 
@@ -347,6 +348,7 @@ type NftActivity {
   orderStatus: OrderStatus
   url: String
   timestamp: Int!
+  chain: Chain
 }
 
 type NftActivityConnection {
@@ -432,6 +434,7 @@ type NftAsset {
   creator: NftProfile
   mediaType: MediaType
   isSpam: Boolean
+  chain: Chain
 }
 
 type NftAssetConnection {

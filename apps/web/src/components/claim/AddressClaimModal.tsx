@@ -6,8 +6,8 @@ import styled from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
 import useENS from '../../hooks/useENS'
@@ -17,9 +17,9 @@ import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
-import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
+import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -44,7 +44,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 `
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   // state for smart contract input
   const [typed, setTyped] = useState('')
@@ -106,27 +106,24 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardSection gap="md">
               <RowBetween>
                 <Text color="$white" fontWeight="$medium">
-                  <Trans>Claim UNI token</Trans>
+                  <Trans i18nKey="common.claimUni" />
                 </Text>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <Text color="$white" fontWeight="$medium" fontSize={36}>
-                <Trans>{{ amount }} UNI</Trans>
+                {amount} UNI
               </Text>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <ThemedText.DeprecatedSubHeader fontWeight={535}>
-              <Trans>
-                Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
-                submission.
-              </Trans>
+              <Trans i18nKey="unitag.addressClaim" />
             </ThemedText.DeprecatedSubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
               <Text color="$statusCritical">
-                <Trans>Address has no available claim</Trans>
+                <Trans i18nKey="uni.claim.notAvailable" />
               </Text>
             )}
             <ButtonPrimary
@@ -137,7 +134,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans>Claim UNI</Trans>
+              <Trans i18nKey="uni.claim" />
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -160,16 +157,16 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader fontWeight={535} color="black">
-                {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
+                {claimConfirmed ? <Trans i18nKey="common.claimed" /> : <Trans i18nKey="common.claiming" />}
               </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color="#ffae00" fontWeight="$medium">
-                  <Trans>{{ unclaimedUni }} UNI</Trans>
+                  {unclaimedUni} UNI
                 </Text>
               )}
               {parsedAddress && (
                 <ThemedText.DeprecatedLargeHeader fontWeight={535} color="black">
-                  <Trans>for {{ address: shortenAddress(parsedAddress) }}</Trans>
+                  <Trans i18nKey="common.for.address" values={{ address: shortenAddress(parsedAddress) }} />
                 </ThemedText.DeprecatedLargeHeader>
               )}
             </AutoColumn>
@@ -179,7 +176,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
-                  <Trans>Welcome to team Unicorn :) </Trans>
+                  <Trans i18nKey="uni.welcome" />
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
@@ -188,12 +185,12 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             )}
             {attempting && !hash && (
               <ThemedText.DeprecatedSubHeader color="black">
-                <Trans>Confirm this transaction in your wallet</Trans>
+                <Trans i18nKey="common.confirmTransaction.button" />
               </ThemedText.DeprecatedSubHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
-                <Trans>View transaction on Explorer</Trans>
+                <Trans i18nKey="common.viewTransactionExplorer.link" />
               </ExternalLink>
             )}
           </AutoColumn>

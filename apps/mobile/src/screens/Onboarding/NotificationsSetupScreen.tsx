@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, Platform, StyleSheet } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { useBiometricContext } from 'src/features/biometrics/context'
@@ -18,12 +17,8 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'uniswap/src/utils/platform'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
-import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
@@ -44,11 +39,9 @@ export const showNotificationSettingsAlert = (): void => {
 export function NotificationsSetupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
-  const accounts = useAppSelector(selectAccounts)
-  const dispatch = useAppDispatch()
-  const addresses = Object.keys(accounts)
   const hasSeedPhrase = useNativeAccountExists()
   const { deviceSupportsBiometrics } = useBiometricContext()
+  const { enableNotifications } = useOnboardingContext()
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
@@ -103,19 +96,11 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   const onPressEnableNotifications = useCallback(async () => {
     promptPushPermission(() => {
-      addresses.forEach((address) => {
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.TogglePushNotification,
-            enabled: true,
-            address,
-          })
-        )
-      })
+      enableNotifications()
     }, showNotificationSettingsAlert)
 
     await navigateToNextScreen()
-  }, [addresses, dispatch, navigateToNextScreen])
+  }, [enableNotifications, navigateToNextScreen])
 
   return (
     <OnboardingScreen

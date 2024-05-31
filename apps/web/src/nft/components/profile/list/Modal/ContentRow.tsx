@@ -151,7 +151,7 @@ export const ContentRow = ({
             />
           ) : row.status === ListingStatus.SIGNING ? (
             <ProceedText>
-              <Trans>Proceed in wallet</Trans>
+              <Trans i18nKey="common.proceedInWallet.short" />
             </ProceedText>
           ) : row.status === ListingStatus.APPROVED ? (
             <Check height="20" width="20" stroke={theme.success} />
@@ -160,7 +160,11 @@ export const ContentRow = ({
               <Row>
                 <XOctagon height="20" width="20" color={theme.critical} />
                 <FailedText>
-                  {row.status === ListingStatus.FAILED ? <Trans>Failed</Trans> : <Trans>Rejected</Trans>}
+                  {row.status === ListingStatus.FAILED ? (
+                    <Trans i18nKey="common.failed.error" />
+                  ) : (
+                    <Trans i18nKey="common.rejected" />
+                  )}
                 </FailedText>
               </Row>
             )
@@ -170,10 +174,10 @@ export const ContentRow = ({
       {failed && (
         <ButtonRow justify="space-between">
           <RemoveButton onClick={() => removeRow(row)}>
-            <Trans>Remove</Trans>
+            <Trans i18nKey="common.remove.label" />
           </RemoveButton>
           <RetryButton onClick={row.callback}>
-            <Trans>Retry</Trans>
+            <Trans i18nKey="common.retry" />
           </RetryButton>
         </ButtonRow>
       )}

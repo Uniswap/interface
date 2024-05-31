@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -20,17 +19,16 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
-import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
 export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props): JSX.Element {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const { generateImportedAccounts } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -52,21 +50,15 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const handleNext = useCallback(
-    (storedMnemonicId: string) => {
-      dispatch(
-        importAccountActions.trigger({
-          type: ImportAccountType.MnemonicNative,
-          mnemonicId: storedMnemonicId,
-          indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
-        })
-      )
+    async (storedMnemonicId: string) => {
+      await generateImportedAccounts(storedMnemonicId, BackupType.Manual)
 
       // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
       if (!isRestoringMnemonic) {
         navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
       }
     },
-    [dispatch, isRestoringMnemonic, navigation, params]
+    [generateImportedAccounts, isRestoringMnemonic, navigation, params]
   )
 
   const onPressRecoveryHelpButton = (): Promise<void> =>
@@ -108,7 +100,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
           setSubmitEnabled(e.nativeEvent.canSubmit)
         }
-        onMnemonicStored={(e: NativeSyntheticEvent<MnemonicStoredEvent>): void =>
+        onMnemonicStored={(e: NativeSyntheticEvent<MnemonicStoredEvent>): Promise<void> =>
           handleNext(e.nativeEvent.mnemonicId)
         }
         onPasteEnd={(): void => {

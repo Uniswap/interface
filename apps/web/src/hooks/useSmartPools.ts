@@ -64,7 +64,9 @@ export function useUserPoolBalance(
   const { result } = useSingleCallResult(poolExtendedContract ?? undefined, 'getUserAccount', target)
 
   return useMemo(() => {
-    if (!poolExtendedContract) return undefined
+    if (!poolExtendedContract) {
+      return undefined
+    }
 
     return result?.[0]
   }, [poolExtendedContract, result])

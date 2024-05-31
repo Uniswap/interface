@@ -83,11 +83,11 @@ export default function SettingsMenu({
   const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
-    <SlideOutMenu title={<Trans>Settings</Trans>} onClose={onClose}>
+    <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
       <Container>
         <div>
           <SectionTitle data-testid="wallet-header">
-            <Trans>Preferences</Trans>
+            <Trans i18nKey="common.preferences" />
           </SectionTitle>
           <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
@@ -99,7 +99,7 @@ export default function SettingsMenu({
           {!currencyConversionEnabled && (
             <>
               <SectionTitle data-testid="wallet-header">
-                <Trans>Language</Trans>
+                <Trans i18nKey="common.language" />
               </SectionTitle>
               <LanguageMenuItems />
             </>
@@ -108,13 +108,13 @@ export default function SettingsMenu({
           {currencyConversionEnabled && (
             <Column>
               <SettingsButton
-                title={<Trans>Language</Trans>}
+                title={<Trans i18nKey="common.language" />}
                 currentState={LOCALE_LABEL[activeLocale]}
                 onClick={openLanguageSettings}
                 testId="language-settings-button"
               />
               <SettingsButton
-                title={<Trans>Currency</Trans>}
+                title={<Trans i18nKey="common.currency" />}
                 currentState={activeLocalCurrency}
                 onClick={openLocalCurrencySettings}
                 testId="local-currency-settings-button"

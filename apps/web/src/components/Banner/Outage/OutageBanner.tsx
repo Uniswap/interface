@@ -56,19 +56,16 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
         </IconContainer>
         <OutageTextContainer>
           <ThemedText.BodySmall lineHeight="20px">
-            <Trans>{{ versionName }} will be back soon</Trans>
+            <Trans i18nKey="outageBanner.title" values={{ versionName }} />
           </ThemedText.BodySmall>
           <ThemedText.LabelMicro>
-            <Trans>
-              {{ chainName }}
-              {{ versionDescription }} data is unavailable right now, but we expect the issue to be resolved shortly.
-            </Trans>
+            <Trans i18nKey="outageBanner.message" values={{ chainName, versionDescription }} />
           </ThemedText.LabelMicro>
           <ThemedText.LabelMicro>
-            <Trans>You can still swap and provide liquidity on this chain without issue.</Trans>
+            <Trans i18nKey="outageBanner.message.sub" />
           </ThemedText.LabelMicro>
           <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
-            <Trans>Learn more</Trans>
+            <Trans i18nKey="common.learnMore.link" />
           </HelpCenterLink>
         </OutageTextContainer>
         <StyledXButton

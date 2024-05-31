@@ -1,4 +1,3 @@
-import { useTrace } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback } from 'react'
 import { useAddPopup } from 'state/application/hooks'
@@ -11,6 +10,7 @@ import { TransactionType } from 'state/transactions/types'
 import { logSwapSuccess } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isL2ChainId } from 'utils/chains'
 import { usePollPendingOrders } from './polling/orders'
 import { usePollPendingTransactions } from './polling/transactions'
@@ -61,7 +61,9 @@ function useOnActivityUpdate(): OnActivityUpdate {
         const { chainId, original, update } = activity
 
         // Return early if the order is already filled
-        if (original.status === UniswapXOrderStatus.FILLED) return
+        if (original.status === UniswapXOrderStatus.FILLED) {
+          return
+        }
 
         const updatedOrder = { ...original, ...update }
         dispatch(updateSignature(updatedOrder))

@@ -21,10 +21,8 @@ const Container = styled.div`
 
 const Fold = forwardRef<HTMLDivElement>(function Fold(props, scrollAnchor) {
   return (
-    <Container>
-      <div ref={scrollAnchor}>
-        <DirectToDefi />
-      </div>
+    <Container ref={scrollAnchor}>
+      <DirectToDefi />
       <Stats />
       <NewsletterEtc />
       <Footer />

@@ -1,7 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
-jest.mock('analytics', () => ({
+jest.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: jest.fn(),
 }))
 
@@ -40,7 +40,7 @@ describe('swapFlowLoggers', () => {
       time_to_swap: 100,
       time_to_swap_since_first_input: 100,
       hash: mockHash,
-      chainId: mockChainId,
+      chain_id: mockChainId,
       ...mockAnalyticsContext,
     })
   })

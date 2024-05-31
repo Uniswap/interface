@@ -3,7 +3,7 @@ import SettingsTab from 'components/Settings'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
@@ -11,8 +11,8 @@ import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { RowBetween } from '../Row'
 
 const Tabs = styled.div`
@@ -51,7 +51,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </Link>
         <FindPoolTabsText>
-          <Trans>Import V2 pool</Trans>
+          <Trans i18nKey="pool.import.v2" />
         </FindPoolTabsText>
       </RowBetween>
     </Tabs>
@@ -70,6 +70,7 @@ export function AddRemoveTabs({
   buying,
   selling,
   autoSlippage,
+  positionID,
   children,
 }: {
   adding: boolean
@@ -77,24 +78,31 @@ export function AddRemoveTabs({
   buying?: boolean
   selling?: boolean
   autoSlippage: Percent
+  positionID?: string
   showBackLink?: boolean
   children?: ReactNode
 }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const { state } = useLocation()
+  const location = useLocation()
+
+  // detect if back should redirect to v3 or v2 pool page
+  const poolLink = location.pathname.includes('add/v2')
+    ? '/pools/v2'
+    : '/pools' + (positionID ? `/${positionID.toString()}` : '')
+
+  // If the 'from' state is set by the previous page route back to the previous page, if not, route back to base pool
+  const target = state?.from ?? poolLink
 
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }} align="center">
         <StyledLink
-          to=".."
-          onClick={(e) => {
-            e.preventDefault()
-            navigate(-1)
-
+          to={target}
+          onClick={() => {
             if (adding) {
               // not 100% sure both of these are needed
               dispatch(resetMintState())
@@ -107,15 +115,15 @@ export function AddRemoveTabs({
         </StyledLink>
         <AddRemoveTitleText $center={!children}>
           {creating ? (
-            <Trans>Create a pair</Trans>
+            <Trans i18nKey="pool.create.pair" />
           ) : adding ? (
-            <Trans>Add Liquidity</Trans>
+            <Trans i18nKey="common.addLiquidity" />
           ) : buying ? (
-            <Trans>Buy Smart Pool</Trans>
+            <Trans i18nKey="common.buySmartPool" />
           ) : selling ? (
-            <Trans>Sell Smart Pool</Trans>
+            <Trans i18nKey="common.sellSmartPool" />
           ) : (
-            <Trans>Remove liquidity</Trans>
+            <Trans i18nKey="pool.removeLiquidity" />
           )}
         </AddRemoveTitleText>
         {children && <Box style={{ marginRight: '.5rem' }}>{children}</Box>}

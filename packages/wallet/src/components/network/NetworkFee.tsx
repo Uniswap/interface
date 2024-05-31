@@ -5,7 +5,6 @@ import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -29,6 +28,8 @@ export function NetworkFee({
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
 
+  const isLoading = gasFee.loading
+
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
       <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}>
@@ -38,14 +39,16 @@ export function NetworkFee({
       </NetworkFeeWarning>
       <Flex row alignItems="center" gap="$spacing8">
         <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
-        {gasFee.loading ? (
-          <SpinningLoader size={iconSizes.icon16} />
-        ) : gasFee.error ? (
+        {gasFee.error ? (
           <Text color="$neutral2" variant="body3">
             {t('common.text.notAvailable')}
           </Text>
         ) : (
-          <Text color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'} variant="body3">
+          <Text
+            color={
+              isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'
+            }
+            variant="body3">
             {gasFeeFormatted}
           </Text>
         )}

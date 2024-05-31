@@ -4,7 +4,9 @@ import { SupportedInterfaceChainId } from 'constants/chains'
 import { useNftUniversalRouterAddressQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function getURAddress(chainId?: SupportedInterfaceChainId, nftURAddress?: string): string | undefined {
-  if (!chainId) return undefined
+  if (!chainId) {
+    return undefined
+  }
   // if mainnet and on NFT flow, use the contract address returned by GQL
   if (chainId === ChainId.MAINNET) {
     return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)

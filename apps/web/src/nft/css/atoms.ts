@@ -9,7 +9,9 @@ export interface Atoms extends Sprinkles {
 }
 
 export const atoms = ({ reset, ...rest }: Atoms) => {
-  if (!reset) return sprinkles(rest)
+  if (!reset) {
+    return sprinkles(rest)
+  }
 
   const elementReset = resetStyles.element[reset as keyof typeof resetStyles.element]
 

@@ -164,6 +164,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           account: signerAccount,
           dapp: request.dapp,
           chainId,
+          request,
         })
       )
     } else {

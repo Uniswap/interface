@@ -1,9 +1,8 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent } from 'analytics'
 import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
-import * as styles from 'nft/components/collection/Filters.css'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
@@ -12,7 +11,7 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Checkbox } from '../layout/Checkbox'
 
 const FilterItemWrapper = styled(Row)`

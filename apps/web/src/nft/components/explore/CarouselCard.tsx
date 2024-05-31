@@ -240,7 +240,9 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
   const { data: gqlCollection, loading } = useCollection(collection.address ?? '')
   const { formatNumber } = useFormatter()
 
-  if (loading) return <LoadingCarouselCard />
+  if (loading) {
+    return <LoadingCarouselCard />
+  }
 
   return (
     <CarouselCardBorder>

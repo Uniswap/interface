@@ -9,5 +9,6 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 // this atom persists the inclusion of the `disableNFTs=boolean` query parameter via the webview's session storage
 const storage = createJSONStorage(() => sessionStorage)
 
-export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', true, storage)
+export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', false, storage)
+export const hideMobileAppPromoBannerAtom = atomWithStorage('hideMobileAppPromoBanner', false, storage)
 export const shouldDisableExploreRoutesAtom = atomWithStorage('shouldDisableExploreRoutes', true, storage)

@@ -116,7 +116,9 @@ export const Brush = ({
 
   // initialize the brush
   useEffect(() => {
-    if (!brushRef.current) return
+    if (!brushRef.current) {
+      return
+    }
 
     brushBehavior.current = brushX<SVGGElement>()
       .extent([
@@ -145,7 +147,9 @@ export const Brush = ({
 
   // respond to xScale changes only
   useEffect(() => {
-    if (!brushRef.current || !brushBehavior.current) return
+    if (!brushRef.current || !brushBehavior.current) {
+      return
+    }
 
     brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(xScale) as any)
   }, [brushExtent, xScale])

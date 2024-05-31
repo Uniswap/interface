@@ -5,6 +5,7 @@ import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { call, delay, fork, select, takeEvery } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { logTransactionEvent } from 'wallet/src/features/transactions/transactionWatcherSaga'
@@ -14,12 +15,12 @@ export function* telemetrySaga() {
   const allowAnalytics = yield* select(selectAllowAnalytics)
   yield* call(
     analytics.init,
-    new ApplicationTransport(
-      uniswapUrls.amplitudeProxyUrl,
-      OriginApplication.MOBILE,
-      uniswapUrls.apiOrigin,
-      DeviceInfo.getBundleId()
-    ),
+    new ApplicationTransport({
+      serverUrl: uniswapUrls.amplitudeProxyUrl,
+      appOrigin: OriginApplication.MOBILE,
+      originOverride: uniswapUrls.apiOrigin,
+      appBuild: DeviceInfo.getBundleId(),
+    }),
     allowAnalytics
   )
   yield* fork(watchTransactionEvents)

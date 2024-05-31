@@ -14,8 +14,8 @@ import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useChainId } from 'wagmi'
 
+import { useAccount } from 'hooks/useAccount'
 import { TitleRow } from '../shared'
 
 const SuccessImage = styled.img<{ numImages: number }>`
@@ -79,7 +79,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
   const theme = useTheme()
   const { formatNumberOrString } = useFormatter()
   const sellAssets = useSellAsset((state) => state.sellAssets)
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const nativeCurrency = useNativeCurrency(chainId)
   const { formatCurrencyAmount } = useFormatter()
 
@@ -91,7 +91,8 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
     <>
       <TitleRow>
         <ThemedText.HeadlineSmall lineHeight="28px">
-          <Trans>Successfully listed</Trans>&nbsp;{sellAssets.length > 1 ? ` ${sellAssets.length} ` : ''}
+          <Trans i18nKey="nft.successListed" />
+          &nbsp;{sellAssets.length > 1 ? ` ${sellAssets.length} ` : ''}
           NFT{pluralize(sellAssets.length)}!
         </ThemedText.HeadlineSmall>
         <X size={24} cursor="pointer" onClick={overlayClick} />
@@ -107,7 +108,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
       </SuccessImageWrapper>
       <Row justify="space-between" align="flex-start" marginBottom="16px">
         <ThemedText.SubHeader>
-          <Trans>Proceeds if sold</Trans>
+          <Trans i18nKey="nft.proceedsIfSold" />
         </ThemedText.SubHeader>
         <ProceedsColumn>
           <ThemedText.SubHeader>
@@ -125,7 +126,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
       </Row>
       <Row justify="space-between" style={{ flexWrap: 'wrap' }}>
         <ReturnButton onClick={() => window.location.reload()}>
-          <Trans>Return to My NFTs</Trans>
+          <Trans i18nKey="nft.returnToMy" />
         </ReturnButton>
         <TweetButton href={generateTweetForList(sellAssets)} target="_blank" rel="noreferrer">
           <TweetRow>
@@ -135,7 +136,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
               color={theme.deprecated_accentTextLightPrimary}
               fill={theme.deprecated_accentTextLightPrimary}
             />
-            <Trans>Share on Twitter</Trans>
+            <Trans i18nKey="common.share.twitter" />
           </TweetRow>
         </TweetButton>
       </Row>

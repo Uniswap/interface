@@ -7,7 +7,9 @@ describe('fromGraphQLChain', () => {
     expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(ChainId.MAINNET)
 
     for (const chain of Object.values(Chain)) {
-      if (!isSupportedGQLChain(chain)) continue
+      if (!isSupportedGQLChain(chain)) {
+        continue
+      }
       expect(supportedChainIdFromGQLChain(chain)).not.toBe(undefined)
     }
   })
@@ -16,7 +18,9 @@ describe('fromGraphQLChain', () => {
     expect(supportedChainIdFromGQLChain(Chain.UnknownChain)).toBe(undefined)
 
     for (const chain of Object.values(Chain)) {
-      if (isSupportedGQLChain(chain)) continue
+      if (isSupportedGQLChain(chain)) {
+        continue
+      }
       expect(supportedChainIdFromGQLChain(chain)).toBe(undefined)
     }
   })
@@ -28,7 +32,9 @@ describe('fromGraphQLChain', () => {
     const ExpandedChainList = [...Object.values(Chain), NewChain.NewChain as unknown as Chain]
 
     for (const chain of ExpandedChainList) {
-      if (isSupportedGQLChain(chain)) continue
+      if (isSupportedGQLChain(chain)) {
+        continue
+      }
       expect(supportedChainIdFromGQLChain(chain)).toBe(undefined)
     }
   })

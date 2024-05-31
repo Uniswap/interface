@@ -47,11 +47,6 @@ async function processAddChanges() {
     warn('You are logging data. Please confirm that nothing sensitive is being logged!')
   }
 
-  // Check for direct logging calls
-  if (allLinesAdded.some((change) => change.content.includes('analytics.sendEvent'))) {
-    warn(`You are using the direct analytics call. Please use the typed wrapper for your given surface if possible!`)
-  }
-
   // Check for UI package imports that are longer than needed
   const validLongerImports = [
     `'ui/src'`,
@@ -215,16 +210,28 @@ if (updatedGraphQLfile) {
 }
 
 // Migrations + schema warnings
-const updatedSchemaFile = danger.git.modified_files.find((file) =>
-  file.includes('src/app/schema.ts')
+const updatedMobileSchemaFile = danger.git.modified_files.find((file) =>
+  file.includes('mobile/src/app/schema.ts')
 )
 
-const updatedMigrationsFile = danger.git.modified_files.find((file) =>
-  file.includes('src/app/migrations.ts')
+const updatedMobileMigrationsFile = danger.git.modified_files.find((file) =>
+  file.includes('mobile/src/app/migrations.ts')
 )
 
-const updatedMigrationsTestFile = danger.git.modified_files.find((file) =>
-  file.includes('src/app/migrations.test.ts')
+const updatedMobileMigrationsTestFile = danger.git.modified_files.find((file) =>
+  file.includes('mobile/src/app/migrations.test.ts')
+)
+
+const updatedExtensionSchemaFile = danger.git.modified_files.find((file) =>
+  file.includes('stretch/src/app/schema.ts')
+)
+
+const updatedExtensionMigrationsFile = danger.git.modified_files.find((file) =>
+  file.includes('stretch/src/store/migrations.ts')
+)
+
+const updatedExtensionMigrationsTestFile = danger.git.modified_files.find((file) =>
+  file.includes('stretch/src/store/migrations.test.ts')
 )
 
 const createdSliceFile = danger.git.created_files.find((file) =>
@@ -239,32 +246,50 @@ const deletedSliceFile = danger.git.deleted_files.find((file) =>
   file.toLowerCase().includes('slice')
 )
 
-if (modifiedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
+if (modifiedSliceFile && ((!updatedMobileSchemaFile || !updatedMobileMigrationsFile) || (!updatedExtensionSchemaFile || !updatedExtensionMigrationsFile))) {
   warn(
     'You modified a slice file. If you added, renamed, or deleted required properties from state, then make sure to define a new schema and a create a migration.'
   )
 }
 
-if (updatedSchemaFile && !updatedMigrationsFile) {
+if (updatedMobileSchemaFile && !updatedMobileMigrationsFile) {
   warn(
-    'You updated the schema file but not the migrations file. Make sure to also define a migration.'
+    'You updated the mobile schema file but not the migrations file. Make sure to also define a migration.'
   )
 }
 
-if (!updatedSchemaFile && updatedMigrationsFile) {
+if (updatedExtensionSchemaFile && !updatedExtensionMigrationsFile) {
   warn(
-    'You updated the migrations file but not the schema. Schema always needs to be updated when a new migration is defined.'
+    'You updated the extension schema file but not the migrations file. Make sure to also define a migration.'
   )
 }
 
-if ((createdSliceFile || deletedSliceFile) && (!updatedSchemaFile || !updatedMigrationsFile)) {
-  warn('You created or deleted a slice file. Make sure to create check schema and migration is updated if needed.')
+if (!updatedMobileSchemaFile && updatedMobileMigrationsFile) {
+  warn(
+    'You updated the mobile migrations file but not the schema. Schema always needs to be updated when a new migration is defined.'
+  )
+}
+
+if (!updatedExtensionSchemaFile && updatedExtensionMigrationsFile) {
+  warn(
+    'You updated the extension migrations file but not the schema. Schema always needs to be updated when a new migration is defined.'
+  )
+}
+
+if ((createdSliceFile || deletedSliceFile) && (!updatedMobileSchemaFile || !updatedMobileMigrationsFile || !updatedExtensionSchemaFile || !updatedExtensionMigrationsFile)) {
+  warn('You created or deleted a slice file. Make sure to update the schema and create migration if needed.')
 
 
 }
 
-if (updatedMigrationsFile && !updatedMigrationsTestFile) {
+if ((updatedMobileMigrationsFile && !updatedMobileMigrationsTestFile) || (updatedExtensionMigrationsFile && !updatedExtensionMigrationsTestFile)) {
   fail(
     'You updated the migrations file but did not write any new tests. Each migration must have a test!'
+  )
+}
+
+if (updatedMobileMigrationsFile !== updatedExtensionMigrationsFile) {
+  warn(
+    'You updated the migrations file in one app but not the other. Make sure to update both migration files if needed.'
   )
 }

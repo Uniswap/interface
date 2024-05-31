@@ -19,7 +19,7 @@ export function V2Unsupported() {
       <AutoColumn gap="md" style={{ width: '100%' }}>
         <TextWrapper>
           <ThemedText.BodySecondary color="neutral2" textAlign="center">
-            <Trans>Uniswap V2 is not available on this network.</Trans>
+            <Trans i18nKey="v2.notAvailable" />
           </ThemedText.BodySecondary>
         </TextWrapper>
       </AutoColumn>

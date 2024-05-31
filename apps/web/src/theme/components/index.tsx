@@ -309,7 +309,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       >
         {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
         <CopyHelperText ref={textRef} fontSize={fontSize} offset={offset}>
-          {isCopied && iconPosition === 'left' ? <Trans>Copied!</Trans> : children}
+          {isCopied && iconPosition === 'left' ? <Trans i18nKey="common.copied" /> : children}
         </CopyHelperText>
         <div style={{ clear: 'both' }} />
         {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}

@@ -28,7 +28,9 @@ function LocalCurrencyMenuItem({
     return <StyledLocalCurrencyIcon>{getLocalCurrencyIcon(localCurrency)}</StyledLocalCurrencyIcon>
   }, [localCurrency])
 
-  if (!to) return null
+  if (!to) {
+    return null
+  }
 
   return (
     <MenuItem
@@ -46,7 +48,7 @@ export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) 
   const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
-    <SlideOutMenu title={<Trans>Currency</Trans>} onClose={onClose}>
+    <SlideOutMenu title={<Trans i18nKey="common.currency" />} onClose={onClose}>
       <MenuColumn>
         {SUPPORTED_LOCAL_CURRENCIES.map((localCurrency) => (
           <LocalCurrencyMenuItem

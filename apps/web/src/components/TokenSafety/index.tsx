@@ -91,13 +91,17 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
-        {!displayWarningLabel(warning) ? <Trans>Continue</Trans> : <Trans>I understand</Trans>}
+        {!displayWarningLabel(warning) ? (
+          <Trans i18nKey="common.continue.button" />
+        ) : (
+          <Trans i18nKey="common.acknowledge" />
+        )}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
   ) : (
     <StyledCloseButton onClick={onBlocked ?? onCancel}>
-      <Trans>Close</Trans>
+      <Trans i18nKey="common.close" />
     </StyledCloseButton>
   )
 }
@@ -245,7 +249,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
   const { heading, description } = getWarningCopy(displayWarning, plural)
   const learnMoreUrl = (
     <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
-      <Trans>Learn more</Trans>
+      <Trans i18nKey="common.learnMore.link" />
     </StyledExternalLink>
   )
 

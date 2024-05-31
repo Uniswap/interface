@@ -11,7 +11,7 @@ export function SmallBalanceToggle() {
 
   return (
     <SettingsToggle
-      title={t`Hide small balances`}
+      title={t('settings.hideSmallBalances')}
       isActive={hideSmallBalances}
       toggle={() => void updateHideSmallBalances((value) => !value)}
     />

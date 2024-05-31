@@ -97,7 +97,9 @@ export default function MigrateV2() {
 
   // filter for v2 liquidity tokens that the user has a balance in
   const tokenPairsWithV2Balance = useMemo(() => {
-    if (fetchingPairBalances) return []
+    if (fetchingPairBalances) {
+      return []
+    }
 
     return tokenPairsWithLiquidityTokens
       .filter(({ v2liquidityToken }) => v2liquidityToken && pairBalances[v2liquidityToken.address]?.greaterThan(0))
@@ -106,7 +108,9 @@ export default function MigrateV2() {
 
   // filter for v2 liquidity tokens that the user has a balance in
   const tokenPairsWithSushiBalance = useMemo(() => {
-    if (fetchingPairBalances) return []
+    if (fetchingPairBalances) {
+      return []
+    }
 
     return tokenPairsWithLiquidityTokens.filter(
       ({ sushiLiquidityToken }) => !!sushiLiquidityToken && pairBalances[sushiLiquidityToken.address]?.greaterThan(0)
@@ -117,7 +121,9 @@ export default function MigrateV2() {
   const v2IsLoading = fetchingPairBalances || v2Pairs.some(([pairState]) => pairState === PairState.LOADING)
 
   const networkSupportsV2 = useNetworkSupportsV2()
-  if (!networkSupportsV2) return <V2Unsupported />
+  if (!networkSupportsV2) {
+    return <V2Unsupported />
+  }
 
   return (
     <>
@@ -126,31 +132,28 @@ export default function MigrateV2() {
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrowLink to="/pools" />
             <MigrateHeader>
-              <Trans>Migrate V2 liquidity</Trans>
+              <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
             <div>
-              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
+              <QuestionHelper text={<Trans i18nKey="migrate.v2Subtitle" />} />
             </div>
           </AutoRow>
 
           <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
-            <Trans>
-              For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
-              Uniswap V3.
-            </Trans>
+            <Trans i18nKey="migrate.v2Instruction" />
           </ThemedText.DeprecatedBody>
 
           {!account ? (
             <LightCard padding="40px">
               <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
-                <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
+                <Trans i18nKey="migrate.connectWallet" />
               </ThemedText.DeprecatedBody>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
               <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Dots>
-                  <Trans>Loading</Trans>
+                  <Trans i18nKey="common.loading" />
                 </Dots>
               </ThemedText.DeprecatedBody>
             </LightCard>
@@ -174,15 +177,14 @@ export default function MigrateV2() {
               })}
             </>
           ) : (
-            <EmptyState message={<Trans>No V2 liquidity found.</Trans>} />
+            <EmptyState message={<Trans i18nKey="migrate.noV2Liquidity" />} />
           )}
 
           <AutoColumn justify="center" gap="md">
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-              <Trans>
-                Don’t see one of your v2 positions?{' '}
+              <Trans i18nKey="migrate.missingV2Position">
                 <StyledInternalLink id="import-pool-link" to="/pools/v2/find">
-                  Import it.
+                  <Trans i18nKey="migrate.import" />
                 </StyledInternalLink>
               </Trans>
             </Text>

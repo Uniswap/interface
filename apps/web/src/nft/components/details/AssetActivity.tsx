@@ -97,19 +97,19 @@ const ActivityTable = ({ children }: { children: ReactNode }) => {
         <thead>
           <TR>
             <TH>
-              <Trans>Event</Trans>
+              <Trans i18nKey="nft.event" />
             </TH>
             <TH>
-              <Trans>Price</Trans>
+              <Trans i18nKey="common.price" />
             </TH>
             <TH>
-              <Trans>By</Trans>
+              <Trans i18nKey="common.by" />
             </TH>
             <TH>
-              <Trans>To</Trans>
+              <Trans i18nKey="common.to" />
             </TH>
             <TH>
-              <Trans>Time</Trans>
+              <Trans i18nKey="common.time" />
             </TH>
           </TR>
         </thead>
@@ -157,7 +157,9 @@ const AssetActivity = ({ events }: { events?: ActivityEvent[] }) => {
           const formattedPrice = price
             ? formatNumberOrString({ input: parseFloat(price), type: NumberType.NFTToken })
             : null
-          if (!eventType) return null
+          if (!eventType) {
+            return null
+          }
           return (
             <TR key={index}>
               <TD>

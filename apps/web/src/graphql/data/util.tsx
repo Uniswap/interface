@@ -8,9 +8,9 @@ import {
   BACKEND_SUPPORTED_CHAINS,
   CHAIN_INFO,
   CHAIN_NAME_TO_CHAIN_ID,
-  ChainInfo,
   GQL_MAINNET_CHAINS,
   InterfaceGqlChain,
+  SupportedInterfaceChain,
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
@@ -95,27 +95,38 @@ export function toContractInput(currency: Currency): ContractInput {
 }
 
 export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefined {
-  if (!token.chain) return undefined
+  if (!token.chain) {
+    return undefined
+  }
   const chainId = supportedChainIdFromGQLChain(token.chain)
-  if (!chainId) return undefined
-  if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address)
+  if (!chainId) {
+    return undefined
+  }
+  if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
     return nativeOnChain(chainId)
-  else
+  } else {
     return new Token(
       chainId,
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.name ?? token.project?.name ?? undefined
+      token.project?.name ?? token.name ?? undefined
     )
+  }
 }
 
-export function getSupportedGraphQlChain(chain: ChainInfo | undefined, options?: undefined): ChainInfo | undefined
-export function getSupportedGraphQlChain(chain: ChainInfo | undefined, options: { fallbackToEthereum: true }): ChainInfo
 export function getSupportedGraphQlChain(
-  chain: ChainInfo | undefined,
+  chain: SupportedInterfaceChain | undefined,
+  options?: undefined
+): SupportedInterfaceChain | undefined
+export function getSupportedGraphQlChain(
+  chain: SupportedInterfaceChain | undefined,
+  options: { fallbackToEthereum: true }
+): SupportedInterfaceChain
+export function getSupportedGraphQlChain(
+  chain: SupportedInterfaceChain | undefined,
   options?: { fallbackToEthereum?: boolean }
-): ChainInfo | undefined {
+): SupportedInterfaceChain | undefined {
   const fallbackChain = options?.fallbackToEthereum ? CHAIN_INFO[ChainId.MAINNET] : undefined
   return chain?.backendChain.backendSupported ? chain : fallbackChain
 }
@@ -180,19 +191,29 @@ export function unwrapToken<
   T extends
     | {
         address?: string | null
+        project?: { name?: string | null }
       }
     | undefined
 >(chainId: number, token: T): T {
-  if (!token?.address) return token
+  if (!token?.address) {
+    return token
+  }
 
   const address = token.address.toLowerCase()
   const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
-  if (address !== nativeAddress) return token
+  if (address !== nativeAddress) {
+    return token
+  }
 
   const nativeToken = nativeOnChain(chainId)
+
   return {
     ...token,
     ...nativeToken,
+    project: {
+      ...token.project,
+      name: nativeToken.name,
+    },
     address: NATIVE_CHAIN_ID,
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
   }

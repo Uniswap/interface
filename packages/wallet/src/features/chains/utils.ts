@@ -22,6 +22,10 @@ export function chainIdToHexadecimalString(chainId: ChainId): string {
   return BigNumber.from(chainId).toHexString()
 }
 
+export function hexadecimalStringToInt(hex: string): number {
+  return parseInt(hex, 16)
+}
+
 export const isL2Chain = (chainId?: ChainId): boolean =>
   Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
@@ -51,6 +55,8 @@ export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
       return ChainId.Bnb
     case Chain.Blast:
       return ChainId.Blast
+    case Chain.Zora:
+      return ChainId.Zora
   }
 
   return null

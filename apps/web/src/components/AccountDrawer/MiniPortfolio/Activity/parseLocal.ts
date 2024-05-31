@@ -39,21 +39,21 @@ function buildCurrencyDescriptor(
   currencyB: Currency | undefined,
   amtB: string,
   formatNumber: FormatNumberFunctionType,
-  delimiter = t`for`
+  delimiter = t('for')
 ) {
   const formattedA = currencyA
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyA, amtA).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t`Unknown`
+    : t('common.unknown')
   const symbolA = currencyA?.symbol ?? ''
   const formattedB = currencyB
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t`Unknown`
+    : t('common.unknown')
   const symbolB = currencyB?.symbol ?? ''
   return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
 }
@@ -108,7 +108,7 @@ async function parseApproval(
   status: TransactionStatus
 ): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
-  const descriptor = currency?.symbol ?? currency?.name ?? t`Unknown`
+  const descriptor = currency?.symbol ?? currency?.name ?? t('common.unknown')
   return {
     title: getActivityTitle(
       TransactionType.APPROVAL,
@@ -134,7 +134,14 @@ async function parseLP(
     getCurrency(lp.quoteCurrencyId, chainId),
   ])
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
-  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber, t`and`)
+  const descriptor = buildCurrencyDescriptor(
+    baseCurrency,
+    baseRaw,
+    quoteCurrency,
+    quoteRaw,
+    formatNumber,
+    t('common.and')
+  )
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
@@ -166,8 +173,8 @@ async function parseMigrateCreateV3(
     getCurrency(lp.baseCurrencyId ?? 'native', chainId),
     getCurrency(lp.quoteCurrencyId ?? 'native', chainId),
   ])
-  const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
-  const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
+  const baseSymbol = baseCurrency?.symbol ?? t('common.unknown')
+  const quoteSymbol = quoteCurrency?.symbol ?? t('common.unknown')
   const descriptor = t(`{{baseSymbol}} and {{quoteSymbol}}`, { baseSymbol, quoteSymbol })
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
@@ -185,10 +192,10 @@ async function parseSend(
         input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
         type: NumberType.TokenNonTx,
       })
-    : t`Unknown`
+    : t('common.unknown')
 
   return {
-    descriptor: `${formattedAmount} ${currency?.symbol} ${t`to`} `,
+    descriptor: `${formattedAmount} ${currency?.symbol} ${t('common.to')} `,
     otherAccount: isAddress(recipient) || undefined,
     currencies: [currency],
   }
@@ -199,7 +206,9 @@ export async function transactionToActivity(
   chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Activity | undefined> {
-  if (!details) return undefined
+  if (!details) {
+    return undefined
+  }
   try {
     const defaultFields = {
       hash: details.hash,
@@ -283,13 +292,17 @@ export async function signatureToActivity(
   signature: SignatureDetails | undefined,
   formatNumber: FormatNumberFunctionType
 ): Promise<Activity | undefined> {
-  if (!signature) return undefined
+  if (!signature) {
+    return undefined
+  }
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER:
     case SignatureType.SIGN_UNISWAPX_V2_ORDER:
     case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
-      if (isOnChainOrder(signature.status)) return undefined
+      if (isOnChainOrder(signature.status)) {
+        return undefined
+      }
 
       const { title, statusMessage, status } =
         signature.type === SignatureType.SIGN_LIMIT
@@ -330,7 +343,9 @@ export function useLocalActivities(account: string): ActivityMap {
         .map((signature) => signatureToActivity(signature, formatNumber))
 
       return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
-        if (activity) acc[activity.hash] = activity
+        if (activity) {
+          acc[activity.hash] = activity
+        }
         return acc
       }, {} as ActivityMap)
     },

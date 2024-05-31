@@ -96,7 +96,9 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   const { formatTickPrice } = useFormatter()
 
   const onClick = useCallback(async () => {
-    if (walletChainId !== positionInfo.chainId) await switchChain(positionInfo.chainId)
+    if (walletChainId !== positionInfo.chainId) {
+      await switchChain(positionInfo.chainId)
+    }
     navigate('/pool/' + positionInfo.details.tokenId)
   }, [navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, walletChainId])
 
@@ -131,7 +133,8 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
       </Row>
       <RangeWrapper>
         <RangeText data-testid={`position-min-${priceLower.toFixed(0)}`}>
-          <Trans>Min:</Trans>&nbsp;
+          <Trans i18nKey="pool.min.label" />
+          &nbsp;
           {formatTickPrice({
             price: priceLower,
             atLimit: ticksAtLimit,
@@ -139,12 +142,14 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
           })}
           &nbsp;
           {positionInfo.pool.token0.symbol}&nbsp;
-          <Trans>per</Trans>&nbsp;
+          <Trans i18nKey="common.per" />
+          &nbsp;
           {positionInfo.pool.token1.symbol}
         </RangeText>
         <StyledDoubleArrow />
         <RangeText data-testid={`position-max-${priceUpper.toFixed(0)}`}>
-          <Trans>Max:</Trans>&nbsp;
+          <Trans i18nKey="pool.max.label" />
+          &nbsp;
           {formatTickPrice({
             price: priceUpper,
             atLimit: ticksAtLimit,
@@ -152,7 +157,8 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
           })}
           &nbsp;
           {positionInfo.pool.token0.symbol}&nbsp;
-          <Trans>per</Trans>&nbsp;
+          <Trans i18nKey="common.per" />
+          &nbsp;
           {positionInfo.pool.token1.symbol}
         </RangeText>
       </RangeWrapper>

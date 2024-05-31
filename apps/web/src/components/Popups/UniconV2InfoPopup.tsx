@@ -2,13 +2,13 @@ import Column from 'components/Column'
 import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
 import { PopupContainer } from 'components/Popups/PopupContent'
 import Row from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
-import { useAccount } from 'wagmi'
 
 const StyledColumn = styled(Column)`
   width: 242px;

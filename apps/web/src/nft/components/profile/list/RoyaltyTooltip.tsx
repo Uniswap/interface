@@ -67,7 +67,7 @@ export const RoyaltyTooltip = ({
             <MarketIcon>{getMarketplaceIcon(market.name, '16')}</MarketIcon>
             <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
               {market.name}&nbsp;
-              <Trans>fee</Trans>
+              <Trans i18nKey="common.fee" />
             </ThemedText.BodySmall>
           </Row>
           <FeePercent>{formatDelta(market.fee)}</FeePercent>
@@ -77,14 +77,14 @@ export const RoyaltyTooltip = ({
         <Row>
           <CollectionIcon src={asset.collection?.imageUrl} />
           <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
-            <Trans>Max creator royalties</Trans>
+            <Trans i18nKey="nft.maxRoyalties" />
           </ThemedText.BodySmall>
         </Row>
         <FeePercent>{maxRoyalty}%</FeePercent>
       </FeeWrap>
       <MaxFeeContainer>
         <ThemedText.BodySmall lineHeight="16px">
-          <Trans>Max fees</Trans>
+          <Trans i18nKey="nft.maxFees" />
         </ThemedText.BodySmall>
         <ThemedText.BodySmall lineHeight="16px" color={fees ? 'neutral1' : 'neutral2'}>
           {fees ? formatNumberOrString({ input: fees, type: NumberType.NFTToken }) : '-'} ETH

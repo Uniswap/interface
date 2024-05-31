@@ -108,7 +108,9 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
       const aprImpact =
         Number(poolInfo?.poolStake) / (Number(poolInfo?.poolStake) + Number(parsedAmount?.quotient.toString()) / 1e18)
       return (Number(poolInfo?.apr) * aprImpact).toFixed(2)
-    } else return undefined
+    } else {
+      return undefined
+    }
   }, [poolInfo, parsedAmount])
 
   const moveStakeData: StakeData = {
@@ -154,8 +156,9 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
       !deactivateStakeCallback ||
       (!fromPoolStakeBalance && !freeStakeBalance) ||
       !currencyValue.isToken
-    )
+    ) {
       return
+    }
 
     const moveCallback = !isDeactivate ? moveStakeCallback : deactivateStakeCallback
 

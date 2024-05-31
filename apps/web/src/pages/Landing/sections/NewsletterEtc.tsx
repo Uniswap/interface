@@ -121,7 +121,7 @@ export function NewsletterEtc() {
       <Box direction="row" maxWidth="1328px" gap="24px" width="100%">
         <SectionCol justify-content="space-between" height="100%">
           <H2>
-            <Trans>Connect with us</Trans>
+            <Trans i18nKey="landing.connectWithUs" />
           </H2>
           <Layout>
             <HelpCenterCard
@@ -132,9 +132,9 @@ export function NewsletterEtc() {
               rel="noopener noreferrer"
               backgroundColor={isDarkMode ? 'rgba(255, 77, 0, 0.08)' : 'rgba(255, 77, 0, 0.04)'}
             >
-              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t`Help Center`} />
+              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t('common.helpCenter')} />
               <H3 color={helpPrimary}>
-                <Trans>Get support</Trans>
+                <Trans i18nKey="common.getSupport.button" />
               </H3>
             </HelpCenterCard>
             <BlogCard
@@ -145,9 +145,9 @@ export function NewsletterEtc() {
               rel="noopener noreferrer"
               backgroundColor={isDarkMode ? 'rgba(98, 84, 50, 0.16)' : 'rgba(98, 84, 50, 0.04)'}
             >
-              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t`Blog`} />
+              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t('common.blog')} />
               <H3 color={blogPrimary}>
-                <Trans>Insights and news from the team</Trans>
+                <Trans i18nKey="landing.teamInsights" />
               </H3>
             </BlogCard>
             <RectCard
@@ -158,9 +158,13 @@ export function NewsletterEtc() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <PillButton icon={<ChatBubbles fill={theme.accent1} />} color={theme.accent1} label={t`Stay connected`} />
+              <PillButton
+                icon={<ChatBubbles fill={theme.accent1} />}
+                color={theme.accent1}
+                label={t('common.stayConnected')}
+              />
               <H3 color={theme.accent1}>
-                <Trans>Follow @Uniswap on X for the latest updates</Trans>
+                <Trans i18nKey="landing.followOnX" />
               </H3>
             </RectCard>
           </Layout>

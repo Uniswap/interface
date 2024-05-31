@@ -77,7 +77,9 @@ export default function Toggle({ id, bgColor, isActive, disabled, toggle }: Togg
 
   const switchToggle = () => {
     toggle()
-    if (isInitialToggleLoad) setIsInitialToggleLoad(false)
+    if (isInitialToggleLoad) {
+      setIsInitialToggleLoad(false)
+    }
   }
 
   return (

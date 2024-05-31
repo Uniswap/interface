@@ -22,7 +22,9 @@ export default function approveAmountCalldata(
   amount: CurrencyAmount<Currency>,
   spender: string
 ): { to: string; data: string; value: '0x0' } {
-  if (!amount.currency.isToken) throw new Error('Must call with an amount of token')
+  if (!amount.currency.isToken) {
+    throw new Error('Must call with an amount of token')
+  }
   const approveData = ERC20_INTERFACE.encodeFunctionData('approve', [spender, toHex(amount.quotient)])
   return {
     to: amount.currency.address,

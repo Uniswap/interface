@@ -64,12 +64,14 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
             return (
               <MouseoverTooltip
                 key={chartType}
-                text={disabled && <Trans>This setting is unavailable for the current chart</Trans>}
+                text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
                 placement={!isMobile ? 'right' : undefined}
               >
                 <InternalMenuItem
                   onClick={() => {
-                    if (disabled) return
+                    if (disabled) {
+                      return
+                    }
                     onSelectOption(chartType)
                     toggleMenu()
                   }}

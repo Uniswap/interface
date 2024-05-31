@@ -78,10 +78,10 @@ const getWarningMessage = (warning: WarningType) => {
   let message = <></>
   switch (warning) {
     case WarningType.BELOW_FLOOR:
-      message = <Trans>below floor price.</Trans>
+      message = <Trans i18nKey="nft.belowFloorEnd" />
       break
     case WarningType.ALREADY_LISTED:
-      message = <Trans>Already listed at</Trans>
+      message = <Trans i18nKey="nft.alreadyListedAt" />
       break
   }
   return message
@@ -175,7 +175,11 @@ export const PriceTextInput = ({
                 setWarningType(WarningType.NONE)
               }}
             >
-              {warningType === WarningType.BELOW_FLOOR ? <Trans>Dismiss</Trans> : <Trans>Remove item</Trans>}
+              {warningType === WarningType.BELOW_FLOOR ? (
+                <Trans i18nKey="common.dismiss" />
+              ) : (
+                <Trans i18nKey="common.removeItem" />
+              )}
             </WarningAction>
           </WarningRow>
         )}

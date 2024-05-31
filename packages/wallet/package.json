@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@apollo/client": "3.9.6",
-    "@ethersproject/bignumber": "5.7.0",
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
     "@ethersproject/providers": "5.7.2",

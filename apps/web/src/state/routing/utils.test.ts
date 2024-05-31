@@ -38,6 +38,10 @@ function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: bool
     tokenOutDecimals: currencyOut.decimals,
     tokenOutSymbol: currencyOut.symbol,
     isXv2: isXv2 ?? false,
+    isXv2Arbitrum: false,
+    priceImprovementBps: 0,
+    forceOpenOrders: false,
+    deadlineBufferSecs: 30,
   }
 }
 

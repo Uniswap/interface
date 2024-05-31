@@ -1,4 +1,4 @@
-import { getChainInfo } from 'constants/chains'
+import { getChain } from 'constants/chains'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -8,5 +8,5 @@ export function getNativeTokenDBAddress(chain: Chain): string | undefined {
     return undefined
   }
 
-  return getChainInfo({ chainId: pageChainId }).backendChain.nativeTokenBackendAddress
+  return getChain({ chainId: pageChainId }).backendChain.nativeTokenBackendAddress
 }

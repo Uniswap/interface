@@ -104,7 +104,9 @@ const Banner = () => {
   const [activeCollectionIdx, setActiveCollectionIdx] = useState(0)
   const onToggleNextSlide = useCallback(
     (direction: number) => {
-      if (!collections) return
+      if (!collections) {
+        return
+      }
       setActiveCollectionIdx((idx) => calculateCardIndex(idx + direction, collections.length))
     },
     [collections]

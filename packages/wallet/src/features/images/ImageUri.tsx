@@ -10,6 +10,7 @@ export type ImageUriProps = {
   resizeMode?: ResizeMode
   loadingContainerStyle?: FlexProps['style']
   loadedImageContainerStyle?: ImageStyle
+  testID?: string
   /**
    * Can optimize performance by prefetching dimensions in api request on Image field,
    * which allows us to avoid setting state in this component

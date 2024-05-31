@@ -37,40 +37,28 @@ export default function RangeBadge({ removed, inRange }: { removed?: boolean; in
   return (
     <BadgeWrapper>
       {removed ? (
-        <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees.</Trans>}>
+        <MouseoverTooltip text={<Trans i18nKey="pool.rangeBadge.tooltip.text" />}>
           <LabelText color={theme.neutral2}>
             <BadgeText>
-              <Trans>Closed</Trans>
+              <Trans i18nKey="common.closed" />
             </BadgeText>
             <Slash width={12} height={12} />
           </LabelText>
         </MouseoverTooltip>
       ) : inRange ? (
-        <MouseoverTooltip
-          text={
-            <Trans>
-              The price of this pool is within your selected range. Your position is currently earning fees.
-            </Trans>
-          }
-        >
+        <MouseoverTooltip text={<Trans i18nKey="pool.rangeBadge.tooltip.withinRange" />}>
           <LabelText color={theme.success}>
             <BadgeText>
-              <Trans>In range</Trans>
+              <Trans i18nKey="common.withinRange" />
             </BadgeText>
             <ActiveDot />
           </LabelText>
         </MouseoverTooltip>
       ) : (
-        <MouseoverTooltip
-          text={
-            <Trans>
-              The price of this pool is outside of your selected range. Your position is not currently earning fees.
-            </Trans>
-          }
-        >
+        <MouseoverTooltip text={<Trans i18nKey="pool.rangeBadge.tooltip.outsideRange" />}>
           <LabelText color={theme.deprecated_accentWarning}>
             <BadgeText>
-              <Trans>Out of range</Trans>
+              <Trans i18nKey="common.outOfRange" />
             </BadgeText>
             <AlertTriangle width={12} height={12} />
           </LabelText>

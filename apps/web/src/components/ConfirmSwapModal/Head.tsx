@@ -28,7 +28,7 @@ export function SwapHead({
         <Row justify="left">
           <FadePresence>
             <ThemedText.SubHeader>
-              {isLimitTrade ? <Trans>Review limit</Trans> : <Trans>Review swap</Trans>}
+              {isLimitTrade ? <Trans i18nKey="swap.reviewLimit" /> : <Trans i18nKey="swap.review" />}
             </ThemedText.SubHeader>
           </FadePresence>
         </Row>

@@ -1,12 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { Trans } from 'i18n'
 import { useCallback, useState } from 'react'
@@ -14,11 +16,10 @@ import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { useEthersSigner } from 'hooks/useEthersSigner'
 import { Text } from 'ui/src'
-import { useAccount } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -68,7 +69,8 @@ export default function AddLiquidity() {
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const wrappedNativeCurrency = account.status === 'connected' ? WRAPPED_NATIVE_CURRENCY[account.chainId] : undefined
+  const wrappedNativeCurrency =
+    account.status === 'connected' && account.chainId ? WRAPPED_NATIVE_CURRENCY[account.chainId] : undefined
 
   const oneCurrencyIsWETH = Boolean(
     account.chainId &&
@@ -145,7 +147,9 @@ export default function AddLiquidity() {
   const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onAdd() {
-    if (account.status !== 'connected' || !signer || !router || !networkSupportsV2) return
+    if (account.status !== 'connected' || !signer || !router || !networkSupportsV2) {
+      return
+    }
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     const deadline = await getDeadline()
@@ -255,10 +259,7 @@ export default function AddLiquidity() {
               </Text>
             </Row>
             <Text fontSize={12} textAlign="left" pt={8} fontStyle="italic" color="$neutral2">
-              <Trans>
-                Output is estimated. If the price changes by more than {{ allowed: allowedSlippage.toSignificant(4) }}%
-                your transaction will revert.
-              </Trans>
+              <Trans i18nKey="pool.estimatePercentToRevert" values={{ allowed: allowedSlippage.toSignificant(4) }} />
             </Text>
           </>
         )}
@@ -280,11 +281,15 @@ export default function AddLiquidity() {
   }
 
   const pendingText = (
-    <Trans>
-      Supplying {{ amtA: parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) }}{' '}
-      {{ symA: currencies[Field.CURRENCY_A]?.symbol }} and {{ amtB: parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) }}{' '}
-      {{ symB: currencies[Field.CURRENCY_B]?.symbol }}
-    </Trans>
+    <Trans
+      i18nKey="pool.supplyingMaths"
+      values={{
+        amtA: parsedAmounts[Field.CURRENCY_A]?.toSignificant(6),
+        symA: currencies[Field.CURRENCY_A]?.symbol,
+        amtB: parsedAmounts[Field.CURRENCY_B]?.toSignificant(6),
+        symB: currencies[Field.CURRENCY_B]?.symbol,
+      }}
+    />
   )
 
   const handleCurrencyASelect = useCallback(
@@ -328,7 +333,9 @@ export default function AddLiquidity() {
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
-  if (!networkSupportsV2) return <V2Unsupported />
+  if (!networkSupportsV2) {
+    return <V2Unsupported />
+  }
 
   return (
     <>
@@ -342,7 +349,7 @@ export default function AddLiquidity() {
             hash={txHash}
             reviewContent={() => (
               <ConfirmationModalContent
-                title={noLiquidity ? <Trans>You are creating a pool</Trans> : <Trans>You will receive</Trans>}
+                title={noLiquidity ? <Trans i18nKey="pool.areCreating" /> : <Trans i18nKey="common.youWillReceive" />}
                 onDismiss={handleDismissConfirmation}
                 topContent={modalHeader}
                 bottomContent={modalBottom}
@@ -358,13 +365,13 @@ export default function AddLiquidity() {
                   <BlueCard>
                     <AutoColumn gap="10px">
                       <ThemedText.DeprecatedLink fontWeight={535} color="accent1">
-                        <Trans>You are the first liquidity provider.</Trans>
+                        <Trans i18nKey="pool.areFirst" />
                       </ThemedText.DeprecatedLink>
                       <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                        <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
+                        <Trans i18nKey="pool.ratioTokenToPrice" />
                       </ThemedText.DeprecatedLink>
                       <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                        <Trans>Once you are happy with the rate click supply to review.</Trans>
+                        <Trans i18nKey="pool.onceHappyReview" />
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
@@ -375,13 +382,9 @@ export default function AddLiquidity() {
                     <AutoColumn gap="10px">
                       <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                         <b>
-                          <Trans>Tip:</Trans>
+                          <Trans i18nKey="common.tip.label" />
                         </b>{' '}
-                        <Trans>
-                          When you add liquidity, you will receive pool tokens representing your position. These tokens
-                          automatically earn fees proportional to your share of the pool, and can be redeemed at any
-                          time.
-                        </Trans>
+                        <Trans i18nKey="pool.liquidityPoolFeesNotice" />
                       </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
@@ -417,11 +420,7 @@ export default function AddLiquidity() {
                 <LightCard padding="0px" $borderRadius="20px">
                   <RowBetween padding="1rem">
                     <ThemedText.DeprecatedSubHeader fontWeight={535} fontSize={14}>
-                      {noLiquidity ? (
-                        <Trans>Initial prices and pool share</Trans>
-                      ) : (
-                        <Trans>Prices and pool share</Trans>
-                      )}
+                      {noLiquidity ? <Trans i18nKey="pool.initialShare" /> : <Trans i18nKey="pool.share" />}
                     </ThemedText.DeprecatedSubHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" $borderRadius="20px">
@@ -439,20 +438,20 @@ export default function AddLiquidity() {
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
                 <ThemedText.DeprecatedMain mb="4px">
-                  <Trans>Unsupported asset</Trans>
+                  <Trans i18nKey="common.unsupportedAsset_one" />
                 </ThemedText.DeprecatedMain>
               </ButtonPrimary>
             ) : account.status !== 'connected' ? (
-              <TraceEvent
-                events={[BrowserEvent.onClick]}
-                name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+              <Trace
+                logPress
+                eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
                 properties={{ received_swap_quote: false }}
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
                 <ButtonLight onClick={toggleWalletDrawer}>
-                  <Trans>Connect wallet</Trans>
+                  <Trans i18nKey="common.connectWallet.button" />
                 </ButtonLight>
-              </TraceEvent>
+              </Trace>
             ) : (
               <AutoColumn gap="md">
                 {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -469,10 +468,16 @@ export default function AddLiquidity() {
                         >
                           {approvalA === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans>Approving {{ sym: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                              <Trans
+                                i18nKey="pools.approving.amount"
+                                values={{ amount: currencies[Field.CURRENCY_A]?.symbol }}
+                              />
                             </Dots>
                           ) : (
-                            <Trans>Approve {{ sym: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                            <Trans
+                              i18nKey="account.transactionSummary.approve"
+                              values={{ sym: currencies[Field.CURRENCY_A]?.symbol }}
+                            />
                           )}
                         </ButtonPrimary>
                       )}
@@ -484,10 +489,16 @@ export default function AddLiquidity() {
                         >
                           {approvalB === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans>Approving {{ sym: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                              <Trans
+                                i18nKey="pools.approving.amount"
+                                values={{ amount: currencies[Field.CURRENCY_B]?.symbol }}
+                              />
                             </Dots>
                           ) : (
-                            <Trans>Approve {{ sym: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                            <Trans
+                              i18nKey="account.transactionSummary.approve"
+                              values={{ sym: currencies[Field.CURRENCY_B]?.symbol }}
+                            />
                           )}
                         </ButtonPrimary>
                       )}
@@ -501,7 +512,7 @@ export default function AddLiquidity() {
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                 >
                   <Text fontSize={20} fontWeight="$medium">
-                    {error ?? <Trans>Supply</Trans>}
+                    {error ?? <Trans i18nKey="pool.supply" />}
                   </Text>
                 </ButtonError>
               </AutoColumn>

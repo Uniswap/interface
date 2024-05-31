@@ -55,7 +55,6 @@ function* importAddressAccount(address: string, name?: string, ignoreActivate?: 
     type: AccountType.Readonly,
     address: formattedAddress,
     name,
-    pending: true,
     timeImportedMs: dayjs().valueOf(),
   }
   yield* call(onAccountImport, account, ignoreActivate)

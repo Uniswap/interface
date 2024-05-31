@@ -1,5 +1,4 @@
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Box } from 'nft/components/Box'
@@ -10,8 +9,9 @@ import { WalletAsset } from 'nft/types'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
 import { useToggleAccountDrawer } from '../hooks'
 
 const FloorPrice = styled(Row)`

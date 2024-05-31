@@ -3,6 +3,7 @@ import {
   UniverseEventProperties,
 } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
+// eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export function sendAnalyticsEvent<EventName extends keyof UniverseEventProperties>(

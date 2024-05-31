@@ -103,7 +103,7 @@ export const PositionPreview = ({
           <Break />
           <RowBetween>
             <ThemedText.DeprecatedLabel>
-              <Trans>Fee tier</Trans>
+              <Trans i18nKey="fee.tier" />
             </ThemedText.DeprecatedLabel>
             <ThemedText.DeprecatedLabel>{formatDelta(position?.pool?.fee / BIPS_BASE)}</ThemedText.DeprecatedLabel>
           </RowBetween>
@@ -123,7 +123,7 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <ThemedText.DeprecatedMain fontSize="12px">
-                <Trans>Min price</Trans>
+                <Trans i18nKey="pool.minPrice" />
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedMediumHeader textAlign="center">
                 {formatTickPrice({
@@ -133,12 +133,13 @@ export const PositionPreview = ({
                 })}
               </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
-                <Trans>
-                  {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
-                </Trans>
+                <Trans
+                  i18nKey="common.feesEarnedPerBase"
+                  values={{ symbolA: quoteCurrency.symbol, symbolB: baseCurrency.symbol }}
+                />
               </ThemedText.DeprecatedMain>
               <Text fontSize={11} textAlign="center" color="$neutral3" mt={4}>
-                <Trans>Your position will be 100% composed of {{ sym: baseCurrency?.symbol }} at this price</Trans>
+                <Trans i18nKey="pool.position.willBe100" values={{ sym: baseCurrency?.symbol }} />
               </Text>
             </AutoColumn>
           </LightCard>
@@ -146,7 +147,7 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <ThemedText.DeprecatedMain fontSize="12px">
-                <Trans>Max price</Trans>
+                <Trans i18nKey="pool.maxPrice" />
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedMediumHeader textAlign="center">
                 {formatTickPrice({
@@ -156,12 +157,13 @@ export const PositionPreview = ({
                 })}
               </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
-                <Trans>
-                  {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
-                </Trans>
+                <Trans
+                  i18nKey="common.feesEarnedPerBase"
+                  values={{ symbolA: quoteCurrency.symbol, symbolB: baseCurrency.symbol }}
+                />
               </ThemedText.DeprecatedMain>
               <Text fontSize={11} textAlign="center" color="$neutral3" mt={4}>
-                <Trans>Your position will be 100% composed of {{ sym: quoteCurrency?.symbol }} at this price</Trans>
+                <Trans i18nKey="pool.position.willBe100" values={{ sym: quoteCurrency?.symbol }} />
               </Text>
             </AutoColumn>
           </LightCard>
@@ -169,16 +171,17 @@ export const PositionPreview = ({
         <LightCard padding="12px ">
           <AutoColumn gap="4px" justify="center">
             <ThemedText.DeprecatedMain fontSize="12px">
-              <Trans>Current price</Trans>
+              <Trans i18nKey="common.currentPrice" />
             </ThemedText.DeprecatedMain>
             <ThemedText.DeprecatedMediumHeader>{`${formatPrice({
               price,
               type: NumberType.TokenTx,
             })} `}</ThemedText.DeprecatedMediumHeader>
             <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
-              <Trans>
-                {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
-              </Trans>
+              <Trans
+                i18nKey="common.feesEarnedPerBase"
+                values={{ symbolA: quoteCurrency.symbol, symbolB: baseCurrency.symbol }}
+              />
             </ThemedText.DeprecatedMain>
           </AutoColumn>
         </LightCard>

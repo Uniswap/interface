@@ -34,13 +34,8 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
     <Dialog
       isVisible={true}
       icon={<StyledUserIcon fill={theme.neutral2} />}
-      title={<Trans>New address</Trans>}
-      description={
-        <Trans>
-          You haven&apos;t transacted with this address before. Make sure it&apos;s the correct address before
-          continuing.
-        </Trans>
-      }
+      title={<Trans i18nKey="speedBump.newAddress.warning.title" />}
+      description={<Trans i18nKey="speedBump.newAddress.warning.description" />}
       body={
         <RecipientInfo>
           <Row justify="center" align="center" gap="xs">
@@ -61,11 +56,11 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
       onCancel={onCancel}
       buttonsConfig={{
         left: {
-          title: <Trans>Cancel</Trans>,
+          title: <Trans i18nKey="common.cancel.button" />,
           onClick: onCancel,
         },
         right: {
-          title: <Trans>Continue</Trans>,
+          title: <Trans i18nKey="common.continue.button" />,
           onClick: onConfirm,
         },
       }}

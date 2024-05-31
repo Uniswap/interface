@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
@@ -23,7 +23,7 @@ import { useIsSmartContractAddress } from 'wallet/src/features/transactions/tran
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { getValidAddress } from 'wallet/src/utils/addresses'
+import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
@@ -77,7 +77,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const accounts = useAccounts()
-  const importedAddresses = Object.keys(accounts)
+  const initialAccounts = useRef(accounts)
 
   useAddBackButton(navigation)
 
@@ -107,10 +107,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
+  const walletExists = Object.keys(initialAccounts).some(
+    (accountAddress) =>
+      areAddressesEqual(accountAddress, resolvedAddress) ||
+      areAddressesEqual(accountAddress, normalizedValue)
+  )
+
   // Form validation.
-  const walletExists =
-    (resolvedAddress && importedAddresses.includes(resolvedAddress)) ||
-    importedAddresses.includes(normalizedValue)
   const isValid = validateForm({
     isAddress,
     name,
@@ -126,21 +129,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {
-      if (resolvedAddress) {
-        dispatch(
-          importAccountActions.trigger({
-            type: ImportAccountType.Address,
-            address: resolvedAddress,
-          })
-        )
-      } else {
-        dispatch(
-          importAccountActions.trigger({
-            type: ImportAccountType.Address,
-            address: normalizedValue,
-          })
-        )
-      }
+      dispatch(
+        importAccountActions.trigger({
+          type: ImportAccountType.Address,
+          address: resolvedAddress || normalizedValue,
+        })
+      )
+
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         screen: OnboardingScreens.WatchWallet,
         element: ElementName.Continue,

@@ -1,7 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
@@ -14,11 +13,10 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
-import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { openUri } from 'wallet/src/utils/linking'
 import {
   MnemonicValidationError,
@@ -31,8 +29,8 @@ import {
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const { generateImportedAccounts } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -64,6 +62,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       return
     }
 
+    if (!validMnemonic) {
+      return
+    }
+
     if (mnemonicId && validMnemonic) {
       const generatedMnemonicId = await Keyring.generateAddressForMnemonic(validMnemonic, 0)
       if (generatedMnemonicId !== mnemonicId) {
@@ -72,18 +74,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       }
     }
 
-    dispatch(
-      importAccountActions.trigger({
-        type: ImportAccountType.Mnemonic,
-        validatedMnemonic: validMnemonic,
-        indexes: Array.from(Array(NUMBER_OF_WALLETS_TO_IMPORT).keys()),
-      })
-    )
+    const importedMnemonicId = await Keyring.importMnemonic(validMnemonic)
+    await generateImportedAccounts(importedMnemonicId, BackupType.Manual)
+
     // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
     if (!isRestoringMnemonic) {
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [value, mnemonicId, dispatch, isRestoringMnemonic, t, navigation, params])
+  }, [value, mnemonicId, generateImportedAccounts, isRestoringMnemonic, t, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)

@@ -48,11 +48,11 @@ export function DownloadWalletCard() {
       button={
         <PillButton
           color={theme.accent1}
-          label={t`Uniswap wallet`}
+          label={t('common.uniswapWallet')}
           icon={<Wallet size="24px" fill={theme.accent1} />}
         />
       }
-      titleText={t`The wallet built for swapping. Available on iOS and Android.`}
+      titleText={t('common.walletForSwapping')}
     >
       <Contents>
         {isDarkMode ? (

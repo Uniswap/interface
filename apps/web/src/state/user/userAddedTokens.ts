@@ -9,7 +9,9 @@ function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] 
   const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
 
   return useMemo(() => {
-    if (!chainId) return []
+    if (!chainId) {
+      return []
+    }
     const tokenMap: Token[] = serializedTokensMap?.[chainId]
       ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
       : []

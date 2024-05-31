@@ -68,7 +68,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
           <Row align="center" padding="8px 0px">
             <Line />
             <Text variant="body3" color="$neutral2" mx={18} whiteSpace="nowrap">
-              <Trans>Other wallets</Trans>
+              <Trans i18nKey="wallet.other" />
             </Text>
             <Line />
           </Row>
@@ -94,7 +94,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
                 <Line />
                 <TextSectionWrapper>
                   <ThemedText.Caption color="neutral3">
-                    <Trans>Fiat onramp powered by Swipelux OÜ</Trans>
+                    <Trans i18nKey="moonpay.poweredBy" />
                   </ThemedText.Caption>
                 </TextSectionWrapper>
               </>

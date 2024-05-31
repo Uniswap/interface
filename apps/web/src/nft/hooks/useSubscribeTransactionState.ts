@@ -19,11 +19,15 @@ export function useSubscribeTransactionState(setModalIsOpen: (isOpen: boolean) =
   }, [])
 
   useEffect(() => {
-    if (transactionStateRef.current === TxStateType.Confirming) setBagStatus(BagStatus.PROCESSING_TRANSACTION)
+    if (transactionStateRef.current === TxStateType.Confirming) {
+      setBagStatus(BagStatus.PROCESSING_TRANSACTION)
+    }
     if (transactionStateRef.current === TxStateType.Denied || transactionStateRef.current === TxStateType.Invalid) {
       if (transactionStateRef.current === TxStateType.Invalid) {
         setBagStatus(BagStatus.WARNING)
-      } else setBagStatus(BagStatus.CONFIRM_REVIEW)
+      } else {
+        setBagStatus(BagStatus.CONFIRM_REVIEW)
+      }
       setTransactionState(TxStateType.New)
 
       setBagLocked(false)

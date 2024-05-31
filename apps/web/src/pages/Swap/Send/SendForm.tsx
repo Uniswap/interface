@@ -1,22 +1,21 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { useIsSmartContractAddress } from 'utils/transfer'
-
-import { Trace } from 'analytics'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import { useAccount } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { useIsSmartContractAddress } from 'utils/transfer'
 import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 import { SendRecipientForm } from './SendRecipientForm'
@@ -36,27 +35,27 @@ function useSendButtonState() {
   return useMemo(() => {
     if (recipient && !recipientData) {
       return {
-        label: <Trans>Invalid recipient</Trans>,
+        label: <Trans i18nKey="common.invalidRecipient.error" />,
         disabled: true,
       }
     }
 
     if (!parsedTokenAmount) {
       return {
-        label: <Trans>Input amount</Trans>,
+        label: <Trans i18nKey="common.amountInput.placeholder" />,
         disabled: true,
       }
     }
 
     if (!recipient && !recipientData) {
       return {
-        label: <Trans>Select recipient</Trans>,
+        label: <Trans i18nKey="common.input.noRecipient.error" />,
         disabled: true,
       }
     }
 
     return {
-      label: <Trans>Send</Trans>,
+      label: <Trans i18nKey="common.send.button" />,
       disabled: false,
     }
   }, [parsedTokenAmount, recipient, recipientData])
@@ -192,15 +191,15 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
         {isDisconnected ? (
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
+          <Trace
+            logPress
+            eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
             <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
-              <Trans>Connect wallet</Trans>
+              <Trans i18nKey="common.connectWallet.button" />
             </ButtonLight>
-          </TraceEvent>
+          </Trace>
         ) : chainId && chainId !== connectedChainId ? (
           <ButtonPrimary
             $borderRadius="16px"
@@ -217,7 +216,10 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
               }
             }}
           >
-            <Trans>Connect to {{ label: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}</Trans>
+            <Trans
+              i18nKey="common.connectToChain.button"
+              values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}
+            />
           </ButtonPrimary>
         ) : (
           <ButtonPrimary
@@ -248,7 +250,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 
 export function SendForm(props: SendFormProps) {
   return (
-    <Trace page="send-page">
+    <Trace page={InterfacePageNameLocal.Send}>
       <SendContextProvider>
         <SendFormInner {...props} />
       </SendContextProvider>

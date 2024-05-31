@@ -1,8 +1,8 @@
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
+import { SwapPreview } from 'components/swap/SwapPreview'
 import { Field } from 'components/swap/constants'
 import { useConfirmModalState } from 'hooks/useConfirmModalState'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
@@ -19,11 +19,10 @@ import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-
-import { SwapPreview } from 'components/swap/SwapPreview'
 import { SwapDetails } from '../swap/SwapDetails'
 import SwapError, { PendingModalError } from './Error'
 import { SwapHead } from './Head'
@@ -122,11 +121,21 @@ export function ConfirmSwapModal({
   const swapReverted = swapStatus === TransactionStatus.Failed
   const swapFailed = localSwapFailure || swapReverted
   const errorType = useMemo(() => {
-    if (approvalError) return approvalError
-    if (tokenError) return tokenError
-    if (swapError instanceof SignatureExpiredError) return
-    if (swapError instanceof UniswapXv2HardQuoteError) return PendingModalError.XV2_HARD_QUOTE_ERROR
-    if (swapError && !didUserReject(swapError)) return PendingModalError.CONFIRMATION_ERROR
+    if (approvalError) {
+      return approvalError
+    }
+    if (tokenError) {
+      return tokenError
+    }
+    if (swapError instanceof SignatureExpiredError) {
+      return
+    }
+    if (swapError instanceof UniswapXv2HardQuoteError) {
+      return PendingModalError.XV2_HARD_QUOTE_ERROR
+    }
+    if (swapError && !didUserReject(swapError)) {
+      return PendingModalError.CONFIRMATION_ERROR
+    }
     return
   }, [approvalError, swapError, tokenError])
 
@@ -270,19 +279,22 @@ export function ConfirmSwapModal({
         )}
         {/* Error screen handles all error types with custom messaging and retry logic */}
         {errorType && showError && (
-          <SwapError
-            trade={trade}
-            swapResult={swapResult}
-            errorType={errorType}
-            onRetry={() => {
-              if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
-                onXV2RetryWithClassic?.()
-                resetToReviewScreen()
-              } else {
-                startSwapFlow()
-              }
-            }}
-          />
+          <Container $padding="16px">
+            <SwapError
+              trade={trade}
+              showTrade={errorType !== PendingModalError.XV2_HARD_QUOTE_ERROR}
+              swapResult={swapResult}
+              errorType={errorType}
+              onRetry={() => {
+                if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
+                  onXV2RetryWithClassic?.()
+                  resetToReviewScreen()
+                } else {
+                  startSwapFlow()
+                }
+              }}
+            />
+          </Container>
         )}
       </SwapModal>
     </ThemeProvider>

@@ -4,7 +4,6 @@ import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC, nativeO
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
-import { Expiry } from 'state/limit/types'
 import {
   ClassicTrade,
   DutchOrderTrade,
@@ -15,6 +14,7 @@ import {
 } from 'state/routing/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {
@@ -261,7 +261,7 @@ export const LIMIT_ORDER_TRADE = new LimitOrderTrade({
   wrapInfo: { needsWrap: false },
   approveInfo: { needsApprove: false },
   swapper: '0xSwapperAddress',
-  deadlineBufferSecs: expiryToDeadlineSeconds(Expiry.Week),
+  deadlineBufferSecs: expiryToDeadlineSeconds(LimitsExpiry.Week),
 })
 
 export const NATIVE_INFO: CurrencyInfo = {

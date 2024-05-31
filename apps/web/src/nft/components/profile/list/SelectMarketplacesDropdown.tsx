@@ -41,7 +41,9 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
 
   const toggleSelected = () => {
-    if (selectedMarkets.length === 1 && isSelected) return
+    if (selectedMarkets.length === 1 && isSelected) {
+      return
+    }
     isSelected
       ? setSelectedMarkets(selectedMarkets.filter((selected: ListingMarket) => selected !== market))
       : setSelectedMarkets([...selectedMarkets, market])

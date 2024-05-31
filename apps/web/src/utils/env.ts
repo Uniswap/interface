@@ -32,8 +32,12 @@ function isLocalhost({ hostname }: { hostname: string }): boolean {
 
 export function isSentryEnabled(): boolean {
   // Disable in e2e test environments
-  if (isBetaEnv() && !isAppRigoblockStagingCom(window.location)) return false
-  if (isProdEnv()) return false
+  if (isBetaEnv() && !isAppRigoblockStagingCom(window.location)) {
+    return false
+  }
+  if (isProdEnv()) {
+    return false
+  }
   return process.env.REACT_APP_SENTRY_ENABLED === 'false'
 }
 

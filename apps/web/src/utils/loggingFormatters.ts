@@ -10,12 +10,14 @@ import {
 } from 'lib/utils/analytics'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
-
+import { SwapPriceUpdateActionProperties } from 'uniswap/src/features/telemetry/types'
 import { RoutingDiagramEntry } from './getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from './prices'
 
 const formatRoutesEventProperties = (routes?: RoutingDiagramEntry[]) => {
-  if (!routes) return {}
+  if (!routes) {
+    return {}
+  }
 
   const routesEventProperties: Record<string, any[]> = {
     routes_percentages: [],
@@ -47,7 +49,7 @@ export const formatSwapPriceUpdatedEventProperties = (
   trade: InterfaceTrade,
   priceUpdate: number | undefined,
   response: SwapPriceUpdateUserResponse
-) => ({
+): SwapPriceUpdateActionProperties => ({
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId

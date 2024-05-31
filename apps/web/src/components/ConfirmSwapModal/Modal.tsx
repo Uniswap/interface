@@ -1,5 +1,4 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import Modal from 'components/Modal'
@@ -7,6 +6,7 @@ import { PropsWithChildren, useRef } from 'react'
 import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import useResizeObserver from 'use-resize-observer'
 
 const AnimatedContainer = styled(animated.div)`

@@ -26,9 +26,13 @@ export function keyToFilter(key: string): Filter {
   const pcs = key.split(':')
   const address = pcs[0]
   const topics = pcs[1].split('-').map((topic) => {
-    if (topic === '\0') return null
+    if (topic === '\0') {
+      return null
+    }
     const parts = topic.split(';')
-    if (parts.length === 1) return parts[0]
+    if (parts.length === 1) {
+      return parts[0]
+    }
     return parts
   })
   const fromBlock = pcs[2]
@@ -48,9 +52,13 @@ export function keyToFilter(key: string): Filter {
  * @param blockNumber The current block number.
  */
 export function isHistoricalLog(filter: Filter, blockNumber: number): boolean {
-  if (!filter.toBlock) return false
+  if (!filter.toBlock) {
+    return false
+  }
 
   let toBlock = filter.toBlock
-  if (typeof toBlock === 'string') toBlock = Number.parseInt(toBlock)
+  if (typeof toBlock === 'string') {
+    toBlock = Number.parseInt(toBlock)
+  }
   return toBlock <= blockNumber
 }

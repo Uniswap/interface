@@ -79,7 +79,10 @@ export function WalletConnectModal({
       }
       await HapticFeedback.selection()
 
-      const supportedURI = await getSupportedURI(uri, { isUwULinkEnabled, isScantasticEnabled })
+      const supportedURI = await getSupportedURI(uri, {
+        isUwULinkEnabled,
+        isScantasticEnabled,
+      })
       if (!supportedURI) {
         setShouldFreezeCamera(true)
         Alert.alert(
@@ -127,7 +130,9 @@ export function WalletConnectModal({
         try {
           await pairWithWalletConnectURI(supportedURI.value)
         } catch (error) {
-          logger.error(error, { tags: { file: 'WalletConnectModal', function: 'onScanCode' } })
+          logger.error(error, {
+            tags: { file: 'WalletConnectModal', function: 'onScanCode' },
+          })
           Alert.alert(
             t('walletConnect.error.general.title'),
             t('walletConnect.error.general.message'),
@@ -225,7 +230,10 @@ export function WalletConnectModal({
                   amount: parsedUwulinkRequest.amount,
                   tokenAddress: parsedUwulinkRequest.tokenAddress,
                   isStablecoin: parsedUwulinkRequest.isStablecoin,
-                  transaction: { from: activeAccount.address, ...preparedTransaction },
+                  transaction: {
+                    from: activeAccount.address,
+                    ...preparedTransaction,
+                  },
                 },
               })
             )
@@ -236,15 +244,24 @@ export function WalletConnectModal({
                 request: {
                   ...newRequest,
                   type: EthMethod.EthSendTransaction,
-                  transaction: { from: activeAccount.address, ...parsedUwulinkRequest.value },
+                  transaction: {
+                    from: activeAccount.address,
+                    ...parsedUwulinkRequest.value,
+                  },
                 },
               })
             )
           }
           onClose()
         } catch (_) {
-          setShouldFreezeCamera(false)
-          Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.scan'))
+          Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.scan'), [
+            {
+              text: t('common.button.ok'),
+              onPress: (): void => {
+                setShouldFreezeCamera(false)
+              },
+            },
+          ])
         }
       }
 

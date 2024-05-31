@@ -182,7 +182,9 @@ const CollectionSelect = ({
   }, [collectionSearchText, collections])
 
   const itemKey = useCallback((index: number, data: WalletCollection[]) => {
-    if (!data) return index
+    if (!data) {
+      return index
+    }
     const collection = data[index]
     return `${collection.address}_${index}`
   }, [])

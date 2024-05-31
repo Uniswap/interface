@@ -5,13 +5,13 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Trans, t } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
 const InlineLink = styled.div`
   color: ${({ theme }) => theme.accent1};
@@ -80,7 +80,7 @@ function UniswapXPreferenceLabel() {
       <QuestionHelper
         text={
           <>
-            <Trans>When available, aggregates liquidity sources for better prices and gas free swaps.</Trans>{' '}
+            <Trans i18nKey="routing.aggregateLiquidity" />{' '}
             <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
               <InlineLink>Learn more</InlineLink>
             </ExternalLink>
@@ -93,10 +93,10 @@ function UniswapXPreferenceLabel() {
 }
 
 const ROUTE_PREFERENCE_TO_LABEL: Record<RoutePreferenceOption, ReactNode> = {
-  [RoutePreferenceOption.Optimal]: t`Default trade options`,
+  [RoutePreferenceOption.Optimal]: t('common.defaultTradeOptions'),
   [RoutePreferenceOption.UniswapX]: <UniswapXPreferenceLabel />,
-  [RoutePreferenceOption.v3]: t`v3 pools`,
-  [RoutePreferenceOption.v2]: t`v2 pools`,
+  [RoutePreferenceOption.v3]: t('pool.v3'),
+  [RoutePreferenceOption.v2]: t('pool.v2'),
 }
 
 function RoutePreferenceToggle({
@@ -127,7 +127,7 @@ function RoutePreferenceToggle({
 }
 
 export default function MultipleRoutingOptions() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =
@@ -196,17 +196,12 @@ export default function MultipleRoutingOptions() {
       <RoutePreferenceToggle
         preference={RoutePreferenceOption.Optimal}
         isActive={routePreferenceOptions[RoutePreferenceOption.Optimal]}
-        text={
-          <Trans>
-            The Rigoblock client selects the cheapest trade option factoring price and network costs factoring price and
-            network costs.
-          </Trans>
-        }
+        text={<Trans i18nKey="routing.cheapest" />}
         subheading={
           routePreferenceOptions[RoutePreferenceOption.Optimal] &&
           uniswapXSupportedChain && (
             <Row gap="xs">
-              <Trans>Includes</Trans>
+              <Trans i18nKey="common.includes" />
               <UniswapXBrandMark />
             </Row>
           )

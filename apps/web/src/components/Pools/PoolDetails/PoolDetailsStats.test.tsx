@@ -1,11 +1,11 @@
-import 'test-utils/tokens/mocks'
-
 import { enableNetConnect } from 'nock'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
+import 'test-utils/tokens/mocks'
 import { BREAKPOINTS } from 'theme'
+
 import { PoolDetailsStats } from './PoolDetailsStats'
 
 describe('PoolDetailsStats', () => {

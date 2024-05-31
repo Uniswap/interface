@@ -5,7 +5,7 @@ import { t } from 'i18n'
 export const getTokenPageTitle = (currency?: Currency, chainId?: SupportedInterfaceChainId) => {
   const tokenName = currency?.name
   const tokenSymbol = currency?.symbol
-  const baseTitle = t`Buy and sell on Uniswap`
+  const baseTitle = t('common.buyAndSell')
   if (!tokenName && !tokenSymbol) {
     return baseTitle
   }

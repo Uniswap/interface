@@ -1,9 +1,9 @@
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useExecuteCallback } from '../../state/governance/hooks'
@@ -40,7 +40,7 @@ interface ExecuteModalProps {
 }
 
 export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteModalProps) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const executeCallback = useExecuteCallback()
 
   // monitor call to help UI loading state
@@ -61,7 +61,9 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!executeCallback) return
+    if (!executeCallback) {
+      return
+    }
 
     // try delegation and store hash
     const hash = await executeCallback(proposalId)?.catch((error) => {
@@ -81,18 +83,18 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Execute proposal {{ proposalId }}</Trans>
+                <Trans i18nKey="account.transactionSummary.executeProposal" values={{ proposalKey: proposalId }} />
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
               <ThemedText.DeprecatedBody>
-                <Trans>Executing this proposal will enact the calldata on-chain.</Trans>
+                <Trans i18nKey="proposal.willEnact" />
               </ThemedText.DeprecatedBody>
             </RowBetween>
             <ButtonPrimary onClick={onExecute}>
               <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Execute</Trans>
+                <Trans i18nKey="vote.votePage.execute" />
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
@@ -110,11 +112,11 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Executing</Trans>
+                <Trans i18nKey="common.executing" />
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             <ThemedText.DeprecatedSubHeader>
-              <Trans>Confirm this transaction in your wallet</Trans>
+              <Trans i18nKey="common.confirmTransaction.button" />
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
@@ -131,7 +133,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="100px" justify="center">
             <AutoColumn gap="md" justify="center">
               <ThemedText.DeprecatedLargeHeader>
-                <Trans>Execution submitted</Trans>
+                <Trans i18nKey="proposal.executionSubmitted" />
               </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (
@@ -140,7 +142,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
                 style={{ marginLeft: '4px' }}
               >
                 <ThemedText.DeprecatedSubHeader>
-                  <Trans>View transaction on Explorer</Trans>
+                  <Trans i18nKey="common.viewTransactionExplorer.link" />
                 </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}

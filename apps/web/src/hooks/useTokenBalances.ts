@@ -1,16 +1,16 @@
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useChainId } from 'wagmi'
 
 export function useTokenBalances(): {
   balanceMap: TokenBalances
   balanceList: readonly (PortfolioTokenBalancePartsFragment | undefined)[]
   loading: boolean
 } {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const { data, loading } = useTokenBalancesQuery()
   return useMemo(() => {
     const balanceList = data?.portfolios?.[0]?.tokenBalances ?? []
@@ -23,12 +23,11 @@ export function useTokenBalances(): {
         if (
           tokenBalance?.token?.chain &&
           supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
-          address &&
-          tokenBalance.denominatedValue?.value !== undefined
+          address
         ) {
-          const usdValue = tokenBalance.denominatedValue?.value
-          const balance = tokenBalance.quantity
-          balanceMap[address] = { usdValue, balance: balance ?? 0 }
+          const usdValue = tokenBalance.denominatedValue?.value ?? 0
+          const balance = tokenBalance.quantity ?? 0
+          balanceMap[address] = { usdValue, balance }
         }
         return balanceMap
       }, {} as TokenBalances) ?? {}

@@ -107,7 +107,9 @@ export enum Markets {
 }
 
 export const isPooledMarket = (market?: Markets): boolean => {
-  if (!market) return false
+  if (!market) {
+    return false
+  }
   return market === Markets.NFTX || market === Markets.NFT20 || market === Markets.Sudoswap
 }
 

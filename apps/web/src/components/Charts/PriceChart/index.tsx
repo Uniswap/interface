@@ -235,19 +235,19 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
     <>
       <TooltipText>
         <RowBetween gap="sm">
-          <Trans>Open</Trans>
+          <Trans i18nKey="chart.price.open" />
           <div>{formatFiatPrice({ price: data.open })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans>High</Trans>
+          <Trans i18nKey="chart.price.high" />
           <div>{formatFiatPrice({ price: data.high })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans>Low</Trans>
+          <Trans i18nKey="chart.price.low" />
           <div>{formatFiatPrice({ price: data.low })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans>Close</Trans>
+          <Trans i18nKey="common.close" />
           <div>{formatFiatPrice({ price: data.close })}</div>
         </RowBetween>
       </TooltipText>

@@ -11,7 +11,9 @@ import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType,
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const { account } = useWeb3React()
   const signatures = useAppSelector((state) => state.signatures) ?? {}
-  if (!account || !signatures[account]) return {}
+  if (!account || !signatures[account]) {
+    return {}
+  }
   return signatures[account]
 }
 
@@ -31,8 +33,9 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
       ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_UNISWAPX_V2_ORDER, SignatureType.SIGN_LIMIT].includes(
         order.type as SignatureType
       )
-    )
+    ) {
       return undefined
+    }
     return order
   }, [signatures, orderHash])
 }

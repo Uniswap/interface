@@ -25,8 +25,9 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = CompositeScreenProps<
@@ -42,7 +43,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
-  const activeAccount = useActiveAccount()
+  const activeAccount = useActiveSignerAccount()
+  const { getImportedAccountsAddresses, getOnboardingAccountAddress } = useOnboardingContext()
+  const onboardingAccountAddress = getOnboardingAccountAddress()
+  const importedAccountsAddresses = getImportedAccountsAddresses()
   const activeAccountBackups = activeAccount?.backups
 
   const renderHeaderLeft = useCallback(
@@ -61,6 +65,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     if (shouldOverrideBackButton) {
       navigation.setOptions({
         headerLeft: renderHeaderLeft,
+        gestureEnabled: false,
       })
     }
   })
@@ -101,12 +106,17 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       )
       return
     }
-    if (!activeAccount?.address) {
-      return
+
+    const address =
+      activeAccount?.address || onboardingAccountAddress || importedAccountsAddresses?.[0]
+
+    if (!address) {
+      throw Error('No account available to backup')
     }
+
     navigate({
       name: OnboardingScreens.BackupCloudPasswordCreate,
-      params: { ...params, address: activeAccount.address },
+      params: { ...params, address },
       merge: true,
     })
   }

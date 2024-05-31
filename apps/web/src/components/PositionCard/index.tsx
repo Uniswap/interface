@@ -83,7 +83,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <FixedHeightRow>
               <RowFixed>
                 <Text fontWeight={535} fontSize={16}>
-                  <Trans>Your position</Trans>
+                  <Trans i18nKey="position.your" />
                 </Text>
               </RowFixed>
             </FixedHeightRow>
@@ -103,7 +103,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Your pool share:</Trans>
+                  <Trans i18nKey="share.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
@@ -146,10 +146,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <span role="img" aria-label="wizard-icon">
               ⭐️
             </span>{' '}
-            <Trans>
-              By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the
-              pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-            </Trans>{' '}
+            <Trans i18nKey="pool.earnFees" />{' '}
           </ThemedText.DeprecatedSubHeader>
         </LightCard>
       )}
@@ -202,7 +199,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
-                  <Trans>Loading</Trans>
+                  <Trans i18nKey="common.loading" />
                 </Dots>
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
@@ -213,12 +210,12 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonEmpty padding="6px 8px" $borderRadius="12px" width="100%" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <>
-                  <Trans>Manage</Trans>
+                  <Trans i18nKey="common.manage" />
                   <ChevronUp size="20" style={{ marginLeft: '8px', height: '20px', minWidth: '20px' }} />
                 </>
               ) : (
                 <>
-                  <Trans>Manage</Trans>
+                  <Trans i18nKey="common.manage" />
                   <ChevronDown size="20" style={{ marginLeft: '8px', height: '20px', minWidth: '20px' }} />
                 </>
               )}
@@ -230,7 +227,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           <AutoColumn gap="sm">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>Your total pool tokens:</Trans>
+                <Trans i18nKey="pool.totalTokens" />
               </Text>
               <Text fontSize={16} fontWeight={535}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
@@ -239,7 +236,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             {stakedBalance && (
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pool tokens in rewards pool:</Trans>
+                  <Trans i18nKey="pool.rewardsPool.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {stakedBalance.toSignificant(4)}
@@ -249,7 +246,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {{ sym: currency0.symbol }}:</Trans>
+                  <Trans i18nKey="pool.pooled" values={{ sym: currency0.symbol }} />
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -267,7 +264,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {{ sym: currency1.symbol }}:</Trans>
+                  <Trans i18nKey="pool.pooled" values={{ sym: currency1.symbol }} />
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -284,13 +281,16 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>Your pool share:</Trans>
+                <Trans i18nKey="pool.share.label" />
               </Text>
               <Text fontSize={16} fontWeight={535}>
                 {poolTokenPercentage ? (
-                  <Trans>
-                    {{ amt: poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2) }}%
-                  </Trans>
+                  <Trans
+                    i18nKey="common.percentage"
+                    values={{
+                      pct: poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2),
+                    }}
+                  />
                 ) : (
                   '-'
                 )}
@@ -302,9 +302,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 style={{ width: '100%', textAlign: 'center' }}
                 href={`https://v2.info.uniswap.org/account/${account}`}
               >
-                <Trans>
-                  View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
-                </Trans>
+                <Trans i18nKey="pool.accruedFees" />
+                <span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary>
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
@@ -316,7 +315,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   to={`/migrate/v2/${pair.liquidityToken.address}`}
                   width="32%"
                 >
-                  <Trans>Migrate</Trans>
+                  <Trans i18nKey="common.migrate" />
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -325,7 +324,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                   width="32%"
                 >
-                  <Trans>Add</Trans>
+                  <Trans i18nKey="common.add.label" />
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
@@ -334,7 +333,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
-                  <Trans>Remove</Trans>
+                  <Trans i18nKey="common.remove.label" />
                 </ButtonPrimary>
               </RowBetween>
             )}
@@ -346,7 +345,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
-                <Trans>Manage liquidity in rewards pool</Trans>
+                <Trans i18nKey="pool.manageRewardsLiquidity" />
               </ButtonPrimary>
             )}
           </AutoColumn>

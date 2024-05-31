@@ -67,8 +67,12 @@ async function sentryAdaptor<T>(context: TraceContext, callback: TraceCallback<T
     },
     setError(error, status) {
       span?.setData('error', error)
-      if (!isStatusSet && !status) status = 'internal_error'
-      if (status) span?.setStatus(status)
+      if (!isStatusSet && !status) {
+        status = 'internal_error'
+      }
+      if (status) {
+        span?.setStatus(status)
+      }
     },
     now() {
       return performance.now() - start
@@ -87,14 +91,22 @@ async function sentryAdaptor<T>(context: TraceContext, callback: TraceCallback<T
     }
   } catch (error) {
     // Do not overwrite any custom status or error data that is already set.
-    if (!span?.status) span?.setStatus('unknown_error')
-    if (!span?.data.error) span?.setData('error', error)
+    if (!span?.status) {
+      span?.setStatus('unknown_error')
+    }
+    if (!span?.data.error) {
+      span?.setData('error', error)
+    }
 
     throw error
   } finally {
     // Do not measure http ops, as they are already measured by DevTools as network calls.
-    if (!context.op.startsWith('http')) performance.measure(context.op, { start })
-    if (!span?.status) span?.setStatus('ok')
+    if (!context.op.startsWith('http')) {
+      performance.measure(context.op, { start })
+    }
+    if (!span?.status) {
+      span?.setStatus('ok')
+    }
     span?.finish()
   }
 }

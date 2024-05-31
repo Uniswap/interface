@@ -27,11 +27,13 @@ export function SwitchLocaleLink() {
 
   const { to, onClick } = useLocationLinkProps(targetLocale)
 
-  if (!targetLocale || !to) return null
+  if (!targetLocale || !to) {
+    return null
+  }
 
   return (
     <Text fontSize={11} opacity={0.6} hoverStyle={{ opacity: 1 }} mt="1rem">
-      <Trans>Rigoblock available in: </Trans>
+      <Trans i18nKey="common.availableIn" />
       <StyledInternalLink
         onClick={() => {
           onClick?.()

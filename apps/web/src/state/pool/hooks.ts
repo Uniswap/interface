@@ -10,6 +10,7 @@ import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses
 import { POOLS_LIST } from 'constants/lists'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { GRG } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import usePrevious from 'hooks/usePrevious'
 import { useTotalSupply } from 'hooks/useTotalSupply'
@@ -25,7 +26,6 @@ import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-import { useAccount } from 'wagmi'
 
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
 import { useLogs } from '../logs/hooks'
@@ -73,9 +73,9 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 1000 : blockNumber //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //2570151
   } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : blockNumber //28843676
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //28843676
   } else {
     registryStartBlock = undefined
   }
@@ -90,7 +90,9 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
   // create filters for Registered events
   const filter = useMemo(() => {
     const logFilter = contract?.filters?.Registered()
-    if (!logFilter) return undefined
+    if (!logFilter) {
+      return undefined
+    }
     return {
       ...logFilter,
       fromBlock,
@@ -137,9 +139,9 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 2963000 //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : 2963000 //2570151
   } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 40000 : 28843676
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : 28843676
   } else {
     registryStartBlock = 1
   }
@@ -211,10 +213,15 @@ export function useCreateCallback(): (
       const parsedAddress = currencyValue?.isNative ? ZERO_ADDRESS : currencyValue?.address
       // TODO: check name and symbol assertions
       //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(parsedAddress ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !parsedAddress || !isAddress(parsedAddress ?? ''))
+      if (!provider || !chainId || !account || !name || !symbol || !parsedAddress || !isAddress(parsedAddress ?? '')) {
         return undefined
-      if (currencyValue?.chainId !== chainId) throw new Error('User Switched Wallet On Open Create Modal')
-      if (!factoryContract) throw new Error('No Factory Contract!')
+      }
+      if (currencyValue?.chainId !== chainId) {
+        throw new Error('User Switched Wallet On Open Create Modal')
+      }
+      if (!factoryContract) {
+        throw new Error('No Factory Contract!')
+      }
       return factoryContract.estimateGas.createPool(name, symbol, parsedAddress, {}).then((estimatedGasLimit) => {
         return factoryContract
           .createPool(name, symbol, parsedAddress, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -237,14 +244,18 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
     const filter = registry?.filters?.Registered()
-    if (!filter) return undefined
+    if (!filter) {
+      return undefined
+    }
     return {
       ...filter,
       fromBlock,
     }
   }, [registry, fromBlock])
   const logs = useAppSelector((state) => state.logs)
-  if (!chainId || !filter) return []
+  if (!chainId || !filter) {
+    return []
+  }
   const state = logs[chainId]?.[filterToKey(filter)]
   const result = state?.results
 
@@ -275,8 +286,12 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
 
   return useCallback(
     (lockup: string | undefined) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!poolContract) throw new Error('No Pool Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!poolContract) {
+        throw new Error('No Pool Contract!')
+      }
       return poolContract.estimateGas.changeMinPeriod(lockup, {}).then((estimatedGasLimit) => {
         return poolContract
           .changeMinPeriod(lockup, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -301,8 +316,12 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
 
   return useCallback(
     (spread: string | undefined) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!poolContract) throw new Error('No Pool Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!poolContract) {
+        throw new Error('No Pool Contract!')
+      }
       return poolContract.estimateGas.changeSpread(spread, {}).then((estimatedGasLimit) => {
         return poolContract
           .changeSpread(spread, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -327,8 +346,12 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
 
   return useCallback(
     (value: string | undefined) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!poolContract) throw new Error('No Pool Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!poolContract) {
+        throw new Error('No Pool Contract!')
+      }
       return poolContract.estimateGas.setUnitaryValue(value, {}).then((estimatedGasLimit) => {
         return poolContract
           .setUnitaryValue(value, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
@@ -425,8 +448,9 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   const supplyAmount = useTotalSupply(GRG[chainId ?? 1])
 
   const yieldData = useMemo(() => {
-    if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount)
+    if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount) {
       return undefined
+    }
     const poolsInfo = stakingPools?.map((pool, i) => ({
       ...pool,
       operatorShare: stakingPools[i].operatorShare,
@@ -475,7 +499,9 @@ export function useOperatedPools() {
   //const poolsLogs = useRegisteredPools()
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
-    if (!poolsLogs) return []
+    if (!poolsLogs) {
+      return []
+    }
 
     return poolsLogs.map((p) => p.pool)
   }, [poolsLogs])
@@ -488,20 +514,28 @@ export function useOperatedPools() {
 
   // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
   const operatedPools: Token[] | undefined = useMemo(() => {
-    if (!account || !chainId || !results || !poolAddresses) return
+    if (!account || !chainId || !results || !poolAddresses) {
+      return
+    }
     const mockToken = new Token(0, account, 1)
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
         const poolAddress = poolAddresses[i]
 
-        if (loading || !pools || !pools?.[0] || !poolAddress) return mockToken
+        if (loading || !pools || !pools?.[0] || !poolAddress) {
+          return mockToken
+        }
         //const parsed: PoolInitParams[] | undefined = pools?.[0]
         const { name, symbol, decimals, owner } = pools[0]
-        if (!name || !symbol || !decimals || !owner || !poolAddress) return mockToken
+        if (!name || !symbol || !decimals || !owner || !poolAddress) {
+          return mockToken
+        }
         //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
         const isPoolOperator = owner === account
-        if (!isPoolOperator) return mockToken
+        if (!isPoolOperator) {
+          return mockToken
+        }
         return new Token(chainId ?? ChainId.MAINNET, poolAddress, decimals, symbol, name)
       })
       .filter((p) => p !== mockToken)
@@ -509,7 +543,9 @@ export function useOperatedPools() {
   }, [account, chainId, poolAddresses, results])
 
   const defaultPool = useMemo(() => {
-    if (!operatedPools) return
+    if (!operatedPools) {
+      return
+    }
     return operatedPools[0]
   }, [operatedPools])
 

@@ -34,10 +34,10 @@ export function ActivitySection() {
     <Container data-testid="token-details-activity-section">
       <Row gap="24px" marginBottom="24px" id="activity-header">
         <Tab isActive={activityInView === ActivityTab.Txs} onClick={() => setActivityInView(ActivityTab.Txs)}>
-          <Trans>Transactions</Trans>
+          <Trans i18nKey="common.transactions" />
         </Tab>
         <Tab isActive={activityInView === ActivityTab.Pools} onClick={() => setActivityInView(ActivityTab.Pools)}>
-          <Trans>Pools</Trans>
+          <Trans i18nKey="common.pools" />
         </Tab>
       </Row>
       {activityInView === ActivityTab.Txs && <TransactionsTable chainId={chainId} referenceToken={referenceToken} />}

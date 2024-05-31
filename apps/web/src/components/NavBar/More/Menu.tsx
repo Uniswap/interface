@@ -116,10 +116,10 @@ export function Menu({ close }: { close: () => void }) {
           {/*<MobileAppLogo />*/}
           <Column gap="xs">
             <Text lineHeight="20px">
-              <Trans>Social</Trans>
+              <Trans i18nKey="common.social" />
             </Text>
             {/*<ThemedText.LabelSmall lineHeight="18px">
-              <Trans>Social</Trans>
+              <Trans i18nKey="common.social" />
             </ThemedText.LabelSmall>*/}
           </Column>
         </StyledRow>

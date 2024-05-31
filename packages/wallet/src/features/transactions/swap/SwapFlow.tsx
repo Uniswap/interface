@@ -1,7 +1,5 @@
-import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -14,10 +12,7 @@ import {
   SwapScreenContextProvider,
   useSwapScreenContext,
 } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
-import {
-  SwapTxContextProviderLegacyApi,
-  SwapTxContextProviderTradingApi,
-} from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { SwapTxContextProviderTradingApi } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapFormScreen } from 'wallet/src/features/transactions/swap/SwapFormScreen'
 import { SwapReviewScreen } from 'wallet/src/features/transactions/swap/SwapReviewScreen'
@@ -44,17 +39,21 @@ export function SwapFlow({
 
   return (
     <TransactionModal fullscreen={fullscreen} modalName={ModalName.Swap} {...transactionModalProps}>
-      <SwapContextsContainer prefilledState={prefilledState}>
-        <CurrentScreen screen={screen} setScreen={setScreen} />
-        {/*
-        We render the `Review` button here instead of doing it inside `SwapFormScreen` so that it stays in place when the user is "holding to swap".
-      */}
-        {showStickyReviewButton && (
-          <TransactionModalFooterContainer>
-            <SwapFormButton />
-          </TransactionModalFooterContainer>
-        )}
-      </SwapContextsContainer>
+      <SwapScreenContextProvider>
+        <SwapFormContextProvider prefilledState={prefilledState}>
+          <SwapTxContextProviderTradingApi>
+            <CurrentScreen screen={screen} setScreen={setScreen} />
+            {/*
+              We render the `Review` button here instead of doing it inside `SwapFormScreen` so that it stays in place when the user is "holding to swap".
+            */}
+            {showStickyReviewButton && (
+              <TransactionModalFooterContainer>
+                <SwapFormButton />
+              </TransactionModalFooterContainer>
+            )}
+          </SwapTxContextProviderTradingApi>
+        </SwapFormContextProvider>
+      </SwapScreenContextProvider>
     </TransactionModal>
   )
 }
@@ -140,26 +139,4 @@ function SwapReviewScreenDelayedRender(): JSX.Element {
   }, [])
 
   return <SwapReviewScreen hideContent={hideContent} />
-}
-
-function SwapContextsContainer({
-  prefilledState,
-  children,
-}: {
-  prefilledState: SwapFormState | undefined
-  children?: ReactNode
-}): JSX.Element {
-  // conditionally render a different provider based on the active api gate. Each uses different hooks for data fetching.
-  const isTradingApiEnabled = useFeatureFlag(FeatureFlags.TradingApi)
-  const SwapTxContextProviderWrapper = isTradingApiEnabled
-    ? SwapTxContextProviderTradingApi
-    : SwapTxContextProviderLegacyApi
-
-  return (
-    <SwapScreenContextProvider>
-      <SwapFormContextProvider prefilledState={prefilledState}>
-        <SwapTxContextProviderWrapper>{children}</SwapTxContextProviderWrapper>
-      </SwapFormContextProvider>
-    </SwapScreenContextProvider>
-  )
 }

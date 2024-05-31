@@ -1366,8 +1366,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                 <div>
                   <button
                     class="c31 c33 c50"
+                    data-testid="swap-button"
+                    disabled=""
+                    id="swap-button"
                   >
-                    Connect to Ethereum
+                    <div
+                      class="css-1cmsyys"
+                    >
+                      Connecting wallet...
+                    </div>
                   </button>
                 </div>
               </div>

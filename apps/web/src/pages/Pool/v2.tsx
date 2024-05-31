@@ -1,7 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { Trans } from 'i18n'
@@ -14,6 +13,7 @@ import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -92,7 +92,9 @@ export default function Pool() {
 
   // fetch the user's balances of all tracked V2 LP tokens
   let trackedTokenPairs = useTrackedTokenPairs()
-  if (!networkSupportsV2) trackedTokenPairs = []
+  if (!networkSupportsV2) {
+    trackedTokenPairs = []
+  }
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -138,7 +140,7 @@ export default function Pool() {
   })
 
   return (
-    <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.POOL_PAGE}>
       <>
         <PageWrapper>
           <LPFeeExplainer>
@@ -148,15 +150,12 @@ export default function Pool() {
               <AutoColumn gap="md">
                 <RowBetween>
                   <ThemedText.DeprecatedWhite fontWeight={535}>
-                    <Trans>Liquidity provider rewards</Trans>
+                    <Trans i18nKey="pool.liquidity.rewards" />
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <RowBetween>
                   <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>
-                      Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees
-                      are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                    </Trans>
+                    <Trans i18nKey="pool.liquidity.earn.fee" />
                   </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <ExternalLink
@@ -165,7 +164,7 @@ export default function Pool() {
                   href="https://docs.uniswap.org/contracts/v2/concepts/core-concepts/pools"
                 >
                   <ThemedText.DeprecatedWhite fontSize={14}>
-                    <Trans>Read more about providing liquidity</Trans>
+                    <Trans i18nKey="pool.learnAbout" />
                   </ThemedText.DeprecatedWhite>
                 </ExternalLink>
               </AutoColumn>
@@ -183,23 +182,23 @@ export default function Pool() {
                   <Row gap="md" width="content">
                     <HideSmall>
                       <Header>
-                        <Trans>Your V2 liquidity</Trans>
+                        <Trans i18nKey="pool.yourv2" />
                       </Header>
                     </HideSmall>
                     <PoolVersionMenu protocolVersion={ProtocolVersion.V2} />
                   </Row>
                   <ButtonRow>
                     <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
-                      <Trans>Create a pair</Trans>
+                      <Trans i18nKey="pool.create.pair" />
                     </ResponsiveButtonSecondary>
                     <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pools/v2/find" padding="6px 8px">
                       <Text fontWeight={535} fontSize={16}>
-                        <Trans>Import pool</Trans>
+                        <Trans i18nKey="pool.import" />
                       </Text>
                     </ResponsiveButtonPrimary>
                     <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
                       <Text fontWeight={535} fontSize={16}>
-                        <Trans>Add V2 liquidity</Trans>
+                        <Trans i18nKey="pool.v2.add" />
                       </Text>
                     </ResponsiveButtonPrimary>
                   </ButtonRow>
@@ -208,14 +207,14 @@ export default function Pool() {
                 {!account ? (
                   <Card padding="40px">
                     <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
-                      <Trans>Connect to a wallet to view your liquidity.</Trans>
+                      <Trans i18nKey="pool.liquidity.connectToAdd" />
                     </ThemedText.DeprecatedBody>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
                     <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                       <Dots>
-                        <Trans>Loading</Trans>
+                        <Trans i18nKey="common.loading" />
                       </Dots>
                     </ThemedText.DeprecatedBody>
                   </EmptyProposals>
@@ -223,12 +222,10 @@ export default function Pool() {
                   <>
                     <ButtonSecondary>
                       <RowBetween>
-                        <Trans>
-                          <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                            Account analytics and accrued fees
-                          </ExternalLink>
-                          <span> ↗ </span>
-                        </Trans>
+                        <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
+                          <Trans i18nKey="pool.account.analyticsFees" />
+                        </ExternalLink>
+                        <span> ↗ </span>
                       </RowBetween>
                     </ButtonSecondary>
                     {v2PairsWithoutStakedAmount.map((v2Pair) => (
@@ -258,14 +255,14 @@ export default function Pool() {
                         }}
                       >
                         <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                        <Trans>Migrate liquidity to V3</Trans>
+                        <Trans i18nKey="pool.v2.migratev3" />
                       </ButtonOutlined>
                     </RowFixed>
                   </>
                 ) : (
                   <EmptyProposals>
                     <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
-                      <Trans>No liquidity found.</Trans>
+                      <Trans i18nKey="pool.noLiquidity" />
                     </ThemedText.DeprecatedBody>
                   </EmptyProposals>
                 )}

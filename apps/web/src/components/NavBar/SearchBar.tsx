@@ -1,18 +1,19 @@
 // eslint-disable-next-line no-restricted-imports
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
-import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { Search } from 'components/Icons/Search'
 import { chainIdToBackendChain } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
+import { useIsMobile, useIsTablet } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useTranslation } from 'i18n'
+import { useTranslation } from 'i18n/useTranslation'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
@@ -24,9 +25,10 @@ import { useLocation } from 'react-router-dom'
 import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled from 'styled-components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useChainId } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-import { useIsMobile, useIsTablet } from 'hooks/screenSize'
 import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
@@ -50,7 +52,7 @@ const KeyShortCut = styled.div`
 
 export const SearchBar = () => {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState<string>('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -66,7 +68,7 @@ export const SearchBar = () => {
 
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
@@ -85,7 +87,9 @@ export const SearchBar = () => {
 
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!uniquePools || !chainId) return [mockToken]
+    if (!uniquePools || !chainId) {
+      return [mockToken]
+    }
     return uniquePools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
@@ -98,7 +102,9 @@ export const SearchBar = () => {
   const chain = chainIdToBackendChain({ chainId })
   // TODO: check using a different struct for pools
   const searchPools: SearchToken[] | undefined = useMemo(() => {
-    if (!chain) return
+    if (!chain) {
+      return
+    }
     return filteredPools.map((p) => {
       const { name, symbol, address } = p
       return {
@@ -166,16 +172,16 @@ export const SearchBar = () => {
 
   const navbarSearchEventProperties = {
     navbar_search_input_text: debouncedSearchValue,
-    hasInput: debouncedSearchValue && debouncedSearchValue.length > 0,
+    hasInput: debouncedSearchValue.length > 0,
     ...trace,
   }
 
   const { t } = useTranslation() // subscribe to locale changes
   const placeholderText = isMobileOrTablet
-    ? t`Search`
+    ? t('common.search.label')
     : shouldDisableNFTRoutes
-    ? t`Search smart pools`
-    : t`Search tokens and NFT collections`
+    ? t('common.searchSmartPools')
+    : t('common.searchTokensNFT')
 
   const handleKeyPress = useCallback(
     (event: any) => {
@@ -242,9 +248,9 @@ export const SearchBar = () => {
               <ChevronLeftIcon />
             </Box>
           </Box>
-          <TraceEvent
-            events={[BrowserEvent.onFocus]}
-            name={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
+          <Trace
+            logFocus
+            eventOnTrigger={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
             element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
             properties={{ ...trace }}
           >
@@ -262,7 +268,7 @@ export const SearchBar = () => {
               ref={inputRef}
               width="full"
             />
-          </TraceEvent>
+          </Trace>
           {!isOpen && <KeyShortCut>/</KeyShortCut>}
         </Row>
         <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>

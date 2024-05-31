@@ -41,7 +41,9 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   const injectedConnectors = connectors.filter((c) => {
     // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
     if (c.id === CONNECTION.COINBASE_RDNS) {
-      if (isMobile) isCoinbaseWalletBrowser = true
+      if (isMobile) {
+        isCoinbaseWalletBrowser = true
+      }
       return false
     }
 
@@ -68,9 +70,13 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
 
   const sortByRecent = useCallback(
     (a: Connector, b: Connector) => {
-      if (a.id === recentConnectorId) return -1
-      else if (b.id === recentConnectorId) return 1
-      else return 0
+      if (a.id === recentConnectorId) {
+        return -1
+      } else if (b.id === recentConnectorId) {
+        return 1
+      } else {
+        return 0
+      }
     },
     [recentConnectorId]
   )
@@ -90,16 +96,22 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
     }
 
     // Special-case: Only display the injected connector for in-wallet browsers.
-    if (isMobile && injectedConnectors.length === 1) return injectedConnectors
+    if (isMobile && injectedConnectors.length === 1) {
+      return injectedConnectors
+    }
 
     // Special-case: Only display the Coinbase connector in the Coinbase Wallet.
-    if (isCoinbaseWalletBrowser) return [coinbaseSdkConnector]
+    if (isCoinbaseWalletBrowser) {
+      return [coinbaseSdkConnector]
+    }
 
     const orderedConnectors: Connector[] = []
     const shouldDisplayUniswapWallet = !excludeUniswapConnections && (isWebIOS || isWebAndroid || !isTouchable)
 
     // Place the Uniswap Wallet at the top of the list by default.
-    if (shouldDisplayUniswapWallet) orderedConnectors.push(uniswapWalletConnectConnector)
+    if (shouldDisplayUniswapWallet) {
+      orderedConnectors.push(uniswapWalletConnectConnector)
+    }
 
     // Injected connectors should appear next in the list, as the user intentionally installed/uses them.
     orderedConnectors.push(...injectedConnectors)

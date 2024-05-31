@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import { BigNumber } from 'ethers'
 import mockdate from 'mockdate'
-import createMigrate from 'src/app/createMigrate'
 import { migrations, OLD_DEMO_ACCOUNT_ADDRESS } from 'src/app/migrations'
 import {
   getSchema,
@@ -104,6 +103,8 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { createMigrate } from 'wallet/src/state/createMigrate'
+import { getAllKeysOfNestedObject } from 'wallet/src/state/testUtils'
 import {
   fiatPurchaseTransactionInfo,
   signerMnemonicAccount,
@@ -123,26 +124,6 @@ const fiatOnRampTxDetailsFailed = transactionDetails({
     id: 'd6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
   }),
 })
-
-// helps with object assignment
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
-  const keys = Object.keys(obj)
-  if (!keys.length && prefix !== '') {
-    return [prefix.slice(0, -1)]
-  }
-  return keys.reduce<string[]>((res, el) => {
-    if (Array.isArray(obj[el])) {
-      return [...res]
-    }
-
-    if (typeof obj[el] === 'object' && obj[el] !== null) {
-      return [...res, ...getAllKeysOfNestedObject(obj[el], prefix + el + '.')]
-    }
-
-    return [...res, prefix + el]
-  }, [])
-}
 
 describe('Redux state migrations', () => {
   it('is able to perform all migrations starting from the initial schema', async () => {
@@ -202,6 +183,10 @@ describe('Redux state migrations', () => {
         version: persistConfig.version,
         rehydrated: true,
       },
+    }
+
+    if (!migratedSchema) {
+      throw new Error('Migrated schema is undefined')
     }
 
     const migratedSchemaKeys = new Set(getAllKeysOfNestedObject(migratedSchema))

@@ -1,7 +1,6 @@
 import { LimitContext } from 'state/limit/LimitContext'
 import { render } from 'test-utils/render'
-
-import { Expiry } from 'state/limit/types'
+import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { LimitExpirySection } from './LimitExpirySection'
 
 const mockLimitContextValue = {
@@ -11,7 +10,7 @@ const mockLimitContextValue = {
     limitPriceEdited: false,
     limitPriceInverted: false,
     outputAmount: '',
-    expiry: Expiry.Day,
+    expiry: LimitsExpiry.Day,
     isInputAmountFixed: true,
   },
   setLimitState: jest.fn(),

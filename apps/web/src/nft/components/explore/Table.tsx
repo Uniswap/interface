@@ -1,16 +1,15 @@
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
+import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useIsMobile, useWindowSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useChainId } from 'wagmi'
-
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Box } from '../../components/Box'
 import { CollectionTableColumn } from '../../types'
 import { ColumnHeaders } from './CollectionTable'
@@ -102,7 +101,7 @@ export function Table<D extends Record<string, unknown>>({
   ...props
 }: TableProps<D>) {
   const theme = useTheme()
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const { width } = useWindowSize()
   const isMobile = useIsMobile()
 
@@ -127,7 +126,9 @@ export function Table<D extends Record<string, unknown>>({
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!width) return
+    if (!width) {
+      return
+    }
 
     if (width <= theme.breakpoint.sm) {
       setHiddenColumns(smallHiddenColumns)
@@ -186,9 +187,9 @@ export function Table<D extends Record<string, unknown>>({
           prepareRow(row)
 
           return (
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={NFTEventName.NFT_TRENDING_ROW_SELECTED}
+            <Trace
+              logPress
+              eventOnTrigger={NFTEventName.NFT_TRENDING_ROW_SELECTED}
               properties={{ collection_address: row.original.collection.address, chain_id: chainId }}
               element={InterfaceElementName.NFT_TRENDING_ROW}
               key={i}
@@ -225,7 +226,7 @@ export function Table<D extends Record<string, unknown>>({
                   )
                 })}
               </StyledRow>
-            </TraceEvent>
+            </Trace>
           )
         })}
       </tbody>

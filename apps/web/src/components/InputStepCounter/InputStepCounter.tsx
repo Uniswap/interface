@@ -157,9 +157,7 @@ const StepCounter = ({
             }}
           />
           <InputTitle fontSize={12} textAlign="left">
-            <Trans>
-              {{ tokenB }} per {{ tokenA }}
-            </Trans>
+            <Trans i18nKey="common.feesEarnedPerBase" values={{ symbolA: tokenB, symbolB: tokenA }} />
           </InputTitle>
         </InputColumn>
 

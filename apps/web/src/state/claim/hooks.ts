@@ -2,12 +2,12 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
-import { useChainId } from 'wagmi'
-
 import { isAddress } from 'utilities/src/addresses'
+
 import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -65,7 +65,9 @@ const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
   const formatted = isAddress(account)
-  if (!formatted) return Promise.reject(new Error('Invalid address'))
+  if (!formatted) {
+    return Promise.reject(new Error('Invalid address'))
+  }
 
   return (
     FETCH_CLAIM_PROMISES[account] ??
@@ -87,7 +89,9 @@ function fetchClaim(account: string): Promise<UserClaimData> {
       })
       .then(fetchClaimFile)
       .then((result) => {
-        if (result[formatted]) return result[formatted]
+        if (result[formatted]) {
+          return result[formatted]
+        }
         throw new Error(`Claim for ${formatted} was not found in claim file!`)
       })
       .catch((error) => {
@@ -100,12 +104,14 @@ function fetchClaim(account: string): Promise<UserClaimData> {
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
 function useUserClaimData(account: string | null | undefined): UserClaimData | null {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
 
   const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})
 
   useEffect(() => {
-    if (!account || chainId !== 1) return
+    if (!account || chainId !== 1) {
+      return
+    }
 
     fetchClaim(account)
       .then((accountClaimInfo) =>
@@ -139,12 +145,14 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
 }
 
 export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
   const uni = chainId ? UNI[chainId] : undefined
-  if (!uni) return undefined
+  if (!uni) {
+    return undefined
+  }
   if (!canClaim || !userClaimData) {
     return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(0))
   }
@@ -164,7 +172,9 @@ export function useClaimCallback(account: string | null | undefined): {
   const distributorContract = useMerkleDistributorContract()
 
   const claimCallback = async function () {
-    if (!claimData || !account || !provider || !chainId || !distributorContract) return
+    if (!claimData || !account || !provider || !chainId || !distributorContract) {
+      return
+    }
 
     const args = [claimData.index, account, claimData.amount, claimData.proof]
 

@@ -78,13 +78,16 @@ const calcSudoSwapXykBondingCurve = (
 }
 
 const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined => {
-  if (!asset.sellorders) return undefined
+  if (!asset.sellorders) {
+    return undefined
+  }
 
   const sudoSwapParameters = asset.sellorders[0].protocolParameters
   const sudoSwapPool = getPoolParameters(sudoSwapParameters)
 
-  if (!sudoSwapPool.fee || !sudoSwapPool.delta || !sudoSwapPool.spotPrice || !sudoSwapPool.bondingCurve)
+  if (!sudoSwapPool.fee || !sudoSwapPool.delta || !sudoSwapPool.spotPrice || !sudoSwapPool.bondingCurve) {
     return undefined
+  }
 
   let currentPrice = BigNumber.from(sudoSwapPool.spotPrice)
   const delta = BigNumber.from(sudoSwapPool.delta)
@@ -109,7 +112,9 @@ const calcSudoSwapPrice = (asset: GenieAsset, position = 0): string | undefined 
 }
 
 const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
-  if (!asset.sellorders) return ''
+  if (!asset.sellorders) {
+    return ''
+  }
 
   let amountToBuy: BigNumber = BigNumber.from(0)
   let marginalBuy: BigNumber = BigNumber.from(0)
@@ -172,8 +177,12 @@ const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
 }
 
 export const calcPoolPrice = (asset: GenieAsset, position = 0): string => {
-  if (!asset.sellorders) return ''
-  if (asset.marketplace === Markets.Sudoswap) return calcSudoSwapPrice(asset, position) ?? '0'
+  if (!asset.sellorders) {
+    return ''
+  }
+  if (asset.marketplace === Markets.Sudoswap) {
+    return calcSudoSwapPrice(asset, position) ?? '0'
+  }
   return calcAmmBasedPoolprice(asset, position)
 }
 
@@ -203,12 +212,13 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
     uncheckedItemsInBag.every(
       (item) => item.status === BagItemStatus.REVIEWED || item.status === BagItemStatus.REVIEWING_PRICE_CHANGE
     )
-  )
+  ) {
     return uncheckedItemsInBag
+  }
 
   const itemsInBag = [...uncheckedItemsInBag]
   itemsInBag.forEach((item) => {
-    if (item.asset.marketplace)
+    if (item.asset.marketplace) {
       if (isPooledMarket(item.asset.marketplace)) {
         const asset = item.asset
         const isPriceChangedAsset = !!asset.updatedPriceInfo
@@ -224,10 +234,13 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
               itemsInPool.findIndex((itemInPool) => itemInPool.asset.tokenId === asset.tokenId)
             )
 
-        if (isPriceChangedAsset && item.asset.updatedPriceInfo)
+        if (isPriceChangedAsset && item.asset.updatedPriceInfo) {
           item.asset.updatedPriceInfo.ETHPrice = item.asset.updatedPriceInfo.basePrice = calculatedPrice
-        else item.asset.priceInfo.ETHPrice = calculatedPrice
+        } else {
+          item.asset.priceInfo.ETHPrice = calculatedPrice
+        }
       }
+    }
   })
 
   return itemsInBag

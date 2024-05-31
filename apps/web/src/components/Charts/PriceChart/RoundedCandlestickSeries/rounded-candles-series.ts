@@ -36,7 +36,9 @@ const defaultOptions: RoundedCandleSeriesOptions = {
   wickUpColor: '#26a69a',
   wickDownColor: '#ef5350',
   radius(bs: number) {
-    if (bs < 4) return 0
+    if (bs < 4) {
+      return 0
+    }
     return bs / 3
   },
 } as const

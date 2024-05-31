@@ -55,7 +55,7 @@ export const AdvancedPriceChartToggle = ({
       menuLabel={isMobileScreen ? currentChartTypeDisplayOptions?.display : currentChartTypeDisplayOptions?.icon}
       currentChartType={currentChartType}
       onSelectOption={onChartTypeChange}
-      tooltipText={!isMobileScreen ? t`Chart type` : undefined}
+      tooltipText={!isMobileScreen ? t('common.chartType') : undefined}
     />
   )
 }

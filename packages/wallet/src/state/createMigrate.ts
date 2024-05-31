@@ -3,7 +3,7 @@ import type { MigrationManifest, PersistedState } from 'redux-persist'
 import { DEFAULT_VERSION } from 'redux-persist/es/constants'
 import { logger } from 'utilities/src/logger/logger'
 
-export default function createMigrate(
+export function createMigrate(
   migrations: MigrationManifest
 ): (state: PersistedState, currentVersion: number) => Promise<PersistedState> {
   return function (state: PersistedState, currentVersion: number): Promise<PersistedState> {

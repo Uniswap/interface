@@ -1,11 +1,11 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
-
-import { useAccount, useSwitchChain as useSwitchChainWagmi } from 'wagmi'
+import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 
 export function useSwitchChain() {
   const dispatch = useAppDispatch()

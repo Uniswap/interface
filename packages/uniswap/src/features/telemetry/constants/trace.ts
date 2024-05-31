@@ -1,3 +1,10 @@
+import {
+  InterfaceElementName,
+  InterfaceModalName,
+  InterfacePageName,
+  InterfaceSectionName,
+} from '@uniswap/analytics-events'
+
 export const ModalName = {
   AccountEdit: 'account-edit-modal',
   AccountEditLabel: 'account-edit--label-modal',
@@ -22,6 +29,7 @@ export const ModalName = {
   FiatOnRampTokenSelector: 'fiat-on-ramp-token-selector',
   ForceUpgradeModal: 'force-upgrade-modal',
   ForgotPassword: 'forgot-password',
+  Legal: 'legal',
   LanguageSelector: 'language-selector-modal',
   NetworkFeeInfo: 'network-fee-info',
   NetworkSelector: 'network-selector-modal',
@@ -68,7 +76,7 @@ export const ModalName = {
   // alphabetize additional values.
 } as const
 
-export type ModalNameType = (typeof ModalName)[keyof typeof ModalName]
+export type ModalNameType = (typeof ModalName)[keyof typeof ModalName] | InterfaceModalName
 
 /**
  * Possible names for the telement property in TraceContext
@@ -84,6 +92,21 @@ export const ElementName = {
   Back: 'back',
   Buy: 'buy',
   Cancel: 'cancel',
+  ChainEthereum: 'chain-ethereum',
+  ChainEthereumGoerli: 'chain-ethereum-goerli',
+  ChainSepolia: 'chain-sepolia',
+  ChainOptimism: 'chain-optimism',
+  ChainOptimismGoerli: 'chain-optimism-goerli',
+  ChainArbitrum: 'chain-arbitrum',
+  ChainArbitrumGoerli: 'chain-arbitrum-goerli',
+  ChainPolygon: 'chain-polygon',
+  ChainPolygonMumbai: 'chain-polygon-mumbai',
+  ChainCelo: 'chain-celo',
+  ChainCeloAlfajores: 'chain-celo-alfajores',
+  ChainBNB: 'chain-bnb',
+  ChainAvalanche: 'chain-avalanche',
+  ChainBase: 'chain-base',
+  ChainBlast: 'chain-blast',
   ChooseInputToken: 'choose-input-token',
   ChooseOutputToken: 'choose-output-token',
   Confirm: 'confirm',
@@ -105,6 +128,7 @@ export const ElementName = {
   GetStarted: 'get-started',
   ImportAccount: 'import',
   ImportAccountInput: 'import-account-input',
+  LimitOrderButton: 'limit-order-button',
   Manage: 'manage',
   MoonpayExplorerView: 'moonpay-explorer-view',
   NetworkButton: 'network-button',
@@ -149,6 +173,7 @@ export const ElementName = {
   TimeFrame1W: 'time-frame-1W',
   TimeFrame1M: 'time-frame-1M',
   TimeFrame1Y: 'time-frame-1Y',
+  TimeFrameAll: 'time-frame-All',
   TokenAddress: 'token-address',
   TokenInputSelector: 'token-input-selector',
   TokenLinkEtherscan: 'token-link-etherscan',
@@ -170,7 +195,7 @@ export const ElementName = {
   // alphabetize additional values.
 } as const
 
-export type ElementNameType = (typeof ElementName)[keyof typeof ElementName]
+export type ElementNameType = (typeof ElementName)[keyof typeof ElementName] | InterfaceElementName
 
 /**
  * Possible names for the section property in TraceContext
@@ -197,7 +222,17 @@ export const SectionName = {
   TransferForm: 'transfer-form',
   TransferPending: 'transfer-pending',
   TransferReview: 'transfer-review',
+  ChainSelector: 'chain-selector',
   // alphabetize additional values.
 } as const
 
-export type SectionNameType = (typeof SectionName)[keyof typeof SectionName]
+export type SectionNameType = (typeof SectionName)[keyof typeof SectionName] | InterfaceSectionName
+
+export const InterfacePageNameLocal = {
+  Send: 'send-page',
+  Limit: 'limit-page',
+}
+
+export type InterfacePageNameType =
+  | (typeof InterfacePageNameLocal)[keyof typeof InterfacePageNameLocal]
+  | InterfacePageName

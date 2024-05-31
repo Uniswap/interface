@@ -27,8 +27,12 @@ function getAssetMediaUrl(asset: GenieAsset | WalletAsset) {
 }
 
 export function detailsHref(asset: GenieAsset | WalletAsset) {
-  if ('address' in asset) return `/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
-  if ('asset_contract' in asset) return `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  if ('address' in asset) {
+    return `/nfts/asset/${asset.address}/${asset.tokenId}?origin=collection`
+  }
+  if ('asset_contract' in asset) {
+    return `/nfts/asset/${asset.asset_contract.address}/${asset.tokenId}?origin=profile`
+  }
   return '/nfts/profile'
 }
 

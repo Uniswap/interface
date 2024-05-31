@@ -145,16 +145,16 @@ export const SetDurationModal = () => {
   let prompt
   switch (duration) {
     case Duration.hour:
-      prompt = <Plural value={+amount} one={t`hour`} other={t`hours`} />
+      prompt = <Plural value={+amount} one={t('hour')} other={t('hours')} />
       break
     case Duration.day:
-      prompt = <Plural value={+amount} one={t`day`} other={t`days`} />
+      prompt = <Plural value={+amount} one={t('day')} other={t('days')} />
       break
     case Duration.week:
-      prompt = <Plural value={+amount} one={t`week`} other={t`weeks`} />
+      prompt = <Plural value={+amount} one={t('week')} other={t('weeks')} />
       break
     case Duration.month:
-      prompt = <Plural value={+amount} one={t`month`} other={t`months`} />
+      prompt = <Plural value={+amount} one={t('month')} other={t('months')} />
       break
     default:
       break
@@ -163,9 +163,13 @@ export const SetDurationModal = () => {
   useEffect(() => {
     const expiration = convertDurationToExpiration(parseFloat(amount), duration)
 
-    if (expiration * 1000 - Date.now() < ms(`60s`) || isNaN(expiration)) setErrorState(ErrorState.empty)
-    else if (expiration * 1000 - Date.now() > ms(`180d`)) setErrorState(ErrorState.overMax)
-    else setErrorState(ErrorState.valid)
+    if (expiration * 1000 - Date.now() < ms(`60s`) || isNaN(expiration)) {
+      setErrorState(ErrorState.empty)
+    } else if (expiration * 1000 - Date.now() > ms(`180d`)) {
+      setErrorState(ErrorState.overMax)
+    } else {
+      setErrorState(ErrorState.valid)
+    }
     setGlobalExpiration(expiration)
   }, [amount, duration, setGlobalExpiration])
 

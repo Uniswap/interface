@@ -30,24 +30,6 @@ type EllipsisPosition = 'start' | 'end'
 
 type ListItem = 'ellipsis' | number
 
-function renderItem({ item: chainId }: { item: ListItem }): JSX.Element {
-  return (
-    <Flex key={chainId} borderColor="$surface2" style={styles.networksInSeriesIcon}>
-      {chainId === ELLIPSIS ? (
-        <Flex
-          centered
-          backgroundColor="$neutral3"
-          height={NETWORK_ICON_SIZE}
-          style={styles.ellipsisIcon}
-          width={NETWORK_ICON_SIZE}>
-          <EllipsisIcon color={colors.white} height={iconSizes.icon12} width={iconSizes.icon12} />
-        </Flex>
-      ) : (
-        <NetworkLogo chainId={chainId} shape="square" size={NETWORK_ICON_SIZE} />
-      )}
-    </Flex>
-  )
-}
 function keyExtractor(item: ListItem): string {
   return item.toString()
 }
@@ -55,9 +37,11 @@ function keyExtractor(item: ListItem): string {
 export function NetworksInSeries({
   networks,
   ellipsisPosition,
+  networkIconSize = NETWORK_ICON_SIZE,
 }: {
   networks: ChainId[]
   ellipsisPosition?: EllipsisPosition
+  networkIconSize?: number
 }): JSX.Element {
   const items = [
     ...(ellipsisPosition === 'start' ? [ELLIPSIS] : []),
@@ -73,6 +57,26 @@ export function NetworksInSeries({
   const getItemCount = (): number => {
     return items.length
   }
+
+  const renderItem = useCallback(
+    ({ item: chainId }: { item: ListItem }) => (
+      <Flex key={chainId} borderColor="$surface2" style={styles.networksInSeriesIcon}>
+        {chainId === ELLIPSIS ? (
+          <Flex
+            centered
+            backgroundColor="$neutral3"
+            height={networkIconSize}
+            style={styles.ellipsisIcon}
+            width={networkIconSize}>
+            <EllipsisIcon color={colors.white} height={iconSizes.icon12} width={iconSizes.icon12} />
+          </Flex>
+        ) : (
+          <NetworkLogo chainId={chainId} shape="square" size={networkIconSize} />
+        )}
+      </Flex>
+    ),
+    [networkIconSize]
+  )
 
   return (
     <Flex>

@@ -20,13 +20,13 @@ export function toReadableError(errorText: string, error: unknown) {
 
 export class WrongChainError extends Error {
   constructor() {
-    super(t`Your wallet is connected to the wrong network.`)
+    super(t('wallet.wrongNet'))
   }
 }
 
 export class UniswapXv2HardQuoteError extends Error {
   constructor() {
-    super(t`UniswapX v2 hard quote failed. Retry with classic swap.`)
+    super(t('uniswapx.v2QuoteFailed'))
     this.name = 'UniswapXv2HardQuoteError'
   }
 }
@@ -34,7 +34,7 @@ export class UniswapXv2HardQuoteError extends Error {
 export class SignatureExpiredError extends Error {
   private _id: string
   constructor() {
-    super(t`Your signature has expired.`)
+    super(t('common.signatureExpired'))
     this.name = 'SignatureExpiredError'
     this._id = `SignatureExpiredError-${uuid()}`
   }

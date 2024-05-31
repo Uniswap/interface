@@ -1,9 +1,9 @@
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { TraceEvent, useTrace } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
+import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans, t } from 'i18n'
@@ -17,10 +17,10 @@ import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-
-import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
@@ -87,7 +87,7 @@ function DropdownController({ open, onClick }: { open: boolean; onClick: () => v
       <Separator />
       <DropdownControllerWrapper>
         <ThemedText.BodySmall color="neutral2">
-          {open ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
+          {open ? <Trans i18nKey="common.showLess.button" /> : <Trans i18nKey="common.showMore.button" />}
         </ThemedText.BodySmall>
         {open ? <ExpandoIconOpened /> : <ExpandoIconClosed />}
       </DropdownControllerWrapper>
@@ -138,15 +138,15 @@ export function SwapDetails({
   const callToAction: CallToAction = useMemo(() => {
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       return {
-        buttonText: isLimitTrade(trade) ? t`Approve and submit` : t`Approve and swap`,
+        buttonText: isLimitTrade(trade) ? t('swap.approveAndSubmit') : t('swap.approveAndSwap'),
       }
     } else if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       return {
-        buttonText: t`Sign and swap`,
+        buttonText: t('swap.signAndSwap'),
       }
     } else {
       return {
-        buttonText: isLimitTrade(trade) ? t`Place order` : t`Confirm swap`,
+        buttonText: isLimitTrade(trade) ? t('swap.placeOrder') : t('swap.confirmSwap'),
       }
     }
   }, [allowance, trade])
@@ -172,20 +172,20 @@ export function SwapDetails({
             <RowFixed>
               <StyledAlertTriangle size={20} />
               <ThemedText.DeprecatedMain color={theme.accent1}>
-                <Trans>Price updated</Trans>
+                <Trans i18nKey="common.priceUpdated" />
               </ThemedText.DeprecatedMain>
             </RowFixed>
             <SmallButtonPrimary onClick={onAcceptChanges}>
-              <Trans>Accept</Trans>
+              <Trans i18nKey="common.accept" />
             </SmallButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : (
         <AutoRow>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
+          <Trace
+            logPress
             element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
-            name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
+            eventOnTrigger={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
             properties={{
               ...formatSwapButtonClickEventProperties({
                 trade,
@@ -211,7 +211,7 @@ export function SwapDetails({
                 <ThemedText.HeadlineSmall color="neutral2">
                   <Row>
                     <SpinningLoader />
-                    <Trans>Finalizing quote...</Trans>
+                    <Trans i18nKey="swap.finalizingQuote" />
                   </Row>
                 </ThemedText.HeadlineSmall>
               ) : (
@@ -221,7 +221,7 @@ export function SwapDetails({
             {callToAction.helpLink && (
               <HelpLink href={callToAction.helpLink.url}>{callToAction.helpLink.text}</HelpLink>
             )}
-          </TraceEvent>
+          </Trace>
 
           {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
         </AutoRow>
@@ -300,7 +300,9 @@ function ExpandableLineItems(props: {
 }) {
   const { open, trade, allowedSlippage, priceImpact } = props
 
-  if (!trade) return null
+  if (!trade) {
+    return null
+  }
 
   const lineItemProps = { trade, allowedSlippage, syncing: false, open, priceImpact }
 

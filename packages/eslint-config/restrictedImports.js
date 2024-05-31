@@ -4,6 +4,15 @@ exports.shared = {
       name: 'utilities/src/telemetry/trace/Trace',
       message: "Please use the Trace in 'uniswap/src/features/telemetry/Trace' for app level usage!",
     },
+    {
+      name: 'utilities/src/telemetry/analytics/analytics',
+      message:
+        'Please only use this for initialization, tests, flushing, and internal usage. Otherwise use `packages/uniswap/src/features/telemetry`',
+    },
+    {
+      name: '@uniswap/analytics',
+      message: 'This is for internal use only. Please use `packages/uniswap/src/features/telemetry`',
+    },
   ],
   patterns: [],
 }

@@ -46,7 +46,7 @@ import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
-import { WALLET_EXPERIMENTS } from 'uniswap/src/features/gating/experiments'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigProvider } from 'uniswap/src/features/gating/sdk/statsig'
@@ -177,10 +177,10 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
       Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
     }
 
-    for (const [_, experimentDef] of WALLET_EXPERIMENTS.entries()) {
+    for (const experiment of Object.values(Experiments)) {
       Sentry.setTag(
-        `experiment.${experimentDef.name}`,
-        Statsig.getExperimentWithExposureLoggingDisabled(experimentDef.name).getGroupName()
+        `experiment.${experiment}`,
+        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName()
       )
     }
   }, [])

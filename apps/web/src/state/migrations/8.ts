@@ -9,7 +9,9 @@ export type PersistAppStateV8 = {
  * Migration to delete unused hideAppPromoBanner redux state variable.
  */
 export const migration8 = (state: PersistAppStateV8 | undefined) => {
-  if (!state) return state
+  if (!state) {
+    return state
+  }
 
   if (state?.user && 'hideAppPromoBanner' in state.user) {
     delete state.user['hideAppPromoBanner']

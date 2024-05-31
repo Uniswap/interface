@@ -1,7 +1,7 @@
 import { ButtonGray } from 'components/Button'
 import { Pool } from 'components/Icons/Pool'
 import { FlyoutAlignment, Menu } from 'components/Menu'
-import { Trans, t } from 'i18n'
+import { Trans } from 'i18n'
 import { ChevronDown } from 'react-feather'
 import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -54,7 +54,7 @@ const menuItems = {
       <PoolVersionItem>
         <Pool width="20px" height="20px" />
         <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
-          <Trans>v3 pools</Trans>
+          <Trans i18nKey="pool.v3" />
         </ThemedText.BodyPrimary>
       </PoolVersionItem>
     ),
@@ -66,7 +66,7 @@ const menuItems = {
       <PoolVersionItem>
         <Pool width="20px" height="20px" />
         <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
-          <Trans>v2 pools</Trans>
+          <Trans i18nKey="pool.v2" />
         </ThemedText.BodyPrimary>
       </PoolVersionItem>
     ),
@@ -76,8 +76,8 @@ const menuItems = {
 }
 
 const titles = {
-  [ProtocolVersion.V3]: t`v3`,
-  [ProtocolVersion.V2]: t`v2`,
+  [ProtocolVersion.V3]: <Trans i18nKey="common.v3" />,
+  [ProtocolVersion.V2]: <Trans i18nKey="common.v2" />,
 }
 
 export function PoolVersionMenu({ protocolVersion }: { protocolVersion: ProtocolVersion }) {

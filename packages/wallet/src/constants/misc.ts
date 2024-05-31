@@ -7,5 +7,6 @@ export enum PollingInterval {
   KindaFast = 30 * ONE_SECOND_MS,
   Fast = 15 * ONE_SECOND_MS, // slightly higher than block times for mainnet
   LightningMcQueen = 6 * ONE_SECOND_MS, // slightly higher than block times for polygon
-  UltraFast = 3 * ONE_SECOND_MS, // used for swap related polling that must be live
+  AverageL2BlockTime = 3 * ONE_SECOND_MS,
+  AverageL1BlockTime = 12 * ONE_SECOND_MS,
 }

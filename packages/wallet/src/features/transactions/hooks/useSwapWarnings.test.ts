@@ -138,7 +138,7 @@ describe(getSwapWarnings, () => {
     expect(warnings.length).toBe(2)
   })
 
-  it('catches errors returned by the routing api', () => {
+  it('catches errors returned by the trading api', () => {
     const warnings = getSwapWarnings(i18n.t, formatPercent, tradeErrorState, isOffline(networkUp()))
     expect(warnings.find((warning) => warning.type === WarningLabel.SwapRouterError)).toBeTruthy()
   })

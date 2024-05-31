@@ -35,7 +35,9 @@ function _NetworkLogo({
   const colors = useSporeColors()
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
-    <Flex style={{ borderColor: colors.surface1.get(), borderRadius, ...styles.iconWrapper }}>
+    <Flex
+      style={{ borderColor: colors.surface1.get(), borderRadius, ...styles.iconWrapper }}
+      testID="network-logo">
       <Image resizeMode={RESIZE_MODE_CONTAIN} source={logo} style={{ width: size, height: size }} />
     </Flex>
   ) : null

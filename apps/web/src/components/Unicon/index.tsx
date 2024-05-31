@@ -111,7 +111,9 @@ function UniconSvg({
     viewBox: `0 0 ${size} ${size}`,
   }
 
-  if (!attributeIndices || !attributeData) return null
+  if (!attributeIndices || !attributeData) {
+    return null
+  }
 
   return (
     <svg {...svgProps}>
@@ -148,7 +150,9 @@ interface Props {
 function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props) {
   const attributeIndices = useMemo(() => deriveUniconAttributeIndices(address, randomSeed), [address, randomSeed])
 
-  if (!address || !isEthAddress(address) || !attributeIndices) return null
+  if (!address || !isEthAddress(address) || !attributeIndices) {
+    return null
+  }
 
   return (
     <div style={{ height: size, width: size, position: 'relative' }}>

@@ -1,6 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
 import {
@@ -14,7 +15,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useChainId } from 'wagmi'
 
 import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
 import { useAssetActivitySubscription } from './AssetActivityProvider'
@@ -39,7 +39,7 @@ function mayAffectTokenBalances(data?: OnAssetActivitySubscription) {
 }
 
 function useIsRealtime() {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
   return isRealtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId)
@@ -80,9 +80,11 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const { address: smartPoolAddress } = useActiveSmartPool()
 
   const fetch = useCallback(() => {
-    if (!account) return
+    if (!account) {
+      return
+    }
     lazyFetch({ variables: { ownerAddress: smartPoolAddress ?? account, chains: GQL_MAINNET_CHAINS_MUTABLE } })
-  }, [account, smartPoolAddress, lazyFetch])
+  }, [account, lazyFetch, smartPoolAddress])
 
   return (
     <AdaptiveTokenBalancesProvider query={query} fetch={fetch} stale={hasAccountUpdate}>
@@ -95,7 +97,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
  * Retrieves cached token balances, avoiding new fetches to reduce backend load.
  * Analytics should use balances from transaction flows instead of initiating fetches at pageload.
  */
-export function useTotalBalancesUsdForAnalytics() {
+export function useTotalBalancesUsdForAnalytics(): number | undefined {
   return useTokenBalancesQuery({ cacheOnly: true }).data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 }
 

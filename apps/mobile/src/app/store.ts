@@ -3,13 +3,13 @@ import { isRejectedWithValue } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
 import { Storage, persistReducer, persistStore } from 'redux-persist'
-import createMigrate from 'src/app/createMigrate'
-import { migrations } from 'src/app/migrations'
+import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { createStore } from 'wallet/src/state'
+import { createMigrate } from 'wallet/src/state/createMigrate'
 import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
 import { MobileState, ReducerNames, mobileReducer } from './reducer'
 import { mobileSaga } from './saga'
@@ -66,7 +66,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 63,
+  version: MOBILE_STATE_VERSION,
   migrate: createMigrate(migrations),
 }
 

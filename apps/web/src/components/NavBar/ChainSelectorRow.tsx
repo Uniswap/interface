@@ -1,13 +1,13 @@
-import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
-import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { getChainInfo, useSupportedChainId } from 'constants/chains'
+import { getChain, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
-import { useChainId } from 'wagmi'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SectionName } from 'uniswap/src/features/telemetry/constants'
 
 const LOGO_SIZE = 20
 
@@ -64,32 +64,35 @@ interface ChainSelectorRowProps {
   isPending: boolean
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
-  const chainId = useChainId()
+  const theme = useTheme()
+  const { chainId } = useAccount()
   const supportedChain = useSupportedChainId(targetChain)
   const active = chainId === targetChain
-  const label = getChainInfo({ chainId: supportedChain })?.label
 
-  const theme = useTheme()
+  const chainInfo = getChain({ chainId: supportedChain })
+  const label = chainInfo?.label
 
   return (
-    <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={`${label}-selector`}>
+    <Trace logPress section={SectionName.ChainSelector} element={chainInfo?.elementName}>
       <Container
         data-testid={`${label}-selector`}
         disabled={!!disabled}
         onClick={() => {
-          if (!disabled) onSelectChain(targetChain)
+          if (!disabled) {
+            onSelectChain(targetChain)
+          }
         }}
       >
         <ChainLogo chainId={targetChain} size={LOGO_SIZE} style={{ marginRight: '12px' }} />
         {label && <Label>{label}</Label>}
         {disabled && (
           <CaptionText>
-            <Trans>Unsupported by your wallet</Trans>
+            <Trans i18nKey="common.wallet.unsupported" />
           </CaptionText>
         )}
         {isPending && (
           <CaptionText>
-            <Trans>Approve in wallet</Trans>
+            <Trans i18nKey="common.wallet.approve" />
           </CaptionText>
         )}
         <Status>
@@ -97,6 +100,6 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
           {!active && isPending && <Loader width={LOGO_SIZE} height={LOGO_SIZE} />}
         </Status>
       </Container>
-    </TraceEvent>
+    </Trace>
   )
 }

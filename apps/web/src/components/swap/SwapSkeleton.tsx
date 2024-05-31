@@ -64,7 +64,7 @@ function Title() {
   return (
     <TitleColumn>
       <ThemedText.SubHeader>
-        <Trans>Swap</Trans>
+        <Trans i18nKey="common.swap" />
       </ThemedText.SubHeader>
     </TitleColumn>
   )

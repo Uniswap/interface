@@ -4,6 +4,7 @@ import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { SupportArticleURL } from 'constants/supportArticles'
+import { useAccount } from 'hooks/useAccount'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -20,7 +21,6 @@ import { Divider } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SignatureExpiredError } from 'utils/errors'
-import { useChainId } from 'wagmi'
 
 import { Step, StepDetails, StepStatus } from './Step'
 
@@ -64,7 +64,7 @@ export default function ProgressIndicator({
   swapError?: Error | string
   onRetryUniswapXSignature?: () => void
 }) {
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const nativeCurrency = useNativeCurrency(chainId)
   const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
   const theme = useTheme()
@@ -118,47 +118,47 @@ export default function ProgressIndicator({
       [ConfirmModalState.WRAPPING]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t(`Wrap {{symbol}}`, { symbol: nativeCurrency.symbol }),
-        actionRequiredTitle: t(`Wrap  {{symbol}} in wallet`, { symbol: nativeCurrency.symbol }),
-        inProgressTitle: t(`Wrapping  {{symbol}}...`, { symbol: nativeCurrency.symbol }),
-        learnMoreLinkText: t(`Why do I have to wrap my {{symbol}}?`, { symbol: nativeCurrency.symbol }),
+        previewTitle: t('common.wrap', { symbol: nativeCurrency.symbol }),
+        actionRequiredTitle: t('common.wrapIn', { symbol: nativeCurrency.symbol }),
+        inProgressTitle: t('common.wrappingToken', { symbol: nativeCurrency.symbol }),
+        learnMoreLinkText: t('common.whyWrap', { symbol: nativeCurrency.symbol }),
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t(`Reset {{symbol}} limit`, { symbol: trade?.inputAmount.currency.symbol }),
-        actionRequiredTitle: t(`Reset {{symbol}} limit in wallet`, { symbol: trade?.inputAmount.currency.symbol }),
-        inProgressTitle: t(`Resetting {{symbol}} limit...`, { symbol: trade?.inputAmount.currency.symbol }),
+        previewTitle: t('common.resetLimit', { symbol: trade?.inputAmount.currency.symbol }),
+        actionRequiredTitle: t('common.resetLimitWallet', { symbol: trade?.inputAmount.currency.symbol }),
+        inProgressTitle: t('common.resettingLimit', { symbol: trade?.inputAmount.currency.symbol }),
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t(`Approve {{symbol}} spending`, { symbol: trade?.inputAmount.currency.symbol }),
-        actionRequiredTitle: t`Approve in wallet`,
-        inProgressTitle: t`Approval pending...`,
-        learnMoreLinkText: t`Why do I have to approve a token?`,
+        previewTitle: t('common.approveSpend', { symbol: trade?.inputAmount.currency.symbol }),
+        actionRequiredTitle: t('common.wallet.approve'),
+        inProgressTitle: t('common.approvePending'),
+        learnMoreLinkText: t('common.whyApprove'),
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
       },
       [ConfirmModalState.PERMITTING]: {
         icon: <Sign />,
         rippleColor: theme.accent1,
-        previewTitle: t`Sign message`,
-        actionRequiredTitle: t`Sign message in wallet`,
-        learnMoreLinkText: t`Why are signatures required?`,
+        previewTitle: t('common.signMessage'),
+        actionRequiredTitle: t('common.signMessageWallet'),
+        learnMoreLinkText: t('common.whySign'),
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
         icon: <Swap />,
         rippleColor: colors.blue400,
-        previewTitle: isLimitTrade(trade) ? t`Confirm` : t`Confirm swap`,
-        actionRequiredTitle: isLimitTrade(trade) ? t`Confirm in wallet` : t`Confirm swap in wallet`,
-        inProgressTitle: isLimitTrade(trade) ? t`Pending...` : t`Swap pending...`,
+        previewTitle: isLimitTrade(trade) ? t('common.confirm') : t('swap.confirmSwap'),
+        actionRequiredTitle: isLimitTrade(trade) ? t('common.confirmWallet') : t('common.confirmSwap'),
+        inProgressTitle: isLimitTrade(trade) ? t('common.pendingEllipsis') : t('common.swapPending'),
         ...(isUniswapXSwapTrade(trade) && {
           timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
-          delayedStartTitle: t`Confirmation timed out. Please retry.`,
+          delayedStartTitle: t('common.confirmTimedOut'),
         }),
-        learnMoreLinkText: isLimitTrade(trade) ? t`Learn more about limits` : t`Learn more about swaps`,
+        learnMoreLinkText: isLimitTrade(trade) ? t('limits.learnMore') : t('common.learnMoreSwap'),
         learnMoreLinkHref: isLimitTrade(trade)
           ? SupportArticleURL.LEARN_ABOUT_LIMITS
           : SupportArticleURL.HOW_TO_SWAP_TOKENS,

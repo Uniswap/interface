@@ -73,6 +73,7 @@ interface UwULinkGenericTransactionRequest extends UwULinkBaseRequest {
 
 export interface UwULinkErc20SendRequest extends UwULinkBaseRequest {
   method: UwULinkMethod.Erc20Send
+  type: UwULinkMethod.Erc20Send
   recipient: string
   tokenAddress: string
   amount: string

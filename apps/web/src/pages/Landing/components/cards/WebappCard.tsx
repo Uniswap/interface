@@ -248,8 +248,8 @@ export function WebappCard(props: WebappCardProps) {
       isDarkMode={props.isDarkMode}
       textColor={primary}
       backgroundColor={{ dark: 'rgba(0, 102, 255, 0.12)', light: 'rgba(0, 102, 255, 0.04)' }}
-      button={<PillButton color={primary} label={t`Web app`} icon={<Computer size="24px" fill={primary} />} />}
-      titleText={t`Swapping made simple. Access thousands of tokens on 8+ chains.`}
+      button={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
+      titleText={t('landing.swapSimple')}
     >
       <Contents>
         {tokens.map((token) => (

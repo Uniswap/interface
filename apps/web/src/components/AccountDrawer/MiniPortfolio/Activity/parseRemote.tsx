@@ -48,34 +48,34 @@ const ENS_IMG =
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
   [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
-    title: t`UNI Governance`,
-    descriptor: t`Contract Interaction`,
+    title: t('common.uniGovernance'),
+    descriptor: t('common.contractInteraction'),
     logos: [UNI_IMG],
   },
   // TODO(cartcrom): Add permit2-specific logo
   '0x000000000022d473030f116ddee9f6b43ac78ba3': {
-    title: t`Permit2`,
-    descriptor: t`Uniswap Protocol`,
+    title: t('common.permit2'),
+    descriptor: t('common.uniswapProtocol'),
     logos: [UNI_IMG],
   },
   '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Public Resolver`,
+    title: t('common.ethereumNameService'),
+    descriptor: t('common.publicResolver'),
     logos: [ENS_IMG],
   },
   '0x58774bb8acd458a640af0b88238369a167546ef2': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`DNS Registrar`,
+    title: t('common.ethereumNameService'),
+    descriptor: t('common.dnsRegistrar'),
     logos: [ENS_IMG],
   },
   '0x084b1c3c81545d370f3634392de611caabff8148': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`Reverse Registrar`,
+    title: t('common.ethereumNameService'),
+    descriptor: t('common.reverseRegistrar'),
     logos: [ENS_IMG],
   },
   '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5': {
-    title: t`Ethereum Name Service`,
-    descriptor: t`ETH Registrar Controller`,
+    title: t('common.ethereumNameService'),
+    descriptor: t('common.ethRegistrarController'),
     logos: [ENS_IMG],
   },
 }
@@ -86,13 +86,17 @@ function isSpam(
   details: TransactionDetailsPartsFragment,
   account: string
 ): boolean {
-  if (!SPAMMABLE_ACTIVITY_TYPES.includes(details.type) || details.from === account) return false
+  if (!SPAMMABLE_ACTIVITY_TYPES.includes(details.type) || details.from === account) {
+    return false
+  }
   return NftTransfer.some((nft) => nft.asset.isSpam) || TokenTransfer.some((t) => t.asset.project?.isSpam)
 }
 
 function callsPositionManagerContract(assetActivity: TransactionActivity) {
   const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
-  if (!supportedChain) return false
+  if (!supportedChain) {
+    return false
+  }
   return isSameAddress(assetActivity.details.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
 }
 
@@ -120,15 +124,15 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
   if (
     sent.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
-  )
-    return t`Wrapped`
-  else if (
+  ) {
+    return t('common.wrapped')
+  } else if (
     received.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
-    return t`Unwrapped`
+    return t('common.unwrapped')
   } else {
-    return t`Swapped`
+    return t('common.swapped')
   }
 }
 
@@ -152,7 +156,9 @@ function getSwapDescriptor({
  * @returns parsed & formatted USD value as a string if currency is of type USD
  */
 function getTransactedValue(transactedValue: TokenTransferPartsFragment['transactedValue']): number | undefined {
-  if (!transactedValue) return undefined
+  if (!transactedValue) {
+    return undefined
+  }
   const price = transactedValue?.currency === GQLCurrency.Usd ? transactedValue.value ?? undefined : undefined
   return price
 }
@@ -180,10 +186,14 @@ export function parseSwapAmounts(
     (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
-  if (!sent || !received) return undefined
+  if (!sent || !received) {
+    return undefined
+  }
   const inputCurrencyId = sent.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : sent.asset.address
   const outputCurrencyId = received.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : received.asset.address
-  if (!inputCurrencyId || !outputCurrencyId) return undefined
+  if (!inputCurrencyId || !outputCurrencyId) {
+    return undefined
+  }
 
   const sentQuantity = parseUnits(sent.quantity, sent.asset.decimals)
   const refundQuantity = refund ? parseUnits(refund.quantity, refund.asset.decimals) : BigNumber.from(0)
@@ -213,7 +223,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
 
-    const title = changes.NftTransfer[0].direction === 'IN' ? t`Bought` : t`Sold`
+    const title = changes.NftTransfer[0].direction === 'IN' ? t('common.bought') : t('common.sold')
     const descriptor = Object.entries(collectionCounts)
       .map(([collectionName, count]) => `${count} ${collectionName}`)
       .join()
@@ -233,7 +243,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
       }
     }
   }
-  return { title: t`Unknown Swap` }
+  return { title: t('common.unknownSwap') }
 }
 
 /**
@@ -246,7 +256,7 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
     return parseSwap(changes, formatNumberOrString)
   }
-  return { title: t`Unknown Lend` }
+  return { title: t('common.unknownLend') }
 }
 
 function parseSwapOrder(
@@ -272,12 +282,18 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   formatNumberOrString: FormatNumberOrStringFunctionType
 ): UniswapXOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
-  if (!activity || !activity.details || !chainId) return undefined
-  if (changes.TokenTransfer.length < 2) return undefined
+  if (!activity || !activity.details || !chainId) {
+    return undefined
+  }
+  if (changes.TokenTransfer.length < 2) {
+    return undefined
+  }
 
   const swapAmounts = parseSwapAmounts(changes, formatNumberOrString)
 
-  if (!swapAmounts) return undefined
+  if (!swapAmounts) {
+    return undefined
+  }
 
   const { inputCurrencyId, outputCurrencyId, inputAmountRaw, outputAmountRaw } = swapAmounts
 
@@ -305,12 +321,12 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
 
 function parseApprove(changes: TransactionChanges) {
   if (changes.TokenApproval.length === 1) {
-    const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t`Revoked Approval` : t`Approved`
+    const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t('common.revokedApproval') : t('common.approved')
     const descriptor = `${changes.TokenApproval[0].asset.symbol}`
     const currencies = [gqlToCurrency(changes.TokenApproval[0].asset)]
     return { title, descriptor, currencies }
   }
-  return { title: t`Unknown Approval` }
+  return { title: t('common.unknownApproval') }
 }
 
 function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -337,7 +353,7 @@ function parseSendReceive(
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
   if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-    return { title: t`Removed Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
+    return { title: t('common.removedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
   }
 
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
@@ -361,8 +377,8 @@ function parseSendReceive(
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
-            title: t`Purchased`,
-            descriptor: `${amount} ${assetName} ${t`for`} ${formatNumberOrString({
+            title: t('common.purchased'),
+            descriptor: `${amount} ${assetName} ${t('for')} ${formatNumberOrString({
               input: getTransactedValue(transfer.transactedValue),
               type: NumberType.FiatTokenPrice,
             })}`,
@@ -370,21 +386,21 @@ function parseSendReceive(
             currencies,
           }
         : {
-            title: t`Received`,
-            descriptor: `${amount} ${assetName} ${t`from`} `,
+            title: t('common.received'),
+            descriptor: `${amount} ${assetName} ${t('common.from')} `,
             otherAccount: isAddress(transfer.sender) || undefined,
             currencies,
           }
     } else {
       return {
-        title: t`Sent`,
-        descriptor: `${amount} ${assetName} ${t`to`} `,
+        title: t('common.sent'),
+        descriptor: `${amount} ${assetName} ${t('common.to')} `,
         otherAccount: isAddress(transfer.recipient) || undefined,
         currencies,
       }
     }
   }
-  return { title: t`Unknown Send` }
+  return { title: t('common.unknownSend') }
 }
 
 function parseMint(
@@ -398,11 +414,11 @@ function parseMint(
 
     // Edge case: Minting a v3 positon represents adding liquidity
     if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
-      return { title: t`Added Liquidity`, ...parseLPTransfers(changes, formatNumberOrString) }
+      return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
     }
-    return { title: t`Minted`, descriptor: `${collectionMap[collectionName]} ${collectionName}` }
+    return { title: t('common.minted'), descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
-  return { title: t`Unknown Mint` }
+  return { title: t('common.unknownMint') }
 }
 
 function parseUnknown(
@@ -410,7 +426,7 @@ function parseUnknown(
   _formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
-  return { title: t`Contract Interaction`, ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
+  return { title: t('common.contractInteraction'), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
 type TransactionTypeParser = (
@@ -492,11 +508,17 @@ function parseRemoteActivity(
 
     const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
-        if (assetChange?.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
-        else if (assetChange?.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
-        else if (assetChange?.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
-        else if (assetChange?.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
-        else if (assetChange?.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
+        if (assetChange?.__typename === 'NftApproval') {
+          acc.NftApproval.push(assetChange)
+        } else if (assetChange?.__typename === 'NftApproveForAll') {
+          acc.NftApproveForAll.push(assetChange)
+        } else if (assetChange?.__typename === 'NftTransfer') {
+          acc.NftTransfer.push(assetChange)
+        } else if (assetChange?.__typename === 'TokenTransfer') {
+          acc.TokenTransfer.push(assetChange)
+        } else if (assetChange?.__typename === 'TokenApproval') {
+          acc.TokenApproval.push(assetChange)
+        }
 
         return acc
       },
@@ -544,7 +566,9 @@ export function parseRemoteActivities(
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)
-    if (activity) acc[activity.hash] = activity
+    if (activity) {
+      acc[activity.hash] = activity
+    }
     return acc
   }, {})
 }
@@ -554,12 +578,23 @@ const getTimeSince = (timestamp: number) => {
 
   let interval
   // TODO(cartcrom): use locale to determine date shorthands to use for non-english
-  if ((interval = seconds / ms(`1y`)) > 1) return Math.floor(interval) + 'y'
-  if ((interval = seconds / ms(`30d`)) > 1) return Math.floor(interval) + 'mo'
-  if ((interval = seconds / ms(`1d`)) > 1) return Math.floor(interval) + 'd'
-  if ((interval = seconds / ms(`1h`)) > 1) return Math.floor(interval) + 'h'
-  if ((interval = seconds / ms(`1m`)) > 1) return Math.floor(interval) + 'm'
-  else return Math.floor(seconds / ms(`1s`)) + 's'
+  if ((interval = seconds / ms(`1y`)) > 1) {
+    return Math.floor(interval) + 'y'
+  }
+  if ((interval = seconds / ms(`30d`)) > 1) {
+    return Math.floor(interval) + 'mo'
+  }
+  if ((interval = seconds / ms(`1d`)) > 1) {
+    return Math.floor(interval) + 'd'
+  }
+  if ((interval = seconds / ms(`1h`)) > 1) {
+    return Math.floor(interval) + 'h'
+  }
+  if ((interval = seconds / ms(`1m`)) > 1) {
+    return Math.floor(interval) + 'm'
+  } else {
+    return Math.floor(seconds / ms(`1s`)) + 's'
+  }
 }
 
 /**

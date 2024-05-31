@@ -83,6 +83,7 @@
   },
   "scripts": {
     "g:build": "turbo run build --concurrency=100%",
+    "g:check:translations": "node ./scripts/ensure-i18n-alphabetized.js",
     "g:check:deps:usage": " depcheck && turbo run check:deps:usage",
     "g:check:deps:mismatch": "manypkg check",
     "g:check:circular": "turbo run check:circular",

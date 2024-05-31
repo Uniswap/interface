@@ -1,9 +1,9 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
-import { Trace, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
 //import { UniIcon } from 'components/Logo/UniIcon'
+import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
@@ -17,10 +17,10 @@ import { generateTweetForPurchase, getSuccessfulImageSize, parseTransactionRespo
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useIsMobile } from 'hooks/screenSize'
 import * as styles from './TransactionCompleteModal.css'
 
 const TWITTER_WIDTH = 560
@@ -101,7 +101,8 @@ const TxCompleteModal = () => {
             {/* Successfully purchased NFTs */}
             {showPurchasedModal && (
               <Trace
-                name={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
+                logImpression
+                eventOnTrigger={NFTEventName.NFT_BUY_BAG_SUCCEEDED}
                 properties={{
                   buy_quantity: nftsPurchased.length,
                   usd_value: parseFloat(ethersFormatEther(totalPurchaseValue)) * ethUsdPrice,
@@ -110,16 +111,15 @@ const TxCompleteModal = () => {
                   ...formatAssetEventProperties(nftsPurchased),
                   ...trace,
                 }}
-                shouldLogImpression
               >
                 <Box className={styles.successModal} onClick={stopPropagation}>
                   <GrgIcon color={vars.color.gold400} width="36" height="36" className={styles.uniLogo} />
                   <Box display="flex" flexWrap="wrap" width="full" height="min">
                     <h1 className={styles.title}>
-                      <Trans>Complete!</Trans>
+                      <Trans i18nKey="nft.complete" />
                     </h1>
                     <p className={styles.subHeading}>
-                      <Trans>Uniswap has granted your wish!</Trans>
+                      <Trans i18nKey="nft.wishGranted" />
                     </p>
                   </Box>
                   <UploadLink onClick={shareTweet} target="_blank">
@@ -175,7 +175,7 @@ const TxCompleteModal = () => {
                     </Row>
                     <a href={txHashUrl} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
                       <Box color="neutral2" fontWeight="book">
-                        <Trans>View on Etherscan</Trans>
+                        <Trans i18nKey="common.etherscan.link" />
                       </Box>
                     </a>
                   </Box>
@@ -187,7 +187,8 @@ const TxCompleteModal = () => {
               /* Showing both purchases & refunds */
               (showPurchasedModal ? (
                 <Trace
-                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
+                  logImpression
+                  eventOnTrigger={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: nftsPurchased.length,
                     fail_quantity: nftsNotPurchased.length,
@@ -195,7 +196,6 @@ const TxCompleteModal = () => {
                     transaction_hash: txHash,
                     ...trace,
                   }}
-                  shouldLogImpression
                 >
                   <Box className={styles.mixedRefundModal} onClick={stopPropagation}>
                     <Box
@@ -270,14 +270,14 @@ const TxCompleteModal = () => {
               ) : (
                 // Only showing when all assets are unavailable
                 <Trace
-                  name={NFTEventName.NFT_BUY_BAG_REFUNDED}
+                  logImpression
+                  eventOnTrigger={NFTEventName.NFT_BUY_BAG_REFUNDED}
                   properties={{
                     buy_quantity: 0,
                     fail_quantity: nftsNotPurchased.length,
                     refund_amount_usd: totalUSDRefund,
                     ...trace,
                   }}
-                  shouldLogImpression
                 >
                   <Box className={styles.fullRefundModal} onClick={stopPropagation}>
                     <Box marginLeft="auto" marginRight="auto" display="flex">

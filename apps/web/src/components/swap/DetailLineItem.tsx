@@ -35,9 +35,13 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
   const { TooltipBody, tooltipSize, loaderWidth } = lineItem
   const isMobile = useIsMobile()
 
-  if (syncing) return <LoadingRow data-testid="loading-row" height={15} width={loaderWidth ?? 50} />
+  if (syncing) {
+    return <LoadingRow data-testid="loading-row" height={15} width={loaderWidth ?? 50} />
+  }
 
-  if (!TooltipBody) return <DetailRowValue>{children}</DetailRowValue>
+  if (!TooltipBody) {
+    return <DetailRowValue>{children}</DetailRowValue>
+  }
 
   return (
     <MouseoverTooltip

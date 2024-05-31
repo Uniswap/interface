@@ -1,6 +1,5 @@
-import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { TraceEvent, useTrace } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -13,8 +12,9 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isSubmittableTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
-
 import GasEstimateTooltip from './GasEstimateTooltip'
 import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 import TradePrice from './TradePrice'
@@ -55,15 +55,15 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
 
   return (
     <Wrapper>
-      <TraceEvent
-        events={[BrowserEvent.onClick]}
-        name={SwapEventName.SWAP_DETAILS_EXPANDED}
+      <Trace
+        logPress
+        logImpression={!showDetails}
+        eventOnTrigger={SwapEventName.SWAP_DETAILS_EXPANDED}
         element={InterfaceElementName.SWAP_DETAILS_DROPDOWN}
         properties={{
           ...(trade ? formatCommonPropertiesForTrade(trade, allowedSlippage) : {}),
           ...trace,
         }}
-        shouldLogImpression={!showDetails}
       >
         <StyledHeaderRow
           data-testid="swap-details-header-row"
@@ -78,7 +78,7 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
               </LoadingOpacityContainer>
             ) : loading || syncing ? (
               <ThemedText.DeprecatedMain fontSize={14}>
-                <Trans>Fetching best price...</Trans>
+                <Trans i18nKey="swap.fetchingBestPrice" />
               </ThemedText.DeprecatedMain>
             ) : null}
           </RowFixed>
@@ -89,7 +89,7 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
             <RotatingArrow stroke={trade ? theme.neutral3 : theme.surface2} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
-      </TraceEvent>
+      </Trace>
       <AdvancedSwapDetails {...props} open={showDetails} />
     </Wrapper>
   )
@@ -99,7 +99,9 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
   const { open, trade, allowedSlippage, syncing = false, priceImpact } = props
   const format = useFormatter()
 
-  if (!trade) return null
+  if (!trade) {
+    return null
+  }
 
   const lineItemProps = { trade, allowedSlippage, format, syncing, priceImpact }
 

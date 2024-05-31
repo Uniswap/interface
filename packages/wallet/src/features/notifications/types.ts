@@ -26,6 +26,7 @@ export enum AppNotificationType {
   ScantasticComplete,
   DappConnected,
   DappDisconnected,
+  NotSupportedNetwork,
 }
 
 export interface AppNotificationBase {
@@ -199,6 +200,10 @@ export interface DappDisconnectedNotification extends AppNotificationBase {
   dappIconUrl: Maybe<string>
 }
 
+export interface NotSupportedNetworkNotification extends AppNotificationBase {
+  type: AppNotificationType.NotSupportedNetwork
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
@@ -215,3 +220,4 @@ export type AppNotification =
   | ScantasticCompleteNotification
   | DappConnectedNotification
   | DappDisconnectedNotification
+  | NotSupportedNetworkNotification

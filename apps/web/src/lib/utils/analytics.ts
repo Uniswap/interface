@@ -5,7 +5,9 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
-  if (!futureTimestampInSecondsSinceEpoch) return undefined
+  if (!futureTimestampInSecondsSinceEpoch) {
+    return undefined
+  }
   return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
@@ -30,8 +32,12 @@ export const getPriceUpdateBasisPoints = (
 }
 
 function getEstimatedNetworkFee(trade: InterfaceTrade) {
-  if (isClassicTrade(trade)) return trade.gasUseEstimateUSD
-  if (isUniswapXTrade(trade)) return trade.classicGasUseEstimateUSD
+  if (isClassicTrade(trade)) {
+    return trade.gasUseEstimateUSD
+  }
+  if (isUniswapXTrade(trade)) {
+    return trade.classicGasUseEstimateUSD
+  }
   return undefined
 }
 
@@ -95,7 +101,9 @@ export const formatSwapSignedAnalyticsEventProperties = ({
 })
 
 function getQuoteMethod(trade: InterfaceTrade) {
-  if (isUniswapXTrade(trade)) return QuoteMethod.ROUTING_API
+  if (isUniswapXTrade(trade)) {
+    return QuoteMethod.ROUTING_API
+  }
 
   return trade.quoteMethod
 }

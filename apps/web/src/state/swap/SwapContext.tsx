@@ -1,9 +1,8 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { SwapTab } from 'components/swap/constants'
+import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
-import { useChainId } from 'wagmi'
-
+import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { useDerivedSwapInfo } from './hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from './types'
 
@@ -32,7 +31,7 @@ export function SwapAndLimitContextProvider({
     [initialInputCurrency, initialOutputCurrency]
   )
 
-  const connectedChainId = useChainId()
+  const { chainId: connectedChainId } = useAccount()
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
 
@@ -78,7 +77,7 @@ export function SwapContextProvider({ children }: { children: React.ReactNode })
   })
   const derivedSwapInfo = useDerivedSwapInfo(swapState)
 
-  const connectedChainId = useChainId()
+  const { chainId: connectedChainId } = useAccount()
   const previousConnectedChainId = usePrevious(connectedChainId)
 
   useEffect(() => {

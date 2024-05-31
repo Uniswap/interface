@@ -1,18 +1,25 @@
-import { allowAnalyticsAtom } from 'analytics'
 import { t } from 'i18n'
-import { useAtom } from 'jotai'
-
+import { useState } from 'react'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 import { SettingsToggle } from './SettingsToggle'
 
 export function AnalyticsToggle() {
-  const [allowAnalytics, updateAllowAnalytics] = useAtom(allowAnalyticsAtom)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [x, setCounter] = useState(0)
+  const [allowAnalytics, setAllowAnalytics] = useState(true)
+
+  getAnalyticsAtomDirect(true).then((v: boolean) => setAllowAnalytics(v))
 
   return (
     <SettingsToggle
-      title={t`Allow analytics`}
-      description={t`We use anonymized data to enhance your experience with Rigoblock products.`}
+      title={t('analytics.allow')}
+      description={t('analytics.allow.message')}
       isActive={allowAnalytics}
-      toggle={() => void updateAllowAnalytics((value) => !value)}
+      toggle={() => {
+        analytics.setAllowAnalytics(!allowAnalytics)
+        setCounter((c) => c + 1)
+      }}
     />
   )
 }

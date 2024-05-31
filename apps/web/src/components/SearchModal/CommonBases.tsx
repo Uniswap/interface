@@ -1,6 +1,5 @@
-import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { TraceEvent } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
@@ -9,6 +8,8 @@ import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { currencyId } from 'utils/currencyId'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
@@ -73,9 +74,10 @@ export default function CommonBases({
         const isSelected = selectedCurrency?.equals(currency)
 
         return (
-          <TraceEvent
-            events={[BrowserEvent.onClick, BrowserEvent.onKeyPress]}
-            name={InterfaceEventName.TOKEN_SELECTED}
+          <Trace
+            logPress
+            logKeyPress
+            eventOnTrigger={WalletEventName.TokenSelected}
             properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch, portfolioBalanceUsd)}
             element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
             key={currencyId(currency)}
@@ -93,7 +95,7 @@ export default function CommonBases({
                 {currency.symbol}
               </Text>
             </BaseWrapper>
-          </TraceEvent>
+          </Trace>
         )
       })}
     </AutoRow>

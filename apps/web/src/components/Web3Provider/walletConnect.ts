@@ -19,10 +19,10 @@ export interface WalletConnectConnector extends Connector {
 export const WC_PARAMS = {
   projectId: WALLET_CONNECT_PROJECT_ID,
   metadata: {
-    name: 'Uniswap',
-    description: 'Uniswap Interface',
-    url: 'https://app.uniswap.org',
-    icons: ['https://app.uniswap.org/favicon.png'],
+    name: 'Rigoblock',
+    description: 'Rigoblock Interface',
+    url: 'https://app.rigoblock.com',
+    icons: ['https://app.rigoblock.com/favicon.png'],
   },
   qrModalOptions: {
     themeVariables: {
@@ -42,7 +42,7 @@ export function uniswapWalletConnect() {
     config.emitter.on('message', ({ type, data }) => {
       if (type === 'display_uri') {
         // Emits custom wallet connect code, parseable by the Uniswap Wallet
-        const uniswapWalletUri = `https://uniswap.org/app/wc?uri=${data}`
+        const uniswapWalletUri = `https://rigoblock.com/app/wc?uri=${data}`
         config.emitter.emit('message', { type: 'display_uniswap_uri', data: uniswapWalletUri })
 
         // Opens deeplink to Uniswap Wallet if on mobile
@@ -59,7 +59,7 @@ export function uniswapWalletConnect() {
       id: 'uniswapWalletConnect',
       type: 'uniswapWalletConnect',
       name: 'Uniswap Wallet',
-      icon: 'https://app.uniswap.org/favicon.png',
+      icon: 'https://app.rigoblock.com/favicon.png',
     }
   })
 }

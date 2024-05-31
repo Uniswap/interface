@@ -6,7 +6,9 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (!account) return
+    if (!account) {
+      return
+    }
 
     // TODO: add back local browser cacheing (revisit 11/13/2023)
     const headers = new Headers({ 'Content-Type': 'application/json' })

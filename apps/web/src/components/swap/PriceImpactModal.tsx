@@ -51,24 +51,27 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
         </IconContainer>
         <ColumnCenter gap="sm">
           <ThemedText.HeadlineSmall fontWeight={535}>
-            <Trans>Warning</Trans>
+            <Trans i18nKey="common.warning" />
           </ThemedText.HeadlineSmall>
           <ThemedText.BodyPrimary lineHeight="24px" textAlign="center">
-            <Trans>
-              This transaction will result in a{' '}
-              <ThemedText.BodyPrimary lineHeight="24px" color="critical" display="inline">
-                {impact}
-              </ThemedText.BodyPrimary>{' '}
-              price impact on the market price of this pool. Do you wish to continue?
-            </Trans>
+            <Trans
+              i18nKey="swap.warning.priceImpact"
+              components={{
+                impact: (
+                  <ThemedText.BodyPrimary lineHeight="24px" color="critical" display="inline">
+                    {impact}
+                  </ThemedText.BodyPrimary>
+                ),
+              }}
+            />
           </ThemedText.BodyPrimary>
         </ColumnCenter>
         <ButtonContainer gap="md">
           <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.failure} onClick={onContinue}>
-            <Trans>Continue</Trans>
+            <Trans i18nKey="common.continue.button" />
           </StyledThemeButton>
           <StyledThemeButton size={ButtonSize.medium} emphasis={ButtonEmphasis.low} onClick={onDismiss}>
-            <Trans>Cancel</Trans>
+            <Trans i18nKey="common.cancel.button" />
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>

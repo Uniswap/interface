@@ -6,7 +6,7 @@ import { CHAIN_IDS_TO_NAMES, CHAIN_INFO, SUPPORTED_INTERFACE_CHAIN_IDS, Supporte
 function getAppProvider(chainId: SupportedInterfaceChainId) {
   const info = CHAIN_INFO[chainId]
   return new AppJsonRpcProvider(
-    info.rpcUrls.appOnly.map(
+    info.rpcUrls.appOnly.http.map(
       (url) => new ConfiguredJsonRpcProvider(url, { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })
     )
   )

@@ -135,7 +135,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   )
 
   return useMemo(() => {
-    if (!chainId || !uni) return []
+    if (!chainId || !uni) {
+      return []
+    }
 
     return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
       // these two are dependent on account
@@ -293,7 +295,9 @@ export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] |
   )
 
   return useMemo(() => {
-    if (!unclaimedRewards || !grg) return undefined
+    if (!unclaimedRewards || !grg) {
+      return undefined
+    }
     return unclaimedRewards
       .map((reward, i) => {
         const value = reward?.result?.[0]
@@ -329,7 +333,9 @@ export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undef
   )
 
   return useMemo(() => {
-    if (!userStakeBalances || !grg) return undefined
+    if (!userStakeBalances || !grg) {
+      return undefined
+    }
     return userStakeBalances.map((balance) => {
       const stake = balance?.result?.[0].nextEpochBalance
       const stakeAmount = CurrencyAmount.fromRawAmount(grg, stake ?? JSBI.BigInt(0))
@@ -352,9 +358,15 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
 
   return useCallback(
     (amount: CurrencyAmount<Token>, isPool?: boolean) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!stakingContract) throw new Error('No Staking Proxy Contract!')
-      if (isPool && !poolContract) throw new Error('No Pool Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!stakingContract) {
+        throw new Error('No Staking Proxy Contract!')
+      }
+      if (isPool && !poolContract) {
+        throw new Error('No Pool Contract!')
+      }
       if (!isPool) {
         return stakingContract.estimateGas.unstake(amount.quotient.toString(), {}).then((estimatedGasLimit) => {
           return stakingContract
@@ -403,9 +415,15 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
 
   return useCallback(
     (poolIds: string[], isPool?: boolean) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!stakingContract || !stakingProxy) throw new Error('No Staking Proxy Contract!')
-      if (isPool && !poolContract) throw new Error('No Pool Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!stakingContract || !stakingProxy) {
+        throw new Error('No Staking Proxy Contract!')
+      }
+      if (isPool && !poolContract) {
+        throw new Error('No Pool Contract!')
+      }
       const harvestCalls: string[] = []
       // when withdrawing pool rewards we will pass an array of only 1 pool ids
       // TODO: we encode pool calls but do not use them as we want to use direct method instead of multicall.
@@ -414,7 +432,9 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
         const harvestCall = !isPool
           ? stakingContract.interface.encodeFunctionData('withdrawDelegatorRewards', [poolId])
           : poolContract?.interface.encodeFunctionData('withdrawDelegatorRewards')
-        if (harvestCall) harvestCalls.push(harvestCall)
+        if (harvestCall) {
+          harvestCalls.push(harvestCall)
+        }
       }
       if (!isPool) {
         return stakingProxy.estimateGas.batchExecute(harvestCalls, {}).then((estimatedGasLimit) => {
@@ -465,8 +485,12 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
 
   return useCallback(
     (poolAddress: string | undefined) => {
-      if (!provider || !chainId || !account) return undefined
-      if (!popContract) throw new Error('No PoP Contract!')
+      if (!provider || !chainId || !account) {
+        return undefined
+      }
+      if (!popContract) {
+        throw new Error('No PoP Contract!')
+      }
       return popContract.estimateGas.creditPopRewardToStakingProxy(poolAddress, {}).then((estimatedGasLimit) => {
         return popContract
           .creditPopRewardToStakingProxy(poolAddress, {

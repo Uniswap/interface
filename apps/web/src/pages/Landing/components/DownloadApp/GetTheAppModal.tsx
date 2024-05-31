@@ -70,10 +70,10 @@ export function GetTheAppModal() {
         <ColumnCenter gap="xl">
           <ColumnCenter gap="sm">
             <ThemedText.H1Medium textAlign="center">
-              <Trans>Download the Uniswap app</Trans>
+              <Trans i18nKey="common.downloadUniswapApp" />
             </ThemedText.H1Medium>
             <ThemedText.BodySecondary textAlign="center" maxWidth="400px">
-              <Trans>Scan the QR code with your phone to download the Uniswap app</Trans>
+              <Trans i18nKey="common.scanQRDownload" />
             </ThemedText.BodySecondary>
           </ColumnCenter>
           <BadgeLink href="https://uniswapwallet.onelink.me/8q3y/m4i9qsez?af_qr=true">

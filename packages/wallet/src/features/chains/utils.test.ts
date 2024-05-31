@@ -4,10 +4,12 @@ import { ChainId } from 'uniswap/src/types/chains'
 import { TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
+  chainIdToHexadecimalString,
   fromGraphQLChain,
   fromMoonpayNetwork,
   fromUniswapWebAppLink,
   getPollingIntervalByBlocktime,
+  hexadecimalStringToInt,
   isTestnet,
   toSupportedChainId,
   toUniswapWebAppLink,
@@ -100,5 +102,40 @@ describe(toUniswapWebAppLink, () => {
 
   it('handle unsupported chain', () => {
     expect(() => fromUniswapWebAppLink('unkwnown')).toThrow('Network "unkwnown" can not be mapped')
+  })
+})
+
+describe(chainIdToHexadecimalString, () => {
+  it('handles supported chain', () => {
+    expect(chainIdToHexadecimalString(ChainId.ArbitrumOne)).toEqual('0xa4b1')
+  })
+})
+
+describe('hexadecimalStringToInt', () => {
+  it('converts valid hexadecimal strings to integers', () => {
+    expect(hexadecimalStringToInt('1')).toEqual(1)
+    expect(hexadecimalStringToInt('a')).toEqual(10)
+    expect(hexadecimalStringToInt('A')).toEqual(10)
+    expect(hexadecimalStringToInt('10')).toEqual(16)
+    expect(hexadecimalStringToInt('FF')).toEqual(255)
+    expect(hexadecimalStringToInt('ff')).toEqual(255)
+    expect(hexadecimalStringToInt('100')).toEqual(256)
+  })
+
+  it('converts hexadecimal strings with prefix to integers', () => {
+    expect(hexadecimalStringToInt('0x1')).toEqual(1)
+    expect(hexadecimalStringToInt('0xa')).toEqual(10)
+    expect(hexadecimalStringToInt('0xA')).toEqual(10)
+    expect(hexadecimalStringToInt('0x10')).toEqual(16)
+    expect(hexadecimalStringToInt('0xFF')).toEqual(255)
+    expect(hexadecimalStringToInt('0xff')).toEqual(255)
+    expect(hexadecimalStringToInt('0x100')).toEqual(256)
+  })
+
+  it('handles invalid hexadecimal strings', () => {
+    expect(hexadecimalStringToInt('')).toBeNaN()
+    expect(hexadecimalStringToInt('g')).toBeNaN()
+    expect(hexadecimalStringToInt('0x')).toBeNaN()
+    expect(hexadecimalStringToInt('0xg')).toBeNaN()
   })
 })

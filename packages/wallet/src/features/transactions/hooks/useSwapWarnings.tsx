@@ -21,7 +21,7 @@ import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
   SWAP_QUOTE_ERROR,
-} from 'wallet/src/features/transactions/swap/trade/legacy/api'
+} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'

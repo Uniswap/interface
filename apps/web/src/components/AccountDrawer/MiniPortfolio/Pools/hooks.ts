@@ -67,7 +67,9 @@ export function useInterfaceMulticallContracts(chainIds: ChainId[]): ContractMap
 type PriceMap = { [key: CurrencyKey]: number | undefined }
 export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
   const contracts = useMemo(() => {
-    if (!positions || !positions.length) return []
+    if (!positions || !positions.length) {
+      return []
+    }
     // Avoids fetching duplicate tokens by placing in map
     const contractMap = positions.reduce((acc: { [key: string]: ContractInput }, { pool: { token0, token1 } }) => {
       acc[currencyKey(token0)] = toContractInput(token0)
@@ -82,7 +84,9 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
   const priceMap = useMemo(
     () =>
       data?.tokens?.reduce((acc: PriceMap, current) => {
-        if (current) acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
+        if (current) {
+          acc[currencyKeyFromGraphQL(current)] = current.project?.markets?.[0]?.price?.value
+        }
         return acc
       }, {}) ?? {},
     [data?.tokens]

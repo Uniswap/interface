@@ -1934,6 +1934,14 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "utilities/src/telemetry/trace/Trace",
           },
           {
+            "message": "Please only use this for initialization, tests, flushing, and internal usage. Otherwise use \`packages/uniswap/src/features/telemetry\`",
+            "name": "utilities/src/telemetry/analytics/analytics",
+          },
+          {
+            "message": "This is for internal use only. Please use \`packages/uniswap/src/features/telemetry\`",
+            "name": "@uniswap/analytics",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
@@ -2046,7 +2054,7 @@ exports[`should have a correct configuration for a React file 1`] = `
       "off",
     ],
     "curly": [
-      0,
+      "error",
     ],
     "dot-location": [
       "off",

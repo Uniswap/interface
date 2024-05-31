@@ -38,35 +38,39 @@ interface LimitPriceErrorProps {
 
 function getTitle({ inputCurrency, outputCurrency, priceInverted, priceError }: LimitPriceErrorProps): ReactNode {
   if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
-    return <Trans>Market price not available</Trans>
+    return <Trans i18nKey="limitPrice.marketPriceNotAvailable.error.title" />
   } else if (priceInverted) {
-    return <Trans>Buying {{ symbol: outputCurrency.symbol }} above market price</Trans>
+    return (
+      <Trans i18nKey="limitPrice.buyingAboveMarketPrice.error.title" values={{ tokenSymbol: outputCurrency.symbol }} />
+    )
   } else {
-    return <Trans>Selling {{ symbol: inputCurrency.symbol }} below market price</Trans>
+    return (
+      <Trans i18nKey="limitPrice.sellingBelowMarketPrice.error.title" values={{ tokenSymbol: inputCurrency.symbol }} />
+    )
   }
 }
 
 function getDescription({ priceInverted, priceAdjustmentPercentage, priceError }: LimitPriceErrorProps): ReactNode {
   if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
     return (
-      <Trans>
+      <Trans i18nKey="limitPrice.marketPriceNotAvailable.error.description">
         We are unable to calculate the current market price. To avoid submitting an order below market price, please
         check your network connection and try again.
       </Trans>
     )
   } else if (priceInverted && !!priceAdjustmentPercentage) {
     return (
-      <Trans>
-        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% higher than market. Adjust your limit price
-        to proceed.
-      </Trans>
+      <Trans
+        i18nKey="limitPrice.buyingAboveMarketPrice.error.description"
+        values={{ percentage: Math.abs(priceAdjustmentPercentage) }}
+      />
     )
   } else if (priceAdjustmentPercentage) {
     return (
-      <Trans>
-        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% lower than market. Adjust your limit price
-        to proceed.
-      </Trans>
+      <Trans
+        i18nKey="limitPrice.sellingBelowMarketPrice.error.description"
+        values={{ percentage: Math.abs(priceAdjustmentPercentage) }}
+      />
     )
   }
   return null

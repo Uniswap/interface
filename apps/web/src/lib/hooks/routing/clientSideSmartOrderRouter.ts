@@ -2,7 +2,7 @@ import { BigintIsh, ChainId, CurrencyAmount, Token, TradeType } from '@uniswap/s
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
-import { SupportedInterfaceChainId, getChainInfo, isSupportedChainId } from 'constants/chains'
+import { SupportedInterfaceChainId, getChain, isSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
@@ -12,9 +12,11 @@ import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGe
 const routers = new Map<ChainId, AlphaRouter>()
 export function getRouter(chainId: ChainId): AlphaRouter {
   const router = routers.get(chainId)
-  if (router) return router
+  if (router) {
+    return router
+  }
 
-  if (isSupportedChainId(chainId) && getChainInfo({ chainId }).supportsClientSideRouting) {
+  if (isSupportedChainId(chainId) && getChain({ chainId }).supportsClientSideRouting) {
     const provider = RPC_PROVIDERS[chainId as SupportedInterfaceChainId]
     const router = new AlphaRouter({ chainId, provider })
     routers.set(chainId, router)

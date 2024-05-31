@@ -36,11 +36,15 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
@@ -101,6 +105,7 @@ function NFTItemScreenContents({
   })
   const asset = data?.nftAssets?.edges[0]?.node
   const owner = (ownerFromProps || asset?.ownerAddress) ?? undefined
+  const chainId = fromGraphQLChain(fallbackData?.chain) ?? undefined
 
   const lastSaleData = data?.nftActivity?.edges[0]?.node
   const listingPrice = asset?.listings?.edges?.[0]?.node?.price
@@ -298,6 +303,7 @@ function NFTItemScreenContents({
                     collection={asset?.collection}
                     fallbackData={fallbackData}
                     loading={nftLoading}
+                    shouldDisableLink={chainId !== ChainId.Mainnet} // TODO(MOB-3447): Remove once backend has full L2 collection support
                     onPress={onPressCollection}
                   />
                 </Flex>
@@ -333,6 +339,20 @@ function NFTItemScreenContents({
                       }
                     />
                   ) : null}
+                  {chainId && (
+                    <AssetMetadata
+                      color={accentTextColor}
+                      title={t('tokens.nfts.details.network')}
+                      valueComponent={
+                        <Flex row alignItems="center" gap="$spacing8">
+                          <Text color="$neutral1" variant="buttonLabel3">
+                            {CHAIN_INFO[chainId].label}
+                          </Text>
+                          <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
+                        </Flex>
+                      }
+                    />
+                  )}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
                       color={accentTextColor}

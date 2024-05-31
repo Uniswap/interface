@@ -1,7 +1,6 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useTrace } from 'analytics'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -9,6 +8,7 @@ import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
+import { useAccount } from 'hooks/useAccount'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'
@@ -21,8 +21,8 @@ import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useChainId } from 'wagmi'
-
+import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
@@ -39,7 +39,7 @@ interface SearchBarDropdownSectionProps {
   startingIndex: number
   setHoveredIndex: (index: number | undefined) => void
   isLoading?: boolean
-  eventProperties: Record<string, unknown>
+  eventProperties: InterfaceSearchResultSelectionProperties
 }
 
 const SearchBarDropdownSection = ({
@@ -72,10 +72,10 @@ const SearchBarDropdownSection = ({
               toggleOpen={toggleOpen}
               index={index + startingIndex}
               eventProperties={{
+                ...eventProperties,
                 position: index + startingIndex,
                 selected_search_result_name: suggestion.name,
                 selected_search_result_address: suggestion.address,
-                ...eventProperties,
               }}
             />
           )
@@ -115,7 +115,7 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
-  const chainId = useChainId()
+  const { chainId } = useAccount()
   const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
 
   return (
@@ -234,12 +234,12 @@ function SearchBarDropdownContents({
   const hasKnownToken = tokens.some(isKnownToken)
   const showCollectionsFirst = isNFTPage && (hasVerifiedCollection || !hasKnownToken)
 
-  const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
+  const trace = useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH })
 
   const eventProperties = {
     total_suggestions: totalSuggestions,
     query_text: queryText,
-    ...JSON.parse(trace),
+    ...trace,
   }
 
   const poolSearchResults =
@@ -274,11 +274,11 @@ function SearchBarDropdownContents({
           suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
           ...eventProperties,
         }}
-        header={<Trans>Tokens</Trans>}
+        header={<Trans i18nKey="common.tokens" />}
       />
     ) : (
       <Box className={styles.notFoundContainer}>
-        <Trans>No tokens found.</Trans>
+        <Trans i18nKey="tokens.noneFound" />
       </Box>
     )
   ) : null
@@ -295,7 +295,7 @@ function SearchBarDropdownContents({
           suggestion_type: NavBarSearchTypes.COLLECTION_SUGGESTION,
           ...eventProperties,
         }}
-        header={<Trans>NFT collections</Trans>}
+        header={<Trans i18nKey="nft.collections" />}
       />
     ) : (
       <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
@@ -333,7 +333,7 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
             ...eventProperties,
           }}
-          header={<Trans>Recent searches</Trans>}
+          header={<Trans i18nKey="search.recent" />}
           headerIcon={<ClockIcon />}
           isLoading={!searchHistory}
         />
@@ -350,7 +350,7 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
             ...eventProperties,
           }}
-          header={<Trans>Popular tokens</Trans>}
+          header={<Trans i18nKey="common.popularTokens" />}
           headerIcon={<TrendingArrow />}
           isLoading={!trendingTokenData}
         />
@@ -367,7 +367,7 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.COLLECTION_TRENDING,
             ...eventProperties,
           }}
-          header={<Trans>Popular NFT collections</Trans>}
+          header={<Trans i18nKey="nft.popularCollections" />}
           headerIcon={<TrendingArrow />}
           isLoading={trendingCollectionsAreLoading}
         />
@@ -379,7 +379,7 @@ function SearchBarDropdownContents({
 function ComingSoonText({ chainId }: { chainId: ChainId }) {
   switch (chainId) {
     case ChainId.AVALANCHE:
-      return <Trans>Coming soon: search and explore tokens on Avalanche Chain</Trans>
+      return <Trans i18nKey="search.avalancheComing" />
     default:
       return null
   }

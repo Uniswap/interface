@@ -1,6 +1,14 @@
 import { BaseTransport } from '@amplitude/analytics-core'
 import { Payload, Response, Transport } from '@amplitude/analytics-types'
 
+interface TransportConfig {
+  serverUrl: string
+  appOrigin: string
+  originOverride?: string
+  appBuild?: string
+  reportOriginCountry?: (country: string) => void
+}
+
 /**
  * Custom Application Transport used to pass in custom `origin` header,
  * and override `serverUrl` (such as in case of using reverse proxy).
@@ -8,16 +16,23 @@ import { Payload, Response, Transport } from '@amplitude/analytics-types'
  * Borrowed and modified from: https://github.com/Uniswap/analytics/blob/main/src/analytics/ApplicationTransport.ts
  */
 export class ApplicationTransport extends BaseTransport implements Transport {
-  appOrigin: string
-  origin: string | undefined
-  appBuild: string | undefined
+  private serverUrl: string
+  private appOrigin: string
+  private originOverride?: string
+  private appBuild?: string
+  private reportOriginCountry?: (country: string) => void
 
-  constructor(private serverUrl: string, appOrigin: string, origin?: string, appBuild?: string) {
+  private shouldReportOriginCountry = true
+
+  constructor(config: TransportConfig) {
     super()
 
-    this.appOrigin = appOrigin
-    this.origin = origin
-    this.appBuild = appBuild
+    this.serverUrl = config.serverUrl
+    this.appOrigin = config.appOrigin
+
+    this.originOverride = config.originOverride
+    this.appBuild = config.appBuild
+    this.reportOriginCountry = config.reportOriginCountry
 
     /* istanbul ignore if */
     if (typeof fetch === 'undefined') {
@@ -32,8 +47,8 @@ export class ApplicationTransport extends BaseTransport implements Transport {
       Accept: '*/*',
     }
 
-    if (this.origin) {
-      headers.Origin = this.origin
+    if (this.originOverride) {
+      headers.Origin = this.originOverride
     }
 
     if (this.appBuild) {
@@ -46,8 +61,16 @@ export class ApplicationTransport extends BaseTransport implements Transport {
       body: JSON.stringify(payload),
       method: 'POST',
     }
+
     const response = await fetch(this.serverUrl, request)
     const responseJSON: Record<string, unknown> = await response.json()
+
+    // Report origin country back
+    if (response.headers.has('Origin-Country') && this.shouldReportOriginCountry) {
+      this.reportOriginCountry?.(response.headers.get('Origin-Country') as string)
+      this.shouldReportOriginCountry = false
+    }
+
     return this.buildResponse(responseJSON)
   }
 }

@@ -22,7 +22,9 @@ export default function useENSAvatar(
 ): { avatar: string | null; loading: boolean } {
   const debouncedAddress = useDebounce(address, 200)
   const node = useMemo(() => {
-    if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
+    if (!debouncedAddress || !isAddress(debouncedAddress)) {
+      return undefined
+    }
     return safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
   }, [debouncedAddress])
 

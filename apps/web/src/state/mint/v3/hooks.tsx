@@ -240,7 +240,7 @@ export function useV3DerivedMintInfo(
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
-  // lower and upper limits in the tick space for `feeAmoun<Trans>
+  // lower and upper limits in the tick space for `feeAmount`
   const tickSpaceLimits = useMemo(
     () => ({
       [Bound.LOWER]: feeAmount ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount]) : undefined,
@@ -455,32 +455,46 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: ReactNode | undefined
   if (!account) {
-    errorMessage = <Trans>Connect wallet</Trans>
+    errorMessage = <Trans i18nKey="common.connectWallet.button" />
   }
 
   if (poolState === PoolState.INVALID) {
-    errorMessage = errorMessage ?? <Trans>Invalid pair</Trans>
+    errorMessage = errorMessage ?? <Trans i18nKey="common.invalidPair" />
   }
 
   if (invalidPrice) {
-    errorMessage = errorMessage ?? <Trans>Invalid price input</Trans>
+    errorMessage = errorMessage ?? <Trans i18nKey="mint.v3.input.invalidPrice.error" />
   }
 
   if (
     (!parsedAmounts[Field.CURRENCY_A] && !depositADisabled) ||
     (!parsedAmounts[Field.CURRENCY_B] && !depositBDisabled)
   ) {
-    errorMessage = errorMessage ?? <Trans>Enter an amount</Trans>
+    errorMessage = errorMessage ?? <Trans i18nKey="common.noAmount.error" />
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_A]?.symbol }} balance</Trans>
+    errorMessage = (
+      <Trans
+        i18nKey="common.insufficientTokenBalance.error"
+        values={{
+          tokenSymbol: currencies[Field.CURRENCY_A]?.symbol,
+        }}
+      />
+    )
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_B]?.symbol }} balance</Trans>
+    errorMessage = (
+      <Trans
+        i18nKey="common.insufficientTokenBalance.error"
+        values={{
+          tokenSymbol: currencies[Field.CURRENCY_B]?.symbol,
+        }}
+      />
+    )
   }
 
   const isTaxed = currencyATax.greaterThan(0) || currencyBTax.greaterThan(0)

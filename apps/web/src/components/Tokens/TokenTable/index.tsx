@@ -66,7 +66,7 @@ function TokenDescription({ token }: { token: TopToken }) {
   return (
     <Row gap="sm">
       <QueryTokenLogo token={token} size={28} />
-      <NameText data-testid="token-name">{token?.name}</NameText>
+      <NameText data-testid="token-name">{token?.project?.name ?? token?.name}</NameText>
       <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
     </Row>
   )
@@ -91,25 +91,19 @@ export function TopTokensTable() {
 }
 
 const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
-  [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans>FDV</Trans>,
-  [TokenSortMethod.PRICE]: <Trans>Price</Trans>,
-  [TokenSortMethod.VOLUME]: <Trans>Volume</Trans>,
-  [TokenSortMethod.HOUR_CHANGE]: <Trans>1 hour</Trans>,
-  [TokenSortMethod.DAY_CHANGE]: <Trans>1 day</Trans>,
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,
+  [TokenSortMethod.PRICE]: <Trans i18nKey="common.price" />,
+  [TokenSortMethod.VOLUME]: <Trans i18nKey="common.volume" />,
+  [TokenSortMethod.HOUR_CHANGE]: <Trans i18nKey="common.oneHour" />,
+  [TokenSortMethod.DAY_CHANGE]: <Trans i18nKey="common.oneDay" />,
 }
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
   [TokenSortMethod.DAY_CHANGE]: undefined,
   [TokenSortMethod.HOUR_CHANGE]: undefined,
-  [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
-    <Trans>
-      Fully diluted valuation (FDV) calculates the total market value assuming all tokens are in circulation.
-    </Trans>
-  ),
-  [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
-  ),
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv.description" />,
+  [TokenSortMethod.VOLUME]: <Trans i18nKey="stats.volume.description" />,
 }
 
 function TokenTableHeader({
@@ -245,7 +239,7 @@ function TokenTable({
         header: () => (
           <Cell justifyContent="flex-start" width={240} grow>
             <ThemedText.BodySecondary>
-              <Trans>Token name</Trans>
+              <Trans i18nKey="common.tokenName" />
             </ThemedText.BodySecondary>
           </Cell>
         ),

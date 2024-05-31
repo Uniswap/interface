@@ -15,7 +15,9 @@ function useUrlLocalCurrency() {
   const parsed = useParsedQueryString()
   const parsedLocalCurrency = parsed.cur
 
-  if (typeof parsedLocalCurrency !== 'string') return undefined
+  if (typeof parsedLocalCurrency !== 'string') {
+    return undefined
+  }
 
   const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
   return SUPPORTED_LOCAL_CURRENCIES.find(

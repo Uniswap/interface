@@ -3,7 +3,6 @@ import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { Trace } from 'analytics'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -33,6 +32,7 @@ import TOKEN_ABI from 'uniswap/src/abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 import { GRG } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -98,17 +98,22 @@ const CreateProposalButton = ({
       onClick={handleCreateProposal}
     >
       {hasActiveOrPendingProposal ? (
-        <Trans>You already have an active or pending proposal</Trans>
+        <Trans i18nKey="vote.proposal.activeOrPendingProposal" />
       ) : !hasEnoughVote ? (
         <>
           {formattedProposalThreshold ? (
-            <Trans>You must have {{ formattedProposalThreshold }} votes to submit a proposal</Trans>
+            <Trans
+              i18nKey="vote.proposal.voteThreshold"
+              values={{
+                formattedProposalThreshold,
+              }}
+            />
           ) : (
-            <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
+            <Trans i18nKey="vote.proposal.notEnoughVotes" />
           )}
         </>
       ) : (
-        <Trans>Create proposal</Trans>
+        <Trans i18nKey="vote.landing.createProposal" />
       )}
     </ButtonError>
   )
@@ -219,9 +224,14 @@ export default function CreateProposal() {
 
     const createProposalData: CreateProposalData = {} as CreateProposalData
 
-    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
+    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) {
+      return
+    }
 
     const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
+    if (!tokenAmount) {
+      return
+    }
 
     createProposalData.description = `# ${titleValue}
 
@@ -235,7 +245,9 @@ ${bodyValue}
     // TODO: add all governance owned methods
     switch (proposalAction) {
       case ProposalAction.TRANSFER_TOKEN: {
-        if (!tokenAmount) return
+        if (!tokenAmount) {
+          return
+        }
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
         interfaces = [new Interface(TOKEN_ABI)]
         targets = [currencyValue.address]
@@ -244,7 +256,9 @@ ${bodyValue}
       }
 
       case ProposalAction.APPROVE_TOKEN: {
-        if (!tokenAmount) return
+        if (!tokenAmount) {
+          return
+        }
         values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
         interfaces = [new Interface(TOKEN_ABI)]
         targets = [currencyValue.address]
@@ -313,30 +327,32 @@ ${bodyValue}
       setAttempting(false)
     })
 
-    if (hash) setHash(hash)
+    if (hash) {
+      setHash(hash)
+    }
   }
 
   return (
-    <Trace page={InterfacePageName.VOTE_PAGE} shouldLogImpression>
+    <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
       <PageWrapper>
         <AppBody $maxWidth="800px">
           <Nav to="/vote">
             <BackArrow />
-            <HeaderText>Create Proposal</HeaderText>
+            <HeaderText>
+              <Trans i18nKey="vote.landing.createProposal" />
+            </HeaderText>
           </Nav>
           <CreateProposalWrapper>
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans>
-                    <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
-                    cannot be modified after submission, so please verify all information before submitting. The voting
-                    period will begin after the new epoch starts and last for 7 days. To propose a custom action,{' '}
-                    <ExternalLink href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose">
-                      read the docs
-                    </ExternalLink>
-                    .
-                  </Trans>
+                  <Trans i18nKey="vote.create.prompt" />
+                  <ExternalLink
+                    key="create-proposal-prompt-link"
+                    href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose"
+                  >
+                    <Trans i18nKey="proposal.readTheDocs" />
+                  </ExternalLink>
                 </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>

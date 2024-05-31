@@ -9,7 +9,9 @@ export type PersistAppStateV6 = {
  * Migration to replace selected wallet with recentConnectionMeta in user state
  */
 export const migration6 = (state: PersistAppStateV6 | undefined) => {
-  if (!state) return state
+  if (!state) {
+    return state
+  }
   // Remove a previously-persisted variable
   if (state?.user && 'selectedWallet' in state.user) {
     const connectionType = state.user.selectedWallet
