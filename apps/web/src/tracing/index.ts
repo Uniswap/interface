@@ -45,6 +45,9 @@ if (!sentryUserId) {
 }
 Sentry.setUser({ id: sentryUserId })
 
+// we do not collect analytics atm
+const shouldAllowAnalytics = false
+
 getAnalyticsAtomDirect(true).then((allowAnalytics) => {
   analytics.init(
     new ApplicationTransport({
@@ -55,4 +58,5 @@ getAnalyticsAtomDirect(true).then((allowAnalytics) => {
     allowAnalytics,
     process.env.REACT_APP_GIT_COMMIT_HASH
   )
+  analytics.setAllowAnalytics(shouldAllowAnalytics)
 })
