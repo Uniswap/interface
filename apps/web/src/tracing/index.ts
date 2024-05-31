@@ -15,7 +15,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { beforeSend } from './errors'
 import { patchFetch } from './request'
 
-patchFetch(global)
+// we do not collect analytics atm
+const shouldAllowAnalytics = false
+
+if (shouldAllowAnalytics) {
+  patchFetch(global)
+}
 
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
@@ -44,9 +49,6 @@ if (!sentryUserId) {
   localStorage.setItem(SENTRY_USER_ID_KEY, (sentryUserId = uuidv4()))
 }
 Sentry.setUser({ id: sentryUserId })
-
-// we do not collect analytics atm
-const shouldAllowAnalytics = false
 
 getAnalyticsAtomDirect(true).then((allowAnalytics) => {
   analytics.init(
