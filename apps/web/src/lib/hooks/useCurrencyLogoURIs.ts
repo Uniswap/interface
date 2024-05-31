@@ -6,8 +6,9 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import AvaxLogo from '../../assets/svg/avax_logo.svg'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
+import logo from '../../assets/svg/logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { PORTAL_ETH_CELO, isCelo, nativeOnChain } from '../../constants/tokens'
+import { GRG, PORTAL_ETH_CELO, isCelo, nativeOnChain } from '../../constants/tokens'
 
 export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   switch (chainId) {
@@ -34,6 +35,16 @@ export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAIN
   }
   if (isCelo(chainId) && isSameAddress(address, PORTAL_ETH_CELO.address)) {
     return EthereumLogo
+  }
+
+  if (
+    address === GRG[ChainId.ARBITRUM_ONE].address ||
+    address === GRG[ChainId.BASE].address ||
+    address === GRG[ChainId.BNB].address ||
+    address === GRG[ChainId.OPTIMISM].address ||
+    address === GRG[ChainId.POLYGON].address
+  ) {
+    return logo
   }
 
   if (networkName) {

@@ -4,6 +4,7 @@
     "/*"
   ],
   "exclude": [
+    "/explore/*",
     "/fonts/*",
     "/images/*",
     "/nft/*",

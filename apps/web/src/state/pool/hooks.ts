@@ -73,9 +73,9 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570151
   } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //28843676
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //28843676
   } else {
     registryStartBlock = undefined
   }
@@ -139,9 +139,9 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : 2963000 //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : 2963000 //2570151
   } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : 28843676
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : 28843676
   } else {
     registryStartBlock = 1
   }

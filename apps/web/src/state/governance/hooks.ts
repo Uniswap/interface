@@ -318,10 +318,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
     govStartBlock = 39249858
   } else if (chainId === ChainId.BASE) {
     // quicknode returns only a very limited number of logs, therefore we won't see proposal details
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //2570523
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570523
   } else if (chainId === ChainId.BNB) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 9000 : blockNumber //29095808
+    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //29095808
   }
 
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
