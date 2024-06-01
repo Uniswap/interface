@@ -290,12 +290,8 @@ export default function VotePage() {
           <ProposalInfo gap="lg" justify="start">
             <RowBetween style={{ width: '100%' }}>
               <ArrowWrapper to="/vote">
-                <Trans
-                  i18nKey="vote.votePage.allProposals"
-                  values={{
-                    arrow: <ArrowLeft size={20} />,
-                  }}
-                />
+                <ArrowLeft size={20} />
+                <Trans i18nKey="vote.votePage.allProposals" />
               </ArrowWrapper>
               {proposalData && <ProposalStatus status={proposalData.status} />}
             </RowBetween>

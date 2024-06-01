@@ -350,13 +350,13 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="25" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '25' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="50" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '50' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="75" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '75' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
                         <Trans i18nKey="common.max" />
