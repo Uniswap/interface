@@ -541,13 +541,13 @@ function RemoveLiquidity() {
                     <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} />
                     <RowBetween>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
-                        <Trans i18nKey="common.percentage" pct="25" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '25' }} />
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')} width="20%">
-                        <Trans i18nKey="common.percentage" pct="50" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '50' }} />
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')} width="20%">
-                        <Trans i18nKey="common.percentage" pct="75" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '75' }} />
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
                         <Trans i18nKey="common.max" />

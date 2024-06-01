@@ -276,13 +276,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
               onClick={onDelegate}
             >
               <ThemedText.DeprecatedMediumHeader color="white">
-                {usingDelegate ? <Trans i18nKey="grg.stakeFromPool" /> : <Trans i18nKey="grg.selfStake" />}
+                {usingDelegate ? <Trans i18nKey="grg.stakeFromPool" /> : <Trans i18nKey="grg.stakeFromWallet" />}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             {poolInfo?.owner === account && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
                 <Text color={theme.accent1}>
-                  {usingDelegate ? <Trans i18nKey="grg.selfStake" /> : <Trans i18nKey="grg.stakeFromWallet" />}
+                  {usingDelegate ? <Trans i18nKey="grg.stakeFromWallet" /> : <Trans i18nKey="grg.stakeFromPool" />}
                 </Text>
               </TextButton>
             )}
@@ -293,7 +293,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="md" justify="center">
             <ThemedText.DeprecatedLargeHeader>
-              {usingDelegate ? <Trans i18nKey="grg.stakingFromPool" /> : <Trans i18nKey="grg.staking" />}
+              {usingDelegate ? <Trans i18nKey="grg.stakingFromPool" /> : <Trans i18nKey="grg.stakingFromWallet" />}
             </ThemedText.DeprecatedLargeHeader>
             <ThemedText.DeprecatedMain fontSize={36}>
               {formatCurrencyAmount(parsedAmount, 4)} GRG

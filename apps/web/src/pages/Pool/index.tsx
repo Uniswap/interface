@@ -228,7 +228,7 @@ export default function Pool() {
     {
       content: (
         <PoolMenuItem>
-          <Trans i18nKey="pool.addLiquidity" />
+          <Trans i18nKey="common.addLiquidity" />
           <PlusCircle size={16} />
         </PoolMenuItem>
       ),

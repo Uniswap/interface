@@ -123,6 +123,9 @@ const Navbar = ({ blur }: { blur: boolean }) => {
     })
   }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
 
+  // TODO: remove when looking to display
+  const shouldDisplayGetTheApp = false
+
   return (
     <>
       {blur && <Blur />}
@@ -172,7 +175,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
-              {isLandingPage && <GetTheAppButton />}
+              {shouldDisplayGetTheApp && isLandingPage && <GetTheAppButton />}
               <Web3Status />
             </Row>
           </Box>
