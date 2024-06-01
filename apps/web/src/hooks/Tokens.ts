@@ -321,8 +321,8 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 // null if loading or null was passed
 // otherwise returns the token
 export function useTokenListToken(tokenAddress?: string | null): Token | undefined {
-  const { chainId } = useWeb3React()
-  const tokens = useDefaultActiveTokens(chainId)
+  //const { chainId } = useWeb3React()
+  const tokens = useDefaultActiveTokens(ChainId.CELO)
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 

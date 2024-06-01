@@ -22,8 +22,8 @@ export const useMenuContent = (): MenuSection[] => {
       items: [
         { label: t('Pool'), href: '/pool', internal: true, overflow: true },
         { label: 'Farm', href: '/farm', internal: true, overflow: true },
-        { label: 'Convert', href: '/claim-new-ube' },
-        { label: 'Explore', href: '/explore/celo' },
+        { label: 'Convert', href: '/claim-new-ube', internal: true },
+        // { label: 'Explore', href: '/explore/celo' },
         { label: t('Analytics'), href: 'https://info.ubeswap.org/' },
       ],
     },

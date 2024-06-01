@@ -1,11 +1,10 @@
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Token } from '@ubeswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 // import { Dialog } from 'components/Dialog/Dialog'
 import { useUbeConvertContract } from 'hooks/useContract'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -124,8 +123,6 @@ export function useConvertCallback(): [
 }
 
 export default function ClaimNewUbeToken() {
-  const { t } = useTranslation()
-
   const { account, chainId } = useWeb3React()
 
   const theme = useTheme()
@@ -136,8 +133,8 @@ export default function ClaimNewUbeToken() {
 
   const [typedValue, setTypedValue] = useState('')
 
-  const inputCurrency = useToken('0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC')
-  const outputCurrency = useToken('0x71e26d0E519D14591b9dE9a0fE9513A398101490')
+  const inputCurrency = useToken('0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC', ChainId.CELO)
+  const outputCurrency = useToken('0x71e26d0E519D14591b9dE9a0fE9513A398101490', ChainId.CELO)
   const currencies: { [field in Field]: Token | null | undefined } = useMemo(() => {
     return {
       [Field.INPUT]: inputCurrency,
@@ -324,7 +321,7 @@ export default function ClaimNewUbeToken() {
         <Wrapper id="swap-page">
           <AutoColumn gap="md">
             <CurrencyInputPanel
-              label={t('from')}
+              label="From"
               value={typedValue}
               showMaxButton={!atMaxAmountInput}
               showHalfButton={!atHalfAmountInput}
@@ -348,7 +345,7 @@ export default function ClaimNewUbeToken() {
             <CurrencyInputPanel
               value={outputAmountText}
               onUserInput={handleTypeOutput}
-              label={t('to')}
+              label="To"
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
               otherCurrency={currencies[Field.INPUT]}
@@ -359,7 +356,7 @@ export default function ClaimNewUbeToken() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>{t('connectWallet')}</ButtonLight>
+              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonConfirmed
