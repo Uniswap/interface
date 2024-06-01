@@ -50,12 +50,12 @@ export const ProposalSubmissionModal = ({
             ) : transactionSuccess ? (
               <>
                 <Text fontWeight={500} fontSize={20} textAlign="center">
-                  <Trans i18nKey="common.transaction.success" />
+                  <Trans i18nKey="common.transactionSuccess" />
                 </Text>
               </>
             ) : (
               <Text fontWeight={500} fontSize={20} textAlign="center">
-                <Trans i18nKey="common.transaction.failed" />
+                <Trans i18nKey="common.transactionFailed" />
               </Text>
             )}
             {hash && chainId && (

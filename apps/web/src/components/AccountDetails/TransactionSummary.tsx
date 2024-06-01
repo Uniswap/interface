@@ -256,17 +256,11 @@ function RemoveLiquidityV3Summary({
   info: RemoveLiquidityV3TransactionInfo
 }) {
   return (
-    <Trans
-      i18nKey="account.transactionSummary.removeLiquiditySummary"
-      components={{
-        base: (
-          <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />
-        ),
-        quote: (
-          <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />
-        ),
-      }}
-    />
+    <Trans>
+      Remove{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} /> and{' '}
+      <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />
+    </Trans>
   )
 }
 
