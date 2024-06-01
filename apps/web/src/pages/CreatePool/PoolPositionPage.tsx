@@ -5,7 +5,7 @@
 import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import IconButton, { IconHoverText } from 'components/AccountDrawer/IconButton'
+import { IconHoverText } from 'components/AccountDrawer/IconButton'
 //import { sendEvent } from 'components/analytics'
 //import Badge from 'components/Badge'
 import { /*ButtonConfirmed, ButtonGray,*/ ButtonPrimary } from 'components/Button'
@@ -20,7 +20,7 @@ import HarvestYieldModal from 'components/earn/HarvestYieldModal'
 import MoveStakeModal from 'components/earn/MoveStakeModal'
 import UnstakeModal from 'components/earn/UnstakeModal'
 //import Loader from 'components/Loader'
-import { RowBetween, RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 //import { Dots } from 'components/swap/styleds'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 //import Toggle from 'components/Toggle'
@@ -29,7 +29,6 @@ import DelegateModal from 'components/vote/DelegateModal'
 import { /*BIG_INT_ZERO,*/ ZERO_ADDRESS } from 'constants/misc'
 import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import useCopyClipboard from 'hooks/useCopyClipboard'
 import { UserAccount, useSmartPoolFromAddress, useUserPoolBalance } from 'hooks/useSmartPools'
 // TODO: this import is from node modules
 import JSBI from 'jsbi'
@@ -39,7 +38,6 @@ import JSBI from 'jsbi'
 //import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { Trans } from 'i18n'
 import { useCallback, useMemo, /*useRef,*/ useState } from 'react'
-import { Copy } from 'react-feather'
 import { Link, useParams } from 'react-router-dom'
 //import { Bound } from 'state/mint/v3/actions'
 import { PoolInfo } from 'state/buy/hooks'
@@ -49,7 +47,7 @@ import { usePoolIdByAddress } from 'state/governance/hooks'
 import { useFreeStakeBalance, useUnclaimedRewards } from 'state/stake/hooks'
 //import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled /*, { useTheme }*/ from 'styled-components'
-import { ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme/components'
+import { CopyHelper, ExternalLink, /*HideExtraSmall,*/ ThemedText } from 'theme/components'
 import { shortenAddress } from 'utilities/src/addresses'
 //import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -187,11 +185,6 @@ function AddressCard({
   chainId?: number | null
   label?: string | null
 }) {
-  const [isCopied, setCopied] = useCopyClipboard()
-  const copy = useCallback(() => {
-    setCopied(address || '')
-  }, [address, setCopied])
-
   if (!address || !chainId || !label) {
     return null
   }
@@ -208,12 +201,13 @@ function AddressCard({
         <ExtentsText>
           {typeof chainId === 'number' && address ? (
             <IconContainer>
-              <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
-                <Trans>{shortenAddress(address)}</Trans>
-              </ExternalLink>
-              <IconButton onClick={copy} Icon={Copy}>
-                {isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>}
-              </IconButton>
+              <CopyHelper iconSize={20} iconPosition="right" toCopy={address}>
+                <Row width="100px" padding="8px 4px">
+                  <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+                    <Trans>{shortenAddress(address)}</Trans>
+                  </ExternalLink>
+                </Row>
+              </CopyHelper>
             </IconContainer>
           ) : null}
         </ExtentsText>

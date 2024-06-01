@@ -126,8 +126,9 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const { account, chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency(chainId)
   const { address: smartPoolAddress } = useActiveSmartPool()
-  // TODO: check we are correctly overwriting balance
-  const balance = useCurrencyBalance(smartPoolAddress ?? account ?? undefined, nativeCurrency)
+
+  // this is used to check the user has enough base currency to cover gas fees
+  const userBalance = useCurrencyBalance(account ?? undefined, nativeCurrency)
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -162,7 +163,8 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     account
   )
 
-  const { data: nativeCurrencyBalanceUSD } = useUSDPrice(balance, nativeCurrency)
+  // only used to check user has enough to cover gas fees
+  const { data: nativeCurrencyBalanceUSD } = useUSDPrice(userBalance, nativeCurrency)
 
   const { data: outputFeeFiatValue } = useUSDPrice(
     isSubmittableTrade(trade.trade) && trade.trade.swapFee
