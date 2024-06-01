@@ -19,6 +19,7 @@ import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { isMobile } from 'uniswap/src/utils/platform'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
@@ -109,11 +110,13 @@ export default function App() {
 
   // this should be run only once per application lifetime
   useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine)
-    }).then(() => {
-      setInit(true)
-    })
+    if (isMobile == false) {
+      initParticlesEngine(async (engine) => {
+        await loadSlim(engine)
+      }).then(() => {
+        setInit(true)
+      })
+    }
   }, [])
   const particlesLoaded = async (container?: Container): Promise<void> => {
     console.log(container)
@@ -166,7 +169,7 @@ export default function App() {
             default: OutMode.out,
           },
           random: false,
-          speed: 5,
+          speed: 1,
           straight: false,
         },
         number: {
