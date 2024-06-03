@@ -50,15 +50,16 @@ if (!sentryUserId) {
 }
 Sentry.setUser({ id: sentryUserId })
 
-getAnalyticsAtomDirect(true).then((allowAnalytics) => {
+// prompt analytics initialization only if analytics are enabled
+analytics.setAllowAnalytics(shouldAllowAnalytics)
+getAnalyticsAtomDirect(true).then((/*allowAnalytics*/) => {
   analytics.init(
     new ApplicationTransport({
       serverUrl: uniswapUrls.amplitudeProxyUrl,
       appOrigin: OriginApplication.INTERFACE,
       reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
     }),
-    allowAnalytics,
+    shouldAllowAnalytics,
     process.env.REACT_APP_GIT_COMMIT_HASH
   )
-  analytics.setAllowAnalytics(shouldAllowAnalytics)
 })

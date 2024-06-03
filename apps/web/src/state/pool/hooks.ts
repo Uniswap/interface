@@ -73,9 +73,9 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
   } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570151
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //28843676
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
     registryStartBlock = undefined
   }
@@ -138,12 +138,12 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
     registryStartBlock = 34629059
   } else if (chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
-  } else if (chainId === ChainId.BASE) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : 2963000 //2570151
-  } else if (chainId === ChainId.BNB) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : 28843676
+  } else if (chainId === ChainId.BASE && blockNumber) {
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+  } else if (chainId === ChainId.BNB && blockNumber) {
+    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
-    registryStartBlock = 1
+    registryStartBlock = blockNumber as number
   }
 
   const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)

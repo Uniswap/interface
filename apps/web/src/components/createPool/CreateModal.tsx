@@ -11,7 +11,7 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
-import { GRG } from '../../constants/tokens'
+import { nativeOnChain } from '../../constants/tokens'
 //import { useTokenBalance } from '../../state/connection/hooks'
 import { useCreateCallback } from '../../state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
@@ -106,7 +106,8 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   // update currency at initialization or on chain switch
   useEffect(() => {
     if (chainId && currencyValue?.chainId !== chainId) {
-      setCurrencyValue(GRG[chainId])
+      const native = nativeOnChain(chainId)
+      setCurrencyValue(native)
     }
   }, [chainId, currencyValue, setCurrencyValue])
 
