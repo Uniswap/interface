@@ -10,7 +10,7 @@ import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTi
 import { getExploreDescription, getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import CreatePool from './CreatePool'
-import Landing from './Landing'
+//import Landing from './Landing'
 import Stake from './Stake'
 import Swap from './Swap'
 
@@ -119,7 +119,11 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     getElement: (args) => {
-      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+      return args.browserRouterEnabled && args.hash ? (
+        <Navigate to={args.hash.replace('#', '')} replace />
+      ) : (
+        <CreatePool />
+      )
     },
   }),
   createRouteDefinition({

@@ -6,8 +6,8 @@ import { revertHardhat, setupHardhat } from '../utils'
 beforeEach(() => {
   // Many API calls enforce that requests come from our app, so we must mock Origin and Referer.
   cy.intercept('*', (req) => {
-    req.headers['referer'] = 'https://app.uniswap.org'
-    req.headers['origin'] = 'https://app.uniswap.org'
+    req.headers['referer'] = 'https://app.rigoblock.com'
+    req.headers['origin'] = 'https://app.rigoblock.com'
   })
 
   // Network RPCs are disabled for cypress tests - calls should be routed through the connected wallet instead.
