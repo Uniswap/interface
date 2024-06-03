@@ -122,7 +122,7 @@ export const routes: RouteDefinition[] = [
       return args.browserRouterEnabled && args.hash ? (
         <Navigate to={args.hash.replace('#', '')} replace />
       ) : (
-        <CreatePool />
+        <Navigate to="/mint" replace />
       )
     },
   }),
