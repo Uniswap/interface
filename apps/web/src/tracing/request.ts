@@ -60,7 +60,7 @@ function is2xx(status: number) {
 }
 
 export function getTraceContext(url: URL, init?: RequestInit, force = false): TraceContext | false {
-  if (url.host.endsWith('gateway.uniswap.org')) {
+  if (url.host.endsWith('gateway.rigoblock.com')) {
     if (url.pathname.endsWith('graphql')) {
       let operation: string | undefined
       let chain: Chain | undefined
