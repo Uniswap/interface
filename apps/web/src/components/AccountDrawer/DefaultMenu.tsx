@@ -4,6 +4,7 @@ import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import styled from 'styled-components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -59,12 +60,19 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   }, [menu])
 
   const { address: smartPoolAddress } = useActiveSmartPool()
+  const { pathname: page } = useLocation()
 
   const SubMenu = useMemo(() => {
+    const isSendPage = page === '/send'
+    const shouldQueryPoolBalances = smartPoolAddress && !isSendPage
+
     switch (menu) {
       case MenuState.DEFAULT:
         return isAuthenticated ? (
-          <AuthenticatedHeader account={smartPoolAddress ?? account} openSettings={openSettings} />
+          <AuthenticatedHeader
+            account={shouldQueryPoolBalances ? smartPoolAddress : account}
+            openSettings={openSettings}
+          />
         ) : (
           <WalletModal openSettings={openSettings} />
         )
@@ -93,6 +101,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     openLocalCurrencySettings,
     openSettings,
     smartPoolAddress,
+    page,
   ])
 
   return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>

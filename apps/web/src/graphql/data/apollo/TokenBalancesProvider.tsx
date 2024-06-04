@@ -84,9 +84,9 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   // TODO: query default pool with hook and either conditionally set, or just use pool
   const { address: smartPoolAddress } = useActiveSmartPool()
 
-  const { pathname: page } = useLocation()
-
+  // TODO: define shouldQueryPoolBalances as useMemo to check if we can set correct state without further updating
   // on send we only allow user token transfer, as smart pool cannot execute arbitrary transfers
+  const { pathname: page } = useLocation()
   const isSendPage = page === '/send'
   const shouldQueryPoolBalances = smartPoolAddress && !isSendPage
 
