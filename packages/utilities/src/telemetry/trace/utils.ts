@@ -22,18 +22,20 @@ export function getEventHandlers(
   > = {}
   for (const event of triggers) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
-      if (!child.props[event]) {
-        logger.error(new Error('Found a null handler while logging an event'), {
-          tags: {
-            file: 'trace/utils.ts',
-            function: 'getEventHandlers',
-          },
-          extra: {
+      // Some interface elements don't have handlers defined.
+      // TODO(WEB-4252): Potentially can remove isInterface check once web is fully converted to tamagui
+      const isInterface: boolean = process.env.REACT_APP_IS_UNISWAP_INTERFACE === 'true'
+      if (!child.props[event] && !isInterface) {
+        logger.info(
+          'trace/utils.ts',
+          'getEventHandlers',
+          'Found a null handler while logging an event',
+          {
             eventName,
             ...consumedProps,
             ...properties,
-          },
-        })
+          }
+        )
       }
 
       // call child event handler with original arguments
