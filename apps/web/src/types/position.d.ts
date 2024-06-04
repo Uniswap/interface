@@ -30,4 +30,5 @@ export interface PoolPositionDetails {
   userBalance?: BigNumber
   userHasStake?: boolean
   userIsOwner?: boolean
+  currentEpochReward?: BigNumber
 }

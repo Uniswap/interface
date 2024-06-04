@@ -7,6 +7,7 @@ import { Trans } from 'i18n'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
 import { Info } from 'react-feather'
+import { useStakingPoolsRewards } from 'state/pool/hooks'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
@@ -70,7 +71,10 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses: string[] = useMemo(() => positions.map((p) => p.pool), [positions])
+  const poolIds: string[] = useMemo(() => positions.map((p) => p.id), [positions])
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
+
+  const poolsRewards: string[] = useStakingPoolsRewards(poolIds)
 
   // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
   //  we do not want to return pools with partial data, so will prompt user to connect or return error.
@@ -116,10 +120,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
           userBalance: userBalances?.[i]?.result,
+          id: poolIds[i],
+          currentEpochReward: poolsRewards[i],
         }
       })
       .filter((p) => p && p.shouldDisplay)
-  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
+  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances, poolIds, poolsRewards])
 
   return (
     <>

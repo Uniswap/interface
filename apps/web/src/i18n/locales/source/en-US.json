@@ -848,6 +848,7 @@
   "settings.maxSlippage": "Max. slippage",
   "settings.showTestNets": "Show testnets",
   "settings.switchNetwork.warning": "To use Rigoblock on {{label}}, switch the network in your wallet’s settings.",
+  "smartPool.decimals": "{{decimals}}",
   "speedBump.newAddress.warning.description": "You haven’t transacted with this address before. Make sure it’s the correct address before continuing.",
   "speedBump.newAddress.warning.title": "New address",
   "speedBump.smartContractAddress.warning.description": "You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.",

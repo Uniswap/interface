@@ -701,7 +701,7 @@ export default function PoolPositionPage() {
                                 </RowFixed>
                                 <RowFixed>
                                   <ThemedText.DeprecatedMain>
-                                    <Trans>{decimals}</Trans>
+                                    <Trans i18nKey="smartPool.decimals" values={{ decimals }} />
                                   </ThemedText.DeprecatedMain>
                                 </RowFixed>
                               </RowBetween>
