@@ -58,15 +58,15 @@ export default function TokenSafetyMessage({
   const { heading, description } = getWarningCopy(warning, plural, tokenSymbol)
 
   return (
-    <Label color={textColor} backgroundColor={backgroundColor}>
+    <Label data-cy="token-safety-message" color={textColor} backgroundColor={backgroundColor}>
       {displayWarningLabel(warning) && (
-        <TitleRow data-cy="token-safety-message">
+        <TitleRow>
           {warning.canProceed ? <AlertTriangle size="16px" /> : <Slash size="16px" />}
           <Title marginLeft="7px">{warning.message}</Title>
         </TitleRow>
       )}
 
-      <DetailsRow data-cy="token-safety-description">
+      <DetailsRow>
         {heading}
         {Boolean(heading) && ' '}
         {description}

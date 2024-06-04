@@ -3,13 +3,13 @@ import { useMemo } from 'react'
 import store from 'state'
 import { useUserLocale } from 'state/user/hooks'
 
-import useParsedQueryString from './useParsedQueryString'
+import useParsedQueryString, { parsedQueryString } from './useParsedQueryString'
 
 /**
  * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale
  * @param maybeSupportedLocale the fuzzy locale identifier
  */
-export function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined {
+function parseLocale(maybeSupportedLocale: unknown): SupportedLocale | undefined {
   if (typeof maybeSupportedLocale !== 'string') {
     return undefined
   }
@@ -36,9 +36,12 @@ export function navigatorLocale(): SupportedLocale | undefined {
   return parseLocale(language)
 }
 
-export function storeLocale(): SupportedLocale | undefined {
+function storeLocale(): SupportedLocale | undefined {
   return store.getState().user.userLocale ?? undefined
 }
+
+export const initialLocale =
+  parseLocale(parsedQueryString().lng) ?? storeLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
 
 function useUrlLocale() {
   const parsed = useParsedQueryString()

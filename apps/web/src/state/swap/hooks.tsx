@@ -330,7 +330,7 @@ export function useInitialCurrencyState(): {
   const account = useAccount()
   const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? ChainId.MAINNET
 
-  const { data: balanceQuery } = useTokenBalancesQuery({ cacheOnly: !multichainUXEnabled })
+  const { data: balanceQuery } = useTokenBalancesQuery()
   const balances = balanceQuery?.portfolios?.[0]?.tokenBalances
   const { initialInputCurrencyAddress, chainId } = useMemo(() => {
     // Handle query params or disconnected state

@@ -1,6 +1,6 @@
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { Plural, Trans, t } from 'i18n'
+import { Plural, t, Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'

@@ -214,7 +214,7 @@ export function TransactionsTable({
           header: () => (
             <Cell minWidth={160} justifyContent="flex-end">
               <ThemedText.BodySecondary>
-                <Trans i18nKey="common.for" />
+                <Trans i18nKey="common.for.label" />
               </ThemedText.BodySecondary>
             </Cell>
           ),

@@ -51,7 +51,10 @@ type UwULinkAllowlistItem = {
   chainId: number
   address: string
   name: string
-  icon?: string
+  logo?: {
+    dark?: string
+    light?: string
+  }
 }
 
 type UwULinkAllowlist = {

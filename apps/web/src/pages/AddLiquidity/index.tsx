@@ -677,7 +677,6 @@ function AddLiquidity() {
           <AddRemoveTabs
             creating={false}
             adding={true}
-            positionID={tokenId}
             autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={!hasExistingPosition}
           >

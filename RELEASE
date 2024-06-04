@@ -1,19 +1,5 @@
-IPFS hash of the deployment:
-- CIDv0: `QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV`
-- CIDv1: `bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna`
+Excited to share some new updates! Here’s what’s new:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Expanded support for NFTs — In addition to mainnet Ethereum, you are now able to see NFTs across all other networks that we currently support, including: Polygon, Arbitrum, Optimism, Base, BSC, and Blast. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
-
-IPFS gateways:
-- https://bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna.ipfs.dweb.link/
-- https://bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna.ipfs.cf-ipfs.com/
-- [ipfs://QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV/](ipfs://QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV/)
-
-### 5.30.1 (2024-05-31)
-
-
+Improved Unicons — We gave your wallet’s unique Unicon a makeover. Check out the rest of your accounts to see your upgraded icons.

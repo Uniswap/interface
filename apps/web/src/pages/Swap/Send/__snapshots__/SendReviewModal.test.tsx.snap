@@ -434,7 +434,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;
@@ -1164,7 +1164,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;

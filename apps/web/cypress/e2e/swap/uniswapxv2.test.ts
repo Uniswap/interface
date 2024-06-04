@@ -287,7 +287,15 @@ describe('UniswapX v2', () => {
         submitUniswapXOrder()
         cy.get(getTestSelector('confirmation-close-icon')).click()
 
-        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json')
+        cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
+          if (req.body.operationName === 'PortfolioBalancesWeb') {
+            req.alias = 'PortfolioBalancesWeb'
+            // Reply with a fixture to speed up test
+            req.reply({ fixture: 'mini-portfolio/tokens.json' })
+          } else {
+            req.continue()
+          }
+        })
 
         // Expect balances to refetch after filling
         cy.wait('@orderStatusOpen')

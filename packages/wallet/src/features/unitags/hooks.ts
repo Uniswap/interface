@@ -167,7 +167,8 @@ export const useCanClaimUnitagName = (
  */
 export const useClaimUnitag = (): ((
   claim: UnitagClaim,
-  context: UnitagClaimContext
+  context: UnitagClaimContext,
+  account?: Account
 ) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -181,8 +182,9 @@ export const useClaimUnitag = (): ((
   // If used outside of the context, this will return undefined and be ignored
   const onboardingAccount = getOnboardingAccount()
 
-  return async (claim: UnitagClaim, context: UnitagClaimContext) => {
-    const claimAccount = onboardingAccount || accounts[claim.address]
+  return async (claim: UnitagClaim, context: UnitagClaimContext, account?: Account) => {
+    const claimAccount = account || onboardingAccount || accounts[claim.address]
+
     if (!claimAccount || !deviceId) {
       return { claimError: t('unitags.claim.error.default') }
     }

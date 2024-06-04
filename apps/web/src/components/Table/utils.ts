@@ -1,4 +1,4 @@
-import { useTranslation } from 'i18n/useTranslation'
+import { useTranslation } from 'i18n'
 
 /**
  * Displays the time as a human-readable string.

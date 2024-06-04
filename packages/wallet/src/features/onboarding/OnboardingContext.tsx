@@ -28,6 +28,7 @@ import {
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export interface OnboardingContext {
   generateOnboardingAccount: (password?: string) => Promise<void>
@@ -224,12 +225,23 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       )
     }
 
+    // Enforces that a unitag claim is made with the correct address
+    const isValidUnitagClaimState = areAddressesEqual(
+      onboardingAccount?.address,
+      unitagClaim?.address
+    )
+
     // Claim unitag if there's a claim to process
-    if (unitagClaim) {
-      const { claimError } = await claimUnitag(unitagClaim, {
-        source: 'onboarding',
-        hasENSAddress: false,
-      })
+    if (unitagClaim && isValidUnitagClaimState) {
+      const { claimError } = await claimUnitag(
+        unitagClaim,
+        {
+          source: 'onboarding',
+          hasENSAddress: false,
+        },
+        onboardingAccount
+      )
+
       if (claimError) {
         dispatch(
           pushNotification({

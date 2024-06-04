@@ -4,6 +4,7 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
+import { useTheme } from 'styled-components'
 
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
@@ -23,7 +24,6 @@ export enum PendingModalError {
 interface ErrorModalContentProps {
   errorType: PendingModalError
   trade?: InterfaceTrade
-  showTrade?: boolean
   swapResult?: SwapResult
   onRetry: () => void
 }
@@ -49,7 +49,7 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
     case PendingModalError.XV2_HARD_QUOTE_ERROR:
       return {
         title: <Trans i18nKey="common.swap.failed" />,
-        message: <Trans i18nKey="swap.fail.uniswapX" />,
+        message: <Trans i18nKey="common.swap.failed.uniswapX" />,
         supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
       }
     case PendingModalError.CONFIRMATION_ERROR:
@@ -61,7 +61,7 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
       } else {
         return {
           title: <Trans i18nKey="common.swap.failed" />,
-          message: <Trans i18nKey="swap.fail.message" />,
+          message: <Trans i18nKey="common.swap.failed.message" />,
           supportArticleURL: isUniswapXTrade(trade)
             ? SupportArticleURL.UNISWAP_X_FAILURE
             : SupportArticleURL.TRANSACTION_FAILURE,
@@ -81,18 +81,19 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
   }
 }
 
-export default function Error({ errorType, trade, showTrade, swapResult, onRetry }: ErrorModalContentProps) {
+export default function Error({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
+  const theme = useTheme()
   const { title, message, supportArticleURL } = getErrorContent({ errorType, trade })
 
   return (
     <DialogContent
       isVisible={true}
-      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" size="24px" />}
+      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" fill={theme.neutral2} size="24px" />}
       title={title}
       description={message}
       body={
-        <ColumnCenter gap="sm">
-          {showTrade && trade && <TradeSummary trade={trade} />}
+        <ColumnCenter gap="md">
+          {trade && <TradeSummary trade={trade} />}
           {supportArticleURL && (
             <ExternalLink href={supportArticleURL}>
               <Trans i18nKey="common.learnMore.link" />
@@ -114,7 +115,7 @@ export default function Error({ errorType, trade, showTrade, swapResult, onRetry
       }
       buttonsConfig={{
         left: {
-          type: DialogButtonType.Primary,
+          type: DialogButtonType.Accent,
           title: <Trans i18nKey="common.tryAgain.error" />,
           onClick: onRetry,
         },

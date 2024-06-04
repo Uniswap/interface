@@ -2,7 +2,7 @@ import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activ
 import Column from 'components/Column'
 import { TimeForwardIcon } from 'components/Icons/TimeForward'
 import Row from 'components/Row'
-import { Plural, Trans, t } from 'i18n'
+import { Plural, t, Trans } from 'i18n'
 import { ChevronRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'

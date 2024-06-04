@@ -226,6 +226,7 @@ export function WalletConnectModal({
                   recipient: {
                     address: parsedUwulinkRequest.recipient,
                     name: tokenRecipient?.name ?? '',
+                    logo: tokenRecipient?.logo,
                   },
                   amount: parsedUwulinkRequest.amount,
                   tokenAddress: parsedUwulinkRequest.tokenAddress,

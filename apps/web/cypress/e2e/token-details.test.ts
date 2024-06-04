@@ -80,10 +80,9 @@ describe('Token details', () => {
     cy.contains(shortenAddress('0x1eFBB78C8b917f67986BcE54cE575069c0143681')).should('exist')
 
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
-    cy.get('[data-cy="token-safety-message"]').contains(/Warning/)
-    cy.get('[data-cy="token-safety-description"]').contains(
-      /This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap./
-    )
+    cy.get('[data-cy="token-safety-message"]')
+      .should('include.text', 'Warning')
+      .and('include.text', "This token isn't traded on leading U.S. centralized exchanges")
   })
 
   describe('swapping', () => {

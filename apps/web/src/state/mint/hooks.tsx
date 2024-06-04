@@ -207,7 +207,7 @@ export function useDerivedMintInfo(
       <Trans
         i18nKey="common.insufficientTokenBalance.error"
         values={{
-          tokenSymbol: currencies[Field.CURRENCY_B]?.symbol,
+          symbol: currencies[Field.CURRENCY_B]?.symbol,
         }}
       />
     )

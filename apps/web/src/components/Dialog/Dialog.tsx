@@ -97,14 +97,12 @@ export interface DialogProps {
 export function DialogContent({ icon, title, description, body, buttonsConfig }: DialogProps) {
   const { left, right, gap } = buttonsConfig ?? {}
   return (
-    <ColumnCenter gap="lg">
-      <ColumnCenter gap="16px">
+    <>
+      <ColumnCenter gap="md">
         <IconContainer>{icon}</IconContainer>
-        <ColumnCenter gap="sm">
-          <TitleText>{title}</TitleText>
-          <DescriptionText>{description}</DescriptionText>
-          {body}
-        </ColumnCenter>
+        <TitleText>{title}</TitleText>
+        <DescriptionText>{description}</DescriptionText>
+        {body}
       </ColumnCenter>
       <Row align="center" justify="center" gap={gap ?? 'md'}>
         {left && (
@@ -130,7 +128,7 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
           </StyledButton>
         )}
       </Row>
-    </ColumnCenter>
+    </>
   )
 }
 

@@ -157,8 +157,9 @@ export function SwapDetails({
           <Flex row alignItems="center" gap="$spacing4">
             <Text color="$neutral2" numberOfLines={3} variant="body3">
               {t('swap.details.slippage')}
+              &nbsp;
+              <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Text>
-            <InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Flex>
         </TouchableArea>
         <Flex centered row gap="$spacing8">

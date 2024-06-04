@@ -19,7 +19,7 @@ import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useMemo, useReducer } from 'react'
 import { Plus, X } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -159,7 +159,6 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
-  const location = useLocation()
   const currency0 = token0 && gqlToCurrency(token0)
   const currency1 = token1 && gqlToCurrency(token1)
 
@@ -198,9 +197,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
       if (walletChainId !== chainId && chainId) {
         await switchChain(chainId)
       }
-      navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
-        state: { from: location.pathname },
-      })
+      navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`)
     }
   }
   const [swapModalOpen, toggleSwapModalOpen] = useReducer((state) => !state, false)

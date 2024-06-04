@@ -52,7 +52,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 4px;
 }
 
-.c19 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -70,7 +70,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -78,7 +78,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -123,7 +123,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   opacity: 0.4;
 }
 
-.c23 {
+.c22 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -137,7 +137,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 100%;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -172,30 +172,30 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c20:active .c22 {
+.c19:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:focus .c22 {
+.c19:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:hover .c22 {
+.c19:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c20:disabled {
+.c19:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c20:disabled:active .c22,
-.c20:disabled:focus .c22,
-.c20:disabled:hover .c22 {
+.c19:disabled:active .c21,
+.c19:disabled:focus .c21,
+.c19:disabled:hover .c21 {
   background-color: transparent;
 }
 
-.c24 {
+.c23 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -230,26 +230,26 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c24:active .c22 {
+.c23:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c24:focus .c22 {
+.c23:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c24:hover .c22 {
+.c23:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c24:disabled {
+.c23:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c24:disabled:active .c22,
-.c24:disabled:focus .c22,
-.c24:disabled:hover .c22 {
+.c23:disabled:active .c21,
+.c23:disabled:focus .c21,
+.c23:disabled:hover .c21 {
   background-color: transparent;
 }
 
@@ -258,7 +258,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;
@@ -304,22 +304,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 16px;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
+  gap: 12px;
 }
 
 .c3 {
@@ -400,14 +385,14 @@ exports[`<Dialog /> renders different button types 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -418,7 +403,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   text-align: center;
 }
 
-.c21 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -552,65 +537,57 @@ exports[`<Dialog /> renders different button types 1`] = `
                 </svg>
               </div>
               <div
-                class="c2 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c12 c3"
+                  class="c13"
                 >
-                  <div
-                    class="c13"
-                  >
-                    <div>
-                      Mock Icon
-                    </div>
-                  </div>
-                  <div
-                    class="c14 c3"
-                  >
-                    <div
-                      class="c15 c16 css-4kpdx7"
-                    >
-                      <div>
-                        Mock Title
-                      </div>
-                    </div>
-                    <div
-                      class="c17 c18 css-1urox24"
-                    >
-                      <div>
-                        Mock Description
-                      </div>
-                    </div>
-                    <div>
-                      Mock Body
-                    </div>
+                  <div>
+                    Mock Icon
                   </div>
                 </div>
                 <div
-                  class="c9 c19"
+                  class="c14 c15 css-4kpdx7"
                 >
-                  <button
-                    class="c20 c21"
-                    disabled=""
-                  >
-                    <div
-                      class="c22 c23"
-                    />
-                    <div>
-                      Left Button
-                    </div>
-                  </button>
-                  <button
-                    class="c24 c21"
-                  >
-                    <div
-                      class="c22 c23"
-                    />
-                    <div>
-                      Right Button
-                    </div>
-                  </button>
+                  <div>
+                    Mock Title
+                  </div>
                 </div>
+                <div
+                  class="c16 c17 css-1urox24"
+                >
+                  <div>
+                    Mock Description
+                  </div>
+                </div>
+                <div>
+                  Mock Body
+                </div>
+              </div>
+              <div
+                class="c9 c18"
+              >
+                <button
+                  class="c19 c20"
+                  disabled=""
+                >
+                  <div
+                    class="c21 c22"
+                  />
+                  <div>
+                    Left Button
+                  </div>
+                </button>
+                <button
+                  class="c23 c20"
+                >
+                  <div
+                    class="c21 c22"
+                  />
+                  <div>
+                    Right Button
+                  </div>
+                </button>
               </div>
             </div>
           </div>
@@ -678,7 +655,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 4px;
 }
 
-.c19 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -696,7 +673,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -704,7 +681,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -749,7 +726,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   opacity: 0.4;
 }
 
-.c23 {
+.c22 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -763,7 +740,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 100%;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -798,26 +775,26 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   user-select: none;
 }
 
-.c20:active .c22 {
+.c19:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:focus .c22 {
+.c19:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:hover .c22 {
+.c19:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c20:disabled {
+.c19:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c20:disabled:active .c22,
-.c20:disabled:focus .c22,
-.c20:disabled:hover .c22 {
+.c19:disabled:active .c21,
+.c19:disabled:focus .c21,
+.c19:disabled:hover .c21 {
   background-color: transparent;
 }
 
@@ -826,7 +803,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 8px;
+  padding: 4px 6px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;
@@ -872,22 +849,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 16px;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
+  gap: 12px;
 }
 
 .c3 {
@@ -968,14 +930,14 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -986,7 +948,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   text-align: center;
 }
 
-.c21 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1120,64 +1082,56 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                 </svg>
               </div>
               <div
-                class="c2 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c12 c3"
+                  class="c13"
                 >
-                  <div
-                    class="c13"
-                  >
-                    <div>
-                      Mock Icon
-                    </div>
-                  </div>
-                  <div
-                    class="c14 c3"
-                  >
-                    <div
-                      class="c15 c16 css-4kpdx7"
-                    >
-                      <div>
-                        Mock Title
-                      </div>
-                    </div>
-                    <div
-                      class="c17 c18 css-1urox24"
-                    >
-                      <div>
-                        Mock Description
-                      </div>
-                    </div>
-                    <div>
-                      Mock Body
-                    </div>
+                  <div>
+                    Mock Icon
                   </div>
                 </div>
                 <div
-                  class="c9 c19"
+                  class="c14 c15 css-4kpdx7"
                 >
-                  <button
-                    class="c20 c21"
-                  >
-                    <div
-                      class="c22 c23"
-                    />
-                    <div>
-                      Left Button
-                    </div>
-                  </button>
-                  <button
-                    class="c20 c21"
-                  >
-                    <div
-                      class="c22 c23"
-                    />
-                    <div>
-                      Right Button
-                    </div>
-                  </button>
+                  <div>
+                    Mock Title
+                  </div>
                 </div>
+                <div
+                  class="c16 c17 css-1urox24"
+                >
+                  <div>
+                    Mock Description
+                  </div>
+                </div>
+                <div>
+                  Mock Body
+                </div>
+              </div>
+              <div
+                class="c9 c18"
+              >
+                <button
+                  class="c19 c20"
+                >
+                  <div
+                    class="c21 c22"
+                  />
+                  <div>
+                    Left Button
+                  </div>
+                </button>
+                <button
+                  class="c19 c20"
+                >
+                  <div
+                    class="c21 c22"
+                  />
+                  <div>
+                    Right Button
+                  </div>
+                </button>
               </div>
             </div>
           </div>

@@ -272,22 +272,19 @@ export function ConfirmSwapModal({
         )}
         {/* Error screen handles all error types with custom messaging and retry logic */}
         {errorType && showError && (
-          <Container $padding="16px">
-            <SwapError
-              trade={trade}
-              showTrade={errorType !== PendingModalError.XV2_HARD_QUOTE_ERROR}
-              swapResult={swapResult}
-              errorType={errorType}
-              onRetry={() => {
-                if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
-                  onXV2RetryWithClassic?.()
-                  resetToReviewScreen()
-                } else {
-                  startSwapFlow()
-                }
-              }}
-            />
-          </Container>
+          <SwapError
+            trade={trade}
+            swapResult={swapResult}
+            errorType={errorType}
+            onRetry={() => {
+              if (errorType === PendingModalError.XV2_HARD_QUOTE_ERROR) {
+                onXV2RetryWithClassic?.()
+                resetToReviewScreen()
+              } else {
+                startSwapFlow()
+              }
+            }}
+          />
         )}
       </SwapModal>
     </ThemeProvider>
