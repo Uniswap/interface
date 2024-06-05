@@ -5,9 +5,9 @@ import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: t('common.uniInterface'),
-  description: t`Swap or provide liquidity on the Uniswap Protocol`,
-  image: `https://app.uniswap.com/images/1200x630_Rich_Link_Preview_Image.png`,
-  url: 'https://app.uniswap.com',
+  description: t`Swap or provide liquidity on the Rigoblock Protocol`,
+  image: `https://app.rigoblock.com/images/1200x630_Rich_Link_Preview_Image.png`,
+  url: 'https://app.rigoblock.com',
 }
 
 type MetatagAttributes = { property?: string; name?: string; content: string }
