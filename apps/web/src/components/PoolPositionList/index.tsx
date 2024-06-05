@@ -134,6 +134,26 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + poolsWithStats.length + ')'}
         </div>
+        {filterByOperator && (
+          <RowFixed gap="32px">
+            <RowFixed gap="2px">
+              <Trans>Points</Trans>
+              <MouseoverTooltip
+                text={
+                  <Trans>
+                    The higher the pool own stake, the higher the points. Combined with the GRG stakers&apos; stake, it
+                    determined the share of the epoch reward the pool is allocated.
+                  </Trans>
+                }
+                placement="right"
+              >
+                <InfoIconContainer>
+                  <Info size={14} />
+                </InfoIconContainer>
+              </MouseoverTooltip>
+            </RowFixed>
+          </RowFixed>
+        )}
         {!filterByOperator && (
           <RowFixed gap="32px">
             <RowFixed gap="2px">
@@ -173,13 +193,19 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}</div>
-        {!filterByOperator && (
+        {!filterByOperator ? (
           <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
             <div>
               <Trans>IRR</Trans>
             </div>
             <div>
               <Trans>APR</Trans>
+            </div>
+          </RowFixed>
+        ) : (
+          <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
+            <div>
+              <Trans>Points</Trans>
             </div>
           </RowFixed>
         )}
