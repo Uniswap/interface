@@ -53,7 +53,7 @@ Sentry.setUser({ id: sentryUserId })
 // prompt analytics initialization only if analytics are enabled
 analytics.setAllowAnalytics(shouldAllowAnalytics)
 if (shouldAllowAnalytics) {
-    getAnalyticsAtomDirect(true).then((/*allowAnalytics*/) => {
+  getAnalyticsAtomDirect(true).then((/*allowAnalytics*/) => {
     analytics.init(
       new ApplicationTransport({
         serverUrl: uniswapUrls.amplitudeProxyUrl,
