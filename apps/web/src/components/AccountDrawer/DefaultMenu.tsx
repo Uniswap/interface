@@ -62,15 +62,15 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const { address: smartPoolAddress } = useActiveSmartPool()
   const { pathname: page } = useLocation()
 
-  const SubMenu = useMemo(() => {
-    const isSendPage = page === '/send'
-    const shouldQueryPoolBalances = smartPoolAddress && !isSendPage
+  const isSendPage = page === '/send'
+  const shouldQueryPoolBalances = useMemo(() => smartPoolAddress && !isSendPage, [smartPoolAddress, isSendPage])
 
+  const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:
         return isAuthenticated ? (
           <AuthenticatedHeader
-            account={shouldQueryPoolBalances ? smartPoolAddress : account}
+            account={shouldQueryPoolBalances ? smartPoolAddress ?? account : account}
             openSettings={openSettings}
           />
         ) : (
@@ -101,7 +101,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     openLocalCurrencySettings,
     openSettings,
     smartPoolAddress,
-    page,
+    shouldQueryPoolBalances,
   ])
 
   return <DefaultMenuWrap>{SubMenu}</DefaultMenuWrap>

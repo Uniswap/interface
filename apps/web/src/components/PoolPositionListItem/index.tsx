@@ -216,7 +216,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
             </ResponsiveRowFixed>
           ) : returnPage === 'mint' ? (
             <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
-              <DataText>{(Number(currentEpochReward) / 1e18).toFixed(0)}</DataText>
+              <DataText>{(Number(currentEpochReward) / 1e18).toFixed(0)} GRG</DataText>
             </RowFixed>
           ) : (
             returnPage === 'stake' && (

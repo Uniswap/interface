@@ -141,8 +141,8 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
               <MouseoverTooltip
                 text={
                   <Trans>
-                    The higher the pool own stake, the higher the points. Combined with the GRG stakers&apos; stake, it
-                    determined the share of the epoch reward the pool is allocated.
+                    The bigger the pool&apos;s own stake, the higher the points. Together with the other stakers&apos;
+                    stake, they compete for a share of the current epoch&apos;s rewards.
                   </Trans>
                 }
                 placement="right"
