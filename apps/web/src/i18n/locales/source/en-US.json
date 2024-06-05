@@ -382,6 +382,7 @@
   "common.searchTokens": "Search tokens",
   "common.searchTokensNFT": "Search tokens and NFT collections",
   "common.selectAction.label": "Select an action",
+  "common.selectSmartPool.label": "Select a smart pool",
   "common.selectToken.label": "Select a token",
   "common.selectToken": "Select token",
   "common.sell.label": "Sell",
