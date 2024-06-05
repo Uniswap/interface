@@ -11,6 +11,7 @@ import {
   useReducer,
   useState,
 } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import {
   ActivityWebQueryResult,
@@ -36,7 +37,12 @@ const SubscriptionContext = createContext<
 export function AssetActivityProvider({ children }: PropsWithChildren) {
   let { account } = useWeb3React()
   const activeSmartPool = useActiveSmartPool().address
-  account = activeSmartPool ?? account
+
+  const { pathname: page } = useLocation()
+  const isSendPage = page === '/send'
+  const shouldQueryPoolBalances = activeSmartPool && !isSendPage
+
+  account = shouldQueryPoolBalances ? activeSmartPool : account
   const previousAccount = usePrevious(account)
 
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
@@ -83,6 +89,8 @@ function useSubscribedActivities() {
 
   const [subscribedActivities, setSubscribedActivities] = useState<AssetActivityPartsFragment[]>([])
 
+  // TODO: check we are updating correctly in the case a smart pool exists and the user account is
+  //  changed, i.e. mobile wallets
   // Clear the subscribed activity list when the account changes.
   useEffect(() => {
     if (!activeSmartPool && account !== previousAccount) {

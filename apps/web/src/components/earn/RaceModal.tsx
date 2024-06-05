@@ -33,6 +33,10 @@ const NameText = styled.span`
   font-size: 18px;
 `
 
+const BoldText = styled.span`
+  font-weight: 600;
+`
+
 const EmphasisText = styled.span`
   font-style: italic;
 `
@@ -103,9 +107,16 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
               <>
                 <RowBetween>
                   <p>
-                    Enroll <NameText>{poolName}</NameText> to compete for the network rewards. To race,{' '}
-                    <EmphasisText>the pool requires actively staked GRG</EmphasisText>. This action only needs to be run
-                    once per each epoch.
+                    <Trans>
+                      Enroll <NameText>{poolName}</NameText> to compete for the network rewards. To race,{' '}
+                      <EmphasisText>the pool requires actively staked GRG</EmphasisText>. This action only needs to be
+                      run once per each epoch.
+                    </Trans>
+                    <p></p>
+                    <Trans>
+                      The smart pool must have a positive <BoldText>own</BoldText> stake, and a minimum 100 GRG{' '}
+                      <BoldText>delegated</BoldText> stake, otherwise won&apos;t be able to participate in rewards.
+                    </Trans>
                   </p>
                 </RowBetween>
                 <ButtonPrimary disabled={false} onClick={onRace}>
@@ -123,8 +134,15 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
                   in 1 click.
                 </p>
               </RowBetween>
+            ) : errorReason === 'execution reverted: STAKING_STAKE_BELOW_MINIMUM_ERROR' ? (
+              <RowBetween>
+                <p>
+                  <NameText>{poolName}</NameText> does not have the minimum 100 GRG delegated stake. Stake more to reach
+                  the minimum. The community&apos;s delegated stake counts.
+                </p>
+              </RowBetween>
             ) : (
-              <p>User rejected transaction error</p>
+              <p>User rejected transaction</p>
             )}
           </AutoColumn>
         </ContentWrapper>

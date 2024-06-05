@@ -381,6 +381,19 @@ interface UseStakingPools {
   stakingPools?: StakingPools[]
 }
 
+export function useStakingPoolsRewards(poolIds: string[] | undefined) {
+  const stakingContract = useStakingContract()
+
+  const inputs = useMemo(() => (poolIds ? poolIds.map((poolId) => [poolId]) : []), [poolIds])
+  const results = useSingleContractMultipleData(stakingContract, 'getStakingPoolStatsThisEpoch', inputs)
+  return useMemo(() => {
+    return results.map((call) => {
+      const result = call.result as CallStateResult
+      return result?.[0].feesCollected
+    })
+  }, [results])
+}
+
 export function useStakingPools(addresses: string[] | undefined, poolIds: string[] | undefined): UseStakingPools {
   const stakingContract = useStakingContract()
 

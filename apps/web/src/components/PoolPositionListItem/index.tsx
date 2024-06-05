@@ -125,8 +125,19 @@ interface PoolPositionListItemProps {
 
 export default function PoolPositionListItem({ positionDetails, returnPage }: PoolPositionListItemProps) {
   const theme = useTheme()
-  const { name, apr, irr, userHasStake, poolDelegatedStake, poolOwnStake, userBalance, userIsOwner } = positionDetails
+  const {
+    name,
+    apr,
+    irr,
+    userHasStake,
+    poolDelegatedStake,
+    poolOwnStake,
+    userBalance,
+    userIsOwner,
+    currentEpochReward,
+  } = positionDetails
 
+  const shouldDisplayRaceButton = Number(currentEpochReward) === 0
   //const position = useMemo(() => {
   //  return new PoolPosition({ name, symbol, pool, id })
   //}, [name, symbol, pool, id])
@@ -192,7 +203,7 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
               )}
             </Row>
           </PrimaryPositionIdData>
-          {returnPage === 'mint' ? (
+          {returnPage === 'mint' && shouldDisplayRaceButton ? (
             <ResponsiveRowFixed gap="24px">
               <ButtonPrimary
                 style={{ width: 'fit-content', height: '40px' }}
@@ -203,11 +214,17 @@ export default function PoolPositionListItem({ positionDetails, returnPage }: Po
                 <Trans>Race</Trans>
               </ButtonPrimary>
             </ResponsiveRowFixed>
-          ) : (
+          ) : returnPage === 'mint' ? (
             <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
-              <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
-              <DataText style={{ minWidth: '50px' }}>{(Number(apr) * 100).toFixed(1)}%</DataText>
+              <DataText>{(Number(currentEpochReward) / 1e18).toFixed(0)} GRG</DataText>
             </RowFixed>
+          ) : (
+            returnPage === 'stake' && (
+              <RowFixed style={{ gap: '24px', marginRight: '8px' }}>
+                <DataText>{(Number(irr) * 100).toFixed(1)}%</DataText>
+                <DataText style={{ minWidth: '50px' }}>{(Number(apr) * 100).toFixed(1)}%</DataText>
+              </RowFixed>
+            )
           )}
         </RowBetween>
         <RangeLineItem>

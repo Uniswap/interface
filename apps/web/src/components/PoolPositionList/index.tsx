@@ -7,6 +7,7 @@ import { Trans } from 'i18n'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
 import { Info } from 'react-feather'
+import { useStakingPoolsRewards } from 'state/pool/hooks'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PoolPositionDetails } from 'types/position'
@@ -70,7 +71,10 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
   const { account, chainId } = useWeb3React()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses: string[] = useMemo(() => positions.map((p) => p.pool), [positions])
+  const poolIds: string[] = useMemo(() => positions.map((p) => p.id), [positions])
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
+
+  const poolsRewards: string[] = useStakingPoolsRewards(poolIds)
 
   // notice: if RPC endpoint is not available the following calls will result in empty poolsWithStats. However,
   //  we do not want to return pools with partial data, so will prompt user to connect or return error.
@@ -116,10 +120,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           shouldDisplay,
           userIsOwner: account ? owner === account : false,
           userBalance: userBalances?.[i]?.result,
+          id: poolIds[i],
+          currentEpochReward: poolsRewards[i],
         }
       })
       .filter((p) => p && p.shouldDisplay)
-  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances])
+  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances, poolIds, poolsRewards])
 
   return (
     <>
@@ -128,6 +134,26 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           {filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}
           {positions && ' (' + poolsWithStats.length + ')'}
         </div>
+        {filterByOperator && (
+          <RowFixed gap="32px">
+            <RowFixed gap="2px">
+              <Trans>Points</Trans>
+              <MouseoverTooltip
+                text={
+                  <Trans>
+                    The bigger the pool&apos;s own stake, the higher the points. Together with the other stakers&apos;
+                    stake, they compete for a share of the current epoch&apos;s rewards.
+                  </Trans>
+                }
+                placement="right"
+              >
+                <InfoIconContainer>
+                  <Info size={14} />
+                </InfoIconContainer>
+              </MouseoverTooltip>
+            </RowFixed>
+          </RowFixed>
+        )}
         {!filterByOperator && (
           <RowFixed gap="32px">
             <RowFixed gap="2px">
@@ -167,13 +193,19 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       </DesktopHeader>
       <MobileHeader>
         <div>{filterByOperator ? <Trans>Your pools</Trans> : <Trans>Loaded pools</Trans>}</div>
-        {!filterByOperator && (
+        {!filterByOperator ? (
           <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
             <div>
               <Trans>IRR</Trans>
             </div>
             <div>
               <Trans>APR</Trans>
+            </div>
+          </RowFixed>
+        ) : (
+          <RowFixed style={{ gap: '40px', marginRight: '8px' }}>
+            <div>
+              <Trans>Points</Trans>
             </div>
           </RowFixed>
         )}
