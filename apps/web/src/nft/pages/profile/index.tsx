@@ -1,9 +1,9 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
 import useENSName from 'hooks/useENSName'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
@@ -86,7 +86,7 @@ export default function Profile() {
   const { account } = useWeb3React()
   const { ENSName } = useENSName(account)
   const accountRef = useRef(account)
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   useEffect(() => {
     if (accountRef.current !== account) {
@@ -115,7 +115,7 @@ export default function Profile() {
               <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
                 <Trans i18nKey="nft.noItems" />
               </ThemedText.HeadlineMedium>
-              <ConnectWalletButton onClick={toggleWalletDrawer}>
+              <ConnectWalletButton onClick={accountDrawer.open}>
                 <ThemedText.SubHeader color="white" lineHeight="20px">
                   <Trans i18nKey="common.connectWallet.button" />
                 </ThemedText.SubHeader>

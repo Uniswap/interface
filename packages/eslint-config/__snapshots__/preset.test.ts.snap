@@ -1942,6 +1942,10 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "@uniswap/analytics",
           },
           {
+            "message": "Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead",
+            "name": "expo-localization",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },

@@ -3,7 +3,7 @@ import { formatEther, parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -275,7 +275,7 @@ interface BagFooterProps {
 }
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const theme = useTheme()
   const { account, chainId } = useWeb3React()
   const isSupportedChain = useIsSupportedChainId(chainId)
@@ -380,7 +380,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
     if (!connected) {
       const handleClick = () => {
-        toggleWalletDrawer()
+        accountDrawer.open()
         setBagExpanded({ bagExpanded: false })
       }
       return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
@@ -451,7 +451,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     theme,
     fetchAssets,
     switchChain,
-    toggleWalletDrawer,
+    accountDrawer,
     setBagExpanded,
   ])
 

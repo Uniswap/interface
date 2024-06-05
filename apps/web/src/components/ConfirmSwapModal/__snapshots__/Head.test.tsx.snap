@@ -130,7 +130,7 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 6px;
+  padding: 4px 8px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;
@@ -380,7 +380,7 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 6px;
+  padding: 4px 8px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;

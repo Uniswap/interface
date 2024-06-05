@@ -12,7 +12,7 @@ import { ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer } from '../hooks'
 
 const FloorPrice = styled(Row)`
   opacity: 0;
@@ -47,12 +47,12 @@ export function NFT({
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const trace = useTrace()
 
   const navigateToNFTDetails = () => {
-    toggleWalletDrawer()
+    accountDrawer.close()
     navigate(detailsHref(asset))
   }
 

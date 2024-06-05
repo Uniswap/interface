@@ -9,6 +9,7 @@ export {
   Popover,
   Portal,
   ScrollView,
+  Select,
   Sheet,
   Square,
   Switch,
@@ -50,6 +51,8 @@ export * from './components/Unicon/types'
 export * from './components/Unicon/utils'
 export * from './components/UniconV2'
 export * from './components/UniconV2/utils'
+export * from './components/UniversalImage/UniversalImage'
+export * from './components/UniversalImage/utils'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'

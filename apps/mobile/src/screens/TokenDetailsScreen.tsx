@@ -329,6 +329,7 @@ function TokenDetails({
           style={{ marginBottom: insets.bottom }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
+            userHasBalance={Boolean(currentChainBalance)}
             onPressBuy={(): void => onPressSwap(CurrencyField.OUTPUT)}
             onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
           />

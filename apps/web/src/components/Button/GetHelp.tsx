@@ -8,7 +8,7 @@ import { ExternalLink } from 'theme/components'
 const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;
   border-radius: 16px;
-  padding: 4px 6px;
+  padding: 4px 8px;
   font-size: 14px;
   font-weight: 485;
   line-height: 20px;

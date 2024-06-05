@@ -9,6 +9,7 @@ export {
   StatsigOptions,
   StatsigOverrides,
   StatsigProvider,
+  StatsigUser,
   useConfig,
   useExperiment,
   useExperimentWithExposureLoggingDisabled,

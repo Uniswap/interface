@@ -17,7 +17,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer } from '../hooks'
 import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
@@ -64,14 +64,14 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [filteredPositions])
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
 
   if (filteredPositions.length === 0) {
-    return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
+    return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
   }
 
   return (
@@ -128,16 +128,16 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const liquidityValue = calculateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const { chainId: walletChainId } = useWeb3React()
   const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
     if (walletChainId !== chainId) {
       await switchChain(chainId)
     }
-    toggleWalletDrawer()
+    accountDrawer.close()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, switchChain, toggleWalletDrawer, navigate, details.tokenId])
+  }, [walletChainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

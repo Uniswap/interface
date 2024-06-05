@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Extras, ScopeContext } from '@sentry/types'
-import { isWeb } from '@tamagui/constants'
+import { isWeb } from 'utilities/src/platform'
 import { Sentry } from './Sentry'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -134,8 +134,8 @@ function formatMessage(
           fileName,
           functionName,
         },
-        message,
       },
+      message,
     ]
   } else {
     // Specific printing style for mobile logging

@@ -183,11 +183,6 @@ module.exports = {
               'Use our internal `BottomSheetTextInput` wrapper from `/wallet/src/components/modals/BottomSheetModal`.',
           },
           {
-            name: 'expo-localization',
-            message:
-              'Avoid using due to issue with unsupported locales. Use utilties/src/device/locales.ts getDeviceLocales instead',
-          },
-          {
             name: 'expo-haptics',
             message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
           },

@@ -43,7 +43,7 @@ export function SharedNotificationToastRouter({
     case AppNotificationType.SwapPending:
       return <SwapPendingNotification notification={notification} />
     case AppNotificationType.TransferCurrencyPending:
-      return <TransferCurrencyPendingNotification notification={notification} />
+      return <TransferCurrencyPendingNotification />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

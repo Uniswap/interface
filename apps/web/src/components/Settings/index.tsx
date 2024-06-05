@@ -22,7 +22,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-import { useAccount } from 'hooks/useAccount'
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
 import RouterPreferenceSettings from './RouterPreferenceSettings'
@@ -117,9 +116,9 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const { chainId: connectedChainId } = useAccount()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
-  const node = useRef<HTMLDivElement | null>(null)
+  const toggleButtonNode = useRef<HTMLDivElement | null>(null)
+  const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
   const closeModal = useCloseModal()
@@ -130,7 +129,7 @@ export default function SettingsTab({
   const isOpenMobile = isOpen && isMobile
   const isOpenDesktop = isOpen && !isMobile
 
-  useOnClickOutside(node, isOpenDesktop ? closeMenu : undefined)
+  useOnClickOutside(menuNode, isOpenDesktop ? closeMenu : undefined, [toggleButtonNode])
   useDisableScrolling(isOpen)
 
   const multipleRoutingOptionsEnabled = useFeatureFlag(FeatureFlags.MultipleRoutingOptions)
@@ -156,27 +155,21 @@ export default function SettingsTab({
         {multipleRoutingOptionsEnabled && (
           <>
             {!isUniswapXTrade(trade) && <StyledDivider />}
-            <MultipleRoutingOptions />
+            <MultipleRoutingOptions chainId={chainId} />
           </>
         )}
       </>
     ),
-    [autoSlippage, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade]
+    [autoSlippage, chainId, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade]
   )
 
   return (
-    <Menu ref={node}>
-      <MenuButton
-        disabled={!isChainSupported || chainId !== connectedChainId}
-        isActive={isOpen}
-        compact={compact}
-        onClick={toggleMenu}
-        trade={trade}
-      />
-      {isOpenDesktop && <MenuFlyout>{Settings}</MenuFlyout>}
+    <Menu ref={toggleButtonNode}>
+      <MenuButton disabled={!isChainSupported} isActive={isOpen} compact={compact} onClick={toggleMenu} trade={trade} />
+      {isOpenDesktop && <MenuFlyout ref={menuNode}>{Settings}</MenuFlyout>}
       {isOpenMobile && (
         <Portal>
-          <MobileMenuContainer data-testid="mobile-settings-menu">
+          <MobileMenuContainer data-testid="mobile-settings-menu" ref={menuNode}>
             <Scrim onClick={closeMenu} $open />
             <MobileMenuWrapper $open>
               <MobileMenuHeader padding="8px 0px 4px">

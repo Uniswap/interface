@@ -19,15 +19,15 @@ import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer, useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer } from '../hooks'
 
 export default function Tokens() {
-  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const hideSpam = useAtomValue(hideSpamAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawerOpen })
+  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
@@ -42,7 +42,7 @@ export default function Tokens() {
 
   if (tokenBalances?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
-    return <EmptyWalletModule type="token" onNavigateClick={toggleAccountDrawer} />
+    return <EmptyWalletModule type="token" onNavigateClick={accountDrawer.close} />
   }
 
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
@@ -80,12 +80,12 @@ function TokenRow({
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const navigateToTokenDetails = useCallback(async () => {
     navigate(getTokenDetailsURL({ ...token }))
-    toggleWalletDrawer()
-  }, [navigate, token, toggleWalletDrawer])
+    accountDrawer.close()
+  }, [navigate, token, accountDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)

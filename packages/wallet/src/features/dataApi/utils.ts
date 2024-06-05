@@ -112,11 +112,6 @@ export function buildCurrency({
     return undefined
   }
 
-  const buyFee =
-    buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
-  const sellFee =
-    sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined
-
   return isNonNativeAddress(chainId, address)
     ? new Token(
         chainId,
@@ -125,8 +120,8 @@ export function buildCurrency({
         symbol ?? undefined,
         name ?? undefined,
         bypassChecksum,
-        buyFee,
-        sellFee
+        buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
+        sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
       )
     : NativeCurrency.onChain(chainId)
 }

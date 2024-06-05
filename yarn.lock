@@ -13828,7 +13828,6 @@ __metadata:
     eslint: 8.44.0
     ethers: 5.7.2
     expo: 50.0.15
-    expo-av: 13.10.5
     expo-barcode-scanner: 12.9.3
     expo-blur: 12.9.2
     expo-camera: 14.1.2
@@ -14014,7 +14013,6 @@ __metadata:
     "@types/redux-persist-webextension-storage": 1.0.3
     "@types/ua-parser-js": 0.7.31
     "@types/uuid": 9.0.1
-    "@uniswap/analytics": 1.7.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/universal-router-sdk": 2.0.4
     "@uniswap/v3-sdk": 3.11.1
@@ -14038,7 +14036,6 @@ __metadata:
     react-native: 0.73.6
     react-native-gesture-handler: 2.15.0
     react-native-reanimated: "npm:react-native-reanimated@3.8.1"
-    react-native-safe-area-context: 4.9.0
     react-native-svg: 15.1.0
     react-native-web: 0.19.10
     react-qr-code: 2.0.12
@@ -23824,15 +23821,6 @@ __metadata:
     invariant: ^2.2.4
     md5-file: ^3.2.3
   checksum: 461e335d17877d8fc54d559dea2d52d6c2a2a27c1a99a796f3181ebf92f62e227f1298c51a6ab0c619d97b127a3ffbfd3e679f8cf6907aed68a1e31fd73d5061
-  languageName: node
-  linkType: hard
-
-"expo-av@npm:13.10.5":
-  version: 13.10.5
-  resolution: "expo-av@npm:13.10.5"
-  peerDependencies:
-    expo: "*"
-  checksum: ca3b11730a5eb117e2a81fed3b0a34ca290cc886a33515ea018872554ac6f05d509bad09af79fac8a892ab6a53a35757ed1280078207f92ecd795243fdee4379
   languageName: node
   linkType: hard
 
@@ -42326,12 +42314,16 @@ __metadata:
     expo-linear-gradient: 12.7.2
     fs-extra: ^11.1.1
     i18next: 23.10.0
+    jest: 29.7.0
+    jest-presets: "workspace:^"
     react: 18.2.0
     react-native: 0.73.6
+    react-native-fast-image: 8.6.3
     react-native-image-colors: 1.5.2
     react-native-reanimated: 3.8.1
     react-native-safe-area-context: 4.9.0
     react-native-svg: 15.1.0
+    react-native-webview: 11.23.1
     tamagui: 1.95.1
     typescript: 5.3.3
     uppercamelcase: ^3.0.0
@@ -42653,6 +42645,7 @@ __metadata:
     statsig-react-native: 4.11.0
     typechain: 5.2.0
     typescript: 5.3.3
+    ui: "workspace:^"
     utilities: "workspace:^"
   languageName: unknown
   linkType: soft
@@ -43125,7 +43118,6 @@ __metadata:
     "@sentry/react": 7.80.0
     "@sentry/react-native": 5.5.0
     "@sentry/types": 7.80.0
-    "@tamagui/constants": 1.95.1
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
     "@types/chrome": 0.0.254
@@ -43140,10 +43132,10 @@ __metadata:
     eslint: 8.44.0
     expo-localization: 14.8.3
     jest: 29.7.0
+    jest-chrome: 0.8.0
     jsbi: 3.2.5
     react: 18.2.0
     react-native: 0.73.6
-    react-native-device-info: 10.0.2
     react-test-renderer: 18.2.0
     subscriptions-transport-ws: 0.11.0
     typescript: 5.3.3

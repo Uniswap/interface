@@ -87,7 +87,6 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         Alert.alert(
           t('walletConnect.error.unsupported.title'),
-          // TODO(EXT-495): Add Scantastic product name here when ready
           t('walletConnect.error.unsupported.message'),
           [
             {

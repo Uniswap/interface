@@ -47,7 +47,7 @@ function useCancelLimitsDialogContent(
           <Plural
             value={orders.length}
             one={t('common.limit.cancel')}
-            other={t(`common.limit.cancel.amount`, { amount: orders.length })}
+            other={t(`common.limit.cancel.amount`, { count: orders.length })}
           />
         ),
         icon: <Slash />,
@@ -143,7 +143,7 @@ export function CancelLimitsDialog(
         }
         buttonsConfig={{
           left: {
-            title: <Trans i18nKey="common.nevermind" />,
+            title: <Trans i18nKey="common.neverMind" />,
             onClick: onCancel,
             textColor: 'neutral1',
           },

@@ -100,25 +100,22 @@ exports[`TokenItem renders without error 1`] = `
           testID="token-logo"
         >
           <Image
-            resizeMode="contain"
+            height={40}
             source={
               {
                 "uri": "https://loremflickr.com/640/480",
               }
             }
             style={
-              [
-                {
-                  "backgroundColor": "#2222220D",
-                  "borderColor": "#2222220D",
-                  "borderRadius": 20,
-                  "borderWidth": 0.5,
-                  "height": 40,
-                  "width": 40,
-                },
-              ]
+              {
+                "aspectRatio": undefined,
+                "backgroundColor": "#2222220D",
+                "borderRadius": 20,
+                "flex": undefined,
+              }
             }
-            testID="token-image"
+            testID="img-token-image"
+            width={40}
           />
         </View>
       </View>

@@ -1,6 +1,6 @@
 import React from 'react'
-import { NativeSyntheticEvent, NativeTouchEvent } from 'react-native'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
@@ -16,24 +16,23 @@ export function getEventHandlers(
   eventName: string,
   element?: string,
   properties?: Record<string, unknown>
-): Partial<Record<string, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>> {
-  const eventHandlers: Partial<
-    Record<string, (e: NativeSyntheticEvent<NativeTouchEvent>) => void>
-  > = {}
+): Partial<Record<string, (e: Event) => void>> {
+  const eventHandlers: Partial<Record<string, (e: Event) => void>> = {}
   for (const event of triggers) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
-      if (!child.props[event]) {
-        logger.error(new Error('Found a null handler while logging an event'), {
-          tags: {
-            file: 'trace/utils.ts',
-            function: 'getEventHandlers',
-          },
-          extra: {
+      // Some interface elements don't have handlers defined.
+      // TODO(WEB-4252): Potentially can remove isInterface check once web is fully converted to tamagui
+      if (!child.props[event] && !isInterface) {
+        logger.info(
+          'trace/utils.ts',
+          'getEventHandlers',
+          'Found a null handler while logging an event',
+          {
             eventName,
             ...consumedProps,
             ...properties,
-          },
-        })
+          }
+        )
       }
 
       // call child event handler with original arguments

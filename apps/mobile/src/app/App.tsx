@@ -70,7 +70,7 @@ import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { updateLanguage } from 'wallet/src/features/language/slice'
+import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -255,11 +255,11 @@ function AppInner(): JSX.Element {
   useEffect(() => {
     if (allowAnalytics) {
       appsFlyer.startSdk()
-      logger.info('AppsFlyer', 'status', 'started')
+      logger.debug('AppsFlyer', 'status', 'started')
     } else {
       appsFlyer.stop(!allowAnalytics, (res: unknown) => {
         if (typeof res === 'string' && res === 'Success') {
-          logger.info('AppsFlyer', 'status', 'stopped')
+          logger.debug('AppsFlyer', 'status', 'stopped')
         } else {
           logger.warn(
             'AppsFlyer',
@@ -273,7 +273,7 @@ function AppInner(): JSX.Element {
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
-    dispatch(updateLanguage(null))
+    dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
@@ -100,7 +100,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const theme = useTheme()
   const { onSwitchTokens } = useSwapActionHandlers()
   const { formatCurrencyAmount } = useFormatter()
-  const openAccountDrawer = useOpenAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
 
   const { currentPriceAdjustment, priceError } = useCurrentPriceAdjustment({
@@ -362,7 +362,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           account={account}
           openLimitsMenu={() => {
             setMenu(MenuState.LIMITS)
-            openAccountDrawer()
+            accountDrawer.open()
           }}
         />
       )}
@@ -425,7 +425,7 @@ function SubmitOrderButton({
   hasInsufficientFunds: boolean
   limitPriceError?: LimitPriceErrorType
 }) {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const { account, chainId } = useWeb3React()
 
   if (!isUniswapXSupportedChain(chainId)) {
@@ -438,7 +438,7 @@ function SubmitOrderButton({
 
   if (!account) {
     return (
-      <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+      <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
         <Trans i18nKey="common.connectWallet.button" />
       </ButtonLight>
     )

@@ -1,6 +1,6 @@
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'

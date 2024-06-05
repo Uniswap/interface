@@ -163,7 +163,7 @@ export interface SuccessNotification extends AppNotificationBase {
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
   chainId: ChainId
-  flow: 'swap' | 'send'
+  flow?: 'swap' | 'send'
 }
 
 export interface ChooseCountryNotification extends AppNotificationBase {

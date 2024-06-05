@@ -1,7 +1,7 @@
 import type { TokenList } from '@uniswap/token-lists'
 import contenthashToUri from 'lib/utils/contenthashToUri'
 import parseENSAddress from 'lib/utils/parseENSAddress'
-import uriToHttp from 'lib/utils/uriToHttp'
+import { uriToHttpUrls } from 'utilities/src/format/urls'
 import { validateTokenList } from 'utils/validateTokenList'
 
 const listCache = new Map<string, TokenList>()
@@ -40,9 +40,9 @@ export default async function fetchTokenList(
       console.debug(message, error)
       throw new Error(message)
     }
-    urls = uriToHttp(`${translatedUri}${parsedENS.ensPath ?? ''}`)
+    urls = uriToHttpUrls(`${translatedUri}${parsedENS.ensPath ?? ''}`)
   } else {
-    urls = uriToHttp(listUrl)
+    urls = uriToHttpUrls(listUrl)
   }
 
   if (urls.length === 0) {

@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Z_INDEX } from 'theme/zIndex'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector, createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
 import { CONNECTION } from './constants'

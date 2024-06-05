@@ -1,5 +1,5 @@
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { useLimitContext } from 'state/limit/LimitContext'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'

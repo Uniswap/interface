@@ -38,5 +38,7 @@ function getTitle({
       return t('notification.send.network', { network })
     case 'swap':
       return t('notification.swap.network', { network })
+    default:
+      return t('notification.network.changed', { network })
   }
 }

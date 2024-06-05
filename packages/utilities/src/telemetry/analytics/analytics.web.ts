@@ -1,4 +1,12 @@
-import { flush, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
+import {
+  flush,
+  getUserId,
+  Identify,
+  identify,
+  init,
+  setDeviceId,
+  track,
+} from '@amplitude/analytics-browser'
 // eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
@@ -13,7 +21,8 @@ import { generateAnalyticsLoggers } from './logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 let allowAnalytics: boolean = true
-let commitHash: string | undefined
+let commitHash: Maybe<string>
+let userId: Maybe<string>
 
 async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
   try {
@@ -55,7 +64,8 @@ export const analytics: Analytics = {
   async init(
     transportProvider: ApplicationTransport,
     allowed: boolean,
-    initHash?: string
+    initHash?: string,
+    userIdGetter?: () => Promise<string>
   ): Promise<void> {
     // Set properties
     commitHash = initHash
@@ -71,6 +81,16 @@ export const analytics: Analytics = {
           trackingOptions: AMPLITUDE_SHARED_TRACKING_OPTIONS,
         }
       )
+
+      userId = userIdGetter ? await userIdGetter() : getUserId()
+
+      if (allowed && userId) {
+        setDeviceId(userId)
+      }
+
+      if (!allowed) {
+        setDeviceId(ANONYMOUS_DEVICE_ID)
+      }
     } catch (error) {
       loggers.init(error)
     }
@@ -78,7 +98,9 @@ export const analytics: Analytics = {
   async setAllowAnalytics(allowed: boolean): Promise<void> {
     await setAnalyticsAtomDirect(allowed)
     if (allowed) {
-      // TODO: handle setting device id to a new or existing old id here
+      if (userId) {
+        setDeviceId(userId)
+      }
     } else {
       loggers.setAllowAnalytics(allowed)
       identify(new Identify().clearAll()) // Clear all custom user properties

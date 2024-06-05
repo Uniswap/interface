@@ -1,5 +1,5 @@
-import { isInterface } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 /**
  * Feature flag names
  * These must match the Gate Key on Statsig

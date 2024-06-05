@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line no-restricted-imports
@@ -10,6 +10,7 @@ import { useAppSelector } from 'wallet/src/state'
 
 export type FiatCurrencyInfo = {
   name: string
+  shortName: string
   code: string
 } & FiatCurrencyComponents
 
@@ -38,38 +39,60 @@ export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyC
 }
 
 /**
- * Hook used to get the fiat currency name in the current app language
+ * Helper used to get the fiat currency name in the current app language
  * @param currency target currency
  * @returns currency name
  */
-export function useFiatCurrencyName(currency: FiatCurrency): string {
-  const { t } = useTranslation()
+export function getFiatCurrencyName(
+  t: AppTFunction,
+  currency: FiatCurrency
+): { name: string; shortName: string } {
+  const currencyToCurrencyName = {
+    [FiatCurrency.AustrialianDollor]: t('currency.aud'),
+    [FiatCurrency.BrazilianReal]: t('currency.brl'),
+    [FiatCurrency.CanadianDollar]: t('currency.cad'),
+    [FiatCurrency.ChineseYuan]: t('currency.cny'),
+    [FiatCurrency.Euro]: t('currency.eur'),
+    [FiatCurrency.BritishPound]: t('currency.gbp'),
+    [FiatCurrency.HongKongDollar]: t('currency.hkd'),
+    [FiatCurrency.IndonesianRupiah]: t('currency.idr'),
+    [FiatCurrency.IndianRupee]: t('currency.inr'),
+    [FiatCurrency.JapaneseYen]: t('currency.jpy'),
+    [FiatCurrency.NigerianNaira]: t('currency.ngn'),
+    [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
+    [FiatCurrency.RussianRuble]: t('currency.rub'),
+    [FiatCurrency.SingaporeDollar]: t('currency.sgd'),
+    [FiatCurrency.ThaiBaht]: t('currency.thb'),
+    [FiatCurrency.TurkishLira]: t('currency.try'),
+    [FiatCurrency.UkrainianHryvnia]: t('currency.uah'),
+    [FiatCurrency.UnitedStatesDollar]: t('currency.usd'),
+    [FiatCurrency.VietnameseDong]: t('currency.vnd'),
+  }
+  const currencyToGlobalSymbol: Record<FiatCurrency, string> = {
+    [FiatCurrency.AustrialianDollor]: '$',
+    [FiatCurrency.BrazilianReal]: 'R$',
+    [FiatCurrency.CanadianDollar]: '$',
+    [FiatCurrency.ChineseYuan]: '¥',
+    [FiatCurrency.Euro]: '€',
+    [FiatCurrency.BritishPound]: '£',
+    [FiatCurrency.HongKongDollar]: '$',
+    [FiatCurrency.IndonesianRupiah]: 'Rp',
+    [FiatCurrency.IndianRupee]: '₹',
+    [FiatCurrency.JapaneseYen]: '¥',
+    [FiatCurrency.NigerianNaira]: '₦',
+    [FiatCurrency.PakistaniRupee]: 'Rs',
+    [FiatCurrency.RussianRuble]: '₽',
+    [FiatCurrency.SingaporeDollar]: '$',
+    [FiatCurrency.ThaiBaht]: '฿',
+    [FiatCurrency.TurkishLira]: '₺',
+    [FiatCurrency.UkrainianHryvnia]: '₴',
+    [FiatCurrency.UnitedStatesDollar]: '$',
+    [FiatCurrency.VietnameseDong]: '₫',
+  }
 
-  const currencyToCurrencyName = useMemo((): Record<FiatCurrency, string> => {
-    return {
-      [FiatCurrency.AustrialianDollor]: t('currency.aud'),
-      [FiatCurrency.BrazilianReal]: t('currency.brl'),
-      [FiatCurrency.CanadianDollar]: t('currency.cad'),
-      [FiatCurrency.ChineseYuan]: t('currency.cny'),
-      [FiatCurrency.Euro]: t('currency.eur'),
-      [FiatCurrency.BritishPound]: t('currency.gbp'),
-      [FiatCurrency.HongKongDollar]: t('currency.hkd'),
-      [FiatCurrency.IndonesianRupiah]: t('currency.idr'),
-      [FiatCurrency.IndianRupee]: t('currency.inr'),
-      [FiatCurrency.JapaneseYen]: t('currency.jpy'),
-      [FiatCurrency.NigerianNaira]: t('currency.ngn'),
-      [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
-      [FiatCurrency.RussianRuble]: t('currency.rub'),
-      [FiatCurrency.SingaporeDollar]: t('currency.sgd'),
-      [FiatCurrency.ThaiBaht]: t('currency.thb'),
-      [FiatCurrency.TurkishLira]: t('currency.try'),
-      [FiatCurrency.UkrainianHryvnia]: t('currency.uah'),
-      [FiatCurrency.UnitedStatesDollar]: t('currency.usd'),
-      [FiatCurrency.VietnameseDong]: t('currency.vnd'),
-    }
-  }, [t])
-
-  return currencyToCurrencyName[currency]
+  const code = getFiatCurrencyCode(currency)
+  const symbol = currencyToGlobalSymbol[currency]
+  return { name: currencyToCurrencyName[currency], shortName: `${code} (${symbol})` }
 }
 
 /**
@@ -78,12 +101,16 @@ export function useFiatCurrencyName(currency: FiatCurrency): string {
  * @returns all relevant currency info
  */
 export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
+  const { t } = useTranslation()
   const components = useFiatCurrencyComponents(currency)
+  const { name, shortName } = getFiatCurrencyName(t, currency)
+  const code = getFiatCurrencyCode(currency)
 
   return {
     ...components,
-    name: useFiatCurrencyName(currency),
-    code: getFiatCurrencyCode(currency),
+    name,
+    shortName,
+    code,
   }
 }
 
@@ -104,11 +131,6 @@ export function useAppFiatCurrency(): FiatCurrency {
  */
 export function useAppFiatCurrencyInfo(): FiatCurrencyInfo {
   const currency = useAppFiatCurrency()
-  const components = useFiatCurrencyComponents(currency)
 
-  return {
-    ...components,
-    name: useFiatCurrencyName(currency),
-    code: getFiatCurrencyCode(currency),
-  }
+  return useFiatCurrencyInfo(currency)
 }

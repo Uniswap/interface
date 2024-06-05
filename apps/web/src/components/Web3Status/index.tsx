@@ -132,11 +132,11 @@ function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const { address, isConnecting, isReconnecting } = useAccount()
 
-  const [, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    toggleAccountDrawer()
-  }, [toggleAccountDrawer])
+    accountDrawer.open()
+  }, [accountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()

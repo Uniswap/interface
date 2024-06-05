@@ -2,11 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { useWeb3React } from '@web3-react/core'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
-import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
-import { safeNamehash } from 'utils/safeNamehash'
-
 import { isAddress } from 'utilities/src/addresses'
+import { uriToHttpUrls } from 'utilities/src/format/urls'
+import { safeNamehash } from 'utils/safeNamehash'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract, useERC1155Contract, useERC721Contract } from './useContract'
 import useDebounce from './useDebounce'
@@ -36,7 +35,7 @@ export default function useENSAvatar(
   const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership, address)
   avatar = nftAvatar.avatar || avatar
 
-  const http = avatar && uriToHttp(avatar)[0]
+  const http = avatar && uriToHttpUrls(avatar)[0]
 
   const changed = debouncedAddress !== address
   return useMemo(
@@ -89,7 +88,7 @@ function useAvatarFromNFT(
     enforceOwnership
   )
   const uri = erc721.uri || erc1155.uri
-  const http = uri && uriToHttp(uri)[0]
+  const http = uri && uriToHttpUrls(uri)[0]
 
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState(undefined)

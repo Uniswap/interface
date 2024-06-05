@@ -45,7 +45,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           "alignItems": "flex-end",
           "flexDirection": "row",
           "justifyContent": "center",
-          "width": "100%",
         }
       }
     >
@@ -66,7 +65,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         placeholderTextColor="#CECECE"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#222222"
+        selectionColor="#CECECE"
         spellCheck={false}
         style={
           {
@@ -85,10 +84,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "borderTopRightRadius": 12,
             "borderTopWidth": 1,
             "color": "#222222",
+            "flexShrink": 1,
             "fontFamily": "Basel-Book",
             "fontSize": 17,
             "height": "auto",
-            "justifyContent": "center",
             "lineHeight": 17,
             "minWidth": 0,
             "paddingBottom": 0,
@@ -96,7 +95,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "paddingRight": 0,
             "paddingTop": 0,
             "textAlign": "left",
-            "width": 8,
           }
         }
         testID="import-account-input"
@@ -104,30 +102,26 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       />
     </View>
     <View
-      onLayout={[Function]}
       style={
         {
           "alignItems": "center",
-          "flexDirection": "row",
-          "flexGrow": 1,
-          "gap": 8,
-          "paddingLeft": 24,
-          "paddingRight": 24,
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "left": 24,
+          "paddingBottom": 16,
           "paddingTop": 16,
           "position": "absolute",
-          "width": "100%",
+          "top": 0,
         }
       }
     >
       <Text
-        adjustsFontSizeToFit={true}
         allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
-        numberOfLines={1}
+        pointerEvents="none"
         style={
           {
             "color": "#7D7D7D",
-            "flexShrink": 1,
             "fontFamily": "Basel-Book",
             "fontSize": 17,
             "lineHeight": 24,
@@ -142,9 +136,13 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       style={
         {
           "alignItems": "center",
+          "bottom": 0,
           "flexDirection": "column",
+          "height": 0,
           "justifyContent": "center",
-          "width": "100%",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
         }
       }
     >
@@ -152,9 +150,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         style={
           {
             "flexDirection": "column",
-            "paddingTop": 64,
             "position": "absolute",
-            "top": 0,
           }
         }
       >

@@ -1,6 +1,6 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
@@ -193,7 +193,7 @@ export default function Pool() {
   const { account, chainId } = useWeb3React()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const networkSupportsV2 = useNetworkSupportsV2()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
@@ -322,7 +322,7 @@ export default function Pool() {
                     >
                       <ButtonPrimary
                         style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                        onClick={toggleWalletDrawer}
+                        onClick={accountDrawer.open}
                       >
                         <Trans i18nKey="common.connectAWallet.button" />
                       </ButtonPrimary>

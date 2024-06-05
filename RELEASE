@@ -1,5 +1,45 @@
-Excited to share some new updates! Here’s what’s new:
+IPFS hash of the deployment:
+- CIDv0: `QmQgjnjsbdgihYv6dHDgLpnXBkTwSwi3bthr3YLBgry9We`
+- CIDv1: `bafybeibc3s5567p7ggbzhvrxuqztosya2qdsixkjlre5onkgbmkiipjba4`
 
-Expanded support for NFTs — In addition to mainnet Ethereum, you are now able to see NFTs across all other networks that we currently support, including: Polygon, Arbitrum, Optimism, Base, BSC, and Blast. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Improved Unicons — We gave your wallet’s unique Unicon a makeover. Check out the rest of your accounts to see your upgraded icons.
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeibc3s5567p7ggbzhvrxuqztosya2qdsixkjlre5onkgbmkiipjba4.ipfs.dweb.link/
+- https://bafybeibc3s5567p7ggbzhvrxuqztosya2qdsixkjlre5onkgbmkiipjba4.ipfs.cf-ipfs.com/
+- [ipfs://QmQgjnjsbdgihYv6dHDgLpnXBkTwSwi3bthr3YLBgry9We/](ipfs://QmQgjnjsbdgihYv6dHDgLpnXBkTwSwi3bthr3YLBgry9We/)
+
+## 5.31.0 (2024-06-05)
+
+
+### Features
+
+* **web:** add utm tags to copyLink buttons (#8556) 7a70df6
+* **web:** Only show identicon in send speedbump if ENS or Unitag (#8475) 5fea09e
+* **web:** use max-image-preview for nft SEO (#8557) caf4d41
+
+
+### Bug Fixes
+
+* **web:** Correctly route back to previous page on AddLiq page (#8523) 21a8143
+* **web:** don't disable swap settings for unconnected chains [staging] (#8653) b9731e2
+* **web:** fix broken translations (#8581) 5a86cb6
+* **web:** fix translations not loading (#8503) 12acb23
+* **web:** improve connection loading/error state (#8533) 9371fb3
+* **web:** properly filter buy/sell txs on TDP (#8511) 28ac0ef
+* **web:** round Send input if greatern than max decimals allowed (#8525) f56c514
+* **web:** update USDC address on Celo Alfajores testnet (#8484) d265731
+* **web:** update useOnClickOutside to handle tooltips [staging] (#8705) 1a4610f
+* **web:** use prev sitemaps for sitemap generation.. (#8524) b72a23f
+
+
+### Continuous Integration
+
+* **web:** update sitemaps ff410fb
+
+

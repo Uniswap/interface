@@ -6,7 +6,7 @@ import {
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
@@ -107,7 +107,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const {
     trade: { state: tradeState, trade, swapQuoteLatency },
@@ -616,7 +616,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+              <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
                 <Trans i18nKey="common.connectWallet.button" />
               </ButtonLight>
             </Trace>

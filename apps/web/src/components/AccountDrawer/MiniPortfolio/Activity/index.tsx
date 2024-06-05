@@ -10,7 +10,7 @@ import { ThemedText } from 'theme/components'
 
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer } from '../hooks'
 import { ActivityRow } from './ActivityRow'
 import { useAllActivities } from './hooks'
 import { createGroups } from './utils'
@@ -26,7 +26,7 @@ const OpenLimitOrdersActivityButton = styled(OpenLimitOrdersButton)`
 `
 
 export function ActivityTab({ account }: { account: string }) {
-  const toggleAccountDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const setMenu = useUpdateAtom(miniPortfolioMenuStateAtom)
 
   const { activities, loading } = useAllActivities(account)
@@ -46,7 +46,7 @@ export function ActivityTab({ account }: { account: string }) {
       return (
         <>
           <OpenLimitOrdersActivityButton openLimitsMenu={() => setMenu(MenuState.LIMITS)} account={account} />
-          <EmptyWalletModule type="activity" onNavigateClick={toggleAccountDrawer} />
+          <EmptyWalletModule type="activity" onNavigateClick={accountDrawer.close} />
         </>
       )
     }

@@ -59,7 +59,7 @@ export async function uploadFileToS3(
         'Content-Type': 'multipart/form-data', // Important for S3 to process the file correctly
       },
     })
-    logger.info('unitags/utils.ts', 'uploadFileToS3', 'Avatar uploaded to S3 successfully')
+    logger.debug('unitags/utils.ts', 'uploadFileToS3', 'Avatar uploaded to S3 successfully')
     return { success: true }
   } catch (error) {
     logger.error(error, {

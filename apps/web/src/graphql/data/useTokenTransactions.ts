@@ -122,7 +122,7 @@ export function useTokenTransactions(
           if (!tx) {
             return false
           }
-          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const tokenBeingSold = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&
@@ -133,7 +133,7 @@ export function useTokenTransactions(
           if (!tx) {
             return false
           }
-          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const tokenBeingSold = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&

@@ -5,7 +5,7 @@ import { useLockScreenContext } from 'src/features/authentication/lockScreenCont
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { Flex, TouchableArea, useDeviceDimensions, useDeviceInsets, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 

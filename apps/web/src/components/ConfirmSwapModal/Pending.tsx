@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { t, Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
@@ -26,8 +26,8 @@ import {
   LoadingIndicatorOverlay,
   LogoContainer,
 } from '../AccountDrawer/MiniPortfolio/Activity/Logos'
-import { slideInAnimation, slideOutAnimation } from './animations'
 import { TradeSummary } from './TradeSummary'
+import { slideInAnimation, slideOutAnimation } from './animations'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 8px;

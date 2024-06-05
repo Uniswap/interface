@@ -1,6 +1,5 @@
 import React from 'react'
-import { Image, ImageResizeMode, StyleSheet } from 'react-native'
-import { Flex, FlexProps, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'uniswap/src/types/chains'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
@@ -18,13 +17,14 @@ export function TransactionSummaryNetworkLogo({
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
   return (
-    <Flex borderColor="$surface1" style={styles.squareLogoOutline}>
+    <Flex
+      borderColor="$surface1"
+      borderRadius={7} // when inner icon borderRadius = 6 and size = 20
+      borderWidth={2}>
       <NetworkLogo chainId={chainId} shape="square" size={size} />
     </Flex>
   )
 }
-
-const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
 function _NetworkLogo({
   chainId,
@@ -36,21 +36,11 @@ function _NetworkLogo({
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
     <Flex
-      style={{ borderColor: colors.surface1.get(), borderRadius, ...styles.iconWrapper }}
+      style={{ borderColor: colors.surface1.get(), borderRadius, overflow: 'hidden' }}
       testID="network-logo">
-      <Image resizeMode={RESIZE_MODE_CONTAIN} source={logo} style={{ width: size, height: size }} />
+      <Image resizeMode="contain" source={logo} style={{ width: size, height: size }} />
     </Flex>
   ) : null
 }
 
 export const NetworkLogo = React.memo(_NetworkLogo)
-
-const styles = StyleSheet.create({
-  iconWrapper: {
-    overflow: 'hidden',
-  },
-  squareLogoOutline: {
-    borderRadius: 7, // when inner icon borderRadius = 6 and size = 20
-    borderWidth: 2,
-  },
-})

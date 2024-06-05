@@ -54,15 +54,18 @@ const StyledChart: typeof Chart = styled(Chart)`
 const PDPChartTypeSelector = ({
   chartType,
   onChartTypeChange,
+  disabledOption,
 }: {
   chartType: PoolsDetailsChartType
   onChartTypeChange: (c: PoolsDetailsChartType) => void
+  disabledOption?: PoolsDetailsChartType
 }) => (
   <ChartTypeSelectorContainer>
     <ChartTypeDropdown
       options={PDP_CHART_SELECTOR_OPTIONS}
       currentChartType={chartType}
       onSelectOption={onChartTypeChange}
+      disabledOption={disabledOption}
     />
   </ChartTypeSelectorContainer>
 )
@@ -196,11 +199,17 @@ export default function ChartSection(props: ChartSectionProps) {
     return DEFAULT_PILL_TIME_SELECTOR_OPTIONS
   }, [activeQuery.chartType, setTimePeriod, timePeriod])
 
+  const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
+
   return (
     <div data-testid="pdp-chart-container">
       {ChartBody}
       <ChartActionsContainer>
-        <PDPChartTypeSelector chartType={activeQuery.chartType} onChartTypeChange={setChartType} />
+        <PDPChartTypeSelector
+          chartType={activeQuery.chartType}
+          onChartTypeChange={setChartType}
+          disabledOption={disabledChartOption}
+        />
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <PillMultiToggle

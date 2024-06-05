@@ -5,7 +5,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SHORT_SCREEN_HEADER_HEIGHT_RATIO, Screen } from 'src/components/layout/Screen'
 import { AnimatedFlex, Flex, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { isIOS } from 'uniswap/src/utils/platform'
+import { isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = {
   subtitle?: string

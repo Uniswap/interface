@@ -25,12 +25,12 @@ export default function Landing() {
   const location = useLocation()
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
-  const [accountDrawerOpen] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const prevAccount = usePrevious(account)
   const redirectOnConnect = useRef(false)
   // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {
-    if (accountDrawerOpen && account && !prevAccount) {
+    if (accountDrawer.isOpen && account && !prevAccount) {
       redirectOnConnect.current = true
       setTransition(true)
     }
@@ -45,16 +45,7 @@ export default function Landing() {
       isExitAnimationEnabled ? TRANSITION_DURATIONS.slow : TRANSITION_DURATIONS.fast
     )
     return () => clearTimeout(timeoutId)
-  }, [
-    account,
-    prevAccount,
-    accountDrawerOpen,
-    navigate,
-    queryParams.intro,
-    connector,
-    disconnect,
-    isExitAnimationEnabled,
-  ])
+  }, [account, prevAccount, accountDrawer, navigate, queryParams.intro, connector, disconnect, isExitAnimationEnabled])
 
   // Redirect to swap page if user is connected or has been recently
   // The intro query parameter can be used to override this

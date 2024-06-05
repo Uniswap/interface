@@ -59,7 +59,7 @@ const FixedPopupColumn = styled(AutoColumn)<{
 `
 
 export default function Popups() {
-  const [isAccountDrawerOpen] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   // get all popups
   const activePopups = useActivePopups()
@@ -71,7 +71,7 @@ export default function Popups() {
     <>
       <FixedPopupColumn
         gap="20px"
-        drawerOpen={isAccountDrawerOpen}
+        drawerOpen={accountDrawer.isOpen}
         showUniconV2InfoPopup={showUniconV2InfoPopup}
         data-testid="popups"
       >

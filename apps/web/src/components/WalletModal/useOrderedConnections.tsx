@@ -1,7 +1,8 @@
 import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
-import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
-import { Connector, useConnect } from 'wagmi'
+import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { Connector } from 'wagmi'
 
 type ConnectorID = (typeof CONNECTION)[keyof typeof CONNECTION]
 

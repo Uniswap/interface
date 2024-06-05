@@ -12,7 +12,7 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
 
 const Wrapper = styled.div`

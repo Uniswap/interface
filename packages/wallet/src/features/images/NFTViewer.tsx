@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text } from 'ui/src'
-import { isGifUri, isSVGUri, uriToHttp } from 'utilities/src/format/urls'
+import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
 import { ImageUri, ImageUriProps } from './ImageUri'
@@ -45,7 +45,7 @@ export function NFTViewer(props: Props): JSX.Element {
     imageDimensions,
   } = props
   const { t } = useTranslation()
-  const imageHttpUri = uri ? uriToHttp(uri)[0] : undefined
+  const imageHttpUri = uri ? uriToHttpUrls(uri)[0] : undefined
 
   const fallback = useMemo(
     () => (

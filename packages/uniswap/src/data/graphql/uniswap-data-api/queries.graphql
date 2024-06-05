@@ -426,7 +426,11 @@ query TransactionHistoryUpdater($addresses: [String!]!) {
   ) {
     id
     ownerAddress
-    assetActivities(pageSize: 1, page: 1) {
+    assetActivities(
+      pageSize: 1,
+      page: 1,
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    ) {
       id
       timestamp
       details {

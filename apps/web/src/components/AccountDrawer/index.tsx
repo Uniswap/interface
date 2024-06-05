@@ -11,7 +11,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isMobile } from 'uniswap/src/utils/platform'
+import { isMobile } from 'utilities/src/platform'
 import DefaultMenu from './DefaultMenu'
 import { useAccountDrawer } from './MiniPortfolio/hooks'
 
@@ -152,21 +152,21 @@ const CloseDrawer = styled.div`
 `
 
 function AccountDrawer() {
-  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
-  const wasWalletDrawerOpen = usePrevious(walletDrawerOpen)
+  const accountDrawer = useAccountDrawer()
+  const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (wasWalletDrawerOpen && !walletDrawerOpen) {
+    if (wasAccountDrawerOpen && !accountDrawer.isOpen) {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }, [walletDrawerOpen, wasWalletDrawerOpen])
+  }, [accountDrawer, wasAccountDrawerOpen])
 
   // close on escape keypress
   useEffect(() => {
     const escapeKeyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && walletDrawerOpen) {
+      if (event.key === 'Escape' && accountDrawer.isOpen) {
         event.preventDefault()
-        toggleWalletDrawer()
+        accountDrawer.close()
       }
     }
 
@@ -175,12 +175,12 @@ function AccountDrawer() {
     return () => {
       document.removeEventListener('keydown', escapeKeyDownHandler)
     }
-  }, [walletDrawerOpen, toggleWalletDrawer])
+  }, [accountDrawer])
 
   // useStates for detecting swipe gestures
   const [yPosition, setYPosition] = useState(0)
   const [dragStartTop, setDragStartTop] = useState(true)
-  useDisableScrolling(walletDrawerOpen)
+  useDisableScrolling(accountDrawer.isOpen)
 
   // useGesture hook for detecting swipe gestures
   const bind = useGesture({
@@ -194,11 +194,11 @@ function AccountDrawer() {
         }
       } else if (
         (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) &&
-        walletDrawerOpen &&
+        accountDrawer.isOpen &&
         dragStartTop
       ) {
-        toggleWalletDrawer()
-      } else if (walletDrawerOpen && dragStartTop && state.movement[1] > 0) {
+        accountDrawer.close()
+      } else if (accountDrawer.isOpen && dragStartTop && state.movement[1] > 0) {
         setYPosition(state.movement[1])
         if (scrollRef.current) {
           scrollRef.current.style.overflowY = 'hidden'
@@ -227,16 +227,16 @@ function AccountDrawer() {
 
   return (
     <Container>
-      {walletDrawerOpen && (
+      {accountDrawer.isOpen && (
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
-          <CloseDrawer onClick={toggleWalletDrawer} data-testid="close-account-drawer">
+          <CloseDrawer onClick={accountDrawer.close} data-testid="close-account-drawer">
             <CloseIcon />
           </CloseDrawer>
         </Trace>
       )}
-      <Scrim onClick={toggleWalletDrawer} $open={walletDrawerOpen} />
+      <Scrim onClick={accountDrawer.close} $open={accountDrawer.isOpen} />
       <AccountDrawerWrapper
-        open={walletDrawerOpen}
+        open={accountDrawer.isOpen}
         {...(isMobile
           ? {
               ...bind(),
@@ -246,7 +246,7 @@ function AccountDrawer() {
       >
         {/* id used for child InfiniteScrolls to reference when it has reached the bottom of the component */}
         <AccountDrawerScrollWrapper ref={scrollRef} id="wallet-dropdown-scroll-wrapper">
-          <DefaultMenu drawerOpen={walletDrawerOpen} />
+          <DefaultMenu drawerOpen={accountDrawer.isOpen} />
         </AccountDrawerScrollWrapper>
       </AccountDrawerWrapper>
     </Container>

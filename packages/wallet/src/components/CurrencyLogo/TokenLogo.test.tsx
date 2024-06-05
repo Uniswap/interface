@@ -17,8 +17,8 @@ describe('TokenLogo', () => {
         <TokenLogo chainId={ChainId.ArbitrumOne} symbol="DAI" url="https://example.com/image.svg" />
       )
 
-      const tokenRemoteSvg = queryByTestId('token-remote-svg')
-      const tokenImage = queryByTestId('token-image')
+      const tokenRemoteSvg = queryByTestId('svg-token-image')
+      const tokenImage = queryByTestId('img-token-image')
 
       expect(tokenRemoteSvg).toBeTruthy()
       expect(tokenImage).toBeFalsy()
@@ -29,8 +29,8 @@ describe('TokenLogo', () => {
         <TokenLogo chainId={ChainId.ArbitrumOne} symbol="DAI" url="https://example.com/image.png" />
       )
 
-      const tokenRemoteSvg = queryByTestId('token-remote-svg')
-      const tokenImage = queryByTestId('token-image')
+      const tokenRemoteSvg = queryByTestId('svg-token-image')
+      const tokenImage = queryByTestId('img-token-image')
 
       expect(tokenRemoteSvg).toBeFalsy()
       expect(tokenImage).toBeTruthy()

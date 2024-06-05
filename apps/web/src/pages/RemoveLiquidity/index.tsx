@@ -8,7 +8,7 @@ import {
   LiquiditySource,
 } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useIsSupportedChainId } from 'constants/chains'
@@ -81,7 +81,7 @@ function RemoveLiquidity() {
   const trace = useTrace()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -690,7 +690,7 @@ function RemoveLiquidity() {
                   properties={{ received_swap_quote: false }}
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
-                  <ButtonLight onClick={toggleWalletDrawer}>
+                  <ButtonLight onClick={accountDrawer.open}>
                     <Trans i18nKey="common.connectWallet.button" />
                   </ButtonLight>
                 </Trace>

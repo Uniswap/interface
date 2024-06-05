@@ -4,7 +4,7 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { isWeb } from 'uniswap/src/utils/platform'
+import { isWeb } from 'utilities/src/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 

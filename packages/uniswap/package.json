@@ -35,6 +35,7 @@
     "react-native-device-info": "10.0.2",
     "statsig-react": "1.32.0",
     "statsig-react-native": "4.11.0",
+    "ui": "workspace:^",
     "utilities": "workspace:^"
   },
   "devDependencies": {

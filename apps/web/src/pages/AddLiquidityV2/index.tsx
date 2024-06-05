@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
@@ -78,7 +78,7 @@ export default function AddLiquidity() {
       ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
   )
 
-  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
+  const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -447,7 +447,7 @@ export default function AddLiquidity() {
                 properties={{ received_swap_quote: false }}
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
-                <ButtonLight onClick={toggleWalletDrawer}>
+                <ButtonLight onClick={accountDrawer.open}>
                   <Trans i18nKey="common.connectWallet.button" />
                 </ButtonLight>
               </Trace>

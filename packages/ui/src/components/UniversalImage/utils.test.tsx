@@ -1,4 +1,4 @@
-import { fetchSVG } from 'wallet/src/features/images/utils'
+import { fetchSVG } from "ui/src/components/UniversalImage/utils"
 
 const REGULAR_SVG = '<svg viewBox="0 0 10 20"></svg>'
 

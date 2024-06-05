@@ -171,7 +171,9 @@ const sporeLight = {
   sporeBlack: '#000000',
 
   surface1: '#FFFFFF',
+  surface1Hovered: '#F5F5F5',
   surface2: '#F9F9F9',
+  surface2Hovered: '#F2F2F2',
   surface3: '#2222220D', //0D = 5%
   surface4: '#FFFFFFA3', //A3 = 64%
   surface5: '#0000000A', //0A = 4%
@@ -183,7 +185,9 @@ const sporeLight = {
   neutral3: '#CECECE',
 
   accent1: '#FC72FF',
+  accent1Hovered: '#C70A92',
   accent2: '#FFEFFF',
+  accent2Hovered: '#FEEBFC',
 
   accentSoft: '#FC72FF33', //33 = 20%
 
@@ -198,7 +202,9 @@ const sporeDark = {
   sporeBlack: '#000000',
 
   surface1: '#131313',
+  surface1Hovered: '#181818',
   surface2: '#1B1B1B',
+  surface2Hovered: '#242424',
   surface3: '#FFFFFF1F', //1F = 12%
   surface4: '#FFFFFF33', //33 = 20%
   surface5: '#0000000A', //0A = 4%
@@ -210,7 +216,9 @@ const sporeDark = {
   neutral3: '#5E5E5E',
 
   accent1: '#FC72FF',
+  accent1Hovered: '#FD3CFE',
   accent2: '#311C31',
+  accent2Hovered: '#510D43',
 
   accentSoft: '#FC72FF33', //33 = 20%
 
@@ -227,7 +235,9 @@ export const colorsLight = {
   sporeBlack: sporeLight.sporeBlack,
 
   surface1: sporeLight.surface1,
+  surface1Hovered: sporeLight.surface1Hovered,
   surface2: sporeLight.surface2,
+  surface2Hovered: sporeLight.surface2Hovered,
   surface3: sporeLight.surface3,
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
@@ -241,7 +251,9 @@ export const colorsLight = {
   neutral3: sporeLight.neutral3,
 
   accent1: sporeLight.accent1,
+  accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
+  accent2Hovered: sporeLight.accent2Hovered,
 
   accentSoft: sporeLight.accentSoft,
 
@@ -291,7 +303,9 @@ export const colorsDark = {
   sporeBlack: sporeDark.sporeBlack,
 
   surface1: sporeDark.surface1,
+  surface1Hovered: sporeDark.surface1Hovered,
   surface2: sporeDark.surface2,
+  surface2Hovered: sporeDark.surface2Hovered,
   surface3: sporeDark.surface3,
   surface4: sporeDark.surface4,
   surface5: sporeDark.surface5,
@@ -305,7 +319,9 @@ export const colorsDark = {
   neutral3: sporeDark.neutral3,
 
   accent1: sporeDark.accent1,
+  accent1Hovered: sporeDark.accent1Hovered,
   accent2: sporeDark.accent2,
+  accent2Hovered: sporeDark.accent2Hovered,
 
   accentSoft: sporeDark.accentSoft,
 

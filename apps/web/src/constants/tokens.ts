@@ -62,6 +62,13 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USD Coin'
 )
 export const USDC_CELO = new Token(ChainId.CELO, '0xceba9300f2b948710d2653dd7b07f33a8b32118c', 6, 'USDC', 'USD Coin')
+export const USDC_CELO_ALFAJORES = new Token(
+  ChainId.CELO_ALFAJORES,
+  '0x2F25deB3848C207fc8E0c34035B3Ba7fC157602B',
+  6,
+  'USDC',
+  'USDC CELO Testnet'
+)
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')

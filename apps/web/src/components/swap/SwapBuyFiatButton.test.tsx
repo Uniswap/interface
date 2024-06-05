@@ -42,19 +42,28 @@ const mockUseFiatOnRampsAvailable = (shouldCheck: boolean) => {
 }
 
 describe('SwapBuyFiatButton.tsx', () => {
-  let toggleWalletDrawer: jest.Mock<any, any>
+  let openWalletDrawer: jest.Mock<any, any>
   let setShowMoonpayTextInDrawer: jest.Mock<any, any>
   let useOpenModal: jest.Mock<any, any>
 
   beforeAll(() => {
-    toggleWalletDrawer = jest.fn()
+    openWalletDrawer = jest.fn()
     useOpenModal = jest.fn()
     setShowMoonpayTextInDrawer = jest.fn()
   })
 
+  beforeEach(() => {
+    mockuseAccountDrawer.mockImplementation(() => ({
+      isOpen: false,
+      toggle: jest.fn(),
+      close: jest.fn(),
+      open: openWalletDrawer,
+    }))
+  })
+
   it('matches base snapshot', () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
-    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
+
     const { asFragment } = render(<SwapBuyFiatButton />)
     expect(asFragment()).toMatchSnapshot()
   })
@@ -62,11 +71,10 @@ describe('SwapBuyFiatButton.tsx', () => {
   it('fiat on ramps available in region, account unconnected', async () => {
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
-    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
     render(<SwapBuyFiatButton />)
     await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
-    expect(toggleWalletDrawer).toHaveBeenCalledTimes(1)
+    expect(openWalletDrawer).toHaveBeenCalledTimes(1)
     expect(setShowMoonpayTextInDrawer).toHaveBeenCalledTimes(1)
     expect(screen.queryByTestId('fiat-on-ramp-unavailable-tooltip')).not.toBeInTheDocument()
   })
@@ -78,11 +86,10 @@ describe('SwapBuyFiatButton.tsx', () => {
     } as ReturnType<typeof useWeb3React>)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
-    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     mockUseOpenModal.mockImplementation(() => useOpenModal)
     render(<SwapBuyFiatButton />)
     await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
-    expect(toggleWalletDrawer).toHaveBeenCalledTimes(0)
+    expect(openWalletDrawer).toHaveBeenCalledTimes(0)
     expect(setShowMoonpayTextInDrawer).toHaveBeenCalledTimes(0)
     expect(useOpenModal).toHaveBeenCalledTimes(1)
     expect(screen.queryByTestId('fiat-on-ramp-unavailable-tooltip')).not.toBeInTheDocument()
@@ -94,7 +101,6 @@ describe('SwapBuyFiatButton.tsx', () => {
     const error = jest.spyOn(console, 'error').mockReturnValue(undefined)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
-    mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
     render(<SwapBuyFiatButton />)
     await act(() => userEvent.click(screen.getByTestId('buy-fiat-button')))
     fireEvent.mouseOver(screen.getByTestId('buy-fiat-button'))

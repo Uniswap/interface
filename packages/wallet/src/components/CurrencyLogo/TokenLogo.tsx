@@ -1,12 +1,9 @@
 import { memo } from 'react'
-import { Image } from 'react-native'
-import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, UniversalImage, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { ChainId } from 'uniswap/src/types/chains'
-import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {
@@ -29,51 +26,52 @@ export const TokenLogo = memo(function _TokenLogo({
   networkLogoBorderWidth = spacing.spacing2,
 }: TokenLogoProps): JSX.Element {
   const colors = useSporeColors()
-
-  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
-  const httpUri = url ? uriToHttp(url)[0] : null
-
-  let tokenImage = null
-
-  if (httpUri) {
-    if (isSVGUri(httpUri)) {
-      tokenImage = (
-        <Flex borderRadius={size / 2} overflow="hidden" testID="token-remote-svg">
-          <RemoteSvg
-            backgroundColor={colors.surface3.val}
-            borderRadius={size / 2}
-            height={size}
-            imageHttpUrl={httpUri}
-            width={size}
-          />
-        </Flex>
-      )
-    } else {
-      tokenImage = (
-        <Image
-          resizeMode="contain"
-          source={{ uri: httpUri }}
-          style={[
-            {
-              backgroundColor: colors.surface3.get(),
-              width: size,
-              height: size,
-              borderRadius: size / 2,
-              borderColor: colors.surface3.get(),
-              borderWidth: 0.5,
-            },
-          ]}
-          testID="token-image"
-        />
-      )
-    }
-  }
-
   const isDarkMode = useIsDarkMode()
   const logolessColorScheme = useLogolessColorScheme(name ?? symbol ?? '')
+
+  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
+
   const { foreground, background } = isDarkMode
     ? logolessColorScheme.dark
     : logolessColorScheme.light
+  const fallback = (
+    <Flex
+      alignItems="center"
+      borderRadius="$roundedFull"
+      height={size}
+      justifyContent="center"
+      px="$spacing8"
+      style={{ backgroundColor: background }}
+      width={size}>
+      <Text
+        adjustsFontSizeToFit
+        allowFontScaling={false}
+        color={validColor(foreground)}
+        fontFamily="$button"
+        fontSize={17}
+        fontWeight="500"
+        lineHeight={14}
+        minimumFontScale={0.5}
+        numberOfLines={1}>
+        {symbol?.slice(0, 3)}
+      </Text>
+    </Flex>
+  )
+
+  const tokenImage = (
+    <UniversalImage
+      fallback={fallback}
+      size={{ height: size, width: size }}
+      style={{
+        image: {
+          backgroundColor: colors.surface3.val,
+          borderRadius: size / 2,
+        },
+      }}
+      testID="token-image"
+      uri={url ?? undefined}
+    />
+  )
 
   return (
     <Flex
@@ -82,31 +80,7 @@ export const TokenLogo = memo(function _TokenLogo({
       justifyContent="center"
       testID="token-logo"
       width={size}>
-      {httpUri ? (
-        tokenImage
-      ) : (
-        <Flex
-          alignItems="center"
-          borderRadius="$roundedFull"
-          height={size}
-          justifyContent="center"
-          px="$spacing8"
-          style={{ backgroundColor: background }}
-          width={size}>
-          <Text
-            adjustsFontSizeToFit
-            allowFontScaling={false}
-            color={validColor(foreground)}
-            fontFamily="$button"
-            fontSize={17}
-            fontWeight="500"
-            lineHeight={14}
-            minimumFontScale={0.5}
-            numberOfLines={1}>
-            {symbol?.slice(0, 3)}
-          </Text>
-        </Flex>
-      )}
+      {tokenImage}
       {showNetworkLogo && (
         <Flex
           borderColor="$surface1"

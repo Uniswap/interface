@@ -5,7 +5,7 @@ import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { Input as NumericalInput } from 'components/NumericalInput'
+import { Input as NumericalInput, isInputGreaterThanDecimals } from 'components/NumericalInput'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { getChain, useSupportedChainId } from 'constants/chains'
@@ -277,13 +277,20 @@ export default function SendCurrencyInputForm({
       onCurrencyChange?.({ inputCurrency: currency, outputCurrency: undefined })
 
       if (fiatCurrency.equals(currency)) {
-        setSendState((prev) => ({
-          ...prev,
-          exactAmountToken: exactAmountToken ?? exactAmountFiat,
-          exactAmountFiat: undefined,
-          inputInFiat: false,
-          inputCurrency: currency,
-        }))
+        setSendState((prev) => {
+          let updatedExactAmountToken = exactAmountToken ?? exactAmountFiat
+          const maxDecimals = inputInFiat ? 6 : currency.decimals
+          if (isInputGreaterThanDecimals(updatedExactAmountToken, maxDecimals)) {
+            updatedExactAmountToken = parseFloat(updatedExactAmountToken).toFixed(maxDecimals)
+          }
+          return {
+            ...prev,
+            exactAmountToken: updatedExactAmountToken,
+            exactAmountFiat: undefined,
+            inputInFiat: false,
+            inputCurrency: currency,
+          }
+        })
         return
       }
 
@@ -292,7 +299,7 @@ export default function SendCurrencyInputForm({
         inputCurrency: currency,
       }))
     },
-    [exactAmountFiat, exactAmountToken, fiatCurrency, onCurrencyChange, setSendState]
+    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState]
   )
 
   const toggleFiatInputAmountEnabled = useCallback(() => {

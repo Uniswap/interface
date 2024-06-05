@@ -34,7 +34,7 @@ export default function SwapBuyFiatButton() {
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
-  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
 
   // Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
@@ -49,9 +49,9 @@ export default function SwapBuyFiatButton() {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_CHECKING_REGION)
-    } else if (fiatOnrampAvailable && !account && !walletDrawerOpen) {
+    } else if (fiatOnrampAvailable && !account && !accountDrawer.isOpen) {
       setShowMoonpayTextInDrawer(true)
-      toggleWalletDrawer()
+      accountDrawer.open()
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     } else if (fiatOnrampAvailable && account) {
       openFiatOnRampModal()
@@ -63,8 +63,7 @@ export default function SwapBuyFiatButton() {
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
     account,
-    walletDrawerOpen,
-    toggleWalletDrawer,
+    accountDrawer,
     openFiatOnRampModal,
     setShowMoonpayTextInDrawer,
   ])
@@ -83,7 +82,7 @@ export default function SwapBuyFiatButton() {
     (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||
     fiatOnrampAvailabilityLoading ||
     // When wallet drawer is open AND user is in the connect wallet step of the buy fiat flow, disable buy fiat button.
-    (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
+    (accountDrawer.isOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
 
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)

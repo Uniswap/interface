@@ -32,7 +32,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'uniswap/src/utils/platform'
+import { isIOS } from 'utilities/src/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'

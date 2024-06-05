@@ -72,7 +72,7 @@ module.exports = {
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
               {
-                name: 'uniswap/src/utils/platform',
+                name: 'utilities/src/platform',
                 importNames: ['isIOS', 'isAndroid'],
                 message:
                   'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
@@ -81,6 +81,11 @@ module.exports = {
                 name: 'wagmi',
                 importNames: ['useChainId', 'useAccount'],
                 message: 'Import properly typed account data from `hooks/useAccount` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useConnect'],
+                message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
               },
             ],
           },

@@ -1,17 +1,12 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Linking } from 'react-native'
-import { Action } from 'redux'
-import { useAppDispatch } from 'src/app/hooks'
-import { closeModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-
-// TODO(MOB-1190): this is DEP_blue_300 at 10% opacity, remove when we have a named color for this
-const LIGHT_BLUE = '#4C82FB1A'
+import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
+import { opacify } from 'wallet/src/utils/colors'
 
 const openLanguageSettings = async (): Promise<void> => {
   if (isAndroid) {
@@ -21,19 +16,17 @@ const openLanguageSettings = async (): Promise<void> => {
   }
 }
 
-export function SettingsLanguageModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
   const { t } = useTranslation()
-
-  const onClose = useCallback(
-    (): Action => dispatch(closeModal({ name: ModalName.LanguageSelector })),
-    [dispatch]
-  )
+  const colors = useSporeColors()
 
   return (
     <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
-        <Flex borderRadius="$rounded12" p="$spacing12" style={{ backgroundColor: LIGHT_BLUE }}>
+        <Flex
+          borderRadius="$rounded12"
+          p="$spacing12"
+          style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
           <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
         </Flex>
       </Flex>
@@ -43,7 +36,7 @@ export function SettingsLanguageModal(): JSX.Element {
             {t('settings.setting.language.title')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t('settings.setting.language.description')}
+            {t('settings.setting.language.description.mobile')}
           </Text>
         </Flex>
         <Button

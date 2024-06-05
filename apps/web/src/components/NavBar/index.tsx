@@ -101,19 +101,17 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   const { account } = useWeb3React()
-  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const handleUniIconClick = useCallback(() => {
     if (account) {
       return
     }
-    if (accountDrawerOpen) {
-      toggleAccountDrawer()
-    }
+    accountDrawer.close()
     navigate({
       pathname: '/',
       search: '?intro=true',
     })
-  }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
+  }, [account, accountDrawer, navigate])
 
   return (
     <>

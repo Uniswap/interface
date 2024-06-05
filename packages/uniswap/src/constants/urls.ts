@@ -1,6 +1,6 @@
 import { isDevEnv } from 'uniswap/src/utils/env'
-import { isAndroid, isExtension, isInterface, isMobileApp } from 'uniswap/src/utils/platform'
 import { isJestRun } from 'utilities/src/environment'
+import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
   GraphQL = 'graphql',

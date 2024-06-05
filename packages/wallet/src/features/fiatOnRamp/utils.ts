@@ -1,4 +1,4 @@
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 import { FORLogo } from './types'
 
 const APPLE_PAY = 'Apple Pay'

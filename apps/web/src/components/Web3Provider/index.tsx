@@ -5,6 +5,7 @@ import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmi'
 import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
+import { ConnectionProvider } from 'hooks/useConnect'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
@@ -24,8 +25,10 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <Updater />
-        {children}
+        <ConnectionProvider>
+          <Updater />
+          {children}
+        </ConnectionProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )

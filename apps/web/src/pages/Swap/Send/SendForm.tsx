@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
@@ -77,7 +77,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const { address: account, isDisconnected, chainId: connectedChainId } = useAccount()
   const switchChain = useSwitchChain()
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const [sendFormModalState, setSendFormModalState] = useState(SendFormModalState.None)
   const [sendFormSpeedBumpState, setSendFormSpeedBumpState] = useState({
@@ -196,7 +196,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
-            <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+            <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
               <Trans i18nKey="common.connectWallet.button" />
             </ButtonLight>
           </Trace>

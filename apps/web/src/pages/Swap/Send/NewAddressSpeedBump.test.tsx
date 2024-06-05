@@ -32,20 +32,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
 })
 
 describe('NewAddressSpeedBumpModal', () => {
-  it('should render correctly with old unicon', () => {
-    const mockOnCancel = jest.fn()
-    const mockOnConfirm = jest.fn()
-    render(
-      <SendContext.Provider value={mockSendContext}>
-        <NewAddressSpeedBumpModal onCancel={mockOnCancel} onConfirm={mockOnConfirm} />
-      </SendContext.Provider>
-    )
-
-    expect(document.body).toMatchSnapshot()
-    expect(screen.getByText('New address')).toBeInTheDocument()
-  })
-
-  it('should render correctly with new unicon', () => {
+  it('should not render identicon if account has no ENS avatar/unitag pp', () => {
     const mockOnCancel = jest.fn()
     const mockOnConfirm = jest.fn()
     mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.UniconsV2)
@@ -57,5 +44,6 @@ describe('NewAddressSpeedBumpModal', () => {
 
     expect(document.body).toMatchSnapshot()
     expect(screen.getByText('New address')).toBeInTheDocument()
+    expect(screen.queryByTestId('speedbump-identicon')).not.toBeInTheDocument()
   })
 })

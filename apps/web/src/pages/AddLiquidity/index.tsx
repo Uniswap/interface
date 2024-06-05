@@ -3,7 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
@@ -118,7 +118,7 @@ function AddLiquidity() {
   const theme = useTheme()
   const trace = useTrace()
 
-  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
+  const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
 
@@ -521,7 +521,7 @@ function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={accountDrawer.open} $borderRadius="12px" padding="12px">
           <Trans i18nKey="common.connectWallet.button" />
         </ButtonLight>
       </Trace>
@@ -677,6 +677,7 @@ function AddLiquidity() {
           <AddRemoveTabs
             creating={false}
             adding={true}
+            positionID={tokenId}
             autoSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
             showBackLink={!hasExistingPosition}
           >
