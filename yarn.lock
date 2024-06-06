@@ -14564,6 +14564,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wagmi/core@patch:@wagmi/core@npm%3A2.6.16#./.yarn/patches/@wagmi-core-npm-2.6.16-1baef7c190.patch::locator=universe%40workspace%3A.":
+  version: 2.6.16
+  resolution: "@wagmi/core@patch:@wagmi/core@npm%3A2.6.16#./.yarn/patches/@wagmi-core-npm-2.6.16-1baef7c190.patch::version=2.6.16&hash=a4dce9&locator=universe%40workspace%3A."
+  dependencies:
+    eventemitter3: 5.0.1
+    mipd: 0.0.5
+    zustand: 4.4.1
+  peerDependencies:
+    "@tanstack/query-core": ">=5.0.0"
+    typescript: ">=5.0.4"
+    viem: 2.x
+  peerDependenciesMeta:
+    "@tanstack/query-core":
+      optional: true
+    typescript:
+      optional: true
+  checksum: a3252d86a02c9c971ad9c8ba351ef01b14f960d76f73a45d2d7954d40bcdc9c38dcb6bbf6cb330f84c643a6e171c1dfbdfa58d077438fcadb9be7289c5386110
+  languageName: node
+  linkType: hard
+
 "@walletconnect/auth-client@npm:2.1.2":
   version: 2.1.2
   resolution: "@walletconnect/auth-client@npm:2.1.2"
