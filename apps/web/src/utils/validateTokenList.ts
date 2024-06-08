@@ -17,11 +17,11 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
   let validatorImport
   switch (schema) {
     case ValidationSchema.LIST:
-      validatorImport = await import('utils/__generated__/validateTokenList')
+      validatorImport = await import('utils/validateTokenList')
       break
-    case ValidationSchema.TOKENS:
-      validatorImport = await import('utils/__generated__/validateTokens')
-      break
+    // case ValidationSchema.TOKENS:
+    //   validatorImport = await import('utils/validateTokens')
+    //   break
     default:
       throw new Error('No validation function specified for token list schema')
   }
