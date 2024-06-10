@@ -6,7 +6,7 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 // import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
-import { Trans } from 'i18n'
+import { Trans, t } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
@@ -26,6 +26,8 @@ import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { More } from './More'
 // import { SearchBar } from './SearchBar'
+import { Moon, Sun } from 'react-feather'
+import { ThemeMode, useDarkModeManager } from 'theme/components/ThemeToggle'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
@@ -33,6 +35,35 @@ const Nav = styled.nav`
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
   z-index: ${Z_INDEX.sticky};
+`
+
+export const StyledMenuButton = styled.button`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+  background-color: ${({ theme }) => theme.bg3};
+  margin-left: 8px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.bg4};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+  > * {
+    stroke: ${({ theme }) => theme.text1};
+  }
 `
 
 interface MenuItemProps {
@@ -121,6 +152,15 @@ const Navbar = ({ blur }: { blur: boolean }) => {
     })
   }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
 
+  const [isDarkMode, setMode] = useDarkModeManager()
+  const toggleDarkMode = () => {
+    if (isDarkMode) {
+      setMode(ThemeMode.LIGHT)
+    } else {
+      setMode(ThemeMode.DARK)
+    }
+  }
+
   return (
     <>
       {blur && <Blur />}
@@ -168,6 +208,9 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
+              <StyledMenuButton aria-label={t('Toggle Dark Mode')} onClick={() => toggleDarkMode()}>
+                {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
+              </StyledMenuButton>
               {/* isLandingPage && <GetTheAppButton /> */}
               <Web3Status />
             </Row>

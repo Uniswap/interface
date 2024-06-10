@@ -7,7 +7,6 @@ import Column from 'components/Column'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { ImagesIcon } from 'components/Icons/Images'
 import { Power } from 'components/Icons/Power'
-import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -31,7 +30,7 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { ActionTile } from './ActionTile'
-import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
+import { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from './MiniPortfolio/hooks'
@@ -94,6 +93,7 @@ const PortfolioDrawerContainer = styled(Column)`
   flex: 1;
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
   const { ENSName } = useENSName(account)
@@ -161,7 +161,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
-  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+  const [, /*showDisconnectConfirm*/ setShowDisconnectConfirm] = useState(false)
 
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
@@ -171,12 +171,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <HeaderWrapper>
         <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} connection={connection} />
         <IconContainer>
-          <IconButton
+          {/*<IconButton
             hideHorizontal={showDisconnectConfirm}
             data-testid="wallet-settings"
             onClick={openSettings}
             Icon={Settings}
-          />
+          />*/}
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}

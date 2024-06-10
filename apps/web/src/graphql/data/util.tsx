@@ -256,12 +256,16 @@ export function getTokenDetailsURL({
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const rt = `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return ''
 }
 
 export function getPoolDetailsURL(address: string, chain: Chain) {
   const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const rt = `/explore/pools/${chainName}/${address}`
+  return ''
 }
 
 export function unwrapToken<
