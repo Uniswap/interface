@@ -143,7 +143,7 @@ export default function App() {
         },
         modes: {
           push: {
-            quantity: 4,
+            quantity: 3,
           },
           repulse: {
             distance: 50,
@@ -169,14 +169,14 @@ export default function App() {
             default: OutMode.out,
           },
           random: false,
-          speed: 1,
+          speed: 0.5,
           straight: false,
         },
         number: {
           density: {
             enable: true,
           },
-          value: 60,
+          value: 40,
         },
         opacity: {
           value: 0.5,
