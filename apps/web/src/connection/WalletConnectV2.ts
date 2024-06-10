@@ -30,10 +30,11 @@ export class WalletConnectV2 extends WalletConnect {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
         chains: [defaultChainId],
         metadata: {
-          name: 'Uniswap',
-          description: 'Uniswap Interface',
-          url: 'https://app.uniswap.org',
-          icons: ['https://app.uniswap.org/favicon.png'],
+          name: 'Ubeswap',
+          description:
+            'The interface for Ubeswap, a decentralized exchange and automated market maker protocol for Celo assets.',
+          url: 'https://app.ubeswap.org',
+          icons: ['https://app.ubeswap.org/favicon.png'],
         },
         optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,
