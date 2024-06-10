@@ -189,6 +189,10 @@ export function useUbeConvertContract() {
   return useContract<UbeConvert>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
 }
 
+export function usePactConvertContract() {
+  return useContract<UbeConvert>('0x8828b88F3e1C256D34D53e50Dc7E347881934bfd', UBE_CONVERT_ABI, true)
+}
+
 export function useUbeTokenContract() {
   return useContract<UbeToken>(UBE_ADDRESSES, UBE_TOKEN_ABI, true)
 }

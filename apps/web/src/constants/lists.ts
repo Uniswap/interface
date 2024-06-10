@@ -1,6 +1,7 @@
 export const UBE_LIST = 'https://unpkg.com/@ubeswap/default-token-list@latest/ubeswap.token-list.json'
 export const UBE_EXTENDED_LIST =
   'https://unpkg.com/@ubeswap/default-token-list@latest/ubeswap-experimental.token-list.json'
+const UBESWAP_EXTRA_LIST = 'https://raw.githubusercontent.com/Ubeswap/static/main/ube-extra-tokens.json'
 // const UNI_UNSUPPORTED_LIST = 'https://cloudflare-ipfs.com/ipns/unsupportedtokens.uniswap.org'
 // const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
@@ -34,6 +35,7 @@ export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST /*, UNI_UNSUPPORTED_LIST
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UBE_LIST]
 export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
   UBE_EXTENDED_LIST,
+  UBESWAP_EXTRA_LIST,
   // COMPOUND_LIST,
   // AAVE_LIST,
   // //  CMC_ALL_LIST,

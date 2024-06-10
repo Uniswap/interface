@@ -6,7 +6,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { formatEther } from '@ethersproject/units'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { useUbeConvertContract } from 'hooks/useContract'
+import { usePactConvertContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -51,7 +51,7 @@ const VoteCard = styled(DataCard)`
   margin-bottom: 20px;
 `
 
-const CONVERT_CONTRACT_ADDRESS = '0x9DFc135e0984Fe88aCd45d68e62a73E98Dbb7A36'
+const CONVERT_CONTRACT_ADDRESS = '0x8828b88F3e1C256D34D53e50Dc7E347881934bfd'
 
 export function useConvertCallback(): [
   boolean,
@@ -63,7 +63,7 @@ export function useConvertCallback(): [
   const pendingTxs = usePendingTransactions()
   const [isPending, setIsPending] = useState(false)
 
-  const convertContract = useUbeConvertContract()
+  const convertContract = usePactConvertContract()
 
   const approve = useCallback(
     async (amountToConvert: CurrencyAmount<Token>, maxOldUbeAmount: string, signature: string): Promise<void> => {
@@ -104,7 +104,7 @@ export function useConvertCallback(): [
               .then((response: TransactionResponse) => {
                 addTransaction(response, {
                   type: TransactionType.CUSTOM,
-                  summary: 'Convert to new UBE',
+                  summary: 'Convert to new PACT',
                 })
                 return response.wait(2)
               })
@@ -128,7 +128,7 @@ export function useConvertCallback(): [
   return [isPending, approve]
 }
 
-export default function ClaimNewUbeToken() {
+export default function ClaimNewPactToken() {
   const { account, chainId } = useWeb3React()
 
   const theme = useTheme()
@@ -137,8 +137,8 @@ export default function ClaimNewUbeToken() {
 
   const [typedValue, setTypedValue] = useState('')
 
-  const inputCurrency = useToken('0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC', ChainId.CELO)
-  const outputCurrency = useToken('0x71e26d0E519D14591b9dE9a0fE9513A398101490', ChainId.CELO)
+  const inputCurrency = useToken('0xC1542E54b34964b7fD0De0B252A8F9Ebd0F9c01e', ChainId.CELO)
+  const outputCurrency = useToken('0x0385F59A81D2fecfDb9722B0ee608722D7CEeA6E', ChainId.CELO)
   const currencies: { [field in Field]: Token | null | undefined } = useMemo(() => {
     return {
       [Field.INPUT]: inputCurrency,
@@ -153,7 +153,7 @@ export default function ClaimNewUbeToken() {
   } | null>(null)
   const [whitelistLoading, setWhitelistLoading] = useState(true)
   useEffect(() => {
-    fetch('https://raw.githubusercontent.com/Ubeswap/static/main/whitelist.json')
+    fetch('https://raw.githubusercontent.com/Ubeswap/static/main/pact-whitelist.json')
       .then((response) => response.json())
       .then((data) => {
         setWhitelistLoading(false)
@@ -176,7 +176,7 @@ export default function ClaimNewUbeToken() {
   }, [whitelistLoading, whitelist, account])
   const maxAllowedText = Number(formatEther(maxAllowed)).toFixed(1).replace(/\.0+$/, '')
 
-  const convertContract = useUbeConvertContract()
+  const convertContract = usePactConvertContract()
   const convertedAmount = useSingleCallResult(convertContract, 'accountToConvertedAmount', [account ?? AddressZero])
   const convertedAmountText = convertedAmount.result?.length
     ? Number(formatEther(convertedAmount.result?.[0])).toFixed(1).replace(/\.0+$/, '')
@@ -211,7 +211,7 @@ export default function ClaimNewUbeToken() {
       return 'Select a token'
     }
     if (inputBalance && parsedAmount && inputBalance.lessThan(parsedAmount)) {
-      return 'Insufficient old-UBE balance'
+      return 'Insufficient old-PACT balance'
     }
     if (whitelist) {
       const data = whitelist[account?.toLocaleLowerCase() || '']
@@ -327,25 +327,22 @@ export default function ClaimNewUbeToken() {
         <CardSection>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedWhite fontWeight={600}>New Tokenomics</ThemedText.DeprecatedWhite>
+              <ThemedText.DeprecatedWhite fontWeight={600}>PACT New Tokenomics</ThemedText.DeprecatedWhite>
             </RowBetween>
             <RowBetween>
               <ThemedText.DeprecatedWhite fontSize={14}>
-                Ubeswap has migrated to new token economics.
+                ImpactMarket has migrated to new token economics.
               </ThemedText.DeprecatedWhite>
             </RowBetween>
             <RowBetween>
-              <ThemedText.DeprecatedWhite fontSize={14}>
-                After 75% of the liquid tokens are swapped, 1 month will be provided for the remainder of the community
-                to swap. Any tokens not swapped after this period will be burned.
-              </ThemedText.DeprecatedWhite>
+              <ThemedText.DeprecatedWhite fontSize={14}>Tokens will be swapped, 1:1 ratio.</ThemedText.DeprecatedWhite>
             </RowBetween>
           </AutoColumn>
         </CardSection>
         <CardNoise />
       </VoteCard>
       <AppBody>
-        <SwapHeader title="Convert to new UBE" hideSettings={true} />
+        <SwapHeader title="Convert to new PACT" hideSettings={true} />
         <Wrapper id="swap-page">
           <AutoColumn gap="md">
             <CurrencyInputPanel
