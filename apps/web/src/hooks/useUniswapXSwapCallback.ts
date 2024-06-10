@@ -191,6 +191,7 @@ export function useUniswapXSwapCallback({
               tokenInChainId: updatedOrder.chainId,
               tokenOutChainId: updatedOrder.chainId,
               requestId: trade.requestId,
+              quoteId: trade.quoteId,
               forceOpenOrder: trade.forceOpenOrder,
             }
           } else {
