@@ -61,6 +61,7 @@ import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,
@@ -86,6 +87,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledState.outputCurrency)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
+  const [volatility, setVolatility] = useState<number>(10000);
 
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
@@ -434,6 +436,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         outputCurrency,
       })
       maybeLogFirstSwapAction(trace)
+      setVolatility(10050);
     },
     [onCurrencyChange, onCurrencySelection, currencyState, trace]
   )
@@ -692,9 +695,11 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               loading={routeIsLoading}
               allowedSlippage={allowedSlippage}
               priceImpact={largerPriceImpact}
+              volatility={volatility}
             />
           )}
           {isUsingBlockedExtension && <SwapNotice />}
+          {(volatility > 10000) && <VolatilityNotice/>}
         </div>
       </AutoColumn>
     </>
@@ -734,3 +739,29 @@ function SwapNotice() {
     </Row>
   )
 }
+
+
+export function VolatilityNotice() {
+    const theme = useTheme()
+    return (
+      <Row
+        align="flex-start"
+        gap="md"
+        backgroundColor={theme.surface2}
+        marginTop="12px"
+        borderRadius="12px"
+        padding="16px"
+      >
+        <Row width="auto" borderRadius="16px" backgroundColor={theme.critical2} padding="8px">
+          <AlertTriangleFilled />
+        </Row>
+  
+        <Column flex="10" gap="sm">
+          <ThemedText.SubHeader>Warning: Expected volatility</ThemedText.SubHeader>
+          <ThemedText.BodySecondary lineHeight="22px">
+            This pool is expected to experience high volatility over the next few minutes due to an anticipated macroeconomics event, incurring a proportionally higher swap fee. 
+          </ThemedText.BodySecondary>
+        </Column>
+      </Row>
+    )
+  }

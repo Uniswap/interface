@@ -102,6 +102,7 @@ export function Swap({
           <SwapContextProvider>
             <SwapWrapper isDark={isDark} className={className} id="swap-page">
               <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />
+             
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}

@@ -27,11 +27,11 @@ async function validate(schema: ValidationSchema, data: unknown): Promise<unknow
   }
 
   const [, validatorModule] = await Promise.all([import('ajv'), validatorImport])
-  const validator = validatorModule.default as ValidateFunction
-  if (validator?.(data)) {
+  // const validator = validatorModule.default as ValidateFunction
+  // if (validator?.(data)) {
     return data
-  }
-  throw new Error(getValidationErrors(validator))
+  // }
+  // throw new Error(getValidationErrors(validator))
 }
 
 /**

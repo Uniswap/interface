@@ -126,5 +126,8 @@
     "apps/*",
     "packages/*",
     "config/*"
-  ]
+  ],
+  "devDependencies": {
+    "jest-chrome": "0.8.0"
+  }
 }

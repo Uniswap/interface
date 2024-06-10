@@ -45,6 +45,7 @@ interface SwapDetailsProps {
   loading: boolean
   allowedSlippage: Percent
   priceImpact?: Percent
+  volatility?: number
 }
 
 export default function SwapDetailsDropdown(props: SwapDetailsProps) {
@@ -96,14 +97,13 @@ export default function SwapDetailsDropdown(props: SwapDetailsProps) {
 }
 
 function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
-  const { open, trade, allowedSlippage, syncing = false, priceImpact } = props
+  const { open, trade, allowedSlippage, syncing = false, priceImpact, volatility} = props
   const format = useFormatter()
 
   if (!trade) {
     return null
   }
-
-  const lineItemProps = { trade, allowedSlippage, format, syncing, priceImpact }
+  const lineItemProps = { trade, allowedSlippage, format, syncing, priceImpact, volatility}
 
   return (
     <AnimatedDropdown open={open}>

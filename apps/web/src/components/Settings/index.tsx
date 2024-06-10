@@ -109,12 +109,14 @@ export default function SettingsTab({
   trade,
   compact = false,
   hideRoutingSettings = false,
+  useHook
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
   compact?: boolean
   hideRoutingSettings?: boolean
+  useHook?: Function
 }) {
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
@@ -150,6 +152,7 @@ export default function SettingsTab({
             {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && <TransactionDeadlineSettings />}
+            {/* <HookSettings /> */}
           </ExpandColumn>
         </AnimatedDropdown>
         {multipleRoutingOptionsEnabled && (
@@ -190,3 +193,27 @@ export default function SettingsTab({
     </Menu>
   )
 }
+
+// function HookSettings() {
+
+//   return (
+//       <Row>
+//         <InputContainer gap="md" error={!!deadlineError}>
+//           <Input
+//             data-testid="deadline-input"
+//             placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
+//             value={deadlineInput}
+//             onChange={(e) => parseCustomDeadline(e.target.value)}
+//             onBlur={() => {
+//               // When the input field is blurred, reset the input field to the current deadline
+//               setDeadlineInput(defaultInputValue)
+//               setDeadlineError(false)
+//             }}
+//           />
+//           <ThemedText.BodyPrimary>
+//             <Trans i18nKey="common.time.minutes" />
+//           </ThemedText.BodyPrimary>
+//         </InputContainer>
+//       </Row>
+//   )
+// }

@@ -67,8 +67,11 @@ export function FOTTooltipContent() {
   )
 }
 
-function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
-  const message = hasFee ? <Trans i18nKey="swap.fees.experience" /> : <Trans i18nKey="swap.fees.noFee" />
+function SwapFeeTooltipContent({ hasFee, volatility }: { hasFee: boolean, volatility?: number }) {
+  const message = hasFee ? 
+  (volatility == 100 ? <Trans i18nKey="swap.fees.experience" /> : <div>Fee is proportional to expected volatility.</div>) : 
+  <Trans i18nKey="swap.fees.noFee" />
+  
   return (
     <>
       {message}{' '}
@@ -95,8 +98,12 @@ function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
   return <>{`${formattedAmount} ${amount.currency.symbol}`}</>
 }
 
-function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade }) {
+function FeeRow({ trade: { swapFee, outputAmount}, volatility }: { trade: SubmittableTrade, volatility: number }) {
   const { formatNumber } = useFormatter()
+  if (swapFee && volatility > 10000) {
+    swapFee.percent = new Percent(volatility - 10000, 10000);
+    swapFee.amount = String(Math.floor(Number(swapFee.amount) * volatility / 10000))
+  }
 
   const feeCurrencyAmount = CurrencyAmount.fromRawAmount(outputAmount.currency, swapFee?.amount ?? 0)
   const { data: outputFeeFiatValue } = useUSDPrice(feeCurrencyAmount, feeCurrencyAmount?.currency)
@@ -110,7 +117,7 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
 }
 
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
-  const { trade, syncing, allowedSlippage, type, priceImpact } = props
+  const { trade, syncing, allowedSlippage, type, priceImpact, volatility } = props
   const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
 
@@ -178,8 +185,8 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
             <Trans i18nKey="common.fee.caps" /> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
           </>
         ),
-        TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
-        Value: () => <FeeRow trade={trade} />,
+        TooltipBody: () => <SwapFeeTooltipContent volatility={volatility} hasFee={Boolean(trade.swapFee)} />,
+        Value: () => <FeeRow trade={trade} volatility={Number(volatility)} />,
       }
     }
     case SwapLineItemType.MAXIMUM_INPUT:
@@ -253,6 +260,7 @@ export interface SwapLineItemProps {
   type: SwapLineItemType
   animatedOpacity?: SpringValue<number>
   priceImpact?: Percent
+  volatility?: number
 }
 
 function SwapLineItem(props: SwapLineItemProps) {

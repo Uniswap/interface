@@ -18,7 +18,7 @@ const StyledSwapHeader = styled(RowBetween)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const HeaderButtonContainer = styled(RowFixed)<{ compact: boolean }>`
+const HeaderButtonContainer = styled(RowFixed) <{ compact: boolean }>`
   gap: ${({ compact }) => (compact ? 0 : 16)}px;
 
   ${SwapHeaderTabButton} {
@@ -92,7 +92,13 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>
-          <SettingsTab autoSlippage={autoSlippage} chainId={chainId} compact={compact} trade={trade.trade} />
+          <SettingsTab 
+          autoSlippage={autoSlippage} 
+          chainId={chainId} 
+          compact={compact} 
+          trade={trade.trade} 
+          // useHook={unicast} 
+          />
         </RowFixed>
       )}
     </StyledSwapHeader>
