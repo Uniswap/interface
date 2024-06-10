@@ -97,7 +97,7 @@ export const useDoTransaction = (): DoTransactionFn => {
         }
         addTransaction(response, {
           type: TransactionType.CUSTOM,
-          summary: 'Convert to new UBE',
+          summary: args.summary || 'Transaction',
         })
         return response
       } catch (error: any) {

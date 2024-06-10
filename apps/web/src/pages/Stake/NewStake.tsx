@@ -118,6 +118,9 @@ export const NewStake: React.FC = () => {
 
   const _rewardRate = useSingleCallResult(contract, 'rewardRate', []).result?.[0] ?? 0
   const rewardRate = ube ? CurrencyAmount.fromRawAmount(ube, _rewardRate) : undefined
+  console.log('rewardRate', rewardRate?.toFixed(18))
+  console.log('stakeBalance', stakeBalance?.toFixed(18))
+  console.log('totalSupply', totalSupply?.toFixed(18))
 
   const apy =
     rewardRate && totalSupply && totalSupply.greaterThan('0')
@@ -125,7 +128,11 @@ export const NewStake: React.FC = () => {
       : undefined
   const userRewardRate =
     rewardRate && stakeBalance && totalSupply && totalSupply?.greaterThan('0')
-      ? stakeBalance.asFraction.multiply(rewardRate.asFraction).divide(totalSupply.asFraction)
+      ? JSBI.divide(JSBI.multiply(stakeBalance.quotient, rewardRate.quotient), totalSupply.quotient)
+      : undefined
+  const userWeeklyRewards =
+    userRewardRate && ube
+      ? CurrencyAmount.fromRawAmount(ube, JSBI.multiply(userRewardRate, BIG_INT_SECONDS_IN_WEEK))
       : undefined
 
   const { tokenDelegate, quorumVotes, proposalThreshold } = useRomulus()
@@ -142,7 +149,7 @@ export const NewStake: React.FC = () => {
     }
     const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, signer)
     return await doTransaction(c, 'stake', {
-      args: [tokenAmount.toExact()],
+      args: [tokenAmount.quotient.toString()],
       summary: `Stake ${amount} UBE`,
     })
   }, [doTransaction, amount, signer, tokenAmount])
@@ -155,7 +162,7 @@ export const NewStake: React.FC = () => {
       return
     }
     return await doTransaction(c, 'withdraw', {
-      args: [tokenAmount.toExact()],
+      args: [tokenAmount.quotient.toString()],
       summary: `Unstake ${amount} UBE`,
     })
   }, [doTransaction, amount, signer, tokenAmount])
@@ -259,7 +266,7 @@ export const NewStake: React.FC = () => {
                 walletBalance={ubeBalance}
               />
             </div>
-            {userRewardRate?.greaterThan('0') && (
+            {userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0)) && (
               <InformationWrapper style={{ margin: '0px 8px 0px 8px' }}>
                 <Text fontWeight={500} fontSize={16}>
                   {t('Unclaimed Rewards')}
@@ -278,11 +285,11 @@ export const NewStake: React.FC = () => {
           </Wrapper>
         </BodyWrapper>
 
-        {!userRewardRate?.greaterThan('0') && (
+        {!(userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0))) && (
           <Text fontSize={20} fontWeight={500}>
             {t('Weekly Rewards') + ' '}
-            {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(0, { groupSeparator: ',' }) : '--'} UBE /
-            week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
+            {userWeeklyRewards ? userWeeklyRewards.toFixed(0, { groupSeparator: ',' }) : '--'} UBE / week (
+            {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
           </Text>
         )}
 
@@ -417,7 +424,7 @@ export const NewStake: React.FC = () => {
             />
           </Text>
         </StakeCollapseCard>
-        {userRewardRate?.greaterThan('0') && (
+        {userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0)) && (
           <StakeCollapseCard title={t('Staking Statistics')} gap="16px">
             <InformationWrapper>
               <Text>{t('Total UBE Staked')}</Text>
@@ -430,9 +437,7 @@ export const NewStake: React.FC = () => {
             <InformationWrapper>
               <Text>{t('Your Weekly Rewards')}</Text>
               <Text>
-                {userRewardRate
-                  ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(4, { groupSeparator: ',' })
-                  : '--'}
+                {userWeeklyRewards ? userWeeklyRewards.toFixed(4, { groupSeparator: ',' }) : '--'}
                 {'  '}
               </Text>
             </InformationWrapper>

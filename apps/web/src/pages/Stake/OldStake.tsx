@@ -78,7 +78,7 @@ export const OldStake: React.FC = () => {
     }
     const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, signer)
     return await doTransaction(c, 'stake', {
-      args: [tokenAmount.toExact()],
+      args: [tokenAmount.quotient.toString()],
       summary: `Stake ${amount} old-UBE`,
     })
   }, [doTransaction, amount, signer, tokenAmount])
@@ -91,7 +91,7 @@ export const OldStake: React.FC = () => {
       return
     }
     return await doTransaction(c, 'withdraw', {
-      args: [tokenAmount.toExact()],
+      args: [tokenAmount.quotient.toString()],
       summary: `Unstake ${amount} old-UBE`,
     })
   }, [doTransaction, amount, signer, tokenAmount])
