@@ -1,8 +1,8 @@
-import { AutoColumn } from 'components/Column'
-import { RowBetween } from 'components/Row'
-import { CardNoise, CardSection, DataCard } from 'components/earn/styled'
+import { AutoColumn } from 'components-old/Column'
+import { RowBetween } from 'components-old/Row'
+import { CardNoise, CardSection, DataCard } from 'components-old/earn/styled'
+import { t } from 'i18n'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ButtonRadio } from '../../components-old/Button'
@@ -21,7 +21,6 @@ const StyledButtonRadio = styled(ButtonRadio)({
 })
 
 export const StakePage: React.FC = () => {
-  const { t } = useTranslation()
   const [newStake, setNewStake] = useState(true)
 
   return (
@@ -32,11 +31,11 @@ export const StakePage: React.FC = () => {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <ThemedText.DeprecatedWhite fontWeight={600}>{t('UBEStakingAndGovernance')}</ThemedText.DeprecatedWhite>
+                <ThemedText.DeprecatedWhite fontWeight={600}>{t`UBE Staking & Governance`}</ThemedText.DeprecatedWhite>
               </RowBetween>
               <RowBetween>
                 <ThemedText.DeprecatedWhite fontSize={14}>
-                  {t('StakeUBEToParticipateInGovernanceAndEarnUbeRewards')}
+                  {t`Stake UBE to participate in governance and earn UBE rewards`}
                 </ThemedText.DeprecatedWhite>
               </RowBetween>
             </AutoColumn>

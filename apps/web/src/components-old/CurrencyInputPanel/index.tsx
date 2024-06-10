@@ -3,7 +3,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 // import { useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { t } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
@@ -143,8 +143,6 @@ export default function CurrencyInputPanel({
   balanceOverride,
   disabled = false,
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
-
   // const [modalOpen, setModalOpen] = useState(false)
   const { account } = useWeb3React()
 
@@ -187,7 +185,7 @@ export default function CurrencyInputPanel({
                         ? currency.symbol.slice(0, 4) +
                           '...' +
                           currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                        : currency?.symbol) || t('selectToken')}
+                        : currency?.symbol) || t`Select a token`}
                     </StyledTokenName>
                   )}
                   {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}

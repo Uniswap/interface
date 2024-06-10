@@ -1,7 +1,7 @@
 import { Currency, Token } from '@ubeswap/sdk-core'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { t } from 'i18n'
 import { useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { List } from 'ui/src/components/icons'
 import CurrencyLogo from '../CurrencyLogo'
@@ -54,7 +54,6 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `
 
 export default function TokenSelect(props: Props) {
-  const { t } = useTranslation()
   const [modalOpen, setModalOpen] = useState(false)
 
   const handleDismissSearch = useCallback(() => {
@@ -80,7 +79,7 @@ export default function TokenSelect(props: Props) {
             ) : (
               <>
                 <StyledList size={16} />
-                <StyledTokenName>{t('Token')}</StyledTokenName>
+                <StyledTokenName>{t`Token`}</StyledTokenName>
               </>
             )}
           </Aligner>

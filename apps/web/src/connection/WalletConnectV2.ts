@@ -75,7 +75,7 @@ export class UniwalletConnect extends WalletConnectV2 {
 
   constructor({ actions, onError }: Omit<WalletConnectConstructorArgs, 'options'>) {
     // disables walletconnect's proprietary qr code modal; instead UniwalletModal will listen for events to trigger our custom modal
-    super({ actions, defaultChainId: ChainId.MAINNET, qrcode: false, onError })
+    super({ actions, defaultChainId: ChainId.CELO, qrcode: false, onError })
 
     this.events.once(URI_AVAILABLE, () => {
       this.provider?.events.on('disconnect', this.deactivate)

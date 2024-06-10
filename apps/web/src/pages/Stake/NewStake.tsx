@@ -1,16 +1,16 @@
-import { CurrencyAmount } from '@ubeswap/sdk-core'
+import { CurrencyAmount, Fraction } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { UBE } from 'constants/tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useContract } from 'hooks/useContract'
+import { t } from 'i18n'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BodyWrapper } from 'pages/AppBody'
 import React, { useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
@@ -40,7 +40,7 @@ import { useVotingTokens } from './hooks/romulus/useVotingTokens'
 import { useDoTransaction } from './hooks/useDoTransaction'
 
 const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
-const BIG_INT_SECONDS_IN_YEAR = JSBI.BigInt(60 * 60 * 24 * 365)
+const BIG_INT_SECONDS_IN_YEAR = new Fraction(JSBI.BigInt(60 * 60 * 24 * 365))
 
 enum DelegateIdx {
   ABSTAIN,
@@ -65,8 +65,6 @@ const Wrapper = styled.div({
 })
 
 export const NewStake: React.FC = () => {
-  const { t } = useTranslation()
-
   const navigate = useNavigate()
   const { account, chainId, provider } = useWeb3React()
   const ube = chainId ? UBE[chainId] : undefined
@@ -123,11 +121,11 @@ export const NewStake: React.FC = () => {
 
   const apy =
     rewardRate && totalSupply && totalSupply.greaterThan('0')
-      ? rewardRate.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply)
+      ? rewardRate.asFraction.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply.asFraction)
       : undefined
   const userRewardRate =
     rewardRate && stakeBalance && totalSupply && totalSupply?.greaterThan('0')
-      ? stakeBalance.multiply(rewardRate).divide(totalSupply)
+      ? stakeBalance.asFraction.multiply(rewardRate.asFraction).divide(totalSupply.asFraction)
       : undefined
 
   const { tokenDelegate, quorumVotes, proposalThreshold } = useRomulus()
@@ -136,7 +134,7 @@ export const NewStake: React.FC = () => {
   const totalVotingPower = votingPower && releaseVotingPower ? votingPower.add(releaseVotingPower) : undefined
 
   // const disablePropose = !totalVotingPower || !proposalThreshold || totalVotingPower?.lessThan(proposalThreshold?.raw)
-  const disablePropose = false
+  const disablePropose = true
 
   const onStakeClick = useCallback(async () => {
     if (!signer || !tokenAmount) {
@@ -185,7 +183,7 @@ export const NewStake: React.FC = () => {
     [doTransaction, signer, userDelegateIdx]
   )
 
-  let button = <ButtonLight onClick={() => toggleAccountDrawer()}></ButtonLight>
+  let button = <ButtonLight onClick={() => toggleAccountDrawer()}>{t('Connect Wallet')}</ButtonLight>
   if (account) {
     if (staking) {
       if (approvalState !== ApprovalState.APPROVED) {
@@ -200,21 +198,21 @@ export const NewStake: React.FC = () => {
                 Approving <Loader stroke="white" />
               </AutoRow>
             ) : (
-              `${t('approve')} UBE`
+              `${t('Approve')} UBE`
             )}
           </ButtonPrimary>
         )
       } else {
         button = (
           <ButtonPrimary onClick={onStakeClick} disabled={isNaN(Number(amount)) || Number(amount) <= 0}>
-            {t('stake')}
+            {t('Stake')}
           </ButtonPrimary>
         )
       }
     } else {
       button = (
         <ButtonPrimary onClick={onUnstakeClick} disabled={isNaN(Number(amount)) || Number(amount) <= 0}>
-          {t('unstake')}
+          {t('Unstake')}
         </ButtonPrimary>
       )
     }
@@ -233,12 +231,12 @@ export const NewStake: React.FC = () => {
           <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: '100px' }}>
               <StyledButtonRadio active={staking} onClick={() => setStaking(true)}>
-                {t('stake')}
+                {t('Stake')}
               </StyledButtonRadio>
             </div>
             <div style={{ width: '100px' }}>
               <StyledButtonRadio active={!staking} onClick={() => setStaking(false)}>
-                {t('unstake')}
+                {t('Unstake')}
               </StyledButtonRadio>
             </div>
           </div>
@@ -264,11 +262,11 @@ export const NewStake: React.FC = () => {
             {userRewardRate?.greaterThan('0') && (
               <InformationWrapper style={{ margin: '0px 8px 0px 8px' }}>
                 <Text fontWeight={500} fontSize={16}>
-                  {t('UnclaimedRewards')}
+                  {t('Unclaimed Rewards')}
                 </Text>
                 <div style={{ display: 'flex' }}>
                   <ButtonEmpty padding="0 8px" borderRadius="8px" width="fit-content" onClick={onClaimClick}>
-                    {t('claim')}
+                    {t('Claim')}
                   </ButtonEmpty>
                   <Text fontWeight={500} fontSize={16}>
                     {userRewardRate && earned ? earned.toFixed(4, { groupSeparator: ',' }) : '--'}
@@ -282,7 +280,7 @@ export const NewStake: React.FC = () => {
 
         {!userRewardRate?.greaterThan('0') && (
           <Text fontSize={20} fontWeight={500}>
-            {t('WeeklyRewards') + ' '}
+            {t('Weekly Rewards') + ' '}
             {rewardRate ? rewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(0, { groupSeparator: ',' }) : '--'} UBE /
             week ({apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
           </Text>
@@ -330,10 +328,12 @@ export const NewStake: React.FC = () => {
         </StakeCollapseCard>
 
         <StakeCollapseCard title={t('Governance')} gap="12px">
-          <Text fontSize={14}>{t('CreateAndViewProposalsDelegateVotesAndParticipateInProtocolGovernance')}</Text>
+          <Text fontSize={14}>
+            {t('Create and view proposals, delegate votes, and participate in protocol governance')}
+          </Text>
           <InformationWrapper>
             <Text fontWeight={500} fontSize={16} marginTop={12}>
-              {t('UserDetails')}
+              {t('User Details')}
             </Text>
             <ButtonPrimary
               padding="6px"
@@ -350,15 +350,15 @@ export const NewStake: React.FC = () => {
             </ButtonPrimary>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
-            <Text>{t('TokenBalance')}</Text>
+            <Text>{t('Token Balance')}</Text>
             <Text>{ubeBalance ? `${ubeBalance?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'} </Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
-            <Text>{t('VotingPower')}</Text>
+            <Text>{t('Voting Power')}</Text>
             <Text>{totalVotingPower ? totalVotingPower?.toFixed(2, { groupSeparator: ',' }) : '-'}</Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
-            <Text>{t('TokenDelegate')}</Text>
+            <Text>{t('Token Delegate')}</Text>
             <div style={{ display: 'flex' }}>
               {tokenDelegate ? (
                 <>
@@ -371,7 +371,7 @@ export const NewStake: React.FC = () => {
                     }}
                     style={{ lineHeight: '15px' }}
                   >
-                    {t('change')}
+                    {t('Change')}
                   </ButtonEmpty>
                   <Text>{shortenAddress(tokenDelegate)}</Text>
                 </>
@@ -385,14 +385,14 @@ export const NewStake: React.FC = () => {
             <Text>{quorumVotes ? `${quorumVotes?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
-            <Text>{t('ProposalThreshold')}</Text>
+            <Text>{t('Proposal Threshold')}</Text>
             <Text>{proposalThreshold ? `${proposalThreshold?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
           </InformationWrapper>
 
           {stakeBalance?.greaterThan('0') && (
             <>
               <Text fontWeight={500} fontSize={16} marginTop={12}>
-                {t('YourGovernanceSelection')}
+                {t('Your governance selection')}
               </Text>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <StyledButtonRadio active={userDelegateIdx === 1} onClick={() => changeDelegateIdx(1)}>
@@ -408,7 +408,7 @@ export const NewStake: React.FC = () => {
             </>
           )}
           <Text fontWeight={500} fontSize={16} marginTop={12}>
-            {t('GovernanceProposals')}
+            {t('Governance Proposals')}
             <Proposals
               onClickProposal={(url: any) => {
                 setSelectedProposal(url)
@@ -418,17 +418,17 @@ export const NewStake: React.FC = () => {
           </Text>
         </StakeCollapseCard>
         {userRewardRate?.greaterThan('0') && (
-          <StakeCollapseCard title={t('StakingStatistics')} gap="16px">
+          <StakeCollapseCard title={t('Staking Statistics')} gap="16px">
             <InformationWrapper>
-              <Text>{t('TotalUBEStaked')}</Text>
+              <Text>{t('Total UBE Staked')}</Text>
               <Text>{Number(totalSupply?.toSignificant(4)).toLocaleString('en-US')}</Text>
             </InformationWrapper>
             <InformationWrapper>
-              <Text>{t('YourUBEStakePoolShare')}</Text>
+              <Text>{t('Your UBE Stake Pool Share')}</Text>
               <Text>{stakeBalance?.toSignificant(4)}</Text>
             </InformationWrapper>
             <InformationWrapper>
-              <Text>{t('YourWeeklyRewards')}</Text>
+              <Text>{t('Your Weekly Rewards')}</Text>
               <Text>
                 {userRewardRate
                   ? userRewardRate.multiply(BIG_INT_SECONDS_IN_WEEK).toFixed(4, { groupSeparator: ',' })
@@ -437,7 +437,7 @@ export const NewStake: React.FC = () => {
               </Text>
             </InformationWrapper>
             <InformationWrapper>
-              <Text>{t('AnnualStakeAPR')}</Text>
+              <Text>{t('Annual Stake APR')}</Text>
               <Text>{apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% </Text>
             </InformationWrapper>
             <ExternalLink
@@ -446,7 +446,7 @@ export const NewStake: React.FC = () => {
               href="https://explorer.celo.org/address/0x71e26d0E519D14591b9dE9a0fE9513A398101490/transactions"
             >
               <Text fontSize={14} fontWeight={600}>
-                {t('ViewUBEContract')}
+                {t('View UBE Contract')}
               </Text>
             </ExternalLink>
             <ExternalLink
@@ -455,7 +455,7 @@ export const NewStake: React.FC = () => {
               href="https://info.ubeswap.org/token/0x71e26d0E519D14591b9dE9a0fE9513A398101490"
             >
               <Text fontSize={14} fontWeight={600}>
-                {t('ViewUBEChart')}
+                {t('View UBE Chart')}
               </Text>
             </ExternalLink>
           </StakeCollapseCard>

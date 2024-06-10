@@ -225,13 +225,16 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
 
   useEffect(() => {
     return () => {
-      mountedRef.current = false
+      if (latestBlockNumber) {
+        mountedRef.current = false
+      }
     }
-  }, [])
+  }, [latestBlockNumber])
 
   const statusSymbol = useRef<JSX.Element>(<XCircle size={20} color="#909090" />)
   useEffect(() => {
-    if (!mountedRef.current || !latestBlockNumber) {
+    // if (!mountedRef.current || !latestBlockNumber) {
+    if (!latestBlockNumber) {
       return
     }
     const secondsTilStart = (latestBlockNumber - Number(proposalEvent.args.startBlock.toString())) * SECONDS_PER_BLOCK

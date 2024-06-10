@@ -1,7 +1,7 @@
 import { useUbeTokenContract } from 'hooks/useContract'
+import { t } from 'i18n'
 import { useDoTransaction } from 'pages/Stake/hooks/useDoTransaction'
 import { RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { isAddress } from 'utilities/src/addresses'
@@ -26,8 +26,6 @@ interface ChangeDelegateModalProps {
 }
 
 export default function ChangeDelegateModal({ isOpen, onDismiss }: ChangeDelegateModalProps) {
-  const { t } = useTranslation()
-
   const inputRef = useRef<HTMLInputElement>()
   const [delegateAddress, setDelegateAddress] = useState<string>('')
   const [error, setError] = useState<string | undefined>('ChangeDelegate')
@@ -42,17 +40,17 @@ export default function ChangeDelegateModal({ isOpen, onDismiss }: ChangeDelegat
 
   useEffect(() => {
     if (delegateAddress.length === 0) {
-      setError(t('ChangeDelegate'))
+      setError(t`Change Delegate`)
     } else if (isAddress(delegateAddress)) {
       setError(undefined)
     } else {
       if (delegateAddress.length > 0) {
-        setError(t('EnterValidDelegateAddress'))
+        setError(t`Enter Valid Delegate Address`)
       } else {
         setError(undefined)
       }
     }
-  }, [delegateAddress, t])
+  }, [delegateAddress])
 
   const onConfirm = useCallback(async () => {
     if (c) {
@@ -71,7 +69,7 @@ export default function ChangeDelegateModal({ isOpen, onDismiss }: ChangeDelegat
         <AutoColumn gap="12px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
-              {t('ChangeDelegate')}
+              {t`Change Delegate`}
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
@@ -79,7 +77,7 @@ export default function ChangeDelegateModal({ isOpen, onDismiss }: ChangeDelegat
             <SearchInput
               type="text"
               id="delegate-input"
-              placeholder={t('EnterDelegateAddress')}
+              placeholder={t`Enter Delegate Address`}
               autoComplete="off"
               value={delegateAddress}
               ref={inputRef as RefObject<HTMLInputElement>}
@@ -88,7 +86,7 @@ export default function ChangeDelegateModal({ isOpen, onDismiss }: ChangeDelegat
           </Row>
         </AutoColumn>
         <ButtonError disabled={!!error} onClick={onConfirm}>
-          {error ? error : t('ChangeDelegate')}
+          {error ? error : t`Change Delegate`}
         </ButtonError>
       </ContentWrapper>
     </Modal>

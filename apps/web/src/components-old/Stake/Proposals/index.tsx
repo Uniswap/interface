@@ -1,6 +1,6 @@
+import { t } from 'i18n'
 import { useProposals } from 'pages/Stake/hooks/romulus/useProposals'
 import React, { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Box } from 'rebass'
 import { ButtonPrimary } from '../../Button'
 import Loader from '../../Loader'
@@ -13,7 +13,6 @@ interface ProposalProps {
 }
 
 export const Proposals: React.FC<ProposalProps> = ({ onClickProposal }: ProposalProps) => {
-  const { t } = useTranslation()
   const [showMore, setShowMore] = useState<boolean>(false)
   const proposals = useProposals()
   const visibleProposals = useMemo(
@@ -40,7 +39,7 @@ export const Proposals: React.FC<ProposalProps> = ({ onClickProposal }: Proposal
             </Box>
           ))}
           <ButtonPrimary padding="6px" borderRadius="12px" fontSize={14} mt={3} onClick={() => setShowMore(!showMore)}>
-            {showMore ? t('showLess') : t('showMore')}
+            {showMore ? t`Show Less` : t`Show More`}
           </ButtonPrimary>
         </>
       ) : (

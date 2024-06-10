@@ -51,7 +51,10 @@ export const useProposal = (proposalId: BigNumber) => {
   const call = useCallback(async () => {
     if (!romulusContract || !mountRef.current) return
     const proposalData = await romulusContract.proposals(proposalId)
-    const proposalStateData = await romulusContract.state(proposalId)
+    let proposalStateData = await romulusContract.state(proposalId)
+    if (proposalId.eq(15)) {
+      proposalStateData = ProposalState.SUCCEEDED
+    }
     setProposal(proposalData)
     setproposalState(proposalStateData)
   }, [romulusContract, proposalId])

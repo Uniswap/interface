@@ -1,6 +1,6 @@
+import { t } from 'i18n'
 import { useProposals } from 'pages/Stake/hooks/romulus/useProposals'
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Box, Card, Text } from 'rebass'
 import styled from 'styled-components'
 import Loader from '../Loader'
@@ -47,7 +47,6 @@ export const ViewProposalModal: React.FC<ViewProposalModalProps> = ({
   onDismiss,
   proposalId,
 }: ViewProposalModalProps) => {
-  const { t } = useTranslation()
   const [proposal, setProposal] = useState<any>(undefined)
   const proposals = useProposals()
 
@@ -74,7 +73,7 @@ export const ViewProposalModal: React.FC<ViewProposalModalProps> = ({
           <DetailsContainer>
             <DetailsHeaderContainer>
               <Text fontWeight={600} fontSize={16}>
-                {t('Details')}
+                {t`Details`}
               </Text>
             </DetailsHeaderContainer>
 

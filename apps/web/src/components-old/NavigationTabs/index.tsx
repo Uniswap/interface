@@ -1,6 +1,6 @@
+import { t } from 'i18n'
 import { darken } from 'polished'
 import { ArrowLeft } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import { Link as HistoryLink, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
@@ -60,28 +60,26 @@ const AbsoluteHistoryLink = styled(HistoryLink)`
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' | 'send' }) {
-  const { t } = useTranslation()
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none' }}>
       <StyledNavLink id="swap-nav-link" to="/swap">
-        {t('swap')}
+        {t`Swap`}
       </StyledNavLink>
       <StyledNavLink id="pool-nav-link" to="/pool">
-        {t('pool')}
+        {t`Pool`}
       </StyledNavLink>
     </Tabs>
   )
 }
 
 export function FindPoolTabs() {
-  const { t } = useTranslation()
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <HistoryLink to="/pool">
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText>{t('ImportPool')}</ActiveText>
+        <ActiveText>{t`Import Pool`}</ActiveText>
         {/* <Settings /> */}
       </RowBetween>
     </Tabs>
