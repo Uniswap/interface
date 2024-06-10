@@ -10,13 +10,14 @@ import { useUbeConvertContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
+import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import styled, { useTheme } from 'styled-components'
 
 // import { AlertCircle } from 'ui/src/components/icons'
 
-import { ButtonConfirmed, ButtonError, ButtonLight } from '../../components-old/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonSecondary } from '../../components-old/Button'
 import Card from '../../components-old/Card'
 import Column, { AutoColumn } from '../../components-old/Column'
 import CurrencyInputPanel from '../../components-old/CurrencyInputPanel'
@@ -450,6 +451,17 @@ export default function ClaimNewUbeToken() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
+
+      <AutoColumn gap="lg" justify="center" style={{ width: '100%', maxWidth: '420px', marginTop: '30px' }}>
+        <AutoColumn gap="lg" style={{ width: '100%' }}>
+          <ButtonSecondary>
+            <RowBetween>
+              <Link to="/claim-new-pact">Go to Convert PACT page</Link>
+              <span> ↗</span>
+            </RowBetween>
+          </ButtonSecondary>
+        </AutoColumn>
+      </AutoColumn>
 
       {/*<Dialog
         isVisible={true}
