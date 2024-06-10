@@ -1,0 +1,7 @@
+query FeeTierDistribution($chain: Chain!, $token0: String!, $token1: String!) {
+  v3PoolsForTokenPair(chain: $chain, token0: $token0, token1: $token1) {
+    feeTier
+    token0Supply
+    token1Supply
+  }
+}

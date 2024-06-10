@@ -798,7 +798,6 @@
   "privacy.anonymizedLogs": "The app logs anonymized usage statistics in order to improve over time.",
   "privacy.autoRouter": "The app fetches the optimal trade route from a Uniswap Labs server.",
   "privacy.infura": "The app fetches on-chain data and constructs contract calls with an Infura API.",
-  "privacy.theGraph": "The app fetches blockchain data from The Graph’s hosted service.",
   "privacy.thirdPartyApis": "This app uses the following third-party APIs:",
   "privacy.trm": "The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance reasons.",
   "privacy.uniswaptos": "Uniswap Labs’ Terms of Service",

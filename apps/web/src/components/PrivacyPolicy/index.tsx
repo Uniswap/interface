@@ -71,10 +71,6 @@ const EXTERNAL_APIS = [
     name: 'Google Analytics & Amplitude',
     description: <Trans i18nKey="privacy.anonymizedLogs" />,
   },
-  {
-    name: 'The Graph',
-    description: <Trans i18nKey="privacy.theGraph" />,
-  },
 ]
 
 export function PrivacyPolicyModal() {

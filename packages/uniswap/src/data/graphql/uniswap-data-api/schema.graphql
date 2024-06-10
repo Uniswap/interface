@@ -880,12 +880,14 @@ type PushNotification {
 }
 
 type Query {
+  isV3SubgraphStale(chain: Chain!): Boolean
   historicalProtocolVolume(chain: Chain!, version: ProtocolVersion!, duration: HistoryDuration!): [TimestampedAmount!]
   dailyProtocolTvl(chain: Chain!, version: ProtocolVersion!): [TimestampedAmount!]
 
   """  returns top v3 pools sorted by total value locked in desc order"""
   topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
   v3Pool(chain: Chain!, address: String!): V3Pool
+  v3PoolsForTokenPair(chain: Chain!, token0: String!, token1: String!): [V3Pool!]
   v3Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
 
   """  returns top v2 pairs sorted by total value locked in desc order"""
@@ -1296,7 +1298,7 @@ type V3Pool implements IPool {
   historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
   priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
   transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
-  ticks(first: Int!, tickIdxCursor: Int): [V3PoolTick]
+  ticks(skip: Int, first: Int): [V3PoolTick]
 }
 
 type V3PoolTick {
@@ -1304,5 +1306,7 @@ type V3PoolTick {
   tickIdx: Int
   liquidityGross: String
   liquidityNet: String
+  price0: String
+  price1: String
 }
 

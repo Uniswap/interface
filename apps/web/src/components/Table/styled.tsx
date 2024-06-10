@@ -8,7 +8,6 @@ import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
-import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { Trans } from 'i18n'
@@ -164,7 +163,7 @@ export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
   gap: 4px;
   ${ClickableStyle}
 `
-export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection | TheGraphOrderDirection }>`
+export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection }>`
   height: 16px;
   width: 16px;
   color: ${({ theme }) => theme.neutral1};

@@ -13635,7 +13635,6 @@ __metadata:
     fancy-canvas: 2.1.0
     focus-visible: 5.2.0
     framer-motion: 10.17.6
-    get-graphql-schema: ^2.1.2
     graphql: 16.6.0
     hardhat: 2.14.0
     husky: ^8.0.3

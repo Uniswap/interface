@@ -972,12 +972,6 @@ export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: SupportedInterfaceCh
     .map(([key, value]) => [value.infuraPrefix, parseInt(key) as SupportedInterfaceChainId])
 )
 
-export const CHAIN_SUBGRAPH_URL = Object.fromEntries(
-  Object.entries(CHAIN_INFO)
-    .filter(([, value]) => !!value.subgraphUrl)
-    .map(([key, value]) => [parseInt(key) as SupportedInterfaceChainId, value.subgraphUrl])
-) as Record<SupportedInterfaceChainId, string>
-
 /**
  * Get the priority of a chainId based on its relevance to the user.
  * @param {ChainId} chainId - The chainId to determine the priority for.

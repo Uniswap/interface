@@ -3,7 +3,7 @@ import { tickToPrice } from '@uniswap/v3-sdk'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
-import { Ticks } from '../graphql/thegraph/AllV3TicksQuery'
+import { Ticks } from '../graphql/data/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -23,12 +23,12 @@ export default function computeSurroundingTicks(
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
   for (let i = pivot + (ascending ? 1 : -1); ascending ? i < sortedTickData.length : i >= 0; ascending ? i++ : i--) {
-    const tick = Number(sortedTickData[i].tick)
+    const tick = Number(sortedTickData[i]?.tick)
     const sdkPrice = tickToPrice(token0, token1, tick)
     const currentTickProcessed: TickProcessed = {
       liquidityActive: previousTickProcessed.liquidityActive,
       tick,
-      liquidityNet: JSBI.BigInt(sortedTickData[i].liquidityNet),
+      liquidityNet: JSBI.BigInt(sortedTickData[i]?.liquidityNet ?? ''),
       price0: sdkPrice.toFixed(PRICE_FIXED_DIGITS),
       sdkPrice,
     }
@@ -40,7 +40,7 @@ export default function computeSurroundingTicks(
     if (ascending) {
       currentTickProcessed.liquidityActive = JSBI.add(
         previousTickProcessed.liquidityActive,
-        JSBI.BigInt(sortedTickData[i].liquidityNet)
+        JSBI.BigInt(sortedTickData[i]?.liquidityNet ?? 0)
       )
     } else if (!ascending && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
       // We are iterating descending, so look at the previous tick and apply any net liquidity.

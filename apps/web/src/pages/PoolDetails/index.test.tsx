@@ -95,7 +95,7 @@ describe('PoolDetailsPage', () => {
     })
   })
 
-  it('not found page displayed when no data is received from thegraph', () => {
+  it('not found page displayed when no data is received from backend', () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,
       loading: false,
