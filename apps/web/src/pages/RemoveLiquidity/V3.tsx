@@ -24,6 +24,7 @@ import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
@@ -33,6 +34,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
@@ -41,7 +43,6 @@ import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
@@ -180,7 +181,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       })
       .catch((error) => {
         setAttemptingTxn(false)
-        console.error(error)
+        logger.error(error, {
+          tags: {
+            file: 'RemoveLiquidity/V3',
+            function: 'burn',
+          },
+        })
       })
   }, [
     positionManager,
@@ -350,13 +356,13 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="25" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '25' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="50" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '50' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
-                        <Trans i18nKey="common.percentage" pct="75" />
+                        <Trans i18nKey="common.percentage" values={{ pct: '75' }} />
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
                         <Trans i18nKey="common.max" />

@@ -1,5 +1,5 @@
 import { chrome } from 'jest-chrome'
-import { DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
+import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG } from 'utilities/src/device/constants'
 import { getDeviceLocales } from 'utilities/src/device/locales.web'
 
 describe(getDeviceLocales, () => {
@@ -8,7 +8,9 @@ describe(getDeviceLocales, () => {
 
   it('should return the device locale', () => {
     expect(getDeviceLocales).not.toThrow()
-    expect(getDeviceLocales()).toEqual([{ languageCode: null, languageTag: MOCK_LANGUAGE }])
+    expect(getDeviceLocales()).toEqual([
+      { languageCode: MOCK_LANGUAGE, languageTag: MOCK_LANGUAGE },
+    ])
   })
 
   it('should return the default locale if an error occurs', () => {
@@ -17,6 +19,8 @@ describe(getDeviceLocales, () => {
     })
 
     expect(getDeviceLocales).not.toThrow()
-    expect(getDeviceLocales()).toEqual([{ languageCode: null, languageTag: DEFAULT_LANGUAGE_TAG }])
+    expect(getDeviceLocales()).toEqual([
+      { languageCode: DEFAULT_LANGUAGE_CODE, languageTag: DEFAULT_LANGUAGE_TAG },
+    ])
   })
 })

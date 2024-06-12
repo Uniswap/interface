@@ -11,6 +11,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
@@ -27,7 +28,6 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import {
   areCurrencyIdsEqual,
   buildWrappedNativeCurrencyId,

@@ -17,14 +17,14 @@ import {
 } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORCountry } from 'wallet/src/features/fiatOnRamp/types'
-import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 const ICON_SIZE = 32 // design prefers a custom value here

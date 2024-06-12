@@ -1,3 +1,4 @@
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getTestSelector, resetHardhatChain } from '../../utils'
 
 function waitsForActiveChain(chain: string) {
@@ -128,6 +129,33 @@ describe('network switching', () => {
       cy.wait('@wallet_switchEthereumChain')
       waitsForActiveChain('Ethereum')
       cy.url().should('not.contain', 'chain=polygon')
+    })
+  })
+
+  describe('multichain', () => {
+    it('does not switchEthereumChain when multichain is enabled', () => {
+      cy.hardhat().then((hardhat) => {
+        cy.visit('/swap', {
+          featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
+        })
+        cy.get('#swap-currency-input .open-currency-select-button').click()
+        cy.get(getTestSelector('chain-selector')).last().click()
+        cy.contains('Arbitrum').click()
+        const sendSpy = cy.spy(hardhat.provider, 'send')
+        cy.wrap(sendSpy).should('not.be.calledWith', 'wallet_switchEthereumChain')
+        cy.wrap(hardhat.provider.network.chainId).should('eq', 1)
+      })
+    })
+    it('does switchEthereumChain when multichain is disabled', () => {
+      cy.hardhat().then(() => {
+        cy.visit('/swap', {
+          featureFlags: [{ flag: FeatureFlags.MultichainUX, value: false }],
+        })
+        cy.get('#swap-currency-input .open-currency-select-button').click()
+        cy.get(getTestSelector('chain-selector')).last().click()
+        cy.contains('Polygon').click()
+        waitsForActiveChain('Polygon')
+      })
     })
   })
 })

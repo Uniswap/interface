@@ -1,12 +1,13 @@
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
+import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
-import { SignatureType } from 'state/signatures/types'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
@@ -120,4 +121,25 @@ export function usePendingActivity() {
   const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length
 
   return { hasPendingActivity, pendingActivityCount }
+}
+
+export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): GasFeeResult {
+  const cancelTransactionParams = useMemo(
+    () =>
+      orders && orders.length > 0
+        ? {
+            orders: orders.map((order) => {
+              return {
+                encodedOrder: order.encodedOrder as string,
+                type: order.type as SignatureType,
+              }
+            }),
+            chainId: orders[0].chainId,
+          }
+        : undefined,
+    [orders]
+  )
+  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
+  const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
+  return gasEstimate
 }

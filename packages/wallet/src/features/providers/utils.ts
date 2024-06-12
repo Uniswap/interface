@@ -1,5 +1,5 @@
-import { ChainId } from 'uniswap/src/types/chains'
-import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
+import { ChainId, RPCType } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 
 // Should match supported chains in `InfuraProvider` class within `getUrl` method
 export type InfuraChainName =
@@ -12,6 +12,8 @@ export type InfuraChainName =
   | 'matic'
   | 'maticmum'
   | 'blast'
+  | 'avalanche-mainnet'
+  | 'celo-mainnet'
 
 export function getInfuraChainName(chainId: ChainId): InfuraChainName {
   switch (chainId) {
@@ -33,6 +35,10 @@ export function getInfuraChainName(chainId: ChainId): InfuraChainName {
       return 'maticmum'
     case ChainId.Blast:
       return 'blast'
+    case ChainId.Avalanche:
+      return 'avalanche-mainnet'
+    case ChainId.Celo:
+      return 'celo-mainnet'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }

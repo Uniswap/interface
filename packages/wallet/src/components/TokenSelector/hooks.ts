@@ -34,6 +34,8 @@ const baseCurrencyIds = [
   buildNativeCurrencyId(ChainId.Mainnet),
   buildNativeCurrencyId(ChainId.Polygon),
   buildNativeCurrencyId(ChainId.Bnb),
+  buildNativeCurrencyId(ChainId.Celo),
+  buildNativeCurrencyId(ChainId.Avalanche),
   currencyId(DAI),
   currencyId(USDC),
   currencyId(USDT),

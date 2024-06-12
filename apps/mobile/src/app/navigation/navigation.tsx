@@ -19,6 +19,7 @@ import { ChooseProfilePictureScreen } from 'src/features/unitags/ChooseProfilePi
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
 import { UnitagConfirmationScreen } from 'src/features/unitags/UnitagConfirmationScreen'
+import { AppLoadingScreen } from 'src/screens/AppLoadingScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
@@ -28,6 +29,7 @@ import { FiatOnRampScreen } from 'src/screens/FiatOnRampScreen'
 import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceProviders'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
+import { OnDeviceRecoveryScreen } from 'src/screens/Import/OnDeviceRecoveryScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -235,6 +237,8 @@ export function OnboardingStackNavigator(): JSX.Element {
     ? SeedPhraseInputScreenV2
     : SeedPhraseInputScreen
 
+  const isOnboardingKeyringEnabled = useFeatureFlag(FeatureFlags.OnboardingKeyring)
+
   return (
     <OnboardingContextProvider>
       <OnboardingStack.Navigator>
@@ -251,6 +255,13 @@ export function OnboardingStackNavigator(): JSX.Element {
             headerRightContainerStyle: { paddingRight: spacing.spacing16 },
             ...TransitionPresets.SlideFromRightIOS,
           }}>
+          {isOnboardingKeyringEnabled && (
+            <OnboardingStack.Screen
+              component={AppLoadingScreen}
+              name={OnboardingScreens.AppLoading}
+              options={navOptions.noHeader}
+            />
+          )}
           <OnboardingStack.Screen
             component={LandingScreen}
             name={OnboardingScreens.Landing}
@@ -294,6 +305,11 @@ export function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen
             component={ImportMethodScreen}
             name={OnboardingScreens.ImportMethod}
+          />
+          <OnboardingStack.Screen
+            component={OnDeviceRecoveryScreen}
+            name={OnboardingScreens.OnDeviceRecovery}
+            options={navOptions.noHeader}
           />
           <OnboardingStack.Screen
             component={RestoreCloudBackupLoadingScreen}

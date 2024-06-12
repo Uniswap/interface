@@ -38,7 +38,7 @@ import {
   TAB_STYLES,
   TAB_VIEW_SCROLL_THROTTLE,
   TabContentProps,
-  renderTabLabel,
+  TabLabel,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
@@ -54,6 +54,7 @@ import {
   HapticFeedback,
   Text,
   TouchableArea,
+  flexStyles,
   useDeviceDimensions,
   useDeviceInsets,
   useMedia,
@@ -489,34 +490,36 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
+  const paddingTopBase = headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop
+  const paddingTopExtra = media.short ? spacing.none : spacing.spacing60
+
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
+      paddingTop: paddingTopBase,
       paddingBottom:
         insets.bottom +
         SWAP_BUTTON_HEIGHT +
         TAB_STYLES.tabListInner.paddingBottom +
         listBottomPadding,
     }),
-    [headerHeight, insets.bottom, listBottomPadding]
+    [paddingTopBase, insets.bottom, listBottomPadding]
   )
 
   const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
+      paddingTop: paddingTopBase,
       paddingBottom: insets.bottom,
     }),
-    [headerHeight, insets.bottom]
+    [paddingTopBase, insets.bottom]
   )
 
-  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({
-      paddingTop: media.short ? spacing.none : spacing.spacing60,
+  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
+    return {
+      paddingTop: paddingTopBase + paddingTopExtra,
       paddingBottom: insets.bottom,
       paddingHorizontal: media.short ? spacing.spacing12 : spacing.spacing48,
-    }),
-    [insets.bottom, media.short]
-  )
+    }
+  }, [paddingTopBase, paddingTopExtra, insets.bottom, media.short])
 
   const sharedProps = useMemo<TabContentProps>(
     () => ({
@@ -566,7 +569,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
                 pressColor={colors.surface3.val} // Android only
-                renderLabel={renderTabLabel}
+                renderLabel={TabLabel}
                 style={[
                   TAB_STYLES.tabBar,
                   {
@@ -631,7 +634,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           return (
             <Freeze freeze={tabIndex !== 0 && isHomeScreenBlur}>
               {isLayoutReady && (
-                <Animated.View entering={FadeIn}>
+                <Animated.View entering={FadeIn} style={flexStyles.fill}>
                   <TokensTab
                     ref={tokensTabScrollRef}
                     containerProps={sharedProps}

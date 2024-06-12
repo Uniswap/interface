@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
@@ -98,6 +99,23 @@ describe('Swap', () => {
         const finalBalance = initialBalance + 1
         cy.get('#swap-currency-output').contains(`Balance: ${finalBalance}`)
         getBalance(USDC_MAINNET).should('eq', finalBalance)
+      })
+    })
+    describe('multichain balances', () => {
+      it('shows balances for disconnected chains', () => {
+        cy.hardhat().then((hardhat) => {
+          cy.visit('/swap', {
+            featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
+          })
+
+          cy.get('#swap-currency-input .open-currency-select-button').click()
+          cy.get(getTestSelector('chain-selector')).last().click()
+          cy.contains('Arbitrum').click()
+          const sendSpy = cy.spy(hardhat.provider, 'send')
+          cy.wrap(sendSpy).should('not.be.calledWith', 'wallet_switchEthereumChain')
+          cy.get(getTestSelector('common-base-USDC')).click()
+          cy.get('#swap-currency-input').contains(`Balance: 0.002`)
+        })
       })
     })
   })

@@ -19,7 +19,6 @@ const DRAWER_WIDTH_XL = '390px'
 const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
-const DRAWER_TOP_MARGIN_MOBILE_WEB = '24px'
 
 const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
   z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};
@@ -83,7 +82,8 @@ const Container = styled.div`
   z-index: ${Z_INDEX.fixed};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    top: 100vh;
+    height: 100%;
+    top: 100%;
     left: 0;
     right: 0;
     width: 100%;
@@ -100,8 +100,8 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
     z-index: ${Z_INDEX.modal};
     position: absolute;
     margin-right: 0;
-    top: ${({ open }) => (open ? `calc(-1 * (100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB}))` : 0)};
-    height: calc(100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB});
+    top: ${({ open, theme }) => (open ? `calc(-1 * (100% - ${theme.navHeight}px))` : 0)};
+    height: calc(100% - ${({ theme }) => theme.navHeight}px);
 
     width: 100%;
     max-width: 100%;

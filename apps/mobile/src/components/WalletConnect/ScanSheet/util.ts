@@ -8,6 +8,7 @@ import {
 } from 'src/features/deepLinking/constants'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { RPCType } from 'uniswap/src/types/chains'
 import {
   EthMethod,
   EthTransaction,
@@ -16,7 +17,6 @@ import {
   UwULinkRequest,
 } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { RPCType } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers'

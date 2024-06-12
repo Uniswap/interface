@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
@@ -8,11 +9,7 @@ import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
-import {
-  getCurrencyDisplayText,
-  getFormattedCurrencyAmount,
-  getSymbolDisplayText,
-} from 'wallet/src/utils/currency'
+import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {

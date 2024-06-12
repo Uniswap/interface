@@ -1,9 +1,9 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Position } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { t } from 'i18n'
@@ -129,15 +129,15 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
-  const { chainId: walletChainId } = useWeb3React()
+  const account = useAccount()
   const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
-    if (walletChainId !== chainId) {
+    if (account.chainId !== chainId) {
       await switchChain(chainId)
     }
     accountDrawer.close()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
+  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

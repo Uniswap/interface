@@ -1,3 +1,5 @@
+import { RetryOptions } from 'uniswap/src/types/chains'
+
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -15,12 +17,6 @@ export class CanceledError extends Error {
 /** May be thrown to force a retry. */
 export class RetryableError extends Error {
   name = 'RetryableError'
-}
-
-export interface RetryOptions {
-  n: number
-  minWait: number
-  maxWait: number
 }
 
 /**

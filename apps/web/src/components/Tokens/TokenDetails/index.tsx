@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
@@ -11,6 +10,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
@@ -79,7 +79,8 @@ function useSwapInitialInputCurrency() {
 
 function TDPSwapComponent() {
   const { address, currency, currencyChain, warning } = useTDPContext()
-  const appChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const account = useAccount()
+  const appChainId = account.chainId ?? ChainId.MAINNET
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(

@@ -2,13 +2,14 @@ import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
-import { useEffect, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
 
+import { useScroll } from 'hooks/useScroll'
 import { BREAKPOINTS } from 'theme'
 import { Text } from 'ui/src'
 import { heightBreakpoints } from 'ui/src/theme'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Box, H1 } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from '../components/animations'
@@ -93,20 +94,8 @@ interface HeroProps {
 }
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
-  const [scrollPosition, setScrollPosition] = useState(0)
-  const handleScroll = () => {
-    const position = window.scrollY
-    setScrollPosition(position)
-  }
+  const { height: scrollPosition } = useScroll()
   const initialInputCurrency = useCurrency('ETH')
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true })
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
 
   const translateY = -scrollPosition / 7
   const opacityY = 1 - scrollPosition / 1000
@@ -144,7 +133,11 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
 
         <RiseIn delay={0.4}>
           <LandingSwapContainer>
-            <LandingSwap syncTabToUrl={false} initialInputCurrency={initialInputCurrency} />
+            <LandingSwap
+              syncTabToUrl={false}
+              chainId={initialInputCurrency?.chainId ?? UniverseChainId.MAINNET}
+              initialInputCurrency={initialInputCurrency}
+            />
           </LandingSwapContainer>
         </RiseIn>
 

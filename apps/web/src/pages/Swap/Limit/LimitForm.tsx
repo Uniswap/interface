@@ -1,7 +1,6 @@
 import { InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -21,6 +20,7 @@ import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/style
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import { SupportArticleURL } from 'constants/supportArticles'
+import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -84,12 +84,13 @@ type LimitFormProps = {
 }
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
-  const { chainId, account } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const account = useAccount()
   const {
+    chainId,
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
+  const isSupportedChain = useIsSupportedChainId(chainId)
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
   const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice } = derivedLimitInfo
@@ -184,6 +185,10 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = currencyToBeReplaced
         }
       }
+      // If the user selects 2 currencies on different chains we should set the other field to undefined
+      if (newCurrency.chainId !== otherCurrency?.chainId) {
+        newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = undefined
+      }
       setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
       onCurrencyChange?.(newCurrencyState)
       setCurrencyState(newCurrencyState)
@@ -192,18 +197,24 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   useEffect(() => {
-    if (!outputCurrency && isSupportedChain) {
-      onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
+    if (!outputCurrency && isSupportedChain && account.chainId) {
+      onSelectCurrency('outputCurrency', getChain({ chainId: account.chainId }).spotPriceStablecoinAmount.currency)
     }
-  }, [chainId, onSelectCurrency, outputCurrency, isSupportedChain])
+  }, [account.chainId, onSelectCurrency, outputCurrency, isSupportedChain])
 
   useEffect(() => {
-    if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
+    if (
+      isSupportedChain &&
+      inputCurrency &&
+      outputCurrency &&
+      (inputCurrency.isNative || outputCurrency.isNative) &&
+      account.chainId
+    ) {
       const [nativeCurrency, nonNativeCurrency] = inputCurrency.isNative
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
+        onSelectCurrency('outputCurrency', getChain({ chainId: account.chainId }).spotPriceStablecoinAmount.currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -224,7 +235,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const allowance = usePermit2Allowance(
     parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
-    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    isSupportedChain && account.chainId ? UNIVERSAL_ROUTER_ADDRESS(account.chainId) : undefined,
     TradeFillType.UniswapX
   )
 
@@ -357,9 +368,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
-      {account && (
+      {account.address && (
         <OpenLimitOrdersButton
-          account={account}
+          account={account.address}
           openLimitsMenu={() => {
             setMenu(MenuState.LIMITS)
             accountDrawer.open()
@@ -367,9 +378,12 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         />
       )}
       <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
+        <StyledAlertIcon
+          size={20}
+          color={!isUniswapXSupportedChain(account.chainId) ? theme.critical : theme.neutral2}
+        />
         <DisclaimerText>
-          {!isUniswapXSupportedChain(chainId) ? (
+          {!isUniswapXSupportedChain(account.chainId) ? (
             <Trans i18nKey="limits.onlyMainnet">
               <ExternalLink href={SupportArticleURL.LIMITS_SUPPORTED_NETWORKS}>
                 <Trans i18nKey="common.learnMore.link" />
@@ -426,9 +440,9 @@ function SubmitOrderButton({
   limitPriceError?: LimitPriceErrorType
 }) {
   const accountDrawer = useAccountDrawer()
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
-  if (!isUniswapXSupportedChain(chainId)) {
+  if (!isUniswapXSupportedChain(account.chainId)) {
     return (
       <ButtonError disabled>
         <Trans i18nKey="limits.selectSupportedTokens" />
@@ -436,7 +450,7 @@ function SubmitOrderButton({
     )
   }
 
-  if (!account) {
+  if (!account.isConnected) {
     return (
       <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
         <Trans i18nKey="common.connectWallet.button" />

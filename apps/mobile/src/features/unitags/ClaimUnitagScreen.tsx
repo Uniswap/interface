@@ -23,6 +23,7 @@ import {
 import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { Pill } from 'uniswap/src/components/pill/Pill'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -34,7 +35,6 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
-import { Pill } from 'wallet/src/components/text/Pill'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,

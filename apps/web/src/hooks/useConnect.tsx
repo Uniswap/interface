@@ -3,6 +3,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { UserRejectedRequestError } from 'viem'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -18,10 +19,10 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
   const connection = useConnectWagmi({
     mutation: {
       onMutate({ connector }) {
-        console.debug(`Connection activating: ${connector.name}`)
+        logger.debug('useConnect', 'ConnectionProvider', `Connection activating: ${connector.name}`)
       },
       onSuccess(_, { connector }) {
-        console.debug(`Connection activated: ${connector.name}`)
+        logger.debug('useConnect', 'ConnectionProvider', `Connection activated: ${connector.name}`)
         accountDrawer.close()
       },
       onError(error, { connector }) {
@@ -31,8 +32,15 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
         }
 
         // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
-        console.debug(`Connection failed: ${connector.name}`)
-        console.error(error)
+        logger.error(error, {
+          tags: {
+            file: 'useConnect',
+            function: 'ConnectionProvider',
+          },
+          extra: {
+            connector: connector.name,
+          },
+        })
 
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
           result: WalletConnectionResult.FAILED,

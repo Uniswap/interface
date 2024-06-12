@@ -345,6 +345,9 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-confusing-arrow": [
       0,
     ],
+    "no-console": [
+      "error",
+    ],
     "no-const-assign": [
       "off",
     ],
@@ -2195,6 +2198,9 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-confusing-arrow": [
       0,
     ],
+    "no-console": [
+      "error",
+    ],
     "no-const-assign": [
       "off",
     ],
@@ -3146,6 +3152,9 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "no-confusing-arrow": [
       0,
+    ],
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",

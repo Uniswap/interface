@@ -1,4 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import MobileAppLogo from 'assets/svg/mobile-app-qr-logo.svg'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
@@ -12,7 +13,6 @@ import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
@@ -91,7 +91,7 @@ export default function UniwalletModal() {
               level="M"
               fgColor={theme.darkMode ? theme.surface1 : theme.black}
               imageSettings={{
-                src: uniPng,
+                src: MobileAppLogo,
                 height: 33,
                 width: 33,
                 excavate: false,

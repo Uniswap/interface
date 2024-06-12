@@ -1,8 +1,8 @@
 import { providers as ethersProviders } from 'ethers'
 import { config } from 'uniswap/src/config'
-import { ChainId } from 'uniswap/src/types/chains'
+import { ChainId, RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
@@ -12,7 +12,7 @@ export function createEthersProvider(
 ): ethersProviders.JsonRpcProvider | null {
   try {
     if (rpcType === RPCType.Private) {
-      const privateRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Private]
+      const privateRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Private]?.http[0]
       if (!privateRPCUrl) {
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
@@ -20,14 +20,14 @@ export function createEthersProvider(
     }
 
     try {
-      const publicRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Public]
+      const publicRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Public]?.http[0]
       if (publicRPCUrl) {
         return new ethersProviders.JsonRpcProvider(publicRPCUrl)
       }
 
       return new ethersProviders.InfuraProvider(getInfuraChainName(chainId), config.infuraProjectId)
     } catch (error) {
-      const altPublicRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.PublicAlt]
+      const altPublicRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.PublicAlt]?.http[0]
       return new ethersProviders.JsonRpcProvider(altPublicRPCUrl)
     }
   } catch (error) {

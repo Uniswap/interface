@@ -1,7 +1,7 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
+import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import { Trans, t } from 'i18n'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
@@ -83,30 +83,30 @@ export default function Profile() {
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
 
-  const { account } = useWeb3React()
-  const { ENSName } = useENSName(account)
-  const accountRef = useRef(account)
+  const account = useAccount()
+  const { ENSName } = useENSName(account.address)
+  const accountRef = useRef(account.address)
   const accountDrawer = useAccountDrawer()
 
   useEffect(() => {
-    if (accountRef.current !== account) {
-      accountRef.current = account
+    if (accountRef.current !== account.address) {
+      accountRef.current = account.address
       resetSellAssets()
       setSellPageState(ProfilePageStateType.VIEWING)
       clearCollectionFilters()
     }
-  }, [account, resetSellAssets, setSellPageState, clearCollectionFilters])
+  }, [account.address, resetSellAssets, setSellPageState, clearCollectionFilters])
   const cartExpanded = useBag((state) => state.bagExpanded)
   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
   return (
     <>
       <Helmet>
-        <title>{getProfilePageTitle(account, ENSName)}</title>
+        <title>{getProfilePageTitle(account.address, ENSName)}</title>
       </Helmet>
       <Trace logImpression page={InterfacePageName.NFT_PROFILE_PAGE}>
         <ProfilePageWrapper>
-          {account ? (
+          {account.isConnected ? (
             <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
               {!isListingNfts ? <ProfilePage /> : <ListPage />}
             </LoadedAccountPage>

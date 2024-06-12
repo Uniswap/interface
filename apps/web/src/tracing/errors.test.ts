@@ -1,5 +1,4 @@
 import { ErrorEvent } from '@sentry/types'
-
 import { beforeSend } from './errors'
 
 Object.defineProperty(window.performance, 'getEntriesByType', {

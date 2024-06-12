@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { fiatOnRampAggregatorApi as sharedFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { appearanceSettingsReducer } from 'wallet/src/features/appearance/slice'
 import { behaviorHistoryReducer } from 'wallet/src/features/behaviorHistory/slice'
 import { favoritesReducer } from 'wallet/src/features/favorites/slice'
@@ -15,6 +16,7 @@ import { walletReducer } from 'wallet/src/features/wallet/slice'
 export const sharedReducers = {
   [fiatOnRampApi.reducerPath]: fiatOnRampApi.reducer,
   [fiatOnRampAggregatorApi.reducerPath]: fiatOnRampAggregatorApi.reducer,
+  [sharedFiatOnRampAggregatorApi.reducerPath]: sharedFiatOnRampAggregatorApi.reducer,
   appearanceSettings: appearanceSettingsReducer,
   behaviorHistory: behaviorHistoryReducer,
   favorites: favoritesReducer,

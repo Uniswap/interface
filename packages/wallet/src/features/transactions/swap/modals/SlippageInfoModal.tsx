@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { Settings } from 'ui/src/components/icons'
@@ -93,25 +93,14 @@ export function SlippageInfoModal({
             </Flex>
           </Flex>
           <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-            {tradeType === TradeType.EXACT_INPUT ? (
-              <Trans
-                components={{
-                  text: <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2" />,
-                  highlight: <Text color="$neutral1" textAlign="center" variant="subheading2" />,
-                }}
-                i18nKey="swap.settings.slippage.input.receive.formatted"
-                values={{ amount, tokenSymbol }}
-              />
-            ) : (
-              <Trans
-                components={{
-                  text: <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2" />,
-                  highlight: <Text color="$neutral1" textAlign="center" variant="subheading2" />,
-                }}
-                i18nKey="swap.settings.slippage.output.spend.formatted"
-                values={{ amount, tokenSymbol }}
-              />
-            )}
+            <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
+              {tradeType === TradeType.EXACT_INPUT
+                ? t('swap.settings.slippage.input.receive.title')
+                : t('swap.settings.slippage.output.spend.title')}
+            </Text>
+            <Text color="$neutral1" textAlign="center" variant="subheading2">
+              {amount} {tokenSymbol}
+            </Text>
           </Flex>
         </Flex>
         {showSlippageWarning ? (

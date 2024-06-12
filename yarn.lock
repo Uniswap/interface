@@ -236,9 +236,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:3.9.6":
-  version: 3.9.6
-  resolution: "@apollo/client@npm:3.9.6"
+"@apollo/client@npm:3.10.4":
+  version: 3.10.4
+  resolution: "@apollo/client@npm:3.10.4"
   dependencies:
     "@graphql-typed-document-node/core": ^3.1.1
     "@wry/caches": ^1.0.0
@@ -248,7 +248,7 @@ __metadata:
     hoist-non-react-statics: ^3.3.2
     optimism: ^0.18.0
     prop-types: ^15.7.2
-    rehackt: 0.0.6
+    rehackt: ^0.1.0
     response-iterator: ^0.2.6
     symbol-observable: ^4.0.0
     ts-invariant: ^0.10.3
@@ -269,7 +269,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: d862719bbc0879218c6bbcddbf1934ffab91daa38e4ebe7658a2bae8258f69343c9de93960114f78f67bdafcabbfd327416c8f24d9a0c2b90813e4ffa25ae45c
+  checksum: 577cb5a075fb9616b6b41bf7b34ce7ee393e7dfc3ca829db284a5bf70e35f658e4b218ba6f6d03e2604da814c6069e438584c9c609fe505dcbe6c4610f4cc638
   languageName: node
   linkType: hard
 
@@ -13515,7 +13515,7 @@ __metadata:
   resolution: "@uniswap/interface@workspace:apps/web"
   dependencies:
     "@amplitude/analytics-browser": 1.12.1
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@babel/preset-env": 7.23.3
     "@cloudflare/workers-types": 4.20231025.0
     "@craco/craco": 7.1.0
@@ -13543,6 +13543,7 @@ __metadata:
     "@swc/jest": 0.2.29
     "@swc/plugin-styled-components": 1.5.97
     "@tamagui/core": 1.95.1
+    "@tamagui/portal": 1.95.1
     "@tamagui/react-native-svg": 1.95.1
     "@tanstack/react-query": 5.28.14
     "@tanstack/react-table": 8.10.7
@@ -13584,18 +13585,18 @@ __metadata:
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.2.1
     "@uniswap/redux-multicall": 1.1.8
-    "@uniswap/router-sdk": 1.9.1
-    "@uniswap/sdk-core": 4.2.1
+    "@uniswap/router-sdk": 1.9.2
+    "@uniswap/sdk-core": 5.0.0
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/uniswapx-sdk": 2.0.4-alpha.1
-    "@uniswap/universal-router-sdk": 2.0.4
+    "@uniswap/universal-router-sdk": 2.1.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
-    "@uniswap/v2-sdk": 4.3.1
+    "@uniswap/v2-sdk": 4.3.2
     "@uniswap/v3-core": 1.0.1
     "@uniswap/v3-periphery": 1.4.4
-    "@uniswap/v3-sdk": 3.11.1
+    "@uniswap/v3-sdk": 3.11.2
     "@vanilla-extract/css": 1.14.0
     "@vanilla-extract/dynamic": 2.1.0
     "@vanilla-extract/jest-transform": 1.1.1
@@ -13763,7 +13764,7 @@ __metadata:
   resolution: "@uniswap/mobile@workspace:apps/mobile"
   dependencies:
     "@amplitude/analytics-react-native": 1.4.0
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@babel/core": ^7.20.5
     "@babel/plugin-proposal-export-namespace-from": 7.18.9
     "@babel/plugin-proposal-logical-assignment-operators": 7.16.7
@@ -13806,8 +13807,8 @@ __metadata:
     "@uniswap/analytics-events": 2.32.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
-    "@uniswap/sdk-core": 4.2.1
-    "@uniswap/v3-sdk": 3.11.1
+    "@uniswap/sdk-core": 5.0.0
+    "@uniswap/v3-sdk": 3.11.2
     "@walletconnect/core": 2.11.2
     "@walletconnect/react-native-compat": 2.11.2
     "@walletconnect/types": 2.11.2
@@ -13929,22 +13930,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.9.1, @uniswap/router-sdk@npm:^1.6.0, @uniswap/router-sdk@npm:^1.9.0, @uniswap/router-sdk@npm:^1.9.1":
-  version: 1.9.1
-  resolution: "@uniswap/router-sdk@npm:1.9.1"
+"@uniswap/router-sdk@npm:1.9.2":
+  version: 1.9.2
+  resolution: "@uniswap/router-sdk@npm:1.9.2"
   dependencies:
     "@ethersproject/abi": ^5.5.0
-    "@uniswap/sdk-core": ^4.2.1
+    "@uniswap/sdk-core": ^5.0.0
     "@uniswap/swap-router-contracts": ^1.3.0
-    "@uniswap/v2-sdk": ^4.3.1
-    "@uniswap/v3-sdk": ^3.11.1
-  checksum: a8bb0191bda3ec5ee8ecd3acfc53274f753e5cc61fbc8455312af596e3283bf252a4a69603ab6d606ac2c61d97f01f9c6f28a538b4acbf6e9a097aea61989cd8
+    "@uniswap/v2-sdk": ^4.3.2
+    "@uniswap/v3-sdk": ^3.11.2
+  checksum: e2f3fcd04efd7249bf21edb5be5923c7f59442d10959981f33b0c0acc4c4cfa6db8b94c8815d9c9a0969fd558a290a719c5e9daeb81ac316d8af61ccc8ccc3bc
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:4.2.1":
-  version: 4.2.1
-  resolution: "@uniswap/sdk-core@npm:4.2.1"
+"@uniswap/sdk-core@npm:5.0.0":
+  version: 5.0.0
+  resolution: "@uniswap/sdk-core@npm:5.0.0"
   dependencies:
     "@ethersproject/address": ^5.0.2
     big.js: ^5.2.2
@@ -13952,7 +13953,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: a72b85e7fafe787a0cb2215cab5f7981fb18c1f63b58a3257accbefe0cc8fd64b7ad99d6ae9d0fc12f4383ac90d3991bae49a6af1fc5c89b72e1a9132af2c8e5
+  checksum: 06a4b9ccec3e19bdf695011999c4039a0477910ad5e4128efd8a06e44c23fb40d3685ef5ef2d520632562fe4d0fa486d01326b391266e8e08f43dfc522bd41d5
   languageName: node
   linkType: hard
 
@@ -13992,7 +13993,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@uniswap/stretch@workspace:apps/stretch"
   dependencies:
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@ethersproject/providers": 5.7.2
     "@metamask/rpc-errors": 6.2.1
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
@@ -14013,8 +14014,8 @@ __metadata:
     "@types/ua-parser-js": 0.7.31
     "@types/uuid": 9.0.1
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/universal-router-sdk": 2.0.4
-    "@uniswap/v3-sdk": 3.11.1
+    "@uniswap/universal-router-sdk": 2.1.0
+    "@uniswap/v3-sdk": 3.11.2
     "@welldone-software/why-did-you-render": 8.0.1
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0
@@ -14100,35 +14101,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:2.0.4":
-  version: 2.0.4
-  resolution: "@uniswap/universal-router-sdk@npm:2.0.4"
+"@uniswap/universal-router-sdk@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@uniswap/universal-router-sdk@npm:2.1.0"
   dependencies:
     "@uniswap/permit2-sdk": ^1.2.1
-    "@uniswap/router-sdk": ^1.9.1
-    "@uniswap/sdk-core": ^4.2.1
+    "@uniswap/router-sdk": ^1.9.2
+    "@uniswap/sdk-core": ^5.0.0
     "@uniswap/universal-router": 1.6.0
-    "@uniswap/v2-sdk": ^4.3.1
-    "@uniswap/v3-sdk": ^3.11.1
+    "@uniswap/v2-sdk": ^4.3.2
+    "@uniswap/v3-sdk": ^3.11.2
     bignumber.js: ^9.0.2
     ethers: ^5.7.0
-  checksum: 9c6ea41d06dc7bab96cbd5846c2229bcf64b7a651a5777dec4daa52ff1aa2e304762117f11328f8af663866b699849a95622eb7c3ff08e62f36501b908f88a58
+  checksum: dbce6f15b4d58120d1d602d6f68bcdf46a4e91fa7118ef75aa7f6932a1efcb07353135337e54805e110c1c21a3f91d37bf626949f860e35f62ffac475f19506c
   languageName: node
   linkType: hard
 
 "@uniswap/universal-router-sdk@npm:^1.5.4, @uniswap/universal-router-sdk@npm:^1.5.8":
-  version: 1.8.2
-  resolution: "@uniswap/universal-router-sdk@npm:1.8.2"
+  version: 1.9.0
+  resolution: "@uniswap/universal-router-sdk@npm:1.9.0"
   dependencies:
     "@uniswap/permit2-sdk": ^1.2.0
     "@uniswap/router-sdk": ^1.9.0
     "@uniswap/sdk-core": ^4.2.0
     "@uniswap/universal-router": 1.6.0
-    "@uniswap/v2-sdk": ^4.2.0
+    "@uniswap/v2-sdk": ^4.3.0
     "@uniswap/v3-sdk": ^3.11.0
     bignumber.js: ^9.0.2
     ethers: ^5.3.1
-  checksum: 87f7d9781ff22e71ecb38efb9cdf39408fed719c7fd6c301d33db0282b0f579b159fcd1b033bc3fb2aba92a551bafb33df2ae8aec7515524b8979c50b5d42b02
+  checksum: fc4bbe178cbdfc1228d93f9fe74de30b7d77feabc368576bbd972a6435a62f79da0ea26cf7d2754a8364c258e1b3521fcca68eee7609875d4b8daf08b06a6e3b
   languageName: node
   linkType: hard
 
@@ -14167,16 +14168,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:4.3.1":
-  version: 4.3.1
-  resolution: "@uniswap/v2-sdk@npm:4.3.1"
+"@uniswap/v2-sdk@npm:4.3.2":
+  version: 4.3.2
+  resolution: "@uniswap/v2-sdk@npm:4.3.2"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^4.2.1
+    "@uniswap/sdk-core": ^5.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: 44588fc5857257c4aa1820468e97f2288ef22b259ec5a05471f3914cd90db56683fd37f1e0be8f0339f40c90a669765f8f08245fdc022f2704a6f6fad3ce823f
+  checksum: aaf01f49a1ba5c8214ce4f4d54526fb289de7ecdc5df08f6be07c925ee7c110769adbf77e29b2dbbe7678c4ed21f384b522bbc9d7a82af55367bd66bfba8eb83
   languageName: node
   linkType: hard
 
@@ -14207,19 +14208,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v3-sdk@npm:3.11.1, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.11.1":
-  version: 3.11.1
-  resolution: "@uniswap/v3-sdk@npm:3.11.1"
+"@uniswap/v3-sdk@npm:3.11.2":
+  version: 3.11.2
+  resolution: "@uniswap/v3-sdk@npm:3.11.2"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^4.2.1
+    "@uniswap/sdk-core": ^5.0.0
     "@uniswap/swap-router-contracts": ^1.3.0
     "@uniswap/v3-periphery": ^1.1.1
     "@uniswap/v3-staker": 1.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: 07baeecc3318ccd6d7a4132e87bd24f3710072665ac51fc22aaf855f178940201f06cfa2024f25a5696ccbb52f1e3f97103e8a08399fd08fd4c7e76f0060f122
+  checksum: 82092b239b482b8fd9fd21afdcc4cf9860315af4c524e100a7ac02d25aba0bf25ad1aaf12d97105874590bad97eed4ff2f95dd56e849f881596ac32148cce726
   languageName: node
   linkType: hard
 
@@ -37879,9 +37880,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rehackt@npm:0.0.6":
-  version: 0.0.6
-  resolution: "rehackt@npm:0.0.6"
+"rehackt@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "rehackt@npm:0.1.0"
   peerDependencies:
     "@types/react": "*"
     react: "*"
@@ -37890,7 +37891,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 25df31d4fc1198b5beba68ec3c960119f120aeba4f7a6f686b087ddbfdd45753ea74b6daf66523c8b6db844429eaed516e0f6f37f657fdcc96334e5ae9efee98
+  checksum: 2c3bcd72524bf47672640265e79cba785e0e6837b9b385ccb0a3ea7d00f55a439d9aed3e0ae71e991d88e0d4b2b3158457c92e75fff5ebf99cd46e280068ddeb
   languageName: node
   linkType: hard
 
@@ -42629,7 +42630,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "uniswap@workspace:packages/uniswap"
   dependencies:
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@ethersproject/providers": 5.7.2
     "@graphql-codegen/cli": ^3.3.1
     "@graphql-codegen/client-preset": ^3.0.1
@@ -42639,12 +42640,13 @@ __metadata:
     "@graphql-codegen/typescript-resolvers": ^3.2.1
     "@react-native-async-storage/async-storage": 1.17.10
     "@reduxjs/toolkit": 1.9.3
+    "@testing-library/react-native": 11.5.0
     "@typechain/ethers-v5": 7.2.0
     "@types/chrome": 0.0.254
     "@uniswap/analytics-events": 2.32.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/router-sdk": 1.9.1
-    "@uniswap/sdk-core": 4.2.1
+    "@uniswap/router-sdk": 1.9.2
+    "@uniswap/sdk-core": 5.0.0
     apollo-link-rest: 0.9.0
     depcheck: 1.4.7
     eslint: 8.44.0
@@ -42666,6 +42668,7 @@ __metadata:
     typescript: 5.3.3
     ui: "workspace:^"
     utilities: "workspace:^"
+    wagmi: 2.5.19
   languageName: unknown
   linkType: soft
 
@@ -43127,7 +43130,7 @@ __metadata:
     "@amplitude/analytics-core": 0.11.0
     "@amplitude/analytics-react-native": 1.4.0
     "@amplitude/analytics-types": 0.13.0
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@ethersproject/abstract-signer": 5.7.0
     "@ethersproject/address": 5.7.0
     "@ethersproject/constants": 5.7.0
@@ -43144,7 +43147,7 @@ __metadata:
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.32.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/sdk-core": 4.2.1
+    "@uniswap/sdk-core": 5.0.0
     aws-appsync-auth-link: 3.0.7
     aws-appsync-subscription-link: 3.1.3
     dayjs: 1.11.7
@@ -43659,7 +43662,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "wallet@workspace:packages/wallet"
   dependencies:
-    "@apollo/client": 3.9.6
+    "@apollo/client": 3.10.4
     "@ethersproject/constants": 5.7.0
     "@ethersproject/contracts": 5.7.0
     "@ethersproject/providers": 5.7.2
@@ -43686,11 +43689,11 @@ __metadata:
     "@uniswap/analytics-events": 2.32.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.2.1
-    "@uniswap/router-sdk": 1.9.1
-    "@uniswap/sdk-core": 4.2.1
-    "@uniswap/universal-router-sdk": 2.0.4
-    "@uniswap/v2-sdk": 4.3.1
-    "@uniswap/v3-sdk": 3.11.1
+    "@uniswap/router-sdk": 1.9.2
+    "@uniswap/sdk-core": 5.0.0
+    "@uniswap/universal-router-sdk": 2.1.0
+    "@uniswap/v2-sdk": 4.3.2
+    "@uniswap/v3-sdk": 3.11.2
     apollo-link-rest: 0.9.0
     apollo3-cache-persist: 0.14.1
     axios: 1.6.5

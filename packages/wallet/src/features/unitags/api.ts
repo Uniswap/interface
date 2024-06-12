@@ -18,6 +18,7 @@ import {
   UnitagUpdateMetadataResponse,
   UnitagWaitlistPositionResponse,
 } from 'uniswap/src/features/unitags/types'
+import { isMobileApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -26,7 +27,7 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 const BASE_HEADERS = {
   'x-request-source': REQUEST_SOURCE,
   'x-app-version': getVersionHeader(),
-  Origin: uniswapUrls.apiOrigin,
+  ...(isMobileApp ? { Origin: uniswapUrls.apiOrigin } : {}),
 }
 
 const generateAxiosHeaders = async (

@@ -1,8 +1,8 @@
 import { ComponentProps } from 'react'
 import { iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { Pill } from 'uniswap/src/components/pill/Pill'
 import { ChainId } from 'uniswap/src/types/chains'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { Pill } from 'wallet/src/components/text/Pill'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { useNetworkColors } from 'wallet/src/utils/colors'
 

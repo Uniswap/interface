@@ -119,7 +119,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       button={
         <ThemedText.BodyPrimary>
           {userSlippageTolerance === SlippageTolerance.Auto ? (
-            <Trans i18nKey="commmon.automatic" />
+            <Trans i18nKey="common.automatic" />
           ) : (
             formatPercent(userSlippageTolerance)
           )}
@@ -137,7 +137,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             isActive={userSlippageTolerance === SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
-              <Trans i18nKey="commmon.automatic" />
+              <Trans i18nKey="common.automatic" />
             </ThemedText.BodyPrimary>
           </Option>
           <Option

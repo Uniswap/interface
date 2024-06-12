@@ -16,6 +16,7 @@ import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
@@ -112,7 +113,14 @@ export function useUniversalRouterSwapCallback(
               txRequest: tx,
               isAutoSlippage,
             })
-            console.warn(gasError)
+            const wrappedError = new Error('gas error')
+            wrappedError.cause = gasError
+            logger.error(wrappedError, {
+              tags: {
+                file: 'useUniversalRouter',
+                function: 'useUniversalRouterSwapCallback',
+              },
+            })
             throw new GasEstimationError()
           }
 

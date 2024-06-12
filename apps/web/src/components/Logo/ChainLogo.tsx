@@ -1,23 +1,21 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, getChain, useIsSupportedChainId } from 'constants/chains'
-import { CSSProperties, FunctionComponent } from 'react'
-import { useTheme } from 'styled-components'
+import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import {
+  ARBITRUM_LOGO,
+  AVALANCHE_LOGO,
+  BASE_LOGO,
+  BLAST_LOGO,
+  BNB_LOGO,
+  CELO_LOGO,
+  ETHEREUM_LOGO,
+  OPTIMISM_LOGO,
+  POLYGON_LOGO,
+  ZORA_LOGO,
+} from 'ui/src/assets'
 
-import { ReactComponent as arbitrum } from './ChainSymbols/arbitrum.svg'
-import { ReactComponent as avax } from './ChainSymbols/avax.svg'
-import { ReactComponent as base } from './ChainSymbols/base.svg'
-import { ReactComponent as blast } from './ChainSymbols/blast.svg'
-import { ReactComponent as blastLight } from './ChainSymbols/blast_light.svg'
-import { ReactComponent as bnb } from './ChainSymbols/bnb.svg'
-import { ReactComponent as celo } from './ChainSymbols/celo.svg'
-import { ReactComponent as celoLight } from './ChainSymbols/celo_light.svg'
-import { ReactComponent as ethereum } from './ChainSymbols/ethereum.svg'
-import { ReactComponent as optimism } from './ChainSymbols/optimism.svg'
-import { ReactComponent as polygon } from './ChainSymbols/polygon.svg'
-
-type SVG = FunctionComponent<React.SVGProps<SVGSVGElement>>
-type ChainUI = { Symbol: SVG; bgColor: string; textColor: string }
+type ChainUI = { symbol: string; bgColor: string; textColor: string }
 
 export function getChainUI(chainId: SupportedInterfaceChainId, darkMode: boolean): ChainUI
 export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undefined {
@@ -26,28 +24,28 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
     case ChainId.GOERLI:
     case ChainId.SEPOLIA:
       return {
-        Symbol: ethereum,
+        symbol: ETHEREUM_LOGO,
         bgColor: '#6B8AFF33',
         textColor: '#6B8AFF',
       }
     case ChainId.POLYGON:
     case ChainId.POLYGON_MUMBAI:
       return {
-        Symbol: polygon,
+        symbol: POLYGON_LOGO,
         bgColor: '#9558FF33',
         textColor: '#9558FF',
       }
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
       return {
-        Symbol: arbitrum,
+        symbol: ARBITRUM_LOGO,
         bgColor: '#00A3FF33',
         textColor: '#00A3FF',
       }
     case ChainId.OPTIMISM:
     case ChainId.OPTIMISM_GOERLI:
       return {
-        Symbol: optimism,
+        symbol: OPTIMISM_LOGO,
         bgColor: '#FF042033',
         textColor: '#FF0420',
       }
@@ -55,44 +53,56 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
     case ChainId.CELO_ALFAJORES:
       return darkMode
         ? {
-            Symbol: celo,
+            symbol: CELO_LOGO,
             bgColor: '#FCFF5233',
             textColor: '#FCFF52',
           }
         : {
-            Symbol: celoLight,
+            symbol: CELO_LOGO,
             bgColor: '#FCFF5299',
             textColor: '#655947',
           }
     case ChainId.AVALANCHE:
       return {
-        Symbol: avax,
+        symbol: AVALANCHE_LOGO,
         bgColor: '#E8414233',
         textColor: '#E84142',
       }
     case ChainId.BNB:
       return {
-        Symbol: bnb,
+        symbol: BNB_LOGO,
         bgColor: '#EAB20033',
         textColor: '#EAB200',
       }
     case ChainId.BASE:
       return {
-        Symbol: base,
+        symbol: BASE_LOGO,
         bgColor: '#0052FF33',
         textColor: '#0052FF',
       }
     case ChainId.BLAST:
       return darkMode
         ? {
-            Symbol: blast,
+            symbol: BLAST_LOGO,
             bgColor: 'rgba(252, 252, 3, 0.12)',
             textColor: 'rgba(252, 252, 3, 1) ',
           }
         : {
-            Symbol: blastLight,
+            symbol: BLAST_LOGO,
             bgColor: 'rgba(252, 252, 3, 0.16)',
             textColor: 'rgba(17, 20, 12, 1)',
+          }
+    case ChainId.ZORA:
+      return darkMode
+        ? {
+            symbol: ZORA_LOGO,
+            bgColor: 'rgba(174, 180, 255, 0.08)',
+            textColor: '#AEB4FF',
+          }
+        : {
+            symbol: ZORA_LOGO,
+            bgColor: 'rgba(65, 71, 148, 0.12)',
+            textColor: '#414794',
           }
     default:
       return undefined
@@ -112,7 +122,6 @@ type ChainLogoProps = {
 }
 export function ChainLogo({
   chainId,
-  className,
   style,
   size = 12,
   borderRadius = getDefaultBorderRadius(size),
@@ -120,7 +129,6 @@ export function ChainLogo({
   fillContainer = false,
 }: ChainLogoProps) {
   const darkMode = useIsDarkMode()
-  const { surface2 } = useTheme()
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   if (!isSupportedChain) {
@@ -128,22 +136,18 @@ export function ChainLogo({
   }
   const { label } = getChain({ chainId })
 
-  const { Symbol, bgColor } = getChainUI(chainId, darkMode)
-  const iconSize = fillContainer ? '100%' : size
+  const { symbol } = getChainUI(chainId, darkMode)
+  const iconSize = fillContainer ? '100%' : size + 'px'
 
-  return (
-    <svg
-      width={iconSize}
-      height={iconSize}
-      className={className}
-      style={{ ...style, width: iconSize, height: iconSize }}
+  return symbol ? (
+    <img
       aria-labelledby="titleID"
       data-testid={testId}
-    >
-      <title id="titleID">{`${label} logo`}</title>
-      <rect rx={borderRadius} fill={surface2} width={iconSize} height={iconSize} />
-      <rect rx={borderRadius} fill={bgColor} width={iconSize} height={iconSize} />
-      <Symbol width={iconSize} height={iconSize} />
-    </svg>
-  )
+      width={iconSize}
+      height={iconSize}
+      src={symbol}
+      style={{ ...style, borderRadius: borderRadius + 'px' }}
+      alt={`${label} logo`}
+    />
+  ) : null
 }

@@ -6,6 +6,7 @@ export enum ImportType {
   Watch = 'Watch',
   Restore = 'Restore',
   RestoreMnemonic = 'RestoreMnemonic',
+  OnDeviceRecovery = 'OnDeviceRecovery',
 }
 
 export enum OnboardingEntryPoint {

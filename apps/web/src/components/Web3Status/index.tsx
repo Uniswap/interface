@@ -130,7 +130,7 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const { address, isConnecting, isReconnecting } = useAccount()
+  const account = useAccount()
 
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -142,7 +142,7 @@ function Web3StatusInner() {
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if ((isConnecting || isReconnecting) && hasRecent && !isIFramed()) {
+  if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
     return (
       <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
@@ -156,7 +156,7 @@ function Web3StatusInner() {
     )
   }
 
-  if (address) {
+  if (account.address) {
     return (
       <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
         <Web3StatusConnected

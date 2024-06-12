@@ -39,6 +39,14 @@ export function RecipientList({
     [onPress]
   )
 
+  const onConfirmViewOnlyRecipient = useCallback(() => {
+    const address = selectedViewOnlyRecipient?.address
+    if (address) {
+      setSelectedViewOnlyRecipient(null)
+      onPress(address)
+    }
+  }, [onPress, selectedViewOnlyRecipient])
+
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
       // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
@@ -68,7 +76,7 @@ export function RecipientList({
       {selectedViewOnlyRecipient && (
         <ViewOnlyRecipientModal
           onCancel={(): void => setSelectedViewOnlyRecipient(null)}
-          onConfirm={(): void => onPress(selectedViewOnlyRecipient.address)}
+          onConfirm={onConfirmViewOnlyRecipient}
         />
       )}
     </>

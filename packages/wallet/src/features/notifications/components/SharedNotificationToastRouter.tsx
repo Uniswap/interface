@@ -10,6 +10,7 @@ import { NetworkChangedNotification } from 'wallet/src/features/notifications/co
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
 import { SwapPendingNotification } from 'wallet/src/features/notifications/components/SwapPendingNotification'
+import { TransactionPendingNotification } from 'wallet/src/features/notifications/components/TransactionPendingNotification'
 import { TransferCurrencyNotification } from 'wallet/src/features/notifications/components/TransferCurrencyNotification'
 import { TransferCurrencyPendingNotification } from 'wallet/src/features/notifications/components/TransferCurrencyPendingNotification'
 import { TransferNFTNotification } from 'wallet/src/features/notifications/components/TransferNFTNotification'
@@ -44,6 +45,8 @@ export function SharedNotificationToastRouter({
       return <SwapPendingNotification notification={notification} />
     case AppNotificationType.TransferCurrencyPending:
       return <TransferCurrencyPendingNotification />
+    case AppNotificationType.TransactionPending:
+      return <TransactionPendingNotification />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

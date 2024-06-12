@@ -28,19 +28,30 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
   override fun getName(): String = REACT_CLASS
 
   private val mnemonicIdFlow = MutableStateFlow("")
+  private val shouldShowSmallTextFlow = MutableStateFlow(false)
+  private val selectedWordPlaceholderFlow = MutableStateFlow("")
 
   override fun createViewInstance(reactContext: ThemedReactContext): ComposeView {
     val ethersRs = RnEthersRs(reactContext)
     val viewModel = MnemonicConfirmationViewModel(ethersRs)
+
     return ComposeView(reactContext).apply {
       id = R.id.mnemonic_confirmation_compose_id // Needed for RN event emitter
 
       setContent {
         val mnemonicId by mnemonicIdFlow.collectAsState()
+        val shouldShowSmallText by shouldShowSmallTextFlow.collectAsState()
+        val selectedWordPlaceholder by selectedWordPlaceholderFlow.collectAsState()
+
+        viewModel.updatePlaceholder(selectedWordPlaceholder)
 
         UniswapComponent {
-          MnemonicConfirmation(mnemonicId = mnemonicId, viewModel = viewModel) {
-            val reactContext = context as ReactContext
+          MnemonicConfirmation(
+            mnemonicId = mnemonicId,
+            viewModel = viewModel,
+            shouldShowSmallText = shouldShowSmallText,
+          ) {
+            context as ReactContext
             reactContext
               .getJSModule(RCTEventEmitter::class.java)
               .receiveEvent(id, EVENT_COMPLETED, null) // Sends event to RN bridge
@@ -68,6 +79,16 @@ class MnemonicConfirmationViewManager : ViewGroupManager<ComposeView>() {
   @ReactProp(name = "mnemonicId")
   fun setMnemonicId(view: View, mnemonicId: String) {
     mnemonicIdFlow.update { mnemonicId }
+  }
+
+  @ReactProp(name = "shouldShowSmallText")
+  fun setShouldShowSmallText(view: View, shouldShowSmallText: Boolean) {
+    shouldShowSmallTextFlow.update { shouldShowSmallText }
+  }
+
+  @ReactProp(name = "selectedWordPlaceholder")
+  fun setSelectedWordPlaceholder(view: View, selectedWordPlaceholder: String) {
+    selectedWordPlaceholderFlow.update { selectedWordPlaceholder }
   }
 
   companion object {

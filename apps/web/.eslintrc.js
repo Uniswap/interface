@@ -112,6 +112,22 @@ module.exports = {
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
           },
+          // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']`,
+            message:
+              "Do not use account directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='chainId']`,
+            message:
+              "Do not use chainId directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.chainId instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']`,
+            message:
+              "Do not use address directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.address instead.",
+          },
         ],
       },
     },

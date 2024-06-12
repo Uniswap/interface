@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/react'
 import noop from 'utilities/src/react/noop'
-
 import { AppState } from './reducer'
 
 /* Utility type to mark all properties of a type as optional */

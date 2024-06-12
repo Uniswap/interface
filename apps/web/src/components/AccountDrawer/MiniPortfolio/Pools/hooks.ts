@@ -12,6 +12,7 @@ import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { toContractInput } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
@@ -31,7 +32,8 @@ export function useContractMultichain<T extends BaseContract>(
   ABI: any,
   chainIds?: ChainId[]
 ): ContractMap<T> {
-  const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
+  const account = useAccount()
+  const { provider: walletProvider } = useWeb3React()
   const isSupportedChain = useIsSupportedChainIdCallback()
 
   return useMemo(() => {
@@ -43,7 +45,7 @@ export function useContractMultichain<T extends BaseContract>(
 
     return relevantChains.reduce((acc: ContractMap<T>, chainId) => {
       const provider =
-        walletProvider && walletChainId === chainId
+        walletProvider && account.chainId === chainId
           ? walletProvider
           : isSupportedChain(chainId)
           ? RPC_PROVIDERS[chainId]
@@ -53,7 +55,7 @@ export function useContractMultichain<T extends BaseContract>(
       }
       return acc
     }, {})
-  }, [ABI, addressMap, chainIds, isSupportedChain, walletChainId, walletProvider])
+  }, [ABI, addressMap, chainIds, isSupportedChain, account.chainId, walletProvider])
 }
 
 export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {

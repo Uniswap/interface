@@ -1,31 +1,20 @@
 package com.uniswap.onboarding.import
 
 import android.view.View
-import android.view.ViewGroup.LayoutParams
-import androidx.annotation.IdRes
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
-import androidx.core.view.updateLayoutParams
 import com.facebook.react.bridge.Arguments
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManager
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.uimanager.events.RCTEventEmitter
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.uniswap.R
 import com.uniswap.RnEthersRs
 import com.uniswap.theme.UniswapComponent
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.serialization.json.Json
 
 
 /**
@@ -49,7 +38,7 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
       id = R.id.seed_phrase_input_compose_id
       viewModel = SeedPhraseInputViewModel(
         ethersRs,
-        onInputValidated =  {
+        onInputValidated = {
           val bundle = Arguments.createMap().apply {
             putBoolean(FIELD_CAN_SUBMIT, it)
           }
@@ -86,13 +75,22 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
   override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
     return mapOf(
       EVENT_HELP_TEXT_PRESS to mapOf(
-        "phasedRegistrationNames" to mapOf("bubbled" to EVENT_HELP_TEXT_PRESS, "captured" to EVENT_HELP_TEXT_PRESS)
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_HELP_TEXT_PRESS,
+          "captured" to EVENT_HELP_TEXT_PRESS
+        )
       ),
       EVENT_INPUT_VALIDATED to mapOf(
-        "phasedRegistrationNames" to mapOf("bubbled" to EVENT_INPUT_VALIDATED, "captured" to EVENT_INPUT_VALIDATED)
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_INPUT_VALIDATED,
+          "captured" to EVENT_INPUT_VALIDATED
+        )
       ),
       EVENT_MNEMONIC_STORED to mapOf(
-        "phasedRegistrationNames" to mapOf("bubbled" to EVENT_MNEMONIC_STORED, "captured" to EVENT_MNEMONIC_STORED)
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_MNEMONIC_STORED,
+          "captured" to EVENT_MNEMONIC_STORED
+        )
       ),
     )
   }

@@ -30,7 +30,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { generateImportedAccounts } = useOnboardingContext()
+  const { generateImportedAccountsByMnemonic } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -74,14 +74,21 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       }
     }
 
-    const importedMnemonicId = await Keyring.importMnemonic(validMnemonic)
-    await generateImportedAccounts(importedMnemonicId, BackupType.Manual)
+    await generateImportedAccountsByMnemonic(validMnemonic, undefined, BackupType.Manual)
 
     // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
     if (!isRestoringMnemonic) {
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [value, mnemonicId, generateImportedAccounts, isRestoringMnemonic, t, navigation, params])
+  }, [
+    value,
+    mnemonicId,
+    generateImportedAccountsByMnemonic,
+    isRestoringMnemonic,
+    t,
+    navigation,
+    params,
+  ])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
@@ -108,7 +115,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   }
 
   const onPressRecoveryHelpButton = (): Promise<void> =>
-    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHelp)
+    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)

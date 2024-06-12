@@ -88,13 +88,15 @@ export function useTransactionRequestInfo({
       slippage: tradeWithStatus.trade.slippageTolerance,
     }
 
-    return {
+    const swapArgs: CreateSwapRequest = {
       quote: quoteWithSlippage,
       permitData: permitData ?? undefined,
       signature: signatureInfo.signature,
       simulateTransaction: shouldSimulateTxn,
       refreshGasPrice: true,
     }
+
+    return swapArgs
   }, [
     permitData,
     requiresPermit2Sig,

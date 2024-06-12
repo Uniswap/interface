@@ -155,6 +155,8 @@ export interface GlobalPalette {
   networkOptimism: string
   networkPolygon: string
   networkArbitrum: string
+  networkCelo: string
+  networkAvalanche: string
 }
 
 export interface Palette {
@@ -204,5 +206,7 @@ export interface Palette {
   chain_137: string
   chain_42161: string
   chain_80001: string
+  chain_42220: string
+  chain_43114: string
   chain_7777777: string
 }

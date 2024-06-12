@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'
 import { useOnAssetActivitySubscription } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -22,8 +22,8 @@ jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hoo
   useOnAssetActivitySubscription: jest.fn(),
 }))
 
-jest.mock('@web3-react/core', () => ({
-  useWeb3React: jest.fn(),
+jest.mock('hooks/useAccount', () => ({
+  useAccount: jest.fn(),
 }))
 
 function triggerSubscriptionUpdate() {
@@ -42,7 +42,7 @@ describe('TokenBalancesProvider', () => {
       variables: { account: '0xaddress1', subscriptionId: '123' },
     })
     mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.Realtime)
-    mocked(useWeb3React).mockReturnValue({ account: '0xaddress1', chainId: 1 } as any)
+    mocked(useAccount).mockReturnValue({ address: '0xaddress1', chainId: 1 } as any)
   })
 
   it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', () => {
@@ -93,7 +93,7 @@ describe('TokenBalancesProvider', () => {
       rerender()
 
       // Balances should refetch when account changes
-      mocked(useWeb3React).mockReturnValue({ account: '0xaddress2', chainId: 1 } as any)
+      mocked(useAccount).mockReturnValue({ address: '0xaddress2', chainId: 1 } as any)
       rerender()
 
       expect(mockLazyFetch).toHaveBeenCalledTimes(2)

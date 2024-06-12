@@ -29,6 +29,7 @@ import {
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import {
   NftActivityType,
   NftItemScreenQuery,
@@ -40,7 +41,6 @@ import { ChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'

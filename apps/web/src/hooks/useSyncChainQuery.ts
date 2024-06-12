@@ -1,71 +1,72 @@
-import { useWeb3React } from '@web3-react/core'
 import { CHAIN_IDS_TO_NAMES, useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
-import { ParsedQs } from 'qs'
-import { useEffect, useRef } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useLocation, useSearchParams } from 'react-router-dom'
 
+import { InterfacePageName } from '@uniswap/analytics-events'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getParsedChainId } from 'utils/chains'
+import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import useParsedQueryString from './useParsedQueryString'
 import useSelectChain from './useSelectChain'
 
-function getChainIdFromName(name: string) {
-  const entry = Object.entries(CHAIN_IDS_TO_NAMES).find(([, n]) => n === name)
-  const chainId = entry?.[0]
-  return chainId ? parseInt(chainId) : undefined
-}
-
-export function getParsedChainId(parsedQs?: ParsedQs) {
-  const chain = parsedQs?.chain
-  if (!chain || typeof chain !== 'string') {
-    return
-  }
-
-  return getChainIdFromName(chain)
-}
-
-export default function useSyncChainQuery() {
-  const { chainId, account } = useWeb3React()
-  const { isConnected } = useAccount()
+export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<number | undefined>) {
+  const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const parsedQs = useParsedQueryString()
-  const chainIdRef = useRef(chainId)
-  const accountRef = useRef(account)
-
-  useEffect(() => {
-    // Update chainIdRef when the account is retrieved from Web3React
-    if (account && account !== accountRef.current) {
-      chainIdRef.current = chainId
-      accountRef.current = account
-    }
-  }, [account, chainId])
-
-  const urlChainId = getParsedChainId(parsedQs)
+  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   const selectChain = useSelectChain()
-
   const [searchParams, setSearchParams] = useSearchParams()
+  const urlChainId = getParsedChainId(parsedQs)
 
+  const { pathname } = useLocation()
+  const page = getCurrentPageFromLocation(pathname)
   useEffect(() => {
-    // Change page chain on pageload if the app chainId does not match the query param chain
-    if (urlChainId && chainIdRef.current === chainId && chainId !== urlChainId) {
+    if (multichainUXEnabled) {
+      return
+    }
+    // Set page/app chain to match query param chain
+    if (page !== InterfacePageName.EXPLORE_PAGE && urlChainId && account.chainId !== urlChainId) {
+      chainIdRef.current = urlChainId
       selectChain(urlChainId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- exclude account.chainId; don't want to trigger twice on account.chainId & urlChainId both being set
+  }, [account.isConnected, chainIdRef, page, parsedQs, selectChain, urlChainId])
+
+  useEffect(() => {
+    if (chainIdRef.current || chainIdRef.current === account.chainId) {
+      chainIdRef.current = undefined
+      return
+    }
     // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported
-    else if (account && chainIdRef.current !== chainId && chainId !== urlChainId) {
-      if (isSupportedChain) {
-        searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
-        setSearchParams(searchParams, { replace: true })
-      } else if (searchParams.has('chain')) {
-        searchParams.delete('chain')
-        setSearchParams(searchParams, { replace: true })
-      }
+    if (
+      !multichainUXEnabled &&
+      account.isConnected &&
+      account.chainId &&
+      account.chainId !== (urlChainId ?? UniverseChainId.Mainnet)
+    ) {
       searchParams.delete('inputCurrency')
       searchParams.delete('outputCurrency')
+      if (isSupportedChain) {
+        searchParams.set('chain', CHAIN_IDS_TO_NAMES[account.chainId])
+      } else if (searchParams.has('chain')) {
+        searchParams.delete('chain')
+      }
       setSearchParams(searchParams, { replace: true })
     }
-    // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
-    else if (isConnected && chainId === urlChainId) {
-      chainIdRef.current = urlChainId
-    }
-  }, [urlChainId, selectChain, searchParams, isConnected, chainId, account, setSearchParams, isSupportedChain])
+  }, [
+    account.chainId,
+    account.isConnected,
+    chainIdRef,
+    isSupportedChain,
+    multichainUXEnabled,
+    searchParams,
+    setSearchParams,
+    urlChainId,
+  ])
 }

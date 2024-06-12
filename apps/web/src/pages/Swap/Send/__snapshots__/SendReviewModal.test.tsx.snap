@@ -684,36 +684,14 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
         class="c27 c28"
         width="min-content"
       >
-        <svg
+        <img
+          alt="Ethereum logo"
           aria-labelledby="titleID"
-          height="16"
-          style="width: 16px; height: 16px;"
-          width="16"
-        >
-          <title
-            id="titleID"
-          >
-            Ethereum logo
-          </title>
-          <rect
-            fill="#F9F9F9"
-            height="16"
-            rx="4"
-            width="16"
-          />
-          <rect
-            fill="#6B8AFF33"
-            height="16"
-            rx="4"
-            width="16"
-          />
-          <svg
-            height="16"
-            width="16"
-          >
-            ethereum.svg
-          </svg>
-        </svg>
+          height="16px"
+          src="ethereum-logo.png"
+          style="border-radius: 4px;"
+          width="16px"
+        />
         <div
           class="c7 css-142zc9n"
         >
@@ -1414,36 +1392,14 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
         class="c27 c28"
         width="min-content"
       >
-        <svg
+        <img
+          alt="Ethereum logo"
           aria-labelledby="titleID"
-          height="16"
-          style="width: 16px; height: 16px;"
-          width="16"
-        >
-          <title
-            id="titleID"
-          >
-            Ethereum logo
-          </title>
-          <rect
-            fill="#F9F9F9"
-            height="16"
-            rx="4"
-            width="16"
-          />
-          <rect
-            fill="#6B8AFF33"
-            height="16"
-            rx="4"
-            width="16"
-          />
-          <svg
-            height="16"
-            width="16"
-          >
-            ethereum.svg
-          </svg>
-        </svg>
+          height="16px"
+          src="ethereum-logo.png"
+          style="border-radius: 4px;"
+          width="16px"
+        />
         <div
           class="c7 css-142zc9n"
         >

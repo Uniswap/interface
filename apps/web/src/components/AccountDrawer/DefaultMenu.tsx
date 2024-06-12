@@ -1,7 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
+import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
@@ -28,8 +28,7 @@ export enum MenuState {
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
-  const { account } = useWeb3React()
-  const isAuthenticated = !!account
+  const account = useAccount()
 
   const [menu, setMenu] = useAtom(miniPortfolioMenuStateAtom)
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [setMenu])
@@ -60,8 +59,8 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:
-        return isAuthenticated ? (
-          <AuthenticatedHeader account={account} openSettings={openSettings} />
+        return account.address ? (
+          <AuthenticatedHeader account={account.address} openSettings={openSettings} />
         ) : (
           <WalletModal openSettings={openSettings} />
         )
@@ -78,13 +77,12 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       case MenuState.LOCAL_CURRENCY_SETTINGS:
         return <LocalCurrencyMenu onClose={openSettings} />
       case MenuState.LIMITS:
-        return isAuthenticated ? <LimitsMenu onClose={closeLimitsMenu} account={account} /> : null
+        return account.address ? <LimitsMenu onClose={closeLimitsMenu} account={account.address} /> : null
     }
   }, [
-    account,
+    account.address,
     closeLimitsMenu,
     closeSettings,
-    isAuthenticated,
     menu,
     openLanguageSettings,
     openLocalCurrencySettings,

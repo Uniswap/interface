@@ -1,7 +1,7 @@
 import {
-  CancelLimitsDialog,
+  CancelOrdersDialog,
   CancellationState,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelLimitsDialog'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
@@ -80,7 +80,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
           </StyledCancelButton>
         )}
       </Container>
-      <CancelLimitsDialog
+      <CancelOrdersDialog
         isVisible={cancelState !== CancellationState.NOT_STARTED}
         orders={selectedOrders}
         onCancel={() => setCancelState(CancellationState.NOT_STARTED)}

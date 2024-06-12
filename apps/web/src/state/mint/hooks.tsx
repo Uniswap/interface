@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-
+import { logger } from 'utilities/src/logger/logger'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useCurrencyBalances } from '../connection/hooks'
@@ -61,7 +61,7 @@ export function useDerivedMintInfo(
   poolTokenPercentage?: Percent
   error?: ReactNode
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
@@ -92,7 +92,7 @@ export function useDerivedMintInfo(
 
   // balances
   const balances = useCurrencyBalances(
-    account ?? undefined,
+    account.address,
     useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
   )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
@@ -160,7 +160,15 @@ export function useDerivedMintInfo(
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
       } catch (error) {
-        console.error(error)
+        logger.error(
+          `Error getLiquidityMinted: ${error}. Total supply: ${totalSupply}, tokenAmountA: ${tokenAmountA}, tokenAmountB: ${tokenAmountB}`,
+          {
+            tags: {
+              file: 'mint/hooks',
+              function: 'useDerivedMintInfo',
+            },
+          }
+        )
         return undefined
       }
     } else {
@@ -177,7 +185,7 @@ export function useDerivedMintInfo(
   }, [liquidityMinted, totalSupply])
 
   let error: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     error = <Trans i18nKey="common.connectWallet.button" />
   }
 

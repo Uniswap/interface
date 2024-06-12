@@ -45,11 +45,16 @@ import {
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
+import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
-import { Statsig, StatsigProvider } from 'uniswap/src/features/gating/sdk/statsig'
+import {
+  Statsig,
+  StatsigOptions,
+  StatsigProvider,
+  StatsigUser,
+} from 'uniswap/src/features/gating/sdk/statsig'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -133,7 +138,12 @@ function App(): JSX.Element | null {
 
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
-  const statSigOptions = {
+  const statSigOptions: {
+    user: StatsigUser
+    options: StatsigOptions
+    sdkKey: string
+    waitForInitialization: boolean
+  } = {
     options: {
       environment: {
         tier: getStatsigEnvironmentTier(),
@@ -144,7 +154,12 @@ function App(): JSX.Element | null {
       initCompletionCallback: loadStatsigOverrides,
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
-    user: deviceId ? { userID: deviceId } : {},
+    user: {
+      ...(deviceId ? { userID: deviceId } : {}),
+      custom: {
+        app: StatsigCustomAppValue.Mobile,
+      },
+    },
     waitForInitialization: true,
   }
 

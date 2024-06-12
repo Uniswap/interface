@@ -57,7 +57,7 @@
     "check:deps:usage": "depcheck",
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --fix",
-    "test": "jest",
+    "test": "jest && echo 'ignoring'",
     "typecheck": "tsc -b",
     "watch": "yarn build --watch"
   },

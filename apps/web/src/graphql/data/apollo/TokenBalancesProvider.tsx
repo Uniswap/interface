@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
@@ -55,29 +54,29 @@ function useHasAccountUpdate() {
   const { data } = useAssetActivitySubscription()
   const prevData = usePrevious(data)
 
-  const { account } = useWeb3React()
-  const prevAccount = usePrevious(account)
+  const account = useAccount()
+  const prevAccount = usePrevious(account.address)
 
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
-    const accountChanged = Boolean(prevAccount !== account && account)
+    const accountChanged = Boolean(prevAccount !== account.address && account.address)
 
     return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged
-  }, [account, data, hasLocalStateUpdate, isRealtime, prevAccount, prevData])
+  }, [account.address, data, hasLocalStateUpdate, isRealtime, prevAccount, prevData])
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
 
   const fetch = useCallback(() => {
-    if (!account) {
+    if (!account.address) {
       return
     }
-    lazyFetch({ variables: { ownerAddress: account, chains: GQL_MAINNET_CHAINS_MUTABLE } })
-  }, [account, lazyFetch])
+    lazyFetch({ variables: { ownerAddress: account.address, chains: GQL_MAINNET_CHAINS_MUTABLE } })
+  }, [account.address, lazyFetch])
 
   return (
     <AdaptiveTokenBalancesProvider query={query} fetch={fetch} stale={hasAccountUpdate}>

@@ -1,10 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useState } from 'react'
 import { isAddress } from 'utilities/src/addresses'
 import { uriToHttpUrls } from 'utilities/src/format/urls'
+import { logger } from 'utilities/src/logger/logger'
 import { safeNamehash } from 'utils/safeNamehash'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract, useERC1155Contract, useERC721Contract } from './useContract'
@@ -101,7 +102,7 @@ function useAvatarFromNFT(
         .then(({ image }) => {
           setAvatar(image)
         })
-        .catch((e) => console.warn(e))
+        .catch((e) => logger.warn('useENSAvatar', 'useAvatarFromNFT', e.message))
         .finally(() => {
           setLoading(false)
         })
@@ -120,16 +121,16 @@ function useERC721Uri(
   enforceOwnership: boolean
 ): { uri?: string; loading: boolean } {
   const idArgument = useMemo(() => [id], [id])
-  const { account } = useWeb3React()
+  const account = useAccount()
   const contract = useERC721Contract(contractAddress)
   const owner = useMainnetSingleCallResult(contract, 'ownerOf', idArgument, NEVER_RELOAD)
   const uri = useMainnetSingleCallResult(contract, 'tokenURI', idArgument, NEVER_RELOAD)
   return useMemo(
     () => ({
-      uri: !enforceOwnership || account === owner.result?.[0] ? uri.result?.[0] : undefined,
+      uri: !enforceOwnership || account.address === owner.result?.[0] ? uri.result?.[0] : undefined,
       loading: owner.loading || uri.loading,
     }),
-    [account, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result]
+    [account.address, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result]
   )
 }
 
@@ -154,7 +155,7 @@ function useERC1155Uri(
         loading: balance.loading || uri.loading,
       }
     } catch (error) {
-      console.error('Invalid token id', error)
+      logger.warn('useENSAvatar', 'useERC1155Uri', 'invalid token id', { id })
       return { loading: false }
     }
   }, [balance.loading, balance.result, enforceOwnership, uri.loading, uri.result, id])

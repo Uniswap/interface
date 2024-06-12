@@ -1,4 +1,4 @@
-import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
+import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 
 export function getServiceProviderForQuote(
   quote: FORQuote | undefined,

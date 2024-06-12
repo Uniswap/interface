@@ -1,11 +1,12 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import AppBody from 'pages/App/AppBody'
 import { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -26,7 +27,6 @@ import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { usePairAdder } from '../../state/user/hooks'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { Dots } from '../Pool/styled'
 
 enum Fields {
@@ -45,12 +45,14 @@ const POOLFINDER_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
 export default function PoolFinder() {
   const query = useQuery()
 
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(() => (chainId ? nativeOnChain(chainId) : null))
+  const [currency0, setCurrency0] = useState<Currency | null>(() =>
+    account.chainId ? nativeOnChain(account.chainId) : null
+  )
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = useV2Pair(currency0 ?? undefined, currency1 ?? undefined)
@@ -70,7 +72,7 @@ export default function PoolFinder() {
         JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0))
     )
 
-  const position: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
+  const position: CurrencyAmount<Token> | undefined = useTokenBalance(account.address, pair?.liquidityToken)
   const hasPosition = Boolean(position && JSBI.greaterThan(position.quotient, JSBI.BigInt(0)))
 
   const handleCurrencySelect = useCallback(
@@ -91,7 +93,7 @@ export default function PoolFinder() {
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
       <Text textAlign="center">
-        {!account ? <Trans i18nKey="poolFinder.connect" /> : <Trans i18nKey="poolFinder.selectToken" />}
+        {!account.isConnected ? <Trans i18nKey="poolFinder.connect" /> : <Trans i18nKey="poolFinder.selectToken" />}
       </Text>
     </LightCard>
   )

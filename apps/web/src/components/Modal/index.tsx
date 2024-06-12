@@ -1,5 +1,6 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
-import React from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import React, { KeyboardEvent, useCallback, useRef } from 'react'
 import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components'
@@ -106,6 +107,18 @@ export default function Modal({
   hideBorder = false,
   slideIn,
 }: ModalProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, () => (isOpen && onDismiss ? onDismiss() : undefined))
+
+  const handleEscape = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape' && isOpen && onDismiss) {
+        onDismiss()
+      }
+    },
+    [isOpen, onDismiss]
+  )
+
   const fadeTransition = useTransition(isOpen, {
     config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
@@ -133,7 +146,7 @@ export default function Modal({
   })
 
   return (
-    <>
+    <div tabIndex={0} onKeyUp={handleEscape}>
       {fadeTransition(
         ({ opacity }, item) =>
           item && (
@@ -148,6 +161,7 @@ export default function Modal({
                 (styles, item) =>
                   item && (
                     <StyledDialogContent
+                      ref={ref}
                       {...(isMobile
                         ? {
                             ...bind(),
@@ -172,6 +186,6 @@ export default function Modal({
             </StyledDialogOverlay>
           )
       )}
-    </>
+    </div>
   )
 }

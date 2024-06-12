@@ -362,46 +362,46 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
 
 // get the users delegatee if it exists
 export function useUserDelegatee(): string {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const uniContract = useUniContract()
-  const { result } = useSingleCallResult(uniContract, 'delegates', [account ?? undefined])
+  const { result } = useSingleCallResult(uniContract, 'delegates', [account.address])
   return result?.[0] ?? undefined
 }
 
 // gets the users current votes
 export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const uniContract = useUniContract()
 
   // check for available votes
-  const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])
+  const { result, loading } = useSingleCallResult(uniContract, 'getCurrentVotes', [account.address])
   return useMemo(() => {
-    const uni = chainId ? UNI[chainId] : undefined
+    const uni = account.chainId ? UNI[account.chainId] : undefined
     return { loading, votes: uni && result ? CurrencyAmount.fromRawAmount(uni, result?.[0]) : undefined }
-  }, [chainId, loading, result])
+  }, [account.chainId, loading, result])
 }
 
 // fetch available votes as of block (usually proposal start block)
 export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const uniContract = useUniContract()
 
   // check for available votes
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
-  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
-    ?.result?.[0]
+  const uni = useMemo(() => (account.chainId ? UNI[account.chainId] : undefined), [account.chainId])
+  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account.address, block ?? undefined])?.result?.[0]
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const uniContract = useUniContract()
 
   return useCallback(
     (delegatee: string | undefined) => {
-      if (!provider || !chainId || !account || !delegatee || !isAddress(delegatee ?? '')) {
+      if (!provider || !account.chainId || !account.address || !delegatee || !isAddress(delegatee ?? '')) {
         return undefined
       }
       const args = [delegatee]
@@ -420,7 +420,7 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
           })
       })
     },
-    [account, addTransaction, chainId, provider, uniContract]
+    [account.address, addTransaction, account.chainId, provider, uniContract]
   )
 }
 
@@ -428,13 +428,13 @@ export function useVoteCallback(): (
   proposalId: string | undefined,
   voteOption: VoteOption
 ) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId, voteOption === VoteOption.Against ? 0 : voteOption === VoteOption.For ? 1 : 2]
@@ -453,18 +453,18 @@ export function useVoteCallback(): (
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
 export function useQueueCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId]
@@ -481,18 +481,18 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
 export function useExecuteCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId]
@@ -509,20 +509,20 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
 export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
-      if (!account || !latestGovernanceContract || !createProposalData || !chainId) {
+      if (!account.address || !latestGovernanceContract || !createProposalData || !account.chainId) {
         return undefined
       }
 
@@ -545,7 +545,7 @@ export function useCreateProposalCallback(): (
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 

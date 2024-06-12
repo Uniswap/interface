@@ -2,6 +2,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -13,11 +14,12 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import LandingV2 from './LandingV2'
 
 export default function Landing() {
-  const { account, connector } = useWeb3React()
+  const account = useAccount()
+  const { connector } = useWeb3React()
   const hasRecentConnection = !!useRecentConnectorId()
   const disconnect = useCallback(() => {
-    connector.deactivate?.()
-    connector.resetState()
+    connector?.deactivate?.()
+    connector?.resetState()
   }, [connector])
 
   const isExitAnimationEnabled = useFeatureFlag(FeatureFlags.ExitAnimation)
@@ -26,11 +28,11 @@ export default function Landing() {
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
-  const prevAccount = usePrevious(account)
+  const prevAccount = usePrevious(account.address)
   const redirectOnConnect = useRef(false)
   // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {
-    if (accountDrawer.isOpen && account && !prevAccount) {
+    if (accountDrawer.isOpen && account.address && !prevAccount) {
       redirectOnConnect.current = true
       setTransition(true)
     }
@@ -38,19 +40,28 @@ export default function Landing() {
       () => {
         if (redirectOnConnect.current) {
           navigate('/swap')
-        } else if (account && queryParams.intro) {
+        } else if (account.address && queryParams.intro) {
           disconnect()
         }
       },
       isExitAnimationEnabled ? TRANSITION_DURATIONS.slow : TRANSITION_DURATIONS.fast
     )
     return () => clearTimeout(timeoutId)
-  }, [account, prevAccount, accountDrawer, navigate, queryParams.intro, connector, disconnect, isExitAnimationEnabled])
+  }, [
+    account.address,
+    prevAccount,
+    accountDrawer,
+    navigate,
+    queryParams.intro,
+    connector,
+    disconnect,
+    isExitAnimationEnabled,
+  ])
 
   // Redirect to swap page if user is connected or has been recently
   // The intro query parameter can be used to override this
 
-  if ((account || hasRecentConnection) && !queryParams.intro) {
+  if ((account.isConnected || hasRecentConnection) && !queryParams.intro) {
     return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 

@@ -32,6 +32,7 @@ import {
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -44,7 +45,6 @@ import { ChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'

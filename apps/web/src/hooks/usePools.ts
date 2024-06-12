@@ -9,6 +9,7 @@ import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useRef } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
 import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
+import { logger } from 'utilities/src/logger/logger'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 
@@ -157,7 +158,18 @@ export function usePools(
         const pool = PoolCache.getPool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)
         return [PoolState.EXISTS, pool]
       } catch (error) {
-        console.error('Error when constructing the pool', error)
+        logger.error(error, {
+          tags: {
+            file: 'usePools',
+            function: 'usePools',
+          },
+          extra: {
+            token0: token0.address,
+            token1: token1.address,
+            chainId: token0.chainId,
+            fee,
+          },
+        })
         return [PoolState.NOT_EXISTS, null]
       }
     })

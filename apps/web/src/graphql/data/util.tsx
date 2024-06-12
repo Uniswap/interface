@@ -1,6 +1,5 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
-import * as Sentry from '@sentry/react'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import {
@@ -140,22 +139,6 @@ export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): Supporte
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
-}
-
-export function logSentryErrorForUnsupportedChain({
-  extras,
-  errorMessage,
-}: {
-  extras?: Record<string, any>
-  errorMessage: string
-}) {
-  Sentry.withScope((scope) => {
-    extras &&
-      Object.entries(extras).map(([k, v]) => {
-        scope.setExtra(k, v)
-      })
-    Sentry.captureException(new Error(errorMessage))
-  })
 }
 
 export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChain {

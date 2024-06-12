@@ -11,9 +11,9 @@ import {
   useIsShortMobileDevice,
 } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/slice'

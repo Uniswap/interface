@@ -113,14 +113,14 @@ export default function NetworkFilter() {
             {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
               const isSupportedChain = isSupportedChainCallaback(network)
               const chainInfo = isSupportedChain ? CHAIN_INFO[network] : undefined
-              return (
+              return chainInfo ? (
                 <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>
                   <NetworkLabel>
-                    <ChainLogo chainId={network} size={20} /> {chainInfo?.label}
+                    <ChainLogo chainId={network} size={20} /> {chainInfo.label}
                   </NetworkLabel>
                   <Tag>Coming soon</Tag>
                 </InternalMenuItem>
-              )
+              ) : null
             })}
           </>
         }

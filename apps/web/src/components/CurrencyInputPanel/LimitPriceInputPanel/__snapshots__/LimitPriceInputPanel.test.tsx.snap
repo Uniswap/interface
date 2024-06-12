@@ -333,6 +333,9 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
           </button>
         </div>
       </div>
+      <div
+        tabindex="0"
+      />
     </div>
   </span>
 </span>
@@ -671,6 +674,9 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
           </button>
         </div>
       </div>
+      <div
+        tabindex="0"
+      />
     </div>
   </span>
 </span>

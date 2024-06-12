@@ -1,18 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { DEFAULT_NATIVE_ADDRESS } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
-
-// swap router API special cases these strings to represent native currencies
-// all chains have "ETH" as native currency symbol except for polygon and bnb
-export enum SwapRouterNativeAssets {
-  MATIC = 'MATIC',
-  BNB = 'BNB',
-  ETH = 'ETH',
-}
 
 export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
@@ -32,22 +24,6 @@ export function buildWrappedNativeCurrencyId(chainId: ChainId): string {
 
 export function areCurrencyIdsEqual(id1: CurrencyId, id2: CurrencyId): boolean {
   return id1.toLowerCase() === id2.toLowerCase()
-}
-
-export function currencyAddressForSwapQuote(currency: Currency): string {
-  if (currency.isNative) {
-    switch (currency.chainId) {
-      case ChainId.Polygon: // fall through
-      case ChainId.PolygonMumbai:
-        return SwapRouterNativeAssets.MATIC
-      case ChainId.Bnb:
-        return SwapRouterNativeAssets.BNB
-      default:
-        return SwapRouterNativeAssets.ETH
-    }
-  }
-
-  return currencyAddress(currency)
 }
 
 export function currencyAddress(currency: Currency): string {

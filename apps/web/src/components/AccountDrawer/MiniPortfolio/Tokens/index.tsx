@@ -4,7 +4,7 @@ import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { PortfolioToken } from 'graphql/data/portfolios'
-import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
@@ -90,9 +91,12 @@ function TokenRow({
 
   const currency = gqlToCurrency(token)
   if (!currency) {
-    logSentryErrorForUnsupportedChain({
-      extras: { token },
-      errorMessage: 'Token from unsupported chain received from Mini Portfolio Token Balance Query',
+    logger.error(new Error('Token from unsupported chain received from Mini Portfolio Token Balance Query'), {
+      tags: {
+        file: 'RecentlySearchedAssets',
+        function: 'useRecentlySearchedAssets',
+      },
+      extra: { token },
     })
     return null
   }

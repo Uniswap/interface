@@ -7,17 +7,33 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
-import { Segment, SegmentedControl } from './SegmentedControl'
+import PillMultiToggle from 'components/Toggle/PillMultiToggle'
+import styled, { useTheme } from 'styled-components'
+import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
 import { ThemedText } from './text'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
 
 export enum ThemeMode {
-  LIGHT,
+  LIGHT = 0,
   DARK,
   AUTO,
 }
+
+const OptionPill = styled.div`
+  padding: 6px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const CompactOptionPill = styled.div`
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+`
 
 // Tracks the device theme
 const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
@@ -81,32 +97,97 @@ export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
   }, [isDarkMode, setMode])
 }
 
-export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
+const ThemePillMultiToggleContainer = styled.div`
+  width: fit;
+`
+
+const compactOptions = [
+  {
+    value: ThemeMode.AUTO,
+    display: (
+      <CompactOptionPill>
+        <Trans>Auto</Trans>
+      </CompactOptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.LIGHT,
+    display: (
+      <CompactOptionPill>
+        <SunFilled size="$icon.20" />
+      </CompactOptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.DARK,
+    display: (
+      <CompactOptionPill>
+        <MoonFilled size="$icon.20" />
+      </CompactOptionPill>
+    ),
+  },
+]
+
+const defaultOptions = [
+  {
+    value: ThemeMode.AUTO,
+    display: (
+      <OptionPill>
+        <Trans>Auto</Trans>
+      </OptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.LIGHT,
+    display: (
+      <OptionPill>
+        <Sun size="20" />
+      </OptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.DARK,
+    display: (
+      <OptionPill>
+        <Moon size="20" />
+      </OptionPill>
+    ),
+  },
+]
+
+export function ThemeSelector({ disabled, compact = false }: { disabled?: boolean; compact?: boolean }) {
+  const theme = useTheme()
   const [mode, setMode] = useAtom(themeModeAtom)
   const switchMode = useCallback(
-    (mode: ThemeMode) => {
+    (mode: string | number) => {
       // Switch feels less jittery with short delay
-      !disabled && setTimeout(() => setMode(mode), THEME_UPDATE_DELAY)
+      !disabled && setTimeout(() => setMode(mode as ThemeMode), THEME_UPDATE_DELAY)
     },
     [disabled, setMode]
   )
 
   return (
-    <Row align="center">
+    <ThemePillMultiToggleContainer>
+      <PillMultiToggle
+        options={compact ? compactOptions : defaultOptions}
+        currentSelected={mode}
+        onSelectOption={switchMode}
+        activePillColor={theme.accent2}
+        activeTextColor={theme.accent1}
+      />
+    </ThemePillMultiToggleContainer>
+  )
+}
+
+export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
+  return (
+    <Row align="center" justify="space-between">
       <Row width="40%">
         <ThemedText.SubHeaderSmall color="primary">
           <Trans i18nKey="themeToggle.theme" />
         </ThemedText.SubHeaderSmall>
       </Row>
-      <Row style={{ flexGrow: 1 }} justify="flex-end" width="60%">
-        <SegmentedControl selected={mode} onSelect={switchMode}>
-          <Segment value={ThemeMode.AUTO} testId="theme-auto">
-            <Trans i18nKey="commmon.automatic" />
-          </Segment>
-          <Segment value={ThemeMode.LIGHT} Icon={Sun} testId="theme-lightmode" />
-          <Segment value={ThemeMode.DARK} Icon={Moon} testId="theme-darkmode" />
-        </SegmentedControl>
-      </Row>
+      <ThemeSelector disabled={disabled} />
     </Row>
   )
 }

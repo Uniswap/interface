@@ -11,6 +11,9 @@ export const BASE_CURRENCY = NativeCurrency.onChain(ChainId.Base)
 export const ARBITRUM_CURRENCY = NativeCurrency.onChain(ChainId.ArbitrumOne)
 export const OPTIMISM_CURRENCY = NativeCurrency.onChain(ChainId.Optimism)
 export const POLYGON_CURRENCY = NativeCurrency.onChain(ChainId.Polygon)
+export const CELO_CURRENCY = NativeCurrency.onChain(ChainId.Celo)
+export const AVALANCHE_CURRENCY = NativeCurrency.onChain(ChainId.Avalanche)
+export const ZORA_CURRENCY = NativeCurrency.onChain(ChainId.Zora)
 
 type CurrencyInfoOptions = {
   nativeCurrency: NativeCurrency

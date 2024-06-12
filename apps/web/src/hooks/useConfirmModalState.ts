@@ -12,6 +12,7 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -98,7 +99,12 @@ export function useConfirmModalState({
     if (didUserReject(e)) {
       return
     }
-    console.error(e)
+    logger.error(e, {
+      tags: {
+        file: 'useConfirmModalState',
+        function: 'useConfirmModalState',
+      },
+    })
     setApprovalError(errorType)
   }
 

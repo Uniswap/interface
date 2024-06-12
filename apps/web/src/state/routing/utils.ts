@@ -12,8 +12,8 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
+import { logger } from 'utilities/src/logger/logger'
 import { toSlippagePercent } from 'utils/slippage'
-
 import { getApproveInfo, getWrapInfo } from './gas'
 import {
   ClassicQuoteData,
@@ -89,7 +89,12 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
       }
     })
   } catch (e) {
-    console.error('Error computing routes', e)
+    logger.error(e, {
+      tags: {
+        file: 'routing/utils',
+        function: 'computeRoutes',
+      },
+    })
     return
   }
 }

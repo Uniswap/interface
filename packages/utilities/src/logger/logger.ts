@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { Extras, ScopeContext } from '@sentry/types'
-import { isWeb } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 import { Sentry } from './Sentry'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -54,8 +54,13 @@ function logMessage(
   message: string,
   ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
-  if (__DEV__) {
+  // Log to console directly for dev builds or interface for debugging
+  if (__DEV__ || isInterface) {
     console[level](...formatMessage(level, fileName, functionName, message), ...args)
+  }
+
+  // Skip sentry logs for dev builds
+  if (__DEV__) {
     return
   }
 
@@ -69,8 +74,13 @@ function logMessage(
 function logException(error: unknown, captureContext: LoggerErrorContext): void {
   const updatedContext = addErrorExtras(error, captureContext)
 
-  if (__DEV__) {
+  // Log to console directly for dev builds or interface for debugging
+  if (__DEV__ || isInterface) {
     console.error(error)
+  }
+
+  // Skip sentry logs for dev builds
+  if (__DEV__) {
     return
   }
 

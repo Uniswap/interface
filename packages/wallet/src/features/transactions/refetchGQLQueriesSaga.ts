@@ -4,13 +4,13 @@ import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import {
   buildCurrencyId,
@@ -42,7 +42,7 @@ export function* refetchGQLQueries({
   yield* delay(REFETCH_INTERVAL)
 
   yield* call([apolloClient, apolloClient.refetchQueries], {
-    include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+    include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
   })
 
   if (!currencyIdToStartingBalance) {
@@ -65,7 +65,7 @@ export function* refetchGQLQueries({
     yield* delay(REFETCH_INTERVAL)
 
     yield* call([apolloClient, apolloClient.refetchQueries], {
-      include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+      include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
     })
 
     freshnessLag += REFETCH_INTERVAL

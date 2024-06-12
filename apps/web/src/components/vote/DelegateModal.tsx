@@ -1,5 +1,5 @@
 import { isAddress } from '@ethersproject/address'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
@@ -7,10 +7,11 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
+import { logger } from 'utilities/src/logger/logger'
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
-import { useTokenBalance } from '../../state/connection/hooks'
 import { useDelegateCallback } from '../../state/governance/hooks'
 import AddressInputPanel from '../AddressInputPanel'
 import { ButtonPrimary } from '../Button'
@@ -43,7 +44,7 @@ interface VoteModalProps {
 }
 
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for delegate input
   const [usingDelegate, setUsingDelegate] = useState(false)
@@ -54,11 +55,11 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
-  const activeDelegate = usingDelegate ? typed : account
+  const activeDelegate = usingDelegate ? typed : account.address
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // get the number of votes available to delegate
-  const uniBalance = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const uniBalance = useTokenBalance(account.address, account.chainId ? UNI[account.chainId] : undefined)
 
   const delegateCallback = useDelegateCallback()
 
@@ -84,7 +85,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
     // try delegation and store hash
     const hash = await delegateCallback(parsedAddress ?? undefined)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('DelegateModal', 'onDelegate', error)
     })
 
     if (hash) {

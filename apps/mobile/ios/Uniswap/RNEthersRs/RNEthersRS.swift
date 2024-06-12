@@ -86,6 +86,16 @@ class RNEthersRS: NSObject {
     return
   }
   
+  @objc(removeMnemonic:resolve:reject:)
+  func removeMnemonic(
+    mnemonicId: String,
+    resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    let res = keychain.delete(keychainKeyForMnemonicId(mnemonicId: mnemonicId))
+    resolve(res)
+  }
+  
   /**
    Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
    
@@ -187,6 +197,14 @@ class RNEthersRS: NSObject {
     storeNewPrivateKey(address: address, privateKey: xprv)
     private_key_free(private_key)
     resolve(address)
+  }
+
+  @objc(removePrivateKey:resolve:reject:)
+  func removePrivateKey(
+    address: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock
+  ) {
+    let res = keychain.delete(keychainKeyForPrivateKey(address: address))
+    resolve(res)
   }
   
   @objc(signTransactionHashForAddress:hash:chainId:resolve:reject:)

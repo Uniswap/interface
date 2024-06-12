@@ -16,6 +16,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
@@ -36,15 +37,15 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 
 /** A component to run hooks under the Web3ReactProvider context. */
 function Updater() {
-  const { address: account, chainId } = useAccount()
+  const account = useAccount()
   const provider = useEthersWeb3Provider()
 
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const isSupportedChain = useIsSupportedChainId(account.chainId)
   const { connector } = useAccount()
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
-  const networkProvider = isSupportedChain ? RPC_PROVIDERS[chainId] : undefined
+  const networkProvider = isSupportedChain && account.chainId ? RPC_PROVIDERS[account.chainId] : undefined
 
   const updateRecentConnectorId = useUpdateAtom(recentConnectorIdAtom)
   useEffect(() => {
@@ -68,31 +69,31 @@ function Updater() {
     }
   }, [analyticsContext, networkProvider, provider, shouldTrace])
 
-  const previousConnectedChainId = usePrevious(chainId)
+  const previousConnectedChainId = usePrevious(account.chainId)
   useEffect(() => {
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== chainId
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
     if (chainChanged) {
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
-        wallet_address: account,
+        wallet_address: account.address,
         wallet_type: connector?.name ?? 'Network',
-        chain_id: chainId,
+        chain_id: account.chainId,
         previousConnectedChainId,
         page: currentPage,
       })
     }
-  }, [account, chainId, connector, currentPage, previousConnectedChainId])
+  }, [account.address, account.chainId, connector, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
-  const previousAccount = usePrevious(account)
+  const previousAccount = usePrevious(account.address)
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
-    if (account && account !== previousAccount) {
+    if (account.address && account.address !== previousAccount) {
       const walletType = connector?.name ?? 'Network'
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
 
       const isReconnect = connectedWallets.some(
-        (wallet) => wallet.account === account && wallet.walletType === walletType
+        (wallet) => wallet.account === account.address && wallet.walletType === walletType
       )
 
       provider
@@ -101,33 +102,42 @@ function Updater() {
           setUserProperty(CustomUserProperties.WALLET_VERSION, clientVersion)
         })
         .catch((error) => {
-          console.warn('Failed to get client version', error)
+          logger.warn('Web3Provider', 'Updater', 'Failed to get client version', error)
         })
 
       // User properties *must* be set before sending corresponding event properties,
       // so that the event contains the correct and up-to-date user properties.
-      setUserProperty(CustomUserProperties.WALLET_ADDRESS, account)
-      setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account, true)
+      setUserProperty(CustomUserProperties.WALLET_ADDRESS, account.address)
+      setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
       setUserProperty(CustomUserProperties.WALLET_TYPE, walletType)
       setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
-      if (chainId) {
-        setUserProperty(CustomUserProperties.CHAIN_ID, chainId)
-        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId, true)
+      if (account.chainId) {
+        setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
       }
 
       sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
-        wallet_address: account,
+        wallet_address: account.address,
         wallet_type: walletType,
         is_reconnect: isReconnect,
         peer_wallet_agent: peerWalletAgent,
         page: currentPage,
       })
 
-      addConnectedWallet({ account, walletType })
+      addConnectedWallet({ account: account.address, walletType })
     }
-  }, [account, addConnectedWallet, currentPage, chainId, connectedWallets, connector, previousAccount, provider])
+  }, [
+    account.address,
+    addConnectedWallet,
+    currentPage,
+    account.chainId,
+    connectedWallets,
+    connector,
+    previousAccount,
+    provider,
+  ])
 
   return null
 }
@@ -137,7 +147,5 @@ function trace(event: any) {
     return
   }
   const { method, id, params } = event.request
-  console.groupCollapsed(method, id)
-  console.debug(params)
-  console.groupEnd()
+  logger.debug('Web3Provider', 'provider', 'trace', { method, id, params })
 }

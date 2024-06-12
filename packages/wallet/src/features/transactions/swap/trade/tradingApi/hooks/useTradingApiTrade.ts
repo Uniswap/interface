@@ -98,7 +98,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     if (skipQuery) {
       return undefined
     }
-    return {
+
+    const quoteArgs: TradingApiQuoteRequest = {
       type: requestTradeType,
       amount: amount.quotient.toString(),
       swapper: activeAccountAddress,
@@ -107,10 +108,10 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
-      includeGasInfo: true,
       routingPreference,
-      deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS),
     }
+
+    return quoteArgs
   }, [
     activeAccountAddress,
     amount,

@@ -368,18 +368,6 @@ export const TwitterIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const CheckMarkIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M16.6693 5.33789L7.5026 14.3175L3.33594 10.2358"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-)
-
 export const ChevronLeftIcon = (props: SVGProps) => (
   <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

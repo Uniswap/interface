@@ -1,5 +1,5 @@
 import { t } from 'i18n'
-
+import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from './errors'
 
 function getReason(error: any): string | undefined {
@@ -71,7 +71,13 @@ export function swapErrorToUserReadableMessage(error: any): string {
       return t`The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
-        console.error(error, reason)
+        logger.error(error, {
+          tags: {
+            file: 'swapErrorToUserReadableMessage',
+            function: 'swapErrorToUserReadableMessage',
+          },
+          extra: { reason },
+        })
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
       }
       return t(

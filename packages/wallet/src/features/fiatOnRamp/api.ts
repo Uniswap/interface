@@ -3,28 +3,19 @@ import { MoonpayEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { objectToQueryString } from 'uniswap/src/data/utils'
+import { useFiatOnRampAggregatorTransferServiceProvidersQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
+import {
+  FORServiceProvider,
+  FORTransactionRequest,
+  FORTransactionResponse,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
+import { createSignedRequestParams } from 'wallet/src/data/utils'
 import {
-  FORGetCountryResponse,
-  FORQuoteRequest,
-  FORQuoteResponse,
-  FORServiceProvider,
-  FORServiceProvidersRequest,
-  FORServiceProvidersResponse,
-  FORSupportedCountriesResponse,
-  FORSupportedFiatCurrenciesRequest,
-  FORSupportedFiatCurrenciesResponse,
-  FORSupportedTokensRequest,
-  FORSupportedTokensResponse,
-  FORTransactionRequest,
-  FORTransactionResponse,
-  FORTransferWidgetUrlRequest,
-  FORWidgetUrlRequest,
-  FORWidgetUrlResponse,
   FiatOnRampTransactionDetails,
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
@@ -44,20 +35,11 @@ import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
-import { transformPaymentMethods } from './utils'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
 const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 3
-
-const FOR_API_HEADERS = {
-  'Content-Type': 'application/json',
-  'X-API-KEY': config.uniswapApiKey,
-  'x-request-source': REQUEST_SOURCE,
-  'x-app-version': getVersionHeader(),
-  Origin: uniswapUrls.requestOriginUrl,
-}
 
 // List of currency codes that our Moonpay account supports
 // Manually maintained for now
@@ -229,71 +211,12 @@ export const {
 } = fiatOnRampApi
 
 export const fiatOnRampAggregatorApi = createApi({
-  reducerPath: 'fiatOnRampAggregatorApi',
+  reducerPath: 'fiatOnRampAggregatorApi-wallet',
   baseQuery: fetchBaseQuery({
     baseUrl: uniswapUrls.fiatOnRampApiUrl,
     headers: FOR_API_HEADERS,
   }),
   endpoints: (builder) => ({
-    fiatOnRampAggregatorCountryList: builder.query<FORSupportedCountriesResponse, void>({
-      query: () => `/supported-countries`,
-    }),
-    fiatOnRampAggregatorGetCountry: builder.query<FORGetCountryResponse, void>({
-      query: () => `/get-country`,
-    }),
-    fiatOnRampAggregatorCryptoQuote: builder.query<FORQuoteResponse, FORQuoteRequest>({
-      query: (request) => ({
-        url: '/quote',
-        body: request,
-        method: 'POST',
-      }),
-      keepUnusedDataFor: 0,
-    }),
-    fiatOnRampAggregatorServiceProviders: builder.query<
-      FORServiceProvidersResponse,
-      FORServiceProvidersRequest
-    >({
-      query: (request) => `/service-providers?${new URLSearchParams(request).toString()}`,
-      transformResponse: (response: FORServiceProvidersResponse) => ({
-        serviceProviders: response.serviceProviders.map((sp) => ({
-          ...sp,
-          paymentMethods: transformPaymentMethods(sp.paymentMethods),
-        })),
-      }),
-    }),
-    fiatOnRampAggregatorTransferServiceProviders: builder.query<FORServiceProvidersResponse, void>({
-      query: () => '/transfer-service-providers',
-      keepUnusedDataFor: 60 * 60, // 1 hour
-    }),
-    fiatOnRampAggregatorSupportedTokens: builder.query<
-      FORSupportedTokensResponse,
-      FORSupportedTokensRequest
-    >({
-      query: (request) => `/supported-tokens?${new URLSearchParams(request).toString()}`,
-    }),
-    fiatOnRampAggregatorSupportedFiatCurrencies: builder.query<
-      FORSupportedFiatCurrenciesResponse,
-      FORSupportedFiatCurrenciesRequest
-    >({
-      query: (request) => `/supported-fiat-currencies?${new URLSearchParams(request).toString()}`,
-    }),
-    fiatOnRampAggregatorWidget: builder.query<FORWidgetUrlResponse, FORWidgetUrlRequest>({
-      query: (request) => ({
-        url: '/widget-url',
-        body: request,
-        method: 'POST',
-      }),
-    }),
-    fiatOnRampAggregatorTransferWidget: builder.query<
-      FORWidgetUrlResponse,
-      FORTransferWidgetUrlRequest
-    >({
-      query: (request) => ({
-        url: '/transfer-widget-url',
-        body: request,
-        method: 'POST',
-      }),
-    }),
     fiatOnRampAggregatorTransaction: builder.query<FORTransactionResponse, FORTransactionRequest>({
       async queryFn(args, { getState }, _extraOptions, baseQuery) {
         try {
@@ -327,18 +250,7 @@ export const fiatOnRampAggregatorApi = createApi({
   }),
 })
 
-export const {
-  useFiatOnRampAggregatorCountryListQuery,
-  useFiatOnRampAggregatorCryptoQuoteQuery,
-  useFiatOnRampAggregatorServiceProvidersQuery,
-  useFiatOnRampAggregatorTransferServiceProvidersQuery,
-  useFiatOnRampAggregatorSupportedTokensQuery,
-  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
-  useFiatOnRampAggregatorWidgetQuery,
-  useFiatOnRampAggregatorTransferWidgetQuery,
-  useFiatOnRampAggregatorTransactionQuery,
-  useFiatOnRampAggregatorGetCountryQuery,
-} = fiatOnRampAggregatorApi
+export const { useFiatOnRampAggregatorTransactionQuery } = fiatOnRampAggregatorApi
 
 /**
  * Utility to fetch fiat onramp transactions from moonpay

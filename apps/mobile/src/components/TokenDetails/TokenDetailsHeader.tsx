@@ -1,10 +1,10 @@
 import React from 'react'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 

@@ -160,6 +160,8 @@ export const colors = {
   networkBsc: '#F0B90B',
   networkBase: '#0052FF',
   networkBlast: '#FCFC03',
+  networkAvalanche: '#E84142',
+  networkCelo: '#FCFF52',
   fiatOnRampBanner: '#FB36D0',
 }
 
@@ -292,6 +294,8 @@ export const colorsLight = {
   chain_7777777: sporeLight.neutral1,
   chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
+  chain_42220: colors.networkCelo,
+  chain_43114: colors.networkAvalanche,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -361,4 +365,6 @@ export const colorsDark = {
   chain_7777777: sporeDark.neutral1,
   chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
+  chain_42220: colors.networkCelo,
+  chain_43114: colors.networkAvalanche,
 }

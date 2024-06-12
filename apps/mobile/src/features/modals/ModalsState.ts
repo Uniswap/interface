@@ -3,10 +3,10 @@ import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWallet
 import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export interface AppModalState<T> {

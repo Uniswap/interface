@@ -7,8 +7,8 @@ import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-
 import { PoolState, usePoolMultichain } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
@@ -103,7 +103,8 @@ export function usePoolActiveLiquidity(
   sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
-  const defaultChainId = useAccount().chainId ?? ChainId.MAINNET
+  const account = useAccount()
+  const defaultChainId = account.chainId ?? ChainId.MAINNET
   const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96
@@ -142,7 +143,11 @@ export function usePoolActiveLiquidity(
 
     if (pivot < 0) {
       // consider setting a local error
-      console.error('TickData pivot not found')
+      logger.debug('usePoolTickData', 'usePoolActiveLiquidity', 'TickData pivot not found', {
+        token0: token0.address,
+        token1: token1.address,
+        chainId: token0.chainId,
+      })
       return {
         isLoading,
         error,

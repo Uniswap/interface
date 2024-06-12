@@ -18,6 +18,11 @@ import SwiftUI
     get { return vc.rootView.props.mnemonicId }
   }
   
+  var selectedWordPlaceholder: String {
+    set { vc.rootView.props.selectedWordPlaceholder = newValue}
+    get { return vc.rootView.props.selectedWordPlaceholder }
+  }
+  
   var shouldShowSmallText: Bool {
     set { vc.rootView.props.shouldShowSmallText = newValue}
     get { return vc.rootView.props.shouldShowSmallText }
@@ -36,11 +41,12 @@ import SwiftUI
 
 class MnemonicConfirmationProps : ObservableObject {
   @Published var mnemonicId: String = ""
+  @Published var selectedWordPlaceholder: String = ""
   @Published var shouldShowSmallText: Bool = false
   @Published var onConfirmComplete: RCTDirectEventBlock = { _ in }
   @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
   @Published var scrambledWords: [String] = Array(repeating: "", count: 12)
-  @Published var typedWords: [String] = Array(repeating: "", count: 12)
+  @Published var typedWordIndexes: [Int] = Array(repeating: -1, count: 12)
   @Published var selectedIndex: Int = 0
 }
 
@@ -58,74 +64,99 @@ struct MnemonicConfirmation: View {
     }
   }
   
-  func onSuggestionTapped(word: String) {
-    props.typedWords[props.selectedIndex] = word
-    
-    if (props.typedWords == props.mnemonicWords) {
-      props.onConfirmComplete([:])
-    } else if (props.mnemonicWords[props.selectedIndex] == props.typedWords[props.selectedIndex] && props.selectedIndex < props.mnemonicWords.count - 1) {
+  func onSuggestionTapped(tappedIndex: Int) {
+    props.typedWordIndexes[props.selectedIndex] = tappedIndex
+
+    // Check if typed words match mnemonic words only if all fields are filled
+    if (props.selectedIndex == props.mnemonicWords.count - 1) {
+      if (isMnemonicMatch()) {
+        props.onConfirmComplete([:])
+      }
+    } else if (props.mnemonicWords[props.selectedIndex] == props.scrambledWords[tappedIndex] && props.selectedIndex < props.mnemonicWords.count - 1) {
       props.selectedIndex += 1
     }
   }
   
-  func onFieldTapped(fieldNumber: Int) {
-    props.selectedIndex = fieldNumber - 1
+  func isMnemonicMatch() -> Bool {
+    for i in 0..<props.typedWordIndexes.count {
+      if (getTypedWord(index: i) != props.mnemonicWords[i]) {
+        return false
+      }
+    }
+    
+    return true
   }
   
-  
-  func getLabelFocusState(index: Int) -> InputFocusState{
-    let isTextFieldFocused = index == props.selectedIndex
-    let isTextFieldValid = props.mnemonicWords[index] == props.typedWords[index]
-    let isTextFieldEmpty = props.typedWords[index].count == 0
-    
-    if (isTextFieldFocused && !isTextFieldEmpty && !isTextFieldValid) {
-      return InputFocusState.focusedWrongInput
-    } else if (isTextFieldFocused) {
-      return InputFocusState.focusedNoInput
-    } else if (!isTextFieldEmpty && !isTextFieldValid) {
-      return InputFocusState.notFocusedWrongInput
+  func getTypedWord(index: Int) -> String {
+    guard index >= 0 && index < props.typedWordIndexes.count else {
+      return ""
     }
-    return InputFocusState.notFocused
+    
+    let scrambledWordIndex = props.typedWordIndexes[index]
+    if scrambledWordIndex == -1 {
+      return ""
+    }
+    
+    return props.scrambledWords[scrambledWordIndex]
+  }
+  
+  func getFieldText(index: Int) -> String {
+    let typedWord = getTypedWord(index: index)
+    return typedWord.isEmpty ? props.selectedWordPlaceholder : typedWord
+  }
+
+  func getFieldStatus(index: Int) -> MnemonicInputStatus {
+    let typedWord = getTypedWord(index: index)
+    
+    if (typedWord.isEmpty) {
+      return MnemonicInputStatus.noInput
+    } else if (props.mnemonicWords[index] != typedWord) {
+      return MnemonicInputStatus.wrongInput
+    }
+    return MnemonicInputStatus.correctInput
   }
   
   var body: some View {
     let end = props.mnemonicWords.count - 1
     let middle = end / 2
     
-    VStack(alignment: HorizontalAlignment.leading, spacing: 0) {
-        HStack(alignment: VerticalAlignment.center, spacing: 12) {
-          VStack(alignment: .leading, spacing: 12) {
-            ForEach((0...middle), id: \.self) {index in
-              MnemonicTextField(index: index + 1,
-                                initialText: props.typedWords[index],
-                                shouldShowSmallText: props.shouldShowSmallText,
-                                focusState: getLabelFocusState(index: index),
-                                onFieldTapped: onFieldTapped
-              )
-              .frame(maxWidth: .infinity, alignment: .leading)
-            }
-          }.frame(maxWidth: .infinity)
-          VStack(alignment: .leading, spacing: 12) {
-            ForEach((middle + 1...end), id: \.self) {index in
-              MnemonicTextField(index: index + 1,
-                                initialText: props.typedWords[index],
-                                shouldShowSmallText: props.shouldShowSmallText,
-                                focusState: getLabelFocusState(index: index),
-                                onFieldTapped: onFieldTapped
-              )
-              .frame(maxWidth: .infinity, alignment: .leading)
-              
-            }
-          }.frame(maxWidth: .infinity)
+    VStack(alignment: .leading, spacing: 0) {
+      HStack(alignment: .center, spacing: 24) {
+        VStack(alignment: .leading, spacing: 12) {
+          ForEach((0...middle), id: \.self) {index in
+            MnemonicTextField(index: index + 1,
+                              word: getFieldText(index: index),
+                              status: getFieldStatus(index: index),
+                              shouldShowSmallText: props.shouldShowSmallText
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+          }
         }.frame(maxWidth: .infinity)
-          .padding([.leading, .trailing], 24)
-        
-        MnemonicConfirmationWordBankView(words: props.scrambledWords,
-                                 usedWords: props.typedWords,
-                                 labelCallback: onSuggestionTapped,
-                                 shouldShowSmallText: props.shouldShowSmallText)
-        .frame(maxWidth: .infinity)
-        .padding([.top, .leading, .trailing], 24)
+        VStack(alignment: .leading, spacing: 12) {
+          ForEach((middle + 1...end), id: \.self) {index in
+            MnemonicTextField(index: index + 1,
+                              word: getFieldText(index: index),
+                              status: getFieldStatus(index: index),
+                              shouldShowSmallText: props.shouldShowSmallText
+            )
+            .frame(maxWidth: .infinity, alignment: .leading)
+          }
+        }.frame(maxWidth: .infinity)
+      }.frame(maxWidth: .infinity)
+        .padding(EdgeInsets(top: 24, leading: 32, bottom: 24, trailing: 32))
+        .background(Colors.surface2)
+        .cornerRadius(20)
+        .overlay(
+          RoundedRectangle(cornerRadius: 20)
+            .stroke(Colors.surface3, lineWidth: 1)
+        )
+      
+      MnemonicConfirmationWordBankView(words: props.scrambledWords,
+                                       usedWordIndexes: props.typedWordIndexes,
+                                       labelCallback: onSuggestionTapped,
+                                       shouldShowSmallText: props.shouldShowSmallText)
+      .frame(maxWidth: .infinity)
+      .padding([.top, .leading, .trailing], 24)
     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
   }
 }

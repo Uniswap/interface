@@ -6,6 +6,7 @@ import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -165,7 +166,9 @@ export const routingApi = createApi({
               return { data: { ...tradeResult, latencyMs: trace.now() } }
             })
           } catch (error: any) {
-            console.warn(
+            logger.warn(
+              'routing/slice',
+              'queryFn',
               `GetQuote failed on Unified Routing API, falling back to client: ${
                 error?.message ?? error?.detail ?? error
               }`
@@ -187,7 +190,7 @@ export const routingApi = createApi({
               }
             })
           } catch (error: any) {
-            console.warn(`GetQuote failed on client: ${error}`)
+            logger.warn('routing/slice', 'queryFn', `GetQuote failed on client: ${error}`)
             trace.setError(error)
             return {
               error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },

@@ -544,7 +544,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "row",
-          "gap": 16,
+          "gap": 8,
           "marginLeft": 24,
         }
       }
@@ -552,6 +552,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
+            "alignItems": "center",
+            "backgroundColor": "#FFFFFF",
             "borderBottomColor": "#2222220D",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
@@ -566,17 +568,27 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderTopRightRadius": 999999,
             "borderTopWidth": 1,
             "flexDirection": "column",
+            "height": 40,
+            "justifyContent": "center",
             "paddingBottom": 8,
             "paddingLeft": 8,
             "paddingRight": 8,
             "paddingTop": 8,
+            "shadowColor": "rgb(34,34,34)",
+            "shadowOffset": {
+              "height": 0,
+              "width": 0,
+            },
+            "shadowOpacity": 0.050980392156862744,
+            "shadowRadius": 10,
+            "width": 40,
           }
         }
       >
         <RNSVGSvgView
           align="xMidYMid"
-          bbHeight="12"
-          bbWidth="12"
+          bbHeight="16"
+          bbWidth="16"
           fill="none"
           focusable={false}
           meetOrSlice={0}
@@ -591,13 +603,13 @@ exports[`AccountSwitcher renders correctly 1`] = `
               },
               {
                 "color": "#7D7D7D",
-                "height": 12,
-                "width": 12,
+                "height": 16,
+                "width": 16,
               },
               {
                 "flex": 0,
-                "height": 12,
-                "width": 12,
+                "height": 16,
+                "width": 16,
               },
             ]
           }

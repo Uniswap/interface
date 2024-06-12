@@ -4,13 +4,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
+import { logger } from 'utilities/src/logger/logger'
 import {
-  addPopup,
-  addSuppressedPopups,
   ApplicationModal,
   PopupContent,
   PopupType,
+  addPopup,
+  addSuppressedPopups,
   removePopup,
   removeSuppressedPopups,
   setFiatOnrampAvailability,
@@ -65,7 +65,12 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
           callback()
         }
       } catch (e) {
-        console.error('Error checking onramp availability', e.toString())
+        logger.error(e, {
+          tags: {
+            file: 'application/hooks',
+            function: 'useFiatOnrampAvailability',
+          },
+        })
         if (stale) {
           return
         }
@@ -153,10 +158,6 @@ export function useToggleExecuteModal(): () => void {
 
 export function useTogglePrivacyPolicy(): () => void {
   return useToggleModal(ApplicationModal.PRIVACY_POLICY)
-}
-
-export function useToggleFeatureFlags(): () => void {
-  return useToggleModal(ApplicationModal.FEATURE_FLAGS)
 }
 
 // returns a function that allows adding a popup

@@ -52,7 +52,7 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   align-items: center;
 
   ::after {
-    content: '${t('commmon.automatic')}';
+    content: '${t('common.automatic')}';
   }
 `
 

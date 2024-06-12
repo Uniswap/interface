@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.toLowerCase
 import androidx.lifecycle.ViewModel
 import com.uniswap.EthersRs
 import com.uniswap.RnEthersRs
@@ -17,9 +16,9 @@ class SeedPhraseInputViewModel(
 ) : ViewModel() {
 
   sealed interface Status {
-    object None: Status
-    object Valid: Status
-    class Error(val error: MnemonicError): Status
+    object None : Status
+    object Valid : Status
+    class Error(val error: MnemonicError) : Status
   }
 
   sealed interface MnemonicError {
@@ -27,7 +26,7 @@ class SeedPhraseInputViewModel(
     object TooManyWords : MnemonicError
     object NotEnoughWords : MnemonicError
     object WrongRecoveryPhrase : MnemonicError
-    object InvalidPhrase: MnemonicError
+    object InvalidPhrase : MnemonicError
   }
 
   data class ReactNativeStrings(
@@ -42,15 +41,17 @@ class SeedPhraseInputViewModel(
 
   // Sourced externally from RN
   var mnemonicIdForRecovery by mutableStateOf<String?>(null)
-  var rnStrings by mutableStateOf(ReactNativeStrings(
-    helpText = "",
-    inputPlaceholder = "",
-    pasteButton = "",
-    errorInvalidWord = "",
-    errorPhraseLength = "",
-    errorWrongPhrase = "",
-    errorInvalidPhrase = "",
-  ))
+  var rnStrings by mutableStateOf(
+    ReactNativeStrings(
+      helpText = "",
+      inputPlaceholder = "",
+      pasteButton = "",
+      errorInvalidWord = "",
+      errorPhraseLength = "",
+      errorWrongPhrase = "",
+      errorInvalidPhrase = "",
+    )
+  )
 
   var input by mutableStateOf(TextFieldValue(""))
     private set

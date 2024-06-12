@@ -14,7 +14,6 @@ import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { useWeb3React } from '@web3-react/core'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -42,6 +41,7 @@ import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { logger } from 'utilities/src/logger/logger'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
@@ -74,7 +74,14 @@ export function useContract<T extends Contract = Contract>(
     try {
       return getContract(address, ABI, provider, withSignerIfPossible && account.address ? account.address : undefined)
     } catch (error) {
-      console.error('Failed to get contract', error)
+      const wrappedError = new Error('failed to get contract')
+      wrappedError.cause = error
+      logger.error(wrappedError, {
+        tags: {
+          file: 'useContract',
+          function: 'useContract',
+        },
+      })
       return null
     }
   }, [addressOrAddressMap, ABI, provider, account.chainId, account.address, withSignerIfPossible]) as T
@@ -96,7 +103,14 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
     try {
       return getContract(address, ABI, provider)
     } catch (error) {
-      console.error('Failed to get mainnet contract', error)
+      const wrappedError = new Error('failed to get mainnet contract')
+      wrappedError.cause = error
+      logger.error(wrappedError, {
+        tags: {
+          file: 'useContract',
+          function: 'useMainnetContract',
+        },
+      })
       return null
     }
   }, [isMainnet, contract, address, ABI]) as T
@@ -168,24 +182,24 @@ export function useMainnetInterfaceMulticall() {
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const contract = useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
     withSignerIfPossible
   )
   useEffect(() => {
-    if (contract && account) {
+    if (contract && account.isConnected) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useV3NFTPositionManagerContract',
         contract: {
           name: 'V3NonfungiblePositionManager',
           address: contract.address,
           withSignerIfPossible,
-          chainId,
+          chainId: account.chainId,
         },
       })
     }
-  }, [account, chainId, contract, withSignerIfPossible])
+  }, [account.isConnected, account.chainId, contract, withSignerIfPossible])
   return contract
 }

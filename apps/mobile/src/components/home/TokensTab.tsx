@@ -6,7 +6,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
-import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
+import { TabProps } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
@@ -19,8 +19,6 @@ import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 
 export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
-
-// ignore ref type
 
 export const TokensTab = memo(
   forwardRef<FlatList<TokenBalanceListRow>, TabProps & { isExternalProfile?: boolean }>(
@@ -50,17 +48,6 @@ export const TokensTab = memo(
         [startProfilerTimer, tokenDetailsNavigation]
       )
 
-      // Update list empty styling based on which empty state is used
-      const formattedContainerProps: TabContentProps | undefined = useMemo(() => {
-        if (!containerProps) {
-          return undefined
-        }
-        if (!isExternalProfile) {
-          return { ...containerProps, emptyContainerStyle: {} }
-        }
-        return containerProps
-      }, [containerProps, isExternalProfile])
-
       const onPressAction = useCallback((): void => {
         dispatch(
           openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
@@ -85,7 +72,7 @@ export const TokensTab = memo(
         <Flex grow backgroundColor="$surface1">
           <TokenBalanceList
             ref={ref}
-            containerProps={formattedContainerProps}
+            containerProps={containerProps}
             empty={renderEmpty}
             headerHeight={headerHeight}
             isExternalProfile={isExternalProfile}

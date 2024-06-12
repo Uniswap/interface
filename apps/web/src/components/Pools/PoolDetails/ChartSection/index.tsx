@@ -191,13 +191,20 @@ export default function ChartSection(props: ChartSectionProps) {
   // BE does not support hourly price data for pools
   const filteredTimeOptions = useMemo(() => {
     if (activeQuery.chartType === ChartType.PRICE) {
+      const filtered = DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
       if (timePeriod === TimePeriod.HOUR) {
         setTimePeriod(TimePeriod.DAY)
       }
-      return DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
+      return {
+        options: filtered,
+        selected: DISPLAYS[timePeriod],
+      }
     }
-    return DEFAULT_PILL_TIME_SELECTOR_OPTIONS
-  }, [activeQuery.chartType, setTimePeriod, timePeriod])
+    return {
+      options: DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
+      selected: DISPLAYS[timePeriod],
+    }
+  }, [activeQuery.chartType, timePeriod, setTimePeriod])
 
   const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
@@ -213,8 +220,8 @@ export default function ChartSection(props: ChartSectionProps) {
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <PillMultiToggle
-              options={filteredTimeOptions}
-              currentSelected={DISPLAYS[timePeriod]}
+              options={filteredTimeOptions.options}
+              currentSelected={filteredTimeOptions.selected}
               onSelectOption={(option) => {
                 const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
                 if (time === timePeriod) {

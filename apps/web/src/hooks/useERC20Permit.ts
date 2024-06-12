@@ -115,16 +115,18 @@ export function useERC20Permit(
   state: UseERC20PermitState
   gatherPermitSignature: null | (() => Promise<void>)
 } {
-  const { status, chainId, address } = useAccount()
+  const account = useAccount()
   const provider = useEthersWeb3Provider()
   const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
-  const nonceInputs = useMemo(() => [address ?? undefined], [address])
+  const nonceInputs = useMemo(() => [account.address ?? undefined], [account.address])
   const tokenNonceState = useSingleCallResult(eip2612Contract, 'nonces', nonceInputs)
   const permitInfo =
     overridePermitInfo ??
-    (status === 'connected' && chainId && tokenAddress ? PERMITTABLE_TOKENS[chainId]?.[tokenAddress] : undefined)
+    (status === 'connected' && account.chainId && tokenAddress
+      ? PERMITTABLE_TOKENS[account.chainId]?.[tokenAddress]
+      : undefined)
 
   const [signatureData, setSignatureData] = useState<SignatureData | null>(null)
 
@@ -133,8 +135,8 @@ export function useERC20Permit(
       isArgentWallet ||
       !currencyAmount ||
       !eip2612Contract ||
-      !chainId ||
-      !address ||
+      !account.chainId ||
+      !account.address ||
       !transactionDeadline ||
       !provider ||
       !tokenNonceState.valid ||
@@ -160,7 +162,7 @@ export function useERC20Permit(
 
     const isSignatureDataValid =
       signatureData &&
-      signatureData.owner === address &&
+      signatureData.owner === account.address &&
       signatureData.deadline >= transactionDeadline.toNumber() &&
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
@@ -178,14 +180,14 @@ export function useERC20Permit(
 
         const message = allowed
           ? {
-              holder: address,
+              holder: account.address,
               spender,
               allowed,
               nonce: nonceNumber,
               expiry: signatureDeadline,
             }
           : {
-              owner: address,
+              owner: account.address,
               spender,
               value,
               nonce: nonceNumber,
@@ -196,12 +198,12 @@ export function useERC20Permit(
               name: permitInfo.name,
               version: permitInfo.version,
               verifyingContract: tokenAddress,
-              chainId,
+              chainId: account.chainId,
             }
           : {
               name: permitInfo.name,
               verifyingContract: tokenAddress,
-              chainId,
+              chainId: account.chainId,
             }
         const data = JSON.stringify({
           types: {
@@ -214,7 +216,7 @@ export function useERC20Permit(
         })
 
         return provider
-          .send('eth_signTypedData_v4', [address, data])
+          .send('eth_signTypedData_v4', [account.address, data])
           .then(splitSignature)
           .then((signature) => {
             setSignatureData({
@@ -224,8 +226,8 @@ export function useERC20Permit(
               deadline: signatureDeadline,
               ...(allowed ? { allowed } : { amount: value }),
               nonce: nonceNumber,
-              chainId,
-              owner: address,
+              chainId: account.chainId as ChainId,
+              owner: account.address as string,
               spender,
               tokenAddress,
               permitType: permitInfo.type,
@@ -237,8 +239,8 @@ export function useERC20Permit(
     isArgentWallet,
     currencyAmount,
     eip2612Contract,
-    chainId,
-    address,
+    account.chainId,
+    account.address,
     transactionDeadline,
     provider,
     tokenNonceState.valid,

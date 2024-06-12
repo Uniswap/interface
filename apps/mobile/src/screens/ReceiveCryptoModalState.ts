@@ -1,3 +1,3 @@
-import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 
 export type ReceiveCryptoModalState = FORServiceProvider[]

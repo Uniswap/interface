@@ -13,14 +13,7 @@ import {
   TAB_VIEW_SCROLL_THROTTLE,
   TabProps,
 } from 'src/components/layout/TabHelpers'
-import {
-  AnimatedFlex,
-  Flex,
-  Loader,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedFlex, Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -88,7 +81,7 @@ export const TokenBalanceListInner = forwardRef<
 
   const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
 
-  const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(
+  const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
     containerProps?.contentContainerStyle
   )
 
@@ -145,19 +138,39 @@ export const TokenBalanceListInner = forwardRef<
   // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
   // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
   const renderItem = useCallback(
-    ({ item }: { item: TokenBalanceListRow }): JSX.Element => {
-      return <TokenBalanceItemRow footerHeight={footerHeight} item={item} />
-    },
-    [footerHeight]
+    ({ item }: { item: TokenBalanceListRow }): JSX.Element => <TokenBalanceItemRow item={item} />,
+    []
   )
 
+  const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
+
   const ListEmptyComponent = useMemo(() => {
+    if (!balancesById) {
+      return (
+        <Flex grow px="$spacing24">
+          {empty}
+        </Flex>
+      )
+    }
+
+    if (isNonPollingRequestInFlight(networkStatus)) {
+      return (
+        <Flex px="$spacing24">
+          <Loader.Token withPrice repeat={6} />
+        </Flex>
+      )
+    }
+
     return (
-      <Flex grow px="$spacing24" style={containerProps?.emptyContainerStyle}>
-        {empty}
+      <Flex pt="$spacing24">
+        <BaseCard.ErrorState
+          retryButtonLabel={t('common.button.retry')}
+          title={t('home.tokens.error.load')}
+          onRetry={(): void | undefined => refetch?.()}
+        />
       </Flex>
     )
-  }, [containerProps?.emptyContainerStyle, empty])
+  }, [balancesById, empty, t, networkStatus, refetch])
 
   const hasError = isError(networkStatus, !!balancesById)
 
@@ -188,6 +201,8 @@ export const TokenBalanceListInner = forwardRef<
     []
   )
 
+  const data = balancesById ? (isFocused ? rows : cachedRows) : undefined
+
   // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
   return (
     <ReactNavigationPerformanceView
@@ -196,60 +211,41 @@ export const TokenBalanceListInner = forwardRef<
         // Marks the home screen as interactive when balances are defined
         MobileScreens.Home
       }>
-      {!balancesById ? (
-        isNonPollingRequestInFlight(networkStatus) ? (
-          <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
-            <Loader.Token withPrice repeat={6} />
-          </Flex>
-        ) : (
-          <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
-            <BaseCard.ErrorState
-              retryButtonLabel={t('common.button.retry')}
-              title={t('home.tokens.error.load')}
-              onRetry={(): void | undefined => refetch?.()}
-            />
-          </Flex>
-        )
-      ) : (
-        <List
-          ref={ref as never}
-          ListEmptyComponent={ListEmptyComponent}
-          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-          ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-          ListFooterComponentStyle={ListFooterComponentStyle}
-          ListHeaderComponent={ListHeaderComponent}
-          contentContainerStyle={containerProps?.contentContainerStyle}
-          data={isFocused ? rows : cachedRows}
-          getItemLayout={getItemLayout}
-          initialNumToRender={20}
-          maxToRenderPerBatch={20}
-          refreshControl={refreshControl}
-          refreshing={refreshing}
-          renderItem={renderItem}
-          scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
-          showsVerticalScrollIndicator={false}
-          updateCellsBatchingPeriod={10}
-          windowSize={isFocused ? 10 : 3}
-          onContentSizeChange={onContentSizeChange}
-          onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
-          onRefresh={onRefresh}
-          onScroll={scrollHandler}
-          onScrollEndDrag={containerProps?.onScrollEndDrag}
-        />
-      )}
+      <List
+        ref={ref as never}
+        ListEmptyComponent={ListEmptyComponent}
+        // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+        ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+        ListFooterComponentStyle={ListFooterComponentStyle}
+        ListHeaderComponent={ListHeaderComponent}
+        contentContainerStyle={containerProps?.contentContainerStyle}
+        data={data}
+        getItemLayout={getItemLayout}
+        initialNumToRender={20}
+        keyExtractor={keyExtractor}
+        maxToRenderPerBatch={20}
+        refreshControl={refreshControl}
+        refreshing={refreshing}
+        renderItem={renderItem}
+        scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
+        showsVerticalScrollIndicator={false}
+        updateCellsBatchingPeriod={10}
+        windowSize={isFocused ? 10 : 3}
+        onContentSizeChange={onContentSizeChange}
+        onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
+        onRefresh={onRefresh}
+        onScroll={scrollHandler}
+        onScrollEndDrag={containerProps?.onScrollEndDrag}
+      />
     </ReactNavigationPerformanceView>
   )
 })
 
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   item,
-  footerHeight,
 }: {
   item: TokenBalanceListRow
-  footerHeight: Animated.SharedValue<number>
 }) {
-  const { fullHeight } = useDeviceDimensions()
-
   const {
     balancesById,
     hiddenTokensCount,
@@ -266,9 +262,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
         isExpanded={hiddenTokensExpanded}
         numHidden={hiddenTokensCount}
         onPress={(): void => {
-          if (hiddenTokensExpanded) {
-            footerHeight.value = fullHeight
-          }
           setHiddenTokensExpanded(!hiddenTokensExpanded)
         }}
       />

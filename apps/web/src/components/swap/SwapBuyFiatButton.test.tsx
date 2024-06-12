@@ -1,15 +1,18 @@
 import userEvent from '@testing-library/user-event'
-import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
 
+import { useAccount } from 'hooks/useAccount'
+import { USE_CONNECTED_ACCOUNT, USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
+import { mocked } from 'test-utils/mocked'
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
 
 jest.mock('../../state/application/hooks')
 const mockUseFiatOnrampAvailability = useFiatOnrampAvailability as jest.MockedFunction<typeof useFiatOnrampAvailability>
 const mockUseOpenModal = useOpenModal as jest.MockedFunction<typeof useOpenModal>
+
+jest.mock('hooks/useAccount')
 
 jest.mock('components/AccountDrawer/MiniPortfolio/hooks')
 const mockuseAccountDrawer = useAccountDrawer as jest.MockedFunction<typeof useAccountDrawer>
@@ -62,6 +65,7 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('matches base snapshot', () => {
+    mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
 
     const { asFragment } = render(<SwapBuyFiatButton />)
@@ -69,6 +73,7 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('fiat on ramps available in region, account unconnected', async () => {
+    mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
     mockUseOpenModal.mockImplementation(() => useOpenModal)
@@ -80,10 +85,7 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('fiat on ramps available in region, account connected', async () => {
-    mocked(useWeb3React).mockReturnValue({
-      account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
-      isActive: true,
-    } as ReturnType<typeof useWeb3React>)
+    mocked(useAccount).mockReturnValue(USE_CONNECTED_ACCOUNT)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsAvailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
     mockUseOpenModal.mockImplementation(() => useOpenModal)
@@ -97,6 +99,7 @@ describe('SwapBuyFiatButton.tsx', () => {
   })
 
   it('fiat on ramps unavailable in region', async () => {
+    mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     // we get flushSync errors only from Popper used in here, for now disabling this as an error
     const error = jest.spyOn(console, 'error').mockReturnValue(undefined)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)

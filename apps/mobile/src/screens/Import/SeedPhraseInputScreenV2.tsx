@@ -62,7 +62,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
   )
 
   const onPressRecoveryHelpButton = (): Promise<void> =>
-    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHelp)
+    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
@@ -80,7 +80,6 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           ? t('account.recoveryPhrase.title.restoring')
           : t('account.recoveryPhrase.title.import')
       }>
-      {/* <Flex gap={itemSpacing}> */}
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         strings={{

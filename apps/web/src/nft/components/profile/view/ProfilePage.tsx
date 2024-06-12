@@ -8,7 +8,7 @@ import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
-import { useBag, useFiltersExpanded, useSellAsset, useWalletBalance, useWalletCollections } from 'nft/hooks'
+import { useBag, useFiltersExpanded, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
@@ -18,6 +18,7 @@ import styled from 'styled-components'
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useIsMobile } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import { getOSCollectionsInfiniteQueryOptions } from 'nft/queries/openSea/OSCollectionsFetcher'
 import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
@@ -53,7 +54,7 @@ const FILTER_SIDEBAR_WIDTH = 300
 const PADDING = 16
 
 export const ProfilePage = () => {
-  const { address } = useWalletBalance()
+  const account = useAccount()
   const walletCollections = useWalletCollections((state) => state.walletCollections)
   const setWalletCollections = useWalletCollections((state) => state.setWalletCollections)
   const { resetSellAssets } = useSellAsset(({ reset }) => ({
@@ -70,7 +71,7 @@ export const ProfilePage = () => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
-  } = useInfiniteQuery(getOSCollectionsInfiniteQueryOptions(address))
+  } = useInfiniteQuery(getOSCollectionsInfiniteQueryOptions(account.address ?? ''))
 
   const ownerCollections = useMemo(
     () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
@@ -162,7 +163,7 @@ const ProfilePageNfts = ({
   isFiltersExpanded: boolean
   setFiltersExpanded: (filtersExpanded: boolean) => void
 }) => {
-  const { address } = useWalletBalance()
+  const account = useAccount()
   const setCollectionFilters = useWalletCollections((state) => state.setCollectionFilters)
   const collectionFilters = useWalletCollections((state) => state.collectionFilters)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
@@ -176,7 +177,7 @@ const ProfilePageNfts = ({
     loading,
     hasNext,
     loadMore,
-  } = useNftBalance(address, collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalance(account.address ?? '', collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,

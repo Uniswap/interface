@@ -1,8 +1,8 @@
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
-  CancelLimitsDialog,
+  CancelOrdersDialog,
   CancellationState,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelLimitsDialog'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
@@ -28,6 +28,7 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { PortfolioLogo } from '../PortfolioLogo'
 import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
@@ -117,7 +118,9 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
   }
 
   if (!inputCurrency || !outputCurrency) {
-    console.error(`Could not find token(s) for order ${order.txHash}`)
+    logger.warn('OffchainActivityModal', 'useOrderAmounts', 'Could not find token(s) for order', {
+      txHash: order.txHash,
+    })
     return undefined
   }
 
@@ -341,7 +344,7 @@ export function OffchainActivityModal() {
   return (
     <>
       {syncedSelectedOrder && selectedOrderAtomValue?.modalOpen && (
-        <CancelLimitsDialog
+        <CancelOrdersDialog
           isVisible={cancelState !== CancellationState.NOT_STARTED}
           orders={[syncedSelectedOrder]}
           onCancel={() => {

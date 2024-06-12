@@ -8,9 +8,13 @@ import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1
 import { act, render, screen } from 'test-utils/render'
 import 'test-utils/tokens/mocks'
 
+import { useAccount } from 'hooks/useAccount'
+import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
+
+jest.mock('hooks/useAccount')
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -27,6 +31,7 @@ describe('PoolDetailsStatsButton', () => {
   }
 
   beforeEach(() => {
+    mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     store.dispatch(
       addSerializedToken({

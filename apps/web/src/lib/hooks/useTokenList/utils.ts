@@ -22,7 +22,6 @@ export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): TokenAdd
     try {
       const token = new TokenFromList(info, list)
       if (map[token.chainId]?.[token.address] !== undefined) {
-        console.warn(`Duplicate token skipped: ${token.address}`)
         return map
       }
       if (!map[token.chainId]) {

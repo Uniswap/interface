@@ -1,5 +1,5 @@
 import { SubscriptionResult } from '@apollo/client'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import {
   PropsWithChildren,
@@ -21,6 +21,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuidV4 } from 'uuid'
 import { GQL_MAINNET_CHAINS_MUTABLE } from '../util'
 import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
@@ -33,30 +34,35 @@ const SubscriptionContext = createContext<
 >(undefined)
 
 export function AssetActivityProvider({ children }: PropsWithChildren) {
-  const { account } = useWeb3React()
-  const previousAccount = usePrevious(account)
+  const account = useAccount()
+  const previousAccount = usePrevious(account.address)
 
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
   const [attempt, incrementAttempt] = useReducer((attempt) => attempt + 1, 1)
   const subscriptionId = useMemo(uuidV4, [account, attempt])
   const result = useOnAssetActivitySubscription({
-    variables: { account: account ?? '', subscriptionId },
+    variables: { account: account.address ?? '', subscriptionId },
     skip: !account || !isRealtimeEnabled,
     onError: (error) => {
-      console.error(error)
+      logger.error(error, {
+        tags: {
+          file: 'AssetActivityProvider',
+          function: 'useOnAssetActivitySubscription#onError',
+        },
+      })
       incrementAttempt()
     },
   })
 
   const [lazyFetch, query] = useActivityWebLazyQuery()
   const fetch = useCallback(
-    () => lazyFetch({ variables: { account: account ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
-    [account, lazyFetch]
+    () => lazyFetch({ variables: { account: account.address ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
+    [account.address, lazyFetch]
   )
 
   return (
     <SubscriptionContext.Provider value={result}>
-      <AdaptiveAssetActivityProvider query={query} fetch={fetch} stale={account !== previousAccount}>
+      <AdaptiveAssetActivityProvider query={query} fetch={fetch} stale={account.address !== previousAccount}>
         {children}
       </AdaptiveAssetActivityProvider>
     </SubscriptionContext.Provider>
@@ -72,17 +78,17 @@ export function useAssetActivitySubscription() {
 }
 
 function useSubscribedActivities() {
-  const { account } = useWeb3React()
-  const previousAccount = usePrevious(account)
+  const account = useAccount()
+  const previousAccount = usePrevious(account.address)
 
   const [subscribedActivities, setSubscribedActivities] = useState<AssetActivityPartsFragment[]>([])
 
   // Clear the subscribed activity list when the account changes.
   useEffect(() => {
-    if (account !== previousAccount) {
+    if (account.address !== previousAccount) {
       setSubscribedActivities([])
     }
-  }, [account, previousAccount])
+  }, [account.address, previousAccount])
 
   // Update the subscribed activity list when a new activity is received from the subscription service.
   const subscription = useAssetActivitySubscription()

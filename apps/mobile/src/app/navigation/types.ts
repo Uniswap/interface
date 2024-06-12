@@ -90,6 +90,7 @@ export type SharedUnitagScreenParams = {
 }
 
 export type OnboardingStackParamList = {
+  [OnboardingScreens.AppLoading]: undefined
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordCreate]: {
     address: Address
@@ -104,6 +105,7 @@ export type OnboardingStackParamList = {
 
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
+  [OnboardingScreens.OnDeviceRecovery]: OnboardingStackBaseParams & { mnemonicIds: Address[] }
   [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupPassword]: {

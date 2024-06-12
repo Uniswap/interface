@@ -125,8 +125,7 @@
     },
     "test": {
       "dependsOn": [
-        "prepare",
-        "^test"
+        "^prepare"
       ]
     },
     "start": {

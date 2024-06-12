@@ -33,6 +33,8 @@ export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
       return Chain.Celo
     case ChainId.BLAST:
       return Chain.Blast
+    case ChainId.ZORA:
+      return Chain.Zora
   }
   return undefined
 }

@@ -28,6 +28,7 @@ export enum MobileScreens {
 }
 
 export enum OnboardingScreens {
+  AppLoading = 'AppLoading',
   Backup = 'OnboardingBackup',
   BackupCloudPasswordCreate = 'OnboardingBackupCloudPasswordCreate',
   BackupCloudPasswordConfirm = 'OnboardingBackupCloudPasswordConfirm',
@@ -46,6 +47,9 @@ export enum OnboardingScreens {
   RestoreCloudBackupPassword = 'RestoreCloudBackupPassword',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
+
+  // on-device recovery
+  OnDeviceRecovery = 'OnDeviceRecovery',
 }
 
 export enum UnitagScreens {

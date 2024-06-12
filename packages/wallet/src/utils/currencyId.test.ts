@@ -7,7 +7,6 @@ import {
   buildCurrencyId,
   buildNativeCurrencyId,
   currencyAddress,
-  currencyAddressForSwapQuote,
   currencyId,
   currencyIdToAddress,
   currencyIdToChain,
@@ -15,12 +14,9 @@ import {
   getCurrencyAddressForAnalytics,
   isNativeCurrencyAddress,
   NATIVE_ANALYTICS_ADDRESS_VALUE,
-  SwapRouterNativeAssets,
 } from './currencyId'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
-const MATIC = NativeCurrency.onChain(ChainId.Polygon)
-const BNB = NativeCurrency.onChain(ChainId.Bnb)
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe(currencyId, () => {
@@ -54,24 +50,6 @@ describe(areCurrencyIdsEqual, () => {
 
   it('returns correct comparison for the different currencyIds', () => {
     expect(areCurrencyIdsEqual(currencyId(DAI), currencyId(ETH))).toBe(false)
-  })
-})
-
-describe(currencyAddressForSwapQuote, () => {
-  it('returns correct address for native, non-polygon asset', () => {
-    expect(currencyAddressForSwapQuote(ETH)).toEqual(SwapRouterNativeAssets.ETH)
-  })
-
-  it('returns correct address for native polygon asset', () => {
-    expect(currencyAddressForSwapQuote(MATIC)).toEqual(SwapRouterNativeAssets.MATIC)
-  })
-
-  it('returns correct address for native bnb asset', () => {
-    expect(currencyAddressForSwapQuote(BNB)).toEqual(SwapRouterNativeAssets.BNB)
-  })
-
-  it('returns correct address for token', () => {
-    expect(currencyAddressForSwapQuote(DAI)).toEqual(DAI.address)
   })
 })
 

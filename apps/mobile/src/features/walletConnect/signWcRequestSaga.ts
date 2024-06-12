@@ -101,6 +101,14 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
+
+      // Trigger a pending transaction notification after we send the transaction to chain
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: txParams.chainId,
+        })
+      )
     }
 
     if (params.dapp.source === 'walletconnect') {

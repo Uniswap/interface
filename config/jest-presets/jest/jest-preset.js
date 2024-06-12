@@ -34,14 +34,14 @@ module.exports = {
     '^src/(.*)$': '<rootDir>/src/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/node_modules'],
-  testPathIgnorePatterns: ['<rootDir>/node_modules'],
+  testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],
   testMatch: ['<rootDir>/**/*.(spec|test).[jt]s?(x)'],
   setupFilesAfterEnv: ['<rootDir>/../../config/jest-presets/jest/setup.js'],
   // consider enabling for speed
   // changedSince: 'master',
   // https://github.com/facebook/jest/issues/2663#issuecomment-341384494
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|react-native-web|react-native-image-colors|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|react-native-splash-screen|@react-native-masked-view|statsig-js|statsig-react-native|statsig-react|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker)/)',
+    'node_modules/(?!(react-native|react-native-web|react-native-image-colors|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|react-native-splash-screen|@react-native-masked-view|statsig-js|statsig-react-native|statsig-react|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker|wagmi|viem)/)',
   ],
   collectCoverage: false, // only collect in CI
   clearMocks: true,
