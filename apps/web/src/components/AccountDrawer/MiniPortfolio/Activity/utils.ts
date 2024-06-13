@@ -1,6 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { ChainId } from '@uniswap/sdk-core'
 import { CosignedV2DutchOrder, DutchOrder } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
@@ -147,7 +147,7 @@ export function useCancelMultipleOrdersCallback(
   orders?: Array<UniswapXOrderDetails>
 ): () => Promise<ContractTransaction[] | undefined> {
   const provider = useEthersWeb3Provider()
-  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  const permit2 = useContract<Permit2>(permit2Address(orders?.[0]?.chainId), PERMIT2_ABI, true)
 
   return useCallback(async () => {
     if (!orders || orders.length === 0) {
@@ -240,7 +240,7 @@ export function useCreateCancelTransactionRequest(
       }
     | undefined
 ): TransactionRequest | undefined {
-  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  const permit2 = useContract<Permit2>(permit2Address(params?.chainId), PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {
     if (
       !params ||

@@ -343,6 +343,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
   ),
   [ChainId.BLAST]: new Token(ChainId.BLAST, '0x4300000000000000000000000000000000000004', 18, 'WETH', 'Wrapped Ether'),
   [ChainId.ZORA]: new Token(ChainId.ZORA, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
+  [ChainId.ZKSYNC]: new Token(
+    ChainId.ZKSYNC,
+    '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {

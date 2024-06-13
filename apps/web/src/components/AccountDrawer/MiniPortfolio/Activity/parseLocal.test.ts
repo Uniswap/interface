@@ -1,7 +1,13 @@
 import 'test-utils/tokens/mocks'
 
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
-import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
+import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import {
+  signatureToActivity,
+  transactionToActivity,
+  useLocalActivities,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import {
@@ -11,14 +17,11 @@ import {
   TransactionDetails,
   TransactionInfo,
 } from 'state/transactions/types'
+import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
-import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
-
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { mocked } from 'test-utils/mocked'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -55,7 +58,7 @@ function mockSwapInfo(
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
 const mockChainId = ChainId.MAINNET
-const mockSpenderAddress = PERMIT2_ADDRESS[mockChainId]
+const mockSpenderAddress = permit2Address(mockChainId)
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
 const mockApprovalAmountRaw = '10000000'

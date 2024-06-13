@@ -222,7 +222,10 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavRefresh} label="Refreshed navigation features" />
-          <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
+          <FeatureFlagGroup name="New Chains">
+            <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
+            <FeatureFlagOption flag={FeatureFlags.ZkSync} label="Enable ZkSync" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Multichain UX">
             <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
             <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />

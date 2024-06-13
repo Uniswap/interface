@@ -2,13 +2,13 @@ import {
   AllowanceProvider,
   AllowanceTransfer,
   MaxUint160,
-  PERMIT2_ADDRESS,
+  permit2Address,
   PermitSingle,
 } from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
-import { BigNumber, TypedDataField, providers } from 'ethers'
+import { BigNumber, providers, TypedDataField } from 'ethers'
 import { useCallback } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
@@ -69,7 +69,7 @@ async function getPermit2PermitSignature(
     }
 
     const user = account.address
-    const allowanceProvider = new AllowanceProvider(provider, PERMIT2_ADDRESS)
+    const allowanceProvider = new AllowanceProvider(provider, permit2Address(chainId))
     const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
     const {
       amount: permitAmount,
@@ -84,7 +84,7 @@ async function getPermit2PermitSignature(
     const permitMessage = getPermitStruct(tokenAddress, nonce, universalRouterAddress)
     const { domain, types, values } = AllowanceTransfer.getPermitData(
       permitMessage,
-      PERMIT2_ADDRESS,
+      permit2Address(chainId),
       chainId
     )
 

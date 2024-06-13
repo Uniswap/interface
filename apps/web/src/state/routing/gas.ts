@@ -1,4 +1,4 @@
-import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -41,7 +41,7 @@ export async function getApproveInfo(
 
   let approveGasUseEstimate
   try {
-    const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
+    const allowance = await tokenContract.callStatic.allowance(account, permit2Address(currency.chainId))
     if (allowance.gte(amount)) {
       return { needsApprove: false }
     }
@@ -51,7 +51,7 @@ export async function getApproveInfo(
   }
 
   try {
-    const approveTx = await tokenContract.populateTransaction.approve(PERMIT2_ADDRESS, MaxUint256)
+    const approveTx = await tokenContract.populateTransaction.approve(permit2Address(currency.chainId), MaxUint256)
     approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
   } catch (_) {
     // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway

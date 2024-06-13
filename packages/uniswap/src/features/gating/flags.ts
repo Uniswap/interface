@@ -47,6 +47,7 @@ export enum FeatureFlags {
   V2Everywhere,
   V2Explore,
   Zora,
+  ZkSync,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -76,6 +77,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.V2Everywhere, 'v2_everywhere'],
   [FeatureFlags.V2Explore, 'v2_explore'],
   [FeatureFlags.Zora, 'zora'],
+  [FeatureFlags.ZkSync, 'zksync'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],

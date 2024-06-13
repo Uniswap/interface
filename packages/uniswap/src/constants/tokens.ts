@@ -180,3 +180,10 @@ export const USDC_ZORA = new Token(
   'USDC',
   'USD Coin'
 )
+export const USDC_ZKSYNC = new Token(
+  UniverseChainId.ZKSYNC,
+  '0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4',
+  6,
+  'USDC',
+  'USD Coin'
+)

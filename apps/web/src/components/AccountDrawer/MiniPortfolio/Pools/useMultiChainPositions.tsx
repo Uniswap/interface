@@ -128,7 +128,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         let poolAddress = poolAddressCache.get(details, chainId)
         if (!poolAddress) {
           const factoryAddress = V3_CORE_FACTORY_ADDRESSES[chainId]
-          poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee })
+          poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee, chainId })
           poolAddressCache.set(details, chainId, poolAddress)
         }
         poolPairs.push([tokenA, tokenB])

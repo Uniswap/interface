@@ -41,6 +41,7 @@ export interface Config {
   quicknodeArbitrumRpcUrl: string
   quicknodeBnbRpcUrl: string
   quicknodeZoraRpcUrl: string
+  quicknodeZkSyncRpcUrl: string
   quicknodeMainnetRpcUrl: string
   tradingApiKey: string
   firebaseAppCheckDebugToken: string
@@ -71,6 +72,7 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_ARBITRUM_RPC_URL || QUICKNODE_ARBITRUM_RPC_URL,
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   quicknodeZoraRpcUrl: process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
+  quicknodeZkSyncRpcUrl: process.env.QUICKNODE_ZKSYNC_RPC_URL || '',
   quicknodeMainnetRpcUrl:
     process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL || QUICKNODE_MAINNET_RPC_URL,
   tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,

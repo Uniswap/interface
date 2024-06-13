@@ -23,7 +23,13 @@ class PoolCache {
   private static pools: Pool[] = []
   private static addresses: { key: string; address: string }[] = []
 
-  static getPoolAddress(factoryAddress: string, tokenA: Token, tokenB: Token, fee: FeeAmount): string {
+  static getPoolAddress(
+    factoryAddress: string,
+    tokenA: Token,
+    tokenB: Token,
+    fee: FeeAmount,
+    chainId: ChainId
+  ): string {
     if (this.addresses.length > this.MAX_ENTRIES) {
       this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
     }
@@ -43,6 +49,7 @@ class PoolCache {
         tokenA,
         tokenB,
         fee,
+        chainId,
       }),
     }
     this.addresses.unshift(address)
@@ -117,7 +124,7 @@ export function usePools(
       return new Array(poolTokens.length)
     }
 
-    return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value))
+    return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value, chainId))
   }, [chainId, poolTokens])
 
   const slot0s = useMultipleContractSingleData(poolAddresses, POOL_STATE_INTERFACE, 'slot0')
@@ -198,7 +205,7 @@ export function usePoolMultichain(
   const poolData = useRef<[PoolState, Pool | null]>([PoolState.LOADING, null])
   const poolAddress =
     tokenA && tokenB && fee
-      ? PoolCache.getPoolAddress(V3_CORE_FACTORY_ADDRESSES[chainId], tokenA, tokenB, fee)
+      ? PoolCache.getPoolAddress(V3_CORE_FACTORY_ADDRESSES[chainId], tokenA, tokenB, fee, chainId)
       : undefined
 
   const contractMap = useMemo(() => (poolAddress ? { [chainId]: poolAddress } : {}), [chainId, poolAddress])

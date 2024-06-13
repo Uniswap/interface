@@ -28,6 +28,7 @@ export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.BASE,
   ChainId.BLAST,
   ChainId.ZORA,
+  ChainId.ZKSYNC,
 ] as const
 
 export function isSupportedChainId(chainId?: number | ChainId | null): chainId is SupportedInterfaceChainId {
@@ -41,11 +42,13 @@ function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, 
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
 
   const zoraEnabled = useFeatureFlag(FeatureFlags.Zora)
+  const zkSyncEnabled = useFeatureFlag(FeatureFlags.ZkSync)
   return useMemo(
     () => ({
       [ChainId.ZORA]: zoraEnabled,
+      [ChainId.ZKSYNC]: zkSyncEnabled,
     }),
-    [zoraEnabled]
+    [zkSyncEnabled, zoraEnabled]
   )
 }
 
@@ -96,6 +99,7 @@ const POLYGON = UNIVERSE_CHAIN_INFO[UniverseChainId.Polygon]
 const POLYGON_MUMBAI = UNIVERSE_CHAIN_INFO[UniverseChainId.PolygonMumbai]
 const SEPOLIA = UNIVERSE_CHAIN_INFO[UniverseChainId.SEPOLIA]
 const ZORA = UNIVERSE_CHAIN_INFO[UniverseChainId.ZORA]
+const ZKSYNC = UNIVERSE_CHAIN_INFO[UniverseChainId.ZKSYNC]
 
 const INTERFACE_SUPPORTED_CHAINS = [
   MAINNET,
@@ -114,6 +118,7 @@ const INTERFACE_SUPPORTED_CHAINS = [
   BASE,
   BLAST,
   ZORA,
+  ZKSYNC,
 ] as const
 
 type ExtractObject<TObject extends Record<string, unknown>, TNarrowedObject extends Partial<TObject>> = Extract<
@@ -145,6 +150,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   [ChainId.BASE]: BASE,
   [ChainId.BLAST]: BLAST,
   [ChainId.ZORA]: ZORA,
+  [ChainId.ZKSYNC]: ZKSYNC,
 } as const
 
 export type ChainSlug = SupportedInterfaceChain['urlParam']

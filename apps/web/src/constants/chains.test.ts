@@ -41,6 +41,7 @@ const chainPriorityTestCases: [ChainId, number][] = [
   [ChainId.CELO_ALFAJORES, 7],
   [ChainId.BLAST, 8],
   [ChainId.ZORA, 9],
+  [ChainId.ZKSYNC, 10],
 ]
 
 test.each(chainPriorityTestCases)(
@@ -68,6 +69,7 @@ const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
   [ChainId.BASE]: 'base',
   [ChainId.BLAST]: 'blast',
   [ChainId.ZORA]: 'zora',
+  [ChainId.ZKSYNC]: 'zksync',
 } as const
 
 test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -138,6 +140,7 @@ const l2ChainIds = [
   ChainId.BASE,
   ChainId.BLAST,
   ChainId.ZORA,
+  ChainId.ZKSYNC,
 ] as const
 
 test.each(l2ChainIds)('L2_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
@@ -156,6 +159,7 @@ const GQLMainnetChains = [
   Chain.Base,
   Chain.Blast,
   Chain.Zora,
+  Chain.Zksync,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
@@ -211,6 +215,7 @@ const chainToChainId = {
   [Chain.Base]: ChainId.BASE,
   [Chain.Blast]: ChainId.BLAST,
   [Chain.Zora]: ChainId.ZORA,
+  [Chain.Zksync]: ChainId.ZKSYNC,
 } as const
 
 test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(
@@ -240,7 +245,7 @@ test.each(backendSupportedChains)(
   }
 )
 
-const backendNotyetSupportedChainIds = [ChainId.AVALANCHE, ChainId.ZORA] as const
+const backendNotyetSupportedChainIds = [ChainId.AVALANCHE, ChainId.ZORA, ChainId.ZKSYNC] as const
 
 test.each(backendNotyetSupportedChainIds)(
   'BACKEND_SUPPORTED_CHAINS generates the correct chains',
@@ -278,6 +283,8 @@ function getBlocksPerMainnetEpochForChainId(chainId: number | undefined): number
   switch (chainId) {
     case ChainId.ARBITRUM_ONE:
       return 46
+    case ChainId.ZKSYNC:
+      return 12
     case ChainId.OPTIMISM:
       return 6
     case ChainId.POLYGON:
