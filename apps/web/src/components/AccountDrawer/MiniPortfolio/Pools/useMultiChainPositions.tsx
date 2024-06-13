@@ -144,7 +144,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
           const slot0 = poolInterface.decodeFunctionResult('slot0', result.returnData)
           acc.push(createPositionInfo(account, chainId, positionDetails[i], slot0, ...poolPairs[i]))
         } else {
-          logger.warn('useMultiChainPositions', 'fetchPositionInfo', 'slot0 fetch errored', result)
+          logger.debug('useMultiChainPositions', 'fetchPositionInfo', 'slot0 fetch errored', result)
         }
         return acc
       }, [])
@@ -172,14 +172,10 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         const postionDetails = await fetchPositionDetails(pm, positionIds)
         return fetchPositionInfo(postionDetails, chainId, multicall)
       } catch (error) {
-        const wrappedError = new Error('Failed to fetch positions for chain')
-        wrappedError.cause = error
-        logger.error(wrappedError, {
-          tags: {
-            file: 'useMultiChainPositions',
-            function: 'fetchPositionsForChain',
-          },
-          extra: { chainId },
+        const wrappedError = new Error('Failed to fetch positions for chain', { cause: error })
+        logger.debug('useMultiChainPositions', 'fetchPositionsForChain', wrappedError.message, {
+          error: wrappedError,
+          chainId,
         })
         return []
       }

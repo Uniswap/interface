@@ -74,13 +74,11 @@ export function useContract<T extends Contract = Contract>(
     try {
       return getContract(address, ABI, provider, withSignerIfPossible && account.address ? account.address : undefined)
     } catch (error) {
-      const wrappedError = new Error('failed to get contract')
-      wrappedError.cause = error
-      logger.error(wrappedError, {
-        tags: {
-          file: 'useContract',
-          function: 'useContract',
-        },
+      const wrappedError = new Error('failed to get contract', { cause: error })
+      logger.warn('useContract', 'useContract', wrappedError.message, {
+        error: wrappedError,
+        addressOrAddressMap,
+        address: account.address,
       })
       return null
     }
@@ -103,14 +101,8 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
     try {
       return getContract(address, ABI, provider)
     } catch (error) {
-      const wrappedError = new Error('failed to get mainnet contract')
-      wrappedError.cause = error
-      logger.error(wrappedError, {
-        tags: {
-          file: 'useContract',
-          function: 'useMainnetContract',
-        },
-      })
+      const wrappedError = new Error('failed to get mainnet contract', { cause: error })
+      logger.warn('useContract', 'useMainnetContract', wrappedError.message, wrappedError)
       return null
     }
   }, [isMainnet, contract, address, ABI]) as T

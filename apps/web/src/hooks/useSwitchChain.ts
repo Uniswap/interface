@@ -48,7 +48,10 @@ export function useSwitchChain() {
                       setSearchParams(searchParams, { replace: true })
                     }
                   } catch (error) {
-                    logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', error)
+                    logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', {
+                      error,
+                      searchParams,
+                    })
                   }
                 },
                 onSettled(_, error) {

@@ -201,12 +201,7 @@ async function cancelMultipleUniswapXOrders({
     return transactions
   } catch (error) {
     if (!didUserReject(error)) {
-      logger.error(error, {
-        tags: {
-          file: 'utils',
-          function: 'cancelMultipleUniswapXOrders',
-        },
-      })
+      logger.debug('utils', 'cancelMultipleUniswapXOrders', 'Failed to cancel multiple orders', { error, orders })
     }
     return undefined
   }
@@ -228,13 +223,10 @@ async function getCancelMultipleUniswapXOrdersTransaction(
       chainId,
     }
   } catch (error) {
-    const wrappedError = new Error('could not populate cancel transaction')
-    wrappedError.cause = error
-    logger.error(wrappedError, {
-      tags: {
-        file: 'utils',
-        function: 'getCancelMultipleUniswapXOrdersTransaction',
-      },
+    const wrappedError = new Error('could not populate cancel transaction', { cause: error })
+    logger.debug('utils', 'getCancelMultipleUniswapXOrdersTransaction', wrappedError.message, {
+      error: wrappedError,
+      orders,
     })
     return undefined
   }

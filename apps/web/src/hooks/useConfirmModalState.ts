@@ -99,12 +99,7 @@ export function useConfirmModalState({
     if (didUserReject(e)) {
       return
     }
-    logger.error(e, {
-      tags: {
-        file: 'useConfirmModalState',
-        function: 'useConfirmModalState',
-      },
-    })
+    logger.warn('useConfirmModalState', 'catchUserReject', 'Failed to wrap', { error: e, trade })
     setApprovalError(errorType)
   }
 

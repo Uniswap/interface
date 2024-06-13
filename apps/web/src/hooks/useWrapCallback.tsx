@@ -164,12 +164,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     return txReceipt.hash
                   } catch (error) {
-                    logger.error(error, {
-                      tags: {
-                        file: 'useWrapCallback',
-                        function: 'useWrapCallback',
-                      },
-                    })
+                    logger.warn('useWrapCallback', 'useWrapCallback', 'Failed to wrap', error)
                     throw error
                   }
                 })

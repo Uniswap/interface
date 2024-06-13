@@ -561,11 +561,8 @@ function parseRemoteActivity(
     )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
-    logger.error(e, {
-      tags: {
-        file: 'parseRemote',
-        function: 'parseRemoteActivity',
-      },
+    logger.debug('parseRemote', 'parseRemoteActivity', 'Failed to parse remote activity', {
+      error: e,
       extra: { assetActivity },
     })
     return undefined

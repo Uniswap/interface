@@ -26,15 +26,7 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
           return tokenList
         })
         .catch((error) => {
-          logger.error(error, {
-            tags: {
-              file: 'useFetchListCallback',
-              function: 'useFetchListCallback',
-            },
-            extra: {
-              listUrl,
-            },
-          })
+          logger.debug('useFetchListCallback', 'useFetchListCallback', 'Failed to fetch list', { error, listUrl })
           dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
           throw error
         })

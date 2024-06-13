@@ -65,12 +65,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
           callback()
         }
       } catch (e) {
-        logger.error(e, {
-          tags: {
-            file: 'application/hooks',
-            function: 'useFiatOnrampAvailability',
-          },
-        })
+        logger.warn('useFiatOnrampAvailability', 'checkAvailability', 'Error fetching FOR availability', e)
         if (stale) {
           return
         }

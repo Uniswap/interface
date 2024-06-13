@@ -89,12 +89,7 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
       }
     })
   } catch (e) {
-    logger.error(e, {
-      tags: {
-        file: 'routing/utils',
-        function: 'computeRoutes',
-      },
-    })
+    logger.warn('routing/utils', 'computeRoutes', 'Failed to compute routes', { error: e })
     return
   }
 }

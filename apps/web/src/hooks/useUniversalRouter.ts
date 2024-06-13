@@ -113,14 +113,8 @@ export function useUniversalRouterSwapCallback(
               txRequest: tx,
               isAutoSlippage,
             })
-            const wrappedError = new Error('gas error')
-            wrappedError.cause = gasError
-            logger.error(wrappedError, {
-              tags: {
-                file: 'useUniversalRouter',
-                function: 'useUniversalRouterSwapCallback',
-              },
-            })
+            const wrappedError = new Error('gas error', { cause: gasError })
+            logger.warn('useUniversalRouter', 'useUniversalRouterSwapCallback', 'Failed to estimate gas', wrappedError)
             throw new GasEstimationError()
           }
 

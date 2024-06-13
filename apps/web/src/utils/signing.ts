@@ -60,7 +60,7 @@ export async function signTypedData(
         'signing',
         'signTypedData',
         'signTypedData: wallet does not implement EIP-712, falling back to eth_sign',
-        error.message
+        error
       )
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
       return await signer.provider.send('eth_sign', [address, hash])

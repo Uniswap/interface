@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQ2oCvxsKb6KLE7XeR4ppyZWhiAsEAMwtXta9Gwtvptnx`
-- CIDv1: `bafybeiazesdn7jujaopqkz3nwemsmtbdp4fcxvjv75cevqgm3fhe65nwdu`
+- CIDv0: `QmU2prusDiAfiySsHU8tcVbFwcrvSXdEDBVbvyzkpYKEUH`
+- CIDv1: `bafybeicususuyvytbxxpmjbk7ustwesnzwekzn4fs3argdhmr3d3p2t2mi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,68 +10,10 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiazesdn7jujaopqkz3nwemsmtbdp4fcxvjv75cevqgm3fhe65nwdu.ipfs.dweb.link/
-- https://bafybeiazesdn7jujaopqkz3nwemsmtbdp4fcxvjv75cevqgm3fhe65nwdu.ipfs.cf-ipfs.com/
-- [ipfs://QmQ2oCvxsKb6KLE7XeR4ppyZWhiAsEAMwtXta9Gwtvptnx/](ipfs://QmQ2oCvxsKb6KLE7XeR4ppyZWhiAsEAMwtXta9Gwtvptnx/)
+- https://bafybeicususuyvytbxxpmjbk7ustwesnzwekzn4fs3argdhmr3d3p2t2mi.ipfs.dweb.link/
+- https://bafybeicususuyvytbxxpmjbk7ustwesnzwekzn4fs3argdhmr3d3p2t2mi.ipfs.cf-ipfs.com/
+- [ipfs://QmU2prusDiAfiySsHU8tcVbFwcrvSXdEDBVbvyzkpYKEUH/](ipfs://QmU2prusDiAfiySsHU8tcVbFwcrvSXdEDBVbvyzkpYKEUH/)
 
-## 5.34.0 (2024-06-12)
-
-
-### Features
-
-* **web:** [multichain] 4070 add chain approval to swap execution flow (#8284) f645d37
-* **web:** [multichain] 4101 update chain id in swap and limit context (#8363) 83cf952
-* **web:** [multichain] 4121 add switch chain to send execution flow (#8060) a40162b
-* **web:** [multichain] 4127 fallback to gql (token balances) when chain is not synced (#8059) 9848242
-* **web:** 4194 use correct native currency in send (#8446) dbff9f3
-* **web:** 4194 use correct native currency in swap (#8448) 27a34cd
-* **web:** 4250 - add UniverseChainInfo and UniverseChainId types (#8632) 5c6208a
-* **web:** 4250 - create UNIVERSE_CHAIN_INFO and mainnet property (#8633) db60dc7
-* **web:** 4250 - move RPCType and DEFAULT_NATIVE_ADDRESS to uniswap pkg (#8634) f578d39
-* **web:** 4250 - pull all chain info from universe (#8643) d76fbf2
-* **web:** 4250 - use mainnet from UniverseChainInfo on wallet (#8636) 2161df6
-* **web:** 4250 - use mainnet from UniverseChainInfo on web (#8635) 2864084
-* **web:** Add base to supported moonpay chains (#8805) d06d5cb
-* **web:** add infringing LV nft collections (#8719) 095e89c
-* **web:** Add Moonpay deeplink (#8806) 81e6971
-* **web:** add quoteId to Xv2 rfq POST (#8909) 54a936b
-* **web:** add unauthenticated FOR transaction fetcher to uniswap package (#8587) 3a6ccfe
-* **web:** adding zora (#8711) e99544c
-* **web:** FOR - share token picker button (#8741) 3048ad2
-* **web:** migrate off direct console logging (#8334) e5f9873
-* **web:** move basic sharable ForAggregator API calls to uniswap package (#8553) fa54d49
-* **web:** move Pill component to shared uniswap package (#8701) 4806ede
-* **web:** Refreshed nav "Get Started" modal (#8642) 6a0e15d
-* **web:** Refreshed nav better app layout (#8625) 4b23b54
-* **web:** Refreshed nav chain selector dropdown (#8627) b5d092c
-* **web:** Refreshed nav company menu dropdown (#8641) b7b2244
-* **web:** Refreshed nav preferences menu and theme toggle (#8628) 9d43d7d
-* **web:** Refreshed nav prep work, organize files (#8622) 9c8b5f7
-* **web:** Replace direct thegraph queries with new BE queries (#8626) 5081b54
-* **web:** share country picker component for FOR (#8702) 3800c04
-
-
-### Bug Fixes
-
-* **web:** [multichain] token selector in TDP should use connected chain (#8963) 6ef7dbc
-* **web:** AccountDrawer still showing in in-app browser on scroll when closed (#8623) ae322cb
-* **web:** can't switch to mainnet if first pageload has chain query param (#8684) d2e3bfb
-* **web:** connector may be undefined on landing page (#8822) 9323bd4
-* **web:** dialog button should no longer be disabled (#8849) 56285db
-* **web:** don't disable swap settings for unconnected chains  (#8651) 141b089
-* **web:** fix missing translation, despite matching the library doesnt work with fee.bestForStable (#8629) 9470c59
-* **web:** liquidity translations (#8821) 4744be8
-* **web:** Pass account to send in transferInfo - staging (#8902) 786dead
-* **web:** patch wagmi to fix MM bug (#8841) 834a26c
-* **web:** Remove duplicate app promo banners (#8646) b35c3c1
-* **web:** removing zora from network selector when feature flag is off (#8960) e1eb12d
-* **web:** update useOnClickOutside to handle tooltips (#8704) 3697c7e
-* **web:** use address, chainId, from useAccount instead of web3-react (#8513) 26bc9fb
-* **web:** use orders text in CancelLimitDialog (#8706) 3fb4151
-
-
-### Continuous Integration
-
-* **web:** update sitemaps f972a73
+### 5.34.1 (2024-06-13)
 
 

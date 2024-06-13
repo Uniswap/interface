@@ -79,13 +79,7 @@ export default function Updater(): null {
           )
         })
         .catch((error) => {
-          logger.error(error, {
-            tags: {
-              file: 'logs/updater',
-              function: 'Updater#useEffect',
-            },
-            extra: { filter },
-          })
+          logger.warn('logs/updater', 'Updater#useEffect', 'Failed to fetch logs', { error, filter })
           dispatch(
             fetchedLogsError({
               chainId,

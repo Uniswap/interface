@@ -151,12 +151,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           rewardRateState.error ||
           periodFinishState.error
         ) {
-          logger.error(new Error('Failed to load staking rewards info'), {
-            tags: {
-              file: 'stake/hooks',
-              function: 'useStakingInfo',
-            },
-          })
+          logger.warn('stake/hooks', 'useStakingInfo', 'Failed to load staking rewards info')
           return memo
         }
 

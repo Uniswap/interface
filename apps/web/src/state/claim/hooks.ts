@@ -40,12 +40,7 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
     )
       .then((res) => res.json())
       .catch((error) => {
-        logger.error(error, {
-          tags: {
-            file: 'claim/hooks',
-            function: 'fetchClaimMapping',
-          },
-        })
+        logger.warn('claim/hooks', 'fetchClaimMapping', 'Claim mapping fetch failed', error)
         FETCH_CLAIM_MAPPING_PROMISE = null
       }))
   )
@@ -60,13 +55,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
     )
       .then((res) => res.json())
       .catch((error) => {
-        logger.error(error, {
-          tags: {
-            file: 'claim/hooks',
-            function: 'fetchClaimFile',
-          },
-          extra: { address: key },
-        })
+        logger.warn('claim/hooks', 'fetchClaimFile', 'Claim file fetch failed', error)
         delete FETCH_CLAIM_FILE_PROMISES[key]
       }))
   )

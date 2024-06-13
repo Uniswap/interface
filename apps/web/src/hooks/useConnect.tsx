@@ -32,15 +32,7 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
         }
 
         // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
-        logger.error(error, {
-          tags: {
-            file: 'useConnect',
-            function: 'ConnectionProvider',
-          },
-          extra: {
-            connector: connector.name,
-          },
-        })
+        logger.warn('useConnect', 'ConnectionProvider', `Connection failed: ${connector.name}`)
 
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
           result: WalletConnectionResult.FAILED,

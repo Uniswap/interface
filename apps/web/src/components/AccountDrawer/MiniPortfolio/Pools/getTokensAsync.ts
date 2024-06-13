@@ -33,9 +33,7 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
         ]).then(([c0, c1]) => [...c0, ...c1])
       }
     }
-    logger.error(error, {
-      tags: { file: 'getTokensAsync', function: 'fetchChunk' },
-    })
+    logger.debug('getTokensAsync', 'fetchChunk', 'Error fetching chunk', { error, extra: { chunk } })
     throw error
   }
 }
@@ -58,13 +56,7 @@ function tryParseToken(address: string, chainId: ChainId, data: CallResult[]) {
 
     return new Token(chainId, address, decimals, symbol, name)
   } catch (error) {
-    logger.error(error, {
-      tags: {
-        file: 'getTokensAsync',
-        function: 'tryParseToken',
-      },
-      extra: { address, chainId },
-    })
+    logger.debug('getTokensAsync', 'tryParseToken', 'Failed to parse token', { error, address, chainId })
     return undefined
   }
 }

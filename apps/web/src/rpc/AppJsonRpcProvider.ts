@@ -85,7 +85,7 @@ export default class AppJsonRpcProvider extends ConfiguredJsonRpcProvider {
         controller.onSuccess()
         return result
       } catch (error) {
-        logger.debug('AppJsonRpcProvider', 'perform', 'rpc action failed', error)
+        logger.warn('AppJsonRpcProvider', 'perform', 'rpc action failed', error)
         controller.onError()
       }
     }

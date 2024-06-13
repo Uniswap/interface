@@ -160,14 +160,11 @@ export function useDerivedMintInfo(
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
       } catch (error) {
-        logger.error(
+        logger.warn(
+          'mint/hooks',
+          'useDerivedMintInfo',
           `Error getLiquidityMinted: ${error}. Total supply: ${totalSupply}, tokenAmountA: ${tokenAmountA}, tokenAmountB: ${tokenAmountB}`,
-          {
-            tags: {
-              file: 'mint/hooks',
-              function: 'useDerivedMintInfo',
-            },
-          }
+          { error }
         )
         return undefined
       }
