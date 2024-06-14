@@ -108,12 +108,18 @@ export const PageTabs = () => {
           <Trans>Pool</Trans>
         </MenuItem>
       </Box>
-      <MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
+      <MenuItem href="/earn" isActive={pathname.startsWith('/earn')}>
+        <Trans>Earn</Trans>
+      </MenuItem>
+      <MenuItem href="/claim-new-ube" isActive={pathname.startsWith('/claim-new')}>
+        <Trans>Convert</Trans>
+      </MenuItem>
+      {/*<MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
         <Trans>Stake</Trans>
       </MenuItem>
       <MenuItem href="/farm" isActive={pathname.startsWith('/farm')}>
         <Trans>Farm</Trans>
-      </MenuItem>
+      </MenuItem>*/}
       {!shouldDisableNFTRoutes && (
         <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
