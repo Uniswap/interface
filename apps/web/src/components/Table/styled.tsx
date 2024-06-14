@@ -34,6 +34,7 @@ const StickyStyles = css`
   position: sticky;
   position: -webkit-sticky;
   z-index: ${Z_INDEX.under_dropdown};
+  background: transparent;
 `
 export const TableHead = styled.div<{ $isSticky?: boolean }>`
   width: 100%;
@@ -44,7 +45,6 @@ export const TableHead = styled.div<{ $isSticky?: boolean }>`
   flex-direction: column;
   justify-content: flex-end;
   // Solid background that matches surface, in order to hide rows as they scroll behind header
-  background: ${({ theme }) => theme.surface1};
 `
 export const TableBodyContainer = styled(Column)`
   width: 100%;
@@ -102,11 +102,12 @@ const TableRow = styled(Row)`
   min-width: 100%;
   display: flex;
   min-height: 64px;
+  background: ${({ theme }) => theme.bg1};
 `
 export const DataRow = styled(TableRow)`
   @media not all and (hover: none) {
     :hover {
-      background: ${({ theme }) => theme.surface3};
+      background: ${({ theme }) => theme.surface2};
     }
   }
 `

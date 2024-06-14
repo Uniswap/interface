@@ -35,6 +35,7 @@ const Stake = lazy(() => import('pages/Stake'))
 const Farm = lazy(() => import('pages/Farm'))
 const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
 const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
+const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -318,6 +319,12 @@ export const routes: RouteDefinition[] = [
     path: '/claim-new-pact',
     getElement: () => <ClaimNewPact />,
     getTitle: () => t`Claim New PACT`,
+  }),
+  createRouteDefinition({
+    path: '/earn',
+    getTitle: getExploreTitle,
+    nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
+    getElement: () => <RedirectEarn />,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

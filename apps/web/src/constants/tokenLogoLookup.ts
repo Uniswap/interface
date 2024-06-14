@@ -29,7 +29,7 @@ class TokenLogoLookupTable {
     this.dict = dict
     this.initialized = true
   }
-  getIcons(address?: string | null, chainId: number | null = 1) {
+  getIcons(address?: string | null, chainId: number | null = 42220) {
     if (!address) return undefined
 
     if (!this.initialized) {

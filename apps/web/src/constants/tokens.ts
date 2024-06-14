@@ -160,7 +160,7 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
-const CELO_CELO = new Token(ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
+export const CELO_CELO = new Token(ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
 export const CUSD_CELO = new Token(
   ChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
@@ -175,6 +175,15 @@ export const CEUR_CELO = new Token(
   'cEUR',
   'Celo Euro Stablecoin'
 )
+
+export const MCUSD_CELO = new Token(
+  ChainId.CELO,
+  '0x918146359264C492BD6934071c6Bd31C854EDBc3',
+  18,
+  'mCUSD',
+  'Moola cUSD'
+)
+
 export const PORTAL_ETH_CELO = new Token(
   ChainId.CELO,
   '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',

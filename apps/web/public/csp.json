@@ -112,7 +112,8 @@
     "wss://ws-us3.pusher.com/",
     "https://unpkg.com",
     "https://ipfs.io",
-    "https://gateway-arbitrum.network.thegraph.com"
+    "https://gateway-arbitrum.network.thegraph.com",
+    "https://rpc.ankr.com"
   ],
   "workerSrc": [
     "'self'",

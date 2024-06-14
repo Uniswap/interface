@@ -190,6 +190,10 @@ export const UBE_CONVERT_ADDRESSES: AddressMap = {
   [ChainId.CELO]: '0x9DFc135e0984Fe88aCd45d68e62a73E98Dbb7A36',
 }
 
+export const FARM_REGISTRY_ADDRESSES: AddressMap = {
+  [ChainId.CELO]: '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec',
+}
+
 export const UBE_ROMULUS_ADDRESSES: AddressMap = {
   [ChainId.CELO]: '0xD355A00220FbA16b69Cd8C4fbE16E02CA855f928',
 }

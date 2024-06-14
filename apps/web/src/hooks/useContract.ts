@@ -4,6 +4,7 @@ import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ChainId,
   ENS_REGISTRAR_ADDRESSES,
+  FARM_REGISTRY_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   OLD_UBE_ROMULUS_ADDRESSES,
@@ -30,7 +31,10 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
+import FARM_REGISTRY_ABI from 'uniswap/src/abis/farm-registry.json'
+import MOOLA_STAKING_ABI from 'uniswap/src/abis/moola-staking-rewards.json'
 import UBE_ROMULUS_ABI from 'uniswap/src/abis/romulus-delegate.json'
+import STAKING_REWARDS_ABI from 'uniswap/src/abis/staking-rewards.json'
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
@@ -38,7 +42,10 @@ import {
   Erc1155,
   Erc20,
   Erc721,
+  FarmRegistry,
+  MoolaStakingRewards,
   RomulusDelegate,
+  StakingRewards,
   UbeConvert,
   UbeToken,
   Weth,
@@ -199,4 +206,19 @@ export function useUbeTokenContract() {
 
 export function useRomulusDelegateContract() {
   return useContract<RomulusDelegate>(OLD_UBE_ROMULUS_ADDRESSES, UBE_ROMULUS_ABI, true)
+}
+
+export function useFarmRegistryContract() {
+  return useContract<FarmRegistry>(FARM_REGISTRY_ADDRESSES, FARM_REGISTRY_ABI, true)
+}
+
+export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
+  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards | null
+}
+
+export function useMoolaStakingRewardsContract(
+  stakingAddress?: string,
+  withSignerIfPossible?: boolean
+): MoolaStakingRewards | null {
+  return useContract(stakingAddress, MOOLA_STAKING_ABI, withSignerIfPossible) as MoolaStakingRewards | null
 }
