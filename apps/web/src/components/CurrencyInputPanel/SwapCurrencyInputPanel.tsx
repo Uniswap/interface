@@ -272,7 +272,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const account = useAccount()
     const { chainId } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
-    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined, chainId)
+    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
 

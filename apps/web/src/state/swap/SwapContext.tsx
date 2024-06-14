@@ -3,7 +3,6 @@ import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-
 import { useDerivedSwapInfo } from './hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from './types'
 
@@ -37,25 +36,6 @@ export function SwapAndLimitContextProvider({
 
   const account = useAccount()
   const previousConnectedChainId = usePrevious(account.chainId)
-  const previousInitialInputCurrency = usePrevious(initialInputCurrency)
-  const previousInitialOutputCurrency = usePrevious(initialOutputCurrency)
-
-  useEffect(() => {
-    if (!multichainUXEnabled) {
-      return
-    }
-
-    if (previousInitialInputCurrency && previousInitialInputCurrency !== initialInputCurrency) {
-      setCurrencyState((prev) => ({ ...prev, inputCurrency: initialInputCurrency }))
-    }
-  }, [
-    multichainUXEnabled,
-    initialInputCurrency,
-    initialOutputCurrency,
-    previousInitialInputCurrency,
-    previousInitialOutputCurrency,
-  ])
-
   const previousPrefilledState = usePrevious(prefilledState)
 
   useEffect(() => {
@@ -112,13 +92,7 @@ export function SwapAndLimitContextProvider({
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }
 
-export function SwapContextProvider({
-  multichainUXEnabled,
-  children,
-}: {
-  multichainUXEnabled?: boolean
-  children: React.ReactNode
-}) {
+export function SwapContextProvider({ children }: { children: React.ReactNode }) {
   const [swapState, setSwapState] = useState<SwapState>({
     ...initialSwapState,
   })
@@ -129,13 +103,10 @@ export function SwapContextProvider({
 
   useEffect(() => {
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
-    if (multichainUXEnabled) {
-      return
-    }
     if (chainChanged) {
       setSwapState((prev) => ({ ...prev, typedValue: '' }))
     }
-  }, [connectedChainId, previousConnectedChainId, multichainUXEnabled])
+  }, [connectedChainId, previousConnectedChainId])
 
   return <SwapContext.Provider value={{ swapState, setSwapState, derivedSwapInfo }}>{children}</SwapContext.Provider>
 }

@@ -106,7 +106,7 @@ export function Swap({
       {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
       <SwapAndLimitContext.Consumer>
         {({ currentTab }) => (
-          <SwapContextProvider multichainUXEnabled={multichainUXEnabled}>
+          <SwapContextProvider>
             <Flex width="100%">
               <SwapWrapper isDark={isDark} className={className} id="swap-page">
                 <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />

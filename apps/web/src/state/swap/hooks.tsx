@@ -127,9 +127,8 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
-  const nativeCurrency = useNativeCurrency(chainId)
-  const balance = useCurrencyBalance(account.address, nativeCurrency, chainId)
+  const nativeCurrency = useNativeCurrency(account.chainId)
+  const balance = useCurrencyBalance(account.address, nativeCurrency)
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -143,8 +142,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
   const relevantTokenBalances = useCurrencyBalances(
     account.address,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
-    chainId
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
   const isExactIn: boolean = independentField === Field.INPUT

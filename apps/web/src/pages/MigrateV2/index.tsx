@@ -15,13 +15,12 @@ import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
-
-import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow } from '../../components/Row'
 import { Dots } from '../../components/swap/styled'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
@@ -90,10 +89,7 @@ export default function MigrateV2() {
   }, [tokenPairsWithLiquidityTokens])
 
   // fetch pair balances
-  const [pairBalances, fetchingPairBalances] = useRpcTokenBalancesWithLoadingIndicator(
-    account.address,
-    allLiquidityTokens
-  )
+  const [pairBalances, fetchingPairBalances] = useTokenBalancesWithLoadingIndicator(account.address, allLiquidityTokens)
 
   // filter for v2 liquidity tokens that the user has a balance in
   const tokenPairsWithV2Balance = useMemo(() => {

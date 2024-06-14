@@ -21,7 +21,6 @@ import { isAddress } from 'utilities/src/addresses'
 
 import { useAccount } from 'hooks/useAccount'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { currencyKey } from 'utils/currencyKey'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
@@ -225,8 +224,12 @@ export function CurrencySearch({
                 isAddressSearch
               )}
               balance={
-                tryParseCurrencyAmount(String(balanceMap[currencyKey(searchCurrency)]?.balance ?? 0), searchCurrency) ??
-                CurrencyAmount.fromRawAmount(searchCurrency, 0)
+                tryParseCurrencyAmount(
+                  String(
+                    balanceMap[searchCurrency.isNative ? 'ETH' : searchCurrency.address?.toLowerCase()]?.balance ?? 0
+                  ),
+                  searchCurrency
+                ) ?? CurrencyAmount.fromRawAmount(searchCurrency, 0)
               }
             />
           </Column>

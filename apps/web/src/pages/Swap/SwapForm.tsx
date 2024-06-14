@@ -60,7 +60,6 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
@@ -240,12 +239,10 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     swapError: undefined,
     swapResult: undefined,
   })
+
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
   useEffect(() => {
-    if (multichainUXEnabled) {
-      return
-    }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
     const prefilledInputChanged =
       previousPrefilledState?.inputCurrency &&
@@ -265,7 +262,6 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     }
   }, [
     connectedChainId,
-    multichainUXEnabled,
     prefilledState.inputCurrency,
     prefilledState?.outputCurrency,
     previousConnectedChainId,
@@ -464,7 +460,6 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const selectChain = useSelectChain()
-
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)

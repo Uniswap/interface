@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { parseEther } from '@ethersproject/units'
 import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { useBag } from 'nft/hooks'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import { useBag, useWalletBalance } from 'nft/hooks'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
@@ -17,7 +18,6 @@ import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, USE_CONNECTED_ACCOUNT, toCurrency
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
-import { nativeOnChain } from 'constants/tokens'
 import { BagFooter } from './BagFooter'
 
 jest.mock('hooks/useAccount', () => ({
@@ -25,6 +25,7 @@ jest.mock('hooks/useAccount', () => ({
 }))
 
 jest.mock('nft/hooks/useBagTotalEthPrice')
+jest.mock('nft/hooks/useWalletBalance')
 jest.mock('nft/hooks/useBag')
 jest.mock('nft/hooks/useTokenInput')
 jest.mock('lib/hooks/useCurrencyBalance')
@@ -59,7 +60,12 @@ describe('BagFooter.tsx', () => {
       itemsInBag: [],
     }) as ReturnType<typeof useBag>
     mocked(useBagTotalEthPrice).mockReturnValue(BigNumber.from(12))
-    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 100))
+    mocked(useWalletBalance).mockReturnValue({
+      address: '',
+      balance: '100',
+      weiBalance: parseEther('0'),
+      provider: undefined,
+    })
 
     mocked(usePermit2Allowance).mockReturnValue({
       state: AllowanceState.ALLOWED,
@@ -126,7 +132,12 @@ describe('BagFooter.tsx', () => {
   })
 
   it('insufficient balance', () => {
-    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 0))
+    mocked(useWalletBalance).mockReturnValue({
+      address: '',
+      balance: '0',
+      weiBalance: parseEther('0'),
+      provider: undefined,
+    })
 
     renderBagFooter()
     const buyButton = getBuyButton()

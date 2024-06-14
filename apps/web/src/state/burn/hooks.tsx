@@ -8,9 +8,9 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 
 import { useAccount } from 'hooks/useAccount'
-import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
+import { useTokenBalances } from '../connection/hooks'
 import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {
@@ -38,7 +38,8 @@ export function useDerivedBurnInfo(
   const [, pair] = useV2Pair(currencyA, currencyB)
 
   // balances
-  const userLiquidity = useCurrencyBalance(account.address, pair?.liquidityToken) as CurrencyAmount<Token>
+  const relevantTokenBalances = useTokenBalances(account.address, [pair?.liquidityToken])
+  const userLiquidity: undefined | CurrencyAmount<Token> = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
   const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
   const tokens = {

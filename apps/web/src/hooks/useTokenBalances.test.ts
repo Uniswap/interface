@@ -67,11 +67,11 @@ describe('useTokenBalances', () => {
     } as any)
     const { balanceMap, loading } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({
-      '1-0x123': {
+      '0x123': {
         balance: 123,
         usdValue: 123,
       },
-      '1-native': {
+      ETH: {
         balance: 123,
         usdValue: 123,
       },

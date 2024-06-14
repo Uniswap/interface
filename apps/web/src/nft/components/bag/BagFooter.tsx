@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
+import { formatEther, parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -19,7 +19,7 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans, t } from 'i18n'
-import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
@@ -29,6 +29,7 @@ import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import { PriceImpact, usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionState'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
+import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
@@ -38,9 +39,6 @@ import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import JSBI from 'jsbi'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
@@ -332,9 +330,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
   const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
 
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID)
-  const nativeCurencyBalance = useCurrencyBalance(account.address ?? undefined, nativeCurrency)
-
+  const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
     if (!connected || account.chainId !== ChainId.MAINNET) {
       return undefined
@@ -350,22 +346,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
       return !inputCurrencyBalance.lessThan(inputAmount)
     }
 
-    if (!nativeCurrency) {
-      return undefined
-    }
-
-    const totalEthPriceCurrencyAmount = CurrencyAmount.fromRawAmount(nativeCurrency, JSBI.BigInt(totalEthPrice))
-    return nativeCurencyBalance?.greaterThan(totalEthPriceCurrencyAmount)
-  }, [
-    connected,
-    account.chainId,
-    inputCurrency,
-    nativeCurrency,
-    totalEthPrice,
-    nativeCurencyBalance,
-    trade?.inputAmount,
-    inputCurrencyBalance,
-  ])
+    return parseEther(balanceInEth).gte(totalEthPrice)
+  }, [connected, account.chainId, inputCurrency, balanceInEth, totalEthPrice, trade?.inputAmount, inputCurrencyBalance])
 
   useEffect(() => {
     setBagStatus(BagStatus.ADDING_TO_BAG)

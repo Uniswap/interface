@@ -92,7 +92,7 @@ it('renders currency rows correctly with balances', () => {
       isAddressSearch=""
       showCurrencyAmount
       balances={{
-        [`1-${DAI.address.toLowerCase()}`]: { usdValue: 2, balance: 2 },
+        [DAI.address.toLowerCase()]: { usdValue: 2, balance: 2 },
       }}
     />
   )

@@ -15,7 +15,6 @@ import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
-import { currencyKey } from 'utils/currencyKey'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { TokenFromList } from '../../../state/lists/tokenFromList'
@@ -26,16 +25,16 @@ import { MouseoverTooltip, TooltipSize } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
-function currencyListRowKey(data: Currency | CurrencyListRow): string {
+function currencyKey(data: Currency | CurrencyListRow): string {
   if (data instanceof CurrencyListSectionTitle) {
     return data.label
   }
 
   if (data instanceof CurrencyListRow) {
-    return currencyKey(data.currency!)
+    return data.currency?.isToken ? data.currency.address : 'ETHER'
   }
 
-  return currencyKey(data)
+  return data.isToken ? data.address : 'ETHER'
 }
 
 const ROW_ITEM_SIZE = 56
@@ -156,7 +155,7 @@ export function CurrencyRow({
   showAddress?: boolean
 }) {
   const account = useAccount()
-  const key = currencyListRowKey(currency)
+  const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
   const warning = useTokenWarning(currency?.isNative ? undefined : currency?.address, currency.chainId)
   const isBlockedToken = !!warning && !warning.canProceed
@@ -327,11 +326,12 @@ export default function CurrencyList({
       }
 
       const currency: Currency = row.currency
-      const key = currencyKey(currency)
 
       const balance =
-        tryParseCurrencyAmount(String(balances[key]?.balance ?? 0), currency) ??
-        CurrencyAmount.fromRawAmount(currency, 0)
+        tryParseCurrencyAmount(
+          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+          currency
+        ) ?? CurrencyAmount.fromRawAmount(currency, 0)
 
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
@@ -375,7 +375,7 @@ export default function CurrencyList({
 
   const itemKey = useCallback((index: number, data: typeof currencies) => {
     const currency = data[index]
-    return currencyListRowKey(currency)
+    return currencyKey(currency)
   }, [])
 
   return (
