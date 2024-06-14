@@ -155,17 +155,19 @@ export const useFarmRegistry = () => {
           tvlUSD: '0',
           rewardsUSDPerYear: '0',
         }
-        farmSummaries.push({
-          farmName: parseBytes32String(e.farmName),
-          stakingAddress: e.stakingAddress,
-          lpAddress: e.lpAddress,
-          token0Address: lps[e.lpAddress][0],
-          token1Address: lps[e.lpAddress][1],
-          tvlUSD: BigNumber.from(fData.tvlUSD),
-          rewardsUSDPerYear: BigNumber.from(fData.rewardsUSDPerYear),
-          isFeatured: !!featuredPoolWhitelist[e.stakingAddress],
-          isImported: false,
-        })
+        if (!farmSummaries.find((f) => f.lpAddress.toLowerCase() == e.lpAddress.toLowerCase())) {
+          farmSummaries.push({
+            farmName: parseBytes32String(e.farmName),
+            stakingAddress: e.stakingAddress,
+            lpAddress: e.lpAddress,
+            token0Address: lps[e.lpAddress][0],
+            token1Address: lps[e.lpAddress][1],
+            tvlUSD: BigNumber.from(fData.tvlUSD),
+            rewardsUSDPerYear: BigNumber.from(fData.rewardsUSDPerYear),
+            isFeatured: !!featuredPoolWhitelist[e.stakingAddress],
+            isImported: false,
+          })
+        }
       })
 
     console.log(farmSummaries)

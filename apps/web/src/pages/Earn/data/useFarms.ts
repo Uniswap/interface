@@ -104,7 +104,7 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
               token0Amount: new Fraction(0),
               token1Amount: new Fraction(0),
               tvl: farm.tvlUSD ? Number(formatEther(farm.tvlUSD)) : 0,
-              apr: farm.apr,
+              apr: new Percent(0),
               feeTier: V2_BIPS,
               protocolVersion: 'V2',
             } as TableFarm

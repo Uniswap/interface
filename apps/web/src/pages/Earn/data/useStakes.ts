@@ -77,8 +77,8 @@ export function useStakes(sortState: StakeTableSortState, chainId?: ChainId) {
         stakingRewardAddress: '',
         stakingToken: tokens['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
         rewardTokens: [tokens['0x71e26d0E519D14591b9dE9a0fE9513A398101490']],
-        tvl: 100,
-        apr: new Percent(0),
+        tvl: 342_986,
+        apr: new Percent(808, 10000),
         isActive: true,
       },
     ]
