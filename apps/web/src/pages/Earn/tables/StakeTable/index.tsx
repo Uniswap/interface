@@ -12,12 +12,7 @@ import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import SingleTokenLogo from './SingleTokenLogo'
 
-import {
-  OrderDirection,
-  chainIdToBackendName,
-  supportedChainIdFromGQLChain,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { OrderDirection, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
@@ -185,7 +180,7 @@ export function StakesTable({
           rewardTokensList: <RewardTokensList rewardTokens={pool.rewardTokens} chainId={chainId} />,
           tvl: pool.tvl,
           apr: pool.apr,
-          link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
+          link: `/stake`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {

@@ -2,10 +2,12 @@ import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName 
 import { Trace, TraceEvent } from 'analytics'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { Trans } from 'i18n'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { Trans, t } from 'i18n'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { Info } from 'react-feather'
+import styled, { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
+import EarnHeader from './EarnHeader'
 import { ActiveFarmTable, InactiveFarmTable } from './tables/FarmTable'
 import { StakeTable } from './tables/StakeTable'
 
@@ -18,10 +20,10 @@ import { useEarnParams } from './redirects'
 const EarnContainer = styled.div`
   width: 100%;
   min-width: 320px;
-  padding: 48px 40px 0px;
+  padding: 0px 40px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding: 16px;
+    padding: 0px 16px;
     padding-bottom: 0px;
   }
 `
@@ -88,24 +90,56 @@ interface Page {
 }
 const Pages: Array<Page> = [
   {
-    title: <Trans>Farms</Trans>,
+    title: <Trans>Farm</Trans>,
     key: EarnTab.Farms,
     component: ActiveFarmTable,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
-    title: <Trans>Stakes</Trans>,
+    title: <Trans>Stake</Trans>,
     key: EarnTab.Stakes,
     component: StakeTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
-    title: <Trans>Deprecaed Farms</Trans>,
+    title: <Trans>Inactive Farms</Trans>,
     key: EarnTab.DeprecatedFarms,
     component: InactiveFarmTable,
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
   },
 ]
+
+const InfoBoxWrapper = styled.div`
+  margin: 0 auto;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+`
+
+const InfoBoxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  gap: 16px;
+  border: 1px solid ${({ theme }) => theme.accent1};
+  border-radius: 20px;
+  background: ${({ theme }) => theme.surface4};
+  backdrop-filter: blur(5px);
+`
+
+function InfoBox({ message }: { message?: ReactNode }) {
+  const theme = useTheme()
+  return (
+    <InfoBoxWrapper>
+      <InfoBoxContainer>
+        <Info size={36} stroke={theme.primary1} />
+        {message && (
+          <ThemedText.BodyPrimary padding={10} textAlign="center">
+            {message}
+          </ThemedText.BodyPrimary>
+        )}
+      </InfoBoxContainer>
+    </InfoBoxWrapper>
+  )
+}
 
 const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
@@ -141,7 +175,7 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
     resetManualOutage()
   }, [resetManualOutage, tab])
 
-  const { component: Page /*, key: currentKey*/ } = Pages[currentTab]
+  const { component: Page, key: currentKey } = Pages[currentTab]
 
   // Automatically trigger a navigation when the app chain changes
   // const navigate = useNavigate()
@@ -159,12 +193,7 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
   return (
     <Trace page={InterfacePageName.EXPLORE_PAGE} properties={{ chainName: chain }} shouldLogImpression>
       <EarnContainer>
-        {/* <div style={{ width: '100%', display: 'flex' }}>
-          <div>
-            <img></img>
-          </div>
-          <div>ThemedText</div>
-        </div> */}
+        <EarnHeader />
         <NavWrapper ref={tabNavRef}>
           <TabBar data-testid="explore-navbar">
             {Pages.map(({ title, loggingElementName, key }, index) => {
@@ -187,6 +216,8 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
           {/* <FiltersContainer>{currentKey === EarnTab.Farms && <TimeSelector />}</FiltersContainer> */}
         </NavWrapper>
         <Page />
+        {currentKey === EarnTab.Farms && <InfoBox message={t('V3 Farms will be announced soon')} />}
+        {currentKey === EarnTab.Stakes && <InfoBox message={t('New Stake programs be announced soon')} />}
       </EarnContainer>
     </Trace>
   )

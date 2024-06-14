@@ -13,12 +13,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
 import DoubleTokenLogo from './DoubleTokenLogo'
 
-import {
-  OrderDirection,
-  chainIdToBackendName,
-  supportedChainIdFromGQLChain,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { OrderDirection, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
@@ -240,7 +235,7 @@ export function FarmsTable({
           tvl: pool.tvl,
           apr: pool.apr,
           protocolVersion: pool.protocolVersion,
-          link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
+          link: `/farm`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
