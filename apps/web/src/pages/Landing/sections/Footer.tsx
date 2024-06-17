@@ -72,17 +72,17 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Box gap="24px">
       <SocialIcon $hoverColor="#00C32B">
-        <StyledExternalLink href="https://github.com/Uniswap">
+        <StyledExternalLink href="https://github.com/Ubeswap">
           <Github size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <StyledExternalLink href="https://twitter.com/Uniswap">
+        <StyledExternalLink href="https://twitter.com/Ubeswap">
           <Twitter size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
-        <StyledExternalLink href="https://discord.com/invite/uniswap">
+        <StyledExternalLink href="https://discord.com/invite/zZkUXCMPGP">
           <Discord size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
