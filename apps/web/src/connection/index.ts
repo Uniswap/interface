@@ -9,6 +9,7 @@ import GNOSIS_ICON from 'assets/images/gnosis.png'
 import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
+import VALORA_ICON from 'assets/wallets/valora-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { t } from 'i18n'
 import { useSyncExternalStore } from 'react'
@@ -19,7 +20,7 @@ import { RPC_PROVIDERS } from '../constants/providers'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
 import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
+import { UniwalletConnect as UniwalletWCV2Connect, ValoraConnect, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)
@@ -180,6 +181,17 @@ export const uniwalletWCV2ConnectConnection: Connection = {
   shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedDevice),
 }
 
+const [web3ValoraConnect, web3ValoraConnectHooks] = initializeConnector<ValoraConnect>(
+  (actions) => new ValoraConnect({ actions, onError })
+)
+export const valoraConnectConnection: Connection = {
+  getProviderInfo: () => ({ name: 'Valora', icon: VALORA_ICON }),
+  connector: web3ValoraConnect,
+  hooks: web3ValoraConnectHooks,
+  type: ConnectionType.VALORA,
+  shouldDisplay: () => Boolean(!getIsInjectedMobileBrowser() && !isNonSupportedDevice),
+}
+
 const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<CoinbaseWallet>(
   (actions) =>
     new CoinbaseWallet({
@@ -214,6 +226,7 @@ export const connections = [
   gnosisSafeConnection,
   // uniwalletWCV2ConnectConnection,
   deprecatedInjectedConnection,
+  valoraConnectConnection,
   walletConnectV2Connection,
   coinbaseWalletConnection,
   eip6963Connection,
@@ -244,6 +257,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return gnosisSafeConnection
       case ConnectionType.EIP_6963_INJECTED:
         return eip6963Connection
+      case ConnectionType.VALORA:
+        return valoraConnectConnection
     }
   }
 }
