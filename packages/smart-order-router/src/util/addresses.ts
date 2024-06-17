@@ -28,7 +28,7 @@ export const UNISWAP_MULTICALL_ADDRESSES: AddressMap = {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const SWAP_ROUTER_02_ADDRESSES = (_chainId: number): string => {
-  return '0x5CDe4d414F27E331B6738F783BC84c5507d8ee7A'
+  return '0xE389f92B47d913F773254962eD638E12C28aA82d'
 }
 
 export const OVM_GASPRICE_ADDRESS = '0x420000000000000000000000000000000000000F'

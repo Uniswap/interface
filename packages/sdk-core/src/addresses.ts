@@ -62,10 +62,10 @@ const CELO_ADDRESSES: ChainAddresses = {
   v3CoreFactoryAddress: '0x67FEa58D5a5a4162cED847E13c2c81c73bf8aeC4',
   multicallAddress: '0x4d446f092461A0bfDeBC72AbC831541ca949d63F',
   quoterAddress: '0xA8864a18Fab1ED233Ce1921F329A6A92DBccA56f',
-  v3MigratorAddress: '0x65415d0bDe9249E185D433A08823fd7FA7ebec66',
-  nonfungiblePositionManagerAddress: '0x5C76245413c6C4cBe7A3fAe395a8F7AF06FDCd65',
+  v3MigratorAddress: '0x7167338eA247CC20B7a559Bf171a3dcDb5DE7A8a',
+  nonfungiblePositionManagerAddress: '0x897387c7B996485c3AAa85c94272Cd6C506f8c8F',
   tickLensAddress: '0x1D8C564cCE485C2f053EF32652E4dba00D4265C4',
-  swapRouter02Address: '0x5CDe4d414F27E331B6738F783BC84c5507d8ee7A',
+  swapRouter02Address: '0xE389f92B47d913F773254962eD638E12C28aA82d',
   mixedRouteQuoterV1Address: '0x1f34a843832044A085bB9cAe48cc7294D5478FAA',
 }
 
