@@ -281,7 +281,12 @@ export default function Pool() {
                     )}
                   />
                 )}
-                <ResponsiveButtonPrimary data-cy="join-pool-button" id="join-pool-button" as={Link} to="/add/ETH">
+                <ResponsiveButtonPrimary
+                  data-cy="join-pool-button"
+                  id="join-pool-button"
+                  as={Link}
+                  to="/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490"
+                >
                   + <Trans>New position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
