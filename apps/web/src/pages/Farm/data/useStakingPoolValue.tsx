@@ -1,55 +1,11 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { CUSD_CELO } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useTotalSupply } from './TotalSupply'
+import { StakingInfo } from './stakeHooks'
 import { useCUSDPrice } from './useCUSDPrice'
 import { CustomStakingInfo } from './useCustomStakingInfo'
-//import { StakingInfo } from 'state/stake/hooks'
-
-interface IRawPool {
-  index: number
-  stakingToken: string
-  poolAddress: string
-  weight: number
-  rewardToken?: string
-  rewardTokenSymbol?: string
-  nextPeriod?: number
-  nextPeriodRewards?: BigNumber | null
-}
-export interface StakingInfo {
-  // the address of the reward contract
-  readonly stakingRewardAddress: string | undefined
-  // the token of the liquidity pool
-  readonly stakingToken: Token
-  // the tokens involved in this pair
-  readonly tokens: readonly [Token, Token]
-  // the amount of token currently staked, or undefined if no account
-  readonly stakedAmount?: CurrencyAmount<Token>
-  // the total amount of token staked in the contract
-  readonly totalStakedAmount: CurrencyAmount<Token>
-  // the amount of reward tokens earned by the active account, or undefined if no account
-  readonly earnedAmounts?: CurrencyAmount<Token>[]
-  // the current amount of token distributed to the active account per second.
-  // equivalent to percent of total supply * reward rate
-  readonly rewardRates?: CurrencyAmount<Token>[]
-  // the amount of token distributed per second to all LPs, constant
-  readonly totalRewardRates: CurrencyAmount<Token>[]
-  // when the period ends
-  readonly periodFinish: Date | undefined
-  // if pool is active
-  readonly active: boolean
-  // calculates a hypothetical amount of token distributed to the active account per second.
-  readonly getHypotheticalRewardRate: (
-    stakedAmount: CurrencyAmount<Token>,
-    totalStakedAmount: CurrencyAmount<Token>,
-    totalRewardRates: CurrencyAmount<Token>[]
-  ) => CurrencyAmount<Token>[]
-  readonly nextPeriodRewards: CurrencyAmount<Token>
-  readonly poolInfo: IRawPool
-  readonly rewardTokens: Token[]
-}
 
 interface IStakingPoolValue {
   valueCUSD?: CurrencyAmount<Token>

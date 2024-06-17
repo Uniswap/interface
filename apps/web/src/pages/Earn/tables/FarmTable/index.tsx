@@ -235,7 +235,7 @@ export function FarmsTable({
           tvl: pool.tvl,
           apr: pool.apr,
           protocolVersion: pool.protocolVersion,
-          link: `/farm`,
+          link: `/farm/${pool.token0.address}/${pool.token1.address}/${pool.farmAddress}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {

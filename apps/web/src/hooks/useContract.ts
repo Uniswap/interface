@@ -33,6 +33,7 @@ import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import FARM_REGISTRY_ABI from 'uniswap/src/abis/farm-registry.json'
 import MOOLA_STAKING_ABI from 'uniswap/src/abis/moola-staking-rewards.json'
+import POOL_MANAGER_ABI from 'uniswap/src/abis/pool-manager.json'
 import UBE_ROMULUS_ABI from 'uniswap/src/abis/romulus-delegate.json'
 import STAKING_REWARDS_ABI from 'uniswap/src/abis/staking-rewards.json'
 import {
@@ -44,6 +45,7 @@ import {
   Erc721,
   FarmRegistry,
   MoolaStakingRewards,
+  PoolManager,
   RomulusDelegate,
   StakingRewards,
   UbeConvert,
@@ -213,12 +215,16 @@ export function useFarmRegistryContract() {
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
-  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards | null
+  return useContract<StakingRewards>(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
 export function useMoolaStakingRewardsContract(
   stakingAddress?: string,
   withSignerIfPossible?: boolean
 ): MoolaStakingRewards | null {
-  return useContract(stakingAddress, MOOLA_STAKING_ABI, withSignerIfPossible) as MoolaStakingRewards | null
+  return useContract<MoolaStakingRewards>(stakingAddress, MOOLA_STAKING_ABI, withSignerIfPossible)
+}
+
+export function usePoolManagerContract(address?: string, withSignerIfPossible?: boolean): PoolManager | null {
+  return useContract<PoolManager>(address, POOL_MANAGER_ABI, withSignerIfPossible)
 }

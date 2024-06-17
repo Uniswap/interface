@@ -95,7 +95,6 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
           const token0Address = isAddress(farm.token0Address)
           const token1Address = isAddress(farm.token1Address)
           if (token0Address && tokens[token0Address] && token1Address && tokens[token1Address]) {
-            console.log('farm', farm)
             return {
               hash: farm.stakingAddress,
               farmAddress: farm.stakingAddress,
@@ -116,7 +115,6 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
         .flat() ?? []
 
     const rt = sortFarms([...fff], sortState)
-    console.log('inactive farms', rt)
     return rt
   }, [farms, tokens, sortState])
 

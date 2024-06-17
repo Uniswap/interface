@@ -32,7 +32,8 @@ const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
 const Stake = lazy(() => import('pages/Stake'))
-const Farm = lazy(() => import('pages/Farm'))
+const FarmManage = lazy(() => import('pages/Farm/Manage'))
+const FarmManageSingle = lazy(() => import('pages/Farm/ManageSingle'))
 const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
 const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
 const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
@@ -306,9 +307,14 @@ export const routes: RouteDefinition[] = [
     getTitle: () => t`Stake UBE`,
   }),
   createRouteDefinition({
-    path: '/farm',
-    getElement: () => <Farm />,
-    getTitle: () => t`Farm`,
+    path: '/farm/:currencyIdA/:currencyIdB/:stakingAddress',
+    getElement: () => <FarmManage />,
+    getTitle: () => t`Manage Farm`,
+  }),
+  createRouteDefinition({
+    path: '/farm/:currencyId/:stakingAddress',
+    getElement: () => <FarmManageSingle />,
+    getTitle: () => t`Manage Farm`,
   }),
   createRouteDefinition({
     path: '/claim-new-ube',

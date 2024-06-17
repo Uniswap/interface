@@ -175,8 +175,8 @@ export const useCUSDPriceOfULP = (stakingToken: Token | undefined): Price<Token,
     ) {
       const amount0 = cusdPrice0.quote(stakingTokenPair.reserve0)
       const amount1 = cusdPrice1.quote(stakingTokenPair.reserve1)
-      const token1CUSDPrice = amount0.divide(totalSupplyOfStakingToken)
-      const token2CUSDPrice = amount1.divide(totalSupplyOfStakingToken)
+      const token1CUSDPrice = amount0.asFraction.divide(totalSupplyOfStakingToken.asFraction)
+      const token2CUSDPrice = amount1.asFraction.divide(totalSupplyOfStakingToken.asFraction)
       const amount = token1CUSDPrice.add(token2CUSDPrice)
       return new Price(stakingToken, CUSD, amount.denominator, amount.numerator)
     }

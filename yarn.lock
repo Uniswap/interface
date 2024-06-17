@@ -12698,6 +12698,7 @@ __metadata:
     tsafe: 1.6.4
     typescript: 5.3.3
     uniswap: "workspace:^"
+    use-count-up: 3.0.1
     use-resize-observer: 9.1.0
     utilities: "workspace:^"
     uuid: 9.0.0
@@ -41380,6 +41381,26 @@ __metadata:
     "@types/react":
       optional: true
   checksum: df690f2032d56aabcea0400313a04621429f45bceb4d65d38829b3680cae3856470ce72958cb7224b332189d8faef54662a283c0867dd7c769f9a5beff61787d
+  languageName: node
+  linkType: hard
+
+"use-count-up@npm:3.0.1":
+  version: 3.0.1
+  resolution: "use-count-up@npm:3.0.1"
+  dependencies:
+    use-elapsed-time: 3.0.2
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 0e5b659acd52bdf401d943605d19c425bc7acdce5f4486b3bd6dfd6b70dadcb68f279df09140976b3038d6de34f3eb5fe47136af04e3789861dfecd943906ea3
+  languageName: node
+  linkType: hard
+
+"use-elapsed-time@npm:3.0.2":
+  version: 3.0.2
+  resolution: "use-elapsed-time@npm:3.0.2"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 9ba8ef6d05b8137fd715ace7303edc2fdc412f372f158bfa659926b0cb356654be84664f912d016f99deb2f3951236443feb84b78318755d5984c340dcb418a6
   languageName: node
   linkType: hard
 
