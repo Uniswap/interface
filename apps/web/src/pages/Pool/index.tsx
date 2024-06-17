@@ -20,10 +20,10 @@ import { Link } from 'react-router-dom'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components'
-import { HideSmall, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import CTACards from './CTACards'
+// import CTACards from './CTACards'
 import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
@@ -335,9 +335,9 @@ export default function Pool() {
                 </ErrorContainer>
               )}
             </MainContentWrapper>
-            <HideSmall>
+            {/* <HideSmall>
               <CTACards />
-            </HideSmall>
+            </HideSmall> */}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
