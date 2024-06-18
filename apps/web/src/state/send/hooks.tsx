@@ -92,8 +92,8 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const transferInfo = useMemo(() => {
     return {
       provider,
-      address: account.address,
-      chaindId: account.chainId,
+      account: account.address,
+      chainId: account.chainId,
       currencyAmount: parsedTokenAmount,
       toAddress: recipientData?.address,
     }
