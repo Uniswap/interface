@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import {
@@ -70,6 +70,7 @@ const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
   [ChainId.BLAST]: 'blast',
   [ChainId.ZORA]: 'zora',
   [ChainId.ZKSYNC]: 'zksync',
+  [ChainId.TARAXA_TESTNET]: 'taraxa_testnet',
 } as const
 
 test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -192,6 +193,7 @@ const chainIdToBackendName: { [key: number]: InterfaceGqlChain } = {
   [ChainId.BASE]: Chain.Base,
   [ChainId.BLAST]: Chain.Blast,
   [ChainId.ZORA]: Chain.Zora,
+  [ChainId.TARAXA_TESTNET]: Chain.TaraxaTestnet,
 }
 
 test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as SupportedInterfaceChainId))(

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@taraswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'

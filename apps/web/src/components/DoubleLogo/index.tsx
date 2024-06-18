@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@taraswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo } from 'components/Logo/ChainLogo'

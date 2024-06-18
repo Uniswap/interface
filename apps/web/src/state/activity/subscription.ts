@@ -1,4 +1,4 @@
-import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { ChainId, TradeType } from '@taraswap/sdk-core'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCallback, useEffect, useRef } from 'react'

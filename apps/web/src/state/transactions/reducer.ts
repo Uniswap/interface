@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from './types'

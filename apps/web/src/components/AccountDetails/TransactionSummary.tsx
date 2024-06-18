@@ -1,4 +1,4 @@
-import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { Fraction, TradeType } from '@taraswap/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'

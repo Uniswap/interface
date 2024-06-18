@@ -1,5 +1,5 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'

@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@taraswap/v2-sdk'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'

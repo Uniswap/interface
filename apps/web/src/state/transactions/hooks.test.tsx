@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import store from 'state'

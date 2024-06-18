@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'

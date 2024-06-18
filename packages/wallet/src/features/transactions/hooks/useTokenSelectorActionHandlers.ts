@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { useCallback } from 'react'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

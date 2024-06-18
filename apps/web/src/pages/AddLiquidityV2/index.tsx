@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@taraswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'

@@ -1,7 +1,7 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@taraswap/sdk-core'
 import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,

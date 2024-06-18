@@ -1,5 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { Position } from '@uniswap/v3-sdk'
+import { Position } from '@taraswap/v3-sdk'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'

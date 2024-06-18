@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: 'https://etherscan.io',

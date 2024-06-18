@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@taraswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'

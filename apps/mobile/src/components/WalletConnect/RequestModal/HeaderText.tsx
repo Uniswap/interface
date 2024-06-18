@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'

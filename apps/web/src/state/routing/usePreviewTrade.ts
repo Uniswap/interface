@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@taraswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { ZERO_PERCENT } from 'constants/misc'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'

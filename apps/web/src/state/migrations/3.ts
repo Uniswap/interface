@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@taraswap/sdk-core'
 import { PersistState } from 'redux-persist'
 import { UserState } from 'state/user/reducer'
 import { serializeToken } from 'state/user/utils'

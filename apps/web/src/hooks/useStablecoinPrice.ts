@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@taraswap/sdk-core'
 import { getChain, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'

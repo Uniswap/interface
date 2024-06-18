@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {

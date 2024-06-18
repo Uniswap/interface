@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'

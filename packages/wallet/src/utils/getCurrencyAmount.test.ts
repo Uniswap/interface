@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@taraswap/sdk-core'
 import { DAI } from 'wallet/src/constants/tokens'
 import { noOpFunction } from 'wallet/src/test/mocks'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'

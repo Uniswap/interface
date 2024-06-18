@@ -1,5 +1,5 @@
 import { isAddress } from '@ethersproject/address'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'

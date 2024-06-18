@@ -1,4 +1,4 @@
-import { ChainId, SOCKS_CONTROLLER_ADDRESSES, Token } from '@uniswap/sdk-core'
+import { ChainId, SOCKS_CONTROLLER_ADDRESSES, Token } from '@taraswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { useTokenBalance } from 'state/connection/hooks'

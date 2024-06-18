@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'

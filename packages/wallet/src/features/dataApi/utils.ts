@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@taraswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { useRef } from 'react'
 import {

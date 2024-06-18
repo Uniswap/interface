@@ -1,5 +1,5 @@
-import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { Percent, Token, V2_FACTORY_ADDRESSES } from '@taraswap/sdk-core'
+import { Pair, computePairAddress } from '@taraswap/v2-sdk'
 import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'

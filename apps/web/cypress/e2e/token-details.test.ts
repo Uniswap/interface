@@ -1,4 +1,4 @@
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@taraswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ARB, UNI } from '../../src/constants/tokens'

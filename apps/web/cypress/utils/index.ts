@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { HardhatProvider } from 'cypress-hardhat/lib/browser/provider'
 import { Utils } from 'cypress-hardhat/lib/browser/utils'
 

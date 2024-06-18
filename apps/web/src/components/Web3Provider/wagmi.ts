@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { CHAIN_INFO } from 'constants/chains'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { createClient } from 'viem'

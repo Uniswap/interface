@@ -1,4 +1,4 @@
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@taraswap/sdk-core'
 import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { Trans } from 'i18n'

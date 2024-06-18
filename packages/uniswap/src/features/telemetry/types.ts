@@ -2,7 +2,7 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
@@ -21,7 +21,7 @@ import {
   SwapPriceUpdateUserResponse,
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@taraswap/router-sdk'
 import {
   Currency as FiatCurrency,
   NftStandard,

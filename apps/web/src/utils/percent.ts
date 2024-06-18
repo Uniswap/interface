@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@taraswap/sdk-core'
 
 export function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {

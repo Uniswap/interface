@@ -1,6 +1,6 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Currency } from '@taraswap/sdk-core'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'

@@ -5,7 +5,7 @@ import {
   permit2Address,
   PermitSingle,
 } from '@uniswap/permit2-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
 import { BigNumber, providers, TypedDataField } from 'ethers'

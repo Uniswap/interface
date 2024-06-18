@@ -1,5 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { useTokenWarning } from 'constants/tokenSafety'

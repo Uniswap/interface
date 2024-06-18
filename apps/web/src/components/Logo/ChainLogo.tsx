@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { SupportedInterfaceChainId, getChain, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'

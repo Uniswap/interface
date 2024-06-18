@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
+import {ChainId, Currency, Token, WETH9} from '@taraswap/sdk-core'
 import {
   ARB,
   BTC_BSC,
@@ -14,6 +14,7 @@ import {
   DAI_OPTIMISM,
   DAI_POLYGON,
   ETH_BSC,
+  nativeOnChain,
   OP,
   PORTAL_ETH_CELO,
   USDC_ARBITRUM,
@@ -43,12 +44,11 @@ import {
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
-  nativeOnChain,
 } from 'constants/tokens'
-import { getNativeLogoURI, getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
-import { USDC_ZKSYNC, USDC_ZORA } from 'uniswap/src/constants/tokens'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import {getNativeLogoURI, getTokenLogoURI} from 'lib/hooks/useCurrencyLogoURIs'
+import {USDC_ZKSYNC, USDC_ZORA, USDT_TARAXA_TESTNET} from 'uniswap/src/constants/tokens'
+import {SafetyLevel} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {CurrencyInfo} from 'uniswap/src/features/dataApi/types'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -172,6 +172,12 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.ZKSYNC]: [nativeOnChain(ChainId.ZKSYNC), WRAPPED_NATIVE_CURRENCY[ChainId.ZKSYNC] as Token, USDC_ZKSYNC].map(
     buildCurrencyInfo
   ),
+
+  [ChainId.TARAXA_TESTNET]: [
+    nativeOnChain(ChainId.TARAXA_TESTNET),
+    WRAPPED_NATIVE_CURRENCY[ChainId.TARAXA_TESTNET] as Token,
+    USDT_TARAXA_TESTNET,
+  ].map(buildCurrencyInfo),
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

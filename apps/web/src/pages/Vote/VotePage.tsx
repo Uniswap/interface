@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
-import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Token } from '@taraswap/sdk-core'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { useAccount } from 'hooks/useAccount'

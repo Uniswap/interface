@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Percent } from '@taraswap/sdk-core'
+import { Position } from '@taraswap/v3-sdk'
 import { useToken } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'

@@ -1,5 +1,5 @@
 // @ts-ignore
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
 import { revertHardhat, setupHardhat } from '../utils'
 

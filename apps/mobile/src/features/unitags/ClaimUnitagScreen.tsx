@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import { ADDRESS_ZERO } from '@taraswap/v3-sdk'
 import { default as React, useCallback, useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator, Keyboard } from 'react-native'

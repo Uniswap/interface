@@ -1,5 +1,5 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'

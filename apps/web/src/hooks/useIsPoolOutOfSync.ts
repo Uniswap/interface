@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Price, Token } from '@taraswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'

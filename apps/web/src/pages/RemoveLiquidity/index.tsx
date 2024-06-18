@@ -7,7 +7,7 @@ import {
   LiquidityEventName,
   LiquiditySource,
 } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@taraswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { V2Unsupported } from 'components/V2Unsupported'

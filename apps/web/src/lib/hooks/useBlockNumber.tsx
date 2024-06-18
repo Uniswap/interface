@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'

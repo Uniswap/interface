@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { NATIVE_CHAIN_ID, UNI } from 'constants/tokens'
 
 import { getTestSelector } from '../utils'

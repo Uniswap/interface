@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'

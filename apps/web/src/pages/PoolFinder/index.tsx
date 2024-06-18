@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useAccount } from 'hooks/useAccount'

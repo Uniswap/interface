@@ -1,4 +1,4 @@
-import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@taraswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 // eslint-disable-next-line no-restricted-syntax

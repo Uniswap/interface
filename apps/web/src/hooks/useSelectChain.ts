@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { useCallback } from 'react'
 import { PopupType, addPopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'

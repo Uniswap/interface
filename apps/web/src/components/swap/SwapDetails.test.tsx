@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@taraswap/sdk-core'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,

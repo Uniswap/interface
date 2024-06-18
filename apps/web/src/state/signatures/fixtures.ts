@@ -1,4 +1,4 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@taraswap/sdk-core'
 import { DAI } from 'constants/tokens'
 import {
   AssetActivityPartsFragment,

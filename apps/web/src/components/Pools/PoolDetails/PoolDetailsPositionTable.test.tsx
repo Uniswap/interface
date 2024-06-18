@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
-import { Price, WETH9 } from '@uniswap/sdk-core'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { Price, WETH9 } from '@taraswap/sdk-core'
+import { FeeAmount, Pool } from '@taraswap/v3-sdk'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import { USDC_MAINNET } from 'constants/tokens'
 import { render, screen } from 'test-utils/render'

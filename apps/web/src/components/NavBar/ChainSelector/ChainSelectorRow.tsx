@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'

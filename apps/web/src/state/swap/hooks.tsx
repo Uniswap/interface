@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@taraswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'

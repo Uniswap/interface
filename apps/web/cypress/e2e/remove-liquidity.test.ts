@@ -1,4 +1,4 @@
-import { ChainId, MaxUint256, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, MaxUint256, UNI_ADDRESSES } from '@taraswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 
 const UNI_MAINNET = UNI_ADDRESSES[ChainId.MAINNET]

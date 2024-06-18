@@ -1,6 +1,6 @@
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@taraswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@uniswap/v3-sdk'
+import { FeeOptions } from '@taraswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'

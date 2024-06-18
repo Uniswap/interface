@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@taraswap/sdk-core'
 import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'

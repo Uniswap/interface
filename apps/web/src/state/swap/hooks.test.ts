@@ -1,7 +1,7 @@
 import { Field } from 'components/swap/constants'
 import { parse } from 'qs'
 
-import { ChainId, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, UNI_ADDRESSES } from '@taraswap/sdk-core'
 import { MATIC_POLYGON, UNI } from 'constants/tokens'
 import { queryParametersToSwapState } from 'state/swap/types'
 import { ETH_MAINNET } from 'test-utils/constants'

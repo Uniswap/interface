@@ -1,5 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

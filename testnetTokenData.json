@@ -1,0 +1,72 @@
+{
+  "tokens": [
+    {
+      "chainId": 842,
+      "address": "0x5745CC77c362D459b78bC014d8940c2c98E08c54",
+      "name": "Wrapped TARA",
+      "symbol": "WTARA",
+      "decimals": 18,
+      "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43"
+    },
+    {
+      "chainId": 842,
+      "address": "0x0a66473ff369d43f1c63832f7bb2fd887ed16844",
+      "name": "USDT",
+      "symbol": "USDT",
+      "decimals": 6,
+      "logoURI": "https://www.creativefabrica.com/wp-content/uploads/2021/06/14/Cryptocurrency-Tether-Usdt-Logo-Graphics-13393983-1.jpg"
+    },
+    {
+      "chainId": 842,
+      "address": "0xF998808aA55d2570e979C27Ce47C8018e5fAdbE8",
+      "name": "T1",
+      "symbol": "T1",
+      "decimals": 18,
+      "logoURI": "https://example.com/path/to/logo.jpg"
+    },
+    {
+      "chainId": 842,
+      "address": "0x7011596be357c709700710C9960cb366C41A4106",
+      "name": "T2",
+      "symbol": "T2",
+      "decimals": 18,
+      "logoURI": "https://example.com/path/to/logo.jpg"
+    },
+    {
+      "chainId": 842,
+      "address": "0x7a4Bccb79ab69852D857E5f77B0A3166700a9AB0",
+      "name": "T3",
+      "symbol": "T3",
+      "decimals": 18,
+      "logoURI": "https://example.com/path/to/logo.jpg"
+    },
+    {
+      "chainId": 842,
+      "address": "0x869FFA5e06BE57200b01a1A373D1bA247364D94C",
+      "name": "Tarapepe",
+      "symbol": "TPEPE",
+      "decimals": 18,
+      "logoURI": "https://m.media-amazon.com/images/I/41v09y9lP0L.jpg"
+    },
+    {
+      "chainId": 842,
+      "address": "0x3F48CB103C3172C24a9F6cF3be92d571bF7072af",
+      "name": "Lara Token",
+      "symbol": "LARA",
+      "decimals": 18,
+      "logoURI": "https://github.com/Lara-staking/visual-elements/blob/main/LARA_v4_1.jpg"
+    }
+  ],
+  "taraxaTestnetTokenList": {
+    "name": "Taraxa Testnet Token List",
+    "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43",
+    "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
+    "timestamp": "new Date().toISOString()",
+    "tokens": "chainData",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  }
+}

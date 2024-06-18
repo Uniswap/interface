@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { getChainFromChainUrlParam, isChainUrlParam } from 'constants/chains'
 import { manualChainOutageAtom, useOutageBanners } from 'featureFlags/flags/outageBanner'

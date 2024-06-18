@@ -1,4 +1,4 @@
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@taraswap/router-sdk'
 import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'

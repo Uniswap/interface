@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, WETH9 } from '@taraswap/sdk-core'
 
 import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 

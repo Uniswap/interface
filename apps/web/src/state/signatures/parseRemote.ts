@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@taraswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import store from 'state'

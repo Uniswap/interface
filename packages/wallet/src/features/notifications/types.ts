@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@taraswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'

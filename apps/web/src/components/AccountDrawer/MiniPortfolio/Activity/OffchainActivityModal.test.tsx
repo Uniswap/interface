@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@taraswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { DAI } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'

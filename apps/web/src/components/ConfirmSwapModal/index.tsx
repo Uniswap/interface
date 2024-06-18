@@ -1,5 +1,5 @@
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@taraswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { SwapPreview } from 'components/swap/SwapPreview'

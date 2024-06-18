@@ -1,5 +1,5 @@
 import { useNetInfo } from '@react-native-community/netinfo'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@taraswap/sdk-core'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'

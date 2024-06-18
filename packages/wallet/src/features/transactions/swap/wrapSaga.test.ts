@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@taraswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { ChainId } from 'uniswap/src/types/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'

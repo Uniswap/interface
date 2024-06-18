@@ -1,6 +1,6 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Percent } from '@taraswap/sdk-core'
+import { Pair } from '@taraswap/v2-sdk'
 import { AutoColumn } from 'components/Column'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'

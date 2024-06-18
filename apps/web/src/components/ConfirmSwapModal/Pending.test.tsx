@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@taraswap/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { BigNumber } from 'ethers/lib/ethers'
 import { SwapResult } from 'hooks/useSwapCallback'

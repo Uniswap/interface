@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { getChain, isSupportedChainId } from 'constants/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 

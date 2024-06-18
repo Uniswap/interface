@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
   getSignatureToActivityQueryOptions,

@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent } from '@taraswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 import { ParsedQs } from 'qs'

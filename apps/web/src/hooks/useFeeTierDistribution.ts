@@ -1,5 +1,5 @@
-import { Currency, Token } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Currency, Token } from '@taraswap/sdk-core'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import { chainIdToBackendChain } from 'constants/chains'
 import ms from 'ms'
 import { useMemo } from 'react'

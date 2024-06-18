@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@taraswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import GetHelp from 'components/Button/GetHelp'

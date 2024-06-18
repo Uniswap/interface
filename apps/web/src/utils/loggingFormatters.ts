@@ -1,5 +1,5 @@
+import { Percent } from '@taraswap/sdk-core'
 import { SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
 import { SwapResult } from 'hooks/useSwapCallback'
 import {
   formatPercentInBasisPointsNumber,

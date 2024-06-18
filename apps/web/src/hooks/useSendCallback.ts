@@ -1,5 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'

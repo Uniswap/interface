@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@taraswap/sdk-core'
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,

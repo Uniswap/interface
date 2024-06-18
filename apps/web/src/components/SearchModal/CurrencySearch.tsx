@@ -1,5 +1,5 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
 import useDebounce from 'hooks/useDebounce'

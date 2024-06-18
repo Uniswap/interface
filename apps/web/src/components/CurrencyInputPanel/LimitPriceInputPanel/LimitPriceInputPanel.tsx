@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@taraswap/sdk-core'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'

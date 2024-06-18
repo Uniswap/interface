@@ -1,12 +1,12 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
-import { isUniswapXSupportedChain } from 'constants/chains'
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import {Protocol} from '@taraswap/router-sdk'
+import {isUniswapXSupportedChain} from 'constants/chains'
 import ms from 'ms'
-import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
-import { trace } from 'tracing/trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
+import {logSwapQuoteRequest} from 'tracing/swapFlowLoggers'
+import {trace} from 'tracing/trace'
+import {InterfaceEventNameLocal} from 'uniswap/src/features/telemetry/constants'
+import {sendAnalyticsEvent} from 'uniswap/src/features/telemetry/send'
+import {logger} from 'utilities/src/logger/logger'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -17,17 +17,21 @@ import {
   RouterPreference,
   RoutingConfig,
   TradeResult,
-  URAQuoteResponse,
-  URAQuoteType,
   UniswapXConfig,
   UniswapXv2Config,
+  URAQuoteResponse,
+  URAQuoteType,
 } from './types'
-import { isExactInput, transformQuoteToTrade } from './utils'
+import {isExactInput, transformQuoteToTrade} from './utils'
+import {ChainId} from "@taraswap/sdk-core";
 
+const UNISWAP_API_URL = process.env.REACT_APP_QUOTE_ENDPOINT
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
+  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
+
+const TARAXA_ROUTING_API_URL = process.env.REACT_APP_TARAXA_ROUTING_API || "";
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
@@ -67,10 +71,10 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     routingType: URAQuoteType.DUTCH_V2,
     ...(isXv2Arbitrum
       ? {
-          priceImprovementBps,
-          forceOpenOrders,
-          deadlineBufferSecs,
-        }
+        priceImprovementBps,
+        forceOpenOrders,
+        deadlineBufferSecs,
+      }
       : {}),
   }
 
@@ -96,7 +100,9 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
-  baseQuery: fetchBaseQuery(),
+  baseQuery: fetchBaseQuery({
+    headers: { 'Access-Control-Allow-Origin': '*' },
+  }),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
       queryFn(args, _api, _extraOptions, fetch) {
@@ -127,11 +133,16 @@ export const routingApi = createApi({
             swapper: args.account,
           }
 
+          const baseURL =
+            args.tokenInChainId === ChainId.TARAXA_TESTNET
+              ? TARAXA_ROUTING_API_URL
+              : UNISWAP_API_URL;
+
           try {
-            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async () => {
+            return trace.child({name: 'Quote on server', op: 'quote.server'}, async () => {
               const response = await fetch({
                 method: 'POST',
-                url: `${UNISWAP_GATEWAY_DNS_URL}/quote`,
+                url: `${baseURL}/quote`,
                 body: JSON.stringify(requestBody),
                 headers: {
                   'x-request-source': 'uniswap-web',
@@ -153,7 +164,7 @@ export const routingApi = createApi({
                       routerPreference: args.routerPreference,
                     })
                     return {
-                      data: { state: QuoteState.NOT_FOUND, latencyMs: trace.now() },
+                      data: {state: QuoteState.NOT_FOUND, latencyMs: trace.now()},
                     }
                   }
                 } catch {
@@ -163,7 +174,7 @@ export const routingApi = createApi({
 
               const uraQuoteResponse = response.data as URAQuoteResponse
               const tradeResult = await transformQuoteToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-              return { data: { ...tradeResult, latencyMs: trace.now() } }
+              return {data: {...tradeResult, latencyMs: trace.now()}}
             })
           } catch (error: any) {
             logger.warn(
@@ -176,24 +187,24 @@ export const routingApi = createApi({
           }
 
           try {
-            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async () => {
-              const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
+            return trace.child({name: 'Quote on client', op: 'quote.client'}, async () => {
+              const {getRouter, getClientSideQuote} = await import('lib/hooks/routing/clientSideSmartOrderRouter')
               const router = getRouter(args.tokenInChainId)
               const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
               if (quoteResult.state === QuoteState.SUCCESS) {
                 const trade = await transformQuoteToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
                 return {
-                  data: { ...trade, latencyMs: trace.now() },
+                  data: {...trade, latencyMs: trace.now()},
                 }
               } else {
-                return { data: { ...quoteResult, latencyMs: trace.now() } }
+                return {data: {...quoteResult, latencyMs: trace.now()}}
               }
             })
           } catch (error: any) {
             logger.warn('routing/slice', 'queryFn', `GetQuote failed on client: ${error}`)
             trace.setError(error)
             return {
-              error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },
+              error: {status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error},
             }
           }
         })
@@ -206,5 +217,5 @@ export const routingApi = createApi({
   }),
 })
 
-export const { useGetQuoteQuery } = routingApi
+export const {useGetQuoteQuery} = routingApi
 export const useGetQuoteQueryState = routingApi.endpoints.getQuote.useQueryState

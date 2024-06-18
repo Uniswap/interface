@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { TokenQueryData } from 'graphql/data/Token'
 import { Trans } from 'i18n'

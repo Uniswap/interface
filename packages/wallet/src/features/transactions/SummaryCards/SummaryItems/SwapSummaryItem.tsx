@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@taraswap/sdk-core'
 import { createElement, useMemo } from 'react'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'

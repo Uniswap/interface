@@ -1,5 +1,5 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@taraswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'

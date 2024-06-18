@@ -4,7 +4,7 @@
 jest.mock('hooks/Tokens')
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
 
-import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, WETH9 } from '@taraswap/sdk-core'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { COMMON_BASES } from 'constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'constants/tokens'

@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 
 // Breakpoints specifically for the token pages
 // TODO(WEB-2968): Deprecate these in the new .info project

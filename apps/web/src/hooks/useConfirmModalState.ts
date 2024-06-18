@@ -1,5 +1,5 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent } from '@taraswap/sdk-core'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { Field, RESET_APPROVAL_TOKENS } from 'components/swap/constants'

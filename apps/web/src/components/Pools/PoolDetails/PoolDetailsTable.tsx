@@ -1,4 +1,4 @@
-import { Pool } from '@uniswap/v3-sdk'
+import { Pool } from '@taraswap/v3-sdk'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import Column from 'components/Column'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'

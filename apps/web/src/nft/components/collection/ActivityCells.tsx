@@ -1,5 +1,5 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'

@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'

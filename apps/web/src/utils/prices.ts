@@ -1,7 +1,7 @@
-import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Trade } from '@taraswap/router-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@taraswap/sdk-core'
+import { Pair } from '@taraswap/v2-sdk'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import { DefaultTheme } from 'styled-components'
 
 import {

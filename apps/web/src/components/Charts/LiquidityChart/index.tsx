@@ -1,8 +1,8 @@
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
+import { ChainId, CurrencyAmount, Token } from '@taraswap/sdk-core'
+import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@taraswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

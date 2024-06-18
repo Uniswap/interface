@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@taraswap/sdk-core'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { DAI } from 'constants/tokens'

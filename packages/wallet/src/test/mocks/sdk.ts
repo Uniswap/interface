@@ -1,4 +1,4 @@
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool } from '@taraswap/v3-sdk'
 import { ChainId } from 'uniswap/src/types/chains'
 import { UNI, WBTC } from 'wallet/src/constants/tokens'
 

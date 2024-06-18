@@ -1,6 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { CurrencyAmount, TradeType } from '@taraswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { USDC_MAINNET } from 'constants/tokens'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'

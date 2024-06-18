@@ -1,6 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Protocol } from '@taraswap/router-sdk'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@taraswap/sdk-core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'

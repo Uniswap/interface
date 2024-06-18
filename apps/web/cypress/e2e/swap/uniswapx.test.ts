@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@taraswap/sdk-core'
 import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'

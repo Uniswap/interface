@@ -1,5 +1,5 @@
-import { ChainId, CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
+import { ChainId, CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@taraswap/sdk-core'
+import { FeeAmount, Pool, Route } from '@taraswap/v3-sdk'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'

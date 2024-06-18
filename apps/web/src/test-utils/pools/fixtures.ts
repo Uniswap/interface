@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
+import { ChainId, Currency, WETH9 } from '@taraswap/sdk-core'
+import { FeeAmount, Pool, Position } from '@taraswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { useCallback } from 'react'
 import { isWeb } from 'ui/src'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'

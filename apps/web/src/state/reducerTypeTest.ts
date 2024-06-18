@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'

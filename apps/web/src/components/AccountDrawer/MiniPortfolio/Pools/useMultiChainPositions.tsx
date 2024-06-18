@@ -1,6 +1,6 @@
-import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@taraswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
+import { Pool, Position, computePoolAddress } from '@taraswap/v3-sdk'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'

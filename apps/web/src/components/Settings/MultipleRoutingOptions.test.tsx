@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import { useAccount } from 'hooks/useAccount'
 import { Provider } from 'jotai'

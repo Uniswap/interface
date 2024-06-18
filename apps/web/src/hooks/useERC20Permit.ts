@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import JSBI from 'jsbi'

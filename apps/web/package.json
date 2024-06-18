@@ -28,11 +28,6 @@
     "cypress:run": "cypress run --browser chrome --e2e",
     "deduplicate": "yarn-deduplicate --strategy=highest"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "yarn.lock": [
       "yarn deduplicate"
@@ -181,6 +176,14 @@
     "@tamagui/react-native-svg": "1.95.1",
     "@tanstack/react-query": "5.28.14",
     "@tanstack/react-table": "8.10.7",
+    "@taraswap/permit2-sdk": "1.0.2",
+    "@taraswap/router-sdk": "1.0.11",
+    "@taraswap/sdk-core": "1.1.2",
+    "@taraswap/smart-order-router": "3.35.8",
+    "@taraswap/uniswapx-sdk": "1.1.1",
+    "@taraswap/universal-router-sdk": "1.0.13",
+    "@taraswap/v2-sdk": "1.0.5",
+    "@taraswap/v3-sdk": "1.0.5",
     "@types/poisson-disk-sampling": "2.2.4",
     "@types/react-scroll-sync": "0.8.7",
     "@types/react-window-infinite-loader": "1.0.6",
@@ -189,20 +192,12 @@
     "@uniswap/governance": "1.0.2",
     "@uniswap/liquidity-staker": "1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/permit2-sdk": "1.3.0",
     "@uniswap/redux-multicall": "1.1.8",
-    "@uniswap/router-sdk": "1.9.2",
-    "@uniswap/sdk-core": "5.3.0",
-    "@uniswap/smart-order-router": "3.17.3",
     "@uniswap/token-lists": "1.0.0-beta.33",
-    "@uniswap/uniswapx-sdk": "2.0.4-alpha.1",
-    "@uniswap/universal-router-sdk": "2.2.0",
     "@uniswap/v2-core": "1.0.1",
     "@uniswap/v2-periphery": "1.1.0-beta.0",
-    "@uniswap/v2-sdk": "4.3.2",
     "@uniswap/v3-core": "1.0.1",
     "@uniswap/v3-periphery": "1.4.4",
-    "@uniswap/v3-sdk": "3.13.0",
     "@vanilla-extract/css": "1.14.0",
     "@vanilla-extract/dynamic": "2.1.0",
     "@vanilla-extract/sprinkles": "1.6.1",

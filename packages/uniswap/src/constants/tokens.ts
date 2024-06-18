@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@taraswap/sdk-core'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const USDC_MAINNET = new Token(
@@ -186,4 +186,12 @@ export const USDC_ZKSYNC = new Token(
   6,
   'USDC',
   'USD Coin'
+)
+
+export const USDT_TARAXA_TESTNET = new Token(
+  UniverseChainId.TARAXA_TESTNET,
+  '0x0a66473ff369d43f1c63832f7bb2fd887ed16844',
+  6,
+  'USDT',
+  'Tether USD'
 )

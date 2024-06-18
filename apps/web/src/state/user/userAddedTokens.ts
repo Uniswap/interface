@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@taraswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'

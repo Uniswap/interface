@@ -1,5 +1,5 @@
 import { QueryResult } from '@apollo/client'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { InterfaceGqlChain, SupportedInterfaceChainId } from 'constants/chains'
 import { Warning } from 'constants/tokenSafety'

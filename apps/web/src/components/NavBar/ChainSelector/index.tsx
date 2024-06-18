@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/Column'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'

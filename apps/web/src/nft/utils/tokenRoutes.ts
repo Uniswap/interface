@@ -1,7 +1,7 @@
-import { IRoute, Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { Pool } from '@uniswap/v3-sdk'
+import { IRoute, Protocol } from '@taraswap/router-sdk'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
+import { Pair } from '@taraswap/v2-sdk'
+import { Pool } from '@taraswap/v3-sdk'
 import { ClassicTrade } from 'state/routing/types'
 import {
   TokenAmountInput,

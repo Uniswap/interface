@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled from 'styled-components'

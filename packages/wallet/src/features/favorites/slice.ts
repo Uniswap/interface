@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Ether } from '@uniswap/sdk-core'
+import { Ether } from '@taraswap/sdk-core'
 import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'

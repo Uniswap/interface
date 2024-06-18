@@ -1,5 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'

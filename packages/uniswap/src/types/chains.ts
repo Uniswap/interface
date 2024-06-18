@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token, ChainId as UniswapChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token, ChainId as UniswapChainId } from '@taraswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { GeneratedIcon } from 'ui/src'

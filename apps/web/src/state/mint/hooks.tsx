@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@taraswap/sdk-core'
+import { Pair } from '@taraswap/v2-sdk'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'

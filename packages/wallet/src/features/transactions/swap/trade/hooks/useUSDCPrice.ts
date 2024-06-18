@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@taraswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'

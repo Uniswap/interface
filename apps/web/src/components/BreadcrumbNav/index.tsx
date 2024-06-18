@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize'

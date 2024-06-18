@@ -1,7 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'
-import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK, ONE, Protocol, Trade } from '@taraswap/router-sdk'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@taraswap/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
@@ -9,9 +9,9 @@ import {
   V2DutchOrderTrade as IV2DutchOrderTrade,
   UnsignedV2DutchOrderInfo,
   UnsignedV2DutchOrderInfoJSON,
-} from '@uniswap/uniswapx-sdk'
-import { Route as V2Route } from '@uniswap/v2-sdk'
-import { Route as V3Route } from '@uniswap/v3-sdk'
+} from '@taraswap/uniswapx-sdk'
+import { Route as V2Route } from '@taraswap/v2-sdk'
+import { Route as V3Route } from '@taraswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
 

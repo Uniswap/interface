@@ -1,15 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { MixedRouteSDK } from '@taraswap/router-sdk'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@taraswap/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
   DutchOutputJSON,
   UnsignedV2DutchOrderInfo,
   UnsignedV2DutchOrderInfoJSON,
-} from '@uniswap/uniswapx-sdk'
-import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+} from '@taraswap/uniswapx-sdk'
+import { Pair, Route as V2Route } from '@taraswap/v2-sdk'
+import { FeeAmount, Pool, Route as V3Route } from '@taraswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
 import { logger } from 'utilities/src/logger/logger'

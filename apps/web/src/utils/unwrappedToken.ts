@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 

@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { DAI, NATIVE_CHAIN_ID, USDC_MAINNET, nativeOnChain } from 'constants/tokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import {

@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@taraswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'

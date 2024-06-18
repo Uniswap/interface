@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { Trans } from 'i18n'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'

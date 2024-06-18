@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'

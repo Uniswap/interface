@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Rounding, Token } from '@taraswap/sdk-core'
 import {
   FeeAmount,
   Pool,
@@ -9,7 +9,7 @@ import {
   nearestUsableTick,
   priceToClosestTick,
   tickToPrice,
-} from '@uniswap/v3-sdk'
+} from '@taraswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'

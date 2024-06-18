@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'

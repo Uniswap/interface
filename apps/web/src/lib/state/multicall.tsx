@@ -1,5 +1,5 @@
 import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall, useMainnetInterfaceMulticall } from 'hooks/useContract'

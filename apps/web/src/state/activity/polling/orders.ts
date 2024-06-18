@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@taraswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'

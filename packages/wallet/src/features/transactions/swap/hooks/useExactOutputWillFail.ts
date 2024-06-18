@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@taraswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 

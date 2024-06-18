@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { ChainId } from 'uniswap/src/types/chains'
 import { filter } from 'wallet/src/components/TokenSelector/filter'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'

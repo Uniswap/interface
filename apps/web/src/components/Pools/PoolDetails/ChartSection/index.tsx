@@ -1,5 +1,5 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { ChainId, CurrencyAmount, Token } from '@taraswap/sdk-core'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'
@@ -285,7 +285,7 @@ function PriceChart({
             <ChartPriceText>
               {`1 ${primaryToken.symbol} = ${formatCurrencyAmount({
                 amount: CurrencyAmount.fromRawAmount(referenceToken, currencyBAmountRaw),
-              })} 
+              })}
             ${referenceToken.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">

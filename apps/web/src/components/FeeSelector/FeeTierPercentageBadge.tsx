@@ -1,4 +1,4 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import Badge from 'components/Badge'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'

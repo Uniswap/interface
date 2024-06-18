@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'

@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
 import {
   NativeSyntheticEvent,

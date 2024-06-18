@@ -1,5 +1,5 @@
-import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
+import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@taraswap/sdk-core'
+import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@taraswap/v3-sdk'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
 import { useAccount } from 'hooks/useAccount'

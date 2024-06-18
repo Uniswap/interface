@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@taraswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'

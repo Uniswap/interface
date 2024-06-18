@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@taraswap/sdk-core'
 import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'

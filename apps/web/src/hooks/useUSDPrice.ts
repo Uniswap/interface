@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@taraswap/sdk-core'
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,

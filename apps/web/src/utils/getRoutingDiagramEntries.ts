@@ -1,7 +1,7 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { Protocol } from '@taraswap/router-sdk'
+import { Currency, Percent, TradeType } from '@taraswap/sdk-core'
+import { Pair } from '@taraswap/v2-sdk'
+import { FeeAmount } from '@taraswap/v3-sdk'
 import { ClassicTrade } from 'state/routing/types'
 
 export interface RoutingDiagramEntry {

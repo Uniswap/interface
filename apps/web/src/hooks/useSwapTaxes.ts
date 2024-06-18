@@ -1,5 +1,5 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@taraswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'

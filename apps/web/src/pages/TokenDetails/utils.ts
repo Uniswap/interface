@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@taraswap/sdk-core'
 import { CHAIN_INFO, SupportedInterfaceChainId } from 'constants/chains'
 import { t } from 'i18n'
 

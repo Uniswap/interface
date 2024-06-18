@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { CHAIN_INFO, useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'

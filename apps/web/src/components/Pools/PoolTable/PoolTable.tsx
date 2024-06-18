@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@taraswap/sdk-core'
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import Row from 'components/Row'
 import { Table } from 'components/Table'

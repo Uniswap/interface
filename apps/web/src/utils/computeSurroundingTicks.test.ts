@@ -1,5 +1,5 @@
-import { Price, Token } from '@uniswap/sdk-core'
-import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { Price, Token } from '@taraswap/sdk-core'
+import { FeeAmount, TICK_SPACINGS } from '@taraswap/v3-sdk'
 import { TickData } from 'graphql/data/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'

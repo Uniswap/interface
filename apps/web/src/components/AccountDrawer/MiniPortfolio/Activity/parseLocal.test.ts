@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
+import { ChainId, TradeType as MockTradeType, Token } from '@taraswap/sdk-core'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import {
   signatureToActivity,

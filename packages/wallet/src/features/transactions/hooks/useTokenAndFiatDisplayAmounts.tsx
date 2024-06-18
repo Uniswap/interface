@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { useMemo } from 'react'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'

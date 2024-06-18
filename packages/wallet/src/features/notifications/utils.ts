@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@taraswap/sdk-core'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import JSBI from 'jsbi'
 import { ChainId } from 'uniswap/src/types/chains'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'

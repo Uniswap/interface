@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@taraswap/sdk-core'
 import SettingsTab from 'components/Settings'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'

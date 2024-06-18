@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@taraswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

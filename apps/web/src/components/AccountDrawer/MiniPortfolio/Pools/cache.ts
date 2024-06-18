@@ -1,5 +1,5 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { ChainId, Token } from '@taraswap/sdk-core'
+import { Pool, Position } from '@taraswap/v3-sdk'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms'

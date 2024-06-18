@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@taraswap/sdk-core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
