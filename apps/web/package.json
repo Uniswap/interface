@@ -110,6 +110,7 @@
     "@walletconnect/types": "2.11.2",
     "babel-jest": "29.6.1",
     "browser-cache-mock": "0.1.7",
+    "browserify-fs": "1.0.0",
     "concurrently": "^8.0.1",
     "cypress": "12.12.0",
     "cypress-hardhat": "2.5.0",
