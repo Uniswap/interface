@@ -1,5 +1,5 @@
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@taraswap/sdk-core'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'

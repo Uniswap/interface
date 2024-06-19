@@ -283,6 +283,12 @@
     "zone.js": "0.12.0",
     "zustand": "4.4.6"
   },
+  "resolutions": {
+    "@taraswap/router-sdk": "1.0.11",
+    "@taraswap/v2-sdk": "1.0.5",
+    "@taraswap/sdk-core": "1.1.2",
+    "@taraswap/v3-sdk": "1.0.5"
+  },
   "engines": {
     "npm": "please-use-yarn",
     "node": "18.x",

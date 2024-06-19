@@ -218,6 +218,7 @@ const chainToChainId = {
   [Chain.Blast]: ChainId.BLAST,
   [Chain.Zora]: ChainId.ZORA,
   [Chain.Zksync]: ChainId.ZKSYNC,
+  [Chain.TaraxaTestnet]: ChainId.TARAXA_TESTNET,
 } as const
 
 test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(

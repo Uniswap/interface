@@ -29,6 +29,7 @@ export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.BLAST,
   ChainId.ZORA,
   ChainId.ZKSYNC,
+  ChainId.TARAXA_TESTNET,
 ] as const
 
 export function isSupportedChainId(chainId?: number | ChainId | null): chainId is SupportedInterfaceChainId {
