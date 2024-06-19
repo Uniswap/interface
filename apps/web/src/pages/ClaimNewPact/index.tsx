@@ -51,7 +51,7 @@ const VoteCard = styled(DataCard)`
   margin-bottom: 20px;
 `
 
-const CONVERT_CONTRACT_ADDRESS = '0x8828b88F3e1C256D34D53e50Dc7E347881934bfd'
+const CONVERT_CONTRACT_ADDRESS = '0x1854c78e5401A501A8F32f3a9DFae3d356Fb9A9E'
 
 export function useConvertCallback(): [
   boolean,
@@ -137,8 +137,8 @@ export default function ClaimNewPactToken() {
 
   const [typedValue, setTypedValue] = useState('')
 
-  const inputCurrency = useToken('0xC1542E54b34964b7fD0De0B252A8F9Ebd0F9c01e', ChainId.CELO)
-  const outputCurrency = useToken('0x0385F59A81D2fecfDb9722B0ee608722D7CEeA6E', ChainId.CELO)
+  const inputCurrency = useToken('0x46c9757C5497c5B1f2eb73aE79b6B67D119B0B58', ChainId.CELO)
+  const outputCurrency = useToken('0x2b9018CeB303D540BbF08De8e7De64fDDD63396C', ChainId.CELO)
   const currencies: { [field in Field]: Token | null | undefined } = useMemo(() => {
     return {
       [Field.INPUT]: inputCurrency,
