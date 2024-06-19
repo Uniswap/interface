@@ -13,7 +13,7 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { Text } from 'rebass'
 // import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
-import { ReactNode, useCallback } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -26,8 +26,15 @@ import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { More } from './More'
 // import { SearchBar } from './SearchBar'
+import { ChainId } from '@ubeswap/sdk-core'
+import Modal from 'components/Modal'
+import { UBE } from 'constants/tokens'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Moon, Sun } from 'react-feather'
+import { HideSmall, ThemedText } from 'theme/components'
 import { ThemeMode, useDarkModeManager } from 'theme/components/ThemeToggle'
+import { relevantDigits } from 'utils/relevantDigits'
+import UbeBalanceContent from './UbeBalanceContent'
 import * as styles from './style.css'
 
 const Nav = styled.nav`
@@ -63,6 +70,48 @@ export const StyledMenuButton = styled.button`
   }
   > * {
     stroke: ${({ theme }) => theme.text1};
+  }
+`
+
+const AccountElement = styled.div<{ active: boolean }>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  border-radius: 12px;
+  white-space: nowrap;
+  width: 100%;
+  cursor: pointer;
+
+  :focus {
+    border: 1px solid blue;
+  }
+`
+
+const UBEAmount = styled(AccountElement)`
+  color: white;
+  padding: 4px 8px;
+  height: 36px;
+  font-weight: 500;
+  background: radial-gradient(
+      174.47% 188.91% at 1.84% 0%,
+      ${({ theme }) => theme.primary1} 0%,
+      ${({ theme }) => theme.primary3} 100%
+    ),
+    #edeef2;
+`
+
+const UBEWrapper = styled.span`
+  width: fit-content;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  cursor: pointer;
+  :hover {
+    opacity: 0.8;
+  }
+  :active {
+    opacity: 0.9;
   }
 `
 
@@ -167,6 +216,10 @@ const Navbar = ({ blur }: { blur: boolean }) => {
     }
   }
 
+  const [showUbeBalanceModal, setShowUbeBalanceModal] = useState<boolean>(false)
+  const ubeBalance = useTokenBalance(account ?? undefined, UBE[ChainId.CELO])
+  const ubeBalanceFormatted = relevantDigits(ubeBalance)
+
   return (
     <>
       {blur && <Blur />}
@@ -214,6 +267,24 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
+              {ubeBalance && (
+                <HideSmall>
+                  <UBEWrapper onClick={() => setShowUbeBalanceModal(true)}>
+                    <UBEAmount active={!!account} style={{ pointerEvents: 'auto' }}>
+                      {account && (
+                        <ThemedText.DeprecatedWhite
+                          style={{
+                            paddingRight: '.4rem',
+                          }}
+                        >
+                          {ubeBalanceFormatted}
+                        </ThemedText.DeprecatedWhite>
+                      )}
+                      UBE
+                    </UBEAmount>
+                  </UBEWrapper>
+                </HideSmall>
+              )}
               <StyledMenuButton aria-label={t('Toggle Dark Mode')} onClick={() => toggleDarkMode()}>
                 {isDarkMode ? <Moon size={20} /> : <Sun size={20} />}
               </StyledMenuButton>
@@ -223,6 +294,9 @@ const Navbar = ({ blur }: { blur: boolean }) => {
           </Box>
         </Box>
       </Nav>
+      <Modal isOpen={showUbeBalanceModal} onDismiss={() => setShowUbeBalanceModal(false)}>
+        <UbeBalanceContent setShowUbeBalanceModal={setShowUbeBalanceModal} />
+      </Modal>
     </>
   )
 }

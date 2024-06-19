@@ -4,11 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { CELO_CELO, CUSD_CELO, MCUSD_CELO } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { usePairContract } from 'hooks/useContract'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { usePair, usePairs } from './Reserves'
-import { useTotalSupply } from './TotalSupply'
 
 type TokenPair = [Token | undefined, Token | undefined]
 
