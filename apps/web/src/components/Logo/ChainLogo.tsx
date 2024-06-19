@@ -14,6 +14,7 @@ import {
   POLYGON_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
+  TARAXA_LOGO,
 } from 'ui/src/assets'
 
 type ChainUI = { symbol: string; bgColor: string; textColor: string }
@@ -117,6 +118,12 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
             bgColor: 'rgba(54, 103, 246, 0.12)',
             textColor: '#3667F6',
           }
+    case ChainId.TARAXA_TESTNET:
+      return {
+        symbol: TARAXA_LOGO,
+        bgColor: 'rgba(9,1,1,0.2)',
+        textColor: '#10680a',
+      }
     default:
       return undefined
   }

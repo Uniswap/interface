@@ -1,5 +1,5 @@
 import { ChainId } from '@taraswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@taraswap/universal-router-sdk'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { useNftUniversalRouterAddressQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 

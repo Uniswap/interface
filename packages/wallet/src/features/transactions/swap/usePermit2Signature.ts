@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
+import { UNIVERSAL_ROUTER_ADDRESS } from '@taraswap/universal-router-sdk'
 import {
   AllowanceProvider,
   AllowanceTransfer,
@@ -6,7 +7,6 @@ import {
   PermitSingle,
   permit2Address,
 } from '@uniswap/permit2-sdk'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
 import { BigNumber, TypedDataField, providers } from 'ethers'
 import { useCallback } from 'react'

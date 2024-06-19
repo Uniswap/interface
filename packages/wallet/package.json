@@ -28,7 +28,7 @@
     "@taraswap/permit2-sdk": "1.0.2",
     "@taraswap/router-sdk": "1.0.11",
     "@taraswap/sdk-core": "1.1.2",
-    "@taraswap/universal-router-sdk": "1.0.13",
+    "@taraswap/universal-router-sdk": "1.0.14",
     "@taraswap/v2-sdk": "1.0.5",
     "@taraswap/v3-sdk": "1.0.5",
     "@uniswap/analytics-events": "2.32.0",
