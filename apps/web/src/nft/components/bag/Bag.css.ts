@@ -5,7 +5,7 @@ export const assetsContainer = style([
   sprinkles({
     paddingX: '20',
     maxHeight: 'full',
-    overflowY: 'scroll',
+    overflow: 'scroll',
   }),
   {
     '::-webkit-scrollbar': { display: 'none' },

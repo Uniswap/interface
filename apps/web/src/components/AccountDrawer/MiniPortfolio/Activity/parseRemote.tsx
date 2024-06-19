@@ -510,56 +510,60 @@ function parseRemoteActivity(
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    const changes = assetActivity.details.assetChanges.reduce(
-      (acc: TransactionChanges, assetChange) => {
-        if (assetChange?.__typename === 'NftApproval') {
-          acc.NftApproval.push(assetChange)
-        } else if (assetChange?.__typename === 'NftApproveForAll') {
-          acc.NftApproveForAll.push(assetChange)
-        } else if (assetChange?.__typename === 'NftTransfer') {
-          acc.NftTransfer.push(assetChange)
-        } else if (assetChange?.__typename === 'TokenTransfer') {
-          acc.TokenTransfer.push(assetChange)
-        } else if (assetChange?.__typename === 'TokenApproval') {
-          acc.TokenApproval.push(assetChange)
-        }
+    if (assetActivity.details.__typename === 'TransactionDetails') {
+      const changes = assetActivity.details.assetChanges.reduce(
+        (acc: TransactionChanges, assetChange) => {
+          if (assetChange?.__typename === 'NftApproval') {
+            acc.NftApproval.push(assetChange)
+          } else if (assetChange?.__typename === 'NftApproveForAll') {
+            acc.NftApproveForAll.push(assetChange)
+          } else if (assetChange?.__typename === 'NftTransfer') {
+            acc.NftTransfer.push(assetChange)
+          } else if (assetChange?.__typename === 'TokenTransfer') {
+            acc.TokenTransfer.push(assetChange)
+          } else if (assetChange?.__typename === 'TokenApproval') {
+            acc.TokenApproval.push(assetChange)
+          }
 
-        return acc
-      },
-      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
-    )
-
-    const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
-    if (!supportedChain) {
-      logger.error(new Error('Invalid activity from unsupported chain received from GQL'), {
-        tags: {
-          file: 'parseRemote',
-          function: 'parseRemoteActivity',
+          return acc
         },
-        extra: { assetActivity },
-      })
+        { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
+      )
+
+      const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
+      if (!supportedChain) {
+        logger.error(new Error('Invalid activity from unsupported chain received from GQL'), {
+          tags: {
+            file: 'parseRemote',
+            function: 'parseRemoteActivity',
+          },
+          extra: { assetActivity },
+        })
+        return undefined
+      }
+
+      const defaultFields = {
+        hash: assetActivity.details.hash,
+        chainId: supportedChain,
+        status: assetActivity.details.status,
+        timestamp: assetActivity.timestamp,
+        logos: getLogoSrcs(changes),
+        title: assetActivity.details.type,
+        descriptor: assetActivity.details.to,
+        from: assetActivity.details.from,
+        nonce: assetActivity.details.nonce,
+        isSpam: isSpam(changes, assetActivity.details, account),
+      }
+
+      const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
+        changes,
+        formatNumberOrString,
+        assetActivity as TransactionActivity
+      )
+      return { ...defaultFields, ...parsedFields }
+    } else {
       return undefined
     }
-
-    const defaultFields = {
-      hash: assetActivity.details.hash,
-      chainId: supportedChain,
-      status: assetActivity.details.status,
-      timestamp: assetActivity.timestamp,
-      logos: getLogoSrcs(changes),
-      title: assetActivity.details.type,
-      descriptor: assetActivity.details.to,
-      from: assetActivity.details.from,
-      nonce: assetActivity.details.nonce,
-      isSpam: isSpam(changes, assetActivity.details, account),
-    }
-
-    const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
-      changes,
-      formatNumberOrString,
-      assetActivity as TransactionActivity
-    )
-    return { ...defaultFields, ...parsedFields }
   } catch (e) {
     logger.debug('parseRemote', 'parseRemoteActivity', 'Failed to parse remote activity', {
       error: e,

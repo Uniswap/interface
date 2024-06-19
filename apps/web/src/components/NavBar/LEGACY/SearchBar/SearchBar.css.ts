@@ -116,7 +116,7 @@ export const searchBarDropdownNft = style([
 ])
 
 export const searchBarScrollable = sprinkles({
-  overflowY: 'auto',
+  overflow: 'auto',
 })
 
 export const sectionHeader = style([

@@ -526,7 +526,7 @@ const BaseThemeButton = styled.button<BaseThemeButtonProps>`
   }
 `
 
-interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
+export interface ThemeButtonProps extends React.ComponentPropsWithoutRef<'button'>, BaseThemeButtonProps {}
 type ThemeButtonRef = HTMLButtonElement
 
 export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(function ThemeButton(

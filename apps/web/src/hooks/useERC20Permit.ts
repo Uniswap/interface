@@ -45,7 +45,7 @@ const PERMITTABLE_TOKENS: {
   },
 }
 
-enum UseERC20PermitState {
+export enum UseERC20PermitState {
   // returned for any reason, e.g. it is an argent wallet, or the currency does not support it
   NOT_APPLICABLE,
   LOADING,
@@ -74,7 +74,7 @@ interface AllowedSignatureData extends BaseSignatureData {
   allowed: true
 }
 
-type SignatureData = StandardSignatureData | AllowedSignatureData
+export type SignatureData = StandardSignatureData | AllowedSignatureData
 
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },

@@ -12,7 +12,11 @@ function clientToSigner(client?: Client<Transport, SupportedInterfaceChain, Acco
   const network = {
     chainId: chain.id,
     name: chain.name,
-    ensAddress: 'ensRegistry' in chain.contracts ? chain.contracts.ensRegistry.address : undefined,
+    ensAddress: chain.contracts
+      ? 'ensRegistry' in chain.contracts
+        ? chain.contracts.ensRegistry?.address
+        : undefined
+      : undefined,
   }
   const provider = new Web3Provider(transport, network)
   return provider.getSigner(account.address)

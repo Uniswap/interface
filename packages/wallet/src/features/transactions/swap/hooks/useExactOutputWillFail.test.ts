@@ -1,5 +1,5 @@
-import { renderHook } from '@testing-library/react-hooks'
 import { Token } from '@taraswap/sdk-core'
+import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'wallet/src/features/dataApi/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'

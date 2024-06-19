@@ -1,14 +1,14 @@
+import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import {
   AllowanceProvider,
   AllowanceTransfer,
   MaxUint160,
-  permit2Address,
   PermitSingle,
+  permit2Address,
 } from '@uniswap/permit2-sdk'
-import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
-import { BigNumber, providers, TypedDataField } from 'ethers'
+import { BigNumber, TypedDataField, providers } from 'ethers'
 import { useCallback } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'

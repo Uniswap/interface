@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@taraswap/sdk-core'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'

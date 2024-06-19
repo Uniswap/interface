@@ -85,7 +85,7 @@ export function useUniversalRouterSwapCallback(
           const deadline = await getDeadline()
 
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
-          const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
+          const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade as any, {
             slippageTolerance: options.slippageTolerance,
             deadlineOrPreviousBlockhash: deadline?.toString(),
             inputTokenPermit: options.permit,

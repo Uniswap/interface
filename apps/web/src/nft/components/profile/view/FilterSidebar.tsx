@@ -317,7 +317,7 @@ const CollectionItem = ({
     <Row
       maxWidth="full"
       overflowX="hidden"
-      overflowY="hidden"
+      overflow="hidden"
       fontWeight="book"
       className={styles.subRowHover}
       justifyContent="space-between"

@@ -11,15 +11,16 @@ function clientToProvider(client?: Client<Transport, SupportedInterfaceChain>, c
     return undefined
   }
   const { chain, transport } = client
-  const network = chain
-    ? {
-        chainId: chain.id,
-        name: chain.name,
-        ensAddress: 'ensRegistry' in chain.contracts ? chain.contracts.ensRegistry.address : undefined,
-      }
-    : chainId
-    ? { chainId, name: 'Unsupported' }
-    : undefined
+  const network =
+    chain && chain.contracts
+      ? {
+          chainId: chain.id,
+          name: chain.name,
+          ensAddress: 'ensRegistry' in chain.contracts ? chain.contracts.ensRegistry?.address : undefined,
+        }
+      : chainId
+      ? { chainId, name: 'Unsupported' }
+      : undefined
   if (!network) {
     return undefined
   }

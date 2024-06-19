@@ -1,5 +1,5 @@
-import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@taraswap/sdk-core'
+import { SwapEventName } from '@uniswap/analytics-events'
 import { useEffect } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
