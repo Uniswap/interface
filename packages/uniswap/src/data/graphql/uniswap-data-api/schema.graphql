@@ -222,7 +222,6 @@ enum Currency {
   UAH
   USD
   VND
-  TARA
 }
 
 input CurrencyAmountInput {

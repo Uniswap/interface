@@ -5,6 +5,7 @@ import { SerializedError } from '@reduxjs/toolkit'
 import { Currency } from '@taraswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
+import { Protocol } from '@taraswap/router-sdk'
 import {
   AppDownloadPlatform,
   FeePoolSelectAction,
@@ -21,7 +22,6 @@ import {
   SwapPriceUpdateUserResponse,
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
-import { Protocol } from '@taraswap/router-sdk'
 import {
   Currency as FiatCurrency,
   NftStandard,

@@ -431,7 +431,6 @@ const unresponsiveProperties = defineProperties({
     fontFamily: vars.fonts,
     overflow,
     overflowX: overflow,
-    overflowY: overflow,
     boxShadow: { ...themeVars.shadows, none: 'none', dropShadow: vars.color.dropShadow },
     transition: vars.time,
     transitionDuration: vars.time,

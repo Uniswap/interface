@@ -296,6 +296,7 @@ export const colorsLight = {
   chain_56: colors.networkBsc,
   chain_42220: colors.networkCelo,
   chain_43114: colors.networkAvalanche,
+  chain_842: colors.green800,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -367,4 +368,5 @@ export const colorsDark = {
   chain_56: colors.networkBsc,
   chain_42220: colors.networkCelo,
   chain_43114: colors.networkAvalanche,
+  chain_842: colors.green100,
 }
