@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 // import { Dialog } from 'components/Dialog/Dialog'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { formatEther } from '@ethersproject/units'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useUbeConvertContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -18,7 +17,6 @@ import styled, { useTheme } from 'styled-components'
 // import { AlertCircle } from 'ui/src/components/icons'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonSecondary } from '../../components-old/Button'
-import Card from '../../components-old/Card'
 import Column, { AutoColumn } from '../../components-old/Column'
 import CurrencyInputPanel from '../../components-old/CurrencyInputPanel'
 import Loader from '../../components-old/Loader'
@@ -166,22 +164,22 @@ export default function ClaimNewUbeToken() {
       })
   }, [])
 
-  const maxAllowed = useMemo(() => {
-    if (!whitelistLoading && whitelist && account) {
-      const data = whitelist[account?.toLocaleLowerCase() || '']
-      if (data) {
-        return BigNumber.from(data.amount)
-      }
-    }
-    return BigNumber.from(0)
-  }, [whitelistLoading, whitelist, account])
-  const maxAllowedText = Number(formatEther(maxAllowed)).toFixed(1).replace(/\.0+$/, '')
+  // const maxAllowed = useMemo(() => {
+  //   if (!whitelistLoading && whitelist && account) {
+  //     const data = whitelist[account?.toLocaleLowerCase() || '']
+  //     if (data) {
+  //       return BigNumber.from(data.amount)
+  //     }
+  //   }
+  //   return BigNumber.from(0)
+  // }, [whitelistLoading, whitelist, account])
+  // const maxAllowedText = Number(formatEther(maxAllowed)).toFixed(1).replace(/\.0+$/, '')
 
   const convertContract = useUbeConvertContract()
   const convertedAmount = useSingleCallResult(convertContract, 'accountToConvertedAmount', [account ?? AddressZero])
-  const convertedAmountText = convertedAmount.result?.length
-    ? Number(formatEther(convertedAmount.result?.[0])).toFixed(1).replace(/\.0+$/, '')
-    : 'loading...'
+  // const convertedAmountText = convertedAmount.result?.length
+  //   ? Number(formatEther(convertedAmount.result?.[0])).toFixed(1).replace(/\.0+$/, '')
+  //   : 'loading...'
 
   const parsedAmount = useMemo(() => {
     return tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined)
@@ -383,7 +381,7 @@ export default function ClaimNewUbeToken() {
               disabled
             />
 
-            <Card padding="0px" borderRadius="20px">
+            {/*<Card padding="0px" borderRadius="20px">
               <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                 <RowBetween align="center">
                   <Text fontWeight={800} fontSize={14} color={theme.text1}>
@@ -394,7 +392,7 @@ export default function ClaimNewUbeToken() {
                   </Text>
                 </RowBetween>
               </AutoColumn>
-            </Card>
+            </Card> */}
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
