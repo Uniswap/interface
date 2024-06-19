@@ -101,7 +101,7 @@ const SwapTitle = t`Buy, sell & trade on Ubeswap`
 export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
-    getTitle: () => t`Ubeswap | Trade crypto & NFTs safely on the top DeFi exchange`,
+    getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
     getElement: (args) => {
       return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
     },

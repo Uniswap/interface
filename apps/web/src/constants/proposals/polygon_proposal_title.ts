@@ -1,1 +1,1 @@
-export const POLYGON_PROPOSAL_TITLE = 'Should Uniswap v3 be deployed to Polygon?'
+export const POLYGON_PROPOSAL_TITLE = 'Should Ubeswap v3 be deployed to Polygon?'

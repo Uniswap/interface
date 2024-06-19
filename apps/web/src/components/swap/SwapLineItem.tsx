@@ -60,7 +60,7 @@ export function FOTTooltipContent() {
   return (
     <>
       <Trans>
-        Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive
+        Some tokens take a fee when they are bought or sold, which is set by the token issuer. Ubeswap does not receive
         any of these fees.
       </Trans>{' '}
       <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">

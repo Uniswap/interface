@@ -38,7 +38,7 @@ export class UniswapMulticallProvider extends IMulticallProvider<UniswapMultical
     const multicallAddress = UNISWAP_MULTICALL_ADDRESSES[this.chainId]
 
     if (!multicallAddress) {
-      throw new Error(`No address for Uniswap Multicall Contract on chain id: ${chainId}`)
+      throw new Error(`No address for Ubeswap Multicall Contract on chain id: ${chainId}`)
     }
 
     this.multicallContract = UniswapInterfaceMulticall__factory.connect(multicallAddress, this.provider)

@@ -97,7 +97,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   ))}
                   {data.isVerified && <img src={CHECK_URL} height="54px" />}
                 </div>
-                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
+                <img src={WATERMARK_URL} alt="Ubeswap" height="72px" width="324px" />
               </div>
             </div>
           </div>
