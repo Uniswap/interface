@@ -362,7 +362,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+            href="https://support.ubeswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -749,7 +749,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+            href="https://support.ubeswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1136,7 +1136,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
+            href="https://support.ubeswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1523,7 +1523,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+            href="https://support.ubeswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1908,7 +1908,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
+            href="https://support.ubeswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -2295,7 +2295,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+            href="https://support.ubeswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
             rel="noopener noreferrer"
             target="_blank"
           >

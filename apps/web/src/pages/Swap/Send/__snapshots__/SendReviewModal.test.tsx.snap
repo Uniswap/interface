@@ -492,7 +492,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
     >
       <a
         class="c9 c10"
-        href="https://support.uniswap.org/hc/en-us"
+        href="https://support.ubeswap.org/hc/en-us"
         rel="noopener noreferrer"
         target="_blank"
       >
@@ -1213,7 +1213,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
     >
       <a
         class="c9 c10"
-        href="https://support.uniswap.org/hc/en-us"
+        href="https://support.ubeswap.org/hc/en-us"
         rel="noopener noreferrer"
         target="_blank"
       >

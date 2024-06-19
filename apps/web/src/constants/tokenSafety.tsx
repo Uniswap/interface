@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from './misc'
 import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 import { NATIVE_CHAIN_ID } from './tokens'
 
-export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
+export const TOKEN_SAFETY_ARTICLE = 'https://support.ubeswap.org/hc/en-us/articles/8723118437133'
 
 export enum WARNING_LEVEL {
   MEDIUM,

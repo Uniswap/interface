@@ -80,7 +80,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
       <Trans>
         Network cost is paid in {{ sym: native.symbol }} on the {{ chainName }} network in order to transact.
       </Trans>{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
+      <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
         <Trans>Learn more</Trans>
       </ExternalLink>
     </ThemedText.LabelMicro>
@@ -97,7 +97,7 @@ export function UniswapXDescription() {
         <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient> aggregates liquidity sources for better prices and gas
         free swaps.
       </Trans>{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+      <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/17515415311501">
         <Trans>Learn more</Trans>
       </ExternalLink>
     </ThemedText.Caption>

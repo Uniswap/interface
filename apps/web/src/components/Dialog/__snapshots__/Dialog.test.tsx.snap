@@ -487,7 +487,7 @@ exports[`<Dialog /> renders different button types 1`] = `
               >
                 <a
                   class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
+                  href="https://support.ubeswap.org/hc/en-us"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -1032,7 +1032,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
               >
                 <a
                   class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
+                  href="https://support.ubeswap.org/hc/en-us"
                   rel="noopener noreferrer"
                   target="_blank"
                 >

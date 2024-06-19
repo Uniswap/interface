@@ -161,10 +161,10 @@ export function Footer() {
                 <Body1>
                   <Trans>Need help?</Trans>
                 </Body1>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us/requests/new">
+                <StyledExternalLink href="https://support.ubeswap.org/hc/en-us/requests/new">
                   <Trans>Contact us</Trans>
                 </StyledExternalLink>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us">
+                <StyledExternalLink href="https://support.ubeswap.org/hc/en-us">
                   <Trans>Help Center</Trans>
                 </StyledExternalLink>
               </Box>

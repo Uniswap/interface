@@ -64,7 +64,7 @@ export function BlastRebasingModal({ currencyIdA, currencyIdB, onContinue }: Bla
         </Trans>
       }
       body={
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
+        <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
           <ThemedText.BodyPrimary fontWeight={535} lineHeight="24px">
             Learn more
           </ThemedText.BodyPrimary>
@@ -133,7 +133,7 @@ export function BlastRebasingAlert() {
             On Blast, USDB and WETH are rebasing tokens that automatically earn yield. Due to incompatibility with
             Uniswap v3, LP positions with USDB or WETH won&apos;t earn rebasing yield, but will in Uniswap v2.
           </Trans>{' '}
-          <StyledLearnMore href="https://support.uniswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
+          <StyledLearnMore href="https://support.ubeswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
             <ThemedText.SubHeaderSmall fontWeight={535} lineHeight="20px" color="neutral1">
               <Trans>Learn more</Trans>
             </ThemedText.SubHeaderSmall>

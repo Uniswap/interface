@@ -371,7 +371,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <DisclaimerText>
           <Trans>
             Limits may not execute exactly when tokens reach the specified price.{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+            <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/24300813697933">
               <Trans>Learn more</Trans>
             </ExternalLink>
           </Trans>

@@ -66,7 +66,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
           <ThemedText.LabelMicro>
             <Trans>You can still swap and provide liquidity on this chain without issue.</Trans>
           </ThemedText.LabelMicro>
-          <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
+          <HelpCenterLink href="https://support.ubeswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
             <Trans>Learn more</Trans>
           </HelpCenterLink>
         </OutageTextContainer>

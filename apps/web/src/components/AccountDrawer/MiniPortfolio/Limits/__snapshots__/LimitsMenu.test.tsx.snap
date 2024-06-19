@@ -378,7 +378,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
           >
             <a
               class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              href="https://support.ubeswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -983,7 +983,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
           >
             <a
               class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              href="https://support.ubeswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
             >

@@ -25,7 +25,7 @@ describe('Blocked Collection', () => {
     render(<UnavailableCollectionPage isBlocked />)
     expect(screen.getByText('Learn why')).toHaveAttribute(
       'href',
-      'https://support.uniswap.org/hc/en-us/articles/18783694078989-Unsupported-Token-Policy'
+      'https://support.ubeswap.org/hc/en-us/articles/18783694078989-Unsupported-Token-Policy'
     )
     expect(screen.getByText('Return to NFT Explore')).toHaveAttribute('href', '/nfts')
   })

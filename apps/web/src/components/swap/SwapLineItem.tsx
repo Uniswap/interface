@@ -63,7 +63,7 @@ export function FOTTooltipContent() {
         Some tokens take a fee when they are bought or sold, which is set by the token issuer. Ubeswap does not receive
         any of these fees.
       </Trans>{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+      <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
         Learn more
       </ExternalLink>
     </>
@@ -83,7 +83,7 @@ function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   return (
     <>
       {message}{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+      <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/20131678274957">
         <Trans>Learn more</Trans>
       </ExternalLink>
     </>

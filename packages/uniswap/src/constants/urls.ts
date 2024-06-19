@@ -5,7 +5,7 @@ export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
 
 const TRADING_API_BASE_PATH = '/v1'
 
-const helpUrl = 'https://support.uniswap.org'
+const helpUrl = 'https://support.ubeswap.org'
 
 export const uniswapUrls = {
   helpUrl,

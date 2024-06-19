@@ -406,7 +406,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                        aggregates liquidity sources for better prices and gas free swaps.
                       <a
                         class="c16"
-                        href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                        href="https://support.ubeswap.org/hc/en-us/articles/17515415311501"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -443,7 +443,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                    aggregates liquidity sources for better prices and gas free swaps.
                   <a
                     class="c16"
-                    href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                    href="https://support.ubeswap.org/hc/en-us/articles/17515415311501"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -521,7 +521,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                     If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c16"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -572,7 +572,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c16"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -714,7 +714,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                    aggregates liquidity sources for better prices and gas free swaps.
                   <a
                     class="c16"
-                    href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                    href="https://support.ubeswap.org/hc/en-us/articles/17515415311501"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -1322,7 +1322,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
-                        href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                        href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -1354,7 +1354,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -1477,7 +1477,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -1528,7 +1528,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -2372,7 +2372,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
-                        href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                        href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -2404,7 +2404,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -2527,7 +2527,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -2578,7 +2578,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -3422,7 +3422,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
-                        href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                        href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -3454,7 +3454,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -3577,7 +3577,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay.
                     <a
                       class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -3628,7 +3628,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -4472,7 +4472,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
-                        href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                        href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -4504,7 +4504,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -4558,7 +4558,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 Some tokens take a fee when they are bought or sold, which is set by the token issuer. Ubeswap does not receive any of these fees.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+                  href="https://support.ubeswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -4680,7 +4680,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -4731,7 +4731,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -5575,7 +5575,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       Network cost is paid in ETH on the ETHEREUM network in order to transact.
                       <a
                         class="c15"
-                        href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                        href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
@@ -5607,7 +5607,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -5661,7 +5661,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 Some tokens take a fee when they are bought or sold, which is set by the token issuer. Ubeswap does not receive any of these fees.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
+                  href="https://support.ubeswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -5783,7 +5783,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -5834,7 +5834,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
                 <a
                   class="c15"
-                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  href="https://support.ubeswap.org/hc/en-us/articles/20131678274957"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -6381,7 +6381,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
                   Network cost is paid in ETH on the ETHEREUM network in order to transact.
                   <a
                     class="c11"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
+                    href="https://support.ubeswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
@@ -6505,7 +6505,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
                     If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive.
                     <a
                       class="c11"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
+                      href="https://support.ubeswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
