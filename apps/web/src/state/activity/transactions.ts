@@ -130,7 +130,7 @@ export function usePollPendingTransactions(onReceiveUpdate: ActivityUpdaterFn) {
             onReceiveUpdate({
               type: 'transaction',
               originalTransaction: tx,
-              receipt,
+              receipt: toSerializableReceipt(receipt),
               chainId,
             })
           })
