@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { DAI, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import {

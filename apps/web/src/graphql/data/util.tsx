@@ -1,7 +1,7 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
 import * as Sentry from '@sentry/react'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@ubeswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
@@ -83,7 +83,7 @@ const GQL_MAINNET_CHAINS = [
 ] as const
 
 /** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
-export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
+export const GQL_MAINNET_CHAINS_MUTABLE = [Chain.Celo]
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
@@ -111,7 +111,7 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
 export function chainIdToBackendName(chainId: number | undefined) {
   return chainId && CHAIN_ID_TO_BACKEND_NAME[chainId]
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
-    : CHAIN_ID_TO_BACKEND_NAME[ChainId.MAINNET]
+    : CHAIN_ID_TO_BACKEND_NAME[ChainId.CELO]
 }
 
 const GQL_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.POLYGON, ChainId.ARBITRUM_ONE, ChainId.CELO] as const
@@ -180,7 +180,7 @@ export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
   const isValidBackEndChain =
     isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
-  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Celo
 }
 
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
@@ -224,14 +224,14 @@ export function logSentryErrorForUnsupportedChain({
 }
 
 export const BACKEND_SUPPORTED_CHAINS = [
-  Chain.Ethereum,
-  Chain.Arbitrum,
-  Chain.Optimism,
-  Chain.Polygon,
-  Chain.Base,
-  Chain.Bnb,
+  // Chain.Ethereum,
+  // Chain.Arbitrum,
+  // Chain.Optimism,
+  // Chain.Polygon,
+  // Chain.Base,
+  // Chain.Bnb,
   Chain.Celo,
-  Chain.Blast,
+  // Chain.Blast,
 ] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.AVALANCHE] as const
 
@@ -256,12 +256,16 @@ export function getTokenDetailsURL({
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const rt = `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return ''
 }
 
 export function getPoolDetailsURL(address: string, chain: Chain) {
   const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const rt = `/explore/pools/${chainName}/${address}`
+  return ''
 }
 
 export function unwrapToken<

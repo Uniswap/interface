@@ -1,5 +1,5 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
@@ -21,7 +21,7 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ApolloError } from '@apollo/client'
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@ubeswap/analytics-events'
 import SparklineChart from 'components/Charts/SparklineChart'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
 import {
@@ -116,7 +116,7 @@ export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined>
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
-    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+    <Trans>Volume is the amount of the asset that has been traded on Ubeswap v3 during the selected time frame.</Trans>
   ),
 }
 

@@ -1,7 +1,7 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
+import { LDO, NATIVE_CHAIN_ID, UBE, USDC_BASE } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -180,8 +180,8 @@ const tokens = [
     address: USDC_BASE.address,
   },
   {
-    chainId: ChainId.MAINNET,
-    address: UNI[ChainId.MAINNET].address,
+    chainId: ChainId.CELO,
+    address: UBE[ChainId.CELO].address,
   },
   {
     chainId: ChainId.MAINNET,

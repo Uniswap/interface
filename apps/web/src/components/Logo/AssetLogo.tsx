@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@ubeswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import React from 'react'
 import styled from 'styled-components'
@@ -39,7 +39,7 @@ const LogoContainer = styled.div`
 export default function AssetLogo({
   currency,
 
-  chainId = ChainId.MAINNET,
+  chainId = ChainId.CELO,
   size = '24px',
   style,
 }: AssetLogoProps) {

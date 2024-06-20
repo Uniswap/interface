@@ -418,7 +418,7 @@
           "marketCap": "市值",
           "priceDecrease": "价格下降（24小时）",
           "priceIncrease": "价格上涨（24小时）",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "Uniswap 交易量（24小时）"
         }
       },

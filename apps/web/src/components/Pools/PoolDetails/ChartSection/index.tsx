@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
@@ -163,7 +163,7 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
-      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.MAINNET,
+      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.CELO,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -266,7 +266,7 @@ function PriceChart({
             <ChartPriceText>
               {`1 ${primaryToken.symbol} = ${formatCurrencyAmount({
                 amount: CurrencyAmount.fromRawAmount(referenceToken, currencyBAmountRaw),
-              })} 
+              })}
             ${referenceToken.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">

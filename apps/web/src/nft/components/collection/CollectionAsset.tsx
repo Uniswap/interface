@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
+import { InterfacePageName, NFTEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { Trans } from 'i18n'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'

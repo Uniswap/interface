@@ -1,4 +1,4 @@
-import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { InterfaceModalName, NFTEventName } from '@ubeswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'

@@ -1,0 +1,32 @@
+{
+  "name": "@uniswap/router-sdk",
+  "description": "An sdk for routing swaps using Ubeswap v2 and Ubeswap v3.",
+  "version": "0.0.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "check:deps:usage": "depcheck",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@ethersproject/abi": "^5.5.0",
+    "@ubeswap/sdk-core": "workspace:^",
+    "@uniswap/swap-router-contracts": "^1.1.0",
+    "@uniswap/v2-sdk": "workspace:^",
+    "@uniswap/v3-sdk": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.0",
+    "@ubeswap/eslint-config": "workspace:^",
+    "eslint": "8.44.0",
+    "tsdx": "^0.14.1",
+    "typescript": "5.3.3"
+  }
+}

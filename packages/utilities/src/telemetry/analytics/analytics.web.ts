@@ -1,5 +1,5 @@
 import { flush, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
-import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
+import { ANONYMOUS_DEVICE_ID } from '@ubeswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
 import { AMPLITUDE_SHARED_TRACKING_OPTIONS, ANONYMOUS_EVENT_NAMES, DUMMY_KEY } from './constants'

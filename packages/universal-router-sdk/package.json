@@ -1,0 +1,36 @@
+{
+  "name": "@uniswap/universal-router-sdk",
+  "description": "sdk for integrating with the Universal Router contracts",
+  "version": "0.0.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "check:deps:usage": "depcheck",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@ubeswap/sdk-core": "workspace:^",
+    "@uniswap/permit2-sdk": "^1.2.0",
+    "@uniswap/router-sdk": "workspace:^",
+    "@uniswap/token-lists": "^1.0.0-beta.31",
+    "@uniswap/universal-router": "1.6.0",
+    "@uniswap/v2-sdk": "workspace:^",
+    "@uniswap/v3-sdk": "workspace:^",
+    "bignumber.js": "^9.0.2",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@ubeswap/eslint-config": "workspace:^",
+    "eslint": "8.44.0",
+    "jest": "29.7.0",
+    "tsdx": "^0.14.1",
+    "typescript": "5.3.3"
+  }
+}

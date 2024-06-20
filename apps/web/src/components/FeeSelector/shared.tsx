@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS } from '@ubeswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from 'i18n'
 import type { ReactNode } from 'react'
@@ -10,19 +10,7 @@ export const FEE_AMOUNT_DETAIL: Record<
   [FeeAmount.LOWEST]: {
     label: '0.01',
     description: <Trans>Best for very stable pairs.</Trans>,
-    supportedChains: [
-      ChainId.ARBITRUM_ONE,
-      ChainId.BNB,
-      ChainId.CELO,
-      ChainId.CELO_ALFAJORES,
-      ChainId.MAINNET,
-      ChainId.OPTIMISM,
-      ChainId.POLYGON,
-      ChainId.POLYGON_MUMBAI,
-      ChainId.AVALANCHE,
-      ChainId.BASE,
-      ChainId.BLAST,
-    ],
+    supportedChains: [ChainId.CELO, ChainId.CELO_ALFAJORES, ChainId.MAINNET],
   },
   [FeeAmount.LOW]: {
     label: '0.05',

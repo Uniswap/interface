@@ -152,7 +152,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 >
                   {data.symbol}
                 </div>
-                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
+                <img src={WATERMARK_URL} alt="Ubeswap" height="72px" width="324px" />
               </div>
             </div>
           </div>

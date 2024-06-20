@@ -114,7 +114,7 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains('Download the Ubeswap app').should('exist')
   })
 
   it('closes modal when close button is selected', () => {
@@ -122,9 +122,9 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains('Download the Ubeswap app').should('exist')
     cy.get(getTestSelector('get-the-app-close-button')).click()
-    cy.contains('Download the Uniswap app').should('not.exist')
+    cy.contains('Download the Ubeswap app').should('not.exist')
   })
 
   it('closes modal when user selects area outside of modal', () => {
@@ -132,8 +132,8 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains('Download the Ubeswap app').should('exist')
     cy.get('nav').click({ force: true })
-    cy.contains('Download the Uniswap app').should('not.exist')
+    cy.contains('Download the Ubeswap app').should('not.exist')
   })
 })

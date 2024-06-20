@@ -297,7 +297,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                   />
                 </div>
               </div>
-              90.9M 
+              90.9M
               <a
                 class="c12"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
@@ -321,7 +321,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                   />
                 </div>
               </div>
-              82.5K 
+              82.5K
               <a
                 class="c12"
                 href="/explore/tokens/ethereum/NATIVE"
@@ -616,7 +616,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c13 {
   height: 8px;
   width: 99.99999996483845%;
-  background: #FC72FF;
+  background: #8878c3;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border-right: 1px solid #F9F9F9;
@@ -741,7 +741,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             <div
               class="c5 c6 c8"
             >
-              90.9M 
+              90.9M
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
@@ -765,7 +765,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
             <div
               class="c5 c6 c8"
             >
-              82.5K 
+              82.5K
               <a
                 class="c9"
                 href="/explore/tokens/ethereum/NATIVE"

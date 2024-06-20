@@ -1,5 +1,5 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { InterfacePageName } from '@ubeswap/analytics-events'
+import { ChainId } from '@ubeswap/sdk-core'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { manualChainOutageAtom, useOutageBanners } from 'featureFlags/flags/outageBanner'
 import { getValidUrlChainId } from 'graphql/data/util'
@@ -21,7 +21,7 @@ export function Banners() {
       const validatedChainId = getValidUrlChainId(maybeChainName)
       return validatedChainId !== undefined
     })
-    return chainName ? getValidUrlChainId(chainName) : ChainId.MAINNET
+    return chainName ? getValidUrlChainId(chainName) : ChainId.CELO
   }, [pathname])
   const currentPageHasManualOutage = manualOutage?.chainId === pageChainId
 

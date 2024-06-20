@@ -26,11 +26,11 @@
 <path d="M83.2061 107.23C83.2061 99.5559 85.8974 90.2391 92.3918 85.5513C98.044 81.4714 105.168 81.0792 111.918 82.2161" stroke="black" stroke-width="3"/>
 <defs>
 <linearGradient id="paint0_linear_11760_192385" x1="66.3809" y1="-17.98" x2="45.2274" y2="22.1892" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FC72FF"/>
+<stop stop-color="#8878c3"/>
 <stop offset="1" stop-color="white"/>
 </linearGradient>
 <linearGradient id="paint1_linear_11760_192385" x1="154.648" y1="77.5435" x2="145.993" y2="118.7" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FC72FF"/>
+<stop stop-color="#8878c3"/>
 <stop offset="1" stop-color="white"/>
 </linearGradient>
 </defs>

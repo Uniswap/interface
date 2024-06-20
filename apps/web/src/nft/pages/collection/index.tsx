@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import Column from 'components/Column'
@@ -185,7 +185,7 @@ const Collection = () => {
     <>
       <Helmet>
         <title>
-          {t(`Buy, sell & trade {{name}} on Uniswap`, {
+          {t(`Buy, sell & trade {{name}} on Ubeswap`, {
             name: collectionStats.name,
           })}
         </title>

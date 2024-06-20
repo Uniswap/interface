@@ -1,4 +1,4 @@
-import { NFTEventName } from '@uniswap/analytics-events'
+import { NFTEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'

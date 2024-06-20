@@ -180,8 +180,8 @@ exports[`NewAddressSpeedBumpModal should render correctly with new unicon 1`] = 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -468,7 +468,7 @@ exports[`NewAddressSpeedBumpModal should render correctly with new unicon 1`] = 
               >
                 <a
                   class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
+                  href="https://support.ubeswap.org/hc/en-us"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -801,8 +801,8 @@ exports[`NewAddressSpeedBumpModal should render correctly with old unicon 1`] = 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1089,7 +1089,7 @@ exports[`NewAddressSpeedBumpModal should render correctly with old unicon 1`] = 
               >
                 <a
                   class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
+                  href="https://support.ubeswap.org/hc/en-us"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
@@ -1195,7 +1195,7 @@ exports[`NewAddressSpeedBumpModal should render correctly with old unicon 1`] = 
                                   y="0"
                                 />
                                 <g
-                                  transform="scale(0.4444444444444444) 
+                                  transform="scale(0.4444444444444444)
  translate(0, 0)"
                                 >
                                   <path
@@ -1217,7 +1217,7 @@ exports[`NewAddressSpeedBumpModal should render correctly with old unicon 1`] = 
                                   y="0"
                                 />
                                 <g
-                                  transform="scale(0.4444444444444444) 
+                                  transform="scale(0.4444444444444444)
  translate(10, 10)"
                                 >
                                   <path

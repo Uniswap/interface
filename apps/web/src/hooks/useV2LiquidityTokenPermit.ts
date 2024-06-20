@@ -1,11 +1,11 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 
 import { PermitInfo, PermitType, useERC20Permit } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 
 const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
   version: '1',
-  name: 'Uniswap V2',
+  name: 'Ubeswap LP Token',
   type: PermitType.AMOUNT,
 }
 

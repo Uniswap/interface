@@ -38,7 +38,7 @@ export const gradientStarts = [
   '#F9F40B',
   '#FF6F1E',
   '#F14544',
-  '#FC72FF',
+  '#8878c3',
   '#C0C0C0',
 ]
 

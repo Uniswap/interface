@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { useCallback, useEffect } from 'react'
@@ -6,7 +6,7 @@ import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
-import tokenLogo from '../../assets/images/token-logo.png'
+import tokenLogo from '../../assets/images/token-logo-small.png'
 import {
   useModalIsOpen,
   useShowClaimPopup,
@@ -107,7 +107,7 @@ export default function ClaimPopup() {
             </ThemedText.DeprecatedWhite>
             <ThemedText.DeprecatedSubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
-                Thanks for being part of the Uniswap community <Heart size={12} />
+                Thanks for being part of the Ubeswap community <Heart size={12} />
               </Trans>
             </ThemedText.DeprecatedSubHeader>
           </AutoColumn>

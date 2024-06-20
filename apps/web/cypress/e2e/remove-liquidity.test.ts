@@ -1,20 +1,20 @@
-import { ChainId, MaxUint256, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, MaxUint256, UBE_ADDRESSES } from '@ubeswap/sdk-core'
 
-const UNI_MAINNET = UNI_ADDRESSES[ChainId.MAINNET]
+const UBE_CELO = UBE_ADDRESSES[ChainId.CELO]
 
 describe('Remove Liquidity', () => {
   it('loads the token pair in v2', () => {
-    cy.visit(`/remove/v2/ETH/${UNI_MAINNET}`)
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'UNI')
+    cy.visit(`/remove/v2/CELO/${UBE_CELO}`)
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'CELO')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'UBE')
   })
 
   it('loads the token pair in v3', () => {
     cy.visit(`/remove/1`)
-    cy.get('#remove-liquidity-tokens').should('contain.text', 'UNI/ETH')
+    cy.get('#remove-liquidity-tokens').should('contain.text', 'UBE/CELO')
 
-    cy.get('#remove-pooled-tokena-symbol').should('contain.text', 'Pooled UNI')
-    cy.get('#remove-pooled-tokenb-symbol').should('contain.text', 'Pooled ETH')
+    cy.get('#remove-pooled-tokena-symbol').should('contain.text', 'Pooled UBE')
+    cy.get('#remove-pooled-tokenb-symbol').should('contain.text', 'Pooled CELO')
   })
 
   it('should redirect to error pages if pool does not exist', () => {

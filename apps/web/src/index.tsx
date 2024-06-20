@@ -8,26 +8,26 @@ import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
 import { ApolloProvider } from '@apollo/client'
-import { useWeb3React } from '@web3-react/core'
-import { getDeviceId } from 'analytics'
+// import { useWeb3React } from '@web3-react/core'
+// import { getDeviceId } from 'analytics'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
-import { PropsWithChildren, StrictMode, useMemo } from 'react'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { ActivityStateUpdater } from 'state/activity/updater'
-import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
+// import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { STATSIG_DUMMY_KEY } from 'tracing'
+// import { STATSIG_DUMMY_KEY } from 'tracing'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
+import { /*getEnvName,*/ isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 import Web3Provider from './components/Web3Provider'
@@ -38,7 +38,11 @@ import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import { ThemeProvider, ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
+// import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
+
+if (localStorage.getItem('react-celo/last-used-wallet')) {
+  localStorage.clear()
+}
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
@@ -52,7 +56,7 @@ function Updaters() {
       <Helmet>
         <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
       </Helmet>
-      <RadialGradientByChainUpdater />
+      {/* <RadialGradientByChainUpdater /> */}
       <ListsUpdater />
       <SystemThemeUpdater />
       <ThemeColorMetaUpdater />
@@ -73,31 +77,31 @@ function GraphqlProviders({ children }: { children: React.ReactNode }) {
     </ApolloProvider>
   )
 }
-function StatsigProvider({ children }: PropsWithChildren) {
-  const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
-  return (
-    <BaseStatsigProvider
-      user={statsigUser}
-      sdkKey={STATSIG_DUMMY_KEY}
-      waitForInitialization={false}
-      options={{
-        environment: { tier: getEnvName() },
-        api: process.env.REACT_APP_STATSIG_PROXY_URL,
-        disableAutoMetricsLogging: true,
-        disableErrorLogging: true,
-      }}
-    >
-      {children}
-    </BaseStatsigProvider>
-  )
-}
+// function StatsigProvider({ children }: PropsWithChildren) {
+//   const { account } = useWeb3React()
+//   const statsigUser: StatsigUser = useMemo(
+//     () => ({
+//       userID: getDeviceId(),
+//       customIDs: { address: account ?? '' },
+//     }),
+//     [account]
+//   )
+//   return (
+//     <BaseStatsigProvider
+//       user={statsigUser}
+//       sdkKey={STATSIG_DUMMY_KEY}
+//       waitForInitialization={false}
+//       options={{
+//         environment: { tier: getEnvName() },
+//         api: process.env.REACT_APP_STATSIG_PROXY_URL,
+//         disableAutoMetricsLogging: true,
+//         disableErrorLogging: true,
+//       }}
+//     >
+//       {children}
+//     </BaseStatsigProvider>
+//   )
+// }
 
 const queryClient = new QueryClient()
 
@@ -113,21 +117,21 @@ createRoot(container).render(
           <Router>
             <LanguageProvider>
               <Web3Provider>
-                <StatsigProvider>
-                  <GraphqlProviders>
-                    <BlockNumberProvider>
-                      <UnitagUpdaterContextProvider>
-                        <Updaters />
-                        <ThemeProvider>
-                          <TamaguiProvider>
-                            <ThemedGlobalStyle />
-                            <App />
-                          </TamaguiProvider>
-                        </ThemeProvider>
-                      </UnitagUpdaterContextProvider>
-                    </BlockNumberProvider>
-                  </GraphqlProviders>
-                </StatsigProvider>
+                {/* <StatsigProvider> */}
+                <GraphqlProviders>
+                  <BlockNumberProvider>
+                    <UnitagUpdaterContextProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <TamaguiProvider>
+                          <ThemedGlobalStyle />
+                          <App />
+                        </TamaguiProvider>
+                      </ThemeProvider>
+                    </UnitagUpdaterContextProvider>
+                  </BlockNumberProvider>
+                </GraphqlProviders>
+                {/* </StatsigProvider> */}
               </Web3Provider>
             </LanguageProvider>
           </Router>

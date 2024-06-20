@@ -143,13 +143,13 @@ const LearnMoreArrow = styled(ArrowRightCircle)`
 `
 const ProtocolDescription = () => (
   <Trans>
-    Uniswap products are powered by the Uniswap Protocol. The protocol is the largest onchain marketplace, with billions
+    Ubeswap products are powered by the Ubeswap Protocol. The protocol is the largest onchain marketplace, with billions
     of dollars in weekly volume across thousands of tokens on Ethereum and 7+ additional chains.
   </Trans>
 )
 function LearnMore() {
   return (
-    <LearnMoreButton href="https://info.uniswap.org">
+    <LearnMoreButton href="https://info.ubeswap.org">
       <Row gap="sm" align="center">
         <Trans>Learn more</Trans>
         <LearnMoreArrow />

@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonPrimary } from 'components/Button'
@@ -121,7 +121,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               label={<Trans>You&apos;re sending</Trans>}
               header={primaryInputView}
               subheader={secondaryInputView}
-              image={<PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />}
+              image={<PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.CELO} />}
             />
             <SendModalHeader
               label={<Trans>To</Trans>}
@@ -155,7 +155,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               <Trans>Network cost</Trans>
             </ThemedText.BodySmall>
             <Row width="min-content" gap="xs">
-              <ChainLogo chainId={chainId ?? ChainId.MAINNET} size={16} />
+              <ChainLogo chainId={chainId ?? ChainId.CELO} size={16} />
               <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
             </Row>
           </Row>

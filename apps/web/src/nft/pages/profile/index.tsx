@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -64,16 +64,16 @@ const ConnectWalletButton = styled(ButtonPrimary)`
 
 function getProfilePageTitle(account: string | undefined, ENSName: string | null | undefined): string {
   if (!account) {
-    return t`NFT collection on Uniswap`
+    return t`NFT collection on Ubeswap`
   }
 
   if (!ENSName) {
-    return t(`NFT collection on Uniswap - {{address}}`, {
+    return t(`NFT collection on Ubeswap - {{address}}`, {
       address: shortenAddress(account),
     })
   }
 
-  return t(`{{name}}'s NFT collection on Uniswap`, {
+  return t(`{{name}}'s NFT collection on Ubeswap`, {
     name: ENSName,
   })
 }

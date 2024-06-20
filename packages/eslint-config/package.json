@@ -1,10 +1,7 @@
 {
-  "name": "@uniswap/eslint-config",
+  "name": "@ubeswap/eslint-config",
   "version": "0.0.1",
-  "description": "Uniswap ESLint config",
-  "repository": "https://github.com/Uniswap/eslint-config",
-  "homepage": "https://github.com/Uniswap/eslint-config#readme",
-  "bugs": "https://github.com/Uniswap/eslint-config/issues",
+  "description": "Ubeswap ESLint config",
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
@@ -15,7 +12,7 @@
     "config",
     "eslint",
     "eslintconfig",
-    "uniswap"
+    "ubeswap"
   ],
   "main": "node.js",
   "files": [
@@ -25,7 +22,6 @@
     "load.js"
   ],
   "dependencies": {
-    "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.0.3",
     "@rushstack/eslint-patch": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "6.20.0",

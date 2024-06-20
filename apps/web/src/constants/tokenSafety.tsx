@@ -5,7 +5,7 @@ import { ZERO_ADDRESS } from './misc'
 import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 import { NATIVE_CHAIN_ID } from './tokens'
 
-export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
+export const TOKEN_SAFETY_ARTICLE = 'https://support.ubeswap.org/hc/en-us/articles/8723118437133'
 
 export enum WARNING_LEVEL {
   MEDIUM,
@@ -50,10 +50,10 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`, {
+            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges or frequently swapped on Ubeswap.`, {
               name: tokenSymbol ?? 'This token',
             })}
-            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
+            other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Ubeswap."
           />
         )
         description = <Trans>Always conduct your own research before trading.</Trans>
@@ -62,10 +62,10 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         description = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`You can't trade {{name}} using the Uniswap App.`, {
+            one={t(`You can't trade {{name}} using the Ubeswap App.`, {
               name: tokenSymbol ?? 'this token',
             })}
-            other="You can't trade these tokens using the Uniswap App."
+            other="You can't trade these tokens using the Ubeswap App."
           />
         )
         break

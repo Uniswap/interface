@@ -1,4 +1,4 @@
-import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UBE_ADDRESSES } from '@ubeswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
@@ -45,23 +45,22 @@ type TransactionChanges = {
 type FormatNumberOrStringFunctionType = ReturnType<typeof useFormatter>['formatNumberOrString']
 
 // TODO: Move common contract metadata to a backend service
-const UNI_IMG =
-  'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png'
+const UBE_IMG = 'https://raw.githubusercontent.com/Ubeswap/ubeswap-interface/main/src/assets/images/token-logo.png'
 
 const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
-  [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
-    title: t`UNI Governance`,
+  [UBE_ADDRESSES[ChainId.CELO].toLowerCase()]: {
+    title: t`UBE Governance`,
     descriptor: t`Contract Interaction`,
-    logos: [UNI_IMG],
+    logos: [UBE_IMG],
   },
   // TODO(cartcrom): Add permit2-specific logo
   '0x000000000022d473030f116ddee9f6b43ac78ba3': {
     title: t`Permit2`,
-    descriptor: t`Uniswap Protocol`,
-    logos: [UNI_IMG],
+    descriptor: t`Ubeswap Protocol`,
+    logos: [UBE_IMG],
   },
   '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
     title: t`Ethereum Name Service`,

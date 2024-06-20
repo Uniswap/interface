@@ -418,7 +418,7 @@
           "marketCap": "Marktkapitalisatie",
           "priceDecrease": "Prijsdaling (24H)",
           "priceIncrease": "Prijsverhoging (24H)",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "Uniswap-volume (24 uur)"
         }
       },

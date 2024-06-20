@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
@@ -39,7 +39,7 @@ function useTDPCurrency(
   isNative: boolean
 ) {
   const { chainId } = useWeb3React()
-  const appChainId = chainId ?? ChainId.MAINNET
+  const appChainId = chainId ?? ChainId.CELO
 
   const queryCurrency = useMemo(() => {
     if (isNative) return nativeOnChain(currencyChainId)
@@ -134,7 +134,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 }
 
 export default function TokenDetailsPage() {
-  const pageChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const pageChainId = useWeb3React().chainId ?? ChainId.CELO
   const contextValue = useCreateTDPContext()
 
   return (

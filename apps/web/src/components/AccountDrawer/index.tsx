@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceEventName } from '@ubeswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { ScrollBarStyles } from 'components/Common'
 import useDisableScrolling from 'hooks/useDisableScrolling'

@@ -70,7 +70,7 @@ export function GetTheAppModal() {
         <ColumnCenter gap="xl">
           <ColumnCenter gap="sm">
             <ThemedText.H1Medium textAlign="center">
-              <Trans>Download the Uniswap app</Trans>
+              <Trans>Download the Ubeswap app</Trans>
             </ThemedText.H1Medium>
             <ThemedText.BodySecondary textAlign="center" maxWidth="400px">
               <Trans>Scan the QR code with your phone to download the Uniswap app</Trans>

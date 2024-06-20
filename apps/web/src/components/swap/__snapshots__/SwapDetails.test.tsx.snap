@@ -203,7 +203,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c23 {
-  background-color: #FC72FF;
+  background-color: #8878c3;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
@@ -417,9 +417,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                     <div
                       class="c9 css-142zc9n"
                     >
-                      1 DEF = 1.00 ABC 
+                      1 DEF = 1.00 ABC
                     </div>
-                     
+
                   </button>
                 </div>
               </div>
@@ -530,7 +530,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               class="c9 c10 css-142zc9n"
               data-testid="swap-li-label"
             >
-              Fee 
+              Fee
             </div>
             <div
               class="c11"
@@ -857,7 +857,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 .c21 {
-  background-color: #FC72FF;
+  background-color: #8878c3;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
@@ -1074,9 +1074,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                 <div
                   class="c9 css-142zc9n"
                 >
-                  1 DEF = 1.00 ABC 
+                  1 DEF = 1.00 ABC
                 </div>
-                 
+
               </button>
             </div>
           </div>

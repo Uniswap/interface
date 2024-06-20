@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 
 export function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {

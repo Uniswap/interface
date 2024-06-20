@@ -2,7 +2,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 
 import { ListsState } from 'state/lists/types'
 import store from '../state'
-import { UNI_EXTENDED_LIST, UNI_LIST, UNSUPPORTED_LIST_URLS } from './lists'
+import { UBE_EXTENDED_LIST, UBE_LIST, UNSUPPORTED_LIST_URLS } from './lists'
 import { COMMON_BASES } from './routing'
 import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import { NATIVE_CHAIN_ID } from './tokens'
@@ -24,12 +24,12 @@ class TokenSafetyLookupTable {
     this.initialized = true
 
     // Initialize extended tokens first
-    lists.byUrl[UNI_EXTENDED_LIST]?.current?.tokens.forEach((token) => {
+    lists.byUrl[UBE_EXTENDED_LIST]?.current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
 
     // Initialize default tokens second, so that any tokens on both default and extended will display as default (no warning)
-    lists.byUrl[UNI_LIST]?.current?.tokens.forEach((token) => {
+    lists.byUrl[UBE_LIST]?.current?.tokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
 

@@ -1,4 +1,4 @@
-import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { InterfaceElementName, SharedEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Column from 'components/Column'
 import Row from 'components/Row'

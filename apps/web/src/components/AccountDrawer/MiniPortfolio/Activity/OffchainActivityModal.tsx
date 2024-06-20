@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import {
   CancelLimitsDialog,
@@ -231,7 +231,7 @@ export function OrderContent({
     <Column>
       <Row gap="md">
         <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
+          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.CELO}
           currencies={currencies}
           images={[logos?.inputLogo, logos?.outputLogo]}
         />

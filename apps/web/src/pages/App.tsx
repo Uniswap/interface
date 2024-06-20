@@ -1,4 +1,4 @@
-import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, getBrowser, SharedEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -7,7 +7,7 @@ import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } 
 import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, memo, Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import { lazy, memo, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
@@ -19,10 +19,15 @@ import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { isMobile } from 'uniswap/src/utils/platform'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
+
+import { MoveDirection, OutMode, type Container, type ISourceOptions } from '@tsparticles/engine'
+import Particles, { initParticlesEngine } from '@tsparticles/react'
+import { loadSlim } from '@tsparticles/slim'
 
 import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
@@ -101,14 +106,101 @@ export default function App() {
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
   const renderUkBanner = useRenderUkBanner()
+  const [init, setInit] = useState(false)
+
+  // this should be run only once per application lifetime
+  useEffect(() => {
+    if (isMobile == false) {
+      initParticlesEngine(async (engine) => {
+        await loadSlim(engine)
+      }).then(() => {
+        setInit(true)
+      })
+    }
+  }, [])
+  const particlesLoaded = async (container?: Container): Promise<void> => {
+    console.log(container)
+  }
+  const options: ISourceOptions = useMemo(
+    () => ({
+      background: {
+        color: {
+          value: '#ffffff',
+        },
+        opacity: 0,
+      },
+      fpsLimit: 120,
+      interactivity: {
+        events: {
+          onClick: {
+            enable: true,
+            mode: 'push',
+          },
+          onHover: {
+            enable: false,
+            mode: 'repulse',
+          },
+        },
+        modes: {
+          push: {
+            quantity: 3,
+          },
+          repulse: {
+            distance: 50,
+            duration: 0.4,
+          },
+        },
+      },
+      particles: {
+        color: {
+          value: '#8878c3',
+        },
+        links: {
+          color: '#8878c3',
+          distance: 150,
+          enable: true,
+          opacity: 0.5,
+          width: 1,
+        },
+        move: {
+          direction: MoveDirection.none,
+          enable: true,
+          outModes: {
+            default: OutMode.out,
+          },
+          random: false,
+          speed: 0.5,
+          straight: false,
+        },
+        number: {
+          density: {
+            enable: true,
+          },
+          value: 40,
+        },
+        opacity: {
+          value: 0.5,
+        },
+        shape: {
+          type: 'circle',
+        },
+        size: {
+          value: { min: 1, max: 5 },
+        },
+      },
+      detectRetina: true,
+    }),
+    []
+  )
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
-    }
+    // if (searchParams.get('disableNFTs') === 'true') {
+    // setShouldDisableNFTRoutes(true)
+    // } else if (searchParams.get('disableNFTs') === 'false') {
+    // setShouldDisableNFTRoutes(false)
+    // }
+    setShouldDisableNFTRoutes(true)
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagURLOverrides()
@@ -139,12 +231,15 @@ export default function App() {
           you can set it later in the page component itself, since react-helmet-async prefers the most recently rendered title.
         */}
         <Helmet>
-          <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
+          <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Ubeswap Interface'}</title>
         </Helmet>
         <UserPropertyUpdater />
         {renderUkBanner && <UkBanner />}
         <Header />
         <ResetPageScrollEffect />
+        <Suspense>
+          {init && <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />}
+        </Suspense>
         <Body />
         <MobileBottomBar>
           <PageTabs />

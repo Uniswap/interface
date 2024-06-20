@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@ubeswap/sdk-core'
 import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'

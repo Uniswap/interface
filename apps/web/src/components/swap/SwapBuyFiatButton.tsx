@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@ubeswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -13,7 +13,7 @@ import { ApplicationModal } from '../../state/application/reducer'
 import { SwapHeaderTabButton } from './styled'
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
-  'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
+  'https://support.ubeswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
 
 enum BuyFiatFlowState {
   // Default initial state. User is not actively trying to buy fiat.

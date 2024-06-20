@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { InterfaceSectionName } from '@uniswap/analytics-events'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { InterfaceSectionName } from '@ubeswap/analytics-events'
+import { CurrencyAmount } from '@ubeswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'

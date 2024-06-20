@@ -1,7 +1,7 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@ubeswap/analytics-events'
 import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
 import { sendAnalyticsEvent } from 'analytics'
-import Column, { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { uniwalletWCV2ConnectConnection } from 'connection'
@@ -16,7 +16,6 @@ import { CloseIcon, ThemedText } from 'theme/components'
 import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
-import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
   display: flex;
@@ -113,9 +112,6 @@ function InfoSection() {
           <Trans>Safely store and swap tokens with the Uniswap app. Available on iOS and Android.</Trans>
         </ThemedText.BodySmall>
       </AutoColumn>
-      <Column>
-        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
-      </Column>
     </InfoSectionWrapper>
   )
 }

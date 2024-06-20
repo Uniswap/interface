@@ -1,14 +1,18 @@
 import { Contract } from '@ethersproject/contracts'
-import { InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@ubeswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ChainId,
   ENS_REGISTRAR_ADDRESSES,
+  FARM_REGISTRY_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  OLD_UBE_ROMULUS_ADDRESSES,
+  UBE_ADDRESSES,
+  UBE_CONVERT_ADDRESSES,
   V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
-} from '@uniswap/sdk-core'
+} from '@ubeswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
@@ -27,6 +31,11 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
+import FARM_REGISTRY_ABI from 'uniswap/src/abis/farm-registry.json'
+import MOOLA_STAKING_ABI from 'uniswap/src/abis/moola-staking-rewards.json'
+import POOL_MANAGER_ABI from 'uniswap/src/abis/pool-manager.json'
+import UBE_ROMULUS_ABI from 'uniswap/src/abis/romulus-delegate.json'
+import STAKING_REWARDS_ABI from 'uniswap/src/abis/staking-rewards.json'
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
@@ -34,10 +43,19 @@ import {
   Erc1155,
   Erc20,
   Erc721,
+  FarmRegistry,
+  MoolaStakingRewards,
+  PoolManager,
+  RomulusDelegate,
+  StakingRewards,
+  UbeConvert,
+  UbeToken,
   Weth,
 } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
+import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
+import UBE_TOKEN_ABI from 'uniswap/src/abis/ube-token.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
 
@@ -174,4 +192,39 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
     }
   }, [account, chainId, contract, withSignerIfPossible])
   return contract
+}
+
+export function useUbeConvertContract() {
+  return useContract<UbeConvert>(UBE_CONVERT_ADDRESSES, UBE_CONVERT_ABI, true)
+}
+
+export function usePactConvertContract() {
+  return useContract<UbeConvert>('0x8828b88F3e1C256D34D53e50Dc7E347881934bfd', UBE_CONVERT_ABI, true)
+}
+
+export function useUbeTokenContract() {
+  return useContract<UbeToken>(UBE_ADDRESSES, UBE_TOKEN_ABI, true)
+}
+
+export function useRomulusDelegateContract() {
+  return useContract<RomulusDelegate>(OLD_UBE_ROMULUS_ADDRESSES, UBE_ROMULUS_ABI, true)
+}
+
+export function useFarmRegistryContract() {
+  return useContract<FarmRegistry>(FARM_REGISTRY_ADDRESSES, FARM_REGISTRY_ABI, true)
+}
+
+export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
+  return useContract<StakingRewards>(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
+}
+
+export function useMoolaStakingRewardsContract(
+  stakingAddress?: string,
+  withSignerIfPossible?: boolean
+): MoolaStakingRewards | null {
+  return useContract<MoolaStakingRewards>(stakingAddress, MOOLA_STAKING_ABI, withSignerIfPossible)
+}
+
+export function usePoolManagerContract(address?: string, withSignerIfPossible?: boolean): PoolManager | null {
+  return useContract<PoolManager>(address, POOL_MANAGER_ABI, withSignerIfPossible)
 }

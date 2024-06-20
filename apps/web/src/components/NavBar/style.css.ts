@@ -6,10 +6,17 @@ import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
-    marginRight: '12',
+    marginRight: '24',
     alignItems: 'center',
     cursor: 'pointer',
+    gap: '8',
   }),
+  {
+    transition: 'transform 0.3s ease 0s',
+    ':hover': {
+      transform: 'rotate(-5deg)',
+    },
+  },
 ])
 
 export const logo = style([

@@ -1,0 +1,31 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependency management
+package-lock.json
+/node_modules
+
+# builds
+/cache
+/cosmos-export
+/dist
+/dts
+/lib
+*.tgz
+package*
+
+# IDE metadata
+.idea/
+.vscode/
+*.swp
+
+# misc
+.DS_Store
+/.netlify
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+notes.txt
+
+# tests
+/coverage

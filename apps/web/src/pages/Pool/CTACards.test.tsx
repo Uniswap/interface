@@ -11,6 +11,6 @@ describe('CTAcard links', () => {
     mocked(useV3Positions).mockReturnValue({ loading: false, positions: undefined })
 
     render(<CTACards />)
-    expect(screen.getByTestId('cta-infolink')).toHaveAttribute('href', 'https://info.uniswap.org/#/pools')
+    expect(screen.getByTestId('cta-infolink')).toHaveAttribute('href', 'https://info.ubeswap.org/#/pools')
   })
 })

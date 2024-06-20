@@ -1,10 +1,10 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@ubeswap/sdk-core'
 import { t } from 'i18n'
 
 export const getTokenPageTitle = (currency?: Currency) => {
   const tokenName = currency?.name
   const tokenSymbol = currency?.symbol
-  const baseTitle = t`Buy, sell, and trade on Uniswap`
+  const baseTitle = t`Buy, sell, and trade on Ubeswap`
   if (!tokenName && !tokenSymbol) {
     return baseTitle
   }

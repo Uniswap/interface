@@ -1,5 +1,5 @@
 // @ts-ignore
-import TokenListJSON from '@uniswap/default-token-list'
+import TokenListJSON from '@ubeswap/default-token-list'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
 beforeEach(() => {

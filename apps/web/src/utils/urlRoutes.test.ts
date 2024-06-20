@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 
 import { getCanonicalUrl, getCurrentPageFromLocation } from './urlRoutes'
 

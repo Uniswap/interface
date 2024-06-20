@@ -7,7 +7,9 @@
     "expo.json",
     "nextjs.json",
     "storybook.json",
-    "ui.json"
+    "ui.json",
+    "analytics.json",
+    "sdk.json"
   ],
   "private": true
 }

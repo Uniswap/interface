@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { Trace } from 'analytics'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { t } from 'i18n'
@@ -52,7 +52,7 @@ const AssetPage = () => {
     <>
       <Helmet>
         <title>
-          {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Uniswap
+          {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Ubeswap
         </title>
       </Helmet>
       <Trace

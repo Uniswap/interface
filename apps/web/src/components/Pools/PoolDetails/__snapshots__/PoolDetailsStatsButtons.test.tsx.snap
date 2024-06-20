@@ -259,8 +259,8 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -379,24 +379,24 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 .c50 {
-  background-color: #FFEFFF;
-  color: #FC72FF;
+  background-color: #E3DFF3;
+  color: #8878c3;
   font-size: 20px;
   font-weight: 535;
 }
 
 .c50:focus {
-  box-shadow: 0 0 0 1pt #FFEFFF;
-  background-color: #FFEFFF;
+  box-shadow: 0 0 0 1pt #E3DFF3;
+  background-color: #E3DFF3;
 }
 
 .c50:hover {
-  background-color: #FFEFFF;
+  background-color: #E3DFF3;
 }
 
 .c50:active {
-  box-shadow: 0 0 0 1pt #FFEFFF;
-  background-color: #FFEFFF;
+  box-shadow: 0 0 0 1pt #E3DFF3;
+  background-color: #E3DFF3;
 }
 
 .c50:hover .c51 {
@@ -943,8 +943,8 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 900px;
   width: 50%;
   gap: 8px;
-  color: #FC72FF;
-  background-color: #FC72FF1f;
+  color: #8878c3;
+  background-color: #8878c31f;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
@@ -979,8 +979,8 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 900px;
   width: 50%;
   gap: 8px;
-  color: #FC72FF;
-  background-color: #FC72FF1f;
+  color: #8878c3;
+  background-color: #8878c31f;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
@@ -1485,10 +1485,10 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
             <div
               class="c56"
             >
-              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading. 
+              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Ubeswap. Always conduct your own research before trading.
               <a
                 class="c57 c58"
-                href="https://support.uniswap.org/hc/en-us/articles/8723118437133"
+                href="https://support.ubeswap.org/hc/en-us/articles/8723118437133"
                 rel="noopener noreferrer"
                 target="_blank"
               >

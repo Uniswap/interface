@@ -1,4 +1,4 @@
-import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, NativeCurrency, Token, UBE_ADDRESSES, WETH9 } from '@ubeswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 // eslint-disable-next-line no-restricted-syntax
@@ -160,7 +160,7 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
-const CELO_CELO = new Token(ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
+export const CELO_CELO = new Token(ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo')
 export const CUSD_CELO = new Token(
   ChainId.CELO,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
@@ -175,6 +175,15 @@ export const CEUR_CELO = new Token(
   'cEUR',
   'Celo Euro Stablecoin'
 )
+
+export const MCUSD_CELO = new Token(
+  ChainId.CELO,
+  '0x918146359264C492BD6934071c6Bd31C854EDBc3',
+  18,
+  'mCUSD',
+  'Moola cUSD'
+)
+
 export const PORTAL_ETH_CELO = new Token(
   ChainId.CELO,
   '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
@@ -182,6 +191,9 @@ export const PORTAL_ETH_CELO = new Token(
   'ETH',
   'Portal Ether'
 )
+
+export const USDT_CELO = new Token(ChainId.CELO, '0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e', 18, 'USDT', 'Tether USD')
+
 export const WBTC_CELO = new Token(
   ChainId.CELO,
   '0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF',
@@ -249,10 +261,15 @@ export const DAI_AVALANCHE = new Token(
   'Dai.e Token'
 )
 
-export const UNI: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),
-  [ChainId.GOERLI]: new Token(ChainId.GOERLI, UNI_ADDRESSES[ChainId.GOERLI], 18, 'UNI', 'Uniswap'),
-  [ChainId.SEPOLIA]: new Token(ChainId.SEPOLIA, UNI_ADDRESSES[ChainId.SEPOLIA], 18, 'UNI', 'Uniswap'),
+export const UBE: { [chainId: number]: Token } = {
+  [ChainId.CELO]: new Token(ChainId.CELO, UBE_ADDRESSES[ChainId.CELO], 18, 'UBE', 'Ubeswap'),
+  [ChainId.CELO_ALFAJORES]: new Token(
+    ChainId.CELO_ALFAJORES,
+    UBE_ADDRESSES[ChainId.CELO_ALFAJORES],
+    18,
+    'UBE',
+    'Ubeswap'
+  ),
 }
 
 export const ARB = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum')

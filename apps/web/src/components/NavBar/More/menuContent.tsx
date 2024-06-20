@@ -17,34 +17,31 @@ export interface MenuItem {
 export const useMenuContent = (): MenuSection[] => {
   const { t } = useTranslation()
   return [
+    // {
+    //   title: t('App'),
+    //   items: [
+    //     { label: t('Pool'), href: '/pool', internal: true, overflow: true },
+    //     { label: 'Farm', href: '/farm', internal: true, overflow: true },
+    //     { label: 'Convert', href: '/claim-new-ube', internal: true, overflow: true },
+    //   ],
+    // },
     {
-      title: t('App'),
+      title: t('Charts'),
       items: [
-        { label: t('Pool'), href: '/pool', internal: true, overflow: true },
-        { label: t('Vote'), href: 'https://vote.uniswapfoundation.org/' },
-        { label: t('Analytics'), href: 'https://info.uniswap.org/' },
+        { label: t('Analytics'), href: 'https://info.ubeswap.org/' },
+        { label: t('Celo Tracker'), href: 'https://celotracker.com/' },
       ],
     },
     {
-      title: t('Company'),
+      title: t('Bridge'),
       items: [
-        { label: t('Careers'), href: 'https://boards.greenhouse.io/uniswaplabs' },
-        { label: t('Blog'), href: 'https://blog.uniswap.org/' },
-      ],
-    },
-    {
-      title: t('Protocol'),
-      items: [
-        { label: t('Governance'), href: 'https://uniswap.org/governance' },
-        { label: t('Developers'), href: 'https://uniswap.org/developers' },
+        { label: t('Squid Router'), href: 'https://app.squidrouter.com/' },
+        { label: t('Portal'), href: 'https://portalbridge.com/' },
       ],
     },
     {
       title: t('Need help?'),
-      items: [
-        { label: t('Contact us'), href: 'https://support.uniswap.org/hc/en-us/requests/new' },
-        { label: t('Help Center'), href: 'https://support.uniswap.org/hc/en-us' },
-      ],
+      items: [{ label: t('Ubeswap Docs'), href: 'https://docs.ubeswap.org' }],
     },
   ]
 }

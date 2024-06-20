@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { createDeferredPromise } from 'test-utils/promise'

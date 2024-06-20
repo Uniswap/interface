@@ -1,5 +1,5 @@
-import defaultTokenList from '@uniswap/default-token-list'
-import { UNI_LIST } from 'constants/lists'
+import defaultTokenList from '@ubeswap/default-token-list'
+import { UBE_LIST } from 'constants/lists'
 import fetch from 'jest-fetch-mock'
 
 import fetchTokenList from './fetchTokenList'
@@ -72,8 +72,8 @@ describe('fetchTokenList', () => {
   })
 
   it('fetches and validates the default token list', async () => {
-    fetch.mockOnceIf(UNI_LIST, () => Promise.resolve(JSON.stringify(defaultTokenList)))
-    await expect(fetchTokenList(UNI_LIST, resolver)).resolves.toStrictEqual(defaultTokenList)
+    fetch.mockOnceIf(UBE_LIST, () => Promise.resolve(JSON.stringify(defaultTokenList)))
+    await expect(fetchTokenList(UBE_LIST, resolver)).resolves.toStrictEqual(defaultTokenList)
     expect(resolver).not.toHaveBeenCalled()
   })
 

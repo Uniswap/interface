@@ -66,8 +66,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -149,7 +149,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -294,7 +294,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
         <div
           class="c6 c7 css-1urox24"
         >
-          This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
+          This provides the Ubeswap protocol access to your token for trading. For security, it expires after 30 days.
         </div>
         <div
           class="c0 c1"
@@ -362,7 +362,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+            href="https://support.ubeswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -453,8 +453,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -536,7 +536,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -749,7 +749,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+            href="https://support.ubeswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -840,8 +840,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -923,7 +923,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1136,7 +1136,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
+            href="https://support.ubeswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1227,8 +1227,8 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1310,7 +1310,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1455,7 +1455,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
         <div
           class="c6 c7 css-1urox24"
         >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+          Swaps on the Ubeswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
         </div>
         <div
           class="c0 c1"
@@ -1523,7 +1523,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+            href="https://support.ubeswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1614,8 +1614,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -1697,7 +1697,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -1908,7 +1908,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
+            href="https://support.ubeswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -1999,8 +1999,8 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -2082,7 +2082,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: #FC72FF;
+  background-color: #8878c3;
   border-radius: 16px;
   border: 0;
   color: #FFFFFF;
@@ -2227,7 +2227,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
         <div
           class="c6 c7 css-1urox24"
         >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+          Swaps on the Ubeswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
         </div>
         <div
           class="c0 c1"
@@ -2295,7 +2295,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
           </div>
           <a
             class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+            href="https://support.ubeswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
             rel="noopener noreferrer"
             target="_blank"
           >

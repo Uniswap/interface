@@ -1,4 +1,4 @@
-import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
+import { SharedEventName, SwapEventName } from '@ubeswap/analytics-events'
 
 export const DUMMY_KEY = '00000000000000000000000000000000'
 

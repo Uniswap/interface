@@ -4,7 +4,7 @@ import { atomWithStorage } from 'jotai/utils'
 
 import { SettingsToggle } from './SettingsToggle'
 
-export const hideSmallBalancesAtom = atomWithStorage<boolean>('hideSmallBalances', true)
+export const hideSmallBalancesAtom = atomWithStorage<boolean>('hideSmallBalances', false)
 
 export function SmallBalanceToggle() {
   const [hideSmallBalances, updateHideSmallBalances] = useAtom(hideSmallBalancesAtom)

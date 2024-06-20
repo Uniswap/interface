@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SwapTab } from 'components/swap/constants'
 import usePrevious from 'hooks/usePrevious'

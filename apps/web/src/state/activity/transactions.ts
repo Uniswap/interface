@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
+import { ChainId } from '@ubeswap/sdk-core'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
-import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
@@ -130,7 +130,7 @@ export function usePollPendingTransactions(onReceiveUpdate: ActivityUpdaterFn) {
             onReceiveUpdate({
               type: 'transaction',
               originalTransaction: tx,
-              receipt,
+              receipt: toSerializableReceipt(receipt),
               chainId,
             })
           })

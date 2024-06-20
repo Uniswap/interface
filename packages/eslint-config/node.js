@@ -20,7 +20,7 @@ module.exports = {
         printWidth: 120,
       },
     ],
-    'import/no-unused-modules': ['error', { unusedExports: true }],
+    // 'import/no-unused-modules': ['error', { unusedExports: true }],
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',
   },

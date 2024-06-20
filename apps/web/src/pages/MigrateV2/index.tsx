@@ -1,6 +1,6 @@
 import { getCreate2Address } from '@ethersproject/address'
 import { keccak256, pack } from '@ethersproject/solidity'
-import { Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Token, V2_FACTORY_ADDRESSES } from '@ubeswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
@@ -129,14 +129,14 @@ export default function MigrateV2() {
               <Trans>Migrate V2 liquidity</Trans>
             </MigrateHeader>
             <div>
-              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
+              <QuestionHelper text={<Trans>Migrate your liquidity tokens from Ubeswap V2 to Ubeswap V3.</Trans>} />
             </div>
           </AutoRow>
 
           <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
             <Trans>
-              For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
-              Uniswap V3.
+              For each pool shown below, click migrate to remove your liquidity from Ubeswap V2 and deposit it into
+              Ubeswap V3.
             </Trans>
           </ThemedText.DeprecatedBody>
 

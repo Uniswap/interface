@@ -11,31 +11,31 @@ describe('Add Liquidity', () => {
   })
 
   it('loads the token pair', () => {
-    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
+    cy.visit('/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490/CELO/500')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UBE')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'CELO')
     cy.contains('0.05% fee tier')
   })
 
   it('clears the token selection when chain changes', () => {
-    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
+    cy.visit('/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490/ETH/500')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UBE')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'CELO')
     cy.get(getTestSelector('chain-selector')).last().click()
     cy.contains('Polygon').click()
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'CELO')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UBE')
   })
 
   it('does not crash if token is duplicated', () => {
-    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'UNI')
+    cy.visit('/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490/0x71e26d0E519D14591b9dE9a0fE9513A398101490')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UBE')
+    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'UBE')
   })
 
   it('single token can be selected', () => {
-    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
+    cy.visit('/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490')
+    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UBE')
   })
 
   it('loads fee tier distribution', () => {
@@ -61,7 +61,7 @@ describe('Add Liquidity', () => {
         }
       )
 
-      cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
+      cy.visit('/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490/CELO')
       cy.wait('@FeeTierDistribution')
       cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.30% fee tier')
       cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40% select')

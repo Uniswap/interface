@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
@@ -13,8 +13,7 @@ export default function QueryTokenLogo(
     token?: TopToken | TokenQueryData | SearchToken
   }
 ) {
-  const chainId =
-    (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.MAINNET) ?? ChainId.MAINNET
+  const chainId = (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.CELO) ?? ChainId.CELO
   const currency = props.token ? gqlToCurrency(props.token) : undefined
   const logoUrl = props.token?.project?.logoUrl
 

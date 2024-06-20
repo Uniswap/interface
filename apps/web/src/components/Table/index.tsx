@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, SharedEventName } from '@ubeswap/analytics-events'
 import { TraceEvent, useTrace } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'

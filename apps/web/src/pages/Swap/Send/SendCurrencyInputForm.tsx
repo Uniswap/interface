@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
@@ -241,7 +241,7 @@ export default function SendCurrencyInputForm({
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
-    () => STABLECOIN_AMOUNT_OUT[asSupportedChain(chainId) ?? (ChainId.MAINNET as SupportedInterfaceChain)].currency,
+    () => STABLECOIN_AMOUNT_OUT[asSupportedChain(chainId) ?? (ChainId.CELO as SupportedInterfaceChain)].currency,
     [chainId]
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
@@ -364,7 +364,7 @@ export default function SendCurrencyInputForm({
           <Row width="100%" gap="md">
             <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
               {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />
+                <PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.CELO} />
               )}
               <Row width="100%">
                 <Column>

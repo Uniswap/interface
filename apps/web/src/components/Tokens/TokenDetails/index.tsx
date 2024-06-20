@@ -1,5 +1,5 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { InterfacePageName } from '@ubeswap/analytics-events'
+import { ChainId, Currency } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
@@ -77,7 +77,7 @@ function useSwapInitialInputCurrency() {
 
 function TDPSwapComponent() {
   const { address, currency, currencyChain, warning } = useTDPContext()
-  const appChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const appChainId = useWeb3React().chainId ?? ChainId.CELO
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(

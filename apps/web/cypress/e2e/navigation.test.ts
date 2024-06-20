@@ -58,11 +58,11 @@ describe('Navigation', () => {
         .within(() => {
           cy.get(getTestSelector('nav-more-button')).should('be.visible').click()
           cy.get(getTestSelector('nav-more-menu')).within(() => {
-            cy.contains('Download Uniswap').should('be.visible').click()
+            cy.contains('Download Ubeswap').should('be.visible').click()
           })
         })
         .then(() => {
-          cy.contains('Download the Uniswap app').should('be.visible')
+          cy.contains('Download the Ubeswap app').should('be.visible')
         })
     })
   })

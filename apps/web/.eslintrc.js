@@ -1,15 +1,11 @@
 /* eslint-env node */
 
-const { node: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
-require('@uniswap/eslint-config/load')
-
-const rulesDirPlugin = require('eslint-plugin-rulesdir')
-rulesDirPlugin.RULES_DIR = 'eslint_rules'
+const { node: restrictedImports } = require('@ubeswap/eslint-config/restrictedImports')
+require('@ubeswap/eslint-config/load')
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/react'],
-  plugins: ['rulesdir'],
+  extends: ['@ubeswap/eslint-config/react'],
 
   rules: {
     // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
@@ -21,7 +17,7 @@ module.exports = {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
-        'rulesdir/no-undefined-or': 'error',
+        // 'rulesdir/no-undefined-or': 'error',
       },
     },
     {
@@ -47,7 +43,7 @@ module.exports = {
                 message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
               },
               {
-                name: '@uniswap/smart-order-router',
+                name: '@ubeswap/smart-order-router',
                 message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
                 allowTypeImports: true,
               },
@@ -110,8 +106,8 @@ module.exports = {
           {
             paths: [
               {
-                name: '@uniswap/analytics',
-                message: `Do not import from '@uniswap/analytics' directly. Use 'analytics' instead.`,
+                name: '@ubeswap/analytics',
+                message: `Do not import from '@ubeswap/analytics' directly. Use 'analytics' instead.`,
               },
             ],
           },

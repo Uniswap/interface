@@ -51,6 +51,6 @@ export const isMobileWebSafari: boolean = isTouchable && isSafari
 export const isMobileWebAndroid: boolean = isTouchable && isWebAndroid
 
 // App
-export const isExtension: boolean = process.env.IS_UNISWAP_EXTENSION === 'true'
+export const isExtension: boolean = false // process.env.IS_UNISWAP_EXTENSION === 'true'
 export const isMobileApp: boolean = false
-export const isInterface: boolean = process.env.REACT_APP_IS_UNISWAP_INTERFACE === 'true'
+export const isInterface: boolean = true // process.env.REACT_APP_IS_UNISWAP_INTERFACE === 'true'

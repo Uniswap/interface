@@ -27,7 +27,7 @@
     "https://*.uniswap.org",
     "https://uniswap.org",
     "https://assets.coingecko.com/",
-    "https://*.amazonaws.com", 
+    "https://*.amazonaws.com",
     "https://basescan.org",
     "https://celo-org.github.io/",
     "https://cdn.center.app/",
@@ -60,6 +60,8 @@
     "wss://*.uniswap.org",
     "https://*.uniswap.org",
     "https://uniswap.org",
+    "https://*.ubeswap.org",
+    "https://ubeswap.org",
     "https://assets.coingecko.com/",
     "https://buy.moonpay.com/",
     "https://cdn.center.app/",
@@ -109,7 +111,11 @@
     "https://*.infura.io",
     "wss://relay.walletconnect.com",
     "wss://www.walletlink.org",
-    "wss://ws-us3.pusher.com/"
+    "wss://ws-us3.pusher.com/",
+    "https://unpkg.com",
+    "https://ipfs.io",
+    "https://gateway-arbitrum.network.thegraph.com",
+    "https://rpc.ankr.com"
   ],
   "workerSrc": [
     "'self'",

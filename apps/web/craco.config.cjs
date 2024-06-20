@@ -67,7 +67,7 @@ module.exports = {
         moduleNameMapper: {
           'd3-array': 'd3-array/dist/d3-array.min.js',
           '^react-native$': 'react-native-web',
-          'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
+          //'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
         },
       })
     },
@@ -124,7 +124,7 @@ module.exports = {
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
         alias: {
           ...webpackConfig.resolve.alias,
-          'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
+          //'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
           'react-native$': 'react-native-web',
         },
@@ -132,7 +132,7 @@ module.exports = {
           // Allow vanilla-extract in production builds.
           // This is necessary because create-react-app guards against external imports.
           // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
-          if (plugin instanceof ModuleScopePlugin) {
+          if (plugin instanceof ModuleScopePlugin || plugin.constructor.name) {
             plugin.allowedPaths.push(path.join(__dirname, '..', '..', 'node_modules/@vanilla-extract/webpack-plugin'))
           }
 

@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@ubeswap/sdk-core'
 import { Field, SwapTab } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
 import { render } from 'test-utils/render'

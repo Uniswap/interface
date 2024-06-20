@@ -2,7 +2,7 @@ import {
   TraceEvent as AnalyticsEvent,
   Trace as AnalyticsTrace,
   sendAnalyticsEvent as sendAnalyticsTraceEvent,
-} from '@uniswap/analytics'
+} from '@ubeswap/analytics'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
 
@@ -13,7 +13,7 @@ export {
   useTrace,
   user,
   type ITraceContext,
-} from '@uniswap/analytics'
+} from '@ubeswap/analytics'
 
 const allowAnalyticsAtomKey = 'allow_analytics'
 export const allowAnalyticsAtom = atomWithStorage<boolean>(allowAnalyticsAtomKey, true)

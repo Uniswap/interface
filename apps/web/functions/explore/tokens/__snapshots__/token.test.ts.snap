@@ -18,13 +18,13 @@ exports[`should inject metadata for valid tokens 1`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
+
     <meta
-      http-equiv="Content-Security-Policy" 
+      http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://*.amazonaws.com https://basescan.org https://celo-org.github.io/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: wss://*.uniswap.org https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://chain-proxy.wallet.coinbase.com https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-mainnet.infura.io/ https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://www.gemini.com https://gateway.ipfs.io/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://openseauserdata.com/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io https://sockjs-us3.pusher.com/ https://api.studio.thegraph.com/ https://trustwallet.com https://tokenlist.arbitrum.io https://tokens.coingecko.com https://*.twnodes.com https://ultra-blue-flower.quiknode.pro https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com https://*.quiknode.pro https://*.infura.io wss://relay.walletconnect.com wss://www.walletlink.org wss://ws-us3.pusher.com/; worker-src 'self' blob:;"
     >
-    
-    <!-- 
+
+    <!--
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
      -->
@@ -44,7 +44,7 @@ exports[`should inject metadata for valid tokens 1`] = `
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
+
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -59,7 +59,7 @@ exports[`should inject metadata for valid tokens 1`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
@@ -69,7 +69,7 @@ exports[`should inject metadata for valid tokens 1`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
@@ -132,7 +132,7 @@ exports[`should inject metadata for valid tokens 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get USDC on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get USDC on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get USDC on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="twitter:image:alt" content="Get USDC on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get USDC on Ubeswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get USDC on Ubeswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get USDC on Ubeswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"/><meta property="twitter:image:alt" content="Get USDC on Ubeswap"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -162,13 +162,13 @@ exports[`should inject metadata for valid tokens 2`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
+
     <meta
-      http-equiv="Content-Security-Policy" 
+      http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://*.amazonaws.com https://basescan.org https://celo-org.github.io/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: wss://*.uniswap.org https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://chain-proxy.wallet.coinbase.com https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-mainnet.infura.io/ https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://www.gemini.com https://gateway.ipfs.io/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://openseauserdata.com/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io https://sockjs-us3.pusher.com/ https://api.studio.thegraph.com/ https://trustwallet.com https://tokenlist.arbitrum.io https://tokens.coingecko.com https://*.twnodes.com https://ultra-blue-flower.quiknode.pro https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com https://*.quiknode.pro https://*.infura.io wss://relay.walletconnect.com wss://www.walletlink.org wss://ws-us3.pusher.com/; worker-src 'self' blob:;"
     >
-    
-    <!-- 
+
+    <!--
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
      -->
@@ -188,7 +188,7 @@ exports[`should inject metadata for valid tokens 2`] = `
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
+
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -203,7 +203,7 @@ exports[`should inject metadata for valid tokens 2`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
@@ -213,7 +213,7 @@ exports[`should inject metadata for valid tokens 2`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
@@ -276,7 +276,7 @@ exports[`should inject metadata for valid tokens 2`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get ETH on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get ETH on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get ETH on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE"/><meta property="twitter:image:alt" content="Get ETH on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get ETH on Ubeswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get ETH on Ubeswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get ETH on Ubeswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE"/><meta property="twitter:image:alt" content="Get ETH on Ubeswap"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -306,13 +306,13 @@ exports[`should inject metadata for valid tokens 3`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
+
     <meta
-      http-equiv="Content-Security-Policy" 
+      http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://*.amazonaws.com https://basescan.org https://celo-org.github.io/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: wss://*.uniswap.org https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://chain-proxy.wallet.coinbase.com https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-mainnet.infura.io/ https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://www.gemini.com https://gateway.ipfs.io/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://openseauserdata.com/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io https://sockjs-us3.pusher.com/ https://api.studio.thegraph.com/ https://trustwallet.com https://tokenlist.arbitrum.io https://tokens.coingecko.com https://*.twnodes.com https://ultra-blue-flower.quiknode.pro https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com https://*.quiknode.pro https://*.infura.io wss://relay.walletconnect.com wss://www.walletlink.org wss://ws-us3.pusher.com/; worker-src 'self' blob:;"
     >
-    
-    <!-- 
+
+    <!--
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
      -->
@@ -332,7 +332,7 @@ exports[`should inject metadata for valid tokens 3`] = `
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
+
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -347,7 +347,7 @@ exports[`should inject metadata for valid tokens 3`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
@@ -357,7 +357,7 @@ exports[`should inject metadata for valid tokens 3`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
@@ -420,7 +420,7 @@ exports[`should inject metadata for valid tokens 3`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get MATIC on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get MATIC on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get MATIC on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE"/><meta property="twitter:image:alt" content="Get MATIC on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get MATIC on Ubeswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get MATIC on Ubeswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get MATIC on Ubeswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE"/><meta property="twitter:image:alt" content="Get MATIC on Ubeswap"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -450,13 +450,13 @@ exports[`should inject metadata for valid tokens 4`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
+
     <meta
-      http-equiv="Content-Security-Policy" 
+      http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://*.amazonaws.com https://basescan.org https://celo-org.github.io/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: wss://*.uniswap.org https://*.uniswap.org https://uniswap.org https://assets.coingecko.com/ https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://chain-proxy.wallet.coinbase.com https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-mainnet.infura.io/ https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://www.gemini.com https://gateway.ipfs.io/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://openseauserdata.com/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io https://sockjs-us3.pusher.com/ https://api.studio.thegraph.com/ https://trustwallet.com https://tokenlist.arbitrum.io https://tokens.coingecko.com https://*.twnodes.com https://ultra-blue-flower.quiknode.pro https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com https://*.quiknode.pro https://*.infura.io wss://relay.walletconnect.com wss://www.walletlink.org wss://ws-us3.pusher.com/; worker-src 'self' blob:;"
     >
-    
-    <!-- 
+
+    <!--
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
      -->
@@ -476,7 +476,7 @@ exports[`should inject metadata for valid tokens 4`] = `
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <link rel="preload" href="/static/js/bundle.js" as="script" />
-   
+
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -491,7 +491,7 @@ exports[`should inject metadata for valid tokens 4`] = `
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
@@ -501,7 +501,7 @@ exports[`should inject metadata for valid tokens 4`] = `
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
           url('/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
@@ -564,7 +564,7 @@ exports[`should inject metadata for valid tokens 4`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get PEPE on Uniswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get PEPE on Uniswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get PEPE on Uniswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="twitter:image:alt" content="Get PEPE on Uniswap"/></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get PEPE on Ubeswap"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Get PEPE on Ubeswap"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Get PEPE on Ubeswap"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0x6982508145454ce325ddbe47a25d4ec3d2311933"/><meta property="twitter:image:alt" content="Get PEPE on Ubeswap"/></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

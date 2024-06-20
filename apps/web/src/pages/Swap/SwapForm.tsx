@@ -5,9 +5,8 @@ import {
   InterfaceSectionName,
   SharedEventName,
   SwapEventName,
-} from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+} from '@ubeswap/analytics-events'
+import { Currency, CurrencyAmount, Token, UNIVERSAL_ROUTER_ADDRESS } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -565,7 +564,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           </TraceEvent>
         </ArrowWrapper>
       </div>
-      <AutoColumn gap="xs">
+      <AutoColumn gap="sm">
         <div>
           <OutputSwapSection>
             <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>

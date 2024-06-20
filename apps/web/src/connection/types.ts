@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { Web3ReactHooks } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 
@@ -10,6 +10,7 @@ export enum ConnectionType {
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
   EIP_6963_INJECTED = 'EIP_6963_INJECTED',
+  VALORA = 'VALORA',
 }
 
 export interface ProviderInfo {

@@ -96,8 +96,8 @@ exports[`OrderContent should render without error, filled order 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -350,7 +350,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   data-testid="INPUT-amount"
                 >
                   252.074
-                   
+
                   DAI
                 </div>
                 <div
@@ -409,7 +409,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   data-testid="OUTPUT-amount"
                 >
                   0.10684
-                   
+
                   WETH
                 </div>
                 <div
@@ -459,9 +459,9 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 <div
                   class="c6 css-142zc9n"
                 >
-                  1 WETH = 2,359.34 DAI 
+                  1 WETH = 2,359.34 DAI
                 </div>
-                 
+
               </button>
             </div>
           </div>
@@ -607,8 +607,8 @@ exports[`OrderContent should render without error, limit order 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -949,7 +949,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   data-testid="INPUT-amount"
                 >
                   252.074
-                   
+
                   DAI
                 </div>
                 <div
@@ -1008,7 +1008,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   data-testid="OUTPUT-amount"
                 >
                   0.10684
-                   
+
                   WETH
                 </div>
                 <div
@@ -1058,9 +1058,9 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 <div
                   class="c6 css-142zc9n"
                 >
-                  1 WETH = 2,359.34 DAI 
+                  1 WETH = 2,359.34 DAI
                 </div>
-                 
+
               </button>
             </div>
           </div>
@@ -1124,7 +1124,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
           >
             <a
               class="c28"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              href="https://support.ubeswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1546,7 +1546,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                   data-testid="INPUT-amount"
                 >
                   252.074
-                   
+
                   DAI
                 </div>
                 <div
@@ -1605,7 +1605,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                   data-testid="OUTPUT-amount"
                 >
                   0.10684
-                   
+
                   WETH
                 </div>
                 <div
@@ -1655,9 +1655,9 @@ exports[`OrderContent should render without error, open order 1`] = `
                 <div
                   class="c6 css-142zc9n"
                 >
-                  1 WETH = 2,359.34 DAI 
+                  1 WETH = 2,359.34 DAI
                 </div>
-                 
+
               </button>
             </div>
           </div>

@@ -4,9 +4,8 @@ import {
   InterfaceSectionName,
   SharedEventName,
   SwapEventName,
-} from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+} from '@ubeswap/analytics-events'
+import { Currency, CurrencyAmount, Token, UNIVERSAL_ROUTER_ADDRESS } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
 import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -372,7 +371,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <DisclaimerText>
           <Trans>
             Limits may not execute exactly when tokens reach the specified price.{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+            <ExternalLink href="https://support.ubeswap.org/hc/en-us/articles/24300813697933">
               <Trans>Learn more</Trans>
             </ExternalLink>
           </Trans>

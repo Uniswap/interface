@@ -71,8 +71,8 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -378,7 +378,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
           >
             <a
               class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              href="https://support.ubeswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -417,7 +417,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       class="c5 css-n8z49y"
                     >
                       252.074
-                       
+
                       DAI
                     </div>
                     <svg
@@ -448,7 +448,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       class="c5 css-n8z49y"
                     >
                       0.10684
-                       
+
                       WETH
                     </div>
                   </div>
@@ -521,7 +521,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       class="c5 css-n8z49y"
                     >
                       252.074
-                       
+
                       DAI
                     </div>
                     <svg
@@ -552,7 +552,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       class="c5 css-n8z49y"
                     >
                       0.10684
-                       
+
                       WETH
                     </div>
                   </div>
@@ -676,8 +676,8 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #8878c3;
+  stroke: #8878c3;
   font-weight: 500;
 }
 
@@ -983,7 +983,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
           >
             <a
               class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              href="https://support.ubeswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -1022,7 +1022,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                       class="c5 css-n8z49y"
                     >
                       252.074
-                       
+
                       DAI
                     </div>
                     <svg
@@ -1053,7 +1053,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                       class="c5 css-n8z49y"
                     >
                       0.10684
-                       
+
                       WETH
                     </div>
                   </div>

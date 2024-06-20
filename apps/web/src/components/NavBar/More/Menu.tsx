@@ -1,18 +1,12 @@
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
-import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
-import { useOpenModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 import { MenuItem, MenuSection, useMenuContent } from './menuContent'
-import { MobileAppLogo } from './MobileAppLogo'
 
 const Container = styled.div`
   width: 295px;
@@ -62,12 +56,6 @@ const Separator = styled.div`
   height: 1px;
   background: ${({ theme }) => theme.surface3};
 `
-const StyledRow = styled(Row)`
-  cursor: pointer;
-  :hover {
-    color: ${({ theme }) => theme.accent1};
-  }
-`
 const StyledSocials = styled(Socials)`
   height: 20px;
 `
@@ -98,7 +86,6 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 export function Menu({ close }: { close: () => void }) {
-  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
   const menuContent = useMenuContent()
 
   return (
@@ -113,24 +100,6 @@ export function Menu({ close }: { close: () => void }) {
           />
         ))}
         <Separator />
-        <StyledRow
-          height="45px"
-          gap="md"
-          onClick={() => {
-            close()
-            openGetTheAppModal()
-          }}
-        >
-          <MobileAppLogo />
-          <Column gap="xs">
-            <Text lineHeight="20px">
-              <Trans>Download Uniswap</Trans>
-            </Text>
-            <ThemedText.LabelSmall lineHeight="18px">
-              <Trans>Available on iOS and Android</Trans>
-            </ThemedText.LabelSmall>
-          </Column>
-        </StyledRow>
         <StyledSocials iconSize="25px" />
       </Column>
     </Container>

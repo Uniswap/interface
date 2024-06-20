@@ -1,10 +1,10 @@
-import { SwapEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { SwapEventName } from '@ubeswap/analytics-events'
+import { ChainId } from '@ubeswap/sdk-core'
 
-import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { UBE, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
-const UNI_MAINNET = UNI[ChainId.MAINNET]
+const UBE_CELO = UBE[ChainId.CELO]
 
 describe('Swap', () => {
   describe('Swap on main page', () => {
@@ -17,15 +17,15 @@ describe('Swap', () => {
     })
 
     it('should default inputs from URL params ', () => {
-      cy.visit(`/swap?inputCurrency=${UNI_MAINNET.address}`)
+      cy.visit(`/swap?inputCurrency=${UBE_CELO.address}`)
       cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'Select token')
 
-      cy.visit(`/swap?outputCurrency=${UNI_MAINNET.address}`)
+      cy.visit(`/swap?outputCurrency=${UBE_CELO.address}`)
       cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'Select token')
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
 
-      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`)
+      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UBE_CELO.address}`)
       cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
     })
@@ -39,7 +39,7 @@ describe('Swap', () => {
     })
 
     it('resets the dependent input when the independent input is cleared', () => {
-      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`)
+      cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UBE_CELO.address}`)
       cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
       cy.get(`#swap-currency-output .token-amount-input`).should('have.value', '')
 

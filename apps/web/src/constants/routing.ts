@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token, WETH9 } from '@ubeswap/sdk-core'
 
 import {
   ARB,
@@ -17,7 +17,7 @@ import {
   DAI_POLYGON,
   ETH_BSC,
   OP,
-  PORTAL_ETH_CELO,
+  UBE,
   USDC_ARBITRUM,
   USDC_ARBITRUM_GOERLI,
   USDC_AVALANCHE,
@@ -33,11 +33,11 @@ import {
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
+  USDT_CELO,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
-  WBTC_CELO,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
@@ -120,8 +120,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_POLYGON_MUMBAI,
   ],
 
-  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, USDC_CELO, WBTC_CELO],
-  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
+  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), UBE[ChainId.CELO], CUSD_CELO, USDT_CELO, USDC_CELO, CEUR_CELO],
+  [ChainId.CELO_ALFAJORES]: [
+    nativeOnChain(ChainId.CELO_ALFAJORES),
+    UBE[ChainId.CELO_ALFAJORES],
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
+  ],
 
   [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
 

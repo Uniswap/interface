@@ -72,17 +72,17 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Box gap="24px">
       <SocialIcon $hoverColor="#00C32B">
-        <StyledExternalLink href="https://github.com/Uniswap">
+        <StyledExternalLink href="https://github.com/Ubeswap">
           <Github size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <StyledExternalLink href="https://twitter.com/Uniswap">
+        <StyledExternalLink href="https://twitter.com/Ubeswap">
           <Twitter size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
-        <StyledExternalLink href="https://discord.com/invite/uniswap">
+        <StyledExternalLink href="https://discord.com/invite/zZkUXCMPGP">
           <Discord size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
@@ -101,7 +101,7 @@ export function Footer() {
           <Box direction="column" height="100%" gap="64px">
             <Box direction="column" gap="10px">
               <H3>© 2024</H3>
-              <H3>Uniswap Labs</H3>
+              <H3>Ubeswap Labs</H3>
             </Box>
             <HideWhenSmall>
               <Socials />
@@ -161,10 +161,10 @@ export function Footer() {
                 <Body1>
                   <Trans>Need help?</Trans>
                 </Body1>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us/requests/new">
+                <StyledExternalLink href="https://support.ubeswap.org/hc/en-us/requests/new">
                   <Trans>Contact us</Trans>
                 </StyledExternalLink>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us">
+                <StyledExternalLink href="https://support.ubeswap.org/hc/en-us">
                   <Trans>Help Center</Trans>
                 </StyledExternalLink>
               </Box>

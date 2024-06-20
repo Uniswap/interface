@@ -11,7 +11,7 @@ function formatTitleName(name: string | undefined, collectionName: string | unde
   if (tokenId) {
     return 'Asset #' + tokenId
   }
-  return 'View NFT on Uniswap'
+  return 'View NFT on Ubeswap'
 }
 
 export default async function getAsset(collectionAddress: string, tokenId: string, url: string) {

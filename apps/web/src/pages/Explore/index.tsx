@@ -1,10 +1,10 @@
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@ubeswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
-import SearchBar from 'components/Tokens/TokenTable/SearchBar'
+// import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { Trans } from 'i18n'
@@ -180,7 +180,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           <FiltersContainer>
             <NetworkFilter />
             {currentKey === ExploreTab.Tokens && <TimeSelector />}
-            {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
+            {/* currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} /> */}
           </FiltersContainer>
         </NavWrapper>
         <Page />

@@ -84,7 +84,7 @@ exports[`PoolTable renders data filled state 1`] = `
 }
 
 .c30 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -163,13 +163,13 @@ exports[`PoolTable renders data filled state 1`] = `
 }
 
 .c29 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -755,7 +755,7 @@ exports[`PoolTable renders data filled state 1`] = `
                 <svg
                   class="c30 c31"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -858,7 +858,7 @@ exports[`PoolTable renders error state 1`] = `
 }
 
 .c26 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -967,13 +967,13 @@ exports[`PoolTable renders error state 1`] = `
 }
 
 .c25 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -2043,7 +2043,7 @@ exports[`PoolTable renders error state 1`] = `
                 <svg
                   class="c26 c27"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
@@ -2138,7 +2138,7 @@ exports[`PoolTable renders loading state 1`] = `
 }
 
 .c24 path {
-  stroke: #FC72FF;
+  stroke: #8878c3;
   background: #7D7D7D;
   fill: none;
 }
@@ -2217,13 +2217,13 @@ exports[`PoolTable renders loading state 1`] = `
 }
 
 .c23 {
-  background: #FFEFFF;
+  background: #E3DFF3;
   border-radius: 8px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   padding: 8px;
-  color: #FC72FF;
+  color: #8878c3;
   font-size: 16px;
   font-weight: 535;
   gap: 8px;
@@ -3244,7 +3244,7 @@ exports[`PoolTable renders loading state 1`] = `
                 <svg
                   class="c24 c25"
                   fill="none"
-                  stroke="#FC72FF"
+                  stroke="#8878c3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >

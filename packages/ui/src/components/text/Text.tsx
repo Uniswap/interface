@@ -1,10 +1,10 @@
 import { PropsWithChildren } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
-import { withAnimated } from 'ui/src/components/factories/animated'
+// import { withAnimated } from 'ui/src/components/factories/animated'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
-import { Skeleton } from 'ui/src/loading/Skeleton'
+import { Shine } from 'ui/src/loading/Shine'
 import { fonts } from 'ui/src/theme/fonts'
 
 export const DEFAULT_FONT_SCALE = 1
@@ -163,7 +163,7 @@ export const TextLoaderWrapper = ({
 }: { loadingShimmer?: boolean } & PropsWithChildren<unknown>): JSX.Element => {
   const inner = <TextPlaceholder>{children}</TextPlaceholder>
   if (loadingShimmer) {
-    return <Skeleton>{inner}</Skeleton>
+    return <Shine>{inner}</Shine>
   }
 
   return inner
@@ -198,4 +198,4 @@ export const Text = ({
 }
 
 // TODO(MOB-1529): make Text able to take animated styles
-export const AnimatedText = withAnimated(TextFrame)
+// export const AnimatedText = withAnimated(TextFrame)

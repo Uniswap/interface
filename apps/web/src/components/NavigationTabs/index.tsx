@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import SettingsTab from 'components/Settings'
 import { Trans } from 'i18n'

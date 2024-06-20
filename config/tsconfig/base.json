@@ -49,6 +49,15 @@
       ],
       "wallet/*": [
         "packages/wallet/*"
+      ],
+      "analytics/*": [
+        "packages/analytics/*"
+      ],
+      "analytics-events/*": [
+        "packages/analytics-events/*"
+      ],
+      "sdk-core/*": [
+        "packages/sdk-core/*"
       ]
     }
   }

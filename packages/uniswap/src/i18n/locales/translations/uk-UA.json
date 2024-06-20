@@ -418,7 +418,7 @@
           "marketCap": "Ринкова капіталізація",
           "priceDecrease": "Зниження ціни (24H)",
           "priceIncrease": "Підвищення ціни (24H)",
-          "totalValueLocked": "Uniswap TVL",
+          "totalValueLocked": "Ubeswap TVL",
           "volume": "Обсяг Uniswap (24 години)"
         }
       },

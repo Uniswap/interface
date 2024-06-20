@@ -1,4 +1,4 @@
-import { Price, WETH9 } from '@uniswap/sdk-core'
+import { Price, WETH9 } from '@ubeswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import { fireEvent, render, screen } from 'test-utils/render'
 

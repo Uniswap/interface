@@ -1,5 +1,5 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
-import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
+import { InterfaceModalName, NFTEventName } from '@ubeswap/analytics-events'
 import { Trace, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
@@ -118,7 +118,7 @@ const TxCompleteModal = () => {
                       <Trans>Complete!</Trans>
                     </h1>
                     <p className={styles.subHeading}>
-                      <Trans>Uniswap has granted your wish!</Trans>
+                      <Trans>Ubeswap has granted your wish!</Trans>
                     </p>
                   </Box>
                   <UploadLink onClick={shareTweet} target="_blank">
@@ -296,7 +296,7 @@ const TxCompleteModal = () => {
                         } no longer available. Uniswap instantly refunded you for this incomplete transaction. `}
                       {formatNumberOrString({ input: txFeeFiat, type: NumberType.FiatNFTToken })} was used for gas in
                       attempt to complete this transaction. For support, please visit our{' '}
-                      <a href="https://discord.gg/FCfyBSbCU5">Discord</a>
+                      <a href="https://discord.gg/zZkUXCMPGP">Discord</a>
                     </p>
                     <Box className={styles.allUnavailableAssets}>
                       {nftsNotPurchased.length >= 3 && (

@@ -1,4 +1,4 @@
-import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { Fraction, TradeType } from '@ubeswap/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
@@ -14,6 +14,7 @@ import {
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
+  CustomTransactionInfo,
   DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -78,7 +79,7 @@ function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransa
       Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol="UNI" decimals={18} sigFigs={4} /> for {{ name }}
     </Trans>
   ) : (
-    <Trans>Claim UNI reward for {{ name }}</Trans>
+    <Trans>Claim UBE reward for {{ name }}</Trans>
   )
 }
 
@@ -268,7 +269,7 @@ function AddLiquidityV2PoolSummary({
     <Trans>
       Add <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />{' '}
       and <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />{' '}
-      to Uniswap V2
+      to Ubeswap V2
     </Trans>
   )
 }
@@ -319,6 +320,10 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
       </Trans>
     )
   }
+}
+
+function CustomTransactionSummary({ info }: { info: CustomTransactionInfo }) {
+  return <Trans>{info.summary}</Trans>
 }
 
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
@@ -376,5 +381,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SEND:
       return <SendSummary info={info} />
+
+    case TransactionType.CUSTOM:
+      return <CustomTransactionSummary info={info} />
   }
 }

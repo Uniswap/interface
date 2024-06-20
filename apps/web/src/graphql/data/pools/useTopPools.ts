@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@ubeswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { BIPS_BASE } from 'constants/misc'
 import { OrderDirection, chainIdToBackendName } from 'graphql/data/util'
@@ -118,7 +118,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100 },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.CELO,
   })
   const loading = loadingV3 || loadingV2
 
