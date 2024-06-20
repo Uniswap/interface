@@ -1,14 +1,13 @@
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
-import { MouseoverTooltip } from '../Tooltip'
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;

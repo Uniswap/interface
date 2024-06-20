@@ -2,8 +2,7 @@ import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI, nativeOnChain } from 'constants/tokens'
 import { act, renderHook } from 'test-utils/render'
-
-import { useCreateTransferTransaction } from './transfer'
+import { useCreateTransferTransaction } from 'utils/transfer'
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] }
 

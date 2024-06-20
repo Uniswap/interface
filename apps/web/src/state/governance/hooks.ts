@@ -17,28 +17,27 @@ import {
 } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
-import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
-import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
-import { t } from 'i18n'
-import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
-import { useCallback, useMemo } from 'react'
-import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
   ONE_BIP_START_BLOCK,
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
-} from '../../constants/proposals'
-import { UNI } from '../../constants/tokens'
-import { useLogs } from '../logs/hooks'
-import { useTransactionAdder } from '../transactions/hooks'
-import { TransactionType } from '../transactions/types'
-import { VoteOption } from './types'
+} from 'constants/proposals'
+import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { UNI } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import { useContract } from 'hooks/useContract'
+import { t } from 'i18n'
+import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useCallback, useMemo } from 'react'
+import { VoteOption } from 'state/governance/types'
+import { useLogs } from 'state/logs/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceV0Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi, false)

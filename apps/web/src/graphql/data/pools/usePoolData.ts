@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { V2_BIPS } from 'graphql/data/pools/useTopPools'
 import ms from 'ms'
@@ -9,8 +8,6 @@ import {
   useV2PairQuery,
   useV3PoolQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export interface PoolData {
   // basic pool info
@@ -76,7 +73,6 @@ export function usePoolData(
   error: boolean
   data?: PoolData
 } {
-  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -91,13 +87,13 @@ export function usePoolData(
     data: dataV2,
   } = useV2PairQuery({
     variables: { chain: chainIdToBackendChain({ chainId, withFallback: true }), address: poolAddress },
-    skip: !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
+    skip: !chainId,
     errorPolicy: 'all',
   })
 
   return useMemo(() => {
-    const anyError = Boolean(errorV3 || (errorV2 && (chainId === ChainId.MAINNET || v2ExploreEnabled)))
-    const anyLoading = Boolean(loadingV3 || (loadingV2 && (chainId === ChainId.MAINNET || v2ExploreEnabled)))
+    const anyError = Boolean(errorV3 || errorV2)
+    const anyLoading = Boolean(loadingV3 || loadingV2)
 
     const pool = dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier = dataV3?.v3Pool?.feeTier ?? V2_BIPS
@@ -124,5 +120,5 @@ export function usePoolData(
       error: anyError,
       loading: anyLoading,
     }
-  }, [chainId, dataV2?.v2Pair, dataV3?.v3Pool, errorV2, errorV3, loadingV2, loadingV3, v2ExploreEnabled])
+  }, [dataV2?.v2Pair, dataV3?.v3Pool, errorV2, errorV3, loadingV2, loadingV3])
 }

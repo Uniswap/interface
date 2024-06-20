@@ -1,7 +1,7 @@
 import { BottomSheetModal as BaseModal } from '@gorhom/bottom-sheet'
 import { ComponentProps, PropsWithChildren } from 'react'
 import { SharedValue } from 'react-native-reanimated'
-import { DynamicColor } from 'ui/src'
+import { DynamicColor, SpaceTokens } from 'ui/src'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
 export type BottomSheetModalProps = PropsWithChildren<{
@@ -33,4 +33,5 @@ export type BottomSheetModalProps = PropsWithChildren<{
   alignment?: 'center' | 'top' | 'bottom'
   hideScrim?: boolean
   maxWidth?: number
+  padding?: SpaceTokens
 }>

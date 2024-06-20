@@ -9,7 +9,7 @@ import {
   SwapProtectionSetting,
   walletReducer,
   WalletState,
-} from './slice'
+} from 'wallet/src/features/wallet/slice'
 
 const TEST_IMPORT_TIME_MS = 12345678912345
 const ACCOUNT_1: Account = {

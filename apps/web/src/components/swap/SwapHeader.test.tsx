@@ -1,10 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
+import SwapHeader from 'components/swap/SwapHeader'
+import { Field } from 'components/swap/constants'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { act, render, screen } from 'test-utils/render'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import SwapHeader from './SwapHeader'
-import { Field } from './constants'
 
 interface WrapperProps {
   setCurrentTab?: Dispatch<SetStateAction<SwapTab>>

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
@@ -14,36 +14,37 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Break } from 'components/earn/styled'
 import { useIsSupportedChainId } from 'constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useEthersSigner } from 'hooks/useEthersSigner'
+import { PoolCache } from 'hooks/usePools'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
+import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from 'pages/RemoveLiquidity/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { TransactionType } from '../../state/transactions/types'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { currencyId } from '../../utils/currencyId'
-import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -167,6 +168,19 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             source: LiquiditySource.V3,
             label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             ...trace,
+            type: LiquiditySource.V3,
+            transaction_hash: response.hash,
+            fee_tier: position?.fee,
+            pool_address:
+              account.chainId && position
+                ? PoolCache.getPoolAddress(
+                    V3_CORE_FACTORY_ADDRESSES[account.chainId],
+                    positionSDK.amount0.currency,
+                    positionSDK.amount1.currency,
+                    position.fee,
+                    account.chainId
+                  )
+                : undefined,
           })
           setTxnHash(response.hash)
           setAttemptingTxn(false)
@@ -204,6 +218,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     feeValue0,
     feeValue1,
     trace,
+    position,
     addTransaction,
   ])
 

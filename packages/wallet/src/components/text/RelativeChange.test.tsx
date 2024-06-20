@@ -3,7 +3,9 @@ import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { Locale } from 'wallet/src/features/language/constants'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { mockLocalizationContext } from 'wallet/src/test/mocks'
-import { RelativeChange } from './RelativeChange'
+
+// Needs to be imported after the mock localization context
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 
 const mockLocale = Locale.EnglishUnitedStates
 

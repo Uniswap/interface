@@ -1,5 +1,5 @@
 import { forwardRef, useCallback, useMemo, useRef } from 'react'
-import { GestureResponderEvent } from 'react-native'
+import type { GestureResponderEvent } from 'react-native'
 import { TamaguiElement, YStack } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { TouchableAreaProps } from 'ui/src/components/touchable/types'

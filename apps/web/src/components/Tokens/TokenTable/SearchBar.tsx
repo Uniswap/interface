@@ -1,14 +1,14 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
+import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import useDebounce from 'hooks/useDebounce'
 import { t } from 'i18n'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { exploreSearchStringAtom } from '../state'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div`

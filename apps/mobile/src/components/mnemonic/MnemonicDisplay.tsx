@@ -30,8 +30,9 @@ export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
         copiedText={t('common.button.copied')}
         copyText={t('common.button.copy')}
         style={[styles.mnemonicDisplay, { maxHeight: height }]}
-        onHeightMeasured={(event) => {
-          setHeight(event.nativeEvent.height)
+        onHeightMeasured={(e) => {
+          // Round to limit state updates (was called with nearly the same value multiple times)
+          setHeight(Math.round(e.nativeEvent.height))
         }}
         {...props}
       />

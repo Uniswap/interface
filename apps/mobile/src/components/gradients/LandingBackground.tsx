@@ -25,9 +25,10 @@ import {
   SwapElement,
   UniconElement,
 } from 'src/screens/Onboarding/OnboardingElements'
-import { AnimatedFlex, Flex, Image, useIsDarkMode } from 'ui/src'
+import { Flex, Image, useIsDarkMode } from 'ui/src'
 import { Jiggly } from 'ui/src/animations'
 import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT, UNISWAP_APP_ICON } from 'ui/src/assets'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { imageSizes } from 'ui/src/theme'
 import { isAndroid } from 'utilities/src/platform'

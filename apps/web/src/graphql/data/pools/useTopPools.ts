@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
@@ -12,8 +12,6 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -112,7 +110,6 @@ function useFilteredPools(pools: TablePool[]) {
 
 export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedInterfaceChainId) {
   const isWindowVisible = useIsWindowVisible()
-  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -127,7 +124,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedIn
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible || !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
+    skip: !isWindowVisible || !chainId,
   })
   const loading = loadingV3 || loadingV2
 

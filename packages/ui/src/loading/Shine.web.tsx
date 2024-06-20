@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LayoutRectangle } from 'react-native'
+import type { LayoutRectangle } from 'react-native'
 import { Flex } from 'ui/src/components/layout'
 import { ShineProps } from 'ui/src/loading/ShineProps'
 

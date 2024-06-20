@@ -2,10 +2,7 @@ import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { ChainId, RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { isStale } from 'utilities/src/time/time'
-import { CHAIN_INFO, L1ChainInfo, L2ChainInfo } from 'wallet/src/constants/chains'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
-import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 enum ProviderStatus {
   Disconnected,
@@ -24,21 +21,6 @@ type ProviderInfo = Partial<{
 }>
 
 type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
-
-const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
-  const chainDetails = CHAIN_INFO[chainId]
-  if (!chainDetails) {
-    logger.error(new Error('Cannot create provider for invalid chain details'), {
-      tags: {
-        file: 'ProviderManager',
-        function: 'getChainDetails',
-      },
-      extra: { chainDetails },
-    })
-    throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
-  }
-  return chainDetails
-}
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
@@ -106,26 +88,5 @@ export class ProviderManager {
 
     delete this._providers[chainId]
     this.onUpdate?.()
-  }
-
-  private isProviderSynced(
-    chainId: ChainId,
-    block?: ethersProviders.Block,
-    network?: ethersProviders.Network
-  ): boolean {
-    const chainDetails = getChainDetails(chainId)
-    const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
-    if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
-      return false
-    }
-    if (isStale(block.timestamp * 1000, staleTime)) {
-      logger.debug(
-        'ProviderManager',
-        'isProviderSynced',
-        `Provider ${getInfuraChainName(chainId)} is stale`
-      )
-      return false
-    }
-    return true
   }
 }

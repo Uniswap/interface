@@ -8,14 +8,13 @@ import {
 } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { PollingInterval } from 'graphql/data/util'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-
-import useIsWindowVisible from './useIsWindowVisible'
-import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.

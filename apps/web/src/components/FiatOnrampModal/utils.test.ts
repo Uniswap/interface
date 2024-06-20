@@ -1,4 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
+import { CHAIN_INFO } from 'constants/chains'
 import {
   MATIC_MAINNET,
   NATIVE_CHAIN_ID,
@@ -10,10 +12,7 @@ import {
   WBTC,
   WETH_POLYGON,
 } from 'constants/tokens'
-
-import { CHAIN_INFO } from 'constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getDefaultCurrencyCode, parsePathParts } from './utils'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {

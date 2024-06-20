@@ -1,6 +1,5 @@
+import Bag from 'nft/components/bag/Bag'
 import { render } from 'test-utils/render'
-
-import Bag from './Bag'
 
 describe('Bag.tsx', () => {
   it('matches base snapshot', () => {

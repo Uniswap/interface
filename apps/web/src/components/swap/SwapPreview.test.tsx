@@ -1,5 +1,6 @@
 import 'test-utils/tokens/mocks'
 
+import { SwapPreview } from 'components/swap/SwapPreview'
 import {
   ETH_MAINNET,
   PREVIEW_EXACT_IN_TRADE,
@@ -11,8 +12,6 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
 } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
-
-import { SwapPreview } from './SwapPreview'
 
 describe('SwapPreview.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {

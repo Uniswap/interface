@@ -1,16 +1,15 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { Pool, Position } from '@uniswap/v3-sdk'
+import { getTokensAsync } from 'components/AccountDrawer/MiniPortfolio/Pools/getTokensAsync'
+import { useInterfaceMulticallContracts } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback } from 'react'
 import { SerializedToken } from 'state/user/types'
+import { deserializeToken, serializeToken } from 'state/user/utils'
 import { PositionDetails } from 'types/position'
 import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
-
-import { deserializeToken, serializeToken } from 'state/user/utils'
-import { getTokensAsync } from './getTokensAsync'
-import { useInterfaceMulticallContracts } from './hooks'
 
 export type PositionInfo = {
   owner: string

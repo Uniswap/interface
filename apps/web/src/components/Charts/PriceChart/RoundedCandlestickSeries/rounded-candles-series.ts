@@ -1,6 +1,7 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/rounded-candle-series.ts
  */
+import { RoundedCandleSeriesRenderer } from 'components/Charts/PriceChart/RoundedCandlestickSeries/renderer'
 import {
   CandlestickData,
   CandlestickSeriesOptions,
@@ -13,7 +14,6 @@ import {
   WhitespaceData,
   customSeriesDefaultOptions,
 } from 'lightweight-charts'
-import { RoundedCandleSeriesRenderer } from './renderer'
 
 export interface RoundedCandleSeriesOptions
   extends CustomSeriesOptions,

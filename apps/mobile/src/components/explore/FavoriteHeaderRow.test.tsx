@@ -1,6 +1,6 @@
+import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import { fireEvent, render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
-import { FavoriteHeaderRow } from './FavoriteHeaderRow'
 
 const defaultProps = {
   title: 'Title',

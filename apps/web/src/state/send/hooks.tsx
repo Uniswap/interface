@@ -12,6 +12,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
@@ -41,6 +42,7 @@ export type SendInfo = {
 export function useDerivedSendInfo(state: SendState): SendInfo {
   const account = useAccount()
   const { provider } = useWeb3React()
+  const { chainId } = useSwapAndLimitContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
   const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)
@@ -78,7 +80,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     unitag?.username,
   ])
 
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, account.chainId)
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
   const [inputCurrencyBalance, nativeCurencyBalance] = useCurrencyBalances(
     account.address,
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency])
@@ -93,20 +95,20 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     return {
       provider,
       account: account.address,
-      chainId: account.chainId,
+      chainId,
       currencyAmount: parsedTokenAmount,
       toAddress: recipientData?.address,
     }
-  }, [account.address, account.chainId, parsedTokenAmount, provider, recipientData?.address])
+  }, [account.address, chainId, parsedTokenAmount, provider, recipientData?.address])
   const transferTransaction = useCreateTransferTransaction(transferInfo)
   const gasFee = useTransactionGasFee(transferTransaction, GasSpeed.Normal, !transferTransaction)
   const gasFeeCurrencyAmount = useMemo(() => {
-    if (!account.chainId || !gasFee?.value) {
+    if (!chainId || !gasFee?.value) {
       return undefined
     }
 
-    return CurrencyAmount.fromRawAmount(nativeOnChain(account.chainId), gasFee.value)
-  }, [account.chainId, gasFee?.value])
+    return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasFee.value)
+  }, [chainId, gasFee?.value])
 
   const inputError = useMemo(() => {
     const insufficientBalance = parsedTokenAmount && inputCurrencyBalance?.lessThan(parsedTokenAmount)

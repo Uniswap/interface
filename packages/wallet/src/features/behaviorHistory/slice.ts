@@ -6,6 +6,11 @@ export enum ExtensionOnboardingState {
   Completed, // User has onboarded or dismissed call to action
 }
 
+export enum ExtensionBetaFeedbackState {
+  ReadyToShow, // Ready to show feedback modal
+  Shown, // Feedback modal shown
+}
+
 /**
  * Used to store persisted info about a users interactions with UI.
  * We use this to show conditional UI, usually only for the first time a user views a new feature.
@@ -15,8 +20,8 @@ export interface BehaviorHistoryState {
   hasSubmittedHoldToSwap: boolean
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
-  hasViewedUniconV2IntroModal: boolean
   extensionOnboardingState: ExtensionOnboardingState
+  extensionBetaFeedbackState: ExtensionBetaFeedbackState | undefined
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -24,8 +29,8 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasSubmittedHoldToSwap: false,
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
-  hasViewedUniconV2IntroModal: false,
   extensionOnboardingState: ExtensionOnboardingState.Undefined,
+  extensionBetaFeedbackState: undefined,
 }
 
 const slice = createSlice({
@@ -44,11 +49,11 @@ const slice = createSlice({
     setHasCompletedUnitagsIntroModal: (state, action: PayloadAction<boolean>) => {
       state.hasCompletedUnitagsIntroModal = action.payload
     },
-    setHasViewedUniconV2IntroModal: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedUniconV2IntroModal = action.payload
-    },
     setExtensionOnboardingState: (state, action: PayloadAction<ExtensionOnboardingState>) => {
       state.extensionOnboardingState = action.payload
+    },
+    setExtensionBetaFeedbackState: (state, action: PayloadAction<ExtensionBetaFeedbackState>) => {
+      state.extensionBetaFeedbackState = action.payload
     },
   },
 })
@@ -58,8 +63,8 @@ export const {
   setHasSubmittedHoldToSwap,
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
-  setHasViewedUniconV2IntroModal,
   setExtensionOnboardingState,
+  setExtensionBetaFeedbackState,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

@@ -1,7 +1,8 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { Flex, flexStyles, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetDetachedModal } from 'wallet/src/components/modals/BottomSheetModal'
 

@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text } from 'ui/src'
 import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
+import { ImageUri, ImageUriProps } from 'wallet/src/features/images/ImageUri'
 import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
-import { ImageUri, ImageUriProps } from './ImageUri'
 
 type PreviewProps =
   // Don't show preview if showSvgPreview is not provided or is false

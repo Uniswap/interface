@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useAccount } from 'hooks/useAccount'
+import { useTotalSupply } from 'hooks/useTotalSupply'
+import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { Field, typeInput } from 'state/mint/actions'
+import { AppState } from 'state/reducer'
 import { logger } from 'utilities/src/logger/logger'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useCurrencyBalances } from '../connection/hooks'
-import { AppState } from '../reducer'
-import { Field, typeInput } from './actions'
 
 const ZERO = JSBI.BigInt(0)
 

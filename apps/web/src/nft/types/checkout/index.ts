@@ -1,6 +1,5 @@
 import { ContractReceipt } from '@ethersproject/contracts'
-
-import { GenieAsset, Markets, PriceInfo, TokenType } from '../common'
+import { GenieAsset, Markets, PriceInfo, TokenType } from 'nft/types/common'
 
 export interface UpdatedGenieAsset extends GenieAsset {
   updatedPriceInfo?: PriceInfo

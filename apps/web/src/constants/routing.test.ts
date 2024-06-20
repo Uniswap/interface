@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-
-import { COMMON_BASES } from './routing'
+import { COMMON_BASES } from 'constants/routing'
 
 describe('Routing', () => {
   describe('COMMON_BASES', () => {

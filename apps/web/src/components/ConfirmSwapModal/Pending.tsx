@@ -1,8 +1,16 @@
 import { ChainId } from '@uniswap/sdk-core'
+import {
+  AnimatedEntranceConfirmationIcon,
+  AnimatedEntranceSubmittedIcon,
+  LoadingIndicatorOverlay,
+  LogoContainer,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column, { ColumnCenter } from 'components/Column'
+import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
+import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
 import Row from 'components/Row'
-import { SupportArticleURL } from 'constants/supportArticles'
+import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { Trans, t } from 'i18n'
@@ -16,18 +24,9 @@ import { ExternalLink } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useAccount } from 'hooks/useAccount'
-import {
-  AnimatedEntranceConfirmationIcon,
-  AnimatedEntranceSubmittedIcon,
-  LoadingIndicatorOverlay,
-  LogoContainer,
-} from '../AccountDrawer/MiniPortfolio/Activity/Logos'
-import { TradeSummary } from './TradeSummary'
-import { slideInAnimation, slideOutAnimation } from './animations'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -189,8 +188,8 @@ export function Pending({
               <ExternalLink
                 href={
                   isLimitTrade(initialTrade)
-                    ? SupportArticleURL.LEARN_ABOUT_LIMITS
-                    : SupportArticleURL.WHAT_IS_UNISWAP_X
+                    ? uniswapUrls.helpArticleUrls.limitsInfo
+                    : uniswapUrls.helpArticleUrls.uniswapXInfo
                 }
               >
                 {isLimitTrade(initialTrade) ? (

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import {
   selectAllowAnalytics,
@@ -15,7 +15,7 @@ import {
 } from 'src/features/telemetry/slice'
 import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { logger } from 'utilities/src/logger/logger'
 import { areSameDays } from 'utilities/src/time/date'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -52,16 +52,16 @@ export function useLastBalancesReporter(): () => void {
     return valuesUnfiltered as number[]
   }, [data?.portfolios])
 
-  const triggerAppFundedEvent = useCallback(async (): Promise<void> => {
+  useEffect(() => {
     const sumOfFunds = signerAccountValues.reduce((a, b) => a + b, 0)
     if (!walletIsFunded && sumOfFunds) {
       // Only trigger the first time a funded wallet is detected
-      await sendAppsFlyerEvent(MobileAppsFlyerEvents.WalletFunded, { sumOfFunds })
       dispatch(recordWalletFunded())
+      sendAppsFlyerEvent(MobileAppsFlyerEvents.WalletFunded, { sumOfFunds }).catch((error) =>
+        logger.debug('hooks', 'useLastBalancesReporter', error)
+      )
     }
   }, [dispatch, signerAccountValues, walletIsFunded])
-
-  useAsyncData(triggerAppFundedEvent)
 
   const reporter = (): void => {
     if (

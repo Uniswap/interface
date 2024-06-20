@@ -9,6 +9,8 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
+export const MAX_FIAT_INPUT_DECIMALS = 2
+
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
   chainId?: ChainId

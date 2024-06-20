@@ -58,12 +58,6 @@ module.exports = {
     'no-ex-assign': 'error',
     curly: 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
-    'no-relative-import-paths/no-relative-import-paths': [
-      2,
-      {
-        allowSameFolder: true,
-      },
-    ],
     'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
@@ -304,7 +298,7 @@ module.exports = {
       },
     },
     {
-      // enable the rule specifically for TypeScript files
+      // enable these rules specifically for TypeScript files
       files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: ['useEffect'] }],

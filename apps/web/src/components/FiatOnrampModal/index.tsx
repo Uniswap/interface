@@ -1,3 +1,7 @@
+import Circle from 'assets/images/blue-loader.svg'
+import { MOONPAY_SUPPORTED_CURRENCY_CODES } from 'components/FiatOnrampModal/constants'
+import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
+import Modal from 'components/Modal'
 import { getChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -10,10 +14,6 @@ import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { logger } from 'utilities/src/logger/logger'
-import Circle from '../../assets/images/blue-loader.svg'
-import Modal from '../Modal'
-import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
-import { getDefaultCurrencyCode, parsePathParts } from './utils'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`

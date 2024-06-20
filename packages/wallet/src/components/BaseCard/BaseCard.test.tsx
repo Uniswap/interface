@@ -1,7 +1,7 @@
 import { View } from 'react-native'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
 import { fireEvent, render } from 'wallet/src/test/test-utils'
-import { BaseCard } from './BaseCard'
 
 describe(BaseCard.Shadow, () => {
   it('renders without error', () => {

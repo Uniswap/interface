@@ -1,12 +1,11 @@
 import { Currency, Token } from '@uniswap/sdk-core'
+import Modal from 'components/Modal'
+import { CurrencySearch, CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import TokenSafety from 'components/TokenSafety'
+import { useWindowSize } from 'hooks/screenSize'
+import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
-
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import { useWindowSize } from '../../hooks/screenSize'
-import useLast from '../../hooks/useLast'
-import Modal from '../Modal'
-import { CurrencySearch, CurrencySearchFilters } from './CurrencySearch'
 
 interface CurrencySearchModalProps {
   isOpen: boolean

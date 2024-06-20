@@ -8,15 +8,8 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import {
-  Button,
-  Flex,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

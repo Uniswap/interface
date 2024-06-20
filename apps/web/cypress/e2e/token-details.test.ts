@@ -142,7 +142,7 @@ describe('Token details', () => {
       cy.visit('/explore/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
-      cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')
+      cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Arbitrum logo`)
       cy.get(getTestSelector(`token-table-row-${ARB.address.toLowerCase()}`)).click()
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
       cy.contains('Connect to Arbitrum').should('exist')

@@ -191,7 +191,10 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ExtensionEthMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.DeprecatedMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
-  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & { source: 'chip' | 'textInput' }
+  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & {
+    source: 'chip' | 'textInput'
+    amountUSD?: number
+  }
   [FiatOnRampEventName.FiatOnRampTokenSelected]: ITraceContext & { token: string }
   [FiatOnRampEventName.FiatOnRampTransactionUpdated]: {
     status: string
@@ -312,6 +315,8 @@ export type UniverseEventProperties = {
   [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: {
     source: LiquiditySource
     label: string
+    type: string
+    fee_tier?: number
   }
   [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
@@ -322,17 +327,24 @@ export type UniverseEventProperties = {
   } & ITraceContext
   [LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]: {
     label: string
-    type: number
+    type: string
     createPool?: boolean
     baseCurrencyId: string
     quoteCurrencyId: string
     feeAmount?: number
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
   } & ITraceContext
   [LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]: {
     source: LiquiditySource
     label: string
+    type: string
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
   } & ITraceContext
   [MobileEventName.ExtensionPromoBannerActionTaken]: {
     action: 'join' | 'dismiss'

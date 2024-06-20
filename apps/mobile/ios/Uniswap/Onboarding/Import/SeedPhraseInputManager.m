@@ -11,11 +11,11 @@
 
 RCT_EXPORT_VIEW_PROPERTY(targetMnemonicId, NSString?)
 RCT_EXPORT_VIEW_PROPERTY(strings, NSDictionary)
-RCT_EXPORT_VIEW_PROPERTY(onHelpTextPress, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onInputValidated, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onMnemonicStored, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPasteStart, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPasteEnd, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onHeightMeasured, RCTDirectEventBlock);
 RCT_EXTERN_METHOD(handleSubmit: (nonnull NSNumber *)node)
 
 @end

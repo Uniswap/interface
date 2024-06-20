@@ -1,22 +1,21 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
+import { Box } from 'pages/Landing/components/Generics'
+import { Computer } from 'pages/Landing/components/Icons'
+import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { useCallback } from 'react'
-import { Box } from '../Generics'
-import { Computer } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
 
 const Contents = styled.div`
   display: flex;

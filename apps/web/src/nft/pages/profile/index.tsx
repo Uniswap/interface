@@ -8,6 +8,7 @@ import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/shared'
 import { ProfilePageStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -16,7 +17,6 @@ import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
-import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 
 const ProfilePageWrapper = styled.div`
   height: 100%;

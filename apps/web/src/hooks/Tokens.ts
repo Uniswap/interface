@@ -15,7 +15,9 @@ import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
+import { useCombinedInactiveLists } from 'state/lists/hooks'
 import { TokenFromList } from 'state/lists/tokenFromList'
+import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import {
   Token as GqlToken,
   SafetyLevel,
@@ -26,8 +28,6 @@ import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyId } from 'utils/currencyId'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { useCombinedInactiveLists } from '../state/lists/hooks'
-import { useUserAddedTokens } from '../state/user/userAddedTokens'
 
 type Maybe<T> = T | undefined
 

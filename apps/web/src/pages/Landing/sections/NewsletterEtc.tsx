@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
 import { t, Trans } from 'i18n'
+import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import { Box, H2, H3 } from 'pages/Landing/components/Generics'
+import { BookOpen, ChatBubbles, HelpCircle } from 'pages/Landing/components/Icons'
 import styled, { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
-import { PillButton } from '../components/cards/PillButton'
-import { Box, H2, H3 } from '../components/Generics'
-import { BookOpen, ChatBubbles, HelpCircle } from '../components/Icons'
 
 const SectionLayout = styled.div`
   width: 100%;

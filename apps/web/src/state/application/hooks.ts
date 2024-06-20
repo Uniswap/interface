@@ -1,10 +1,6 @@
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
 import {
   ApplicationModal,
   PopupContent,
@@ -15,7 +11,11 @@ import {
   removeSuppressedPopups,
   setFiatOnrampAvailability,
   setOpenModal,
-} from './reducer'
+} from 'state/application/reducer'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)

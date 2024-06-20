@@ -14,8 +14,7 @@ import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);

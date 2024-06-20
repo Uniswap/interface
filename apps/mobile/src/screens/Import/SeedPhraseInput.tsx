@@ -1,4 +1,4 @@
-import { forwardRef, RefObject, useEffect, useRef } from 'react'
+import { forwardRef, RefObject, useEffect, useRef, useState } from 'react'
 import {
   findNodeHandle,
   NativeSyntheticEvent,
@@ -13,9 +13,11 @@ export type MnemonicStoredEvent = {
 export type InputValidatedEvent = {
   canSubmit: boolean
 }
+type HeightMeasuredEvent = {
+  height: number
+}
 
 export enum StringKey {
-  HelpText = 'helpText',
   InputPlaceholder = 'inputPlaceholder',
   PasteButton = 'pasteButton',
   ErrorInvalidWord = 'errorInvalidWord',
@@ -26,7 +28,6 @@ export enum StringKey {
 interface NativeSeedPhraseInputProps {
   targetMnemonicId?: string
   strings: Record<StringKey, string>
-  onHelpTextPress: () => void
   onInputValidated: (e: NativeSyntheticEvent<InputValidatedEvent>) => void
   onMnemonicStored: (e: NativeSyntheticEvent<MnemonicStoredEvent>) => void
 
@@ -36,7 +37,11 @@ interface NativeSeedPhraseInputProps {
   onPasteEnd: () => void
 }
 
-const NativeSeedPhraseInput = requireNativeComponent<NativeSeedPhraseInputProps>('SeedPhraseInput')
+const NativeSeedPhraseInput = requireNativeComponent<
+  NativeSeedPhraseInputProps & {
+    onHeightMeasured: (e: NativeSyntheticEvent<HeightMeasuredEvent>) => void
+  }
+>('SeedPhraseInput')
 type NativeSeedPhraseInputRef = typeof NativeSeedPhraseInput & { handleSubmit: () => void }
 
 const styles = StyleSheet.create({
@@ -63,8 +68,22 @@ export const useSeedPhraseInputRef = (): RefObject<NativeSeedPhraseInputRef> => 
 }
 
 export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, NativeSeedPhraseInputProps>(
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  (props, ref) => <NativeSeedPhraseInput ref={ref} style={styles.input} {...props} />
+  (props, ref) => {
+    const [height, setHeight] = useState(0)
+
+    return (
+      <NativeSeedPhraseInput
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ref={ref}
+        style={[styles.input, { height }]}
+        {...props}
+        onHeightMeasured={(e) => {
+          // Round to limit state updates (was called with nearly the same value multiple times)
+          setHeight(Math.round(e.nativeEvent.height))
+        }}
+      />
+    )
+  }
 )
 SeedPhraseInput.displayName = 'NativeSeedPhraseInput'

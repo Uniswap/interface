@@ -1,22 +1,21 @@
 import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
+import { useScroll } from 'hooks/useScroll'
 import { Trans } from 'i18n'
+import { Box, H1 } from 'pages/Landing/components/Generics'
+import { TokenCloud } from 'pages/Landing/components/TokenCloud/index'
+import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
 import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
-
-import { useScroll } from 'hooks/useScroll'
 import { BREAKPOINTS } from 'theme'
 import { Text } from 'ui/src'
 import { heightBreakpoints } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { Box, H1 } from '../components/Generics'
-import { TokenCloud } from '../components/TokenCloud/index'
-import { Hover, RiseIn, RiseInText } from '../components/animations'
 
 const Container = styled(Box)`
   min-width: 100%;
-  padding-top: 72px;
+  padding-top: ${({ theme }) => theme.navHeight}px;
 `
 const LandingSwapContainer = styled(Box)`
   width: 480px;

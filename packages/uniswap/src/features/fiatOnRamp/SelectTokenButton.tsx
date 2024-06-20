@@ -1,6 +1,5 @@
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
+import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -14,6 +13,7 @@ interface SelectTokenButtonProps {
   amountReady?: boolean
   disabled?: boolean
   loading?: boolean
+  showCaret?: boolean
 }
 
 export function SelectTokenButton({
@@ -23,6 +23,7 @@ export function SelectTokenButton({
   amountReady,
   disabled,
   loading,
+  showCaret = true,
 }: SelectTokenButtonProps): JSX.Element {
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
@@ -49,7 +50,9 @@ export function SelectTokenButton({
         <Text color={textColor} pl="$spacing1" variant="body1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
-        <RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
+        {showCaret && (
+          <RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
+        )}
       </Flex>
     </TouchableArea>
   )

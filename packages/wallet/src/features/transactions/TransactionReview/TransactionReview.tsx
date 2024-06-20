@@ -2,12 +2,14 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Button, Flex, Text, isWeb, useDeviceDimensions, useMedia } from 'ui/src'
+import { Button, Flex, Text, isWeb, useMedia } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -30,13 +32,10 @@ interface BaseReviewProps {
   transactionDetails?: ReactNode
   nftIn?: GQLNftAsset
   currencyInInfo: Maybe<CurrencyInfo>
-  currencyOutInfo?: CurrencyInfo
   formattedAmountIn?: string
-  formattedAmountOut?: string
   recipient?: string
   onPrev: () => void
   inputCurrencyUSDValue?: CurrencyAmount<Currency> | null
-  outputCurrencyUSDValue?: CurrencyAmount<Currency> | null
   usdTokenEquivalentAmount?: string
 }
 
@@ -44,23 +43,13 @@ interface TransferReviewProps extends BaseReviewProps {
   recipient: string
 }
 
-interface SwapReviewProps extends BaseReviewProps {
-  currencyInInfo: CurrencyInfo
-  currencyOutInfo: CurrencyInfo
-  formattedAmountIn: string
-  formattedAmountOut: string
-}
-
-type TransactionReviewProps = TransferReviewProps | SwapReviewProps
+type TransactionReviewProps = TransferReviewProps
 
 export function TransactionReview({
   actionButtonProps,
   currencyInInfo,
   formattedAmountIn,
-  currencyOutInfo,
-  formattedAmountOut,
   inputCurrencyUSDValue,
-  outputCurrencyUSDValue,
   nftIn,
   recipient,
   isFiatInput = false,
@@ -97,10 +86,6 @@ export function TransactionReview({
     inputCurrencyUSDValue?.toExact(),
     NumberType.FiatTokenQuantity
   )
-  const formattedOutputFiatValue = convertFiatAmountFormatted(
-    outputCurrencyUSDValue?.toExact(),
-    NumberType.FiatTokenQuantity
-  )
 
   return (
     <>
@@ -129,8 +114,6 @@ export function TransactionReview({
                 editable={false}
                 px="$spacing16"
                 py="$none"
-                // on review screen, number formatter will already include $ sign
-                showCurrencySign={false}
                 showSoftInputOnFocus={false}
                 testID="amount-input-in"
                 textAlign="center"
@@ -161,32 +144,7 @@ export function TransactionReview({
           borderColor="$transparent"
           p={arrowPadding}
         />
-        {currencyOutInfo && formattedAmountOut ? (
-          <Flex centered $short={{ pb: '$spacing4' }} gap={innerGap} pb="$none">
-            <Flex centered gap={amountAndEquivalentValueGap}>
-              <AmountInput
-                {...textProps}
-                alignSelf="stretch"
-                backgroundColor="$transparent"
-                borderWidth={0}
-                editable={false}
-                px="$spacing16"
-                py="$none"
-                showCurrencySign={isFiatInput}
-                showSoftInputOnFocus={false}
-                testID={ElementName.AmountInputOut}
-                textAlign="center"
-                value={formattedAmountOut}
-              />
-              {outputCurrencyUSDValue ? (
-                <Text color="$neutral2" variant={equivalentValueTextVariant}>
-                  {formattedOutputFiatValue}
-                </Text>
-              ) : null}
-            </Flex>
-            <CurrencyLogoWithLabel currencyInfo={currencyOutInfo} />
-          </Flex>
-        ) : recipient ? (
+        {recipient ? (
           <Flex centered gap="$spacing12">
             <Text color="$neutral2" variant="body1">
               {/* TODO gary to come back and fix this later. More complicated with nested components */}

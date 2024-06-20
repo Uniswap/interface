@@ -3,7 +3,7 @@ import {
   getPasswordStrength,
   getPasswordStrengthTextAndColor,
   isPasswordStrongEnough,
-} from './password'
+} from 'wallet/src/utils/password'
 
 describe(isPasswordStrongEnough, () => {
   it('returns true for equal strengths', () => {

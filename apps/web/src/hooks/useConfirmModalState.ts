@@ -4,6 +4,10 @@ import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { Field, RESET_APPROVAL_TOKENS } from 'components/swap/constants'
 import { useAccount } from 'hooks/useAccount'
+import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
+import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
+import usePrevious from 'hooks/usePrevious'
+import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
@@ -17,10 +21,6 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
-import { useMaxAmountIn } from './useMaxAmountIn'
-import { Allowance, AllowanceState } from './usePermit2Allowance'
-import usePrevious from './usePrevious'
-import useWrapCallback from './useWrapCallback'
 
 type PendingConfirmModalState = Extract<
   ConfirmModalState,
@@ -94,14 +94,17 @@ export function useConfirmModalState({
   )
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
   const prevWrapConfirmed = usePrevious(wrapConfirmed)
-  const catchUserReject = async (e: any, errorType: PendingModalError) => {
-    setConfirmModalState(ConfirmModalState.REVIEWING)
-    if (didUserReject(e)) {
-      return
-    }
-    logger.warn('useConfirmModalState', 'catchUserReject', 'Failed to wrap', { error: e, trade })
-    setApprovalError(errorType)
-  }
+  const catchUserReject = useCallback(
+    async (e: any, errorType: PendingModalError) => {
+      setConfirmModalState(ConfirmModalState.REVIEWING)
+      if (didUserReject(e)) {
+        return
+      }
+      logger.warn('useConfirmModalState', 'catchUserReject', 'Failed to wrap', { error: e, trade })
+      setApprovalError(errorType)
+    },
+    [trade]
+  )
 
   const performStep = useCallback(
     async (step: ConfirmModalState) => {
@@ -153,15 +156,16 @@ export function useConfirmModalState({
       }
     },
     [
-      allowance,
-      chainId,
-      maximumAmountIn?.currency.address,
-      maximumAmountIn?.currency.symbol,
-      onSwap,
       onWrap,
-      trace,
-      trade,
+      allowance,
       onCurrencySelection,
+      trade,
+      chainId,
+      maximumAmountIn?.currency.symbol,
+      maximumAmountIn?.currency.address,
+      trace,
+      catchUserReject,
+      onSwap,
     ]
   )
 

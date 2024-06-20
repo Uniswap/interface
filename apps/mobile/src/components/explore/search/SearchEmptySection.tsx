@@ -7,12 +7,13 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import { TrendUp } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />

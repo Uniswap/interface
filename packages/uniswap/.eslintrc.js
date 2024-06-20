@@ -13,16 +13,16 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
-      rules: {},
-    },
-    {
       files: ['*.ts', '*.tsx'],
-      rules: {},
-    },
-    {
-      files: ['*.js', '*.jsx'],
-      rules: {},
+      rules: {
+        'no-relative-import-paths/no-relative-import-paths': [
+          'error',
+          {
+            allowSameFolder: false,
+            prefix: 'uniswap',
+          },
+        ],
+      },
     },
   ],
   rules: {},

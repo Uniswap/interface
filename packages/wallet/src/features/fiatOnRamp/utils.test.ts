@@ -2,7 +2,7 @@ import {
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
-} from './utils'
+} from 'wallet/src/features/fiatOnRamp/utils'
 
 describe('isFiatOnRampApiError', () => {
   test('returns true', () => {

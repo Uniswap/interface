@@ -13,7 +13,8 @@ import {
   useSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInput'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Button } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -70,6 +71,21 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
 
   return (
     <SafeKeyboardOnboardingScreen
+      minHeightWhenKeyboardExpanded={false}
+      screenFooter={
+        <Trace logPress element={ElementName.Next}>
+          <Button
+            disabled={!submitEnabled}
+            mx="$spacing16"
+            my="$spacing12"
+            testID="seed-input-submit"
+            onPress={(): void => {
+              seedPhraseInputRef.current?.handleSubmit()
+            }}>
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
+      }
       subtitle={
         isRestoringMnemonic
           ? t('account.recoveryPhrase.subtitle.restoring')
@@ -83,9 +99,6 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         strings={{
-          [StringKey.HelpText]: isRestoringMnemonic
-            ? t('account.recoveryPhrase.helpText.restoring')
-            : t('account.recoveryPhrase.helpText.import'),
           [StringKey.InputPlaceholder]: t('account.recoveryPhrase.input'),
           [StringKey.PasteButton]: t('common.button.paste'),
           // No good way to pass interpolated strings to native code, but an empty string is okay here
@@ -95,7 +108,6 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
         }}
         targetMnemonicId={targetMnemonicId}
-        onHelpTextPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
           setSubmitEnabled(e.nativeEvent.canSubmit)
         }
@@ -110,16 +122,19 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
         }}
       />
 
-      <Trace logPress element={ElementName.Next}>
-        <Button
-          disabled={!submitEnabled}
-          testID="seed-input-submit"
-          onPress={(): void => {
-            seedPhraseInputRef.current?.handleSubmit()
-          }}>
-          {t('common.button.continue')}
-        </Button>
-      </Trace>
+      <Flex row justifyContent="center" pt="$spacing24">
+        <TouchableArea
+          onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
+          <Flex row alignItems="center" gap="$spacing4">
+            <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
+            <Text color="$neutral3" variant="body2">
+              {isRestoringMnemonic
+                ? t('account.recoveryPhrase.helpText.restoring')
+                : t('account.recoveryPhrase.helpText.import')}
+            </Text>
+          </Flex>
+        </TouchableArea>
+      </Flex>
     </SafeKeyboardOnboardingScreen>
   )
 }

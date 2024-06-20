@@ -29,13 +29,13 @@ export const TableContainer = styled(Column)<{ $maxWidth?: number; $maxHeight?: 
   align-items: center;
   margin: 0px auto 24px auto;
 `
-const StickyStyles = css`
-  top: 73px;
+const StickyStyles = css<{ $top: number }>`
   position: sticky;
   position: -webkit-sticky;
+  top: ${({ $top }) => $top}px;
   z-index: ${Z_INDEX.under_dropdown};
 `
-export const TableHead = styled.div<{ $isSticky?: boolean }>`
+export const TableHead = styled.div<{ $isSticky?: boolean; $top: number }>`
   width: 100%;
   position: relative;
   ${({ $isSticky }) => ($isSticky ? StickyStyles : '')}

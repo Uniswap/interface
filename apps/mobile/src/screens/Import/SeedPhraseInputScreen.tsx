@@ -155,7 +155,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
               flexDirection="row"
               gap="$spacing8"
               onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
-              <QuestionInCircleFilled color="$surface1" size="$icon.20" />
+              <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
               <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
                 {isRestoringMnemonic
                   ? t('account.recoveryPhrase.helpText.restoring')

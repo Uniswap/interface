@@ -1,6 +1,11 @@
 import React from 'react'
 import { useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
+import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
+import {
+  useLineChartPrice,
+  useLineChartRelativeChange,
+} from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
@@ -8,8 +13,6 @@ import { isAndroid } from 'utilities/src/platform'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
-import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number }): JSX.Element {
   const price = useLineChartPrice()

@@ -2,13 +2,13 @@ import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'c
 import Column from 'components/Column'
 import Row from 'components/Row'
 import Tooltip from 'components/Tooltip'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { ReactNode, useReducer } from 'react'
 import { Info } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const Container = styled(Column)`
   position: relative;
@@ -112,7 +112,7 @@ export function ActionTile({
               onMouseEnter={toggleTooltip}
               onMouseLeave={toggleTooltip}
               style={{ color: 'inherit' }}
-              href={SupportArticleURL.MOONPAY_REGIONAL_AVAILABILITY}
+              href={uniswapUrls.helpArticleUrls.moonpayRegionalAvailability}
             >
               <StyledInfoIcon />
             </ErrorLink>

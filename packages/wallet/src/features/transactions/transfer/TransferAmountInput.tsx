@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback, useLayoutEffect } from 'react'
+import { useCallback, useLayoutEffect, useState } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
@@ -79,6 +79,7 @@ export function TransferAmountInput({
     MAX_INPUT_FONT_SIZE,
     MIN_INPUT_FONT_SIZE
   )
+  const [containerWidth, setContainerWidth] = useState(0)
 
   // Resize font value when value changes
   useLayoutEffect(() => {
@@ -116,31 +117,48 @@ export function TransferAmountInput({
       gap="$spacing16"
       onLayout={(e): void => {
         onLayout(e)
+        setContainerWidth(e.nativeEvent.layout.width)
         // Avoid case where onSetFontSize is called before onLayout, resulting in incorrect sizing if view is re-mounted
         onSetFontSize(value || '0')
       }}
       {...rest}>
-      <Flex fill grow row alignItems="center" height={MAX_INPUT_FONT_SIZE} overflow="hidden">
+      <Flex
+        row
+        alignItems="center"
+        height={MAX_INPUT_FONT_SIZE}
+        justifyContent="center"
+        overflow="hidden">
+        {isFiatInput && (
+          <Text
+            allowFontScaling
+            color={inputColor}
+            fontSize={fontSize}
+            height={fontSize}
+            lineHeight={fontSize}>
+            {symbol}
+          </Text>
+        )}
         {currencyInfo ? (
           <AmountInput
+            adjustWidthToContent={isFiatInput}
             backgroundColor="$transparent"
             borderWidth={0}
             color={inputColor}
-            flex={1}
             focusable={Boolean(currencyInfo)}
             fontFamily="$heading"
             fontSize={fontSize}
             maxDecimals={currencyInfo.currency.decimals}
             maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+            // x0.5 is to mimic the behavior for non-fiat input
+            maxWidth={isFiatInput ? containerWidth * 0.5 : undefined}
             minHeight={2 * MAX_INPUT_FONT_SIZE}
             overflow="visible"
             placeholder="0"
             placeholderTextColor="$neutral3"
             px="$none"
             py="$none"
-            showCurrencySign={isFiatInput}
             testID="amount-input-in"
-            textAlign="center"
+            textAlign={isFiatInput ? 'left' : 'center'}
             value={value}
             onChangeText={onChangeText}
             onSelectionChange={onSelectionChange}

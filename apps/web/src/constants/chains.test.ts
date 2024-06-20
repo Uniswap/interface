@@ -1,6 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -21,7 +19,8 @@ import {
   UX_SUPPORTED_GQL_CHAINS,
   getChainFromChainUrlParam,
   getChainPriority,
-} from './chains'
+} from 'constants/chains'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // Define an array of test cases with chainId and expected priority
 const chainPriorityTestCases: [ChainId, number][] = [

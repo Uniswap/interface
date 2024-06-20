@@ -9,8 +9,9 @@
 /* Begin PBXBuildFile section */
 		005446EF1B67FC63C0A7383A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		00E356F31AD99517003FC87E /* UniswapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UniswapTests.m */; };
-		030F0F632BF3829E0085C829 /* CopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030F0F622BF3829E0085C829 /* CopyButton.swift */; };
 		037C5AAA2C04970B00B1D808 /* CopyIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037C5AA92C04970B00B1D808 /* CopyIcon.swift */; };
+		03C788232C10E7390011E5DC /* ActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C788222C10E7390011E5DC /* ActionButtons.swift */; };
+		03C788252C10F2810011E5DC /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C788242C10F2810011E5DC /* Modifiers.swift */; };
 		0703EE032A5734A600AED1DA /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0703EE022A5734A600AED1DA /* UserDefaults.swift */; };
 		0703EE052A57351800AED1DA /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 072F6C372A44BECC00DA720A /* Logging.swift */; };
 		072E238E2A44D5BD006AD6C9 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
@@ -133,6 +134,10 @@
 		07F5CF712A6AD97D00C648A5 /* Chart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F5CF702A6AD97D00C648A5 /* Chart.swift */; };
 		07F5CF752A7020FD00C648A5 /* Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F5CF742A7020FD00C648A5 /* Format.swift */; };
 		0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DC6ADEF2B1E2C0F0092909C /* PortfolioValueModifier.graphql.swift */; };
+		0DE251432C13B674005F47F9 /* OnRampTransactionsAuth.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251422C13B674005F47F9 /* OnRampTransactionsAuth.graphql.swift */; };
+		0DE251472C13B69D005F47F9 /* OnRampTransfer.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251442C13B69D005F47F9 /* OnRampTransfer.graphql.swift */; };
+		0DE251482C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */; };
+		0DE251492C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */; };
 		1391D0BDA6D00CCFAE5BA24B /* libPods-WidgetsCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7201E4F4866FA5A80D1A150B /* libPods-WidgetsCore.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -297,8 +302,9 @@
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
-		030F0F622BF3829E0085C829 /* CopyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyButton.swift; sourceTree = "<group>"; };
 		037C5AA92C04970B00B1D808 /* CopyIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyIcon.swift; sourceTree = "<group>"; };
+		03C788222C10E7390011E5DC /* ActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtons.swift; sourceTree = "<group>"; };
+		03C788242C10F2810011E5DC /* Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifiers.swift; sourceTree = "<group>"; };
 		065A981F892F7A06A900FCD5 /* Pods-WidgetsCoreTests.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.dev.xcconfig"; sourceTree = "<group>"; };
 		0703EE022A5734A600AED1DA /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		070480372A58A507009006CE /* WidgetIntentExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetIntentExtension.entitlements; sourceTree = "<group>"; };
@@ -426,6 +432,10 @@
 		0B7E5D62E11408EB5F0F5A80 /* Pods-WidgetsCore.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.beta.xcconfig"; sourceTree = "<group>"; };
 		0C19DE44A750FB17647FF2B6 /* Pods-Widgets.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.beta.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.beta.xcconfig"; sourceTree = "<group>"; };
 		0DC6ADEF2B1E2C0F0092909C /* PortfolioValueModifier.graphql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioValueModifier.graphql.swift; sourceTree = "<group>"; };
+		0DE251422C13B674005F47F9 /* OnRampTransactionsAuth.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampTransactionsAuth.graphql.swift; sourceTree = "<group>"; };
+		0DE251442C13B69D005F47F9 /* OnRampTransfer.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampTransfer.graphql.swift; sourceTree = "<group>"; };
+		0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampServiceProvider.graphql.swift; sourceTree = "<group>"; };
+		0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampTransactionDetails.graphql.swift; sourceTree = "<group>"; };
 		1193B3A845BC3BE8CAA00D01 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
@@ -607,6 +617,14 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03C788212C10E71D0011E5DC /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				03C788222C10E7390011E5DC /* ActionButtons.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		03DD298C2A4CE34B00E3E0F5 /* Appearance */ = {
@@ -821,6 +839,9 @@
 				074321DB2A83E3C900F8518D /* NftApproval.graphql.swift */,
 				074321DC2A83E3C900F8518D /* NftBalance.graphql.swift */,
 				074321DD2A83E3C900F8518D /* Token.graphql.swift */,
+				0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */,
+				0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */,
+				0DE251442C13B69D005F47F9 /* OnRampTransfer.graphql.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -836,6 +857,7 @@
 				074321E32A83E3C900F8518D /* NftActivityFilterInput.graphql.swift */,
 				074321E42A83E3C900F8518D /* NftAssetTraitInput.graphql.swift */,
 				074321E62A83E3C900F8518D /* NftAssetsFilterInput.graphql.swift */,
+				0DE251422C13B674005F47F9 /* OnRampTransactionsAuth.graphql.swift */,
 			);
 			path = InputObjects;
 			sourceTree = "<group>";
@@ -903,6 +925,7 @@
 				BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */,
 				FD7304CD28A364FC0085BDEA /* Colors.xcassets */,
 				FD7304CF28A3650A0085BDEA /* Colors.swift */,
+				03C788242C10F2810011E5DC /* Modifiers.swift */,
 			);
 			name = Uniswap;
 			sourceTree = "<group>";
@@ -958,6 +981,7 @@
 		6C84F055283D83CF0071FA2E /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				03C788212C10E71D0011E5DC /* Shared */,
 				6BC7D07A2B5FF02400617C95 /* Scantastic */,
 				8E89C3A52AB8AAA400C84DE5 /* Backup */,
 				8EA8AB2F2AB7ED3C004E7EF3 /* Import */,
@@ -1061,7 +1085,6 @@
 				8E89C3AB2AB8AAA400C84DE5 /* MnemonicDisplayManager.m */,
 				8E89C3AC2AB8AAA400C84DE5 /* MnemonicConfirmationManager.m */,
 				8E89C3AD2AB8AAA400C84DE5 /* RNSwiftUI-Bridging-Header.h */,
-				030F0F622BF3829E0085C829 /* CopyButton.swift */,
 			);
 			name = Backup;
 			path = Uniswap/Onboarding/Backup;
@@ -1832,6 +1855,7 @@
 				0703EE052A57351800AED1DA /* Logging.swift in Sources */,
 				074321EB2A83E3CA00F8518D /* TokenDetailsScreenQuery.graphql.swift in Sources */,
 				0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */,
+				0DE251492C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift in Sources */,
 				074322092A83E3CA00F8518D /* NftActivityType.graphql.swift in Sources */,
 				074322222A83E3CA00F8518D /* NftContract.graphql.swift in Sources */,
 				0743220E2A83E3CA00F8518D /* NftOrderEdge.graphql.swift in Sources */,
@@ -1874,8 +1898,10 @@
 				074322312A83E3CA00F8518D /* NftApproval.graphql.swift in Sources */,
 				074322062A83E3CA00F8518D /* TokenSortableField.graphql.swift in Sources */,
 				074322272A83E3CA00F8518D /* Dimensions.graphql.swift in Sources */,
+				0DE251482C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift in Sources */,
 				074322002A83E3CA00F8518D /* AssetChange.graphql.swift in Sources */,
 				074322232A83E3CA00F8518D /* NftActivityConnection.graphql.swift in Sources */,
+				0DE251432C13B674005F47F9 /* OnRampTransactionsAuth.graphql.swift in Sources */,
 				0743221B2A83E3CA00F8518D /* NftCollectionMarket.graphql.swift in Sources */,
 				074322162A83E3CA00F8518D /* TokenProject.graphql.swift in Sources */,
 				074321ED2A83E3CA00F8518D /* ExploreTokensTabQuery.graphql.swift in Sources */,
@@ -1888,6 +1914,7 @@
 				07F5CF752A7020FD00C648A5 /* Format.swift in Sources */,
 				0783F7B42A619E7C009ED617 /* UIComponents.swift in Sources */,
 				0743220B2A83E3CA00F8518D /* NftMarketplace.graphql.swift in Sources */,
+				0DE251472C13B69D005F47F9 /* OnRampTransfer.graphql.swift in Sources */,
 				5EFB78362B1E585000E77EAC /* ConvertQuery.graphql.swift in Sources */,
 				074321F62A83E3CA00F8518D /* SearchTokensQuery.graphql.swift in Sources */,
 				0743223E2A83E3CA00F8518D /* IContract.graphql.swift in Sources */,
@@ -1967,10 +1994,11 @@
 				8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */,
 				9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */,
 				6BC7D0802B5FF02400617C95 /* EncryptionUtils.swift in Sources */,
+				03C788232C10E7390011E5DC /* ActionButtons.swift in Sources */,
 				8EA8AB3B2AB7ED3C004E7EF3 /* SeedPhraseInputManager.m in Sources */,
+				03C788252C10F2810011E5DC /* Modifiers.swift in Sources */,
 				6CA91BDB2A95223C00C4063E /* RNEthersRS.swift in Sources */,
 				8EA8AB3C2AB7ED3C004E7EF3 /* SeedPhraseInputViewModel.swift in Sources */,
-				030F0F632BF3829E0085C829 /* CopyButton.swift in Sources */,
 				072F6C2E2A44A32F00DA720A /* TokenPriceWidget.intentdefinition in Sources */,
 				8E89C3B12AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift in Sources */,
 				07B0676D2A7D6EC8001DD9B9 /* RNWidgets.m in Sources */,
@@ -2494,7 +2522,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2540,7 +2568,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -2586,7 +2614,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -2632,7 +2660,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -2674,7 +2702,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2717,7 +2745,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -2760,7 +2788,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -2803,7 +2831,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -2839,7 +2867,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2877,7 +2905,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2957,7 +2985,11 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -3020,7 +3052,11 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -3055,7 +3091,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3099,7 +3135,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -3170,7 +3206,11 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -3199,7 +3239,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3270,7 +3310,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -3341,7 +3381,11 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = "$(inherited)";
-				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-Wl",
+					"-ld_classic",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -3370,7 +3414,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3441,7 +3485,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.29;
+				MARKETING_VERSION = 1.30;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;

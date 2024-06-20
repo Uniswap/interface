@@ -1,8 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { getLoadingTitle, TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { USDC_MAINNET } from 'constants/tokens'
 import { render } from 'test-utils/render'
-
-import { getLoadingTitle, TokenDetailsPageSkeleton } from './Skeleton'
 
 describe('TDP Skeleton', () => {
   it('should render correctly', () => {

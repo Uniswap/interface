@@ -64,7 +64,7 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
     .filter(Boolean)
 )
 
-function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
+export function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
   const logoUrl = commonBase.isNative
     ? getNativeLogoURI(commonBase.chainId)
     : getTokenLogoURI(commonBase.address, commonBase.chainId)

@@ -1,27 +1,22 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
+import ENSAvatarIcon from 'components/Identicon/ENSAvatarIcon'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
-import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Unicon } from 'ui/src'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import ENSAvatarIcon from './ENSAvatarIcon'
 
 export enum IdenticonType {
   LOADING = 'loading',
   UNITAG_PROFILE_PICTURE = 'unitagProfilePicture',
   ENS_AVATAR = 'ensAvatar',
   UNICON = 'unicon',
-  UNICON_V2 = 'uniconV2',
 }
 
 export function useIdenticonType(account?: string) {
   const { unitag, loading: unitagLoading } = useUnitagByAddress(account)
   const { avatar, loading: ensAvatarLoading } = useENSAvatar(account)
-  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (!account) {
     return undefined
@@ -33,7 +28,7 @@ export function useIdenticonType(account?: string) {
   } else if (avatar) {
     return IdenticonType.ENS_AVATAR
   } else {
-    return uniconV2Enabled ? IdenticonType.UNICON_V2 : IdenticonType.UNICON
+    return IdenticonType.UNICON
   }
 }
 
@@ -63,12 +58,6 @@ export default function Identicon({ account, size }: { account?: string; size: n
       return (
         <FadeInContainer>
           <ENSAvatarIcon account={account} size={size} />
-        </FadeInContainer>
-      )
-    case IdenticonType.UNICON_V2:
-      return (
-        <FadeInContainer>
-          <UniconV2 address={account} size={size} />
         </FadeInContainer>
       )
     case IdenticonType.UNICON:

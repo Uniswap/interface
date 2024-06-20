@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-
-import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 describe('#getExplorerLink', () => {
   it('correct for tx', () => {

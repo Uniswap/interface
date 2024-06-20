@@ -1,9 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
@@ -16,11 +20,6 @@ import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/c
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;

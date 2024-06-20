@@ -63,11 +63,11 @@ export default function NetworkFilter() {
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
         menuLabel={
-          <NetworkLabel data-testid="tokens-network-filter-selected">
+          <NetworkLabel>
             {!exploreParams.chainName && isMultichainExploreEnabled ? (
               <AllNetworksIcon />
             ) : (
-              <ChainLogo chainId={currentChain.id} size={20} />
+              <ChainLogo chainId={currentChain.id} size={20} testId="tokens-network-filter-selected" />
             )}
           </NetworkLabel>
         }

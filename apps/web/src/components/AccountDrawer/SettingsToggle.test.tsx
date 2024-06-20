@@ -1,6 +1,5 @@
+import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { act, render } from 'test-utils/render'
-
-import { SettingsToggle } from './SettingsToggle'
 
 describe('SettingsToggle', () => {
   it('Updates value on click', () => {

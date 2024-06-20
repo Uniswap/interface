@@ -73,7 +73,11 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
   }
 
   @ReactMethod fun generateAndStorePrivateKey(mnemonicId: String, derivationIndex: Int, promise: Promise) {
-    promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
+    try {
+      promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
+    } catch (error: Exception) {
+      promise.reject(error)
+    }
   }
 
   @ReactMethod fun removePrivateKey(address: String, promise: Promise) {

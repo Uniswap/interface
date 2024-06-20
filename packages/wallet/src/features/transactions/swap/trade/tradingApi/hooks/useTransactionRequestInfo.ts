@@ -149,17 +149,20 @@ export function useTransactionRequestInfo({
     error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
   }
 
-  // Only log analytics events once per quote
-  const previousQuoteIdRef = useRef(swapQuote?.quoteId)
+  // Only log analytics events once per request
+  const previousRequestIdRef = useRef(trade?.quote?.requestId)
 
   useEffect(() => {
-    if (!swapQuote) {
+    // Only log errors if we have a valid quote with requestId
+    if (!trade?.quote || !trade.quote.requestId) {
       return
     }
 
-    const currentQuoteId = swapQuote?.quoteId
-    const isNewQuote = previousQuoteIdRef.current !== currentQuoteId
-    previousQuoteIdRef.current = currentQuoteId
+    const currentRequestId = trade.quote.requestId
+    const isNewQuote = previousRequestIdRef.current !== currentRequestId
+
+    // reset request id
+    previousRequestIdRef.current = currentRequestId
 
     if (!isNewQuote) {
       return
@@ -179,7 +182,7 @@ export function useTransactionRequestInfo({
         txRequest: data?.swap,
       })
     }
-  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapQuote, swapRequestArgs])
+  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade])
 
   return {
     transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,

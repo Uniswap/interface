@@ -275,8 +275,7 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
       browser: browser ? decodeURIComponent(browser) : undefined,
     })
   } catch (e) {
-    const wrappedError = new Error('Invalid scantastic params')
-    wrappedError.cause = e
+    const wrappedError = new Error('Invalid scantastic params', { cause: e })
     logger.error(wrappedError, {
       tags: {
         file: 'util.ts',

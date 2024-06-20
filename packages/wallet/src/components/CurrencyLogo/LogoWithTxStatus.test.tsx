@@ -1,16 +1,16 @@
 import { ChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { AssetType } from 'wallet/src/entities/assets'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
-import { render } from 'wallet/src/test/test-utils'
-import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 import {
   DappLogoWithTxStatus,
   DappLogoWithWCBadge,
   LogoWithTxStatus,
   LogoWithTxStatusProps,
-} from './LogoWithTxStatus'
+} from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { AssetType } from 'wallet/src/entities/assets'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
+import { render } from 'wallet/src/test/test-utils'
+import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 
 const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   assetType: AssetType.Currency,

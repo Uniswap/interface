@@ -1,6 +1,3 @@
-import { ReactNode } from 'react'
-import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
 import {
   AUD_ICON,
   BRL_ICON,
@@ -20,7 +17,9 @@ import {
   UAH_ICON,
   USD_ICON,
   VND_ICON,
-} from './localCurrencyIcons'
+} from 'constants/localCurrencyIcons'
+import { ReactNode } from 'react'
+import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const SUPPORTED_LOCAL_CURRENCIES = [
   Currency.Usd,

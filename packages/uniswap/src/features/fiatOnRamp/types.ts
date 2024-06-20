@@ -1,3 +1,5 @@
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+
 export type FORCountry = {
   countryCode: string
   displayName: string
@@ -160,4 +162,15 @@ export type FORTransactionRequest = {
 
 export type FORTransactionResponse = {
   transaction?: FORTransaction
+}
+
+export type FiatOnRampCurrency = {
+  currencyInfo: Maybe<CurrencyInfo>
+  moonpayCurrencyCode?: string
+  meldCurrencyCode?: string
+}
+
+export enum InitialQuoteSelection {
+  MostRecent,
+  Best,
 }

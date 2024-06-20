@@ -1,14 +1,13 @@
 import { Percent } from '@uniswap/sdk-core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
+import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
-
-import Modal from '../Modal'
 
 const Wrapper = styled(ColumnCenter)`
   padding: 16px 24px;

@@ -1,13 +1,12 @@
 import 'test-utils/tokens/mocks'
 
 import { ChainId } from '@uniswap/sdk-core'
+import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-
-import { PoolDetailsLink } from './PoolDetailsLink'
 
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {

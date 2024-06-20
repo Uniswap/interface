@@ -1,16 +1,15 @@
 import { t } from 'i18n'
 import { useAtom } from 'jotai'
-import { lazy, ReactNode, Suspense, useMemo } from 'react'
-import { matchPath, Navigate, useLocation } from 'react-router-dom'
+import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
+import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
+import { ReactNode, Suspense, lazy, useMemo } from 'react'
+import { Navigate, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { SpinnerSVG } from 'theme/components'
 import { isBrowserRouterEnabled } from 'utils/env'
-
-import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
-import { getExploreDescription, getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
-import Landing from './Landing'
-import Swap from './Swap'
+import Landing from 'pages/Landing'
+import Swap from 'pages/Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -192,6 +191,11 @@ export const routes: RouteDefinition[] = [
     path: '/limit',
     getElement: () => <Swap />,
     getTitle: () => t('title.placeLimit'),
+  }),
+  createRouteDefinition({
+    path: '/buy',
+    getElement: () => <Swap />,
+    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
   }),
   createRouteDefinition({
     path: '/swap',

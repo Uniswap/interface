@@ -1,31 +1,37 @@
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
-import { useAccount } from 'hooks/useAccount'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
-import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { isAddress } from 'utilities/src/addresses'
-
 import { useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
+import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
+import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { ParsedQs } from 'qs'
+import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
+import {
+  CurrencyState,
+  SerializedCurrencyState,
+  SwapAndLimitContext,
+  SwapContext,
+  SwapInfo,
+  SwapState,
+} from 'state/swap/types'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chains'
-import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
-import { CurrencyState, SerializedCurrencyState, SwapAndLimitContext, SwapContext, SwapInfo, SwapState } from './types'
 
 export function useSwapContext() {
   return useContext(SwapContext)
@@ -127,8 +133,9 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const nativeCurrency = useNativeCurrency(account.chainId)
-  const balance = useCurrencyBalance(account.address, nativeCurrency)
+  const { chainId } = useSwapAndLimitContext()
+  const nativeCurrency = useNativeCurrency(chainId)
+  const balance = useCurrencyBalance(account.address, nativeCurrency, chainId)
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -142,7 +149,8 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
   const relevantTokenBalances = useCurrencyBalances(
     account.address,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
+    chainId
   )
 
   const isExactIn: boolean = independentField === Field.INPUT

@@ -3,6 +3,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { ChainId } from '@uniswap/sdk-core'
 import { CosignedV2DutchOrder, DutchOrder } from '@uniswap/uniswapx-sdk'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
@@ -21,7 +22,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { Activity } from './types'
 
 interface ActivityGroup {
   title: string

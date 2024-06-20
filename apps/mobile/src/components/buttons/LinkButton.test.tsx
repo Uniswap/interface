@@ -1,6 +1,6 @@
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import { fireEvent, render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
-import { LinkButton } from './LinkButton'
 
 jest.mock('wallet/src/utils/linking')
 

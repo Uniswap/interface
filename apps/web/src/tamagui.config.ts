@@ -1,5 +1,5 @@
 import { createTamagui } from '@tamagui/core'
-import { animations } from 'ui/src/theme/animations-css'
+import { animations } from 'ui/src/theme/animations'
 import { configWithoutAnimations } from 'ui/src/theme/config'
 
 const {

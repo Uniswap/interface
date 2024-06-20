@@ -15,16 +15,12 @@ import {
   NFT_BANNER_HEIGHT,
 } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
-  Flex,
-  ImpactFeedbackStyle,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-} from 'ui/src'
+} from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import {
   NftCollectionScreenQuery,

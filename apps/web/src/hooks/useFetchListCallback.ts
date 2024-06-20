@@ -6,8 +6,8 @@ import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
+import { fetchTokenList } from 'state/lists/actions'
 import { logger } from 'utilities/src/logger/logger'
-import { fetchTokenList } from '../state/lists/actions'
 
 export function useFetchListCallback(): (listUrl: string, skipValidation?: boolean) => Promise<TokenList> {
   const dispatch = useAppDispatch()

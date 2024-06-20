@@ -1,15 +1,14 @@
-import { Field } from 'components/swap/constants'
-import { parse } from 'qs'
-
 import { ChainId, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { Field } from 'components/swap/constants'
 import { MATIC_POLYGON, UNI } from 'constants/tokens'
+import { parse } from 'qs'
+import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
 import { queryParametersToSwapState } from 'state/swap/types'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { queryParametersToCurrencyState, useInitialCurrencyState } from './hooks'
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {

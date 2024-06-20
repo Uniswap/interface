@@ -30,7 +30,8 @@
   "packageManager": "yarn@3.2.3",
   "private": true,
   "resolutionsComments": {
-    "immer": "this fixes yarn typecheck in mobile app, see https://github.com/reduxjs/redux-toolkit/issues/1806"
+    "immer": "this fixes yarn typecheck in mobile app, see https://github.com/reduxjs/redux-toolkit/issues/1806",
+    "react-native-wagmi-charts@2.5.1": "this fixes really bad performance issue when the pulse dot is enabled"
   },
   "resolutions": {
     "cypress": "13.7.3",
@@ -78,9 +79,9 @@
     "lightweight-charts@4.1.1": "patch:lightweight-charts@npm%3A4.1.1#./.yarn/patches/lightweight-charts-npm-4.1.1-01f161d9b6.patch",
     "react-native-context-menu-view@1.15.0": "patch:react-native-context-menu-view@npm%3A1.15.0#./.yarn/patches/react-native-context-menu-view-npm-1.15.0-c8a9d10d8c.patch",
     "expo-local-authentication@13.8.0": "patch:expo-local-authentication@npm%3A13.8.0#./.yarn/patches/expo-local-authentication-npm-13.8.0-3a1b5c983f.patch",
-    "react-native-wagmi-charts@2.3.0": "patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch",
     "@tamagui/animations-moti@1.92.0": "patch:@tamagui/animations-moti@npm%3A1.92.0#./.yarn/patches/@tamagui-animations-moti-npm-1.92.0-a8dde990ec.patch",
     "cypress-hardhat@2.5.0": "patch:cypress-hardhat@npm%3A2.5.0#./.yarn/patches/cypress-hardhat-npm-2.5.0-9b9b7d7a28.patch",
+    "react-native-wagmi-charts@2.5.1": "patch:react-native-wagmi-charts@npm%3A2.5.1#./.yarn/patches/react-native-wagmi-charts-npm-2.5.1-c9e2637be7.patch",
     "@wagmi/core@2.6.16": "patch:@wagmi/core@npm%3A2.6.16#./.yarn/patches/@wagmi-core-npm-2.6.16-1baef7c190.patch"
   },
   "scripts": {

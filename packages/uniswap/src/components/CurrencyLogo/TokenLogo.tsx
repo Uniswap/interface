@@ -2,9 +2,9 @@ import { memo } from 'react'
 import { Flex, Text, UniversalImage, useIsDarkMode, useSporeColors } from 'ui/src'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
+import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId } from 'uniswap/src/types/chains'
-import { STATUS_RATIO } from './CurrencyLogo'
-import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {
   url?: string | null

@@ -14,14 +14,9 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  AnimatedFlex,
-  Flex,
-  LinearGradient,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, LinearGradient, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'

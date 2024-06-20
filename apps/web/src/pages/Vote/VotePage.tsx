@@ -2,8 +2,23 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
+import { ButtonPrimary } from 'components/Button'
+import { GrayCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from 'components/Row'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { CardSection, DataCard } from 'components/earn/styled'
+import DelegateModal from 'components/vote/DelegateModal'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
+import VoteModal from 'components/vote/VoteModal'
+import {
+  AVERAGE_BLOCK_TIME_IN_SECS,
+  COMMON_CONTRACT_NAMES,
+  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+} from 'constants/governance'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -11,38 +26,20 @@ import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
+import { ProposalStatus } from 'pages/Vote/styled'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'utilities/src/addresses'
-import { ButtonPrimary } from '../../components/Button'
-import { GrayCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { CardSection, DataCard } from '../../components/earn/styled'
-import DelegateModal from '../../components/vote/DelegateModal'
-import VoteModal from '../../components/vote/VoteModal'
-import {
-  AVERAGE_BLOCK_TIME_IN_SECS,
-  COMMON_CONTRACT_NAMES,
-  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-} from '../../constants/governance'
-import { ZERO_ADDRESS } from '../../constants/misc'
-import { UNI } from '../../constants/tokens'
 import {
   useModalIsOpen,
   useToggleDelegateModal,
   useToggleExecuteModal,
   useToggleQueueModal,
   useToggleVoteModal,
-} from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { useTokenBalance } from '../../state/connection/hooks'
+} from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import { useTokenBalance } from 'state/connection/hooks'
 import {
   ProposalData,
   ProposalState,
@@ -50,10 +47,13 @@ import {
   useQuorum,
   useUserDelegatee,
   useUserVotesAsOfBlock,
-} from '../../state/governance/hooks'
-import { VoteOption } from '../../state/governance/types'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { ProposalStatus } from './styled'
+} from 'state/governance/hooks'
+import { VoteOption } from 'state/governance/types'
+import styled from 'styled-components'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isAddress } from 'utilities/src/addresses'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;

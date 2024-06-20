@@ -1,10 +1,12 @@
 import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import {
+  OffchainOrderLineItem,
+  OffchainOrderLineItemType,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-
-import { OffchainOrderLineItem, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
 describe('OffchainOrderLineItem', () => {
   it('should render type EXCHANGE_RATE', () => {

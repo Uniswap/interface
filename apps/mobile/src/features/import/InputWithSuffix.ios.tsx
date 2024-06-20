@@ -1,7 +1,7 @@
+import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { Flex } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TextInput } from 'wallet/src/components/input/TextInput'
-import { InputWithSuffixProps } from './InputWIthSuffixProps'
 
 export default function InputWithSuffix({
   alwaysShowInputSuffix = false,

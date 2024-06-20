@@ -1,10 +1,9 @@
 import userEvent from '@testing-library/user-event'
 import { ChainId } from '@uniswap/sdk-core'
+import { CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { act, render, screen } from 'test-utils/render'
-
-import { CurrentPageBreadcrumb } from '.'
 
 describe('BreadcrumbNav', () => {
   it('renders hover components correctly', async () => {

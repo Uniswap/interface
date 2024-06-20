@@ -1,5 +1,5 @@
+import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { renderHook } from 'test-utils/render'
-import { useNftAssetDetails } from './Details'
 
 describe('useNftAssetDetails', () => {
   it('should handle listing.price.value of 1e-18 without crashing', () => {

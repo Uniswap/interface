@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
-
+import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from './types'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage

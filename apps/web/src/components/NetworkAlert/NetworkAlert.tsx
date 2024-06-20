@@ -1,17 +1,16 @@
+import Column from 'components/Column'
 import { getChainUI } from 'components/Logo/ChainLogo'
 import { RowBetween } from 'components/Row'
 import { getChain, useIsSupportedChainId } from 'constants/chains'
+import { useIsSendPage } from 'hooks/useIsSendPage'
+import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { Trans } from 'i18n'
 import { ArrowUpRight } from 'react-feather'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
-import { useIsSendPage } from 'hooks/useIsSendPage'
-import { useIsSwapPage } from 'hooks/useIsSwapPage'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { NetworkLayer } from 'uniswap/src/types/chains'
-import Column from '../Column'
 
 const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   color: ${({ color }) => color};

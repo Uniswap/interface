@@ -4,13 +4,14 @@ import '@reach/dialog/styles.css'
 import 'inter-ui'
 import 'polyfills'
 import 'tracing'
-import './i18n' // ensure translations load before things
+import 'i18n' // ensure translations load before things
 /* eslint-enable prettier/prettier */
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { PortalProvider } from '@tamagui/portal'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import Web3Provider from 'components/Web3Provider'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
@@ -18,13 +19,20 @@ import { useAccount } from 'hooks/useAccount'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
+import App from 'pages/App'
 import { PropsWithChildren, StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
+import store from 'state'
 import { ActivityStateUpdater } from 'state/activity/updater'
+import ApplicationUpdater from 'state/application/updater'
+import ListsUpdater from 'state/lists/updater'
+import LogsUpdater from 'state/logs/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
+import { ThemeProvider, ThemedGlobalStyle } from 'theme'
+import RadialGradientByChainUpdater from 'theme/components/RadialGradientByChainUpdater'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
@@ -32,14 +40,6 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
-import Web3Provider from './components/Web3Provider'
-import App from './pages/App'
-import store from './state'
-import ApplicationUpdater from './state/application/updater'
-import ListsUpdater from './state/lists/updater'
-import LogsUpdater from './state/logs/updater'
-import { ThemeProvider, ThemedGlobalStyle } from './theme'
-import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
@@ -113,7 +113,7 @@ const container = document.getElementById('root') as HTMLElement
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 
 createRoot(container).render(
-  <StrictMode>
+  <OptionalStrictMode>
     <HelmetProvider>
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
@@ -143,8 +143,15 @@ createRoot(container).render(
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>
-  </StrictMode>
+  </OptionalStrictMode>
 )
+
+// TODO(EXT-1229): We had to remove `React.StrictMode` because it's not
+// currently supported by Reanimated Web. We should consider re-enabling
+// once Reanimated fixes this.
+function OptionalStrictMode(props: { children: React.ReactNode }): JSX.Element {
+  return process.env.ENABLE_STRICT_MODE ? <StrictMode>{props.children}</StrictMode> : <>{props.children}</>
+}
 
 // We once had a ServiceWorker, and users who have not visited since then may still have it registered.
 // This ensures it is truly gone.

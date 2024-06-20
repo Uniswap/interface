@@ -1,12 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pool } from '@uniswap/v3-sdk'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useState } from 'react'
 import { unwrappedToken } from 'utils/unwrappedToken'
-
-import { useV3NFTPositionManagerContract } from './useContract'
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 

@@ -1,12 +1,11 @@
+import { getPriceBounds } from 'components/Charts/PriceChart/utils'
+import LineChart from 'components/Charts/SparklineChart/LineChart'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
 import { memo } from 'react'
 import styled, { useTheme } from 'styled-components'
-
-import { LoadingBubble } from 'components/Tokens/loading'
-import { getPriceBounds } from '../PriceChart/utils'
-import LineChart from './LineChart'
 
 const LoadingContainer = styled.div`
   height: 100%;

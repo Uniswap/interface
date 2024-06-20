@@ -1,11 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
-import { mocked } from 'test-utils/mocked'
-import { renderHook } from 'test-utils/render'
-
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenBalances } from 'hooks/useTokenBalances'
+import { mocked } from 'test-utils/mocked'
+import { renderHook } from 'test-utils/render'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenBalances } from './useTokenBalances'
 
 jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(() => ({ account: '0x123', chainId: 1 })),
@@ -67,11 +66,11 @@ describe('useTokenBalances', () => {
     } as any)
     const { balanceMap, loading } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({
-      '0x123': {
+      '1-0x123': {
         balance: 123,
         usdValue: 123,
       },
-      ETH: {
+      '1-native': {
         balance: 123,
         usdValue: 123,
       },

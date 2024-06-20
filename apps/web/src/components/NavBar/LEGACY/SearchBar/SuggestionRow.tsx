@@ -2,6 +2,7 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
+import { useAddRecentlySearchedAsset } from 'components/NavBar/LEGACY/SearchBar/RecentlySearchedAssets'
 import Row from 'components/Row'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
@@ -21,7 +22,6 @@ import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 
 const PriceChangeContainer = styled.div`
   display: flex;

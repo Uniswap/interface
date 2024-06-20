@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPRQRBZwDw1jYotLP4R6zubEWZjMW2P5LkuiJsFzaMkM3`
-- CIDv1: `bafybeiaqcnxgf37h52eyehnmepivgbycqmpgd6iosvgitzceiuly3ck34y`
+- CIDv0: `QmXnRSBVHh7UXvgip6FDhq1ub3ChJxv3K8QirGXZ59J39s`
+- CIDv1: `bafybeiemkndbltdog6u2zo3ee3j5sp4spncnhktezgt7rd6eixu6ctyp6i`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,10 +10,60 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaqcnxgf37h52eyehnmepivgbycqmpgd6iosvgitzceiuly3ck34y.ipfs.dweb.link/
-- https://bafybeiaqcnxgf37h52eyehnmepivgbycqmpgd6iosvgitzceiuly3ck34y.ipfs.cf-ipfs.com/
-- [ipfs://QmPRQRBZwDw1jYotLP4R6zubEWZjMW2P5LkuiJsFzaMkM3/](ipfs://QmPRQRBZwDw1jYotLP4R6zubEWZjMW2P5LkuiJsFzaMkM3/)
+- https://bafybeiemkndbltdog6u2zo3ee3j5sp4spncnhktezgt7rd6eixu6ctyp6i.ipfs.dweb.link/
+- https://bafybeiemkndbltdog6u2zo3ee3j5sp4spncnhktezgt7rd6eixu6ctyp6i.ipfs.cf-ipfs.com/
+- [ipfs://QmXnRSBVHh7UXvgip6FDhq1ub3ChJxv3K8QirGXZ59J39s/](ipfs://QmXnRSBVHh7UXvgip6FDhq1ub3ChJxv3K8QirGXZ59J39s/)
 
-### 5.35.2 (2024-06-18)
+## 5.36.0 (2024-06-20)
+
+
+### Features
+
+* **web:** add basic buy form, feature flag for meld on web (incl. snapshot changes) (#8766) c4e2b9b
+* **web:** add fields to LP logging (#9106) bc98569
+* **web:** add PredefinedAmounts to Buy form (+tests/snapshots) (#8767) 74c82c6
+* **web:** add quoteId to Xv2 rfq POST (#8907) 326636c
+* **web:** add ZKsync chain integration and update dependencies (#8935) ad9d4d0
+* **web:** add zora tokenlist (#9072) e4d121d
+* **web:** adds reanimated to tamagui config and removes strict mode to support it (#9007) c443031
+* **web:** enable coinbase mobile wallet link (#8964) f42f0c2
+* **web:** Refreshed nav mobile bottom bar (#8645) f04d6fd
+* **web:** Refreshed nav search bar (#8644) 7cf3aff
+
+
+### Bug Fixes
+
+* **web:** [multichain] token selector in TDP should use connected chain (#8884) 081bc5c
+* **web:** add token to balance map even if denominated value is missing (#9099) ce6ad8b
+* **web:** cache bust uniswapx tests (#8896) d97dd58
+* **web:** Correctly parse tx type when a Pool token is native currency (#8968) 7ea24fa
+* **web:** dont deeplink to moonpay when new FOR aggregator is enabled (#9127) 6f7d66e
+* **web:** filter undefined chainId from GQL_MAINNET_CHAINS (#9107) 8e2ce72
+* **web:** fix some missing translations (#9120) 53d652e
+* **web:** fix tests using waitsForActiveChain (#8893) 78f08a3
+* **web:** fix theme tests (#8894) 9c234c5
+* **web:** fix translation stats.tvl.description (#8877) b4bf8e4
+* **web:** fix wrap tests (#8895) 2c11821
+* **web:** language and currency labels in preferences dropdown (#9159) c4c77b2
+* **web:** legacy chain selector breakpoint fix (#9023) 00e503e
+* **web:** mobile navigation missing for nfts page (#9160) 778bb50
+* **web:** move addLiquidity to logger.warn (#9101) d441972
+* **web:** multipill toggle fix (#9021) 50d01fe
+* **web:** nav hot keys bug (#9097) 5fdac46
+* **web:** pass account to send in transferInfo (#8898) daf511d
+* **web:** pay button in nft bag (#8892) bca1471
+* **web:** Remove Failed Network Connection Popup upon success (#9113) 60aa9ca
+* **web:** removing zora from network selector when feature flag is off (#8939) 2d658cf
+* **web:** web config #9169 (#9170) a46bf74
+
+
+### Reverts
+
+* **web:** place hotkeys behind feature flag (#9199) b6c1b96
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 9ad52a9
 
 

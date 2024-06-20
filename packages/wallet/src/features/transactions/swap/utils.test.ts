@@ -3,10 +3,14 @@ import { Route } from '@uniswap/v3-sdk'
 import { ChainId } from 'uniswap/src/types/chains'
 import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
+import {
+  getWrapType,
+  requireAcceptNewTrade,
+  serializeQueryParams,
+} from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { mockPool } from 'wallet/src/test/mocks'
-import { getWrapType, requireAcceptNewTrade, serializeQueryParams } from './utils'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
@@ -51,7 +55,7 @@ describe(getWrapType, () => {
 })
 
 describe(requireAcceptNewTrade, () => {
-  const oldTrade = new Trade({
+  const oldTrade = new ClassicTrade({
     v3Routes: [
       {
         routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
@@ -67,7 +71,7 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns false when prices are within threshold', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
           routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
@@ -86,7 +90,7 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns true when prices move above threshold', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
           routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
@@ -105,7 +109,7 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns false when new price is better', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
           routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),

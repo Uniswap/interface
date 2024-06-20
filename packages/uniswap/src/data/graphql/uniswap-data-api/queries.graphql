@@ -248,7 +248,18 @@ query NftsTab(
 ) {
   nftBalances(
     ownerAddress: $ownerAddress
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BLAST, BNB, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BLAST
+      BNB
+      ZORA
+      CELO
+      AVALANCHE
+    ]
     first: $first
     after: $after
     filter: $filter
@@ -303,7 +314,18 @@ query PortfolioBalances(
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
     valueModifiers: $valueModifiers
   ) {
     id
@@ -357,7 +379,18 @@ query MultiplePortfolioBalances(
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
     valueModifiers: $valueModifiers
   ) {
     id
@@ -409,7 +442,18 @@ query MultiplePortfolioBalances(
 query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
   ) {
     id
     ownerAddress
@@ -419,17 +463,43 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
   }
 }
 
-query TransactionHistoryUpdater($addresses: [String!]!) {
+query TransactionHistoryUpdater(
+  $addresses: [String!]!
+  $onRampAuth: OnRampTransactionsAuth
+) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
   ) {
     id
     ownerAddress
     assetActivities(
-      pageSize: 1,
-      page: 1,
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+      pageSize: 1
+      page: 1
+      chains: [
+        ETHEREUM
+        POLYGON
+        ARBITRUM
+        OPTIMISM
+        BASE
+        BNB
+        BLAST
+        ZORA
+        CELO
+        AVALANCHE
+      ]
+      onRampTransactionsAuth: $onRampAuth
     ) {
       id
       timestamp
@@ -466,14 +536,14 @@ query Token($chain: Chain!, $address: String) {
 }
 
 query TokenDetailsScreen(
-  $chain: Chain!,
-  $address: String,
-  $includeSpanish: Boolean = false,
-  $includeFrench: Boolean = false,
-  $includeJapanese: Boolean = false,
-  $includePortuguese: Boolean = false,
-  $includeChineseSimplified: Boolean = false,
-  $includeChineseTraditional: Boolean = false,
+  $chain: Chain!
+  $address: String
+  $includeSpanish: Boolean = false
+  $includeFrench: Boolean = false
+  $includeJapanese: Boolean = false
+  $includePortuguese: Boolean = false
+  $includeChineseSimplified: Boolean = false
+  $includeChineseTraditional: Boolean = false
 ) {
   token(chain: $chain, address: $address) {
     address
@@ -556,21 +626,80 @@ query TokenProjects($contracts: [ContractInput!]!) {
   }
 }
 
-query TransactionList($address: String!) {
+query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
   portfolios(
     ownerAddresses: [$address]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
   ) {
     id
     assetActivities(
       pageSize: 100
       page: 1
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+      chains: [
+        ETHEREUM
+        POLYGON
+        ARBITRUM
+        OPTIMISM
+        BASE
+        BNB
+        BLAST
+        ZORA
+        CELO
+        AVALANCHE
+      ]
+      onRampTransactionsAuth: $onRampAuth
     ) {
       id
       timestamp
       chain
       details {
+        ... on OnRampTransactionDetails {
+          id
+          status
+          receiverAddress
+          onRampTransfer {
+            id
+            transactionReferenceId
+            token {
+              id
+              symbol
+              address
+              decimals
+              chain
+              project {
+                id
+                isSpam
+                spamCode
+              }
+            }
+            tokenStandard
+            amount
+            sourceCurrency
+            sourceAmount
+            serviceProvider {
+              serviceProvider
+              name
+              url
+              logoLightUrl
+              logoDarkUrl
+              supportUrl
+            }
+            networkFee
+            transactionFee
+            totalFee
+          }
+        }
         ... on TransactionDetails {
           id
           to
@@ -631,6 +760,37 @@ query TransactionList($address: String!) {
               recipient
               direction
             }
+            ... on OnRampTransfer {
+              id
+              transactionReferenceId
+              token {
+                id
+                symbol
+                address
+                decimals
+                chain
+                project {
+                  id
+                  isSpam
+                  spamCode
+                }
+              }
+              tokenStandard
+              amount
+              sourceCurrency
+              sourceAmount
+              serviceProvider {
+                serviceProvider
+                name
+                url
+                logoLightUrl
+                logoDarkUrl
+                supportUrl
+              }
+              networkFee
+              transactionFee
+              totalFee
+            }
             ... on TokenApproval {
               id
               asset {
@@ -654,14 +814,36 @@ query TransactionList($address: String!) {
 query FeedTransactionList($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+    ]
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 30
       page: 1
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE]
+      chains: [
+        ETHEREUM
+        POLYGON
+        ARBITRUM
+        OPTIMISM
+        BASE
+        BNB
+        BLAST
+        ZORA
+        CELO
+        AVALANCHE
+      ]
     ) {
       id
       timestamp

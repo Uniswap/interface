@@ -24,7 +24,6 @@ class SeedPhraseInputViewModel: ObservableObject {
   }
   
   struct ReactNativeStrings {
-    var helpText: String
     var inputPlaceholder: String
     var pasteButton: String
     var errorInvalidWord: String
@@ -40,7 +39,6 @@ class SeedPhraseInputViewModel: ObservableObject {
   @Published var rawRNStrings: Dictionary<String, String> = Dictionary<String, String>() {
     didSet {
       strings = ReactNativeStrings(
-        helpText: rawRNStrings["helpText"] ?? "",
         inputPlaceholder: rawRNStrings["inputPlaceholder"] ?? "",
         pasteButton: rawRNStrings["pasteButton"] ?? "", 
         errorInvalidWord: rawRNStrings["errorInvalidWord"] ?? "",
@@ -51,7 +49,6 @@ class SeedPhraseInputViewModel: ObservableObject {
     }
   }
   @Published var strings: ReactNativeStrings = ReactNativeStrings(
-    helpText: "",
     inputPlaceholder: "",
     pasteButton: "",
     errorInvalidWord: "",
@@ -59,11 +56,11 @@ class SeedPhraseInputViewModel: ObservableObject {
     errorWrongPhrase: "", 
     errorInvalidPhrase: ""
   )
-  @Published var onHelpTextPress: RCTDirectEventBlock = { _ in }
   @Published var onInputValidated: RCTDirectEventBlock = { _ in }
   @Published var onMnemonicStored: RCTDirectEventBlock = { _ in }
   @Published var onPasteStart: RCTDirectEventBlock = { _ in }
   @Published var onPasteEnd: RCTDirectEventBlock = { _ in }
+  @Published var onHeightMeasured: RCTDirectEventBlock = { _ in }
   
   @Published var input = "" {
     didSet {

@@ -1,9 +1,8 @@
 import { Box } from 'nft/components/Box'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
+import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from 'nft/components/profile/view/ProfilePage'
 import { loadingAsset } from 'nft/css/loading.css'
 import styled from 'styled-components'
-
-import { DEFAULT_WALLET_ASSET_QUERY_AMOUNT } from './ProfilePage'
 
 const SkeletonBodyWrapper = styled.div`
   display: flex;

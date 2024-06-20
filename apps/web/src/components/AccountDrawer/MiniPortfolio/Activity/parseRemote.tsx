@@ -1,6 +1,12 @@
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import {
+  LimitOrderTextTable,
+  MOONPAY_SENDER_ADDRESSES,
+  OrderTextTable,
+} from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -27,8 +33,6 @@ import {
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { LimitOrderTextTable, MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
-import { Activity } from './types'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -508,6 +512,10 @@ function parseRemoteActivity(
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
       // UniswapX orders are returned as SwapOrderDetails until they are filled onchain, at which point they are returned as TransactionDetails
       return parseUniswapXOrder(assetActivity as OrderActivity)
+    }
+
+    if (assetActivity.details.__typename === 'OnRampTransactionDetails') {
+      return undefined // TODO(WEB-4187): support onramp transactions
     }
 
     const changes = assetActivity.details.assetChanges.reduce(

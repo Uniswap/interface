@@ -1,9 +1,9 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { CONNECTION } from 'components/Web3Provider/constants'
 import { Z_INDEX } from 'theme/zIndex'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector, createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
-import { CONNECTION } from './constants'
 
 if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
   throw new Error('REACT_APP_WALLET_CONNECT_PROJECT_ID must be a defined environment variable')

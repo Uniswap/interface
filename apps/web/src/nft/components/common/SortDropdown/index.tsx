@@ -2,14 +2,13 @@ import clsx from 'clsx'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/common/SortDropdown/SortDropdown.css'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useCollectionFilters, useIsCollectionLoading } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react'
-
-import * as styles from './SortDropdown.css'
 
 export { FilterSortDropdown } from './FilterSortDropdown'
 

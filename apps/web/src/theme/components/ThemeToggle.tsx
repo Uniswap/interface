@@ -1,16 +1,15 @@
 import Row from 'components/Row'
+import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
-
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components/text'
 import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
-import { ThemedText } from './text'
+import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
@@ -105,7 +104,7 @@ const compactOptions = [
   {
     value: ThemeMode.AUTO,
     display: (
-      <CompactOptionPill>
+      <CompactOptionPill data-testid="theme-auto">
         <Trans>Auto</Trans>
       </CompactOptionPill>
     ),
@@ -113,7 +112,7 @@ const compactOptions = [
   {
     value: ThemeMode.LIGHT,
     display: (
-      <CompactOptionPill>
+      <CompactOptionPill data-testid="theme-light">
         <SunFilled size="$icon.20" />
       </CompactOptionPill>
     ),
@@ -121,7 +120,7 @@ const compactOptions = [
   {
     value: ThemeMode.DARK,
     display: (
-      <CompactOptionPill>
+      <CompactOptionPill data-testid="theme-dark">
         <MoonFilled size="$icon.20" />
       </CompactOptionPill>
     ),
@@ -132,7 +131,7 @@ const defaultOptions = [
   {
     value: ThemeMode.AUTO,
     display: (
-      <OptionPill>
+      <OptionPill data-testid="theme-auto">
         <Trans>Auto</Trans>
       </OptionPill>
     ),
@@ -140,7 +139,7 @@ const defaultOptions = [
   {
     value: ThemeMode.LIGHT,
     display: (
-      <OptionPill>
+      <OptionPill data-testid="theme-light">
         <Sun size="20" />
       </OptionPill>
     ),
@@ -148,7 +147,7 @@ const defaultOptions = [
   {
     value: ThemeMode.DARK,
     display: (
-      <OptionPill>
+      <OptionPill data-testid="theme-dark">
         <Moon size="20" />
       </OptionPill>
     ),

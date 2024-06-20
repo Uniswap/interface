@@ -6,14 +6,14 @@ import * as Sentry from '@sentry/react'
 import { OriginApplication } from '@uniswap/analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
+import { beforeSend } from 'tracing/errors'
+import { patchFetch } from 'tracing/request'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 import { getEnvName, isSentryEnabled } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
-import { beforeSend } from './errors'
-import { patchFetch } from './request'
 
 patchFetch(global)
 

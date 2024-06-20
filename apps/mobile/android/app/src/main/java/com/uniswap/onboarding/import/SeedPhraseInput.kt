@@ -2,13 +2,10 @@ package com.uniswap.onboarding.import
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -22,7 +19,10 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -48,24 +49,29 @@ import com.uniswap.onboarding.import.SeedPhraseInputViewModel.Status.Valid
 import com.uniswap.onboarding.shared.PasteButton
 import com.uniswap.theme.UniswapTheme
 import com.uniswap.theme.relativeOffset
+import kotlin.math.abs
 
 @Composable
-fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> Unit) {
+fun SeedPhraseInput(
+  viewModel: SeedPhraseInputViewModel
+) {
   val focusRequester = remember { FocusRequester() }
+  val density = LocalDensity.current.density
+  var buttonOffset by remember { mutableStateOf(20.dp) }
 
   LaunchedEffect(Unit) {
     focusRequester.requestFocus()
   }
 
   Column(
-    modifier = Modifier.fillMaxSize(),
-    verticalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing12, Alignment.Top),
+    modifier = Modifier.wrapContentHeight(),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     Box(
       modifier = Modifier
         .fillMaxWidth()
         .wrapContentHeight()
+        .padding(bottom = buttonOffset)
     ) {
       BasicTextField(
         modifier = Modifier
@@ -113,7 +119,9 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
         PasteButton(
           modifier = Modifier
             .align(Alignment.BottomCenter)
-            .relativeOffset(y = .5f),
+            .relativeOffset(y = .5f) { _, offsetY ->
+              buttonOffset = (abs(offsetY) / density).dp
+            },
           pasteButtonText = viewModel.rnStrings.pasteButton,
           onPaste = {
             viewModel.handleInputChange(
@@ -126,38 +134,6 @@ fun SeedPhraseInput(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> 
     }
 
     SeedPhraseError(viewModel)
-    Spacer(modifier = Modifier.weight(1f))
-    SeedPhraseRecovery(viewModel, onHelpTextPress)
-  }
-}
-
-@Composable
-private fun SeedPhraseRecovery(viewModel: SeedPhraseInputViewModel, onHelpTextPress: () -> Unit) {
-  Column(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(bottom = UniswapTheme.spacing.spacing24),
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Row(
-      horizontalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing4),
-      verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.clickable {
-        onHelpTextPress()
-      }
-    ) {
-      Icon(
-        painter = painterResource(id = R.drawable.uniswap_question_circle),
-        tint = UniswapTheme.colors.neutral3,
-        contentDescription = null,
-        modifier = Modifier.size(20.dp)
-      )
-      Text(
-        viewModel.rnStrings.helpText,
-        color = UniswapTheme.colors.neutral3,
-        style = UniswapTheme.typography.body2
-      )
-    }
   }
 }
 

@@ -1,7 +1,7 @@
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks' // Replace with the actual import if this is incorrect
 
-import { Activity } from './types'
-import { createGroups } from './utils'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { createGroups } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 
 describe('createGroups', () => {
   it('should return an empty array if activities is undefined', () => {

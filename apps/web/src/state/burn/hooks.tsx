@@ -1,17 +1,16 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { useAccount } from 'hooks/useAccount'
+import { useTotalSupply } from 'hooks/useTotalSupply'
+import { useV2Pair } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback } from 'react'
+import { Field, typeInput } from 'state/burn/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
-
-import { useAccount } from 'hooks/useAccount'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useV2Pair } from '../../hooks/useV2Pairs'
-import { useTokenBalances } from '../connection/hooks'
-import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {
   return useAppSelector((state) => state.burn)
@@ -38,8 +37,7 @@ export function useDerivedBurnInfo(
   const [, pair] = useV2Pair(currencyA, currencyB)
 
   // balances
-  const relevantTokenBalances = useTokenBalances(account.address, [pair?.liquidityToken])
-  const userLiquidity: undefined | CurrencyAmount<Token> = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
+  const userLiquidity = useCurrencyBalance(account.address, pair?.liquidityToken) as CurrencyAmount<Token>
 
   const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
   const tokens = {

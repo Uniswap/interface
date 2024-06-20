@@ -1,8 +1,7 @@
 import { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-
-import { addConnectedWallet } from './reducer'
-import { Wallet } from './types'
+import { addConnectedWallet } from 'state/wallets/reducer'
+import { Wallet } from 'state/wallets/types'
 
 export function useConnectedWallets(): [Wallet[], (wallet: Wallet) => void] {
   const dispatch = useAppDispatch()

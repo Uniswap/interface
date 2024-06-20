@@ -1,8 +1,13 @@
 import { call } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
+import {
+  AuthActionType,
+  AuthBaseParams,
+  AuthSagaError,
+  UnlockParams,
+} from 'wallet/src/features/auth/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
-import { AuthActionType, AuthBaseParams, AuthSagaError, UnlockParams } from './types'
 
 function* auth(params: AuthBaseParams) {
   logger.debug('authSaga', 'auth', `Using monitored auth saga`)

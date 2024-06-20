@@ -1,6 +1,9 @@
 import { styled as tamaguiStyled } from '@tamagui/core'
+import { ChainConnectivityWarning } from 'components/Polling/ChainConnectivityWarning'
 import { RowFixed } from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -13,10 +16,6 @@ import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { DEFAULT_MS_BEFORE_WARNING } from 'uniswap/src/constants/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useAccount } from 'hooks/useAccount'
-import { MouseoverTooltip } from '../Tooltip'
-import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div`
   align-items: center;

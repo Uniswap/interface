@@ -18,16 +18,13 @@ import {
   LinearGradient,
   ScrollView,
   Text,
-  getUniconV2Colors,
+  getUniconColors,
   useIsDarkMode,
   useSporeColors,
-  useUniconColors,
 } from 'ui/src'
 import { Pen, TripleDots } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
@@ -136,26 +133,18 @@ export function EditUnitagProfileScreen({
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
-  const uniconV1Colors = useUniconColors(address)
-  const { color: uniconV2Color } = getUniconV2Colors(address)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-  const uniconColors = isUniconsV2Enabled
-    ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }
-    : uniconV1Colors
-
-  const uniconGradientStart = uniconColors.gradientStart
-  const uniconGradientEnd = uniconColors.gradientEnd
+  const { color: uniconColor } = getUniconColors(address)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
-    if (avatarImageUri || (avatarImageUri && !avatarColors)) {
+    if (avatarImageUri && !avatarColors) {
       return [colors.surface1.val, colors.surface1.val]
-    }
-    if (avatarImageUri && avatarColors && avatarColors.base) {
+    } else if (avatarImageUri && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
+    } else {
+      return [uniconColor, uniconColor]
     }
-    return [uniconGradientStart, uniconGradientEnd]
-  }, [avatarColors, avatarImageUri, uniconGradientEnd, uniconGradientStart, colors.surface1.val])
+  }, [avatarImageUri, avatarColors, colors.surface1.val, uniconColor])
 
   const openAvatarModal = (): void => {
     Keyboard.dismiss()

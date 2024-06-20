@@ -3,12 +3,11 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { ApproveInfo, WrapInfo } from 'state/routing/types'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
-
-import { ApproveInfo, WrapInfo } from './types'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 const WRAP_FALLBACK_GAS_LIMIT = 45_000

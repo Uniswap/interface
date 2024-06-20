@@ -1,3 +1,4 @@
+import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { fireEvent, render, screen, waitFor } from 'src/test/test-utils'
 import * as hooks from 'wallet/src/features/accounts/hooks'
 import {
@@ -7,7 +8,6 @@ import {
   portfolio,
 } from 'wallet/src/test/fixtures'
 import { queryResolvers } from 'wallet/src/test/utils'
-import { AccountCardItem } from './AccountCardItem'
 
 describe(AccountCardItem, () => {
   beforeEach(() => {

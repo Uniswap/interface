@@ -35,6 +35,8 @@ import useWrapCallback, { WrapErrorText } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { getIsReviewableQuote } from 'pages/Swap'
+import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -60,8 +62,6 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { getIsReviewableQuote } from '.'
-import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,
@@ -239,10 +239,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     swapError: undefined,
     swapResult: undefined,
   })
-
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
   useEffect(() => {
+    if (multichainUXEnabled) {
+      return
+    }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
     const prefilledInputChanged =
       previousPrefilledState?.inputCurrency &&
@@ -262,6 +264,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     }
   }, [
     connectedChainId,
+    multichainUXEnabled,
     prefilledState.inputCurrency,
     prefilledState?.outputCurrency,
     previousConnectedChainId,
@@ -460,6 +463,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const selectChain = useSelectChain()
+
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)

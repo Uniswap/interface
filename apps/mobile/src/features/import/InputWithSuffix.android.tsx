@@ -1,10 +1,10 @@
 import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
+import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { Flex } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isIOS } from 'utilities/src/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
-import { InputWithSuffixProps } from './InputWIthSuffixProps'
 
 const EPS = 1
 

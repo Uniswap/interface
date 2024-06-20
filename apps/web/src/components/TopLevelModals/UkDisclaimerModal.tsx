@@ -1,14 +1,13 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
+import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
-
-import { bannerText } from '../TopLevelBanners/UkBanner'
 
 const Wrapper = styled(Column)`
   padding: 8px;

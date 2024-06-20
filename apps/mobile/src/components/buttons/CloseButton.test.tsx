@@ -1,6 +1,6 @@
+import { CloseButton } from 'src/components/buttons/CloseButton'
 import { fireEvent, render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
-import { CloseButton } from './CloseButton'
 
 describe(CloseButton, () => {
   it('renders without error', () => {

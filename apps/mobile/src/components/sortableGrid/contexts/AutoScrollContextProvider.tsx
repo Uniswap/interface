@@ -8,10 +8,10 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import { AUTO_SCROLL_THRESHOLD } from 'src/components/sortableGrid/constants'
+import { useDragContext } from 'src/components/sortableGrid/contexts/DragContextProvider'
+import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
 import { useStableCallback } from 'src/components/sortableGrid/hooks'
 import { AutoScrollProps } from 'src/components/sortableGrid/types'
-import { useDragContext } from './DragContextProvider'
-import { useLayoutContext } from './LayoutContextProvider'
 
 export type AutoScrollContextType = {
   // REFS

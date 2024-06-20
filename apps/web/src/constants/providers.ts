@@ -1,7 +1,11 @@
+import {
+  CHAIN_IDS_TO_NAMES,
+  CHAIN_INFO,
+  SUPPORTED_INTERFACE_CHAIN_IDS,
+  SupportedInterfaceChainId,
+} from 'constants/chains'
 import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
-
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
-import { CHAIN_IDS_TO_NAMES, CHAIN_INFO, SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from './chains'
 
 function getAppProvider(chainId: SupportedInterfaceChainId) {
   const info = CHAIN_INFO[chainId]

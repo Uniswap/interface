@@ -1,9 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-
-import { useV3NFTPositionManagerContract } from './useContract'
 
 type TokenId = number | JSBI | BigNumber
 

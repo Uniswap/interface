@@ -1,4 +1,4 @@
-import { BlockedWarning, getPriorityWarning, MediumWarning, StrongWarning } from './tokenSafety'
+import { BlockedWarning, getPriorityWarning, MediumWarning, StrongWarning } from 'constants/tokenSafety'
 
 describe('getPriorityWarning', () => {
   it('returns token1Warning when both warnings exist and token1Warning is BLOCKED', () => {

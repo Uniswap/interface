@@ -10,10 +10,6 @@ import {
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
-import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppSelector } from 'wallet/src/state'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
@@ -28,7 +24,11 @@ import {
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
   selectWalletSwapProtectionSetting,
-} from './selectors'
+} from 'wallet/src/features/wallet/selectors'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
+import { useAppSelector } from 'wallet/src/state'
+import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const ENS_TRIM_LENGTH = 8
 

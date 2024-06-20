@@ -1,13 +1,21 @@
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
+import {
+  RefObject,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import {
   NativeSyntheticEvent,
   TextInput,
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import Animated, {
+import {
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -16,7 +24,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {
-  AnimatedFlex,
   Flex,
   FlexProps,
   Text,
@@ -25,13 +32,13 @@ import {
   useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { NumberType } from 'utilities/src/format/types'
-import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
@@ -39,6 +46,7 @@ import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -73,10 +81,13 @@ const MIN_INPUT_FONT_SIZE = 24
 // changes from 36 then width value must be adjusted
 const MAX_CHAR_PIXEL_WIDTH = 23
 
-/** Input panel for a single side of a swap action. */
+export type CurrencyInputPanelRef = {
+  textInputRef: RefObject<TextInput>
+  triggerShakeAnimation: () => void
+}
 
 export const CurrencyInputPanel = memo(
-  forwardRef<TextInput, CurrentInputPanelProps>(function _CurrencyInputPanel(
+  forwardRef<CurrencyInputPanelRef, CurrentInputPanelProps>(function _CurrencyInputPanel(
     {
       autoFocus,
       currencyAmount,
@@ -108,7 +119,23 @@ export const CurrencyInputPanel = memo(
 
     const inputRef = useRef<TextInput>(null)
 
-    useForwardRef(forwardedRef, inputRef)
+    const shakeValue = useSharedValue(0)
+
+    const shakeStyle = useAnimatedStyle(
+      () => ({
+        transform: [{ translateX: shakeValue.value }],
+      }),
+      [shakeValue.value]
+    )
+
+    const triggerShakeAnimation = useCallback(() => {
+      shakeValue.value = errorShakeAnimation(shakeValue)
+    }, [shakeValue])
+
+    useImperativeHandle(forwardedRef, () => ({
+      textInputRef: inputRef,
+      triggerShakeAnimation,
+    }))
 
     const isOutput = currencyField === CurrencyField.OUTPUT
 
@@ -210,19 +237,10 @@ export const CurrencyInputPanel = memo(
       [isLoading, loadingFlexProgress]
     )
 
-    const shakeValue = useSharedValue(0)
-
-    const shakeStyle = useAnimatedStyle(
-      () => ({
-        transform: [{ translateX: shakeValue.value }],
-      }),
-      [shakeValue.value]
-    )
-
-    const triggerShakeAnimation = (): void => {
+    const onPressDisabledWithShakeAnimation = useCallback((): void => {
       onPressDisabled?.()
-      shakeValue.value = errorShakeAnimation(shakeValue)
-    }
+      triggerShakeAnimation()
+    }, [onPressDisabled, triggerShakeAnimation])
 
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
@@ -233,44 +251,55 @@ export const CurrencyInputPanel = memo(
       [currencyField, onSetMax]
     )
 
-    // TODO: Remove this when fiat mode is ready to be integrated, to small for feature flag.
-    const fiatModeFeatureEnabled = false
     return (
       <TouchableArea
         hapticFeedback
-        onPress={disabled ? triggerShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}>
+        onPress={
+          disabled
+            ? onPressDisabledWithShakeAnimation
+            : currencyInfo
+            ? onPressIn
+            : onShowTokenSelector
+        }>
         <Flex
           {...rest}
           overflow="hidden"
           px="$spacing16"
           py={isWeb ? '$spacing24' : isShortMobileDevice ? '$spacing8' : '$spacing20'}>
-          <Flex
+          <AnimatedFlex
             row
             alignItems="center"
-            gap="$spacing8"
             justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-            py="$spacing8">
+            py="$spacing8"
+            style={shakeStyle}>
+            {isFiatMode && (
+              <Text
+                allowFontScaling
+                color={inputColor}
+                fontSize={fontSize}
+                height={fontSize}
+                lineHeight={fontSize}
+                mr="$spacing4">
+                {fiatCurrencySymbol}
+              </Text>
+            )}
             <AnimatedFlex
               fill
               grow
               row
               alignItems="center"
               height={MAX_INPUT_FONT_SIZE}
+              mr="$spacing8"
               overflow="hidden"
               style={loadingStyle}
               onLayout={onLayout}>
-              {isFiatMode && (
-                <Text allowFontScaling color={inputColor} fontSize={fontSize} variant="heading2">
-                  {fiatCurrencySymbol}
-                </Text>
-              )}
               {currencyInfo ? (
-                <Flex>
+                <Flex flexShrink={isWeb ? 1 : 0}>
                   {disabled && (
                     // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
                     <TouchableArea
                       style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}
-                      onPress={triggerShakeAnimation}
+                      onPress={onPressDisabledWithShakeAnimation}
                     />
                   )}
                   <AmountInput
@@ -283,12 +312,14 @@ export const CurrencyInputPanel = memo(
                     flex={1}
                     focusable={!disabled && Boolean(currencyInfo)}
                     fontFamily="$heading"
-                    fontSize={fontSize}
-                    maxDecimals={currencyInfo.currency.decimals}
-                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     // This is a hacky workaround for Android to prevent text from being cut off
                     // (the text input height is greater than the font size and the input is
                     // centered vertically, so the caret is cut off but the text is not)
+                    fontSize={fontSize}
+                    maxDecimals={
+                      isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals
+                    }
+                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={2 * MAX_INPUT_FONT_SIZE}
                     overflow="visible"
                     placeholder="0"
@@ -296,8 +327,6 @@ export const CurrencyInputPanel = memo(
                     px="$none"
                     py="$none"
                     returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                    // Inline for better interaction with custom selection refs
-                    showCurrencySign={false}
                     showSoftInputOnFocus={showSoftInputOnFocus}
                     testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
                     value={isLoading ? loadingTextValue : value}
@@ -314,32 +343,27 @@ export const CurrencyInputPanel = memo(
                 </TouchableArea>
               )}
             </AnimatedFlex>
-            <Animated.View style={shakeStyle}>
-              <Flex row alignItems="center">
-                <SelectTokenButton
-                  selectedCurrencyInfo={currencyInfo}
-                  testID={
-                    currencyField === CurrencyField.INPUT
-                      ? ElementName.ChooseInputToken
-                      : ElementName.ChooseOutputToken
-                  }
-                  onPress={onShowTokenSelector}
-                />
-              </Flex>
-            </Animated.View>
-          </Flex>
+
+            <Flex row alignItems="center">
+              <SelectTokenButton
+                selectedCurrencyInfo={currencyInfo}
+                testID={
+                  currencyField === CurrencyField.INPUT
+                    ? ElementName.ChooseInputToken
+                    : ElementName.ChooseOutputToken
+                }
+                onPress={onShowTokenSelector}
+              />
+            </Flex>
+          </AnimatedFlex>
           {currencyInfo && (
             <Flex row gap="$spacing8" justifyContent="space-between">
               <TouchableArea
-                disabled={fiatModeFeatureEnabled}
-                onPress={disabled ? triggerShakeAnimation : _onToggleIsFiatMode}>
+                onPress={disabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}>
                 <Flex centered row shrink gap="$spacing4">
                   <Text color="$neutral2" numberOfLines={1} variant="body3">
                     {inputPanelFormattedValue}
                   </Text>
-                  {Boolean(inputPanelFormattedValue && fiatModeFeatureEnabled) && (
-                    <ArrowUpDown color="$neutral3" size="$icon.12" />
-                  )}
                 </Flex>
               </TouchableArea>
               <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">

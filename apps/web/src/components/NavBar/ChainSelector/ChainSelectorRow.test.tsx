@@ -1,7 +1,6 @@
 import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { render } from 'test-utils/render'
-
-import ChainSelectorRow from './ChainSelectorRow'
 
 describe('ChainSelectorRow', () => {
   SUPPORTED_CHAINS.forEach((chainId) => {

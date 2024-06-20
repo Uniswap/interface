@@ -1,15 +1,18 @@
-import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
-import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
-
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
+import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import { LiquidityBarSeries } from 'components/Charts/LiquidityChart/liquidity-bar-series'
+import {
+  LiquidityBarData,
+  LiquidityBarProps,
+  LiquidityBarSeriesOptions,
+} from 'components/Charts/LiquidityChart/renderer'
 import { BigNumber } from 'ethers/lib/ethers'
 import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
+import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { LiquidityBarSeries } from './liquidity-bar-series'
-import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions } from './renderer'
 
 interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}
 

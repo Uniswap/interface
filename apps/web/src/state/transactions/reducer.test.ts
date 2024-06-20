@@ -1,7 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
-
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import reducer, {
   addTransaction,
   cancelTransaction,
@@ -10,8 +8,9 @@ import reducer, {
   finalizeTransaction,
   initialState,
   TransactionState,
-} from './reducer'
-import { ConfirmedTransactionDetails, PendingTransactionDetails, TransactionType } from './types'
+} from 'state/transactions/reducer'
+import { ConfirmedTransactionDetails, PendingTransactionDetails, TransactionType } from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 describe('transaction reducer', () => {
   let store: Store<TransactionState>

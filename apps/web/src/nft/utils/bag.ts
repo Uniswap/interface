@@ -1,7 +1,6 @@
 import { BagItem, BagItemStatus, BagStatus, RoutingItem, UpdatedGenieAsset } from 'nft/types'
-
-import { compareAssetsWithTransactionRoute } from './txRoute/combineItemsWithTxRoute'
-import { filterUpdatedAssetsByState } from './updatedAssets'
+import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
+import { filterUpdatedAssetsByState } from 'nft/utils/updatedAssets'
 
 export function getPurchasableAssets(itemsInBag: BagItem[]): UpdatedGenieAsset[] {
   return itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)

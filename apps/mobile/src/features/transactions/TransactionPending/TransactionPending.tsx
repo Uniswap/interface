@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
-import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ChainId } from 'uniswap/src/types/chains'
 import {

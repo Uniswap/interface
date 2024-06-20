@@ -20,7 +20,6 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
 import {
-  AnimatedFlex,
   Flex,
   Separator,
   Text,
@@ -30,6 +29,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'

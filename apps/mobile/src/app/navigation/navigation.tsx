@@ -30,6 +30,7 @@ import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceP
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { OnDeviceRecoveryScreen } from 'src/screens/Import/OnDeviceRecoveryScreen'
+import { OnDeviceRecoveryViewSeedPhraseScreen } from 'src/screens/Import/OnDeviceRecoveryViewSeedPhraseScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
@@ -309,6 +310,11 @@ export function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen
             component={OnDeviceRecoveryScreen}
             name={OnboardingScreens.OnDeviceRecovery}
+            options={navOptions.noHeader}
+          />
+          <OnboardingStack.Screen
+            component={OnDeviceRecoveryViewSeedPhraseScreen}
+            name={OnboardingScreens.OnDeviceRecoveryViewSeedPhrase}
             options={navOptions.noHeader}
           />
           <OnboardingStack.Screen

@@ -1,7 +1,5 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useNetInfo } from '@react-native-community/netinfo'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-
 import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
@@ -24,6 +22,7 @@ import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { NetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 

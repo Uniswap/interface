@@ -50,6 +50,7 @@ export enum OnboardingScreens {
 
   // on-device recovery
   OnDeviceRecovery = 'OnDeviceRecovery',
+  OnDeviceRecoveryViewSeedPhrase = 'OnDeviceRecoveryViewSeedPhrase',
 }
 
 export enum UnitagScreens {

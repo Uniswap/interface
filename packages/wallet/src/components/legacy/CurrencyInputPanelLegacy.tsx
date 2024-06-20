@@ -7,7 +7,7 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
+import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -15,6 +15,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -32,6 +33,7 @@ type CurrentInputPanelProps = {
   focus?: boolean
   isOutput?: boolean
   isFiatInput?: boolean
+  onToggleFiatInput?: (isFiatInput: boolean) => void
   onSetMax?: (amount: string) => void
   onPressIn?: () => void
   warnings: Warning[]
@@ -103,6 +105,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     autoFocus,
     isOutput = false,
     isFiatInput = false,
+    onToggleFiatInput,
     onPressIn,
     warnings,
     dimTextColor,
@@ -191,19 +194,36 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     [isOutput, currencyInfo]
   )
 
+  const handleToggleFiatInput = useCallback(() => {
+    onToggleFiatInput?.(!isFiatInput)
+  }, [isFiatInput, onToggleFiatInput])
+
   const { outerPadding, innerPadding } = paddingStyles
   const { paddingBottom, paddingTop, paddingHorizontal } = outerPadding
   const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
+
+  const inputColor = !value ? '$neutral3' : '$neutral1'
+  const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
   return (
     <Flex gap="$spacing8" pb={paddingBottom} pt={paddingTop} px={paddingHorizontal} {...rest}>
       <Flex
         row
         alignItems="center"
-        gap="$spacing8"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         pb={innerPaddingBottom}
         pt={innerPaddingTop}>
+        {isFiatInput && (
+          <Text
+            allowFontScaling
+            color={inputColor}
+            fontSize={fontSize}
+            height={fontSize}
+            lineHeight={fontSize}
+            mr="$spacing2">
+            {fiatCurrencySymbol}
+          </Text>
+        )}
         {currencyInfo && (
           <Flex
             fill
@@ -234,7 +254,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               px="$none"
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showCurrencySign={isFiatInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
               value={value}
@@ -244,18 +263,20 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             />
           </Flex>
         )}
-        <Flex row alignItems="center">
+        <Flex row alignItems="center" pl="$spacing8">
           <SelectTokenButton selectedCurrencyInfo={currencyInfo} onPress={onShowTokenSelector} />
         </Flex>
       </Flex>
 
       {currencyInfo && (
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
-          <Flex shrink>
-            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-              {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
-            </Text>
-          </Flex>
+          <TouchableArea onPress={handleToggleFiatInput}>
+            <Flex shrink>
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
+              </Text>
+            </Flex>
+          </TouchableArea>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
             <Text
               color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}

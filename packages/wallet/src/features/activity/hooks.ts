@@ -6,6 +6,12 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import {
+  LoadingItem,
+  SectionHeader,
+  isLoadingItem,
+  isSectionHeader,
+} from 'wallet/src/features/activity/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
@@ -15,7 +21,6 @@ import {
 } from 'wallet/src/features/transactions/history/utils'
 import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from './utils'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]

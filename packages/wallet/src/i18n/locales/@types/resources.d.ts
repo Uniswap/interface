@@ -992,7 +992,7 @@ interface Resources {
       },
       "status": {
         "fail": {
-          "description": "Keep in mind that the network fee is still charged for failed transfers."
+          "description": "Keep in mind that the network cost is still charged for failed transfers."
         },
         "failed": {
           "title": "Send failed"
@@ -1603,7 +1603,7 @@ interface Resources {
       "action": {
         "cancel": {
           "button": "Cancel transaction",
-          "description": "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.",
+          "description": "If you cancel this transaction before it’s processed by the network, you’ll pay a new network cost instead of the original one.",
           "title": "Cancel this transaction?"
         },
         "copy": "Copy transaction ID",

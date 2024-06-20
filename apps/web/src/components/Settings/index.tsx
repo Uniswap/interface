@@ -3,7 +3,11 @@ import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
+import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
+import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
+import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
+import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
 import { isUniswapXSupportedChain, L2_CHAIN_IDS, useIsSupportedChainId } from 'constants/chains'
 import { useIsMobile } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -21,11 +25,6 @@ import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-
-import MaxSlippageSettings from './MaxSlippageSettings'
-import MenuButton from './MenuButton'
-import RouterPreferenceSettings from './RouterPreferenceSettings'
-import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const CloseButton = styled.button`
   background: transparent;

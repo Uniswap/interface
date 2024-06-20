@@ -12,7 +12,7 @@ import { ChainId, RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
-import { SignerManager } from './signing/SignerManager'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 export interface WalletContextValue {
   // Manages contracts

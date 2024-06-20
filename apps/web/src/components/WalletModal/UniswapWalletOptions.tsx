@@ -1,13 +1,13 @@
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { Text } from 'ui/src'
 import { Mobile, QrCode } from 'ui/src/components/icons'
-import { useConnectorWithId } from './useOrderedConnections'
 
 const OptionContainer = styled(Row)`
   padding: 16px;

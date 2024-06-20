@@ -11,6 +11,8 @@ import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
+import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
+import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -21,8 +23,6 @@ import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
-import { getTokenPageDescription, getTokenPageTitle } from './utils'
 
 function useOnChainToken(address: string | undefined, chainId: ChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)

@@ -67,4 +67,5 @@ ignores: [
     "types",
     "utils",
     "i18n",
+    "tamagui.config",
   ]

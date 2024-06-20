@@ -1,4 +1,6 @@
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
+import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
@@ -13,9 +15,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
-
-import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
-import { useAssetActivitySubscription } from './AssetActivityProvider'
 
 const {
   Provider: AdaptiveTokenBalancesProvider,

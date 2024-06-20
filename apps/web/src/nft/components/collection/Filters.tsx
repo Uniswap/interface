@@ -1,8 +1,11 @@
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { getSortDropdownOptions } from 'nft/components/collection/CollectionNfts'
 import * as styles from 'nft/components/collection/Filters.css'
 import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
+import { TraitSelect } from 'nft/components/collection/TraitSelect'
+import { FilterSortDropdown } from 'nft/components/common/SortDropdown'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subhead } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
@@ -11,10 +14,6 @@ import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
 import { useMemo, useReducer } from 'react'
 import { isMobile } from 'utilities/src/platform'
-
-import { FilterSortDropdown } from '../common/SortDropdown'
-import { getSortDropdownOptions } from './CollectionNfts'
-import { TraitSelect } from './TraitSelect'
 
 export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
   const { buyNow, setBuyNow } = useCollectionFilters((state) => ({

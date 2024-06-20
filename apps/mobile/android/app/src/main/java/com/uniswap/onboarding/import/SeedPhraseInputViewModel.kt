@@ -30,7 +30,6 @@ class SeedPhraseInputViewModel(
   }
 
   data class ReactNativeStrings(
-    val helpText: String,
     val inputPlaceholder: String,
     val pasteButton: String,
     val errorInvalidWord: String,
@@ -43,7 +42,6 @@ class SeedPhraseInputViewModel(
   var mnemonicIdForRecovery by mutableStateOf<String?>(null)
   var rnStrings by mutableStateOf(
     ReactNativeStrings(
-      helpText = "",
       inputPlaceholder = "",
       pasteButton = "",
       errorInvalidWord = "",

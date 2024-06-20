@@ -16,21 +16,15 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  Flex,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useIsDarkMode,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, useDeviceInsets, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAndroid, isIOS } from 'utilities/src/platform'
+import { BottomSheetContextProvider } from 'wallet/src/components/modals/BottomSheetContext'
 import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
+import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
-import { BottomSheetContextProvider } from './BottomSheetContext'
-import { HandleBar } from './HandleBar'
 
 /**
  * (android only)

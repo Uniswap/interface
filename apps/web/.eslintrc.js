@@ -18,6 +18,18 @@ module.exports = {
 
   overrides: [
     {
+      files: ['src/**/*.ts', 'src/**/*.tsx'],
+      rules: {
+        'no-relative-import-paths/no-relative-import-paths': [
+          'error',
+          {
+            allowSameFolder: false,
+            rootDir: 'src',
+          },
+        ],
+      },
+    },
+    {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],

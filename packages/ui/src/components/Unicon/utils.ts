@@ -1,118 +1,43 @@
-// dummy file to make sure we don't get an error when importing Unicon
+import { isAddress, keccak256, toUtf8Bytes } from 'ethers/lib/utils'
+import { UNICON_COLORS } from 'ui/src/components/Unicon/Colors'
 
-import { isAddress } from 'ethers/lib/utils'
-
-import { containerSvgPaths } from './Container'
-import { emblemSvgPaths } from './Emblem'
-import {
-  blurs,
-  gradientEnds,
-  gradientStarts,
-  UniconAttributeData,
-  UniconAttributes,
-  UniconAttributesArray,
-  UniconAttributesToIndices,
-  UniconNumOptions,
-} from './types.web'
-
-const NUM_CHARS_TO_USE_PER_ATTRIBUTE = 2
-
-export const isEthAddress = (address: string): boolean => {
-  return address.startsWith('0x') && isAddress(address.toLowerCase())
-}
-
-export const deriveUniconAttributeIndices = (
-  address: string,
-  randomSeed = 0
-): UniconAttributesToIndices | undefined => {
-  if (!isEthAddress(address)) {
-    return
+export const getUniconsDeterministicHash = (address: string): bigint => {
+  if (!isValidEthAddress(address)) {
+    throw new Error('Invalid Ethereum address')
   }
-
-  const hexAddr = address.slice(-40)
-  const newIndices = {
-    [UniconAttributes.GradientStart]: 0,
-    [UniconAttributes.GradientEnd]: 0,
-    [UniconAttributes.Container]: 0,
-    [UniconAttributes.Shape]: 0,
-  } as UniconAttributesToIndices
-  for (const a of UniconAttributesArray) {
-    const optionHex = hexAddr.slice(
-      NUM_CHARS_TO_USE_PER_ATTRIBUTE * a,
-      NUM_CHARS_TO_USE_PER_ATTRIBUTE * (a + 1)
-    )
-    const optionDec = parseInt(optionHex, 16) + randomSeed
-    const optionIndex = optionDec % UniconNumOptions[a]
-    newIndices[a] = optionIndex
-  }
-  return newIndices
+  const hash = keccak256(toUtf8Bytes(address))
+  const hashNumber = BigInt('0x' + hash.slice(2, 12))
+  return hashNumber
 }
 
-export const getUniconAttributeData = (
-  attributeIndices: UniconAttributesToIndices
-): UniconAttributeData => {
-  return {
-    [UniconAttributes.GradientStart]:
-      gradientStarts[attributeIndices[UniconAttributes.GradientStart]],
-    [UniconAttributes.GradientEnd]: gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
-    [UniconAttributes.Container]: containerSvgPaths[attributeIndices[UniconAttributes.Container]],
-    [UniconAttributes.Shape]: emblemSvgPaths[attributeIndices[UniconAttributes.Shape]],
-  } as UniconAttributeData
+const ETH_ADDRESS_LENGTH = 42 // Ethereum addresses are 42 characters long including '0x'
+// TODO: move to a shared location in utilities or wallet package
+export const isValidEthAddress = (address: string): boolean => {
+  return Boolean(
+    address.startsWith('0x') &&
+      isAddress(address.toLowerCase()) &&
+      address.length === ETH_ADDRESS_LENGTH
+  )
 }
 
-export const useUniconColors = (
-  activeAddress: string | undefined
+export const getUniconColors = (
+  activeAddress: string,
+  isDark: boolean = false
 ): {
-  glow: string
-  gradientStart: string
-  gradientEnd: string
+  color: string
 } => {
-  const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
-  if (!attributeIndices) {
-    return {
-      gradientStart: '$accent1',
-      gradientEnd: '$accent2',
-      glow: '$accent1',
-    }
-  }
+  const hashValue = getUniconsDeterministicHash(activeAddress)
+  const colorIndex = isDark ? 1 : 0
 
-  const attributeData = getUniconAttributeData(attributeIndices)
-  const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
-  if (!blurColor) {
-    return {
-      gradientStart: '$accent1',
-      gradientEnd: '$accent2',
-      glow: '$accent1',
-    }
+  let colorToUse
+  if (!isNaN(Number(hashValue.toString()))) {
+    const colorArrayIndex = Number(hashValue.toString()) % Number(UNICON_COLORS.length)
+    colorToUse = UNICON_COLORS[colorArrayIndex]?.[colorIndex]
+  } else {
+    colorToUse = UNICON_COLORS[0]?.[colorIndex]
   }
 
   return {
-    gradientStart: attributeData[UniconAttributes.GradientStart].toString(),
-    gradientEnd: attributeData[UniconAttributes.GradientEnd].toString(),
-    glow: blurColor.toString(),
-  }
-}
-
-// Adapted from https://natclark.com/tutorials/javascript-lighten-darken-hex-color/
-export function adjustColor(hexColor: string, magnitude: number): string {
-  hexColor = hexColor.replace(`#`, ``)
-  if (hexColor.length === 6) {
-    const decimalColor = parseInt(hexColor, 16)
-    // eslint-disable-next-line no-bitwise
-    let r = (decimalColor >> 16) + magnitude
-    r > 255 && (r = 255)
-    r < 0 && (r = 0)
-    // eslint-disable-next-line no-bitwise
-    let g = (decimalColor & 0x0000ff) + magnitude
-    g > 255 && (g = 255)
-    g < 0 && (g = 0)
-    // eslint-disable-next-line no-bitwise
-    let b = ((decimalColor >> 8) & 0x00ff) + magnitude
-    b > 255 && (b = 255)
-    b < 0 && (b = 0)
-    // eslint-disable-next-line no-bitwise
-    return `#${(g | (b << 8) | (r << 16)).toString(16)}`
-  } else {
-    return hexColor
+    color: (colorToUse || '#F50DB4').toString(),
   }
 }

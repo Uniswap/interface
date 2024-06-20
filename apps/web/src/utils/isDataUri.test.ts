@@ -1,4 +1,4 @@
-import isDataUri from './isDataUri'
+import isDataUri from 'utils/isDataUri'
 
 describe('isDataUri', () => {
   it('Valid Base64 Encoded PNG Image', () => {

@@ -8,6 +8,7 @@ import type { AddressMap } from '@uniswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
@@ -22,7 +23,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
-import { PositionInfo } from './cache'
 
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 

@@ -4,6 +4,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
+import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
@@ -11,13 +12,15 @@ import { SearchNFTCollectionItem } from 'src/components/explore/search/items/Sea
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnitagItem'
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
+import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
 import { ChainId } from 'uniswap/src/types/chains'
@@ -31,8 +34,6 @@ import {
   TokenSearchResult,
 } from 'wallet/src/features/search/SearchResult'
 import { getValidAddress } from 'wallet/src/utils/addresses'
-import { SEARCH_RESULT_HEADER_KEY } from './constants'
-import { SearchResultOrHeader } from './types'
 
 const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'
@@ -58,6 +59,8 @@ const EtherscanHeaderItem: SearchResultOrHeader = {
     blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
   }),
 }
+
+const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
@@ -172,15 +175,19 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   if (error) {
-    return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel="common.button.retry"
-          title={t('explore.search.error')}
-          onRetry={onRetry}
-        />
-      </AnimatedFlex>
-    )
+    if (IGNORED_ERRORS.includes(error?.message)) {
+      logger.info('SearchResultSection', 'useExploreSearchQuery', error?.message)
+    } else {
+      return (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
+          <BaseCard.ErrorState
+            retryButtonLabel={t('common.button.retry')}
+            title={t('explore.search.error')}
+            onRetry={onRetry}
+          />
+        </AnimatedFlex>
+      )
+    }
   }
 
   return (

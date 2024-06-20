@@ -13,7 +13,8 @@ import {
   TAB_VIEW_SCROLL_THROTTLE,
   TabProps,
 } from 'src/components/layout/TabHelpers'
-import { AnimatedFlex, Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -145,32 +146,12 @@ export const TokenBalanceListInner = forwardRef<
   const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
 
   const ListEmptyComponent = useMemo(() => {
-    if (!balancesById) {
-      return (
-        <Flex grow px="$spacing24">
-          {empty}
-        </Flex>
-      )
-    }
-
-    if (isNonPollingRequestInFlight(networkStatus)) {
-      return (
-        <Flex px="$spacing24">
-          <Loader.Token withPrice repeat={6} />
-        </Flex>
-      )
-    }
-
     return (
-      <Flex pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel={t('common.button.retry')}
-          title={t('home.tokens.error.load')}
-          onRetry={(): void | undefined => refetch?.()}
-        />
+      <Flex grow px="$spacing24" style={containerProps?.emptyContainerStyle}>
+        {empty}
       </Flex>
     )
-  }, [balancesById, empty, t, networkStatus, refetch])
+  }, [containerProps?.emptyContainerStyle, empty])
 
   const hasError = isError(networkStatus, !!balancesById)
 
@@ -201,8 +182,6 @@ export const TokenBalanceListInner = forwardRef<
     []
   )
 
-  const data = balancesById ? (isFocused ? rows : cachedRows) : undefined
-
   // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
   return (
     <ReactNavigationPerformanceView
@@ -211,32 +190,48 @@ export const TokenBalanceListInner = forwardRef<
         // Marks the home screen as interactive when balances are defined
         MobileScreens.Home
       }>
-      <List
-        ref={ref as never}
-        ListEmptyComponent={ListEmptyComponent}
-        // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-        ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-        ListFooterComponentStyle={ListFooterComponentStyle}
-        ListHeaderComponent={ListHeaderComponent}
-        contentContainerStyle={containerProps?.contentContainerStyle}
-        data={data}
-        getItemLayout={getItemLayout}
-        initialNumToRender={20}
-        keyExtractor={keyExtractor}
-        maxToRenderPerBatch={20}
-        refreshControl={refreshControl}
-        refreshing={refreshing}
-        renderItem={renderItem}
-        scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
-        showsVerticalScrollIndicator={false}
-        updateCellsBatchingPeriod={10}
-        windowSize={isFocused ? 10 : 3}
-        onContentSizeChange={onContentSizeChange}
-        onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
-        onRefresh={onRefresh}
-        onScroll={scrollHandler}
-        onScrollEndDrag={containerProps?.onScrollEndDrag}
-      />
+      {!balancesById ? (
+        isNonPollingRequestInFlight(networkStatus) ? (
+          <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
+            <Loader.Token withPrice repeat={6} />
+          </Flex>
+        ) : (
+          <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
+            <BaseCard.ErrorState
+              retryButtonLabel={t('common.button.retry')}
+              title={t('home.tokens.error.load')}
+              onRetry={(): void | undefined => refetch?.()}
+            />
+          </Flex>
+        )
+      ) : (
+        <List
+          ref={ref as never}
+          ListEmptyComponent={ListEmptyComponent}
+          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+          ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+          ListFooterComponentStyle={ListFooterComponentStyle}
+          ListHeaderComponent={ListHeaderComponent}
+          contentContainerStyle={containerProps?.contentContainerStyle}
+          data={isFocused ? rows : cachedRows}
+          getItemLayout={getItemLayout}
+          initialNumToRender={20}
+          keyExtractor={keyExtractor}
+          maxToRenderPerBatch={20}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
+          renderItem={renderItem}
+          scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
+          showsVerticalScrollIndicator={false}
+          updateCellsBatchingPeriod={10}
+          windowSize={isFocused ? 10 : 3}
+          onContentSizeChange={onContentSizeChange}
+          onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
+          onRefresh={onRefresh}
+          onScroll={scrollHandler}
+          onScrollEndDrag={containerProps?.onScrollEndDrag}
+        />
+      )}
     </ReactNavigationPerformanceView>
   )
 })

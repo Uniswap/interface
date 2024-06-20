@@ -4,6 +4,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/Activity.css'
 import {
   ActivityExternalLinkIcon,
   ActivityListingIcon,
@@ -38,7 +39,6 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import * as styles from './Activity.css'
 
 const AddressLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral1};

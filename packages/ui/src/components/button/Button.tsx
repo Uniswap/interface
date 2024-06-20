@@ -14,7 +14,7 @@ import {
   wrapChildrenInText,
   XStack,
 } from 'tamagui'
-import { IconProps } from 'ui/src/components/factories/createIcon'
+import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { HapticFeedback, HapticFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'

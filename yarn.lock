@@ -10135,19 +10135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/animations-css@npm:1.95.1":
-  version: 1.95.1
-  resolution: "@tamagui/animations-css@npm:1.95.1"
-  dependencies:
-    "@tamagui/constants": 1.95.1
-    "@tamagui/cubic-bezier-animator": 1.95.1
-    "@tamagui/use-presence": 1.95.1
-    "@tamagui/web": 1.95.1
-    react: ^18.2.0
-  checksum: 471b8206c711a458f9a99d3943c28bbc397f53f088246fdc3aab387254d65754e4a036a3020a6bb3058768213017dc98588e075dc4868328242a8e4699a99bcb
-  languageName: node
-  linkType: hard
-
 "@tamagui/animations-moti@npm:1.95.1":
   version: 1.95.1
   resolution: "@tamagui/animations-moti@npm:1.95.1"
@@ -10412,13 +10399,6 @@ __metadata:
   dependencies:
     "@tamagui/web": 1.95.1
   checksum: bd4a2c1cf11c5adffac5e96fb0f8d7d0fb7d78da3abeb92e8f89dd631cd880326ba2638be5718ad70186f81829a7cfabf292abf6aeb31bf276b705b6292ee4a9
-  languageName: node
-  linkType: hard
-
-"@tamagui/cubic-bezier-animator@npm:1.95.1":
-  version: 1.95.1
-  resolution: "@tamagui/cubic-bezier-animator@npm:1.95.1"
-  checksum: d9b23b8239131cc4d69c016ab8a6ca02ad2803be7de8ca2552e3865a64b3516d907d93791e26191ade37cd8d4595e87c5424139fde8d06376dd95e6dd31a7039
   languageName: node
   linkType: hard
 
@@ -13645,7 +13625,7 @@ __metadata:
     inter-ui: 3.19.3
     jest: 29.7.0
     jest-extended: 4.0.1
-    jest-fail-on-console: 3.1.1
+    jest-fail-on-console: 3.3.0
     jest-fetch-mock: 3.0.3
     jest-styled-components: 7.2.0
     jotai: 1.3.7
@@ -13885,7 +13865,7 @@ __metadata:
     react-native-svg-transformer: 1.3.0
     react-native-tab-view: 3.5.2
     react-native-url-polyfill: 1.3.0
-    react-native-wagmi-charts: 2.3.0
+    react-native-wagmi-charts: 2.5.1
     react-native-webview: 11.23.1
     react-native-widgetkit: 1.0.9
     react-redux: 8.0.5
@@ -20100,7 +20080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:2.5.0 - 3, d3-array@npm:3, d3-array@npm:^3.2.0":
+"d3-array@npm:2 - 3, d3-array@npm:2.10.0 - 3, d3-array@npm:2.5.0 - 3, d3-array@npm:3, d3-array@npm:^3.1.6, d3-array@npm:^3.2.0":
   version: 3.2.4
   resolution: "d3-array@npm:3.2.4"
   dependencies:
@@ -24398,9 +24378,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fbjs@npm:^3.0.0, fbjs@npm:^3.0.4":
-  version: 3.0.4
-  resolution: "fbjs@npm:3.0.4"
+"fbjs@npm:^3.0.0, fbjs@npm:^3.0.4, fbjs@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "fbjs@npm:3.0.5"
   dependencies:
     cross-fetch: ^3.1.5
     fbjs-css-vars: ^1.0.0
@@ -24408,8 +24388,8 @@ __metadata:
     object-assign: ^4.1.0
     promise: ^7.1.1
     setimmediate: ^1.0.5
-    ua-parser-js: ^0.7.30
-  checksum: 8b23a3550fcda8a9109fca9475a3416590c18bb6825ea884192864ed686f67fcd618e308a140c9e5444fbd0168732e1ff3c092ba3d0c0ae1768969f32ba280c7
+    ua-parser-js: ^1.0.35
+  checksum: e609b5b64686bc96495a5c67728ed9b2710b9b3d695c5759c5f5e47c9483d1c323543ac777a86459e3694efc5712c6ce7212e944feb19752867d699568bb0e54
   languageName: node
   linkType: hard
 
@@ -28729,12 +28709,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-fail-on-console@npm:3.1.1":
-  version: 3.1.1
-  resolution: "jest-fail-on-console@npm:3.1.1"
-  dependencies:
-    chalk: ^4.1.0
-  checksum: dbc244766fb78525b2d4a7e879678b91032acefa04694e17edb5917e325abf8ee356bdf728bc1c89058d67b9c8b3da4cd45515232eb9ab1b973a6b4f57bfb7af
+"jest-fail-on-console@npm:3.3.0":
+  version: 3.3.0
+  resolution: "jest-fail-on-console@npm:3.3.0"
+  checksum: 891cbe9bac5d7656beee75850c880427401880debc6dc110b845d17313cf375dc5f6f1d27eaf411553839287fe150fd46738f3c5facba5cb22244546ee66e111
   languageName: node
   linkType: hard
 
@@ -36736,9 +36714,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-redash@npm:^16.1.1":
-  version: 16.3.0
-  resolution: "react-native-redash@npm:16.3.0"
+"react-native-redash@npm:^18.1.3":
+  version: 18.1.3
+  resolution: "react-native-redash@npm:18.1.3"
   dependencies:
     abs-svg-path: ^0.1.1
     normalize-svg-path: ^1.0.1
@@ -36748,7 +36726,7 @@ __metadata:
     react-native: "*"
     react-native-gesture-handler: "*"
     react-native-reanimated: ">=2.0.0"
-  checksum: f7e09c4fb21bd0be4013a4f72c1d5f2b4cc003fd11421f58e43c019f3243550ca300786eb3ddc0ccdd3d73067f27df5264caa41489a47be94510feac8f67ddd0
+  checksum: 8ef94db8d05b29c76ff05e095233a94dcb8d9cf1f1ae569a27b55c3f83c0224a8fd2d36228c9a36eb74c6ed32d0e1d5019ec7a3154dc0ee5ab8433fe3bbbde2a
   languageName: node
   linkType: hard
 
@@ -36857,41 +36835,47 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-wagmi-charts@npm:2.3.0":
-  version: 2.3.0
-  resolution: "react-native-wagmi-charts@npm:2.3.0"
+"react-native-wagmi-charts@npm:2.5.1":
+  version: 2.5.1
+  resolution: "react-native-wagmi-charts@npm:2.5.1"
   dependencies:
+    d3-array: ^3.1.6
     d3-interpolate-path: ^2.2.3
     d3-scale: ^2
     d3-shape: ^3.0.1
+    fbjs: ^3.0.5
     react-keyed-flatten-children: ^1.3.0
-    react-native-redash: ^16.1.1
+    react-native-redash: ^18.1.3
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
     react-native-reanimated: "*"
+    react-native-redash: "*"
     react-native-svg: "*"
-  checksum: 3788e5da0c0197f70f229a53d88f0a856104767f79944cc37c7b0c2b5765d072b4fa7fdd05b937d7b76d059244460f96b33c5321ce9fe89d44699002fecbf35e
+  checksum: 72f41ae63729a9385115a377f274b0cc742db0ac18434191f78a1933c87f21d39b9ce4b279c9210b4c3e90b592127ad9d30aeb1b1a61dc2d8a8059f2202ace91
   languageName: node
   linkType: hard
 
-"react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::locator=universe%40workspace%3A.":
-  version: 2.3.0
-  resolution: "react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.3.0#./.yarn/patches/react-native-wagmi-charts-npm-2.3.0-8e836a8f3c.patch::version=2.3.0&hash=2dff80&locator=universe%40workspace%3A."
+"react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.5.1#./.yarn/patches/react-native-wagmi-charts-npm-2.5.1-c9e2637be7.patch::locator=universe%40workspace%3A.":
+  version: 2.5.1
+  resolution: "react-native-wagmi-charts@patch:react-native-wagmi-charts@npm%3A2.5.1#./.yarn/patches/react-native-wagmi-charts-npm-2.5.1-c9e2637be7.patch::version=2.5.1&hash=fb42c2&locator=universe%40workspace%3A."
   dependencies:
+    d3-array: ^3.1.6
     d3-interpolate-path: ^2.2.3
     d3-scale: ^2
     d3-shape: ^3.0.1
+    fbjs: ^3.0.5
     react-keyed-flatten-children: ^1.3.0
-    react-native-redash: ^16.1.1
+    react-native-redash: ^18.1.3
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
     react-native-reanimated: "*"
+    react-native-redash: "*"
     react-native-svg: "*"
-  checksum: 8de1714da2fc38271927182e1d1ce8ad8105b409c0d9e8f2fba6be208151b5dbb3cb08541bb31a02fe322d1e9917f7dba22a2f09c0699e534c19831c78bb193e
+  checksum: f81ced17f3f5f6d15fb602a7594e0e95031dbc2d3e4e95e0107312d72343fbb912461f5826e898068f139609c013b0da024140326f83e367c7d2c6acf7bd6b98
   languageName: node
   linkType: hard
 
@@ -42280,10 +42264,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ua-parser-js@npm:^0.7.30":
-  version: 0.7.37
-  resolution: "ua-parser-js@npm:0.7.37"
-  checksum: 9e91a66171aa16c74680cfac84af6ed7ecdeb508ff7c90a55222f56c63172da2d98d2478763e9469c940415fe29c45a56ae51fec1c19a498e7a3b293f7b3b874
+"ua-parser-js@npm:^1.0.35":
+  version: 1.0.38
+  resolution: "ua-parser-js@npm:1.0.38"
+  checksum: d0772b22b027338d806ab17d1ac2896ee7485bdf9217c526028159f3cd6bb10272bb18f6196d2f94dde83e3b36dc9d2533daf08a414764f6f4f1844842383838
   languageName: node
   linkType: hard
 
@@ -42318,7 +42302,6 @@ __metadata:
     "@react-native-masked-view/masked-view": 0.2.9
     "@shopify/flash-list": 1.6.3
     "@shopify/react-native-skia": 1.2.0
-    "@tamagui/animations-css": 1.95.1
     "@tamagui/animations-moti": 1.95.1
     "@tamagui/animations-react-native": 1.95.1
     "@tamagui/build": 1.95.1
@@ -43143,7 +43126,6 @@ __metadata:
     "@sentry/react": 7.80.0
     "@sentry/react-native": 5.5.0
     "@sentry/types": 7.80.0
-    "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
     "@types/chrome": 0.0.254
     "@types/react": ^18.0.15
@@ -43694,6 +43676,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.9.2
     "@uniswap/sdk-core": 5.3.0
+    "@uniswap/uniswapx-sdk": 2.0.4-alpha.1
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v2-sdk": 4.3.2
     "@uniswap/v3-sdk": 3.13.0

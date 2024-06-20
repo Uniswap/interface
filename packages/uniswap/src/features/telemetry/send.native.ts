@@ -4,6 +4,7 @@ import {
   AppsFlyerEventProperties,
   UniverseEventProperties,
 } from 'uniswap/src/features/telemetry/types'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -23,7 +24,7 @@ export async function sendAppsFlyerEvent<EventName extends keyof AppsFlyerEventP
     : [EventName, AppsFlyerEventProperties[EventName]]
 ): Promise<void> {
   const [eventName, eventProperties] = args
-  if (__DEV__) {
+  if (__DEV__ || isDevEnv() || isBetaEnv()) {
     logger.debug(
       'telemetry/send.native.ts',
       'sendWalletAppsFlyerEvent',

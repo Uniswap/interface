@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
+import { SpaceTokens } from '@tamagui/core'
 import { PropsWithChildren } from 'react'
-import { SpaceTokens } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 
 interface InsetProps {

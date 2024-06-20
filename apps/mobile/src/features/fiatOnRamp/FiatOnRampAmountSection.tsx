@@ -9,12 +9,13 @@ import {
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { AnimatedFlex, ColorTokens, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
+import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
+import { ColorTokens, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
-import { NumberType } from 'utilities/src/format/types'
+import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -22,7 +23,6 @@ import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
-import { useFormatExactCurrencyAmount } from './hooks'
 
 const MAX_INPUT_FONT_SIZE = 56
 const MIN_INPUT_FONT_SIZE = 32
@@ -113,8 +113,6 @@ export function FiatOnRampAmountSection({
     setSelection({ start, end })
   }
 
-  const { formatNumberOrString } = useLocalizationContext()
-
   const inputShakeX = useSharedValue(0)
   const inputAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: inputShakeX.value }],
@@ -157,35 +155,41 @@ export function FiatOnRampAmountSection({
           )}
         </AnimatedFlex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
-          <AmountInput
-            ref={inputRef}
-            autoFocus
-            alignSelf="stretch"
-            backgroundColor="$transparent"
-            borderWidth={0}
-            caretHidden={!showNativeKeyboard}
-            disabled={disabled}
-            fiatCurrencyInfo={fiatCurrencyInfo}
-            fontFamily="$heading"
-            fontSize={fontSize}
-            maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-            minHeight={MAX_INPUT_FONT_SIZE}
-            placeholder={formatNumberOrString({
-              value: 0,
-              type: NumberType.FiatStandard,
-              currencyCode: fiatCurrencyInfo.code,
-            })}
-            placeholderTextColor="$neutral3"
-            px="$none"
-            py="$none"
-            returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-            showCurrencySign={value !== ''}
-            showSoftInputOnFocus={showSoftInputOnFocus}
-            textAlign="center"
-            value={value}
-            onChangeText={onChangeValue(onEnterAmount)}
-            onSelectionChange={onSelectionChange}
-          />
+          <Flex row alignItems="center" justifyContent="center">
+            <Text
+              allowFontScaling
+              color={!value ? '$neutral3' : '$neutral1'}
+              fontSize={fontSize}
+              height={fontSize}
+              lineHeight={fontSize}>
+              {fiatCurrencyInfo.symbol}
+            </Text>
+            <AmountInput
+              ref={inputRef}
+              adjustWidthToContent
+              autoFocus
+              alignSelf="stretch"
+              backgroundColor="$transparent"
+              borderWidth={0}
+              caretHidden={!showNativeKeyboard}
+              disabled={disabled}
+              fiatCurrencyInfo={fiatCurrencyInfo}
+              fontFamily="$heading"
+              fontSize={fontSize}
+              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+              minHeight={MAX_INPUT_FONT_SIZE}
+              placeholder="0"
+              placeholderTextColor="$neutral3"
+              px="$none"
+              py="$none"
+              returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+              showSoftInputOnFocus={showSoftInputOnFocus}
+              textAlign="left"
+              value={value}
+              onChangeText={onChangeValue(onEnterAmount)}
+              onSelectionChange={onSelectionChange}
+            />
+          </Flex>
         </AnimatedFlex>
         {currency.currencyInfo && formattedAmount && (
           <SelectTokenButton

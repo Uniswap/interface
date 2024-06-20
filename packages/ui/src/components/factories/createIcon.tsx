@@ -10,9 +10,9 @@ import {
   styled,
   usePropsAndStyle,
 } from 'tamagui'
+import { withAnimated } from 'ui/src/components/factories/animated'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
-import { withAnimated } from './animated'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 

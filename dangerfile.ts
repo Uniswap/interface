@@ -56,7 +56,11 @@ async function processAddChanges() {
     `'ui/src/components/icons'`,
     `'ui/src/components/logos'`,
     `'ui/src/icons'`,
-    `'ui/src/animations'`
+    `'ui/src/animations'`,
+    `'ui/src/hooks/useDeviceDimensions'`,
+    `'ui/src/components/layout/AnimatedFlex'`,
+    `'ui/src/components/text/AnimatedText'`,
+    `'ui/src/components/AnimatedFlashList/AnimatedFlashList'`,
   ]
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
   allNonUILinesAdded.forEach((change) => {

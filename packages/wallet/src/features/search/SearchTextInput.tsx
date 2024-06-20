@@ -20,9 +20,9 @@ import {
   TouchableArea,
   isWeb,
   useComposedRefs,
-  useDeviceDimensions,
 } from 'ui/src'
 import { RotatableChevron, Search, X } from 'ui/src/components/icons'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

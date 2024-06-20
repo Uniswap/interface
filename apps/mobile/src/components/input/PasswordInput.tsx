@@ -1,8 +1,9 @@
 import React, { forwardRef, useState } from 'react'
 import { TextInput as NativeTextInput } from 'react-native'
-import { AnimatedFlex, Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, TouchableArea, useSporeColors } from 'ui/src'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput, TextInputProps } from 'wallet/src/components/input/TextInput'
 

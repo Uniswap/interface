@@ -4,6 +4,8 @@ import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
 import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
+import { MobileState, ReducerNames, mobileReducer } from 'src/app/reducer'
+import { mobileSaga } from 'src/app/saga'
 import { fiatOnRampAggregatorApi as sharedFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
@@ -12,8 +14,6 @@ import { importAccountSagaName } from 'wallet/src/features/wallet/import/importA
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
-import { MobileState, ReducerNames, mobileReducer } from './reducer'
-import { mobileSaga } from './saga'
 
 const storage = new MMKV()
 

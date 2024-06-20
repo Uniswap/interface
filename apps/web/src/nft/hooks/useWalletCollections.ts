@@ -1,8 +1,7 @@
+import { WalletAsset, WalletCollection } from 'nft/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-
-import { WalletAsset, WalletCollection } from '../types'
 
 interface WalletCollectionState {
   walletAssets: WalletAsset[]

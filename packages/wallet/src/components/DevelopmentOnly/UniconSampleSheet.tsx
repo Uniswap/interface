@@ -1,4 +1,4 @@
-import { Flex, UniconV2 } from 'ui/src'
+import { Flex, Unicon } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
@@ -23,7 +23,7 @@ export const UniconSampleSheet = ({ onClose }: { onClose: () => void }): JSX.Ele
           {generateRandomEthereumAddresses(80).map((address) => {
             return (
               <Flex>
-                <UniconV2 key={address} address={address} size={42} />
+                <Unicon key={address} address={address} size={42} />
               </Flex>
             )
           })}

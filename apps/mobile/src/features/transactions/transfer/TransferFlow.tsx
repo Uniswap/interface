@@ -10,8 +10,9 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { TransferHeader } from 'src/features/transactions/transfer/TransferHeader'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -180,12 +181,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
               <Flex fill gap="$spacing16" mb={insets.bottom} pb="$spacing12" px="$spacing16">
                 {step !== TransactionStep.SUBMITTED && (
                   <TransferHeader
-                    dispatch={dispatch}
                     flowName={t('send.title')}
-                    isFiatInput={isFiatInput}
                     setShowViewOnlyModal={setShowViewOnlyModal}
-                    showFiatToggle={true}
-                    step={step}
                   />
                 )}
                 {renderInnerContentRouter && isSheetReady && (

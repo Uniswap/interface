@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
-import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
+import { isWeb } from 'ui/src'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import {
@@ -16,6 +18,11 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { selectExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/selectors'
+import {
+  ExtensionBetaFeedbackState,
+  setExtensionBetaFeedbackState,
+} from 'wallet/src/features/behaviorHistory/slice'
 import {
   fetchFiatOnRampTransaction,
   fetchMoonpayTransaction,
@@ -58,6 +65,7 @@ export function* transactionWatcher({
   apolloClient: ApolloClient<NormalizedCacheObject>
 }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
+  yield* fork(watchForFinalizedTransactions)
 
   // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
@@ -408,6 +416,31 @@ export function logTransactionEvent(
       tokenAddress,
       toAddress,
     })
+  }
+}
+
+function* watchForFinalizedTransactions() {
+  const state = yield* appSelect(selectExtensionBetaFeedbackState)
+  if (isWeb && state === undefined) {
+    yield* takeEvery(transactionActions.finalizeTransaction.type, maybeLaunchFeedbackModal)
+  }
+}
+
+function* maybeLaunchFeedbackModal(
+  actionData: ReturnType<typeof transactionActions.finalizeTransaction>
+) {
+  const { payload } = actionData
+  const { typeInfo, status } = payload
+  const { type } = typeInfo
+  const state = yield* appSelect(selectExtensionBetaFeedbackState)
+
+  if (
+    status === TransactionStatus.Success &&
+    [TransactionType.Swap, TransactionType.Send].includes(type) &&
+    state === undefined
+  ) {
+    yield* delay(3000)
+    yield* put(setExtensionBetaFeedbackState(ExtensionBetaFeedbackState.ReadyToShow))
   }
 }
 

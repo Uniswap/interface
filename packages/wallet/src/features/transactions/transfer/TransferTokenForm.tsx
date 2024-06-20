@@ -5,18 +5,11 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import {
-  AnimatedFlex,
-  Button,
-  Flex,
-  Text,
-  TouchableArea,
-  isWeb,
-  useDeviceDimensions,
-  useSporeColors,
-} from 'ui/src'
+import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -224,6 +217,8 @@ export function TransferTokenForm({
     setShowWarningModal(true)
   }
 
+  const { onToggleFiatInput } = useTokenFormActionHandlers(dispatch)
+
   const transferWarning = warnings.warnings.find(
     (warning) => warning.severity >= WarningSeverity.Low
   )
@@ -298,6 +293,7 @@ export function TransferTokenForm({
                   setCurrencyFieldFocused(false)
                 }}
                 onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
+                onToggleFiatInput={onToggleFiatInput}
               />
             </Flex>
           )}

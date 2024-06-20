@@ -1842,6 +1842,7 @@ exports[`should have a correct configuration for a React file 1`] = `
     "import",
     "@typescript-eslint",
     "prettier",
+    "no-relative-import-paths",
     "react-hooks",
     "react",
   ],

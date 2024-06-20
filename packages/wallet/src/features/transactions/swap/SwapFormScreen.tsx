@@ -2,7 +2,7 @@
 /* eslint-disable max-lines */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { LayoutChangeEvent, StyleSheet, TextInputProps } from 'react-native'
 import {
   AnimatePresence,
   Flex,
@@ -19,11 +19,15 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
-import { CurrencyInputPanel } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
+import {
+  CurrencyInputPanel,
+  CurrencyInputPanelRef,
+} from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
 import {
   DecimalPadInput,
   DecimalPadInputRef,
@@ -38,6 +42,7 @@ import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/ho
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {
@@ -148,8 +153,8 @@ function SwapFormContent(): JSX.Element {
   // Quote is being fetched for first time
   const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
 
-  const inputRef = useRef<TextInput>(null)
-  const outputRef = useRef<TextInput>(null)
+  const inputRef = useRef<CurrencyInputPanelRef>(null)
+  const outputRef = useRef<CurrencyInputPanelRef>(null)
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
 
   const inputSelectionRef = useRef<TextInputProps['selection']>()
@@ -181,11 +186,14 @@ function SwapFormContent(): JSX.Element {
       const _currencyField = currencyField ?? decimalPadControlledField
       const selectionRef =
         _currencyField === CurrencyField.INPUT ? inputSelectionRef : outputSelectionRef
-      const inputFieldRef = _currencyField === CurrencyField.INPUT ? inputRef : outputRef
+      const inputFieldRef =
+        _currencyField === CurrencyField.INPUT
+          ? inputRef.current?.textInputRef
+          : outputRef.current?.textInputRef
 
       selectionRef.current = { start, end }
 
-      if (!isWeb) {
+      if (!isWeb && inputFieldRef) {
         setTimeout(() => {
           inputFieldRef.current?.setNativeProps?.({ selection: { start, end } })
         }, 0)
@@ -205,17 +213,10 @@ function SwapFormContent(): JSX.Element {
           ? exactAmountFiatRef
           : exactAmountTokenRef
 
-      if (_isFiatMode) {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      } else {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      }
+      resetSelection({
+        start: amountRef.current.length,
+        end: amountRef.current.length,
+      })
     },
     [
       decimalPadControlledField,
@@ -227,16 +228,27 @@ function SwapFormContent(): JSX.Element {
     ]
   )
 
+  const maxDecimals = isFiatMode
+    ? MAX_FIAT_INPUT_DECIMALS
+    : currencies[decimalPadControlledField]?.currency.decimals ?? 0
+
   const decimalPadSetValue = useCallback(
     (value: string): void => {
+      // We disable the `DecimalPad` when the input reaches the max number of decimals,
+      // but we still need to truncate in case the user moves the cursor and adds a decimal separator in the middle of the input.
+      const truncatedValue = truncateToMaxDecimals({
+        value,
+        maxDecimals,
+      })
+
       updateSwapForm({
-        exactAmountFiat: isFiatMode ? value : undefined,
-        exactAmountToken: !isFiatMode ? value : undefined,
+        exactAmountFiat: isFiatMode ? truncatedValue : undefined,
+        exactAmountToken: !isFiatMode ? truncatedValue : undefined,
         exactCurrencyField: decimalPadControlledField,
         focusOnCurrencyField: decimalPadControlledField,
       })
     },
-    [decimalPadControlledField, isFiatMode, updateSwapForm]
+    [decimalPadControlledField, isFiatMode, maxDecimals, updateSwapForm]
   )
 
   const [decimalPadReady, setDecimalPadReady] = useState(false)
@@ -246,6 +258,17 @@ function SwapFormContent(): JSX.Element {
   }, [])
 
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
+
+  const onDecimalPadTriggerInputShake = useCallback(() => {
+    switch (decimalPadControlledField) {
+      case CurrencyField.INPUT:
+        inputRef.current?.triggerShakeAnimation()
+        break
+      case CurrencyField.OUTPUT:
+        outputRef.current?.triggerShakeAnimation()
+        break
+    }
+  }, [decimalPadControlledField, inputRef, outputRef])
 
   const onInputSelectionChange = useCallback(
     (start: number, end: number) => {
@@ -636,11 +659,13 @@ function SwapFormContent(): JSX.Element {
             <Flex grow justifyContent="flex-end">
               <DecimalPadInput
                 ref={decimalPadRef}
+                maxDecimals={maxDecimals}
                 resetSelection={resetSelection}
                 selectionRef={selection[decimalPadControlledField]}
                 setValue={decimalPadSetValue}
                 valueRef={decimalPadValueRef}
                 onReady={onDecimalPadReady}
+                onTriggerInputShakeAnimation={onDecimalPadTriggerInputShake}
               />
             </Flex>
           </Flex>

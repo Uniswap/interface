@@ -106,6 +106,9 @@ export type OnboardingStackParamList = {
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
   [OnboardingScreens.OnDeviceRecovery]: OnboardingStackBaseParams & { mnemonicIds: Address[] }
+  [OnboardingScreens.OnDeviceRecoveryViewSeedPhrase]: {
+    mnemonicId: string
+  } & OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupPassword]: {

@@ -1,6 +1,5 @@
+import { StyledSVG } from 'components/Icons/shared'
 import { useTheme } from 'styled-components'
-
-import { StyledSVG } from './shared'
 
 export default function ErrorIcon({ size = '24px', ...rest }: { size?: string; [k: string]: any }) {
   const theme = useTheme()

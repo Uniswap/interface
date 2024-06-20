@@ -2,10 +2,10 @@ import { ThunkDispatch } from '@reduxjs/toolkit'
 import { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import type { MobileState } from 'src/app/reducer'
 import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { spacing } from 'ui/src/theme'
-import type { MobileState } from './reducer'
 
 // Use throughout the app instead of plain `useDispatch` and `useSelector`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

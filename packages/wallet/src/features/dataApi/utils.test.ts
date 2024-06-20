@@ -8,6 +8,13 @@ import {
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'uniswap/src/types/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import {
+  buildCurrency,
+  currencyIdToContractInput,
+  gqlTokenToCurrencyInfo,
+  tokenProjectToCurrencyInfos,
+  usePersistedError,
+} from 'wallet/src/features/dataApi/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   SAMPLE_CURRENCY_ID_1,
@@ -16,13 +23,6 @@ import {
   usdcTokenProject,
 } from 'wallet/src/test/fixtures'
 import { renderHook } from 'wallet/src/test/test-utils'
-import {
-  buildCurrency,
-  currencyIdToContractInput,
-  gqlTokenToCurrencyInfo,
-  tokenProjectToCurrencyInfos,
-  usePersistedError,
-} from './utils'
 
 describe(currencyIdToContractInput, () => {
   it('converts currencyId to ContractInput', () => {

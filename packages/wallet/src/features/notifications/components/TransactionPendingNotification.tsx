@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
+import { SpinningLoader } from 'ui/src'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { TRANSACTION_PENDING_NOTIFICATION_DELAY } from 'wallet/src/features/notifications/components/SwapPendingNotification'
 

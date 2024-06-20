@@ -1,0 +1,42 @@
+diff --git a/src/charts/line/ChartPath.tsx b/src/charts/line/ChartPath.tsx
+index 3807c185c9456d2976c305df94574ff7d948b32a..070df9b7fd4c3b3ad749ecf1ab91fc2851e914fd 100644
+--- a/src/charts/line/ChartPath.tsx
++++ b/src/charts/line/ChartPath.tsx
+@@ -152,6 +152,8 @@ export function LineChartPathWrapper({
+               width={strokeWidth}
+               {...pathProps}
+             />
++          </Svg>
++          <Svg style={StyleSheet.absoluteFill}>
+             {backgroundChildren}
+           </Svg>
+         </View>
+@@ -166,6 +168,8 @@ export function LineChartPathWrapper({
+         <View style={StyleSheet.absoluteFill}>
+           <AnimatedSVG animatedProps={svgProps} height={height}>
+             <LineChartPath color={color} width={strokeWidth} {...pathProps} />
++          </AnimatedSVG>
++          <AnimatedSVG animatedProps={svgProps} height={height} style={StyleSheet.absoluteFill}>
+             {foregroundChildren}
+           </AnimatedSVG>
+         </View>
+diff --git a/src/charts/line/Dot.tsx b/src/charts/line/Dot.tsx
+index db11303fd8dabf3d70a6b40b94e8fb64d925035d..51d1c9563f72ebff2675f874894cbf635a0204d3 100644
+--- a/src/charts/line/Dot.tsx
++++ b/src/charts/line/Dot.tsx
+@@ -113,6 +113,7 @@ export function LineChartDot({
+     const easing = Easing.out(Easing.sin);
+     const animatedOpacity = withRepeat(
+       withSequence(
++        withTiming(0),
+         withTiming(0.8),
+         withTiming(0, {
+           duration: pulseDurationMs,
+@@ -124,6 +125,7 @@ export function LineChartDot({
+     );
+     const scale = withRepeat(
+       withSequence(
++        withTiming(0),
+         withTiming(0),
+         withTiming(outerSize, {
+           duration: pulseDurationMs,

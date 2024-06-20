@@ -16,6 +16,7 @@ import {
   USDzC,
 } from 'wallet/src/constants/tokens'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -68,7 +69,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (!trade || !trade.routes.length || !trade.routes[0] || !quoteAmount || !currency) {
+    if (!trade || isUniswapX(trade) || !trade.routes[0] || !quoteAmount || !currency) {
       return
     }
 

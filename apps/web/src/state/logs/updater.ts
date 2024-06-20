@@ -3,10 +3,10 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
+import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
 import { logger } from 'utilities/src/logger/logger'
-import { useAppDispatch, useAppSelector } from '../hooks'
-import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
-import { isHistoricalLog, keyToFilter } from './utils'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()

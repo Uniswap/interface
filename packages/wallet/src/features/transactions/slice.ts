@@ -115,10 +115,12 @@ const slice = createSlice({
 
       state[from] ??= {}
       state[from]![chainId] ??= {}
-      const oldTypeInfo = state[from]![chainId]![id]?.typeInfo
+      const oldTypeInfo = state[from]![chainId]![id]?.typeInfo as
+        | FiatPurchaseTransactionInfo
+        | undefined
       state[from]![chainId]![id] = {
         ...transaction,
-        ...{ typeInfo: { ...oldTypeInfo, ...transaction.typeInfo } },
+        typeInfo: { ...oldTypeInfo, ...transaction.typeInfo },
       }
     },
   },

@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css'
-
-import { breakpoints, sprinkles } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 export const assetList = style([
   sprinkles({

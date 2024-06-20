@@ -1,6 +1,6 @@
+import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { act, fireEvent, render } from 'src/test/test-utils'
 import { setClipboard } from 'wallet/src/utils/clipboard'
-import { CopyTextButton } from './CopyTextButton'
 
 jest.mock('wallet/src/utils/clipboard')
 

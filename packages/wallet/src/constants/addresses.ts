@@ -1,5 +1,5 @@
 import { ChainId } from 'uniswap/src/types/chains'
-import { CHAIN_INFO } from './chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 
 const MATIC_MAINNET_ADDRESS = '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'
 const MATIC_BNB_ADDRESS = '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'

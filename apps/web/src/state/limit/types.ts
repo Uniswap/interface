@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
+import { LimitInfo } from 'state/limit/hooks'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { LimitInfo } from './hooks'
 
 export interface LimitState {
   readonly inputAmount: string

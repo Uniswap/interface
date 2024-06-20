@@ -1,15 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import { useEIP2612Contract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
-
-import { DAI, UNI, USDC_MAINNET } from '../constants/tokens'
-import { useEIP2612Contract } from './useContract'
-import useIsArgentWallet from './useIsArgentWallet'
 
 export enum PermitType {
   AMOUNT = 1,

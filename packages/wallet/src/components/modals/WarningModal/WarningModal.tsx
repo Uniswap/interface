@@ -13,7 +13,7 @@ export type WarningModalProps = {
   onCancel?: () => void
   onConfirm?: () => void
   modalName: ModalNameType
-  title: string
+  title: ReactNode
   caption?: string
   closeText?: string
   confirmText?: string

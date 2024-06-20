@@ -6,6 +6,8 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
+import { CanceledError, RetryableError, retry } from 'state/activity/polling/retry'
+import { OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
@@ -15,8 +17,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { RetryOptions } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
-import { OnActivityUpdate } from '../types'
-import { CanceledError, RetryableError, retry } from './retry'
 
 interface Transaction {
   addedTime: number

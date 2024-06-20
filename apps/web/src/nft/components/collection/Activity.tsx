@@ -1,7 +1,11 @@
 import { OpacityHoverState } from 'components/Common'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
+import { useIsMobile } from 'hooks/screenSize'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/Activity.css'
+import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from 'nft/components/collection/ActivityCells'
+import { ActivityLoader, ActivityPageLoader } from 'nft/components/collection/ActivityLoader'
 import { useBag, useNativeUsdPrice } from 'nft/hooks'
 import { ActivityEventType } from 'nft/types'
 import { useCallback, useReducer } from 'react'
@@ -9,11 +13,6 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { useIsMobile } from 'hooks/screenSize'
-import * as styles from './Activity.css'
-import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from './ActivityCells'
-import { ActivityLoader, ActivityPageLoader } from './ActivityLoader'
 
 enum ColumnHeaders {
   Item = 'Item',

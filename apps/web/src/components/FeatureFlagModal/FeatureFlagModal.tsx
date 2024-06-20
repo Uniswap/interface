@@ -215,13 +215,13 @@ export default function FeatureFlagModal() {
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
           <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
-          <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
           <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
           <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
-          <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavRefresh} label="Refreshed navigation features" />
+          <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
+          <FeatureFlagOption flag={FeatureFlags.ForAggregatorWeb} label="Enable FOR aggregator web" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
             <FeatureFlagOption flag={FeatureFlags.ZkSync} label="Enable ZkSync" />

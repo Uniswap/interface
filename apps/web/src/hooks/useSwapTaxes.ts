@@ -3,12 +3,12 @@ import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import { useContract } from './useContract'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
 function getFeeOnTransferAddress(chainId?: ChainId) {

@@ -1,4 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { MoonpaySupportedCurrencyCode } from 'components/FiatOnrampModal/constants'
+import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,
@@ -11,9 +13,6 @@ import {
   WETH_POLYGON,
 } from 'constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
-import { MoonpaySupportedCurrencyCode } from './constants'
 
 type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism | Chain.Base
 const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism, Chain.Base]

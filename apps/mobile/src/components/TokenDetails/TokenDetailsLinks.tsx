@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
+import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
@@ -15,7 +16,6 @@ import {
   isDefaultNativeAddress,
 } from 'wallet/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
-import { LinkButton, LinkButtonType } from './LinkButton'
 
 export function TokenDetailsLinks({
   currencyId,

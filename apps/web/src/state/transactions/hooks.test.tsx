@@ -4,18 +4,18 @@ import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import store from 'state'
-import { mocked } from 'test-utils/mocked'
-import { act, renderHook } from 'test-utils/render'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useHasPendingApproval,
   useHasPendingRevocation,
   useTransactionAdder,
   useTransactionCanceller,
   useTransactionRemover,
-} from './hooks'
-import { clearAllTransactions, finalizeTransaction } from './reducer'
-import { ApproveTransactionInfo, TransactionInfo, TransactionType } from './types'
+} from 'state/transactions/hooks'
+import { clearAllTransactions, finalizeTransaction } from 'state/transactions/reducer'
+import { ApproveTransactionInfo, TransactionInfo, TransactionType } from 'state/transactions/types'
+import { mocked } from 'test-utils/mocked'
+import { act, renderHook } from 'test-utils/render'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const PERMIT2_ADDRESS_MAINNET = permit2Address(ChainId.MAINNET)
 

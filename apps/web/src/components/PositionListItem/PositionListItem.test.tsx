@@ -1,13 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import PositionListItem from 'components/PositionListItem'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-
-import PositionListItem from '.'
 
 jest.mock('components/DoubleLogo')
 jest.mock('hooks/Tokens')

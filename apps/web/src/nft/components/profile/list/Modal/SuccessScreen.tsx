@@ -1,10 +1,12 @@
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { TitleRow } from 'nft/components/profile/list/shared'
 import { getTotalEthValue } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { generateTweetForList, pluralize } from 'nft/utils'
@@ -14,9 +16,6 @@ import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useAccount } from 'hooks/useAccount'
-import { TitleRow } from '../shared'
 
 const SuccessImage = styled.img<{ numImages: number }>`
   width: calc(${({ numImages }) => (numImages > 1 ? (numImages > 2 ? '33%' : '50%') : '100%')} - 12px);

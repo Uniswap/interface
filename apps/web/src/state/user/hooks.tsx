@@ -3,20 +3,13 @@ import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
+import { gqlToCurrency } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
-
-import { gqlToCurrency } from 'graphql/data/util'
-import { useAccount } from 'hooks/useAccount'
-import { deserializeToken, serializeToken } from 'state/user/utils'
-import {
-  Chain,
-  TokenSortableField,
-  useTopTokensQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -25,8 +18,14 @@ import {
   updateUserLocale,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
-} from './reducer'
-import { SerializedPair, SlippageTolerance } from './types'
+} from 'state/user/reducer'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import { deserializeToken, serializeToken } from 'state/user/utils'
+import {
+  Chain,
+  TokenSortableField,
+  useTopTokensQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)

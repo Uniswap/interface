@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncryption'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangle, Faceid, Laptop, LinkBrokenHorizontal } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -21,7 +22,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { getOtpDurationString } from 'wallet/src/utils/duration'
-import { getEncryptedMnemonic } from './ScantasticEncryption'
 
 enum OtpState {
   Pending = 'pending',

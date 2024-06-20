@@ -1,6 +1,6 @@
+import { NotSupportedNetworkNotification } from 'wallet/src/features/notifications/components/NotSupportedNetworkNotification'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { renderWithProviders } from 'wallet/src/test/render'
-import { NotSupportedNetworkNotification } from './NotSupportedNetworkNotification'
 
 describe(NotSupportedNetworkNotification, () => {
   it('renders without error', () => {

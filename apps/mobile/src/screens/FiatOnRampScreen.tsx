@@ -18,14 +18,20 @@ import {
   useParseFiatOnRampError,
 } from 'src/features/fiatOnRamp/aggregatorHooks'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
-import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
-import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampAggregatorGetCountryQuery,
   useFiatOnRampAggregatorServiceProvidersQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORQuote, FORServiceProvider, FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORQuote,
+  FORServiceProvider,
+  FORTransaction,
+  FiatOnRampCurrency,
+  InitialQuoteSelection,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -35,6 +41,7 @@ import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
+import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useFiatOnRampAggregatorTransactionQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -213,11 +220,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setCountryCode(country.countryCode)
   }
 
+  const fiatToUSDConverter = useLocalFiatToUSDConverter()
+
   const onChangeValue =
     (source: UniverseEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
       sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
         source,
+        amountUSD: fiatToUSDConverter(parseFloat(newAmount)),
       })
       setValue(newAmount)
       setAmount(newAmount ? parseFloat(newAmount) : 0)

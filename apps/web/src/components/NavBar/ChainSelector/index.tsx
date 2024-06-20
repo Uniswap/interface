@@ -3,6 +3,7 @@ import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/Column'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
@@ -25,7 +26,6 @@ import { Popover } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Connector } from 'wagmi'
-import ChainSelectorRow from './ChainSelectorRow'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 

@@ -1,6 +1,18 @@
 import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
+import {
+  PositionInfo,
+  useCachedPositions,
+  useGetCachedTokens,
+  usePoolAddressCache,
+} from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
+import { Call, DEFAULT_GAS_LIMIT } from 'components/AccountDrawer/MiniPortfolio/Pools/getTokensAsync'
+import {
+  useInterfaceMulticallContracts,
+  usePoolPriceMap,
+  useV3ManagerContracts,
+} from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
@@ -11,9 +23,6 @@ import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyKey } from 'utils/currencyKey'
-import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
-import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'
-import { useInterfaceMulticallContracts, usePoolPriceMap, useV3ManagerContracts } from './hooks'
 
 function createPositionInfo(
   owner: string,

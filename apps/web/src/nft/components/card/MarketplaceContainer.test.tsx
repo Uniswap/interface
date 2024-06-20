@@ -1,7 +1,6 @@
+import { MarketplaceContainer } from 'nft/components/card/icons'
 import { Markets } from 'nft/types'
 import { render } from 'test-utils/render'
-
-import { MarketplaceContainer } from './icons'
 
 describe('MarketplaceContainer', () => {
   it('should render with list price', () => {

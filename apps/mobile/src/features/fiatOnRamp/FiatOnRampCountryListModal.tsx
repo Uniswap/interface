@@ -6,16 +6,10 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading'
 import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
-import {
-  AnimatedFlex,
-  Flex,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'

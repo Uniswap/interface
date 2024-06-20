@@ -19,13 +19,13 @@ import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
+import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -39,6 +39,7 @@ import { CurrencyState } from 'state/swap/types'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { AlertTriangle } from 'ui/src/components/icons'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -47,7 +48,6 @@ import {
   useFormatter,
 } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { LimitExpirySection } from './LimitExpirySection'
 
 const CustomHeightSwapSection = styled(SwapSection)`
   height: unset;
@@ -385,13 +385,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <DisclaimerText>
           {!isUniswapXSupportedChain(account.chainId) ? (
             <Trans i18nKey="limits.onlyMainnet">
-              <ExternalLink href={SupportArticleURL.LIMITS_SUPPORTED_NETWORKS}>
+              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}>
                 <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>
           ) : (
             <Trans i18nKey="limits.priceWarning">
-              <ExternalLink href={SupportArticleURL.LIMIT_FAILURE}>
+              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsFailure}>
                 <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>

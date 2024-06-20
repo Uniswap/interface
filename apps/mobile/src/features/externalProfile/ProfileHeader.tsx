@@ -11,24 +11,21 @@ import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextM
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
-  AnimatedFlex,
   Flex,
   Image,
   LinearGradient,
   ScrollView,
   Text,
   TouchableArea,
-  getUniconV2Colors,
+  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
-  useUniconColors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
@@ -77,16 +74,11 @@ export const ProfileHeader = memo(function ProfileHeader({
   const showENSName = primaryENSName && primaryENSName !== displayName?.name
 
   const { colors: avatarColors } = useExtractedColors(avatar)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
-  const { gradientStart: uniconGradientStart, gradientEnd: uniconGradientEnd } =
-    useUniconColors(address)
-
-  // UniconV2 colors
-  const { color } = getUniconV2Colors(address)
+  const { color } = getUniconColors(address)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {
@@ -96,20 +88,8 @@ export const ProfileHeader = memo(function ProfileHeader({
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
     }
-    return [
-      isUniconsV2Enabled ? color : uniconGradientStart,
-      isUniconsV2Enabled ? color : uniconGradientEnd,
-    ]
-  }, [
-    avatarColors,
-    hasAvatar,
-    avatarLoading,
-    colors.surface1,
-    uniconGradientEnd,
-    uniconGradientStart,
-    color,
-    isUniconsV2Enabled,
-  ])
+    return [color, color]
+  }, [avatarColors, hasAvatar, avatarLoading, colors.surface1, color])
 
   const onPressFavorite = useToggleWatchedWalletCallback(address)
 
@@ -176,10 +156,7 @@ export const ProfileHeader = memo(function ProfileHeader({
         {hasAvatar && avatarColors?.primary ? (
           <HeaderRadial color={avatarColors.primary} {...solidHeaderProps} />
         ) : (
-          <HeaderRadial
-            color={isUniconsV2Enabled ? color : uniconGradientStart}
-            {...solidHeaderProps}
-          />
+          <HeaderRadial color={color} {...solidHeaderProps} />
         )}
       </AnimatedFlex>
 

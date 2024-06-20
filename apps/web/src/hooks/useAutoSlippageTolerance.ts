@@ -4,14 +4,14 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
 import { L2_CHAIN_IDS, SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
+import useGasPrice from 'hooks/useGasPrice'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
 import { logger } from 'utilities/src/logger/logger'
-import useGasPrice from './useGasPrice'
-import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
-import { useUSDPrice } from './useUSDPrice'
 
 const DEFAULT_AUTO_SLIPPAGE = new Percent(5, 1000) // 0.5%
 

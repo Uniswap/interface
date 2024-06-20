@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
-import { FlexProps, flexStyles, HiddenFromScreenReaders, useDeviceDimensions } from 'ui/src'
+import { FlexProps, flexStyles, HiddenFromScreenReaders } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 
 interface NativeMnemonicConfirmationProps {
   mnemonicId: Address

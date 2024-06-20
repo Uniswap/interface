@@ -1,12 +1,18 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
+import { ButtonGray } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
+import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
+import { RowBetween, RowFixed } from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Tooltip from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
@@ -16,21 +22,14 @@ import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useCurrencyBalance } from 'state/connection/hooks'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useCurrencyBalance } from '../../state/connection/hooks'
-import { ButtonGray } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
-import { FiatValue } from './FiatValue'
-import { formatCurrencySymbol } from './utils'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
@@ -272,7 +271,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const account = useAccount()
     const { chainId } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
-    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
+    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined, chainId)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
 

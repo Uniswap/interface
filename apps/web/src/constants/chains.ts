@@ -181,6 +181,7 @@ export const CHAIN_IDS_TO_NAMES = Object.fromEntries(
 export const GQL_MAINNET_CHAINS = Object.values(CHAIN_INFO)
   .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)
+  .filter((backendChain) => !!backendChain)
 
 const GQL_TESTNET_CHAINS = Object.values(CHAIN_INFO)
   .filter((chain) => chain.testnet && !chain.backendChain.isSecondaryChain)

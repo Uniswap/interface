@@ -1,7 +1,14 @@
 package com.uniswap.onboarding.import
 
 import android.view.View
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalDensity
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
@@ -53,13 +60,24 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
       )
 
       setContent {
-        UniswapComponent {
-          SeedPhraseInput(
-            viewModel,
-            onHelpTextPress = {
-              sendEvent(id, EVENT_HELP_TEXT_PRESS, null)
-            }
-          )
+        val density = LocalDensity.current.density
+
+        BoxWithConstraints {
+          UniswapComponent(
+            modifier = Modifier
+              .fillMaxWidth()
+              .wrapContentHeight(unbounded = true)
+              .align(Alignment.TopCenter)
+              .onSizeChanged {
+                val bundle = Arguments
+                  .createMap()
+                  .apply {
+                    putDouble(FIELD_HEIGHT, it.height.toDouble() / density)
+                  }
+                sendEvent(id, EVENT_HEIGHT_MEASURED, bundle)
+              }) {
+            SeedPhraseInput(viewModel)
+          }
         }
       }
     }
@@ -74,12 +92,6 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
    */
   override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
     return mapOf(
-      EVENT_HELP_TEXT_PRESS to mapOf(
-        "phasedRegistrationNames" to mapOf(
-          "bubbled" to EVENT_HELP_TEXT_PRESS,
-          "captured" to EVENT_HELP_TEXT_PRESS
-        )
-      ),
       EVENT_INPUT_VALIDATED to mapOf(
         "phasedRegistrationNames" to mapOf(
           "bubbled" to EVENT_INPUT_VALIDATED,
@@ -90,6 +102,12 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
         "phasedRegistrationNames" to mapOf(
           "bubbled" to EVENT_MNEMONIC_STORED,
           "captured" to EVENT_MNEMONIC_STORED
+        )
+      ),
+      EVENT_HEIGHT_MEASURED to mapOf(
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_HEIGHT_MEASURED,
+          "captured" to EVENT_HEIGHT_MEASURED
         )
       ),
     )
@@ -117,7 +135,6 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
   @ReactProp(name = "strings")
   fun setStrings(view: View, strings: ReadableMap) {
     viewModel.rnStrings = SeedPhraseInputViewModel.ReactNativeStrings(
-      helpText = strings.getString("helpText") ?: "",
       inputPlaceholder = strings.getString("inputPlaceholder") ?: "",
       pasteButton = strings.getString("pasteButton") ?: "",
       errorInvalidWord = strings.getString("errorInvalidWord") ?: "",
@@ -129,11 +146,12 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
 
   companion object {
     private const val REACT_CLASS = "SeedPhraseInput"
-    private const val EVENT_HELP_TEXT_PRESS = "onHelpTextPress"
     private const val EVENT_INPUT_VALIDATED = "onInputValidated"
     private const val EVENT_MNEMONIC_STORED = "onMnemonicStored"
+    private const val EVENT_HEIGHT_MEASURED = "onHeightMeasured"
     private const val COMMAND_HANDLE_SUBMIT = "handleSubmit"
     private const val FIELD_MNEMONIC_ID = "mnemonicId"
     private const val FIELD_CAN_SUBMIT = "canSubmit"
+    private const val FIELD_HEIGHT = "height"
   }
 }

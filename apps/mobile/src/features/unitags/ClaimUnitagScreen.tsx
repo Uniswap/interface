@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { default as React, useCallback, useEffect, useState } from 'react'
@@ -10,18 +9,10 @@ import { UnitagStackParamList } from 'src/app/navigation/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import {
-  AnimatePresence,
-  AnimatedFlex,
-  Button,
-  Flex,
-  Image,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatePresence, Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { uniswapUrls } from 'uniswap/src/constants/urls'

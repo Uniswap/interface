@@ -1,10 +1,11 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { Input as NumericalInput, isInputGreaterThanDecimals } from 'components/NumericalInput'
+import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { getChain, useSupportedChainId } from 'constants/chains'
@@ -13,7 +14,14 @@ import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+  StyledNumericalInput,
+  useWidthAdjustedDisplayValue,
+} from 'pages/Swap/common/shared'
+import { useCallback, useMemo, useState } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
@@ -24,7 +32,6 @@ import { Text } from 'ui/src'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 
 const Wrapper = styled(Column)<{ $disabled: boolean }>`
   opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
@@ -60,48 +67,6 @@ const InputLabelContainer = styled.div`
   position: absolute;
   top: 16px;
   left: 16px;
-`
-
-const NumericalInputFontStyle = css`
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-`
-
-const NumericalInputWrapper = styled(Row)`
-  position: relative;
-  max-width: 100%;
-  width: max-content;
-`
-
-const StyledNumericalInput = styled(NumericalInput)<{ $width?: number }>`
-  max-height: 84px;
-  max-width: 100%;
-  width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
-  ${NumericalInputFontStyle}
-
-  ::placeholder {
-    opacity: 1;
-  }
-`
-
-const NumericalInputMimic = styled.span`
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  ${NumericalInputFontStyle}
-`
-
-const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean }>`
-  user-select: none;
-  ${NumericalInputFontStyle}
-  ${({ showPlaceholder }) =>
-    showPlaceholder &&
-    css`
-      color: ${({ theme }) => theme.neutral3};
-    `}
 `
 
 const StyledUpAndDownArrowIcon = styled(ReverseArrow)`
@@ -254,13 +219,8 @@ export default function SendCurrencyInputForm({
   const fiatBalanceValue = useUSDPrice(currencyBalance, inputCurrency)
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
-  const [postWidthAdjustedDisplayValue, setPostWidthAdjustedDisplayValue] = useState('')
 
-  // Doing this to set the value the user is seeing once the width of the
-  // hidden element is known (after 1 render) so users don't see a weird jump
-  useLayoutEffect(() => {
-    requestAnimationFrame(() => setPostWidthAdjustedDisplayValue(displayValue))
-  }, [displayValue])
+  const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(displayValue)
 
   const handleUserInput = useCallback(
     (newValue: string) => {

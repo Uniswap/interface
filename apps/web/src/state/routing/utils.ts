@@ -12,9 +12,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
-import { logger } from 'utilities/src/logger/logger'
-import { toSlippagePercent } from 'utils/slippage'
-import { getApproveInfo, getWrapInfo } from './gas'
+import { getApproveInfo, getWrapInfo } from 'state/routing/gas'
 import {
   ClassicQuoteData,
   ClassicTrade,
@@ -44,7 +42,9 @@ import {
   V2PoolInRoute,
   V3PoolInRoute,
   isClassicQuoteResponse,
-} from './types'
+} from 'state/routing/types'
+import { logger } from 'utilities/src/logger/logger'
+import { toSlippagePercent } from 'utils/slippage'
 
 interface RouteResult {
   routev3: V3Route<Currency, Currency> | null

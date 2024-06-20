@@ -52,6 +52,9 @@ describe(transactionWatcher, () => {
 
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
       .withState({
+        behaviorHistory: {
+          extensionBetaFeedbackState: undefined,
+        },
         transactions: {
           byChainId: {
             [ChainId.Mainnet]: {

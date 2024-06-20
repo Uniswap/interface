@@ -3,7 +3,13 @@ import {
   CancelOrdersDialog,
   CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
+import {
+  OffchainOrderLineItem,
+  OffchainOrderLineItemProps,
+  OffchainOrderLineItemType,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column, { AutoColumn } from 'components/Column'
@@ -30,8 +36,6 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { PortfolioLogo } from '../PortfolioLogo'
-import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
 type Logos = {
   inputLogo?: string

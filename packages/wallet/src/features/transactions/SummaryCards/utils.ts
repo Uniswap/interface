@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 import { createElement, useMemo, useState } from 'react'
+import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
@@ -16,24 +16,28 @@ import {
   FORMAT_TIME_SHORT,
   useLocalizedDayjs,
 } from 'wallet/src/features/language/localizedDayjs'
+import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
+import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
+import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
+import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
+import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
+import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
+import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
+import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
+import { UnknownSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
+import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
+import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
+import {
+  SummaryItemProps,
+  SwapSummaryCallbacks,
+  TransactionSummaryLayoutProps,
+} from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   NFTTradeType,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { ApproveSummaryItem } from './SummaryItems/ApproveSummaryItem'
-import { FiatPurchaseSummaryItem } from './SummaryItems/FiatPurchaseSummaryItem'
-import { NFTApproveSummaryItem } from './SummaryItems/NFTApproveSummaryItem'
-import { NFTMintSummaryItem } from './SummaryItems/NFTMintSummaryItem'
-import { NFTTradeSummaryItem } from './SummaryItems/NFTTradeSummaryItem'
-import { ReceiveSummaryItem } from './SummaryItems/ReceiveSummaryItem'
-import { SendSummaryItem } from './SummaryItems/SendSummaryItem'
-import { SwapSummaryItem } from './SummaryItems/SwapSummaryItem'
-import { UnknownSummaryItem } from './SummaryItems/UnknownSummaryItem'
-import { WCSummaryItem } from './SummaryItems/WCSummaryItem'
-import { WrapSummaryItem } from './SummaryItems/WrapSummaryItem'
-import { SummaryItemProps, SwapSummaryCallbacks, TransactionSummaryLayoutProps } from './types'
 
 export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16

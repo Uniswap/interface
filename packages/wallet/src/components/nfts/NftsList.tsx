@@ -4,14 +4,13 @@ import { ComponentProps, CSSProperties, forwardRef, useCallback, useEffect, useS
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
+import { Flex, Loader } from 'ui/src'
 import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
-  Flex,
-  Loader,
-  useDeviceDimensions,
-} from 'ui/src'
+} from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { NoNfts } from 'ui/src/components/icons'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'

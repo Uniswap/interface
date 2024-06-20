@@ -25,7 +25,6 @@ import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/b
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { getFullAppVersion } from 'src/utils/version'
 import {
-  AnimatedFlex,
   Button,
   Flex,
   IconProps,
@@ -54,6 +53,7 @@ import {
   RotatableChevron,
   ShieldQuestion,
 } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'

@@ -10,10 +10,10 @@ import {
   TouchableArea,
   isWeb,
   styled,
-  useDeviceDimensions,
   useDeviceInsets,
   useIsDarkMode,
 } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'wallet/src/components/misc/Scrollbar'

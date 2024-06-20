@@ -1,40 +1,41 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import Column, { AutoColumn } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Row, { RowFixed } from 'components/Row'
+import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
+import { LoadingRows, MenuItem } from 'components/SearchModal/styled'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useIsUserAddedToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { TokenFromList } from 'state/lists/tokenFromList'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
+import { currencyKey } from 'utils/currencyKey'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { TokenFromList } from '../../../state/lists/tokenFromList'
-import Column, { AutoColumn } from '../../Column'
-import CurrencyLogo from '../../Logo/CurrencyLogo'
-import Row, { RowFixed } from '../../Row'
-import { MouseoverTooltip, TooltipSize } from '../../Tooltip'
-import { LoadingRows, MenuItem } from '../styled'
-import { scrollbarStyle } from './index.css'
 
-function currencyKey(data: Currency | CurrencyListRow): string {
+function currencyListRowKey(data: Currency | CurrencyListRow): string {
   if (data instanceof CurrencyListSectionTitle) {
     return data.label
   }
 
   if (data instanceof CurrencyListRow) {
-    return data.currency?.isToken ? data.currency.address : 'ETHER'
+    return currencyKey(data.currency!)
   }
 
-  return data.isToken ? data.address : 'ETHER'
+  return currencyKey(data)
 }
 
 const ROW_ITEM_SIZE = 56
@@ -155,7 +156,7 @@ export function CurrencyRow({
   showAddress?: boolean
 }) {
   const account = useAccount()
-  const key = currencyKey(currency)
+  const key = currencyListRowKey(currency)
   const customAdded = useIsUserAddedToken(currency)
   const warning = useTokenWarning(currency?.isNative ? undefined : currency?.address, currency.chainId)
   const isBlockedToken = !!warning && !warning.canProceed
@@ -326,12 +327,11 @@ export default function CurrencyList({
       }
 
       const currency: Currency = row.currency
+      const key = currencyKey(currency)
 
       const balance =
-        tryParseCurrencyAmount(
-          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
-          currency
-        ) ?? CurrencyAmount.fromRawAmount(currency, 0)
+        tryParseCurrencyAmount(String(balances[key]?.balance ?? 0), currency) ??
+        CurrencyAmount.fromRawAmount(currency, 0)
 
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
@@ -375,7 +375,7 @@ export default function CurrencyList({
 
   const itemKey = useCallback((index: number, data: typeof currencies) => {
     const currency = data[index]
-    return currencyKey(currency)
+    return currencyListRowKey(currency)
   }, [])
 
   return (

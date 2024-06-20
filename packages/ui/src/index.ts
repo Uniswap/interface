@@ -40,46 +40,29 @@ export type {
   Tokens,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
-export {
-  AnimatedBottomSheetFlashList,
-  AnimatedFlashList,
-} from './components/AnimatedFlashList/AnimatedFlashList'
-export * from './components/Unicon'
-export * from './components/Unicon/Container'
-export * from './components/Unicon/Emblem'
-export * from './components/Unicon/types'
+export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
-export * from './components/UniconV2'
-export * from './components/UniconV2/utils'
 export * from './components/UniversalImage/UniversalImage'
 export * from './components/UniversalImage/utils'
 export { Button } from './components/button/Button'
-export { withAnimated } from './components/factories/animated'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
 export * from './components/input/CheckBox'
 export * from './components/input/utils'
-export {
-  AnimatedFlex,
-  Flex,
-  Inset,
-  Separator,
-  flexStyles,
-  type FlexProps,
-} from './components/layout'
-export * as Logos from './components/logos'
+export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
-export { useDeviceDimensions } from './hooks/useDeviceDimensions'
 export { useDeviceInsets } from './hooks/useDeviceInsets'
 export { useIsDarkMode } from './hooks/useIsDarkMode'
 export { useIsShortMobileDevice } from './hooks/useIsShortMobileDevice'
 export { useSporeColors, type DynamicColor } from './hooks/useSporeColors'
+// Loaders
 export * from './loading/FlexLoader'
 export * from './loading/Loader'
 export * from './loading/NftCardLoader'
 export * from './loading/Shine'
 export * from './loading/Skeleton'
+export * from './loading/SpinningLoader'
 export * from './loading/TransactionLoader'
 export * from './theme/shadows'
 export * from './utils/colors'

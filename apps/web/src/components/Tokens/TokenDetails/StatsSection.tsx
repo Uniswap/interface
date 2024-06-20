@@ -1,5 +1,9 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
+import { UNSUPPORTED_METADATA_CHAINS } from 'components/Tokens/constants'
+import { TokenSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { TokenQueryData } from 'graphql/data/Token'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
@@ -7,11 +11,6 @@ import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
-import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
-import { TokenSortMethod } from '../state'
 
 export const StatWrapper = styled.div`
   color: ${({ theme }) => theme.neutral2};
@@ -115,7 +114,7 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat
               dataCy="tvl"
               value={TVL}
-              description={<Trans i18nKey="common.totalValueLocked.description" />}
+              description={<Trans i18nKey="stats.tvl.description" />}
               title={<Trans i18nKey="common.totalValueLocked" />}
             />
             <Stat

@@ -1,14 +1,13 @@
 import { createMigrate } from 'redux-persist'
+import { migration1 } from 'state/migrations/1'
+import { migration2 } from 'state/migrations/2'
+import { migration3 } from 'state/migrations/3'
+import { migration4 } from 'state/migrations/4'
+import { migration5 } from 'state/migrations/5'
+import { migration6 } from 'state/migrations/6'
+import { migration7, PersistAppStateV7 } from 'state/migrations/7'
 import { RouterPreference } from 'state/routing/types'
 import { SlippageTolerance } from 'state/user/types'
-
-import { migration1 } from './1'
-import { migration2 } from './2'
-import { migration3 } from './3'
-import { migration4 } from './4'
-import { migration5 } from './5'
-import { migration6 } from './6'
-import { migration7, PersistAppStateV7 } from './7'
 
 const previousState: PersistAppStateV7 = {
   user: {

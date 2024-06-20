@@ -131,6 +131,8 @@ export const colors = {
   violet800: '#121643',
   violet900: '#0E0D30',
   violetVibrant: '#5065FD',
+  uniswapXViolet: '#4673FA',
+  uniswapXPurple: '#9646FA',
   cyan50: '#D6F5FE',
   cyan100: '#B0EDFE',
   cyan200: '#63CDE8',

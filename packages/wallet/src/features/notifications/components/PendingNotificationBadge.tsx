@@ -1,6 +1,5 @@
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes } from 'ui/src/theme'
 import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'

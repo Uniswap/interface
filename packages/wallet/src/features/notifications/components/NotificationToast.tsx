@@ -11,7 +11,6 @@ import {
 } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import {
-  AnimatedFlex,
   Flex,
   Text,
   TouchableArea,
@@ -21,6 +20,7 @@ import {
   styled,
   useDeviceInsets,
 } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'

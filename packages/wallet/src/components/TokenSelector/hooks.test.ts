@@ -4,6 +4,17 @@ import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'uniswap/src/types/chains'
+import {
+  useAllCommonBaseCurrencies,
+  useCommonTokensOptions,
+  useCurrencyInfosToTokenOptions,
+  useFavoriteCurrencies,
+  useFavoriteTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioBalancesForAddressById,
+  usePortfolioTokenOptions,
+} from 'wallet/src/components/TokenSelector/hooks'
 import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
@@ -30,17 +41,6 @@ import {
 import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import { portfolioBalancesById, queryResolvers } from 'wallet/src/test/utils'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import {
-  useAllCommonBaseCurrencies,
-  useCommonTokensOptions,
-  useCurrencyInfosToTokenOptions,
-  useFavoriteCurrencies,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioBalancesForAddressById,
-  usePortfolioTokenOptions,
-} from './hooks'
 
 expect.extend({ toIncludeSameMembers })
 

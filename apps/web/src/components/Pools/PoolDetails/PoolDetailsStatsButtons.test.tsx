@@ -1,16 +1,16 @@
+import 'test-utils/tokens/mocks'
+
 import userEvent from '@testing-library/user-event'
 import { ChainId } from '@uniswap/sdk-core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { useAccount } from 'hooks/useAccount'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
+import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-import 'test-utils/tokens/mocks'
-
-import { useAccount } from 'hooks/useAccount'
-import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
-import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 

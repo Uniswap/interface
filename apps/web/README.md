@@ -13,6 +13,28 @@ yarn
 yarn web start
 ```
 
+## Translations
+
+To get translations to work you'll need to set up 1Password, and then:
+
+```
+eval $(op signin)
+```
+
+Sign into 1Password, then:
+
+```
+yarn mobile env:local:download
+```
+
+Which downs a `.env.defaults.local` file at the root. Finally:
+
+```
+yarn web i18n:download
+```
+
+Which will download the translations to `./apps/web/src/i18n/locales/translations`.
+
 ## Accessing Uniswap V2
 
 The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.

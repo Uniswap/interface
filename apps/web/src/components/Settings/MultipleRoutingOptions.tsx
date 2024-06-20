@@ -11,6 +11,7 @@ import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const LabelWrapper = styled(Column)`
   height: 100%;
@@ -65,7 +66,7 @@ function UniswapXPreferenceLabel() {
         text={
           <>
             <Trans i18nKey="routing.aggregateLiquidity" />{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
+            <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapXInfo}>
               <Trans i18nKey="common.learnMore.link" />
             </ExternalLink>
           </>

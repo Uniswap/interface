@@ -3,17 +3,17 @@ import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
-import {
   INITIAL_TRANSACTION_STATE,
   selectCurrency,
   switchCurrencySides,
   transactionStateReducer,
   updateExactAmountFiat,
   updateExactAmountToken,
-} from './transactionState'
+} from 'wallet/src/features/transactions/transactionState/transactionState'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 
 const chainId = ChainId.Goerli
 const ethAddress = getNativeAddress(ChainId.Goerli)

@@ -1,9 +1,9 @@
 import { Flex, TouchableArea, UniversalImage } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
+import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { getCountryFlagSvgUrl } from './utils'
 
 const ICON_SIZE = iconSizes.icon16
 

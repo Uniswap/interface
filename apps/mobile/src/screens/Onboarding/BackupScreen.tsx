@@ -210,7 +210,7 @@ function RecoveryPhraseTooltip({
       gap="$spacing8"
       py="$spacing8"
       onPress={onPressEducationButton}>
-      <QuestionInCircleFilled color="$surface1" size="$icon.20" />
+      <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
         {t('onboarding.tooltip.recoveryPhrase.trigger')}
       </Text>

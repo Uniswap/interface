@@ -1,6 +1,6 @@
 import { ChainId } from 'uniswap/src/types/chains'
+import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { render } from 'wallet/src/test/test-utils'
-import { NetworkFee } from './NetworkFee'
 
 jest.mock('wallet/src/features/gas/hooks', () => {
   return {

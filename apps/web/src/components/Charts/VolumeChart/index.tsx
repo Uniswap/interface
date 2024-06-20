@@ -1,5 +1,10 @@
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
+import {
+  CustomVolumeChartModel,
+  CustomVolumeChartModelParams,
+} from 'components/Charts/VolumeChart/CustomVolumeChartModel'
+import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { BIPS_BASE } from 'constants/misc'
@@ -10,8 +15,6 @@ import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { CustomVolumeChartModel, CustomVolumeChartModelParams } from './CustomVolumeChartModel'
-import { SingleHistogramData } from './renderer'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>

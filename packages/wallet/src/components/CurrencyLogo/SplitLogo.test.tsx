@@ -1,4 +1,5 @@
 import { ChainId } from 'uniswap/src/types/chains'
+import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import {
   DAI_CURRENCY_INFO,
   ETH_CURRENCY_INFO,
@@ -6,7 +7,6 @@ import {
   ethCurrencyInfo,
 } from 'wallet/src/test/fixtures'
 import { render, within } from 'wallet/src/test/test-utils'
-import { SplitLogo } from './SplitLogo'
 
 describe(SplitLogo, () => {
   it('renders without error', () => {

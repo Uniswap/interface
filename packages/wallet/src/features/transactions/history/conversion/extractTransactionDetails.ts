@@ -1,45 +1,20 @@
-import {
-  TransactionStatus as RemoteTransactionStatus,
-  TransactionType as RemoteTransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'uniswap/src/types/chains'
 import { SpamCode } from 'wallet/src/data/types'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
+import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'
+import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
+import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
+import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
+import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
+import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
 import {
   TransactionDetails,
   TransactionListQueryResponse,
-  TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
-import parseApproveTransaction from './parseApproveTransaction'
-import parseNFTMintTransaction from './parseMintTransaction'
-import parseReceiveTransaction from './parseReceiveTransaction'
-import parseSendTransaction from './parseSendTransaction'
-import parseTradeTransaction from './parseTradeTransaction'
-
-function remoteTxStatusToLocalTxStatus(
-  type: RemoteTransactionType,
-  status: RemoteTransactionStatus
-): TransactionStatus {
-  switch (status) {
-    case RemoteTransactionStatus.Failed:
-      if (type === RemoteTransactionType.Cancel) {
-        return TransactionStatus.FailedCancel
-      }
-      return TransactionStatus.Failed
-    case RemoteTransactionStatus.Pending:
-      if (type === RemoteTransactionType.Cancel) {
-        return TransactionStatus.Cancelling
-      }
-      return TransactionStatus.Pending
-    case RemoteTransactionStatus.Confirmed:
-      if (type === RemoteTransactionType.Cancel) {
-        return TransactionStatus.Canceled
-      }
-      return TransactionStatus.Success
-  }
-}
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -71,6 +46,9 @@ export default function extractTransactionDetails(
       break
     case RemoteTransactionType.Mint:
       typeInfo = parseNFTMintTransaction(transaction)
+      break
+    case RemoteTransactionType.OnRamp:
+      typeInfo = parseOnRampTransaction(transaction)
       break
   }
 

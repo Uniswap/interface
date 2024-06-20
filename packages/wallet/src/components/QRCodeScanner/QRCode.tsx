@@ -3,17 +3,13 @@ import { ImageSourcePropType } from 'react-native'
 import {
   ColorTokens,
   Flex,
-  getUniconV2Colors,
+  getUniconColors,
   passesContrast,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
-  useUniconColors,
 } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { isAndroid } from 'utilities/src/platform'
 import QRCode from 'wallet/src/components/QRCodeScanner/custom-qr-code-generator'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useAvatar } from 'wallet/src/features/wallet/hooks'
@@ -34,12 +30,10 @@ type ColorProps = {
   }
 }
 
-const useColorProps = (address: Address, color?: string): ColorProps => {
+const useColorProps = (address: Address): ColorProps => {
   const colors = useSporeColors()
-  const gradientData = useUniconColors(address)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
   const isDarkMode = useIsDarkMode()
-  const uniconV2Color = getUniconV2Colors(address, isDarkMode) as { color: string }
+  const { color: uniconColor } = getUniconColors(address, isDarkMode) as { color: string }
   const { avatar, loading: avatarLoading } = useAvatar(address)
   const { colors: avatarColors } = useExtractedColors(avatar) as { colors: AvatarColors }
   const hasAvatar = !!avatar && !avatarLoading
@@ -62,34 +56,10 @@ const useColorProps = (address: Address, color?: string): ColorProps => {
       // Replace 'modifiedColor' with the actual color you want to use
       return colors.neutral1.val as string
     }
-    return isUniconsV2Enabled ? uniconV2Color.color : '$transparent'
-  }, [
-    avatarColors,
-    hasAvatar,
-    isUniconsV2Enabled,
-    uniconV2Color.color,
-    colors.surface2.val,
-    colors.neutral1.val,
-  ])
+    return uniconColor
+  }, [avatarColors, hasAvatar, uniconColor, colors.surface2.val, colors.neutral1.val])
 
-  const gradientProps = useMemo(() => {
-    let gradientPropsObject: {
-      enableLinearGradient?: boolean
-      linearGradient?: string[]
-      gradientDirection?: string[]
-      color?: string
-    } = {}
-    gradientPropsObject = {
-      enableLinearGradient: isUniconsV2Enabled ? false : true,
-      linearGradient: [gradientData.gradientStart, gradientData.gradientEnd],
-      color: isUniconsV2Enabled ? color : gradientData.gradientStart,
-      // TODO(MOB-2822): see if we can remove ternary
-      gradientDirection: ['0%', '0%', isAndroid ? '150%' : '100%', '0%'],
-    }
-    return gradientPropsObject
-  }, [gradientData.gradientEnd, gradientData.gradientStart, isUniconsV2Enabled, color])
-
-  return { smartColor, gradientProps }
+  return { smartColor, gradientProps: {} }
 }
 
 type AddressQRCodeProps = {
@@ -112,7 +82,7 @@ export const AddressQRCode = ({
   safeAreaColor,
 }: AddressQRCodeProps): JSX.Element => {
   const backgroundColorValue = backgroundColor
-  const { gradientProps } = useColorProps(address, color)
+  const { gradientProps } = useColorProps(address)
   const colors = useSporeColors()
 
   const safeAreaProps = useMemo(() => {
@@ -162,7 +132,6 @@ type QRCodeDisplayProps = {
   logoSize?: number
   hideOutline?: boolean
   displayShadow?: boolean
-  color?: string
 }
 
 const _QRCodeDisplay = ({
@@ -170,14 +139,13 @@ const _QRCodeDisplay = ({
   errorCorrectionLevel = 'H',
   size,
   containerBackgroundColor,
-  color,
   logoSize = 32,
   safeAreaColor,
   hideOutline = false,
   displayShadow = false,
 }: QRCodeDisplayProps): JSX.Element => {
   const { avatar } = useAvatar(address)
-  const { smartColor } = useColorProps(address, color)
+  const { smartColor } = useColorProps(address)
 
   return (
     <Flex

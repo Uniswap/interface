@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
+import { sprinkles } from 'nft/css/sprinkles.css'
 import { Z_INDEX } from 'theme/zIndex'
-
-import { sprinkles } from '../../css/sprinkles.css'
 
 export const overlay = style([
   sprinkles({

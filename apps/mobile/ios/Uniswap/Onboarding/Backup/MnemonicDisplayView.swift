@@ -27,7 +27,7 @@ import SwiftUI
     get { return vc.rootView.props.copiedText }
   }
   
-  var onHeightMeasured: RCTBubblingEventBlock? {
+  var onHeightMeasured: RCTDirectEventBlock? {
     didSet {
       vc.rootView.props.onHeightMeasured = { [weak self] height in
         self?.onHeightMeasured?([ "height": height ])
@@ -50,9 +50,8 @@ class MnemonicDisplayProps: ObservableObject {
 }
 
 struct MnemonicDisplay: View {
-  private let buttonOffset: CGFloat = 20
-  
   @ObservedObject var props = MnemonicDisplayProps()
+  @State private var buttonPadding: CGFloat = 20
   
   let rnEthersRS = RNEthersRS()
   let interFont = UIFont(name: "Basel-Semibold", size: 20)
@@ -63,12 +62,6 @@ struct MnemonicDisplay: View {
       props.mnemonicWords = mnemonic.components(separatedBy: " ")
     }
   }
-  
-  func copyToClipboard() {
-    let mnemonicString = props.mnemonicWords.joined(separator: " ")
-    UIPasteboard.general.string = mnemonicString
-  }
-  
   
   var body: some View {
     if (props.mnemonicWords.count > 12) {
@@ -118,18 +111,20 @@ struct MnemonicDisplay: View {
         HStack {
           Spacer()
           CopyButton(
-            action: copyToClipboard,
-            copyText: props.copyText,
-            copiedText: props.copiedText
+            copyButtonText: props.copyText,
+            copiedButtonText: props.copiedText,
+            textToCopy: props.mnemonicWords.joined(separator: " ")
           )
           Spacer()
         }
-          .offset(y: -buttonOffset),
+          .relativeOffset(y: -0.5) { _, offsetY in
+            buttonPadding = abs(offsetY)
+          },
         alignment: .top
       )
     }
     .frame(maxWidth: .infinity, alignment: .top)
-    .padding(.top, buttonOffset)
+    .padding(.top, buttonPadding)
     .overlay(
       GeometryReader { geometry in
         Color.clear

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 
-enum Direction {
+export enum ScrollDirection {
   UP = 'up',
   DOWN = 'down',
 }
 export function useScroll() {
-  const [direction, setDirection] = useState<Direction | undefined>()
+  const [direction, setDirection] = useState<ScrollDirection | undefined>()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const [height, setHeight] = useState(window.scrollY)
 
@@ -19,9 +19,9 @@ export function useScroll() {
       currentScrollPosition = window.scrollY
 
       if (previousScrollPosition < currentScrollPosition) {
-        setDirection(Direction.DOWN)
+        setDirection(ScrollDirection.DOWN)
       } else if (previousScrollPosition > currentScrollPosition) {
-        setDirection(Direction.UP)
+        setDirection(ScrollDirection.UP)
       }
 
       // Update the previous value

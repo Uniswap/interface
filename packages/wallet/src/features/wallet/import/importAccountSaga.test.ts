@@ -1,6 +1,12 @@
 import { runSaga } from '@redux-saga/core'
 import { PayloadAction } from '@reduxjs/toolkit'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { importAccount } from 'wallet/src/features/wallet/import/importAccountSaga'
+import {
+  ImportAccountType,
+  ImportAddressAccountParams,
+  ImportMnemonicAccountParams,
+} from 'wallet/src/features/wallet/import/types'
 import {
   addAccounts,
   restoreMnemonicComplete,
@@ -13,8 +19,6 @@ import {
   SAMPLE_SEED_ADDRESS_2,
 } from 'wallet/src/test/fixtures'
 import { signerManager } from 'wallet/src/test/mocks'
-import { importAccount } from './importAccountSaga'
-import { ImportAccountType, ImportAddressAccountParams, ImportMnemonicAccountParams } from './types'
 
 // uses , () => ({__mocks__
 jest.mock('wallet/src/features/wallet/Keyring/crypto')

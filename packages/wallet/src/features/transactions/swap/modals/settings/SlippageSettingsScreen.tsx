@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { AnimatedFlex, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import PlusMinusButton, { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'

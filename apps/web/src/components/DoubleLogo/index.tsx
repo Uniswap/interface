@@ -5,7 +5,7 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { useLogolessColorScheme } from 'ui/src/utils/colors'
+import { useLogolessColorScheme } from 'ui/src'
 
 function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: string }) {
   const isDarkMode = useIsDarkMode()

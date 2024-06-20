@@ -1,13 +1,13 @@
 import { QueryClient } from '@tanstack/react-query'
 import { ChainId } from '@uniswap/sdk-core'
+import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
+import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import { CHAIN_INFO } from 'constants/chains'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
 import { connect } from 'wagmi/actions'
 import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
-import { injectedWithFallback } from './injectedWithFallback'
-import { WC_PARAMS, uniswapWalletConnect } from './walletConnect'
 
 declare module 'wagmi' {
   interface Register {
@@ -25,6 +25,7 @@ export const wagmiConfig = createConfig({
       appName: 'Uniswap',
       appLogoUrl: UNISWAP_LOGO,
       reloadOnDisconnect: false,
+      enableMobileWalletLink: true,
     }),
     safe(),
   ],

@@ -4,8 +4,11 @@
 import React, { createContext, useContext, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
-import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORQuote,
+  FORServiceProvider,
+  FiatOnRampCurrency,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'

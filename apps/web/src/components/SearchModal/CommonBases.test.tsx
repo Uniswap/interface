@@ -1,9 +1,8 @@
 import 'test-utils/tokens/mocks'
 
 import { ChainId } from '@uniswap/sdk-core'
+import CommonBases from 'components/SearchModal/CommonBases'
 import { render } from 'test-utils/render'
-
-import CommonBases from './CommonBases'
 
 const mockOnSelect = jest.fn()
 

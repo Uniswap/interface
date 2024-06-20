@@ -8,7 +8,7 @@ import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
-  getTokenAddressForApiRequest,
+  getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import {
@@ -36,7 +36,7 @@ export function useTokenApprovalInfo(
   const currencyIn = currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
-  const tokenAddress = getTokenAddressForApiRequest(currencyIn)
+  const tokenAddress = getTokenAddressForApi(currencyIn)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const supportedChainId = toTradingApiSupportedChainId(chainId)

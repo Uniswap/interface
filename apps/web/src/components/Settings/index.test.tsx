@@ -1,10 +1,9 @@
 import { ChainId, Percent } from '@uniswap/sdk-core'
+import SettingsTab from 'components/Settings/index'
 import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
-
-import { useAccount } from 'hooks/useAccount'
-import SettingsTab from './index'
 
 const slippage = new Percent(75, 10_000)
 jest.mock('constants/chains')

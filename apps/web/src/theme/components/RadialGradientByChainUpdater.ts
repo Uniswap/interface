@@ -1,10 +1,9 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
+import { darkTheme, lightTheme } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
-
-import { useAccount } from 'hooks/useAccount'
-import { darkTheme, lightTheme } from '../colors'
 
 const initialStyles = {
   width: '200vw',

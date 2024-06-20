@@ -1,6 +1,6 @@
 import { t } from 'i18n'
 import { logger } from 'utilities/src/logger/logger'
-import { UserRejectedRequestError } from './errors'
+import { UserRejectedRequestError } from 'utils/errors'
 
 function getReason(error: any): string | undefined {
   let reason: string | undefined
