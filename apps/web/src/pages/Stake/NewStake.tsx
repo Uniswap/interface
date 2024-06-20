@@ -118,9 +118,6 @@ export const NewStake: React.FC = () => {
 
   const _rewardRate = useSingleCallResult(contract, 'rewardRate', []).result?.[0] ?? 0
   const rewardRate = ube ? CurrencyAmount.fromRawAmount(ube, _rewardRate) : undefined
-  console.log('rewardRate', rewardRate?.toFixed(18))
-  console.log('stakeBalance', stakeBalance?.toFixed(18))
-  console.log('totalSupply', totalSupply?.toFixed(18))
 
   const apy =
     rewardRate && totalSupply && totalSupply.greaterThan('0')
@@ -286,8 +283,8 @@ export const NewStake: React.FC = () => {
         </BodyWrapper>
 
         {!(userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0))) && (
-          <Text fontSize={20} fontWeight={500}>
-            {t('Weekly Rewards') + ' '}
+          <Text fontSize={20} fontWeight={500} padding="0px 8px">
+            {t('Your Weekly Rewards') + ' '}
             {userWeeklyRewards ? userWeeklyRewards.toFixed(0, { groupSeparator: ',' }) : '--'} UBE / week (
             {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
           </Text>

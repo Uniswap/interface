@@ -13,6 +13,7 @@ import { OldStake } from './OldStake'
 const TopSection = styled(AutoColumn)({
   maxWidth: '480px',
   width: '100%',
+  padding: '2px',
 })
 
 const StyledButtonRadio = styled(ButtonRadio)({
@@ -43,13 +44,13 @@ export const StakePage: React.FC = () => {
           <CardNoise />
         </DataCard>
 
-        <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center' }}>
-          <div style={{ width: '200px' }}>
+        <div style={{ margin: '10px 0 0 6px', display: 'flex', justifyContent: 'center', width: '90%' }}>
+          <div style={{ width: '50%', maxWidth: '200px' }}>
             <StyledButtonRadio active={newStake} onClick={() => setNewStake(true)}>
               New Stake
             </StyledButtonRadio>
           </div>
-          <div style={{ width: '200px' }}>
+          <div style={{ width: '50%', maxWidth: '200px' }}>
             <StyledButtonRadio active={!newStake} onClick={() => setNewStake(false)}>
               Old Stake
             </StyledButtonRadio>
