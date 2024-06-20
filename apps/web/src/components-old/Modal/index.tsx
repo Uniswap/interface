@@ -6,13 +6,14 @@ import React from 'react'
 import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components'
+import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'uniswap/src/utils/platform'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: ${Z_INDEX.modalBackdrop};
     background-color: transparent;
     overflow: hidden;
 
