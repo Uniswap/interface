@@ -40,6 +40,10 @@ import LogsUpdater from './state/logs/updater'
 import { ThemeProvider, ThemedGlobalStyle } from './theme'
 // import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
+if (localStorage.getItem('react-celo/last-used-wallet')) {
+  localStorage.clear()
+}
+
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
