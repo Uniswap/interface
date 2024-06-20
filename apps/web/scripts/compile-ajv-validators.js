@@ -12,7 +12,10 @@ addFormats(tokenListAjv)
 const validateTokenList = tokenListAjv.compile(schema)
 let tokenListModuleCode = standaloneCode(tokenListAjv, validateTokenList)
 
-fs.writeFileSync(!fs.existsSync(path.join(__dirname, '../src/utils/__generated__/validateTokenList.js')) ? fs.mkdirSync(path.join(__dirname, '../src/utils/__generated__/validateTokenList.js'), {recursive: true}) : path.join(__dirname, '../src/utils/__generated__/validateTokenList.js'), tokenListModuleCode)
+if (!fs.existsSync(path.join(__dirname, '../src/utils/__generated__'))) {
+  fs.mkdirSync(path.join(__dirname, '../src/utils/__generated__'))
+}
+fs.writeFileSync(path.join(__dirname, '../src/utils/__generated__/validateTokenList.js'), tokenListModuleCode)
 
 const tokensAjv = new Ajv({ code: { source: true, esm: true } })
 addFormats(tokensAjv)

@@ -5220,4 +5220,34 @@
     <lastmod>2024-06-18T16:40:08.359Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0xbcfac19a0036ada56496316ee5cf388c2af2bf58</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xa60b111920686dff5b1dab13ca4e9b8d427bbddb</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x9e71e2b14d7e6d30811628ab0965f28e4e2edbce</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xa011da4a0c9261ecf4694bf73a74d113aa261133</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x7ab922c1bfdf7df977c7531c5782074d866f3adc</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xe2d2050430e341a8f3988e2726e44d9370f8cd3a</loc>
+    <lastmod>2024-06-20T09:48:35.733Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>
