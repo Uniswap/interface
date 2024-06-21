@@ -1,5 +1,5 @@
 import { ChainId } from '@taraswap/sdk-core'
-import { SupportedInterfaceChainId, getChain, useIsSupportedChainId } from 'constants/chains'
+import { getChain, SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import {
@@ -12,9 +12,9 @@ import {
   ETHEREUM_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
+  TARAXA_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
-  TARAXA_LOGO,
 } from 'ui/src/assets'
 
 type ChainUI = { symbol: string; bgColor: string; textColor: string }
@@ -121,8 +121,8 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
     case ChainId.TARAXA_TESTNET:
       return {
         symbol: TARAXA_LOGO,
-        bgColor: 'rgba(9,1,1,0.2)',
-        textColor: '#10680a',
+        bgColor: 'rgba(30,34,49,1)',
+        textColor: '#15AC5B',
       }
     default:
       return undefined
@@ -140,6 +140,7 @@ type ChainLogoProps = {
   testId?: string
   fillContainer?: boolean
 }
+
 export function ChainLogo({
   chainId,
   style,

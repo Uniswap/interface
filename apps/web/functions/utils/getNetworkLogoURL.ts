@@ -22,6 +22,8 @@ export default function getNetworkLogoUrl(network: string, origin: string) {
       return origin + '/images/logos/Zora_Logo.png'
     case Chain.Zksync:
       return origin + '/images/logos/Zora_Logo.png'
+    case Chain.TaraxaTestnet:
+      return origin + '/images/logos/Taraxa_Logo.png'
     default:
       return ''
   }

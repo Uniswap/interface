@@ -1,5 +1,5 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId } from '@taraswap/sdk-core'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'

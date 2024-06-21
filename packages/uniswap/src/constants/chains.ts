@@ -11,6 +11,7 @@ import {
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
+  TARAXA_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
 } from 'ui/src/assets'
@@ -1058,7 +1059,7 @@ export const UNIVERSE_CHAIN_INFO = {
     id: UniverseChainId.TARAXA_TESTNET,
     assetRepoNetworkName: 'taraxaTestnet',
     backendChain: {
-      chain: BackendChainId.Zksync as InterfaceGqlChain,
+      chain: BackendChainId.TaraxaTestnet as InterfaceGqlChain,
       backendSupported: false,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
@@ -1080,9 +1081,9 @@ export const UNIVERSE_CHAIN_INFO = {
     infuraPrefix: undefined,
     interfaceName: 'taraxa-testnet',
     label: 'Taraxa Testnet',
-    logo: ZKSYNC_LOGO,
+    logo: TARAXA_LOGO,
     nativeCurrency: {
-      name: 'Taraxa',
+      name: 'Testnet Tara',
       symbol: 'TARA',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
