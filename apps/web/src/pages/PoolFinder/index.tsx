@@ -167,7 +167,7 @@ export default function PoolFinder() {
                 <Text textAlign="center" fontWeight={535}>
                   <Trans i18nKey="poolFinder.found" />
                 </Text>
-                <StyledInternalLink to="pools/v2">
+                <StyledInternalLink to="/pools/v2">
                   <Text textAlign="center">
                     <Trans i18nKey="poolFinder.managePool" />
                   </Text>

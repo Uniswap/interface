@@ -12,10 +12,10 @@ import { Dots } from 'components/swap/styled'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { useTokenBalances } from 'hooks/useTokenBalances'
 import { useV2Pairs } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -27,7 +27,6 @@ import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { currencyKey } from 'utils/currencyKey'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -100,14 +99,17 @@ export default function Pool() {
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
-  const { balanceMap, loading: fetchingV2PairBalances } = useTokenBalances()
+  const [balanceMap, fetchingV2PairBalances] = useRpcTokenBalancesWithLoadingIndicator(
+    account.address,
+    tokenPairsWithLiquidityTokens.map(({ liquidityToken }) => liquidityToken),
+    !account?.address,
+  )
 
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
-        const liquidityTokenKey = currencyKey(liquidityToken)
-        return balanceMap[liquidityTokenKey]?.balance > 0
+        return balanceMap[liquidityToken.address]?.greaterThan(0)
       }),
     [tokenPairsWithLiquidityTokens, balanceMap]
   )

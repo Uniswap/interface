@@ -102,7 +102,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans i18nKey="share.label" />
+                  <Trans i18nKey="pool.share.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
