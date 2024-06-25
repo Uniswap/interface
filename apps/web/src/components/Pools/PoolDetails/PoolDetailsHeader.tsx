@@ -217,7 +217,7 @@ const ContractsDropdownRow = ({
 
 const ContractsModalContainer = css`
   ${ActionMenuFlyoutStyle}
-  min-width: 235px;
+  min-width 235px;
   border-radius: 16px;
   ${EllipsisStyle}
 `

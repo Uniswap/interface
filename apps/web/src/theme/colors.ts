@@ -158,6 +158,7 @@ const commonTheme = {
   chain_81457: colors.networkBlast,
   chain_7777777: colors.neutral1_light,
   chain_842: colors.green800,
+  chain_841: colors.green800,
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',

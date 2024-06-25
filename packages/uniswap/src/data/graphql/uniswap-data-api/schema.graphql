@@ -188,6 +188,7 @@ enum Chain {
   ZORA
   ZKSYNC
   TARAXA_TESTNET
+  TARAXA
   UNKNOWN_CHAIN
 }
 

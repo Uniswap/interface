@@ -111,6 +111,7 @@ export const ElementName = {
   ChainZora: 'chain-zora',
   ChainZkSync: 'chain-zksync',
   ChainTaraxaTestnet: 'chain-taraxa-testnet',
+  ChainTaraxa: 'chain-taraxa',
   ChooseInputToken: 'choose-input-token',
   ChooseOutputToken: 'choose-output-token',
   Confirm: 'confirm',

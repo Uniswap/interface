@@ -195,3 +195,11 @@ export const USDT_TARAXA_TESTNET = new Token(
   'USDT',
   'Tether USD'
 )
+
+export const USDT_TARAXA = new Token( //todo: replace with real address
+  UniverseChainId.TARAXA,
+  '0x0a66473ff369d43f1c63832f7bb2fd887ed16844',
+  6,
+  'USDT',
+  'Tether USD'
+)

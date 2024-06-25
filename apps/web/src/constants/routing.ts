@@ -1,4 +1,4 @@
-import {ChainId, Currency, Token, WETH9} from '@taraswap/sdk-core'
+import { ChainId, Currency, Token, WETH9 } from '@taraswap/sdk-core'
 import {
   ARB,
   BTC_BSC,

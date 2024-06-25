@@ -1,6 +1,6 @@
-import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
 import { Pair } from '@taraswap/v2-sdk'
+import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'

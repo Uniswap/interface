@@ -15,7 +15,7 @@
     "@react-navigation/core": "6.2.2",
     "@sentry/react": "7.80.0",
     "@sentry/react-native": "5.5.0",
-    "@taraswap/sdk-core": "1.1.2",
+    "@taraswap/sdk-core": "1.4.0",
     "@uniswap/analytics": "1.7.0",
     "@uniswap/analytics-events": "2.32.0",
     "aws-appsync-auth-link": "3.0.7",

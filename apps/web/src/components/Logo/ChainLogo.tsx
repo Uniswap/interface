@@ -124,6 +124,12 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
         bgColor: 'rgba(30,34,49,1)',
         textColor: '#15AC5B',
       }
+    case ChainId.TARAXA:
+      return {
+        symbol: TARAXA_LOGO,
+        bgColor: 'rgba(30,34,49,1)',
+        textColor: '#15AC5B',
+      }
     default:
       return undefined
   }

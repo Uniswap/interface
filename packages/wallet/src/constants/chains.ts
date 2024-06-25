@@ -17,11 +17,17 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Avalanche,
   ChainId.Celo,
   ChainId.Zora,
+  ChainId.Taraxa,
 ]
 
 export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai, ChainId.TaraxaTestnet]
 
-export const ETHEREUM_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli, ChainId.TaraxaTestnet] as const
+export const ETHEREUM_CHAIN_IDS = [
+  ChainId.Mainnet,
+  ChainId.Goerli,
+  ChainId.Taraxa,
+  ChainId.TaraxaTestnet,
+] as const
 
 // Renamed from SupportedL1ChainId in web app
 export type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
@@ -70,4 +76,5 @@ export const CHAIN_INFO: ChainInfo = {
   [UniverseChainId.Avalanche]: UNIVERSE_CHAIN_INFO[UniverseChainId.Avalanche] satisfies L2ChainInfo,
   [UniverseChainId.Celo]: UNIVERSE_CHAIN_INFO[UniverseChainId.Celo] satisfies L2ChainInfo,
   [UniverseChainId.TaraxaTestnet]: UNIVERSE_CHAIN_INFO[UniverseChainId.TaraxaTestnet],
+  [UniverseChainId.Taraxa]: UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA],
 }

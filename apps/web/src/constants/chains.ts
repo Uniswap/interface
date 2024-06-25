@@ -30,10 +30,11 @@ export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.ZORA,
   ChainId.ZKSYNC,
   ChainId.TARAXA_TESTNET,
+  ChainId.TARAXA,
 ] as const
 
 export function isSupportedChainId(chainId?: number | ChainId | null): chainId is SupportedInterfaceChainId {
-  return !!chainId && SUPPORTED_INTERFACE_CHAIN_IDS.includes(chainId as SupportedInterfaceChainId)
+  return !!chainId && (chainId == ChainId.TARAXA || chainId == ChainId.TARAXA_TESTNET)
 }
 
 // Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
@@ -102,6 +103,7 @@ const SEPOLIA = UNIVERSE_CHAIN_INFO[UniverseChainId.SEPOLIA]
 const ZORA = UNIVERSE_CHAIN_INFO[UniverseChainId.ZORA]
 const ZKSYNC = UNIVERSE_CHAIN_INFO[UniverseChainId.ZKSYNC]
 const TARAXA_TESTNET = UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA_TESTNET]
+const TARAXA = UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA]
 
 const INTERFACE_SUPPORTED_CHAINS = [
   MAINNET,
@@ -122,6 +124,7 @@ const INTERFACE_SUPPORTED_CHAINS = [
   ZORA,
   ZKSYNC,
   TARAXA_TESTNET,
+  TARAXA,
 ] as const
 
 type ExtractObject<TObject extends Record<string, unknown>, TNarrowedObject extends Partial<TObject>> = Extract<
@@ -155,6 +158,7 @@ export const CHAIN_INFO: ChainInfoMap = {
   [ChainId.ZORA]: ZORA,
   [ChainId.ZKSYNC]: ZKSYNC,
   [ChainId.TARAXA_TESTNET]: TARAXA_TESTNET,
+  [ChainId.TARAXA]: TARAXA,
 } as const
 
 export type ChainSlug = SupportedInterfaceChain['urlParam']

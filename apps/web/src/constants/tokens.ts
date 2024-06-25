@@ -393,6 +393,32 @@ class PolygonNativeCurrency extends NativeCurrency {
   }
 }
 
+function isTaraxa(chainId: number): chainId is ChainId.TARAXA | ChainId.TARAXA_TESTNET {
+  return chainId === ChainId.TARAXA || chainId === ChainId.TARAXA_TESTNET
+}
+
+class TaraxaNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isTaraxa(this.chainId)) {
+      throw new Error('Not Taraxa')
+    }
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isTaraxa(chainId)) {
+      throw new Error('Not Taraxa')
+    }
+    super(chainId, 18, 'TARA', 'Tara')
+  }
+}
+
 export function isBsc(chainId: number): chainId is ChainId.BNB {
   return chainId === ChainId.BNB
 }
@@ -483,6 +509,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {
     nativeCurrency = new AvaxNativeCurrency(chainId)
+  } else if (isTaraxa(chainId)) {
+    nativeCurrency = new TaraxaNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }

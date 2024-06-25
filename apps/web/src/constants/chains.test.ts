@@ -71,6 +71,7 @@ const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
   [ChainId.ZORA]: 'zora',
   [ChainId.ZKSYNC]: 'zksync',
   [ChainId.TARAXA_TESTNET]: 'taraxa_testnet',
+  [ChainId.TARAXA]: 'taraxa',
 } as const
 
 test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -219,6 +220,7 @@ const chainToChainId = {
   [Chain.Zora]: ChainId.ZORA,
   [Chain.Zksync]: ChainId.ZKSYNC,
   [Chain.TaraxaTestnet]: ChainId.TARAXA_TESTNET,
+  [Chain.Taraxa]: ChainId.TARAXA,
 } as const
 
 test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(

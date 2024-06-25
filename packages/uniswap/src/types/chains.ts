@@ -21,6 +21,7 @@ export enum ChainId {
   Bnb = 56,
   Zora = 7777777,
   TaraxaTestnet = 842,
+  Taraxa = 841,
 }
 
 export const UniverseChainId = {

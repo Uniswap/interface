@@ -52,6 +52,7 @@ import {
   USDC_ZORA,
   USDT,
   USDT_BSC,
+  USDT_TARAXA,
   USDT_TARAXA_TESTNET,
 } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -1054,7 +1055,7 @@ export const UNIVERSE_CHAIN_INFO = {
       address: '0x000000000000000000000000000000000000800A',
     },
   } as const satisfies UniverseChainInfo,
-  [UniverseChainId.TARAXA_TESTNET]: {
+  [UniverseChainId.TaraxaTestnet]: {
     ...taraxaTestnet,
     id: UniverseChainId.TARAXA_TESTNET,
     assetRepoNetworkName: 'taraxaTestnet',
@@ -1102,6 +1103,61 @@ export const UNIVERSE_CHAIN_INFO = {
     supportsClientSideRouting: false,
     supportsGasEstimates: false,
     wrappedNativeCurrency: {
+      name: 'Wrapped TARA',
+      symbol: 'WTARA',
+      decimals: 18,
+      address: '0x5745CC77c362D459b78bC014d8940c2c98E08c54',
+    },
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.Taraxa]: {
+    ...taraxaTestnet,
+    id: UniverseChainId.TARAXA,
+    assetRepoNetworkName: 'taraxa',
+    backendChain: {
+      chain: BackendChainId.Taraxa as InterfaceGqlChain,
+      backendSupported: false,
+      isSecondaryChain: false,
+      nativeTokenBackendAddress: undefined,
+    },
+    blockPerMainnetEpochForChainId: 12,
+    blockWaitMsBeforeWarning: 600000,
+    bridge: undefined,
+    chainPriority: 12,
+    docs: 'https://docs.taraxa.io/',
+    elementName: ElementName.ChainTaraxa,
+    explorer: {
+      name: 'Taraxa Explorer',
+      url: 'https://mainnet.explorer.taraxa.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
+    },
+    helpCenterUrl: undefined,
+    infoLink: 'https://app.uniswap.org/explore/tokens/tara',
+    infuraPrefix: undefined,
+    interfaceName: 'taraxa',
+    label: 'Taraxa',
+    logo: TARAXA_LOGO,
+    nativeCurrency: {
+      name: 'Tara',
+      symbol: 'TARA',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+    },
+    networkLayer: NetworkLayer.L1,
+    pendingTransactionsRetryOptions: undefined,
+    rpcUrls: {
+      [RPCType.Public]: { http: ['https://rpc.mainnet.taraxa.io'] },
+      default: { http: ['https://rpc.mainnet.taraxa.io'] },
+      appOnly: { http: ['https://rpc.mainnet.taraxa.io'] },
+    },
+    urlParam: 'taraxa',
+    statusPage: undefined,
+    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_TARAXA, 10_000e6),
+    stablecoins: [USDT_TARAXA],
+    supportsClientSideRouting: false,
+    supportsGasEstimates: false,
+    wrappedNativeCurrency: {
+      //todo: replace with real address
       name: 'Wrapped TARA',
       symbol: 'WTARA',
       decimals: 18,

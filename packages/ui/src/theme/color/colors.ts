@@ -154,6 +154,7 @@ export const colors = {
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
   networkEthereum: '#627EEA',
+  networkTaraxa: '#15AC5B',
   networkOptimism: '#FF0420',
   networkPolygon: '#A457FF',
   networkArbitrum: '#28A0F0',
@@ -296,7 +297,8 @@ export const colorsLight = {
   chain_56: colors.networkBsc,
   chain_42220: colors.networkCelo,
   chain_43114: colors.networkAvalanche,
-  chain_842: colors.green800,
+  chain_842: colors.networkTaraxa,
+  chain_841: colors.networkTaraxa,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -368,5 +370,6 @@ export const colorsDark = {
   chain_56: colors.networkBsc,
   chain_42220: colors.networkCelo,
   chain_43114: colors.networkAvalanche,
-  chain_842: colors.green100,
+  chain_842: colors.networkTaraxa,
+  chain_841: colors.networkTaraxa,
 }
