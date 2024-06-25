@@ -152,6 +152,37 @@ export function useCurrencyInfo(
       }
     }
 
+    /**
+     * Hard coded custom tokens
+     */
+    if (address === '0xF15D41e06FE329427c643Ed2203F14C409cb4b85' && supportedChainId) {
+      const husdToken = new Token(supportedChainId, address,
+        18, 'HUSD', 'Human USD'
+      )
+
+      return {
+        currency: husdToken,
+        currencyId: currencyId(husdToken),
+        logoUrl: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/usd.svg',
+        safetyLevel: SafetyLevel.StrongWarning,
+        isSpam: false,
+      }
+    }
+
+    if (address === '0x6A3267e048B80FC2Fbd52510508c1eb884F0fDb1' && supportedChainId) {
+      const usdtToken = new Token(supportedChainId, address,
+        18, 'USDT', 'USDT'
+      )
+
+      return {
+        currency: usdtToken,
+        currencyId: currencyId(usdtToken),
+        logoUrl: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/usdt.svg',
+        safetyLevel: SafetyLevel.StrongWarning,
+        isSpam: false,
+      }
+    }
+
     if (!data?.token || !address || skip) {
       return
     }

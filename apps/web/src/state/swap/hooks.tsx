@@ -211,7 +211,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
   // totalGasUseEstimateUSD is greater than native token balance
   const insufficientGas =
-    isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
+    isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 3500) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
   const { isDisconnected } = useAccount()
   const inputError = useMemo(() => {
