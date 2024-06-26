@@ -10,7 +10,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
 
     // TODO: add back local browser cacheing (revisit 11/13/2023)
     const headers = new Headers({ 'Content-Type': 'application/json' })
-    fetch('https://interface.gateway.uniswap.org/v1/screen', {
+    fetch('https://interface-gateway.ubeswap.org/v1/screen', {
       method: 'POST',
       headers,
       body: JSON.stringify({ address: account }),

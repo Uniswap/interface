@@ -72,7 +72,7 @@ describe('Landing Page', () => {
   })
 
   it('renders uk compliance banner in uk', () => {
-    cy.intercept('https://interface.gateway.uniswap.org/v1/amplitude-proxy', (req) => {
+    cy.intercept('https://interface-gateway.ubeswap.org/v1/amplitude-proxy', (req) => {
       const requestBody = JSON.stringify(req.body)
       const byteSize = new Blob([requestBody]).size
       req.alias = 'amplitude'

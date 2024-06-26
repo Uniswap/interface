@@ -36,7 +36,7 @@ exports[`should inject metadata for valid tokens 1`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://interface-gateway.ubeswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
@@ -180,7 +180,7 @@ exports[`should inject metadata for valid tokens 2`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://interface-gateway.ubeswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
@@ -324,7 +324,7 @@ exports[`should inject metadata for valid tokens 3`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://interface-gateway.ubeswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
@@ -468,7 +468,7 @@ exports[`should inject metadata for valid tokens 4`] = `
     -->
     <link rel="manifest" href="/manifest.json" />
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://interface-gateway.ubeswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
