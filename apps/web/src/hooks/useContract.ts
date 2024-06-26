@@ -199,7 +199,7 @@ export function useUbeConvertContract() {
 }
 
 export function usePactConvertContract() {
-  return useContract<UbeConvert>('0x8828b88F3e1C256D34D53e50Dc7E347881934bfd', UBE_CONVERT_ABI, true)
+  return useContract<UbeConvert>('0x1854c78e5401A501A8F32f3a9DFae3d356Fb9A9E', UBE_CONVERT_ABI, true)
 }
 
 export function useUbeTokenContract() {
