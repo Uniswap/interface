@@ -26,6 +26,8 @@
     "data:",
     "https://*.uniswap.org",
     "https://uniswap.org",
+    "https://ubeswap.org",
+    "https://*.ubeswap.org",
     "https://assets.coingecko.com/",
     "https://*.amazonaws.com",
     "https://basescan.org",
