@@ -15,8 +15,10 @@ export function useScroll() {
 
     const scrollListener = () => {
       setIsScrolledDown(window.scrollY > 0)
-      setHeight(window.scrollY)
-      currentScrollPosition = window.scrollY
+      if (window.scrollY >= 0) {
+        setHeight(window.scrollY)
+        currentScrollPosition = window.scrollY
+      }
 
       if (previousScrollPosition < currentScrollPosition) {
         setDirection(ScrollDirection.DOWN)
