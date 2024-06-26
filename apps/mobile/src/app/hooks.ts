@@ -1,5 +1,6 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { ThunkDispatch } from '@reduxjs/toolkit'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import type { MobileState } from 'src/app/reducer'
@@ -57,5 +58,35 @@ export function useShouldShowNativeKeyboard(): {
     // can be used to imitate flexGrow=1 for the input panel
     maxContentHeight:
       isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMAL_PAD_GAP,
+  }
+}
+
+const getNativeComponentKey = (): string => `native-component-${Math.random().toString()}`
+
+export function useNativeComponentKey(autoUpdate = true): {
+  key: string
+  triggerUpdate: () => void
+} {
+  const isInitialRenderRef = useRef(true)
+
+  const [key, setKey] = useState(getNativeComponentKey)
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isInitialRenderRef.current || !autoUpdate) {
+        isInitialRenderRef.current = false
+        return
+      }
+      setKey(getNativeComponentKey())
+    }, [autoUpdate])
+  )
+
+  const triggerUpdate = useCallback(() => {
+    setKey(getNativeComponentKey())
+  }, [])
+
+  return {
+    key,
+    triggerUpdate,
   }
 }

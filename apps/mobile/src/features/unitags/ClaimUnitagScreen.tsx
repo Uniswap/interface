@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { default as React, useCallback, useEffect, useState } from 'react'
@@ -14,6 +15,7 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -23,7 +25,6 @@ import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import {
@@ -373,7 +374,12 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           </Trace>
         )}
         <Button
-          disabled={!unitagInputValue || isCheckingUnitag || shouldBlockContinue}
+          disabled={
+            (entryPoint === OnboardingScreens.Landing && !onboardingAccountAddress) ||
+            !unitagInputValue ||
+            isCheckingUnitag ||
+            shouldBlockContinue
+          }
           size="medium"
           testID={ElementName.Continue}
           theme="primary"

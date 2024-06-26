@@ -1,6 +1,6 @@
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { fireEvent, render } from 'src/test/test-utils'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 
 describe(RemoveButton, () => {
   it('renders without error', () => {

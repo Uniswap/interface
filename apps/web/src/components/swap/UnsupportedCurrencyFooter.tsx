@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { ButtonEmpty } from 'components/Button'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -14,6 +14,7 @@ import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -98,7 +99,7 @@ export default function UnsupportedCurrencyFooter({
   )
 }
 
-function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: ChainId }) {
+function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: InterfaceChainId }) {
   const currencyInfo = useCurrencyInfo(token)
 
   if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyLevel === SafetyLevel.Verified)) {

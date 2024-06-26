@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
@@ -15,15 +15,15 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 
-const chainId = ChainId.Goerli
-const ethAddress = getNativeAddress(ChainId.Goerli)
+const chainId = UniverseChainId.Goerli
+const ethAddress = getNativeAddress(UniverseChainId.Goerli)
 const daiTradeableAsset: CurrencyAsset = { address: 'DAI', chainId, type: AssetType.Currency }
 const ethTradeableAsset: CurrencyAsset = { address: ethAddress, chainId, type: AssetType.Currency }
 
 const testInitialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: {
     address: ethAddress,
-    chainId: ChainId.Goerli,
+    chainId: UniverseChainId.Goerli,
     type: AssetType.Currency,
   },
   [CurrencyField.OUTPUT]: null,

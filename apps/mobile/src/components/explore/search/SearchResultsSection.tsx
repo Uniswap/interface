@@ -21,12 +21,12 @@ import {
 import { Flex, Text } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
@@ -56,7 +56,7 @@ const NFTHeaderItem: SearchResultOrHeader = {
 const EtherscanHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
+    blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
   }),
 }
 
@@ -175,7 +175,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   if (error) {
-    if (IGNORED_ERRORS.includes(error?.message)) {
+    const filteredErrors = error.graphQLErrors.filter((e) => !IGNORED_ERRORS.includes(e.message))
+
+    if (filteredErrors.length === 0) {
       logger.info('SearchResultSection', 'useExploreSearchQuery', error?.message)
     } else {
       return (

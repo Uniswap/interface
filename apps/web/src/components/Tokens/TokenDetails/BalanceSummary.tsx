@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
@@ -12,6 +12,7 @@ import {
   Chain,
   PortfolioTokenBalancePartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
@@ -61,12 +62,18 @@ const BalanceAmountsContainer = styled.div<{ $alignLeft: boolean }>`
 
 interface BalanceProps {
   currency?: Currency
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   gqlBalance?: PortfolioTokenBalancePartsFragment
   alignLeft?: boolean
   onClick?: () => void
 }
-const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, alignLeft = false, onClick }: BalanceProps) => {
+const Balance = ({
+  currency,
+  chainId = UniverseChainId.Mainnet,
+  gqlBalance,
+  alignLeft = false,
+  onClick,
+}: BalanceProps) => {
   const { formatNumber } = useFormatter()
   const currencies = useMemo(() => [currency], [currency])
 
@@ -145,7 +152,7 @@ const OtherChainsBalanceSummary = ({
       )}
       {otherChainBalances.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
-        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.MAINNET
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? UniverseChainId.Mainnet
         return (
           <Balance
             key={balance.id}

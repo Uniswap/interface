@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
   CancelOrdersDialog,
   CancellationState,
@@ -34,6 +34,7 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -223,7 +224,7 @@ export function OrderContent({
     <Column>
       <Row gap="md">
         <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
+          chainId={amounts?.inputAmount.currency.chainId ?? UniverseChainId.Mainnet}
           currencies={currencies}
           images={[logos?.inputLogo, logos?.outputLogo]}
         />

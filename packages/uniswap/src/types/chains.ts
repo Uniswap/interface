@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token, ChainId as UniswapChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { GeneratedIcon } from 'ui/src'
@@ -6,28 +6,78 @@ import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-a
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { Chain as WagmiChain } from 'wagmi/chains'
 
-// Renamed from SupportedChainId in web app
-export enum ChainId {
-  Mainnet = 1,
-  Goerli = 5,
-
-  ArbitrumOne = 42161,
-  Avalanche = 43114,
-  Base = 8453,
-  Celo = 42220,
-  Optimism = 10,
-  Polygon = 137,
-  PolygonMumbai = 80001,
-  Blast = 81457,
-  Bnb = 56,
-  Zora = 7777777,
+export enum UniverseChainId {
+  Mainnet = UniswapSDKChainId.MAINNET,
+  Goerli = UniswapSDKChainId.GOERLI,
+  Sepolia = UniswapSDKChainId.SEPOLIA,
+  Optimism = UniswapSDKChainId.OPTIMISM,
+  OptimismGoerli = UniswapSDKChainId.OPTIMISM_GOERLI,
+  ArbitrumOne = UniswapSDKChainId.ARBITRUM_ONE,
+  ArbitrumGoerli = UniswapSDKChainId.ARBITRUM_GOERLI,
+  Polygon = UniswapSDKChainId.POLYGON,
+  PolygonMumbai = UniswapSDKChainId.POLYGON_MUMBAI,
+  Avalanche = UniswapSDKChainId.AVALANCHE,
+  Celo = UniswapSDKChainId.CELO,
+  CeloAlfajores = UniswapSDKChainId.CELO_ALFAJORES,
+  Bnb = UniswapSDKChainId.BNB,
+  Base = UniswapSDKChainId.BASE,
+  Blast = UniswapSDKChainId.BLAST,
+  Zora = UniswapSDKChainId.ZORA,
+  Zksync = UniswapSDKChainId.ZKSYNC,
 }
 
-export const UniverseChainId = {
-  ...ChainId,
-  ...UniswapChainId,
-}
-export type UniverseChainId = ChainId | UniswapChainId
+export type WalletChainId =
+  | UniverseChainId.Mainnet
+  | UniverseChainId.Goerli
+  | UniverseChainId.ArbitrumOne
+  | UniverseChainId.Avalanche
+  | UniverseChainId.Base
+  | UniverseChainId.Celo
+  | UniverseChainId.Optimism
+  | UniverseChainId.Polygon
+  | UniverseChainId.PolygonMumbai
+  | UniverseChainId.Blast
+  | UniverseChainId.Bnb
+  | UniverseChainId.Zora
+  | UniverseChainId.Zksync
+
+// DON'T CHANGE - order here determines ordering of networks in app
+// TODO: [MOB-250] Add back in testnets once our endpoints support them
+export const WALLET_SUPPORTED_CHAIN_IDS: WalletChainId[] = [
+  UniverseChainId.Mainnet,
+  UniverseChainId.Polygon,
+  UniverseChainId.ArbitrumOne,
+  UniverseChainId.Optimism,
+  UniverseChainId.Base,
+  UniverseChainId.Bnb,
+  UniverseChainId.Blast,
+  UniverseChainId.Avalanche,
+  UniverseChainId.Celo,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
+]
+
+export type InterfaceChainId = UniverseChainId
+
+export const WEB_SUPPORTED_CHAIN_IDS: InterfaceChainId[] = [
+  UniverseChainId.Mainnet,
+  UniverseChainId.Goerli,
+  UniverseChainId.Sepolia,
+  UniverseChainId.Optimism,
+  UniverseChainId.OptimismGoerli,
+  UniverseChainId.ArbitrumOne,
+  UniverseChainId.ArbitrumGoerli,
+  UniverseChainId.Polygon,
+  UniverseChainId.PolygonMumbai,
+  UniverseChainId.Avalanche,
+  UniverseChainId.Celo,
+  UniverseChainId.CeloAlfajores,
+  UniverseChainId.Bnb,
+  UniverseChainId.Base,
+  UniverseChainId.Blast,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
+]
 
 export enum RPCType {
   Public = 'public',
@@ -66,6 +116,7 @@ export interface BackendChain {
 
 export interface UniverseChainInfo extends WagmiChain {
   readonly id: UniverseChainId
+  readonly sdkId: UniswapSDKChainId
   readonly assetRepoNetworkName: string | undefined // Name used to index the network on this repo: https://github.com/Uniswap/assets/
   readonly backendChain: BackendChain
   readonly blockPerMainnetEpochForChainId: number
@@ -77,8 +128,6 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly explorer: {
     name: string
     url: string
-    logoLight: GeneratedIcon
-    logoDark: GeneratedIcon
   }
   readonly helpCenterUrl: string | undefined
   readonly infoLink: string
@@ -106,5 +155,12 @@ export interface UniverseChainInfo extends WagmiChain {
     symbol: string // 'WETH',
     decimals: number // 18,
     address: string // '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
+  }
+}
+
+export interface UniverseChainLogoInfo {
+  explorer: {
+    logoLight: GeneratedIcon
+    logoDark: GeneratedIcon
   }
 }

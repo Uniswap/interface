@@ -16,6 +16,7 @@ import signatures from 'state/signatures/reducer'
 import transactions from 'state/transactions/reducer'
 import user from 'state/user/reducer'
 import wallets from 'state/wallets/reducer'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv } from 'uniswap/src/utils/env'
 
 const persistedReducers = {
@@ -36,6 +37,7 @@ const appReducer = combineReducers({
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
   [quickRouteApi.reducerPath]: quickRouteApi.reducer,
+  [fiatOnRampAggregatorApi.reducerPath]: fiatOnRampAggregatorApi.reducer,
   ...persistedReducers,
 })
 
@@ -43,7 +45,7 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 9, // see migrations.ts for more details about this version
+  version: 12, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: INDEXED_DB_REDUX_TABLE_NAME,
     driver: localForage.LOCALSTORAGE,

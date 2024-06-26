@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { nativeOnChain } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
@@ -18,6 +18,7 @@ import { TradeState } from 'state/routing/types'
 import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, USE_CONNECTED_ACCOUNT, toCurrencyAmount } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('hooks/useAccount', () => ({
   useAccount: jest.fn(),
@@ -58,7 +59,9 @@ describe('BagFooter.tsx', () => {
       itemsInBag: [],
     }) as ReturnType<typeof useBag>
     mocked(useBagTotalEthPrice).mockReturnValue(BigNumber.from(12))
-    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 100))
+    mocked(useCurrencyBalance).mockReturnValue(
+      CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 100)
+    )
 
     mocked(usePermit2Allowance).mockReturnValue({
       state: AllowanceState.ALLOWED,
@@ -125,7 +128,7 @@ describe('BagFooter.tsx', () => {
   })
 
   it('insufficient balance', () => {
-    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 0))
+    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 0))
 
     renderBagFooter()
     const buyButton = getBuyButton()
@@ -405,8 +408,8 @@ describe('BagFooter.tsx', () => {
 
   it('should use the correct UR address', () => {
     expect(getURAddress(undefined)).toBe(undefined)
-    expect(getURAddress(ChainId.MAINNET)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET))
-    expect(getURAddress(ChainId.MAINNET, 'test_nft_ur_address')).toBe('test_nft_ur_address')
-    expect(getURAddress(ChainId.OPTIMISM)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.OPTIMISM))
+    expect(getURAddress(UniverseChainId.Mainnet)).toBe(UNIVERSAL_ROUTER_ADDRESS(UniverseChainId.Mainnet))
+    expect(getURAddress(UniverseChainId.Mainnet, 'test_nft_ur_address')).toBe('test_nft_ur_address')
+    expect(getURAddress(UniverseChainId.Optimism)).toBe(UNIVERSAL_ROUTER_ADDRESS(UniverseChainId.Optimism))
   })
 })

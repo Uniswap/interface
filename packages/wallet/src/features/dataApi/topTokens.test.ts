@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { usePopularTokens } from 'wallet/src/features/dataApi/topTokens'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { token } from 'wallet/src/test/fixtures'
@@ -7,7 +7,7 @@ import { createArray, queryResolvers } from 'wallet/src/test/utils'
 
 describe(usePopularTokens, () => {
   it('returns loading true when data is being fetched', async () => {
-    const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet))
+    const { result } = renderHook(() => usePopularTokens(UniverseChainId.Mainnet))
 
     expect(result.current).toEqual({
       data: undefined,
@@ -27,7 +27,7 @@ describe(usePopularTokens, () => {
         throw new Error('test error')
       },
     })
-    const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet), {
+    const { result } = renderHook(() => usePopularTokens(UniverseChainId.Mainnet), {
       resolvers,
     })
 
@@ -46,7 +46,7 @@ describe(usePopularTokens, () => {
     const { resolvers } = queryResolvers({
       topTokens: () => topToken,
     })
-    const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet), {
+    const { result } = renderHook(() => usePopularTokens(UniverseChainId.Mainnet), {
       resolvers,
     })
 

@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { BigintIsh, ChainId, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
@@ -9,6 +9,8 @@ import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useRef } from 'react'
 import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
 import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
@@ -28,7 +30,7 @@ export class PoolCache {
     tokenA: Token,
     tokenB: Token,
     fee: FeeAmount,
-    chainId: ChainId
+    chainId: InterfaceChainId
   ): string {
     if (this.addresses.length > this.MAX_ENTRIES) {
       this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
@@ -49,7 +51,7 @@ export class PoolCache {
         tokenA,
         tokenB,
         fee,
-        chainId,
+        chainId: UNIVERSE_CHAIN_INFO[chainId].sdkId,
       }),
     }
     this.addresses.unshift(address)
@@ -200,7 +202,7 @@ export function usePoolMultichain(
   tokenA: Token | undefined,
   tokenB: Token | undefined,
   fee: number | undefined,
-  chainId: ChainId
+  chainId: InterfaceChainId
 ): [PoolState, Pool | null] {
   const poolData = useRef<[PoolState, Pool | null]>([PoolState.LOADING, null])
   const poolAddress =

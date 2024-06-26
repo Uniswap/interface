@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qmcit8DbnQtQk8ZzSa9E4PFXjU1ENfbMQXYv5VwfNLvF1N`
-- CIDv1: `bafybeigvwwif77wmthgzo7xqqnjpxbqfsodjbwg3mafmnrwtcojewqpveu`
+- CIDv0: `QmW47HPC4SPLcqU9J19iTWNzjsqyaTmbUyhxUyNLcPNqhu`
+- CIDv1: `bafybeidsucvs434zirxhib6npfzfqg4jagv6xkccfxjz3gmegib2bu36zq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,49 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigvwwif77wmthgzo7xqqnjpxbqfsodjbwg3mafmnrwtcojewqpveu.ipfs.dweb.link/
-- https://bafybeigvwwif77wmthgzo7xqqnjpxbqfsodjbwg3mafmnrwtcojewqpveu.ipfs.cf-ipfs.com/
-- [ipfs://Qmcit8DbnQtQk8ZzSa9E4PFXjU1ENfbMQXYv5VwfNLvF1N/](ipfs://Qmcit8DbnQtQk8ZzSa9E4PFXjU1ENfbMQXYv5VwfNLvF1N/)
+- https://bafybeidsucvs434zirxhib6npfzfqg4jagv6xkccfxjz3gmegib2bu36zq.ipfs.dweb.link/
+- https://bafybeidsucvs434zirxhib6npfzfqg4jagv6xkccfxjz3gmegib2bu36zq.ipfs.cf-ipfs.com/
+- [ipfs://QmW47HPC4SPLcqU9J19iTWNzjsqyaTmbUyhxUyNLcPNqhu/](ipfs://QmW47HPC4SPLcqU9J19iTWNzjsqyaTmbUyhxUyNLcPNqhu/)
 
-### 5.36.3 (2024-06-26)
+## 5.37.0 (2024-06-26)
+
+
+### Features
+
+* **web:** add fiat currency selection to buy flow (#8868) 25d35a7
+* **web:** country picker for buy flow (+ tests/snapshots) (#8825) a342a3a
+* **web:** Enable Avax on /explore (#8965) c9f8ed5
+* **web:** move BaseCard and dependencies to uniswap (#9084) 61c6c15
 
 
 ### Bug Fixes
 
-* **web:** legacy nav should not transition out of view on scroll (#9538) 435b634
+* **web:** Divide 1 day APR by 100 (#9343) 838a3c7
+* **web:** ensure explore and pools tabs are highlighted when active (#9151) 63673b1
+* **web:** fix a few translations where components need a tag for inte… (#9152) cfe7ed5
+* **web:** fix broken link, translation, and importing v2 positions (#9543) 51335c2
+* **web:** fix height of token safety modal (#9258) f8bb7f4
+* **web:** fix moonpay modal height (#9270) ce92266
+* **web:** ignore GQL errors in SearchTokens query (#9544) e687bd0
+* **web:** language/currency label (#9158) af0c676
+* **web:** legacy nav should not transition out of view on scroll (#9540) 1ae4664
+* **web:** reconcile multichainUx with refreshedNavbar (#9122) 6519f2c
+* **web:** unblock ENS namewrapper contract address (#9254) 050fe29
+* **web:** update redux store to v12 to match migrations (#8844) a9c162b
+* **web:** use Add/Remove language in Transactions table (#9133) f78bb31
+* **web:** use nullable valueModifiers (#9268) 8ccdf1c
+* **web:** use uniswapx-sdk for cancel limits params (#8912) 83d70ab
+* **web:** use valueModifiers in web portfolio query (#8942) ff5a840
+* **web:** web config (#9169) 39c336a
+
+
+### Reverts
+
+* **web:** place hotkeys under feature flag for nav release (#9196) c1fff38
+
+
+### Continuous Integration
+
+* **web:** update sitemaps be4b927
 
 

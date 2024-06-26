@@ -32,6 +32,7 @@ export function translateMnemonicErrorMessage(
 export function validateSetOfWords(mnemonic?: string): {
   error?: MnemonicValidationError
   invalidWord?: string
+  invalidWordCount?: number
   isValidLength: boolean // we need this to enable/disable buttons for all error return types
 } {
   if (!mnemonic) {
@@ -42,11 +43,12 @@ export function validateSetOfWords(mnemonic?: string): {
   const split = formatted.split(' ')
   const isValidLength = split.length >= MNEMONIC_LENGTH_MIN && split.length <= MNEMONIC_LENGTH_MAX
 
-  const invalidWords = split.filter((item) => wordlists.en?.getWordIndex(item) === -1)
+  const invalidWords = split.filter((item) => isValidMnemonicWord(item))
   if (invalidWords.length) {
     return {
       error: MnemonicValidationError.InvalidWord,
       invalidWord: invalidWords.at(-1),
+      invalidWordCount: invalidWords.length,
       isValidLength,
     }
   }
@@ -66,11 +68,12 @@ export function validateSetOfWords(mnemonic?: string): {
 export function validateMnemonic(mnemonic?: string): {
   error?: MnemonicValidationError
   invalidWord?: string
+  invalidWordCount?: number
   validMnemonic?: string
 } {
-  const { error, invalidWord } = validateSetOfWords(mnemonic)
+  const { error, invalidWord, invalidWordCount } = validateSetOfWords(mnemonic)
   if (error) {
-    return { error, invalidWord }
+    return { error, invalidWord, invalidWordCount }
   }
 
   const formatted = normalizeTextInput(mnemonic ?? '')
@@ -79,6 +82,11 @@ export function validateMnemonic(mnemonic?: string): {
   }
 
   return { validMnemonic: formatted }
+}
+
+// Validate individual mnemonic word
+export function isValidMnemonicWord(word: string): boolean {
+  return word.length > 0 && wordlists.en?.getWordIndex(word) === -1
 }
 
 // Check if phrase has trailing whitespace, indicating the user is done typing the previous word.

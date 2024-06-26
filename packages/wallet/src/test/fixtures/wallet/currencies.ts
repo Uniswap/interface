@@ -1,19 +1,20 @@
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture } from 'wallet/src/test/utils'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
-export const MAINNET_CURRENCY = NativeCurrency.onChain(ChainId.Mainnet)
-export const BASE_CURRENCY = NativeCurrency.onChain(ChainId.Base)
-export const ARBITRUM_CURRENCY = NativeCurrency.onChain(ChainId.ArbitrumOne)
-export const OPTIMISM_CURRENCY = NativeCurrency.onChain(ChainId.Optimism)
-export const POLYGON_CURRENCY = NativeCurrency.onChain(ChainId.Polygon)
-export const CELO_CURRENCY = NativeCurrency.onChain(ChainId.Celo)
-export const AVALANCHE_CURRENCY = NativeCurrency.onChain(ChainId.Avalanche)
-export const ZORA_CURRENCY = NativeCurrency.onChain(ChainId.Zora)
+export const MAINNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.Mainnet)
+export const BASE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Base)
+export const ARBITRUM_CURRENCY = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
+export const OPTIMISM_CURRENCY = NativeCurrency.onChain(UniverseChainId.Optimism)
+export const POLYGON_CURRENCY = NativeCurrency.onChain(UniverseChainId.Polygon)
+export const CELO_CURRENCY = NativeCurrency.onChain(UniverseChainId.Celo)
+export const AVALANCHE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Avalanche)
+export const ZORA_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zora)
+export const ZKSYNC_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zksync)
 
 type CurrencyInfoOptions = {
   nativeCurrency: NativeCurrency

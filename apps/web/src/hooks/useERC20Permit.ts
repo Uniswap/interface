@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
-import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEIP2612Contract } from 'hooks/useContract'
@@ -9,6 +9,7 @@ import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum PermitType {
   AMOUNT = 1,
@@ -31,16 +32,16 @@ const PERMITTABLE_TOKENS: {
     [checksummedTokenAddress: string]: PermitInfo
   }
 } = {
-  [ChainId.MAINNET]: {
+  [UniverseChainId.Mainnet]: {
     [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
-    [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    [UNI[UniverseChainId.Mainnet].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [ChainId.GOERLI]: {
-    [UNI[ChainId.GOERLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [UniverseChainId.Goerli]: {
+    [UNI[UniverseChainId.Goerli].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
-  [ChainId.SEPOLIA]: {
-    [UNI[ChainId.SEPOLIA].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  [UniverseChainId.Sepolia]: {
+    [UNI[UniverseChainId.Sepolia].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
 }
 
@@ -225,7 +226,7 @@ export function useERC20Permit(
               deadline: signatureDeadline,
               ...(allowed ? { allowed } : { amount: value }),
               nonce: nonceNumber,
-              chainId: account.chainId as ChainId,
+              chainId: account.chainId as InterfaceChainId,
               owner: account.address as string,
               spender,
               tokenAddress,

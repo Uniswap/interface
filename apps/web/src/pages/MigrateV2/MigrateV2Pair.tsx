@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { ChainId, CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
@@ -46,6 +46,7 @@ import { useTheme } from 'styled-components'
 import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -405,7 +406,7 @@ function V2PairMigration({
           <ExternalLink
             key="migration-contract"
             href={getExplorerLink(
-              account.chainId ?? ChainId.MAINNET,
+              account.chainId ?? UniverseChainId.Mainnet,
               migrator?.address ?? '',
               ExplorerDataType.ADDRESS
             )}

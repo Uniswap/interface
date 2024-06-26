@@ -5,8 +5,9 @@ import { providers } from 'ethers'
 import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -20,12 +21,12 @@ export enum WrapType {
 }
 
 export type ChainIdToTxIdToDetails = Partial<
-  Record<ChainId, { [txId: string]: TransactionDetails }>
+  Record<WalletChainId, { [txId: string]: TransactionDetails }>
 >
 
 // Basic identifying info for a transaction
 export interface TransactionId {
-  chainId: ChainId
+  chainId: WalletChainId
   // moonpay externalTransactionId
   id: string
 }
@@ -34,7 +35,7 @@ export type TransactionListQueryResponse = NonNullable<
   NonNullable<NonNullable<TransactionListQuery['portfolios']>[0]>['assetActivities']
 >[0]
 
-export interface TransactionDetails extends TransactionId {
+interface BaseTransactionDetails extends TransactionId {
   ownerAddress?: Address
   from: Address
 
@@ -44,12 +45,9 @@ export interface TransactionDetails extends TransactionId {
   // Info for status tracking
   status: TransactionStatus
   addedTime: number
-  // Note: hash is mandatory for now but may be made optional if
-  // we start tracking txs before they're actually sent
+  // Note: hash is mandatory for classic transactions and undefined for unfilled UniswapX orders
+  // It may also become optional for classic if we start tracking txs before they're actually sent
   hash?: string
-
-  // Info for submitting the tx
-  options: TransactionOptions
 
   receipt?: TransactionReceipt
 
@@ -59,6 +57,24 @@ export interface TransactionDetails extends TransactionId {
   // to get submitted first
   cancelRequest?: providers.TransactionRequest
 }
+
+export interface UniswapXOrderDetails extends BaseTransactionDetails {
+  routing: Routing.DUTCH_V2
+
+  // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
+  // UniswapX orders will also have a transaction `hash` if they become filled.
+  // `orderHash` will be undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
+  orderHash?: string
+}
+
+export interface ClassicTransactionDetails extends BaseTransactionDetails {
+  routing: Routing.CLASSIC
+
+  // Info for submitting the tx
+  options: TransactionOptions
+}
+
+export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
@@ -79,12 +95,12 @@ export type FinalizedTransactionStatus =
   | TransactionStatus.Canceled
   | TransactionStatus.FailedCancel
 
-export interface FinalizedTransactionDetails extends TransactionDetails {
+export type FinalizedTransactionDetails = TransactionDetails & {
   status: FinalizedTransactionStatus
   hash: string
 }
 
-export interface TransactionOptions {
+export type TransactionOptions = {
   request: providers.TransactionRequest
   timeoutMs?: number
   submitViaPrivateRpc?: boolean

@@ -392,8 +392,13 @@ export function validateTrade({
 // Converts routing preference type to expected type for trading api
 export function getRoutingPreferenceForSwapRequest(
   protocolPreference: TradeProtocolPreference | undefined,
-  uniswapXEnabled: boolean
+  uniswapXEnabled: boolean,
+  isUSDQuote?: boolean
 ): RoutingPreference {
+  if (isUSDQuote) {
+    return RoutingPreference.CLASSIC
+  }
+
   switch (protocolPreference) {
     case TradeProtocolPreference.Default:
       return uniswapXEnabled ? RoutingPreference.BEST_PRICE_V2 : RoutingPreference.CLASSIC

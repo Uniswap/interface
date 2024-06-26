@@ -118,6 +118,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    * @param password secures generated mnemonic with password
    */
   const generateOnboardingAccount = async (password?: string): Promise<void> => {
+    resetOnboardingContextData()
     setOnboardingAccount(await createOnboardingAccount(sortedMnemonicAccounts, password))
   }
 
@@ -262,7 +263,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   }
 
   /**
-   * Finalizes onboarding flow by adding pedning account or imported accounts
+   * Finalizes onboarding flow by adding pending account or imported accounts
    * to redux store.
    * @param importType Type of onboarding flow
    * @param accounts optional list of accounts to import directly, only used for device recovery
@@ -271,7 +272,8 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     importType: ImportType,
     accounts?: SignerMnemonicAccount[]
   ): Promise<void> => {
-    const onboardingAccounts = accounts ?? getAllOnboardingAccounts()
+    const isWatchFlow = importType === ImportType.Watch
+    const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
     const onboardingAddresses = onboardingAccounts.map((a) => a.address)
 
     // Activate all pending accounts
@@ -279,7 +281,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       dispatch(
         createAccountsActions.trigger({
           accounts: onboardingAccounts,
-          activateFirst: true,
         })
       )
     }
@@ -291,7 +292,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     )
 
     // Claim unitag if there's a claim to process
-    if (unitagClaim && isValidUnitagClaimState) {
+    if (unitagClaim && isValidUnitagClaimState && !isWatchFlow) {
       const { claimError } = await claimUnitag(
         unitagClaim,
         {
@@ -339,7 +340,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       ),
     })
 
-    resetOnboardingContextData()
+    // Reset data caused production ios app crashes and it is not necessary on mobile
+    if (isExtension) {
+      resetOnboardingContextData()
+    }
   }
 
   /**

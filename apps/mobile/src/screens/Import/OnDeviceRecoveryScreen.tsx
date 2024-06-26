@@ -123,14 +123,7 @@ export function OnDeviceRecoveryScreen({
       <Screen>
         <Flex grow p="$spacing24">
           <Flex alignItems="flex-start" gap="$spacing16">
-            <Flex
-              alignItems="center"
-              backgroundColor="$accentSoft"
-              borderRadius="$rounded8"
-              justifyContent="center"
-              p="$spacing4">
-              <Image height={iconSizes.icon24} source={UNISWAP_LOGO} width={iconSizes.icon24} />
-            </Flex>
+            <Image height={iconSizes.icon24} source={UNISWAP_LOGO} width={iconSizes.icon36} />
             <Text variant="subheading1">{t('onboarding.import.onDeviceRecovery.title')}</Text>
             <Text color="$neutral2" variant="subheading2">
               {t('onboarding.import.onDeviceRecovery.subtitle')}

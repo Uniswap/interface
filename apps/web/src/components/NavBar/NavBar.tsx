@@ -11,12 +11,17 @@ import Web3Status from 'components/Web3Status'
 import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
+import { useIsLimitPage } from 'hooks/useIsLimitPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { useIsSendPage } from 'hooks/useIsSendPage'
+import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const Nav = styled.nav`
   padding: 0px 12px;
@@ -56,12 +61,19 @@ const SearchContainer = styled.div`
 export const RefreshedNavbar = () => {
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
+  const isSendPage = useIsSendPage()
+  const isSwapPage = useIsSwapPage()
+  const isLimitPage = useIsLimitPage()
+
   const sellPageState = useProfilePageState((state) => state.state)
   const isSmallScreen = !useScreenSize()['sm']
   const areTabsVisible = useTabsVisible()
   const collapseSearchBar = !useScreenSize()['lg']
   const account = useAccount()
   const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
+
+  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+  const hideChainSelector = multichainUXEnabled ? isSendPage || isSwapPage || isLimitPage || isNftPage : isNftPage
 
   return (
     <Nav>
@@ -80,7 +92,7 @@ export const RefreshedNavbar = () => {
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {isLandingPage && !isSmallScreen && <GetTheAppButton showIcons={false} />}
           {!account.isConnected && <PreferenceMenu />}
-          {!isNftPage && <ChainSelector />}
+          {!hideChainSelector && <ChainSelector />}
           <Web3Status />
         </Row>
       </NavContents>

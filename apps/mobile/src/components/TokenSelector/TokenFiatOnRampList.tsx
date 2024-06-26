@@ -3,10 +3,10 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
@@ -42,7 +42,7 @@ function TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       option={option}
-      showNetworkPill={currencyInfo?.currency.chainId !== ChainId.Mainnet}
+      showNetworkPill={currencyInfo?.currency.chainId !== UniverseChainId.Mainnet}
       showWarnings={true}
       onPress={onPress}
     />

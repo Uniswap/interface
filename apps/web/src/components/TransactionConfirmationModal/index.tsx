@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Circle from 'assets/images/blue-loader.svg'
 import { TransactionSummary } from 'components/AccountDetails/TransactionSummary'
@@ -9,7 +9,7 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
-import { CHAIN_INFO, SupportedL2ChainId, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
@@ -18,7 +18,9 @@ import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { isConfirmedTx, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { L2ChainId, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -117,7 +119,7 @@ function TransactionSubmittedContent({
   }, [connector, logoURL, token])
 
   const explorerText =
-    chainId === ChainId.MAINNET ? (
+    chainId === UniverseChainId.Mainnet ? (
       <Trans i18nKey="common.etherscan.link" />
     ) : (
       <Trans i18nKey="common.viewOnBlockExplorer" />
@@ -218,7 +220,7 @@ function L2Content({
 }: {
   onDismiss: () => void
   hash?: string
-  chainId: SupportedL2ChainId
+  chainId: L2ChainId
   currencyToAdd?: Currency
   pendingText: ReactNode
   inline?: boolean // not in modal
@@ -233,7 +235,7 @@ function L2Content({
   const secondsToConfirm =
     confirmed && transaction.confirmedTime ? (transaction.confirmedTime - transaction.addedTime) / 1000 : undefined
 
-  const info = CHAIN_INFO[chainId]
+  const info = UNIVERSE_CHAIN_INFO[chainId]
 
   return (
     <Wrapper>
@@ -334,7 +336,7 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight="90vh">
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (

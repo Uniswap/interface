@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
@@ -27,6 +27,7 @@ import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -166,7 +167,7 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
-      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.MAINNET,
+      chainId: supportedChainIdFromGQLChain(props.chain) ?? UniverseChainId.Mainnet,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -368,7 +369,7 @@ function LiquidityChart({
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
-  chainId: ChainId
+  chainId: InterfaceChainId
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')

@@ -17,7 +17,7 @@ export const USDC_GOERLI = new Token(
   'USD//C'
 )
 export const USDC_SEPOLIA = new Token(
-  UniverseChainId.SEPOLIA,
+  UniverseChainId.Sepolia,
   '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
   6,
   'USDC',
@@ -54,7 +54,7 @@ export const USDC_OPTIMISM = new Token(
   'USD//C'
 )
 export const USDC_OPTIMISM_GOERLI = new Token(
-  UniverseChainId.OPTIMISM_GOERLI,
+  UniverseChainId.OptimismGoerli,
   '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
   6,
   'USDC',
@@ -70,14 +70,14 @@ export const USDC_BASE = new Token(
 )
 
 export const USDC_BSC = new Token(
-  UniverseChainId.BNB,
+  UniverseChainId.Bnb,
   '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
   18,
   'USDC',
   'USDC'
 )
 export const USDT_BSC = new Token(
-  UniverseChainId.BNB,
+  UniverseChainId.Bnb,
   '0x55d398326f99059fF775485246999027B3197955',
   18,
   'USDT',
@@ -136,7 +136,7 @@ export const DAI_ARBITRUM_ONE = new Token(
   'Dai stable coin'
 )
 export const USDC_ARBITRUM_GOERLI = new Token(
-  UniverseChainId.ARBITRUM_GOERLI,
+  UniverseChainId.ArbitrumGoerli,
   '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',
   6,
   'USDC',
@@ -144,7 +144,7 @@ export const USDC_ARBITRUM_GOERLI = new Token(
 )
 
 export const USDC_AVALANCHE = new Token(
-  UniverseChainId.AVALANCHE,
+  UniverseChainId.Avalanche,
   '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
   6,
   'USDC',
@@ -152,21 +152,21 @@ export const USDC_AVALANCHE = new Token(
 )
 
 export const USDC_CELO = new Token(
-  UniverseChainId.CELO,
+  UniverseChainId.Celo,
   '0xceba9300f2b948710d2653dd7b07f33a8b32118c',
   6,
   'USDC',
   'USD Coin'
 )
 export const CUSD_CELO = new Token(
-  UniverseChainId.CELO,
+  UniverseChainId.Celo,
   '0x765DE816845861e75A25fCA122bb6898B8B1282a',
   18,
   'cUSD',
   'Celo Dollar'
 )
 export const CUSD_CELO_ALFAJORES = new Token(
-  UniverseChainId.CELO_ALFAJORES,
+  UniverseChainId.CeloAlfajores,
   '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
   18,
   'CUSD',
@@ -174,14 +174,14 @@ export const CUSD_CELO_ALFAJORES = new Token(
 )
 
 export const USDC_ZORA = new Token(
-  UniverseChainId.ZORA,
+  UniverseChainId.Zora,
   '0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4',
   6,
   'USDC',
   'USD Coin'
 )
 export const USDC_ZKSYNC = new Token(
-  UniverseChainId.ZKSYNC,
+  UniverseChainId.Zksync,
   '0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4',
   6,
   'USDC',

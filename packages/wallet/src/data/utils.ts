@@ -1,10 +1,14 @@
 import { ApolloClient, NetworkStatus, NormalizedCacheObject, useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
+import { OnRampTransactionsAuth } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { AuthData } from 'wallet/src/data/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage } from 'wallet/src/features/wallet/signing/signing'
+
+export const ON_RAMP_AUTH_MAX_LIMIT = 100
+export const ON_RAMP_AUTH_MIN_LIMIT = 1
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
   return (
@@ -71,4 +75,17 @@ export async function createSignedRequestParams<T>(
   const message = objectToQueryString(requestParams)
   const signature = await signMessage(message, account, signerManager)
   return { requestParams, signature }
+}
+
+export async function createOnRampTransactionsAuth(
+  limit: number,
+  account: Account,
+  signerManager: SignerManager
+): Promise<OnRampTransactionsAuth> {
+  const { requestParams, signature } = await createSignedRequestParams(
+    { limit }, // Parameter needed by graphql server when fetching onramp transactions
+    account,
+    signerManager
+  )
+  return { queryParams: objectToQueryString(requestParams), signature }
 }

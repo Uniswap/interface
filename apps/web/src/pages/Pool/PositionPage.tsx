@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -51,6 +51,7 @@ import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLi
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
@@ -842,7 +843,10 @@ function PositionPageContent() {
                     <LightCard padding="12px 16px">
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyQuote} />
+                          <LinkedCurrency
+                            chainId={account.chainId ?? UniverseChainId.Mainnet}
+                            currency={currencyQuote}
+                          />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount0 : position?.amount1 })}
@@ -857,7 +861,10 @@ function PositionPageContent() {
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
-                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyBase} />
+                          <LinkedCurrency
+                            chainId={account.chainId ?? UniverseChainId.Mainnet}
+                            currency={currencyBase}
+                          />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount1 : position?.amount0 })}

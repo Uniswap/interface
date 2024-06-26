@@ -1,10 +1,11 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { render } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 jest.mock('hooks/useContract', () => ({
@@ -105,7 +106,7 @@ describe('Combined contexts', () => {
       <SwapAndLimitContext.Provider
         value={{
           currencyState: {
-            inputCurrency: nativeOnChain(ChainId.MAINNET),
+            inputCurrency: nativeOnChain(UniverseChainId.Mainnet),
             outputCurrency: undefined,
           },
           prefilledState: {
@@ -114,7 +115,7 @@ describe('Combined contexts', () => {
           },
           setCurrencyState: expect.any(Function),
           setSelectedChainId: jest.fn(),
-          chainId: ChainId.MAINNET,
+          chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
         }}
@@ -127,7 +128,7 @@ describe('Combined contexts', () => {
 
     // @ts-ignore rendering TestComponent sets derivedSwapInfo value
     expect(derivedSwapInfo?.currencies).toEqual({
-      [Field.INPUT]: nativeOnChain(ChainId.MAINNET),
+      [Field.INPUT]: nativeOnChain(UniverseChainId.Mainnet),
       [Field.OUTPUT]: undefined,
     })
   })

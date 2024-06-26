@@ -1,5 +1,4 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
@@ -35,6 +34,7 @@ import {
   OrderStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -167,7 +167,7 @@ export const AddressCell = ({ address, desktopLBreakpoint, chainId }: AddressCel
       className={styles.addressCell}
     >
       <AddressLink
-        href={getExplorerLink(chainId ?? ChainId.MAINNET, address ?? '', ExplorerDataType.ADDRESS)}
+        href={getExplorerLink(chainId ?? UniverseChainId.Mainnet, address ?? '', ExplorerDataType.ADDRESS)}
         style={{ textDecoration: 'none' }}
       >
         <Box onClick={(e) => e.stopPropagation()}>{address ? shortenAddress(address, 2) : '-'}</Box>

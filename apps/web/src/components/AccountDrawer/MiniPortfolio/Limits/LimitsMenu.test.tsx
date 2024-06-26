@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@uniswap/sdk-core'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
@@ -10,6 +10,7 @@ import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
   ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
@@ -30,7 +31,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
     type: 1,
     tradeType: 0,
     inputCurrencyId: DAI.address,
-    outputCurrencyId: WETH9[ChainId.MAINNET].address,
+    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -39,14 +40,14 @@ const mockOrderDetails: UniswapXOrderDetails = {
   encodedOrder: '0xencodedOrder',
   id: '0x1234',
   addedTime: 3,
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   expiry: 4,
   offerer: '0x1234',
 }
 
 const mockLimitActivity: Activity = {
   hash: '0x123',
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   status: TransactionStatus.Pending,
   timestamp: 1,
   title: 'Limit pending',

@@ -1,6 +1,6 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { ChainId, RPCType } from 'uniswap/src/types/chains'
+import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 
@@ -20,7 +20,7 @@ type ProviderInfo = Partial<{
   [key in keyof RPCType as RPCType]: ProviderDetails
 }>
 
-type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
+type ChainIdToProvider = Partial<Record<WalletChainId, ProviderInfo>>
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
@@ -31,7 +31,7 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  tryGetProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
+  tryGetProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
     try {
       return this.getProvider(chainId, rpcType)
     } catch (error) {
@@ -39,7 +39,7 @@ export class ProviderManager {
     }
   }
 
-  getProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
+  getProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
     const cachedProviderDetails = this._providers[chainId]?.[rpcType]
     if (cachedProviderDetails?.status === ProviderStatus.Connected) {
       return cachedProviderDetails.provider
@@ -55,7 +55,7 @@ export class ProviderManager {
     return providerDetails.provider
   }
 
-  createProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public): undefined {
+  createProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public): undefined {
     const provider = createEthersProvider(chainId, rpcType)
     if (!provider) {
       if (rpcType === RPCType.Public) {
@@ -71,7 +71,7 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  removeProviders(chainId: ChainId): void {
+  removeProviders(chainId: WalletChainId): void {
     const providersInfo = this._providers[chainId]
     if (!providersInfo) {
       logger.warn(

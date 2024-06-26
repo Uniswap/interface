@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
@@ -14,6 +13,7 @@ import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/confi
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -224,7 +224,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.ForAggregatorWeb} label="Enable FOR aggregator web" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.ZkSync} label="Enable ZkSync" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Multichain UX">
             <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
@@ -234,7 +233,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
             <DynamicConfigDropdown
               selected={useQuickRouteChains()}
-              options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
+              options={WEB_SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
               label="Enable quick routes for these chains"

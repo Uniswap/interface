@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import store from 'state'
@@ -16,8 +15,9 @@ import { ApproveTransactionInfo, TransactionInfo, TransactionType } from 'state/
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
-const PERMIT2_ADDRESS_MAINNET = permit2Address(ChainId.MAINNET)
+const PERMIT2_ADDRESS_MAINNET = permit2Address(UniverseChainId.Mainnet)
 
 const pendingTransactionResponse = {
   hash: '0x123',
@@ -28,7 +28,7 @@ const pendingTransactionResponse = {
   gasLimit: BigNumber.from(1000),
   data: '0x',
   value: BigNumber.from(0),
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   confirmations: 0,
   blockNumber: undefined,
   blockHash: undefined,
@@ -51,13 +51,13 @@ jest.mock('hooks/useAccount')
 describe('Transactions hooks', () => {
   beforeEach(() => {
     mocked(useAccount).mockReturnValue({
-      chainId: ChainId.MAINNET,
+      chainId: UniverseChainId.Mainnet,
       address: '0x123',
       status: 'connected',
     } as unknown as ReturnType<typeof useAccount>)
 
     jest.useFakeTimers()
-    store.dispatch(clearAllTransactions({ chainId: ChainId.MAINNET }))
+    store.dispatch(clearAllTransactions({ chainId: UniverseChainId.Mainnet }))
   })
 
   function addPendingTransaction(txInfo: TransactionInfo) {
@@ -73,7 +73,7 @@ describe('Transactions hooks', () => {
     act(() => {
       store.dispatch(
         finalizeTransaction({
-          chainId: ChainId.MAINNET,
+          chainId: UniverseChainId.Mainnet,
           hash: pendingTransactionResponse.hash,
           status: TransactionStatus.Confirmed,
         })
@@ -83,7 +83,7 @@ describe('Transactions hooks', () => {
 
   it('useTransactionAdder adds a transaction', () => {
     addPendingTransaction(mockApprovalTransactionInfo)
-    expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toEqual({
+    expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toEqual({
       hash: pendingTransactionResponse.hash,
       info: mockApprovalTransactionInfo,
       from: pendingTransactionResponse.from,
@@ -101,7 +101,7 @@ describe('Transactions hooks', () => {
     act(() => {
       remover.current(pendingTransactionResponse.hash)
     })
-    expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toBeUndefined()
+    expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toBeUndefined()
   })
 
   describe('useHasPendingApproval', () => {
@@ -120,7 +120,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending approval but it is not for the current chain', () => {
-      mocked(useAccount).mockReturnValue({ chainId: ChainId.BASE } as ReturnType<typeof useAccount>)
+      mocked(useAccount).mockReturnValue({ chainId: UniverseChainId.Base } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockApprovalTransactionInfo)
       const { result } = renderHook(() => useHasPendingApproval(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))
       expect(result.current).toBe(false)
@@ -160,7 +160,7 @@ describe('Transactions hooks', () => {
     })
 
     it('returns false when there is a pending revocation but it is not for the current chain', () => {
-      mocked(useAccount).mockReturnValue({ chainId: ChainId.BASE } as ReturnType<typeof useAccount>)
+      mocked(useAccount).mockReturnValue({ chainId: UniverseChainId.Base } as ReturnType<typeof useAccount>)
       addPendingTransaction(mockRevocationTransactionInfo)
       const { result } = renderHook(() => useHasPendingRevocation(USDC_MAINNET, PERMIT2_ADDRESS_MAINNET))
       expect(result.current).toBe(false)
@@ -189,13 +189,14 @@ describe('Transactions hooks', () => {
       addPendingTransaction(mockApprovalTransactionInfo)
       const { result: canceller } = renderHook(() => useTransactionCanceller())
 
-      const originalTransactionDetails = store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]
+      const originalTransactionDetails =
+        store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]
 
-      act(() => canceller.current(pendingTransactionResponse.hash, ChainId.MAINNET, '0x456'))
+      act(() => canceller.current(pendingTransactionResponse.hash, UniverseChainId.Mainnet, '0x456'))
 
-      expect(store.getState().transactions[ChainId.MAINNET][pendingTransactionResponse.hash]).toBeUndefined()
+      expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toBeUndefined()
 
-      expect(store.getState().transactions[ChainId.MAINNET]['0x456']).toEqual({
+      expect(store.getState().transactions[UniverseChainId.Mainnet]['0x456']).toEqual({
         ...originalTransactionDetails,
         hash: '0x456',
         cancelled: true,

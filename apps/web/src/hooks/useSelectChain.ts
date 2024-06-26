@@ -1,8 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useCallback } from 'react'
 import { PopupType, addPopup, removePopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'viem'
 
@@ -11,7 +11,7 @@ export default function useSelectChain() {
   const switchChain = useSwitchChain()
 
   return useCallback(
-    async (targetChain: ChainId) => {
+    async (targetChain: InterfaceChainId) => {
       try {
         await switchChain(targetChain)
         dispatch(

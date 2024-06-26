@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
+import { Token, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import PositionListItem from 'components/PositionListItem'
 import { USDC_MAINNET } from 'constants/tokens'
@@ -7,6 +7,7 @@ import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/DoubleLogo')
 jest.mock('hooks/Tokens')
@@ -25,7 +26,7 @@ beforeEach(() => {
     // tokenA: Token, tokenB: Token, fee: FeeAmount, sqrtRatioX96: BigintIsh, liquidity: BigintIsh, tickCurrent: number
     new Pool(
       USDC_MAINNET,
-      WETH9[ChainId.MAINNET],
+      WETH9[UniverseChainId.Mainnet],
       FeeAmount.MEDIUM,
       '1745948049099224684665158875285708',
       '4203610460178577802',
@@ -37,7 +38,7 @@ beforeEach(() => {
 test('PositionListItem should render a position', () => {
   const positionDetails = {
     token0: USDC_MAINNET.address,
-    token1: WETH9[ChainId.MAINNET].address,
+    token1: WETH9[UniverseChainId.Mainnet].address,
     tokenId: BigNumber.from(479689),
     fee: FeeAmount.MEDIUM,
     liquidity: BigNumber.from('1341008833950736'),

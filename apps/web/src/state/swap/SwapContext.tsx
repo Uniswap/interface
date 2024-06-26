@@ -1,9 +1,10 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export function SwapAndLimitContextProvider({
@@ -13,12 +14,12 @@ export function SwapAndLimitContextProvider({
   initialOutputCurrency,
   multichainUXEnabled,
 }: PropsWithChildren<{
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   multichainUXEnabled?: boolean
 }>) {
-  const [selectedChainId, setSelectedChainId] = useState<ChainId | undefined>(chainId)
+  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(chainId)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -103,7 +104,7 @@ export function SwapAndLimitContextProvider({
       currentTab,
       setCurrentTab,
       prefilledState,
-      chainId: multichainUXEnabled ? selectedChainId : chainId,
+      chainId: (multichainUXEnabled ? selectedChainId : chainId) ?? undefined,
       multichainUXEnabled,
     }
   }, [chainId, currencyState, currentTab, multichainUXEnabled, prefilledState, selectedChainId])

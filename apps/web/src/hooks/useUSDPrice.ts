@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
@@ -14,12 +14,13 @@ import { useMemo } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 function getEthAmountOut(chainId: SupportedInterfaceChainId): CurrencyAmount<Currency> {
-  return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), chainId === ChainId.MAINNET ? 50e18 : 10e18)
+  return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), chainId === UniverseChainId.Mainnet ? 50e18 : 10e18)
 }
 
 function useETHPrice(currency?: Currency): {

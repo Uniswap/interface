@@ -1,23 +1,23 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
-  [ChainId.MAINNET]: 'https://etherscan.io',
-  [ChainId.GOERLI]: 'https://goerli.etherscan.io',
-  [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
-  [ChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
-  [ChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
-  [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
-  [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
-  [ChainId.POLYGON]: 'https://polygonscan.com',
-  [ChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
-  [ChainId.CELO]: 'https://celoscan.io',
-  [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
-  [ChainId.BNB]: 'https://bscscan.com',
-  [ChainId.AVALANCHE]: 'https://snowtrace.io',
-  [ChainId.BASE]: 'https://basescan.org',
-  [ChainId.BLAST]: 'https://blastscan.io',
-  [ChainId.ZORA]: 'https://zora.superscan.network',
-  [ChainId.ZKSYNC]: 'https://explorer.zksync.io',
+  [UniverseChainId.Mainnet]: 'https://etherscan.io',
+  [UniverseChainId.Goerli]: 'https://goerli.etherscan.io',
+  [UniverseChainId.Sepolia]: 'https://sepolia.etherscan.io',
+  [UniverseChainId.ArbitrumOne]: 'https://arbiscan.io',
+  [UniverseChainId.ArbitrumGoerli]: 'https://goerli.arbiscan.io',
+  [UniverseChainId.Optimism]: 'https://optimistic.etherscan.io',
+  [UniverseChainId.OptimismGoerli]: 'https://goerli-optimism.etherscan.io',
+  [UniverseChainId.Polygon]: 'https://polygonscan.com',
+  [UniverseChainId.PolygonMumbai]: 'https://mumbai.polygonscan.com',
+  [UniverseChainId.Celo]: 'https://celoscan.io',
+  [UniverseChainId.CeloAlfajores]: 'https://alfajores-blockscout.celo-testnet.org',
+  [UniverseChainId.Bnb]: 'https://bscscan.com',
+  [UniverseChainId.Avalanche]: 'https://snowtrace.io',
+  [UniverseChainId.Base]: 'https://basescan.org',
+  [UniverseChainId.Blast]: 'https://blastscan.io',
+  [UniverseChainId.Zora]: 'https://zora.superscan.network',
+  [UniverseChainId.Zksync]: 'https://explorer.zksync.io',
 }
 
 export enum ExplorerDataType {

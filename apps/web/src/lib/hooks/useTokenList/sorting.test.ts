@@ -1,4 +1,4 @@
-import { ChainId, Token as InterfaceToken } from '@uniswap/sdk-core'
+import { Token as InterfaceToken } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { getSortedPortfolioTokens } from 'lib/hooks/useTokenList/sorting'
 import {
@@ -8,6 +8,7 @@ import {
   TokenBalance,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const nativeToken: Token = {
   id: 'native-token',
@@ -135,7 +136,7 @@ const tokens: TokenBalance[] = [
 describe('sorting', () => {
   describe('getSortedPortfolioTokens', () => {
     it('should return an empty array if portfolioTokenBalances is undefined', () => {
-      const result = getSortedPortfolioTokens(undefined, {}, ChainId.MAINNET)
+      const result = getSortedPortfolioTokens(undefined, {}, UniverseChainId.Mainnet)
       expect(result).toEqual([])
     })
     it('should return only visible tokens, sorted by balances', () => {
@@ -146,10 +147,10 @@ describe('sorting', () => {
           [DAI.address]: { usdValue: 100, balance: 100 },
           [USDT.address]: { usdValue: 100, balance: 100 },
         },
-        ChainId.MAINNET
+        UniverseChainId.Mainnet
       )
 
-      expect(result).toEqual([nativeOnChain(ChainId.MAINNET), USDT, WBTC])
+      expect(result).toEqual([nativeOnChain(UniverseChainId.Mainnet), USDT, WBTC])
     })
   })
 })

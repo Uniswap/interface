@@ -1,6 +1,5 @@
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@uniswap/sdk-core'
 import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
-import { CHAIN_INFO } from 'constants/chains'
 import {
   MATIC_MAINNET,
   NATIVE_CHAIN_ID,
@@ -12,7 +11,9 @@ import {
   WBTC,
   WETH_POLYGON,
 } from 'constants/tokens'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {
@@ -25,7 +26,7 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode(WETH_POLYGON.address, Chain.Polygon)).toBe('eth_polygon')
   })
   it('WETH/ethereum should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode(WETH9[ChainId.MAINNET].address, Chain.Ethereum)).toBe('weth')
+    expect(getDefaultCurrencyCode(WETH9[UniverseChainId.Mainnet].address, Chain.Ethereum)).toBe('weth')
   })
   it('WBTC/ethereum should return the correct currency code', () => {
     expect(getDefaultCurrencyCode(WBTC.address, Chain.Ethereum)).toBe('wbtc')
@@ -65,11 +66,11 @@ describe('getDefaultCurrencyCode', () => {
 describe('parseLocation', () => {
   it('should parse the URL correctly', () => {
     expect(parsePathParts('/tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      chain: CHAIN_INFO[ChainId.MAINNET],
+      chain: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
       tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     })
     expect(parsePathParts('tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      chain: CHAIN_INFO[ChainId.MAINNET],
+      chain: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
       tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     })
     expect(parsePathParts('/swap')).toEqual({

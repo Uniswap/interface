@@ -1,7 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
+import { TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import {
   signatureToActivity,
@@ -21,6 +21,7 @@ import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useFormatter } from 'utils/formatNumbers'
 
 function mockSwapInfo(
@@ -57,7 +58,7 @@ function mockSwapInfo(
 
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
-const mockChainId = ChainId.MAINNET
+const mockChainId = UniverseChainId.Mainnet
 const mockSpenderAddress = permit2Address(mockChainId)
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
@@ -241,7 +242,7 @@ describe('parseLocalActivity', () => {
       hash: '0x123',
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = UniverseChainId.Mainnet
     const result = await transactionToActivity(details, chainId, formatNumber)
     expect(result).toEqual({
       chainId: 1,
@@ -269,7 +270,7 @@ describe('parseLocalActivity', () => {
       hash: '0x123',
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = UniverseChainId.Mainnet
     const result = await transactionToActivity(details, chainId, formatNumber)
     expect(result).toMatchObject({
       chainId: 1,
@@ -296,7 +297,7 @@ describe('parseLocalActivity', () => {
       hash: '0x123',
       status: TransactionStatus.Confirmed,
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = UniverseChainId.Mainnet
     const result = await transactionToActivity(details, chainId, formatNumber)
     expect(result).toMatchObject({
       chainId: 1,
@@ -587,7 +588,7 @@ describe('parseLocalActivity', () => {
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.CANCELLED,
-          chainId: ChainId.MAINNET,
+          chainId: UniverseChainId.Mainnet,
           swapInfo: mockSwapInfo(
             MockTradeType.EXACT_INPUT,
             MockUSDC_MAINNET,

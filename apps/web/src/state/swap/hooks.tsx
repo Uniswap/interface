@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -30,6 +30,7 @@ import {
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chains'
 
@@ -332,7 +333,7 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
 export function useInitialCurrencyState(): {
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
-  chainId: ChainId
+  chainId: InterfaceChainId
 } {
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
@@ -342,7 +343,8 @@ export function useInitialCurrencyState(): {
   }, [parsedQs])
 
   const account = useAccount()
-  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? ChainId.MAINNET
+  const supportedChainId =
+    useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? UniverseChainId.Mainnet
 
   const { data: balanceQuery } = useTokenBalancesQuery({ cacheOnly: !multichainUXEnabled })
   const balances = balanceQuery?.portfolios?.[0]?.tokenBalances
@@ -368,7 +370,7 @@ export function useInitialCurrencyState(): {
     // If no query params & connected, return the native token where user has the highest USD value
     let highestBalance = 0
     let highestBalanceNativeTokenAddress = 'ETH'
-    let highestBalanceChainId = ChainId.MAINNET
+    let highestBalanceChainId = UniverseChainId.Mainnet
     balances.forEach((balance) => {
       if (
         balance?.token?.standard === NATIVE_CHAIN_ID &&
@@ -377,7 +379,7 @@ export function useInitialCurrencyState(): {
       ) {
         highestBalance = balance.denominatedValue.value
         highestBalanceNativeTokenAddress = balance?.token.address ?? 'ETH'
-        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? ChainId.MAINNET
+        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? UniverseChainId.Mainnet
       }
     })
     return { initialInputCurrencyAddress: highestBalanceNativeTokenAddress, chainId: highestBalanceChainId }

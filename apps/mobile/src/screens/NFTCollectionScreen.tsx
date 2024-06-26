@@ -22,6 +22,7 @@ import {
 } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
@@ -29,7 +30,6 @@ import {
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'

@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
+  ClassicTransactionDetails,
   NFTTradeTransactionInfo,
   NFTTradeType,
-  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -18,7 +19,10 @@ const meta: Meta<typeof NFTTradeSummaryItem> = {
 
 export default meta
 
-const baseNFTBuyTx: Omit<TransactionDetails, 'status'> & { typeInfo: NFTTradeTransactionInfo } = {
+const baseNFTBuyTx: Omit<ClassicTransactionDetails, 'status'> & {
+  typeInfo: NFTTradeTransactionInfo
+} = {
+  routing: Routing.CLASSIC,
   from: '',
   addedTime: Date.now() - 30000,
   hash: '',
@@ -35,12 +39,14 @@ const baseNFTBuyTx: Omit<TransactionDetails, 'status'> & { typeInfo: NFTTradeTra
       name: 'Froggy Friend #1777',
       tokenId: '1777',
     },
-    purchaseCurrencyId: buildNativeCurrencyId(ChainId.Mainnet),
+    purchaseCurrencyId: buildNativeCurrencyId(UniverseChainId.Mainnet),
     purchaseCurrencyAmountRaw: '1000000000000000000',
   },
 }
 
-const baseNFTSellTx: Omit<TransactionDetails, 'status'> & { typeInfo: NFTTradeTransactionInfo } = {
+const baseNFTSellTx: Omit<ClassicTransactionDetails, 'status'> & {
+  typeInfo: NFTTradeTransactionInfo
+} = {
   ...baseNFTBuyTx,
   typeInfo: {
     ...baseNFTBuyTx.typeInfo,

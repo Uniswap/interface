@@ -15,7 +15,7 @@ export default function TokenSafetyModal({
   showCancel,
 }: TokenSafetyModalProps) {
   return (
-    <Modal isOpen={isOpen} onDismiss={onCancel}>
+    <Modal isOpen={isOpen} onDismiss={onCancel} maxHeight={400}>
       <TokenSafety
         token0={token0}
         token1={token1}

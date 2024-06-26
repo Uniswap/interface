@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -6,6 +6,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useLogolessColorScheme } from 'ui/src'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: string }) {
   const isDarkMode = useIsDarkMode()
@@ -130,8 +131,8 @@ export const L2LogoContainer = styled.div<{ $size: number }>`
   justify-content: center;
 `
 
-function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
-  if (chainId === ChainId.MAINNET) {
+function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+  if (chainId === UniverseChainId.Mainnet) {
     return null
   }
 

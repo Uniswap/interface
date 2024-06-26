@@ -134,7 +134,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           <LandingSwapContainer>
             <LandingSwap
               syncTabToUrl={false}
-              chainId={initialInputCurrency?.chainId ?? UniverseChainId.MAINNET}
+              chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
             />
           </LandingSwapContainer>

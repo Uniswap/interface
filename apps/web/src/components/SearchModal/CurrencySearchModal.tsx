@@ -2,9 +2,9 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import Modal from 'components/Modal'
 import { CurrencySearch, CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import TokenSafety from 'components/TokenSafety'
-import { useWindowSize } from 'hooks/screenSize'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
+
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 
 interface CurrencySearchModalProps {
@@ -61,16 +61,9 @@ export default memo(function CurrencySearchModal({
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
-  const { height: windowHeight } = useWindowSize()
-  // change min height if not searching
-  let modalHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
-      if (windowHeight) {
-        // Converts pixel units to vh for Modal component
-        modalHeight = Math.min(Math.round((680 / windowHeight) * 100), 80)
-      }
       content = (
         <CurrencySearch
           isOpen={isOpen}
@@ -84,7 +77,6 @@ export default memo(function CurrencySearchModal({
       )
       break
     case CurrencyModalView.tokenSafety:
-      modalHeight = undefined
       if (warningToken) {
         content = (
           <TokenSafety
@@ -98,7 +90,12 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} height={modalHeight}>
+    <Modal
+      isOpen={isOpen}
+      onDismiss={onDismiss}
+      height="90vh"
+      maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
+    >
       {content}
     </Modal>
   )

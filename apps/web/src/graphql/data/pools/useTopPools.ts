@@ -49,7 +49,7 @@ export function calculateOneDayApr(volume24h?: number, tvl?: number, feeTier?: n
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) {
     return new Percent(0)
   }
-  return new Percent(Math.round(volume24h * (feeTier / BIPS_BASE)), Math.round(tvl))
+  return new Percent(Math.round(volume24h * (feeTier / (BIPS_BASE * 100))), Math.round(tvl))
 }
 
 export const V2_BIPS = 3000

@@ -1,5 +1,4 @@
 import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
@@ -7,7 +6,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { CHAIN_INFO, useChainFromUrlParam } from 'constants/chains'
+import { useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -20,7 +19,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -131,7 +132,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   // to allow backward navigation between tabs
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
-  const chain = useChainFromUrlParam() ?? CHAIN_INFO[ChainId.MAINNET]
+  const chain = useChainFromUrlParam() ?? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -170,7 +171,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   key={index}
                 >
                   <StyledInternalLink
-                    to={`/explore/${key}` + (chain.id !== ChainId.MAINNET ? `/${chain.urlParam}` : '')}
+                    to={`/explore/${key}` + (chain.id !== UniverseChainId.Mainnet ? `/${chain.urlParam}` : '')}
                   >
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}

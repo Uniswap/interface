@@ -1,5 +1,4 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import Column from 'components/Column'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -24,6 +23,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const SearchBarDropdownContainer = styled(Column)<{ $loading: boolean }>`
@@ -356,9 +356,9 @@ function SearchBarDropdownContents({
   )
 }
 
-function ComingSoonText({ chainId }: { chainId: ChainId }) {
+function ComingSoonText({ chainId }: { chainId: InterfaceChainId }) {
   switch (chainId) {
-    case ChainId.AVALANCHE:
+    case UniverseChainId.Avalanche:
       return <Trans i18nKey="search.avalancheComing" />
     default:
       return null

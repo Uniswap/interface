@@ -1,8 +1,9 @@
-import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { requireNativeComponent, StyleProp, ViewProps } from 'react-native'
-import { FlexProps, flexStyles, HiddenFromScreenReaders } from 'ui/src'
+import { StyleProp, ViewProps, requireNativeComponent } from 'react-native'
+import { useNativeComponentKey } from 'src/app/hooks'
+import { FlexProps, HiddenFromScreenReaders, flexStyles } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { isAndroid } from 'utilities/src/platform'
 
 interface NativeMnemonicConfirmationProps {
   mnemonicId: Address
@@ -28,10 +29,15 @@ export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Elem
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
   const shouldShowSmallText = fullHeight < 700
+  // Android only (ensures that Jetpack Compose mounts the view again
+  // after navigating back in the stack navigator)
+  // (see https://github.com/react-native-community/discussions-and-proposals/issues/446#issuecomment-2041254054)
+  const { key } = useNativeComponentKey(isAndroid)
 
   return (
     <HiddenFromScreenReaders style={flexStyles.fill}>
       <NativeMnemonicConfirmation
+        key={key}
         selectedWordPlaceholder={t('onboarding.backup.manual.selectedWordPlaceholder')}
         shouldShowSmallText={shouldShowSmallText}
         style={mnemonicConfirmationStyle}

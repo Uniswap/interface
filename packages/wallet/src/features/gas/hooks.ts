@@ -1,6 +1,6 @@
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
@@ -9,6 +9,7 @@ import { useGasFeeQuery } from 'wallet/src/features/gas/api'
 import { FeeType, GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -50,7 +51,7 @@ export function useTransactionGasFee(
   }, [data, error, loading, speed])
 }
 
-export function useUSDValue(chainId?: ChainId, ethValueInWei?: string): string | undefined {
+export function useUSDValue(chainId?: WalletChainId, ethValueInWei?: string): string | undefined {
   const currencyAmount = getCurrencyAmount({
     value: ethValueInWei,
     valueType: ValueType.Raw,
@@ -82,6 +83,11 @@ export function useCancelationGasFeeInfo(
       return
     }
 
+    // TODO(WEB-4295): handle uniswapx cancels
+    if (isUniswapX(transaction)) {
+      return
+    }
+
     let adjustedFeeDetails: FeeDetails | undefined
     try {
       adjustedFeeDetails = getAdjustedGasFeeDetails(
@@ -107,7 +113,7 @@ export function useCancelationGasFeeInfo(
       cancelRequest,
       cancelationGasFee: getCancelationGasFee(adjustedFeeDetails, baseTxGasFee.params.gasLimit),
     }
-  }, [baseTxGasFee, cancelationRequest, transaction.options.request])
+  }, [baseTxGasFee.params, cancelationRequest, transaction])
 }
 
 function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {

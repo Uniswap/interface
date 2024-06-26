@@ -24,9 +24,9 @@ import {
 import { RotatableChevron, Search, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 
 const DEFAULT_MIN_HEIGHT = 48
 

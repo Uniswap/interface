@@ -147,37 +147,35 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <>
-      <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} height={80 /* vh */}>
-        <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
-          {error ? (
-            <>
-              <ThemedText.MediumHeader>
-                <Trans i18nKey="moonpay.rampIframe" />
-              </ThemedText.MediumHeader>
-              <ErrorText>
-                <Trans i18nKey="common.error.somethingWrong" />
-                <br />
-                {error}
-              </ErrorText>
-            </>
-          ) : loading ? (
-            <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
-          ) : (
-            <StyledIframe
-              src={signedIframeUrl ?? ''}
-              frameBorder="0"
-              title="fiat-onramp-iframe"
-              isDarkMode={isDarkMode}
-            />
-          )}
-        </Wrapper>
-        <MoonpayTextWrapper>
-          <ThemedText.BodySmall color="neutral3">
-            <Trans i18nKey="moonpay.poweredBy" />
-          </ThemedText.BodySmall>
-        </MoonpayTextWrapper>
-      </Modal>
-    </>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} maxHeight="80vh" height="80vh">
+      <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
+        {error ? (
+          <>
+            <ThemedText.MediumHeader>
+              <Trans i18nKey="moonpay.rampIframe" />
+            </ThemedText.MediumHeader>
+            <ErrorText>
+              <Trans i18nKey="common.error.somethingWrong" />
+              <br />
+              {error}
+            </ErrorText>
+          </>
+        ) : loading ? (
+          <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
+        ) : (
+          <StyledIframe
+            src={signedIframeUrl ?? ''}
+            frameBorder="0"
+            title="fiat-onramp-iframe"
+            isDarkMode={isDarkMode}
+          />
+        )}
+      </Wrapper>
+      <MoonpayTextWrapper>
+        <ThemedText.BodySmall color="neutral3">
+          <Trans i18nKey="moonpay.poweredBy" />
+        </ThemedText.BodySmall>
+      </MoonpayTextWrapper>
+    </Modal>
   )
 }

@@ -11,6 +11,8 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
+import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -18,8 +20,6 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { isAndroid } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
-import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
@@ -109,7 +109,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       dispatch(
         createAccountsActions.trigger({
           accounts: [newAccount],
-          activateFirst: true,
         })
       )
 

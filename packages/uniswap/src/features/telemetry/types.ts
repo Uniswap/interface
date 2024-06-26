@@ -38,7 +38,7 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -122,7 +122,7 @@ type SwapTransactionResultProperties = {
 }
 
 type TransferProperties = {
-  chainId: ChainId
+  chainId: WalletChainId
   tokenAddress: Address
   toAddress: Address
 }
@@ -135,7 +135,7 @@ export type WindowEthereumRequestProperties = {
 
 export type DappContextProperties = {
   dappUrl: string
-  chainId: ChainId
+  chainId: WalletChainId
   activeConnectedAddress: Address
   connectedAddresses: Address[]
 }
@@ -578,7 +578,7 @@ export type UniverseEventProperties = {
     query: string
   }
   [WalletEventName.NetworkFilterSelected]: ITraceContext & {
-    chain: ChainId | 'All'
+    chain: UniverseChainId | 'All'
   }
   [WalletEventName.NFTsLoaded]: {
     shown: number
@@ -601,9 +601,17 @@ export type UniverseEventProperties = {
     entity: ShareableEntity
     url: string
   }
-  [WalletEventName.SwapSubmitted]: {
-    transaction_hash: string
-  } & SwapTradeBaseProperties
+  [WalletEventName.SwapSubmitted]: (
+    | {
+        routing: 'CLASSIC'
+        transaction_hash: string
+      }
+    | {
+        routing: 'DUTCH_V2'
+        order_hash: string
+      }
+  ) &
+    SwapTradeBaseProperties
   // Please sort new values by EventName type!
 }
 

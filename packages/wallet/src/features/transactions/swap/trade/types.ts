@@ -10,8 +10,7 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   ClassicQuote,
   DutchQuoteV2,
-  NullablePermit,
-  RequestId,
+  QuoteResponse,
   Routing,
 } from 'wallet/src/data/tradingApi/__generated__/index'
 import {
@@ -24,18 +23,14 @@ import { TradeProtocolPreference } from 'wallet/src/features/transactions/transa
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
 export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse
 
-export type DutchQuoteResponse = {
-  requestId?: RequestId
+export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2
   routing: Routing.DUTCH_V2
-  permitData: NullablePermit
 }
 
-export type ClassicQuoteResponse = {
-  requestId?: RequestId
+export type ClassicQuoteResponse = QuoteResponse & {
   quote: ClassicQuote
   routing: Routing.CLASSIC
-  permitData: NullablePermit
 }
 
 export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
@@ -123,7 +118,7 @@ export class ClassicTrade<
     this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = slippageTolerance
-    this.swapFee = this.swapFee = getSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
   }
 }
 

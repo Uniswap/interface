@@ -13,18 +13,18 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
-import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
@@ -84,7 +84,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(
-    buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
+    buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))
   )
 
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
@@ -125,7 +125,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   } = useMoonpayFiatOnRamp({
     baseCurrencyAmount: value,
     quoteCurrencyCode: currency.moonpayCurrencyCode,
-    quoteChainId: currency.currencyInfo?.currency.chainId ?? ChainId.Mainnet,
+    quoteChainId: currency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
   })
 
   useTimeout(

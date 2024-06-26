@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
@@ -8,7 +7,9 @@ import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
+import { CountryListModal } from 'pages/Swap/Buy/CountryListModal'
 import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
+import { useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -16,15 +17,20 @@ import {
   StyledNumericalInput,
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
-import { useCallback, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import styled from 'styled-components'
 import { Text } from 'ui/src/components/text/Text'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
-import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  useFiatOnRampAggregatorCountryListQuery,
+  useFiatOnRampAggregatorGetCountryQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
+import { FORCountry, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -50,7 +56,7 @@ const HeaderRow = styled(Row)`
 `
 
 const PREDEFINED_AMOUNTS = [100, 300, 1000]
-const ethCurrencyInfo = buildCurrencyInfo(nativeOnChain(ChainId.MAINNET))
+const ethCurrencyInfo = buildCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
 
 type BuyFormProps = {
   disabled?: boolean
@@ -69,6 +75,23 @@ export function BuyForm({ disabled }: BuyFormProps) {
   const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(inputAmount)
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const exactAmountOut = useUSDTokenUpdater(true /* inputInFiat */, inputAmount, quoteCurrency?.currencyInfo?.currency)
+
+  const handleUserInput = (newValue: string) => {
+    setInputAmount(newValue)
+  }
+
+  const [selectedCountry, setSelectedCountry] = useState<FORCountry>()
+  const [countryModalOpen, setCountryModalOpen] = useState(false)
+  const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
+  useEffect(() => {
+    if (!selectedCountry && countryResult) {
+      setSelectedCountry(countryResult)
+    }
+  }, [countryResult, selectedCountry])
+  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery()
+
+  const { notAvailableInThisRegion } = useMeldFiatCurrencyInfo(selectedCountry)
+
   const buyButtonState = useMemo(() => {
     if (!isConnected) {
       return {
@@ -87,6 +110,15 @@ export function BuyForm({ disabled }: BuyFormProps) {
       }
     }
 
+    if (notAvailableInThisRegion) {
+      return {
+        label: <Trans i18nKey="common.notAvailableInRegion.error" />,
+        disabled: true,
+        onClick: undefined,
+        Component: ButtonPrimary,
+      }
+    }
+
     return {
       label: <Trans i18nKey="common.continue.button" />,
       disabled: false,
@@ -95,11 +127,7 @@ export function BuyForm({ disabled }: BuyFormProps) {
         // TODO: open "choose FOR provider" modal
       },
     }
-  }, [accountDrawer.open, inputAmount, isConnected])
-
-  const handleUserInput = useCallback((newValue: string) => {
-    setInputAmount(newValue)
-  }, [])
+  }, [accountDrawer.open, inputAmount, isConnected, notAvailableInThisRegion])
 
   return (
     <Trace page={InterfacePageNameLocal.Buy}>
@@ -110,11 +138,10 @@ export function BuyForm({ disabled }: BuyFormProps) {
               <Trans i18nKey="common.youreBuying" />
             </Text>
             <FiatOnRampCountryPicker
-              onPress={function (): void {
-                // TODO: open country picker modal
+              onPress={() => {
+                setCountryModalOpen(true)
               }}
-              // TODO: get country code from user's location
-              countryCode="US"
+              countryCode={selectedCountry?.countryCode}
             />
           </HeaderRow>
           <NumericalInputWrapper>
@@ -163,6 +190,15 @@ export function BuyForm({ disabled }: BuyFormProps) {
           {buyButtonState.label}
         </buyButtonState.Component>
       </Column>
+      {countryOptionsResult?.supportedCountries && (
+        <CountryListModal
+          onSelectCountry={(selectedCountry) => setSelectedCountry(selectedCountry)}
+          countryList={countryOptionsResult?.supportedCountries}
+          isOpen={countryModalOpen}
+          onDismiss={() => setCountryModalOpen(false)}
+          selectedCountry={selectedCountry}
+        />
+      )}
     </Trace>
   )
 }

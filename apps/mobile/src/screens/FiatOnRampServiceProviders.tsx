@@ -13,9 +13,9 @@ import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { FORQuote, InitialQuoteSelection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>

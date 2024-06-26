@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
@@ -18,6 +17,7 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -177,7 +177,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>
-              {chainId === ChainId.MAINNET ? (
+              {chainId === UniverseChainId.Mainnet ? (
                 <EtherscanLogo width="16px" height="16px" fill={theme.neutral1} />
               ) : (
                 <ExplorerIcon width="16px" height="16px" fill={theme.neutral1} />

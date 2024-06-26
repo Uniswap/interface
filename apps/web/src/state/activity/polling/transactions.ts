@@ -15,7 +15,7 @@ import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { RetryOptions } from 'uniswap/src/types/chains'
+import { InterfaceChainId, RetryOptions } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 
 interface Transaction {
@@ -73,7 +73,11 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   const pendingTransactions = usePendingTransactions(
     // We can skip polling when the app's current chain is supported by the subscription service.
-    realtimeEnabled && account.chainId && SUBSCRIPTION_CHAINIDS.includes(account.chainId) ? undefined : account.chainId
+    realtimeEnabled &&
+      account.chainId &&
+      (SUBSCRIPTION_CHAINIDS as unknown as InterfaceChainId[]).includes(account.chainId)
+      ? undefined
+      : account.chainId
   )
   const supportedChain = useSupportedChainId(account.chainId)
   const hasPending = pendingTransactions.length > 0

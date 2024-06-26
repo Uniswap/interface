@@ -15,9 +15,6 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
-  selectNonPendingAccounts,
-  selectNonPendingSignerMnemonicAccounts,
-  selectPendingAccounts,
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
@@ -33,7 +30,7 @@ import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src
 const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
-  return useAppSelector<Record<string, Account>>(selectNonPendingAccounts)
+  return useAppSelector<Record<string, Account>>(selectAccounts)
 }
 
 export function useAccount(address: Address): Account {
@@ -49,16 +46,8 @@ export function useAccountIfExists(address: Address): Account | undefined {
   return account
 }
 
-export function usePendingAccounts(): AddressTo<Account> {
-  return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
-}
-
 export function useSignerAccounts(): SignerMnemonicAccount[] {
   return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
-}
-
-export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
-  return useAppSelector<SignerMnemonicAccount[]>(selectNonPendingSignerMnemonicAccounts)
 }
 
 export function useViewOnlyAccounts(): Account[] {

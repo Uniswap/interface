@@ -6,10 +6,10 @@ import FavoriteWalletCard, {
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import * as ensHooks from 'wallet/src/features/ens/api'
 import {
-  ON_PRESS_EVENT_PAYLOAD,
   SAMPLE_SEED_ADDRESS_1,
   preloadedWalletState,
   signerMnemonicAccount,

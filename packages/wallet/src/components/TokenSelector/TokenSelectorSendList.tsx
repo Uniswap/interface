@@ -3,9 +3,9 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpinningLoader, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GqlResult } from 'uniswap/src/data/types'
-import { ChainId } from 'uniswap/src/types/chains'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import {
   SectionHeader,
   TokenSelectorList,
@@ -16,7 +16,7 @@ import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/util
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSection[]> {
+function useTokenSectionsForSend(chainFilter: UniverseChainId | null): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -91,7 +91,7 @@ function _TokenSelectorSendList({
   onEmptyActionPress,
 }: {
   onSelectCurrency: OnSelectCurrency
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
   onEmptyActionPress: () => void
 }): JSX.Element {
   const { data: sections, loading, error, refetch } = useTokenSectionsForSend(chainFilter)

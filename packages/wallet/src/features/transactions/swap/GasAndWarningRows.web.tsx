@@ -10,10 +10,10 @@ import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { BuyNativeTokenCtaRow } from 'wallet/src/features/transactions/swap/BuyNativeTokenCtaRow'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
@@ -92,32 +92,33 @@ export function GasAndWarningRows({
         )}
 
         <Flex gap="$spacing8" px="$spacing8" py="$spacing4">
-          {trade.trade && (
-            <Flex centered row>
+          <Flex centered row>
+            {trade.trade && (
               <Flex fill>
                 <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
               </Flex>
-              {showGasFee && (
-                <NetworkFeeWarning
-                  gasFeeHighRelativeToValue={gasFeeHighRelativeToSwapValue}
-                  placement="bottom"
-                  tooltipTrigger={
-                    <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                      <Gas
-                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                        size="$icon.16"
-                      />
-                      <Text
-                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                        variant="body4">
-                        {gasFeeFormatted}
-                      </Text>
-                    </AnimatedFlex>
-                  }
-                />
-              )}
-            </Flex>
-          )}
+            )}
+
+            {showGasFee && (
+              <NetworkFeeWarning
+                gasFeeHighRelativeToValue={gasFeeHighRelativeToSwapValue}
+                placement="bottom"
+                tooltipTrigger={
+                  <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
+                    <Gas
+                      color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
+                      size="$icon.16"
+                    />
+                    <Text
+                      color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
+                      variant="body4">
+                      {gasFeeFormatted}
+                    </Text>
+                  </AnimatedFlex>
+                }
+              />
+            )}
+          </Flex>
 
           {showPriceImpactWarning && priceImpactWarning && (
             <Flex centered row>
@@ -163,7 +164,8 @@ export function GasAndWarningRows({
             </TouchableArea>
           )}
         </Flex>
-        <BuyNativeTokenCtaRow warnings={warnings} />
+
+        <InsufficientNativeTokenWarning flow="swap" gasFee={gasFee} warnings={warnings} />
       </Flex>
     </>
   )

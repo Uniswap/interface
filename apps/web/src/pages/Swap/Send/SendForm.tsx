@@ -2,7 +2,7 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
@@ -17,6 +17,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -218,7 +219,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           >
             <Trans
               i18nKey="common.connectToChain.button"
-              values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}
+              values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : undefined }}
             />
           </ButtonPrimary>
         ) : (

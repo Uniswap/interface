@@ -1,5 +1,5 @@
 import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
@@ -7,6 +7,7 @@ import { ApproveInfo, WrapInfo } from 'state/routing/types'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
@@ -31,7 +32,7 @@ export async function getApproveInfo(
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI) {
+  if (currency.chainId === UniverseChainId.ArbitrumOne || currency.chainId === UniverseChainId.ArbitrumGoerli) {
     return { needsApprove: false }
   }
 

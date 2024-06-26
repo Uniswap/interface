@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
 import {
-  TransactionDetails,
+  ClassicTransactionDetails,
   TransactionStatus,
   TransactionType,
   WrapTransactionInfo,
@@ -81,7 +82,8 @@ const meta: Meta<typeof WrapSummaryItem> = {
 
 export default meta
 
-const baseWrapTx: Omit<TransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } = {
+const baseWrapTx: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } = {
+  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -95,13 +97,14 @@ const baseWrapTx: Omit<TransactionDetails, 'status'> & { typeInfo: WrapTransacti
   },
 }
 
-const baseUnwrapTx: Omit<TransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } = {
-  ...baseWrapTx,
-  typeInfo: {
-    ...baseWrapTx.typeInfo,
-    unwrapped: true,
-  },
-}
+const baseUnwrapTx: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } =
+  {
+    ...baseWrapTx,
+    typeInfo: {
+      ...baseWrapTx.typeInfo,
+      unwrapped: true,
+    },
+  }
 
 export const Wrap: StoryObj = {
   render: () => (

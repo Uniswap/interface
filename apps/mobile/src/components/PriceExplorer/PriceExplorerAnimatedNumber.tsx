@@ -16,7 +16,7 @@ import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistor
 import { useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,

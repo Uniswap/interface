@@ -102,7 +102,7 @@ export default function Pool() {
   const [balanceMap, fetchingV2PairBalances] = useRpcTokenBalancesWithLoadingIndicator(
     account.address,
     tokenPairsWithLiquidityTokens.map(({ liquidityToken }) => liquidityToken),
-    !account?.address
+    !account?.address,
   )
 
   // fetch the reserves for all V2 pools in which the user has a balance

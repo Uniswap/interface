@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CountryListModal should render options and call select callback 1`] = `
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (max-width:768px) {
+
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+<span
+  class="t_light is_inversed _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      tabindex="0"
+    />
+  </span>
+</span>
+`;

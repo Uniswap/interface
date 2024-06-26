@@ -97,7 +97,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>

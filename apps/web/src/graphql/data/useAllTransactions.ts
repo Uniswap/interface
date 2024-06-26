@@ -10,21 +10,21 @@ import {
 
 export enum TransactionType {
   SWAP = 'Swap',
-  MINT = 'Add',
-  BURN = 'Remove',
+  ADD = 'Add',
+  REMOVE = 'Remove',
 }
 
 export const BETypeToTransactionType: { [key: string]: TransactionType } = {
   [PoolTransactionType.Swap]: TransactionType.SWAP,
-  [PoolTransactionType.Remove]: TransactionType.BURN,
-  [PoolTransactionType.Add]: TransactionType.MINT,
+  [PoolTransactionType.Remove]: TransactionType.REMOVE,
+  [PoolTransactionType.Add]: TransactionType.ADD,
 }
 
 const ALL_TX_DEFAULT_QUERY_SIZE = 20
 
 export function useAllTransactions(
   chain: Chain,
-  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
+  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE]
 ) {
   const isWindowVisible = useIsWindowVisible()
 

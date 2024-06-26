@@ -4,13 +4,13 @@ import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface TokenLogoProps {
   url?: string | null
   symbol?: string
   name?: string | null
-  chainId?: ChainId
+  chainId?: UniverseChainId
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number
@@ -29,7 +29,7 @@ export const TokenLogo = memo(function _TokenLogo({
   const isDarkMode = useIsDarkMode()
   const logolessColorScheme = useLogolessColorScheme(name ?? symbol ?? '')
 
-  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== ChainId.Mainnet
+  const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
 
   const { foreground, background } = isDarkMode
     ? logolessColorScheme.dark

@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/Column'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
@@ -22,9 +21,11 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { css, useTheme } from 'styled-components'
-import { Popover } from 'ui/src'
+import { Flex, Popover } from 'ui/src'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
@@ -57,10 +58,10 @@ const ChainsDropdownWrapper = styled(Column)`
 
 type WalletConnectConnector = Connector & {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => ChainId[]
+  getNamespaceChainsIds: () => InterfaceChainId[]
 }
 
-function useWalletSupportedChains(): ChainId[] {
+function useWalletSupportedChains(): InterfaceChainId[] {
   const { connector } = useAccount()
 
   switch (connector?.type) {
@@ -79,6 +80,9 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const account = useAccount()
   const { chainId: swapChainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
+  // flag can be true but multichainUXEnabled can be false (TDP page)
+  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   const theme = useTheme()
   const popoverRef = useRef<Popover>(null)
@@ -105,16 +109,16 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
           }
           return acc
         },
-        { supported: [], unsupported: [] } as Record<string, ChainId[]>
+        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>
       )
     return [supported, unsupported]
   }, [isSupportedChain, showTestnets, walletSupportsChain])
 
-  const [pendingChainId, setPendingChainId] = useState<ChainId | undefined>(undefined)
+  const [pendingChainId, setPendingChainId] = useState<InterfaceChainId | undefined>(undefined)
 
   const onSelectChain = useCallback(
-    async (targetChainId: ChainId) => {
-      if (multichainUXEnabled) {
+    async (targetChainId: UniverseChainId | null) => {
+      if (multichainUXEnabled || !targetChainId) {
         setSelectedChainId(targetChainId)
       } else {
         setPendingChainId(targetChainId)
@@ -137,6 +141,14 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   ) : (
     <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
   )
+
+  if (multichainFlagEnabled) {
+    return (
+      <Flex px={4}>
+        <NetworkFilter includeAllNetworks selectedChain={chainId ?? null} onPressChain={onSelectChain} />
+      </Flex>
+    )
+  }
 
   if (navRefreshEnabled) {
     return (

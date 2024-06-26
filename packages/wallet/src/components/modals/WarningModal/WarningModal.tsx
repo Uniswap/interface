@@ -3,9 +3,9 @@ import { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { isWeb } from 'utilities/src/platform'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export type WarningModalProps = {
@@ -23,7 +23,8 @@ export type WarningModalProps = {
   icon?: ReactNode
   // when icon is undefined we default it to triangle, this allows us to hide it
   hideIcon?: boolean
-  backgroundIconColor?: ColorValue
+  // `undefined` means we use the default color, `false` means no background color
+  backgroundIconColor?: ColorValue | false
   maxWidth?: number
 }
 
@@ -69,10 +70,15 @@ export function WarningModal({
             centered
             borderRadius="$rounded12"
             mb="$spacing8"
-            p="$spacing12"
-            style={{
-              backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
-            }}>
+            p={backgroundIconColor === false ? '$none' : '$spacing12'}
+            style={
+              backgroundIconColor === false
+                ? undefined
+                : {
+                    backgroundColor:
+                      backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
+                  }
+            }>
             {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
@@ -92,13 +98,14 @@ export function WarningModal({
           pt={children ? '$spacing12' : '$spacing24'}
           width="100%">
           {closeText && (
-            <Button fill theme="secondary" onPress={onCancel ?? onClose}>
+            <Button flex={1} flexBasis={1} theme="secondary" onPress={onCancel ?? onClose}>
               {closeText}
             </Button>
           )}
           {confirmText && (
             <Button
-              fill
+              flex={1}
+              flexBasis={1}
               testID={ElementName.Confirm}
               theme={alertColor.buttonTheme}
               onPress={onConfirm}>

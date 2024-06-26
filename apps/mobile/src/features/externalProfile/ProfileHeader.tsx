@@ -78,7 +78,7 @@ export const ProfileHeader = memo(function ProfileHeader({
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
-  const { color } = getUniconColors(address)
+  const { color } = getUniconColors(address, false)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {

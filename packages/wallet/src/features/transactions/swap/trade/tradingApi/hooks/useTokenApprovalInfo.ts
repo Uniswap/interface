@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/index'
@@ -19,7 +19,7 @@ import { WrapType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenApprovalInfoParams {
-  chainId: ChainId
+  chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   skip?: boolean

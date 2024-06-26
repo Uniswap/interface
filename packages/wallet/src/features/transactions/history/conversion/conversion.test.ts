@@ -8,7 +8,7 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { DAI } from 'wallet/src/constants/tokens'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
@@ -35,7 +35,7 @@ const FROM_ADDRESS = SAMPLE_SEED_ADDRESS_1
 const TO_ADDRESS = SAMPLE_SEED_ADDRESS_2
 const TEST_HASH = '0x00'
 const ERC20_ASSET_ADDRESS = DAI.address
-const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(ChainId.Mainnet)
+const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
 const RESPONSE_BASE = {
   id: 'base_id',
@@ -110,7 +110,7 @@ const NATIVE_TRANSFER_OUT_ASSET_CHANGE = {
   ...ERC20_TRANSFER_OUT_ASSET_CHANGE,
   asset: {
     ...ERC20_TRANSFER_OUT_ASSET_CHANGE.asset,
-    address: getNativeAddress(ChainId.Mainnet),
+    address: getNativeAddress(UniverseChainId.Mainnet),
   },
   tokenbStandard: TokenStandard.Native,
 }
@@ -259,7 +259,7 @@ describe(parseNFTMintTransaction, () => {
         imageURL: 'image_url',
         tokenId: 'token_id',
       },
-      purchaseCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
+      purchaseCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
       isSpam: false,
@@ -480,7 +480,7 @@ describe(parseTradeTransaction, () => {
   it('Swap: parse native swap', () => {
     expect(parseTradeTransaction(MOCK_NATIVE_SWAP)).toEqual({
       type: TransactionType.Swap,
-      inputCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       transactedUSDValue: 1,
       inputCurrencyAmountRaw: '1000000000000000000',

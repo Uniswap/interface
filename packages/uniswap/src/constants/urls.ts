@@ -27,6 +27,7 @@ export const uniswapUrls = {
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
+    extensionHelp: `${helpUrl}/categories/25219141467405`,
     extensionWaitlist: `${helpUrl}/articles/24458735271181-Get-started-with-the-Uniswap-Extension`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
@@ -95,6 +96,7 @@ export const uniswapUrls = {
   webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
   webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
+  webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
 }
 
 function getCloudflarePrefix(flow?: TrafficFlows): string {

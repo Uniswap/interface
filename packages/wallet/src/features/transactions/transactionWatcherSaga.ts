@@ -15,7 +15,7 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { selectExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/selectors'
@@ -46,8 +46,10 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'wallet/src/features/transactions/slice'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   BaseSwapTransactionInfo,
+  ClassicTransactionDetails,
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionReceipt,
@@ -73,6 +75,8 @@ export function* transactionWatcher({
   for (const transaction of incompleteTransactions) {
     if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
       yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+    } else if (isUniswapX(transaction)) {
+      // TODO(WEB-4296): Add watcher for UniswapX transactions
     } else {
       yield* fork(watchTransaction, { transaction, apolloClient })
     }
@@ -87,6 +91,8 @@ export function* transactionWatcher({
     try {
       if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
         yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+      } else if (isUniswapX(transaction)) {
+        // TODO(WEB-4296): Add watcher for UniswapX transactions
       } else {
         yield* fork(watchTransaction, { transaction, apolloClient })
       }
@@ -239,7 +245,7 @@ export function* watchTransaction({
   transaction,
   apolloClient,
 }: {
-  transaction: TransactionDetails
+  transaction: ClassicTransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
 }): Generator<unknown> {
   const { chainId, id, hash, options } = transaction
@@ -310,7 +316,7 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* waitForCancellation(chainId: ChainId, id: string) {
+function* waitForCancellation(chainId: WalletChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
@@ -319,7 +325,7 @@ function* waitForCancellation(chainId: ChainId, id: string) {
   }
 }
 
-function* waitForReplacement(chainId: ChainId, id: string) {
+function* waitForReplacement(chainId: WalletChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) {
@@ -332,7 +338,7 @@ function* waitForReplacement(chainId: ChainId, id: string) {
  * the current transaction has been invalidated and wont be picked up on chain.
  */
 export function* waitForTxnInvalidated(
-  chainId: ChainId,
+  chainId: WalletChainId,
   id: string,
   nonce: BigNumberish | undefined
 ) {
@@ -340,7 +346,9 @@ export function* waitForTxnInvalidated(
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type
     )
+
     if (
+      !isUniswapX(payload) && // UniswapX transactions are submitted by a filler, so they cannot invalidate a transaction sent by a user.
       payload.chainId === chainId &&
       payload.id !== id &&
       payload.options.request.nonce === nonce
@@ -357,16 +365,7 @@ export function logTransactionEvent(
   actionData: ReturnType<typeof transactionActions.finalizeTransaction>
 ): void {
   const { payload } = actionData
-  const {
-    hash,
-    chainId,
-    addedTime,
-    from,
-    typeInfo,
-    receipt,
-    status,
-    options: { submitViaPrivateRpc },
-  } = payload
+  const { hash, chainId, addedTime, from, typeInfo, receipt, status } = payload
   const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
 
@@ -402,7 +401,7 @@ export function logTransactionEvent(
       gasUseEstimate,
       route: routeString,
       quoteId,
-      submitViaPrivateRpc,
+      submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       protocol,
       transactedUSDValue,
     })

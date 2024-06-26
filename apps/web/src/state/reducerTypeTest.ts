@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
@@ -26,6 +25,8 @@ import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/t
 import { WalletState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { Equals, assert } from 'tsafe'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 /**
  * WARNING:
@@ -61,6 +62,7 @@ type ExpectedAppState = CombinedState<{
   logs: LogsState
   [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
+  [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
 }>
 
 assert<Equals<AppState, ExpectedAppState>>()
@@ -124,7 +126,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
-  switchingChain: ChainId | false
+  switchingChain: InterfaceChainId | false
 }
 
 assert<Equals<WalletState, ExpectedWalletState>>()

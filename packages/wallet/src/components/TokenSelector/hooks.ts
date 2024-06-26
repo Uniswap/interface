@@ -3,7 +3,7 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { filter } from 'wallet/src/components/TokenSelector/filter'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'
@@ -31,16 +31,16 @@ import {
 // Use Mainnet base token addresses since TokenProjects query returns each token
 // on each network
 const baseCurrencyIds = [
-  buildNativeCurrencyId(ChainId.Mainnet),
-  buildNativeCurrencyId(ChainId.Polygon),
-  buildNativeCurrencyId(ChainId.Bnb),
-  buildNativeCurrencyId(ChainId.Celo),
-  buildNativeCurrencyId(ChainId.Avalanche),
+  buildNativeCurrencyId(UniverseChainId.Mainnet),
+  buildNativeCurrencyId(UniverseChainId.Polygon),
+  buildNativeCurrencyId(UniverseChainId.Bnb),
+  buildNativeCurrencyId(UniverseChainId.Celo),
+  buildNativeCurrencyId(UniverseChainId.Avalanche),
   currencyId(DAI),
   currencyId(USDC),
   currencyId(USDT),
   currencyId(WBTC),
-  buildWrappedNativeCurrencyId(ChainId.Mainnet),
+  buildWrappedNativeCurrencyId(UniverseChainId.Mainnet),
 ]
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
@@ -105,16 +105,16 @@ export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
 }
 
 export function useFilterCallbacks(
-  chainId: ChainId | null,
+  chainId: UniverseChainId | null,
   flow: TokenSelectorFlow
 ): {
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
   searchFilter: string | null
-  onChangeChainFilter: (newChainFilter: ChainId | null) => void
+  onChangeChainFilter: (newChainFilter: UniverseChainId | null) => void
   onClearSearchFilter: () => void
   onChangeText: (newSearchFilter: string) => void
 } {
-  const [chainFilter, setChainFilter] = useState<ChainId | null>(chainId)
+  const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(chainId)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export function usePortfolioBalancesForAddressById(
 
 export function usePortfolioTokenOptions(
   address: Address,
-  chainFilter: ChainId | null,
+  chainFilter: UniverseChainId | null,
   searchFilter?: string
 ): GqlResult<TokenOption[] | undefined> {
   const {
@@ -238,7 +238,7 @@ export function usePortfolioTokenOptions(
 
 export function usePopularTokensOptions(
   address: Address,
-  chainFilter: ChainId
+  chainFilter: UniverseChainId
 ): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
@@ -279,7 +279,7 @@ export function usePopularTokensOptions(
 
 export function useCommonTokensOptions(
   address: Address,
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
 ): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
@@ -324,7 +324,7 @@ export function useCommonTokensOptions(
 
 export function useFavoriteTokensOptions(
   address: Address,
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
 ): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,

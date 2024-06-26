@@ -1,5 +1,6 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { SpamCode } from 'wallet/src/data/types'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
@@ -76,9 +77,12 @@ export default function extractTransactionDetails(
   const chainId = fromGraphQLChain(transaction.chain)
 
   return {
+    routing:
+      // TODO(MOB-3535): Update query w/ flag to return SwapOrderDetails & set routing to DUTCH_V2 if details is of type SwapOrderDetails
+      Routing.CLASSIC,
     id: transaction.details.hash,
     // fallback to mainnet, although this should never happen
-    chainId: chainId ?? ChainId.Mainnet,
+    chainId: chainId ?? UniverseChainId.Mainnet,
     hash: transaction.details.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
     status: remoteTxStatusToLocalTxStatus(transaction.details.type, transaction.details.status),

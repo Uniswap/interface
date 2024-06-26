@@ -11,7 +11,6 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -24,13 +23,8 @@ import {
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WelcomeWallet>,
@@ -53,8 +47,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const walletName = useDisplayName(onboardingAccountAddress)
   const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
-  const dispatch = useAppDispatch()
-
   const onPressNext = (): void => {
     navigation.navigate({
       name: OnboardingScreens.Backup,
@@ -62,13 +54,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
       params,
     })
   }
-
-  // Ensure pending account is cleared before navigating away
-  navigation.addListener('beforeRemove', () => {
-    if (params.entryPoint === OnboardingEntryPoint.Sidebar) {
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-    }
-  })
 
   const zeroBalance = convertFiatAmountFormatted(0, NumberType.PortfolioBalance)
 
@@ -131,6 +116,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
       </Flex>
       <Trace logPress element={ElementName.Next}>
         <Button
+          disabled={!onboardingAccountAddress}
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing8">

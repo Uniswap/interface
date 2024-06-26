@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
@@ -27,6 +27,7 @@ import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -247,7 +248,7 @@ const PoolDetailsHeaderActions = ({
           isOpen={contractsModalIsOpen}
           toggleOpen={toggleContractsModal}
           menuLabel={
-            chainId === ChainId.MAINNET ? (
+            chainId === UniverseChainId.Mainnet ? (
               <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
             ) : (
               <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />

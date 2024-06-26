@@ -1,15 +1,13 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,
-  CHAIN_INFO,
   CHAIN_NAME_TO_CHAIN_ID,
   GQL_MAINNET_CHAINS,
   InterfaceGqlChain,
-  SupportedInterfaceChain,
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
@@ -20,6 +18,7 @@ import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -28,6 +27,7 @@ import {
   PriceSource,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/types/chains'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export enum PollingInterval {
@@ -85,7 +85,7 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
 export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
 
 export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
-  return !!chainId && GQL_MAINNET_CHAINS.includes(CHAIN_INFO[chainId].backendChain.chain)
+  return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
 }
 
 export function toContractInput(currency: Currency): ContractInput {
@@ -115,18 +115,18 @@ export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefine
 }
 
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
+  chain: UniverseChainInfo | undefined,
   options?: undefined
-): SupportedInterfaceChain | undefined
+): UniverseChainInfo | undefined
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
+  chain: UniverseChainInfo | undefined,
   options: { fallbackToEthereum: true }
-): SupportedInterfaceChain
+): UniverseChainInfo
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
+  chain: UniverseChainInfo | undefined,
   options?: { fallbackToEthereum?: boolean }
-): SupportedInterfaceChain | undefined {
-  const fallbackChain = options?.fallbackToEthereum ? CHAIN_INFO[ChainId.MAINNET] : undefined
+): UniverseChainInfo | undefined {
+  const fallbackChain = options?.fallbackToEthereum ? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet] : undefined
   return chain?.backendChain.backendSupported ? chain : fallbackChain
 }
 

@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'
 
 const searchOptions: Fuse.IFuseOptions<TokenOption> = {
@@ -17,7 +17,7 @@ const searchOptions: Fuse.IFuseOptions<TokenOption> = {
 }
 
 const getChainSearchPattern = (
-  chain: ChainId | null
+  chain: UniverseChainId | null
 ): {
   'currencyInfo.currency.chainId': string
 } | null =>
@@ -64,7 +64,7 @@ const getNameSearchPattern = (
  */
 export function filter(
   tokenOptions: TokenOption[] | null,
-  chainFilter: ChainId | null,
+  chainFilter: UniverseChainId | null,
   searchFilter?: string
 ): TokenOption[] {
   if (!tokenOptions || !tokenOptions.length) {

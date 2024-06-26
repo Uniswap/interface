@@ -1,7 +1,7 @@
 // If the message to be signed is a hex string, it must be converted to an array:
 
 import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
-import { arrayify } from 'ethers/lib/utils'
+import { arrayify, isHexString } from 'ethers/lib/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -19,9 +19,10 @@ export async function signMessage(
   // Web needs to connect to provider to ensure correct chain
   const unconnectedSigner = await signerManager.getSignerForAccount(account)
   const signer = provider ? unconnectedSigner?.connect(provider) : unconnectedSigner
-  // message is a hex string, so we arrayify to get the byte data
+  // If message is a hex string, we arrayify to get the byte data
   // else ethers will treat the string as if it is utf8
-  const signature = await signer.signMessage(arrayify(message))
+  const formattedMessage = isHexString(message) ? arrayify(message) : message
+  const signature = await signer.signMessage(formattedMessage)
   return ensureLeading0x(signature)
 }
 

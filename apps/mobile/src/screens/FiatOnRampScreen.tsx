@@ -20,6 +20,8 @@ import {
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import {
   useFiatOnRampAggregatorGetCountryQuery,
@@ -39,8 +41,6 @@ import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useFiatOnRampAggregatorTransactionQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'

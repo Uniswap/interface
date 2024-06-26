@@ -8,7 +8,6 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
 import {
-  ChainId,
   CurrencyAmount,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
@@ -37,6 +36,7 @@ import { useLogs } from 'state/logs/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceV0Contract(): Contract | null {
@@ -245,10 +245,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const proposalCount2 = useProposalCount(gov2)
 
   const gov0ProposalIndexes = useMemo(() => {
-    return chainId === ChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
+    return chainId === UniverseChainId.Mainnet ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
   }, [chainId, proposalCount0])
   const gov1ProposalIndexes = useMemo(() => {
-    return chainId === ChainId.MAINNET ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
+    return chainId === UniverseChainId.Mainnet ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
   }, [chainId, proposalCount1])
   const gov2ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount2, 8)
@@ -349,7 +349,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== ChainId.MAINNET ||
+    chainId !== UniverseChainId.Mainnet ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   ) {

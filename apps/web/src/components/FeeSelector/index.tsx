@@ -19,6 +19,7 @@ import { Box } from 'rebass'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -191,7 +192,7 @@ export default function FeeSelector({
           <Select>
             {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
               const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
-              if (supportedChains.includes(chainId)) {
+              if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
                 return (
                   <FeeOption
                     feeAmount={_feeAmount}

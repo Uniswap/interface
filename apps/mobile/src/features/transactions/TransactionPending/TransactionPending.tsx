@@ -4,7 +4,7 @@ import { StatusAnimation } from 'src/features/transactions/TransactionPending/St
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -14,7 +14,7 @@ import { openTransactionLink } from 'wallet/src/utils/linking'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined
-  chainId: ChainId
+  chainId: WalletChainId
   title: string
   description: string
   onNext: () => void

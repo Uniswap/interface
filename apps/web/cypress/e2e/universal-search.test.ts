@@ -1,9 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID, UNI } from 'constants/tokens'
-
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getTestSelector } from '../utils'
 
-const UNI_ADDRESS = UNI[ChainId.MAINNET].address.toLowerCase()
+const UNI_ADDRESS = UNI[UniverseChainId.Mainnet].address.toLowerCase()
 
 describe('Universal search bar', () => {
   function openSearch() {

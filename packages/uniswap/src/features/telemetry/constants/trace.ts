@@ -61,6 +61,7 @@ export const ModalName = {
   TokenWarningModal: 'token-warning-modal',
   TooltipContent: 'tooltip-content',
   TransactionActions: 'transaction-actions',
+  TransactionDetails: 'transaction-details',
   UniswapXInfo: 'uniswapx-info-modal',
   UnitagsChange: 'unitags-change-modal',
   UnitagsChangeConfirm: 'unitags-change-confirm-modal',

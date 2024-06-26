@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
@@ -23,6 +23,7 @@ import { Flex } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export function getIsReviewableQuote(
@@ -85,7 +86,7 @@ export function Swap({
   syncTabToUrl,
 }: {
   className?: string
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency

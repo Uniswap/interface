@@ -1,6 +1,6 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { Z_INDEX } from 'theme/zIndex'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector, createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
@@ -12,7 +12,7 @@ const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_P
 
 export interface WalletConnectConnector extends Connector {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => ChainId[]
+  getNamespaceChainsIds: () => InterfaceChainId[]
   getProvider(): Promise<{ modal: { setTheme: ({ themeMode }: { themeMode: 'dark' | 'light' }) => void } }>
 }
 

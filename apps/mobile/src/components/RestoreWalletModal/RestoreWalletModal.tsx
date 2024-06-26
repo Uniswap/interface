@@ -6,10 +6,10 @@ import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()

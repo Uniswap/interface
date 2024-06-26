@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
@@ -29,6 +29,7 @@ import { CurrencyState } from 'state/swap/types'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -331,7 +332,7 @@ export default function SendCurrencyInputForm({
           <Row width="100%" gap="md">
             <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
               {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />
+                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
               )}
               <Row width="100%">
                 <Column>

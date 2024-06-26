@@ -7,7 +7,6 @@ import {
   LiquiditySource,
 } from '@uniswap/analytics-events'
 import {
-  ChainId,
   Currency,
   CurrencyAmount,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -35,7 +34,7 @@ import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { CHAIN_INFO, isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
+import { isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
@@ -85,8 +84,10 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
@@ -649,7 +650,7 @@ function AddLiquidity() {
     addressesAreEquivalent(existingPositionDetails?.operator, account.address)
   const showOwnershipWarning = Boolean(hasExistingPosition && account.address && !ownsNFT)
   const showBlastRebasingWarning =
-    account.chainId === ChainId.BLAST &&
+    account.chainId === UniverseChainId.Blast &&
     ((!!currencyIdA && BLAST_REBASING_TOKENS.includes(currencyIdA)) ||
       (!!currencyIdB && BLAST_REBASING_TOKENS.includes(currencyIdB)))
 
@@ -670,7 +671,9 @@ function AddLiquidity() {
               quoteCurrency?.symbol && baseCurrency?.symbol
                 ? `${quoteCurrency.symbol}/${baseCurrency.symbol}`
                 : quoteCurrency?.symbol ?? baseCurrency?.symbol ?? 'pools',
-            chain: CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : ChainId.MAINNET].label,
+            chain:
+              UNIVERSE_CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : UniverseChainId.Mainnet]
+                .label,
           })}
         </title>
       </Helmet>

@@ -10,7 +10,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -25,7 +25,7 @@ import {
 export type TokenItemData = {
   name: string
   logoUrl: string
-  chainId: ChainId
+  chainId: WalletChainId
   address: Address | null
   symbol: string
   price?: number

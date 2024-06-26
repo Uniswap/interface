@@ -2,7 +2,6 @@ import { Contract } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  ChainId,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -40,6 +39,7 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -87,7 +87,7 @@ export function useContract<T extends Contract = Contract>(
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
   const { chainId } = useAccount()
-  const isMainnet = chainId === ChainId.MAINNET
+  const isMainnet = chainId === UniverseChainId.Mainnet
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
 
   return useMemo(() => {
@@ -97,7 +97,7 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
     if (!address) {
       return null
     }
-    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    const provider = RPC_PROVIDERS[UniverseChainId.Mainnet]
     try {
       return getContract(address, ABI, provider)
     } catch (error) {
@@ -138,7 +138,7 @@ export function useArgentWalletDetectorContract() {
 }
 
 export function useENSRegistrarContract() {
-  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[UniverseChainId.Mainnet], ENS_ABI)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -168,7 +168,7 @@ export function useInterfaceMulticall() {
 
 export function useMainnetInterfaceMulticall() {
   return useMainnetContract<UniswapInterfaceMulticall>(
-    MULTICALL_ADDRESSES[ChainId.MAINNET],
+    MULTICALL_ADDRESSES[UniverseChainId.Mainnet],
     MulticallABI
   ) as UniswapInterfaceMulticall
 }

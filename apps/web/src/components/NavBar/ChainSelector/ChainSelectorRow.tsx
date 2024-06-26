@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'
@@ -9,6 +8,7 @@ import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 const LOGO_SIZE = 20
 
@@ -57,7 +57,7 @@ const CaptionText = styled.div`
 
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: ChainId
+  targetChain: InterfaceChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
 }

@@ -7,8 +7,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { Flex, SpaceTokens, Text, flexStyles, useMedia, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { opacify, spacing } from 'ui/src/theme'
+import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 import { isIOS } from 'utilities/src/platform'
-import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
 
 type OnboardingScreenProps = {
   subtitle?: string

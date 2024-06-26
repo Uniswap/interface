@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { logger } from 'utilities/src/logger/logger'
+// eslint-disable-next-line no-restricted-imports
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -81,9 +83,11 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     useStoredAddressesForMnemonic(mnemonicId)
   const addresses = addressesWithIndex.map((address) => address.address)
 
+  const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data: balancesData, loading: balancesLoading } = useMultiplePortfolioBalancesQuery({
     variables: {
       ownerAddresses: addresses,
+      valueModifiers,
     },
     skip: !addresses.length,
   })

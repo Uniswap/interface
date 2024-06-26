@@ -21,7 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -49,6 +49,7 @@ import { CurrencyState } from 'state/swap/types'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -611,7 +612,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               <Trans
                 i18nKey="common.connectingToChain"
                 values={{
-                  chainName: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '',
+                  chainName: switchingChainIsSupported ? UNIVERSE_CHAIN_INFO[targetChain]?.label : '',
                 }}
               />
             </ButtonPrimary>
@@ -644,7 +645,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             >
               <Trans
                 i18nKey="common.connectToChain.button"
-                values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : '' }}
+                values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : '' }}
               />
             </ButtonPrimary>
           ) : showWrap ? (

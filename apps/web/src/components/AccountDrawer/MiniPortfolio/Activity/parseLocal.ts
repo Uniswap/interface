@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -32,6 +32,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -86,7 +87,7 @@ async function parseSwap(
 
 function parseWrap(
   wrap: WrapTransactionInfo,
-  chainId: ChainId,
+  chainId: InterfaceChainId,
   status: TransactionStatus,
   formatNumber: FormatNumberFunctionType
 ): Partial<Activity> {

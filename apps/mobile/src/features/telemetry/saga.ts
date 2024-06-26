@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { OriginApplication } from '@uniswap/analytics'
-import DeviceInfo, { getDeviceId } from 'react-native-device-info'
+import DeviceInfo, { getUniqueId } from 'react-native-device-info'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { call, delay, fork, select, takeEvery } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -23,7 +23,7 @@ export function* telemetrySaga() {
     }),
     allowAnalytics,
     undefined,
-    async () => getDeviceId()
+    async () => getUniqueId()
   )
   yield* fork(watchTransactionEvents)
 }

@@ -1,26 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Loader } from 'ui/src'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useSelectWalletScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { useAppDispatch } from 'wallet/src/state'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
@@ -40,7 +35,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const { getImportedAccountsAddresses, selectImportedAccounts } = useOnboardingContext()
   const importedAccountsAddresses = getImportedAccountsAddresses()
 
@@ -96,15 +90,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   const showError = error && !initialShownAccounts?.length
 
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(initialShownAccounts)
-
-  useEffect(() => {
-    const beforeRemoveListener = (): void => {
-      // Remove all pending signer accounts when navigating back
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-    }
-    navigation.addListener('beforeRemove', beforeRemoveListener)
-    return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
-  }, [dispatch, navigation])
 
   const onSubmit = useCallback(async () => {
     await selectImportedAccounts(selectedAddresses)

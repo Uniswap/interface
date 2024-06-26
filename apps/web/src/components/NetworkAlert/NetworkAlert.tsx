@@ -10,7 +10,6 @@ import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { NetworkLayer } from 'uniswap/src/types/chains'
 
 const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   color: ${({ color }) => color};
@@ -63,7 +62,7 @@ export function NetworkAlert() {
   const { symbol, bgColor, textColor } = getChainUI(chainId, darkMode)
   const chainInfo = getChain({ chainId })
 
-  return chainInfo.networkLayer == NetworkLayer.L2 ? (
+  return chainInfo.bridge ? (
     <BridgeLink href={chainInfo.bridge} bgColor={bgColor}>
       {symbol && <ChainSymbolImage width="40px" height="40px" src={symbol} />}
       <RowBetween>

@@ -4,7 +4,7 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -26,7 +26,7 @@ export function useTransferTransactionRequest(
 ): providers.TransactionRequest | undefined {
   const account = useActiveAccountWithThrow()
   const chainId = toSupportedChainId(derivedTransferInfo.chainId)
-  const provider = useProvider(chainId ?? ChainId.Mainnet)
+  const provider = useProvider(chainId ?? UniverseChainId.Mainnet)
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(() => {

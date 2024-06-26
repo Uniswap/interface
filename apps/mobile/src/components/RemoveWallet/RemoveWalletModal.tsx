@@ -14,11 +14,11 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, ColorTokens, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
   EditAccountAction,

@@ -9,7 +9,7 @@ import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -17,7 +17,7 @@ import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   CurrencyField,
@@ -55,7 +55,7 @@ export function getWrapType(
     return WrapType.NotApplicable
   }
 
-  const inputChainId = inputCurrency.chainId as ChainId
+  const inputChainId = inputCurrency.chainId as WalletChainId
   const wrappedCurrencyId = buildWrappedNativeCurrencyId(inputChainId)
 
   if (
@@ -199,7 +199,7 @@ export const prepareSwapFormState = ({
         exactAmountToken: '',
         [CurrencyField.INPUT]: {
           address: currencyIdToAddress(inputCurrencyId),
-          chainId: currencyIdToChain(inputCurrencyId) ?? ChainId.Mainnet,
+          chainId: currencyIdToChain(inputCurrencyId) ?? UniverseChainId.Mainnet,
           type: AssetType.Currency,
         },
         [CurrencyField.OUTPUT]: null,
@@ -250,7 +250,7 @@ export const getSwapMethodParameters = ({
 }
 
 export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined {
-  if (isUniswapX(trade)) {
+  if (!isClassic(trade)) {
     return undefined
   }
 

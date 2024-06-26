@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { CheckMark } from 'components/Icons/CheckMark'
@@ -24,6 +23,7 @@ import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobile } from 'utilities/src/platform'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -176,7 +176,7 @@ export const TokenDetailsHeader = () => {
               >
                 <StyledExternalLink href={explorerUrl}>
                   <ActionButton>
-                    {currency.chainId === ChainId.MAINNET ? (
+                    {currency.chainId === UniverseChainId.Mainnet ? (
                       <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
                     ) : (
                       <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />

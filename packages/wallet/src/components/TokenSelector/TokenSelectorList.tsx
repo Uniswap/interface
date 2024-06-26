@@ -4,9 +4,9 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import {
   SectionHeaderProps,
@@ -47,7 +47,7 @@ function TokenOptionItemWrapper({
   onSelectCurrency: OnSelectCurrency
   section: TokenSection
   index: number
-  chainFilter: Maybe<ChainId>
+  chainFilter: Maybe<UniverseChainId>
   showWarnings: boolean
   showTokenAddress?: boolean
 }): JSX.Element {
@@ -60,7 +60,7 @@ function TokenOptionItemWrapper({
     <TokenOptionItem
       option={tokenOption}
       showNetworkPill={
-        !chainFilter && tokenOption.currencyInfo.currency.chainId !== ChainId.Mainnet
+        !chainFilter && tokenOption.currencyInfo.currency.chainId !== UniverseChainId.Mainnet
       }
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
@@ -72,7 +72,7 @@ function TokenOptionItemWrapper({
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
   sections?: TokenSelectorListSections
-  chainFilter?: ChainId | null
+  chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
   loading?: boolean

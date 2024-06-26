@@ -6,7 +6,7 @@ import {
   TokenProject,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   buildCurrency,
@@ -61,7 +61,7 @@ describe(tokenProjectToCurrencyInfos, () => {
   })
 
   it('filters by chainId if chainFilter is provided', () => {
-    const result = tokenProjectToCurrencyInfos([project], ChainId.Polygon)
+    const result = tokenProjectToCurrencyInfos([project], UniverseChainId.Polygon)
 
     expect(result).toEqual(
       project.tokens
@@ -82,7 +82,7 @@ describe(tokenProjectToCurrencyInfos, () => {
       ],
     } as TokenProject
 
-    const result = tokenProjectToCurrencyInfos([projectWithInvalidTokens], ChainId.Mainnet)
+    const result = tokenProjectToCurrencyInfos([projectWithInvalidTokens], UniverseChainId.Mainnet)
 
     expect(result).toEqual([getExpectedResult(project, project.tokens[0] as GQLToken)])
   })
@@ -91,14 +91,14 @@ describe(tokenProjectToCurrencyInfos, () => {
 describe(buildCurrency, () => {
   it('should return a new Token instance when all parameters are provided', () => {
     const token = buildCurrency({
-      chainId: ChainId.Mainnet,
+      chainId: UniverseChainId.Mainnet,
       address: '0x0000000000000000000000000000000000000000',
       decimals: 0,
       symbol: 'TEST',
       name: 'Test Token',
     }) as Token
     expect(token).toBeInstanceOf(Token)
-    expect(token.chainId).toBe(ChainId.Mainnet)
+    expect(token.chainId).toBe(UniverseChainId.Mainnet)
     expect(token.address).toBe('0x0000000000000000000000000000000000000000')
     expect(token.decimals).toBe(0)
     expect(token.symbol).toBe('TEST')
@@ -107,12 +107,12 @@ describe(buildCurrency, () => {
 
   it('should return a new NativeCurrency instance when address is not provided', () => {
     const nativeCurrency = buildCurrency({
-      chainId: ChainId.Mainnet,
+      chainId: UniverseChainId.Mainnet,
       address: null,
       decimals: 18,
     }) as NativeCurrency
     expect(nativeCurrency).toBeInstanceOf(NativeCurrency)
-    expect(nativeCurrency.chainId).toBe(ChainId.Mainnet)
+    expect(nativeCurrency.chainId).toBe(UniverseChainId.Mainnet)
   })
 
   it('should return undefined when chainId or decimals are not provided', () => {
@@ -125,7 +125,7 @@ describe(buildCurrency, () => {
     ).toBeUndefined()
     expect(
       buildCurrency({
-        chainId: ChainId.Mainnet,
+        chainId: UniverseChainId.Mainnet,
         address: '0x0',
         decimals: null,
       })

@@ -5,7 +5,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
@@ -87,7 +87,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   const routingPreference = getRoutingPreferenceForSwapRequest(
     tradeProtocolPreference,
-    uniswapXEnabled
+    uniswapXEnabled,
+    isUSDQuote
   )
 
   const requestTradeType =
@@ -262,7 +263,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   ])
 }
 
-function getPollIntervalByChain(chainId?: ChainId): number {
+function getPollIntervalByChain(chainId?: WalletChainId): number {
   return isL2Chain(chainId)
     ? PollingInterval.AverageL2BlockTime
     : PollingInterval.AverageL1BlockTime

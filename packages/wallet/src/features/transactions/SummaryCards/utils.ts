@@ -21,6 +21,7 @@ import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/Summar
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
+import { OnRampTransferSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/OnRampTransferSummaryItem'
 import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
 import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
@@ -71,6 +72,10 @@ export function generateActivityItemRenderer(
         break
       case TransactionType.FiatPurchase:
         SummaryItem = FiatPurchaseSummaryItem
+        break
+      case TransactionType.OnRampPurchase:
+      case TransactionType.OnRampTransfer:
+        SummaryItem = OnRampTransferSummaryItem
         break
       case TransactionType.NFTApprove:
         SummaryItem = NFTApproveSummaryItem
@@ -264,6 +269,26 @@ function getTransactionTypeVerbs(
           canceled: t('transaction.status.purchase.canceled'),
         }
       }
+    case TransactionType.OnRampPurchase: {
+      const serviceProvider = typeInfo.serviceProvider.name
+      return {
+        success: t('transaction.status.purchase.successOn', { serviceProvider }),
+        pending: t('transaction.status.purchase.pendingOn', { serviceProvider }),
+        failed: t('transaction.status.purchase.failedOn', { serviceProvider }),
+        canceling: t('transaction.status.purchase.canceling'), // On ramp transactions are not cancellable
+        canceled: t('transaction.status.purchase.canceled'), // On ramp transactions are not cancellable
+      }
+    }
+    case TransactionType.OnRampTransfer: {
+      const serviceProvider = typeInfo.serviceProvider.name
+      return {
+        success: t('transaction.status.receive.successFrom', { serviceProvider }),
+        pending: t('transaction.status.receive.pendingFrom', { serviceProvider }),
+        failed: t('transaction.status.receive.failedFrom', { serviceProvider }),
+        canceling: t('transaction.status.receive.canceling'), // On ramp transactions are not cancellable
+        canceled: t('transaction.status.receive.canceled'), // On ramp transactions are not cancellable
+      }
+    }
     case TransactionType.Unknown:
     case TransactionType.WCConfirm:
     default:

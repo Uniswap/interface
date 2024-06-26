@@ -11,10 +11,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'utilities/src/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
@@ -74,7 +74,7 @@ export const FeedTab = memo(
     }
 
     const errorCard = (
-      <Flex grow style={containerProps?.emptyContainerStyle}>
+      <Flex grow style={containerProps?.emptyComponentStyle}>
         <BaseCard.ErrorState
           retryButtonLabel={t('common.button.retry')}
           title={t('home.feed.error')}
@@ -84,7 +84,7 @@ export const FeedTab = memo(
     )
 
     const emptyListView = (
-      <Flex grow style={containerProps?.emptyContainerStyle}>
+      <Flex grow style={containerProps?.emptyComponentStyle}>
         <BaseCard.EmptyState
           description={t('home.feed.empty.description')}
           icon={<NoTransactions color="$neutral3" size="$icon.70" />}

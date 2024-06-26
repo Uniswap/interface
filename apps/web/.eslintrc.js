@@ -124,6 +124,10 @@ module.exports = {
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
           },
+          {
+            selector: `ImportDeclaration[source.value='@uniswap/sdk-core'] > ImportSpecifier[imported.name='ChainId']`,
+            message: "Don't use ChainId from @uniswap/sdk-core. Use the InterfaceChainId from universe/uniswap.",
+          },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {
             selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']`,

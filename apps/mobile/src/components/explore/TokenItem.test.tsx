@@ -3,8 +3,8 @@ import { TokenItem } from 'src/components/explore/TokenItem'
 import * as exploreHooks from 'src/components/explore/hooks'
 import { TOKEN_ITEM_DATA, tokenItemData } from 'src/test/fixtures'
 import { fireEvent, render, within } from 'src/test/test-utils'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 describe('TokenItem', () => {

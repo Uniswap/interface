@@ -90,15 +90,7 @@ import {
   useShowExtensionPromoBanner,
 } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import {
-  useActiveAccountWithThrow,
-  useNonPendingSignerAccounts,
-} from 'wallet/src/features/wallet/hooks'
-import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
@@ -119,15 +111,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
 
-  // Ensure if a user is here and has completed onboarding, they have at least one non-pending signer account
-  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-  const nonPendingSignerAccounts = useNonPendingSignerAccounts()
-  useEffect(() => {
-    if (finishedOnboarding && activeAccount.pending && nonPendingSignerAccounts.length === 0) {
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
-    }
-  }, [activeAccount, dispatch, finishedOnboarding, nonPendingSignerAccounts.length])
-
   const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
 
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
@@ -141,8 +124,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   const lastBalancesReporter = useLastBalancesReporter()
   useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
-
-  const listBottomPadding = media.short ? spacing.spacing36 : spacing.spacing12
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
@@ -476,45 +457,34 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
+  const paddingTop = headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop
+  const paddingBottom =
+    insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
+
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
-      paddingBottom:
-        insets.bottom +
-        SWAP_BUTTON_HEIGHT +
-        TAB_STYLES.tabListInner.paddingBottom +
-        listBottomPadding,
-    }),
-    [headerHeight, insets.bottom, listBottomPadding]
+    () => ({ paddingTop, paddingBottom }),
+    [paddingTop, paddingBottom]
   )
 
-  const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
+  const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
-      paddingBottom: insets.bottom,
+      minHeight: dimensions.fullHeight - (paddingTop + paddingBottom),
+      paddingTop: spacing.none,
+      paddingLeft: media.short ? spacing.none : spacing.spacing12,
+      paddingRight: media.short ? spacing.none : spacing.spacing12,
     }),
-    [headerHeight, insets.bottom]
-  )
-
-  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({
-      paddingTop: media.short ? spacing.none : spacing.spacing60,
-      paddingBottom: insets.bottom,
-      paddingHorizontal: media.short ? spacing.spacing12 : spacing.spacing48,
-    }),
-    [insets.bottom, media.short]
+    [dimensions.fullHeight, media.short, paddingBottom, paddingTop]
   )
 
   const sharedProps = useMemo<TabContentProps>(
     () => ({
-      loadingContainerStyle,
-      emptyContainerStyle,
       contentContainerStyle,
+      emptyComponentStyle,
       onMomentumScrollEnd: sync,
       onScrollEndDrag: sync,
       scrollEventThrottle: TAB_VIEW_SCROLL_THROTTLE,
     }),
-    [contentContainerStyle, emptyContainerStyle, loadingContainerStyle, sync]
+    [contentContainerStyle, emptyComponentStyle, sync]
   )
 
   const tabBarStyle = useMemo<StyleProp<ViewStyle>>(

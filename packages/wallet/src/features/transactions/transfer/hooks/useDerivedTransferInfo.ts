@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
 import {
@@ -27,7 +27,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   } = state
 
   const activeAccount = useActiveAccount()
-  const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
+  const chainId = tradeableAsset?.chainId ?? UniverseChainId.Mainnet
 
   const currencyInInfo = useCurrencyInfo(
     tradeableAsset?.type === AssetType.Currency
@@ -57,7 +57,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   )
 
   const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(
-    chainId ?? ChainId.Mainnet,
+    chainId ?? UniverseChainId.Mainnet,
     activeAccount?.address
   )
 

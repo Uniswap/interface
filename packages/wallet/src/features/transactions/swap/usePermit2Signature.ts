@@ -10,7 +10,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
 import { BigNumber, providers, TypedDataField } from 'ethers'
 import { useCallback } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { currentTimeInSeconds, inXMinutesUnix } from 'utilities/src/time/time'
@@ -55,7 +55,7 @@ async function getPermit2PermitSignature(
   signerManager: SignerManager,
   account: Account,
   tokenAddress: string,
-  chainId: ChainId,
+  chainId: WalletChainId,
   tokenInAmount: string
 ): Promise<PermitSignatureInfo | undefined> {
   try {
@@ -119,7 +119,7 @@ export function usePermit2Signature(
   const signerManager = useWalletSigners()
   const account = useActiveAccountWithThrow()
   const currencyIn = currencyInAmount?.currency
-  const provider = useProvider(currencyIn?.chainId ?? ChainId.Mainnet)
+  const provider = useProvider(currencyIn?.chainId ?? UniverseChainId.Mainnet)
 
   const permitSignatureFetcher = useCallback(() => {
     if (!provider || !currencyIn || currencyIn.isNative || skip) {
@@ -151,7 +151,7 @@ export function usePermit2SignatureWithData(
   const signerManager = useWalletSigners()
   const account = useActiveAccountWithThrow()
   const currencyIn = currencyInAmount?.currency
-  const provider = useProvider(currencyIn?.chainId ?? ChainId.Mainnet)
+  const provider = useProvider(currencyIn?.chainId ?? UniverseChainId.Mainnet)
 
   const { domain, types, values } = permitData || {}
 

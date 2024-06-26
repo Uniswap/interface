@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
@@ -15,6 +14,7 @@ import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Contents = styled.div`
@@ -172,19 +172,19 @@ const primary = '#2ABDFF'
 
 const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
-    chainId: ChainId.MAINNET,
+    chainId: UniverseChainId.Mainnet,
     address: 'ETH',
   },
   {
-    chainId: ChainId.BASE,
+    chainId: UniverseChainId.Base,
     address: USDC_BASE.address,
   },
   {
-    chainId: ChainId.MAINNET,
-    address: UNI[ChainId.MAINNET].address,
+    chainId: UniverseChainId.Mainnet,
+    address: UNI[UniverseChainId.Mainnet].address,
   },
   {
-    chainId: ChainId.MAINNET,
+    chainId: UniverseChainId.Mainnet,
     address: LDO.address,
   },
 ]

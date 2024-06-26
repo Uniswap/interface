@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'typed-redux-saga'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
@@ -128,7 +128,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
 // then suppress the approve notification
 function* suppressApproveNotification(
   address: Address,
-  chainId: ChainId,
+  chainId: WalletChainId,
   approveAddedTime: number
 ) {
   const transactions = (yield* appSelect(selectTransactions))?.[address]?.[chainId]

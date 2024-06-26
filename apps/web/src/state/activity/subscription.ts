@@ -1,4 +1,4 @@
-import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCallback, useEffect, useRef } from 'react'
@@ -14,6 +14,7 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
   const onOrderActivity = useOnOrderActivity(onActivityUpdate)
@@ -56,7 +57,7 @@ function useOnOrderActivity(onActivityUpdate: OnActivityUpdate) {
 
 function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
   // Updates should only trigger from the AssetActivity subscription, so the pending transactions are behind a ref.
-  const pendingTransactions = useRef<[TransactionDetails, ChainId][]>()
+  const pendingTransactions = useRef<[TransactionDetails, InterfaceChainId][]>()
   pendingTransactions.current = useMultichainTransactions()
 
   return useCallback(

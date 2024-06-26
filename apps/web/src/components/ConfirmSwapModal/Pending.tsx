@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import {
   AnimatedEntranceConfirmationIcon,
   AnimatedEntranceSubmittedIcon,
@@ -26,6 +25,7 @@ import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Container = styled(ColumnCenter)`
@@ -124,8 +124,8 @@ export function Pending({
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
-  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
-  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
+  const showSubmitted = swapPending && !swapConfirmed && chainId === UniverseChainId.Mainnet
+  const showSuccess = swapConfirmed || (chainId !== UniverseChainId.Mainnet && swapPending)
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
@@ -139,7 +139,7 @@ export function Pending({
     } else {
       return
     }
-    return getExplorerLink(chainId || ChainId.MAINNET, txHash, ExplorerDataType.TRANSACTION)
+    return getExplorerLink(chainId || UniverseChainId.Mainnet, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])
 
   // Handle special statuses for UniswapX orders

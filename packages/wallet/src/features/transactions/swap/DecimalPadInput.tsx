@@ -7,8 +7,8 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
-import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { DecimalPad, KeyAction, KeyLabel } from 'wallet/src/features/transactions/swap/DecimalPad'
 
 type DisableKeyCondition = (value: string) => boolean

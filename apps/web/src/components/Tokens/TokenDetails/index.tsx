@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -31,6 +31,7 @@ import styled from 'styled-components'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
@@ -87,7 +88,7 @@ function useSwapInitialInputCurrency() {
 function TDPSwapComponent() {
   const { address, currency, currencyChain, warning } = useTDPContext()
   const account = useAccount()
-  const appChainId = account.chainId ?? ChainId.MAINNET
+  const appChainId = account.chainId ?? UniverseChainId.Mainnet
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(

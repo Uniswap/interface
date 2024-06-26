@@ -1,7 +1,7 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useMemo } from 'react'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // eslint-disable-next-line import/no-unused-modules -- shim is used via a build alias in craco.config.cjs
 export function useWeb3React() {
@@ -11,7 +11,7 @@ export function useWeb3React() {
   return useMemo(
     () => ({
       account: account.address,
-      chainId: account.chainId ?? ChainId.MAINNET,
+      chainId: account.chainId ?? UniverseChainId.Mainnet,
       provider,
     }),
     [account.address, account.chainId, provider]

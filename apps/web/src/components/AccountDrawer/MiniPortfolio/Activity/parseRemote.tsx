@@ -1,4 +1,4 @@
-import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -30,6 +30,7 @@ import {
   TransactionDetailsPartsFragment,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -52,7 +53,7 @@ const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
-  [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
+  [UNI_ADDRESSES[UniverseChainId.Mainnet].toLowerCase()]: {
     title: t('common.uniGovernance'),
     descriptor: t('common.contractInteraction'),
     logos: [UNI_IMG],

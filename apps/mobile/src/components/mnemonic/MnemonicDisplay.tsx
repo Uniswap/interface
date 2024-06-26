@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, StyleSheet, ViewProps, requireNativeComponent } from 'react-native'
+import { useNativeComponentKey } from 'src/app/hooks'
 import { Flex, HiddenFromScreenReaders, Text, flexStyles } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { isAndroid } from 'utilities/src/platform'
 
 type HeightMeasuredEvent = {
   height: number
@@ -23,10 +25,15 @@ type MnemonicDisplayProps = ViewProps & Pick<NativeMnemonicDisplayProps, 'mnemon
 export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
   const { t } = useTranslation()
   const [height, setHeight] = useState(0)
+  // Android only (ensures that Jetpack Compose mounts the view again
+  // after navigating back in the stack navigator)
+  // (see https://github.com/react-native-community/discussions-and-proposals/issues/446#issuecomment-2041254054)
+  const { key } = useNativeComponentKey(isAndroid)
 
   return (
     <HiddenFromScreenReaders style={flexStyles.fill}>
       <NativeMnemonicDisplay
+        key={key}
         copiedText={t('common.button.copied')}
         copyText={t('common.button.copy')}
         style={[styles.mnemonicDisplay, { maxHeight: height }]}
