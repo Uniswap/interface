@@ -12,7 +12,9 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
-import { getApproveInfo, getWrapInfo } from 'state/routing/gas'
+import { logger } from 'utilities/src/logger/logger'
+import { toSlippagePercent } from 'utils/slippage'
+import { getApproveInfo, getWrapInfo } from './gas'
 import {
   ClassicQuoteData,
   ClassicTrade,
@@ -42,9 +44,7 @@ import {
   V2PoolInRoute,
   V3PoolInRoute,
   isClassicQuoteResponse,
-} from 'state/routing/types'
-import { logger } from 'utilities/src/logger/logger'
-import { toSlippagePercent } from 'utils/slippage'
+} from './types'
 
 interface RouteResult {
   routev3: V3Route<Currency, Currency> | null
@@ -89,7 +89,12 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
       }
     })
   } catch (e) {
-    logger.warn('routing/utils', 'computeRoutes', 'Failed to compute routes', { error: e })
+    logger.error(e, {
+      tags: {
+        file: 'routing/utils',
+        function: 'computeRoutes',
+      },
+    })
     return
   }
 }

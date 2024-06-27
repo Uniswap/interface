@@ -1,4 +1,4 @@
-import type { Insets } from 'react-native'
+import { Insets } from 'react-native'
 import { StackProps } from 'tamagui'
 import { HapticFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
 

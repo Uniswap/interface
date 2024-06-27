@@ -73,7 +73,11 @@ describe('TraceUserProperties', () => {
     })
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
-    mockFn(walletHooks, 'useSignerAccounts', [signerAccount1, signerAccount2, signerAccount3])
+    mockFn(walletHooks, 'useNonPendingSignerAccounts', [
+      signerAccount1,
+      signerAccount2,
+      signerAccount3,
+    ])
     mockFn(walletHooks, 'useHideSpamTokensSetting', true)
     mockFn(walletHooks, 'useHideSmallBalancesSetting', false)
     mockFn(biometricHooks, 'useBiometricAppSettings', {
@@ -159,7 +163,7 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useActiveAccount', null)
     mockFn(walletHooks, 'useViewOnlyAccounts', [])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
-    mockFn(walletHooks, 'useSignerAccounts', [])
+    mockFn(walletHooks, 'useNonPendingSignerAccounts', [])
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: false,
       requiredForTransactions: false,

@@ -3,8 +3,6 @@
  * Modifications are called out with comments.
  */
 
-import { StackedAreaData } from 'components/Charts/StackedLineChart/stacked-area-series/data'
-import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   ICustomSeriesPaneRenderer,
@@ -13,6 +11,9 @@ import {
   Range,
   Time,
 } from 'lightweight-charts'
+
+import { StackedAreaData } from './data'
+import { StackedAreaSeriesOptions } from './options'
 
 interface Position {
   x: number

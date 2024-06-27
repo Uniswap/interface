@@ -1,6 +1,7 @@
 import { call, fork, join } from 'typed-redux-saga'
-import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
 import { getProviderManager } from 'wallet/src/features/wallet/context'
 
@@ -9,7 +10,7 @@ export function* initProviders() {
   logger.debug('providerSaga', 'initProviders', 'Initializing providers')
   const manager = yield* call(getProviderManager)
   const initTasks = []
-  for (const chainId of WALLET_SUPPORTED_CHAIN_IDS) {
+  for (const chainId of ALL_SUPPORTED_CHAIN_IDS) {
     const task = yield* fork(initProvider, chainId, manager)
     initTasks.push(task)
   }
@@ -18,7 +19,7 @@ export function* initProviders() {
   logger.debug('providerSaga', 'initProviders', 'Providers ready')
 }
 
-function* initProvider(chainId: WalletChainId, manager: ProviderManager) {
+function* initProvider(chainId: ChainId, manager: ProviderManager) {
   try {
     logger.debug('providerSaga', 'initProvider', 'Creating a provider for:', chainId)
     yield* call([manager, manager.createProvider], chainId)

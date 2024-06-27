@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { GqlResult } from 'uniswap/src/data/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   SectionHeader,
   TokenSelectorList,
@@ -39,7 +39,7 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
 }
 
 function useTokenSectionsForSearchResults(
-  chainFilter: UniverseChainId | null,
+  chainFilter: ChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean
 ): GqlResult<TokenSection[]> {
@@ -117,7 +117,7 @@ function _TokenSelectorSearchResultsList({
   isBalancesOnlySearch,
 }: {
   onSelectCurrency: OnSelectCurrency
-  chainFilter: UniverseChainId | null
+  chainFilter: ChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
   isBalancesOnlySearch: boolean

@@ -54,9 +54,9 @@ export function ExternalProfileScreen({
     [insets.bottom]
   )
 
-  const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
+  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: spacing.spacing48,
+      paddingTop: spacing.spacing60,
       paddingHorizontal: spacing.spacing36,
       paddingBottom: insets.bottom,
     }),
@@ -67,9 +67,9 @@ export function ExternalProfileScreen({
     () => ({
       contentContainerStyle: containerStyle,
       loadingContainerStyle: containerStyle,
-      emptyComponentStyle,
+      emptyContainerStyle,
     }),
-    [containerStyle, emptyComponentStyle]
+    [containerStyle, emptyContainerStyle]
   )
 
   const renderTab = useCallback(

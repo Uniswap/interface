@@ -1,4 +1,4 @@
-import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
+import { getCountryFlagSvgUrl } from './utils'
 
 describe('getCountryFlagSvgUrl', () => {
   test('should return the correct SVG URL for a given country code', () => {

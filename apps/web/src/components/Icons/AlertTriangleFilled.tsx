@@ -1,5 +1,6 @@
-import { StyledSVG } from 'components/Icons/shared'
 import { useTheme } from 'styled-components'
+
+import { StyledSVG } from './shared'
 
 export default function AlertTriangleFilled({ size = '16px', ...rest }: { size?: string; [k: string]: any }) {
   const theme = useTheme()

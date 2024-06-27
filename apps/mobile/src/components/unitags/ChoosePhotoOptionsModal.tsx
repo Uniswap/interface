@@ -5,8 +5,8 @@ import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Camera, Photo, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 type ChoosePhotoOptionsProps = {
   address: Maybe<Address>

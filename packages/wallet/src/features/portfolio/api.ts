@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from 
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
@@ -16,7 +16,7 @@ export const STUB_ONCHAIN_BALANCES_ENDPOINT = '/onchain-balances'
 
 export type BalanceLookupParams = {
   currencyAddress?: Address
-  chainId?: WalletChainId
+  chainId?: ChainId
   currencyIsNative?: boolean
   accountAddress?: string
 }
@@ -83,7 +83,7 @@ export function useOnChainCurrencyBalance(
 }
 
 export function useOnChainNativeCurrencyBalance(
-  chain: WalletChainId,
+  chain: ChainId,
   accountAddress?: Address
 ): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
   const currency = NativeCurrency.onChain(chain)

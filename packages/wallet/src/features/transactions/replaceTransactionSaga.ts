@@ -6,11 +6,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { addTransaction, deleteTransaction } from 'wallet/src/features/transactions/slice'
-import {
-  ClassicTransactionDetails,
-  TransactionDetails,
-  TransactionStatus,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import {
   createTransactionId,
   getSerializableTransactionRequest,
@@ -21,7 +17,7 @@ import { appSelect } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export function* attemptReplaceTransaction(
-  transaction: ClassicTransactionDetails,
+  transaction: TransactionDetails,
   newTxRequest: providers.TransactionRequest,
   isCancellation = false
 ) {

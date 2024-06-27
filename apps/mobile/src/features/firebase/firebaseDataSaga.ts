@@ -23,8 +23,9 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
+  selectNonPendingAccounts,
 } from 'wallet/src/features/wallet/selectors'
-import { addAccounts, editAccount } from 'wallet/src/features/wallet/slice'
+import { editAccount, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
 
 interface AccountMetadata {
   name?: string
@@ -53,12 +54,12 @@ export function* firebaseDataWatcher() {
   // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
   yield* takeLatest(setCurrentLanguage, syncLanguageWithFirebase)
-  yield* takeEvery(addAccounts, syncAccountWithFirebase)
+  yield* takeEvery(setAccountsNonPending, syncAccountWithFirebase)
 }
 
 function* syncNotificationsWithFirebase() {
   try {
-    const accounts = yield* select(selectAccounts)
+    const accounts = yield* select(selectNonPendingAccounts)
     const addresses = Object.keys(accounts)
 
     for (const address of addresses) {
@@ -82,16 +83,15 @@ function* syncNotificationsWithFirebase() {
 }
 
 function* syncLanguageWithFirebase(actionData: ReturnType<typeof setCurrentLanguage>) {
-  const accounts = yield* select(selectAccounts)
+  const accounts = yield* select(selectNonPendingAccounts)
   const addresses = Object.keys(accounts)
 
   yield* call(updateFirebaseLanguage, addresses, actionData.payload)
 }
 
-function* syncAccountWithFirebase(actionData: ReturnType<typeof addAccounts>) {
+function* syncAccountWithFirebase(actionData: ReturnType<typeof setAccountsNonPending>) {
   const currentLanguage = yield* select(selectCurrentLanguage)
-  const addedAccountsAddresses = actionData.payload.map((account) => account.address)
-  yield* call(updateFirebaseLanguage, addedAccountsAddresses, currentLanguage)
+  yield* call(updateFirebaseLanguage, actionData.payload, currentLanguage)
 }
 
 function* updateFirebaseLanguage(addresses: Address[], language: Language) {

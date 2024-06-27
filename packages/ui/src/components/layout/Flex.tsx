@@ -1,4 +1,5 @@
-import type { Insets } from 'react-native'
+import { Insets } from 'react-native'
+import Animated from 'react-native-reanimated'
 import { SizeTokens, View, ViewProps, styled } from 'tamagui'
 import {
   animationsEnter,
@@ -79,3 +80,13 @@ export const Flex = styled(View, {
     animateEnterExit: animationsEnterExit,
   } as const,
 })
+
+/**
+ * @deprecated  Prefer <Flex animation="" />
+ *
+ *    See: https://tamagui.dev/docs/core/animations
+ *
+ * TODO(MOB-1948): Remove this
+ */
+export const AnimatedFlex = Animated.createAnimatedComponent(Flex)
+AnimatedFlex.displayName = 'AnimatedFlex'

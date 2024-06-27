@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'
@@ -8,22 +9,21 @@ import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 const LOGO_SIZE = 20
 
-const Container = styled.button<{ $disabled: boolean }>`
+const Container = styled.button<{ disabled: boolean }>`
   align-items: center;
   background: none;
   border: none;
   border-radius: 12px;
   color: ${({ theme }) => theme.neutral1};
-  cursor: ${({ $disabled }) => ($disabled ? 'auto' : 'pointer')};
+  cursor: ${({ disabled }) => (disabled ? 'auto' : 'pointer')};
   display: grid;
   grid-template-columns: min-content 1fr min-content;
   justify-content: space-between;
   line-height: 20px;
-  opacity: ${({ $disabled }) => ($disabled ? 0.6 : 1)};
+  opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   padding: 10px 8px;
   text-align: left;
   outline: none;
@@ -32,7 +32,7 @@ const Container = styled.button<{ $disabled: boolean }>`
   width: 100%;
 
   &:hover {
-    background-color: ${({ $disabled, theme }) => ($disabled ? 'none' : theme.surface3)};
+    background-color: ${({ disabled, theme }) => (disabled ? 'none' : theme.surface3)};
   }
 `
 const Label = styled.div`
@@ -57,7 +57,7 @@ const CaptionText = styled.div`
 
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: InterfaceChainId
+  targetChain: ChainId
   onSelectChain: (targetChain: number) => void
   isPending: boolean
 }
@@ -76,7 +76,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
     <Trace logPress section={SectionName.ChainSelector} element={chainInfo?.elementName}>
       <Container
         data-testid={`${label}-selector`}
-        $disabled={!!disabled}
+        disabled={!!disabled}
         onClick={() => {
           if (!disabled) {
             onSelectChain(targetChain)

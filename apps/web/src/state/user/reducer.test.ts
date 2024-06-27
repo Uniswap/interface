@@ -1,5 +1,6 @@
 import { createStore, Store } from 'redux'
 import { RouterPreference } from 'state/routing/types'
+
 import reducer, {
   addSerializedPair,
   addSerializedToken,
@@ -10,7 +11,7 @@ import reducer, {
   updateUserRouterPreference,
   updateUserSlippageTolerance,
   UserState,
-} from 'state/user/reducer'
+} from './reducer'
 
 function buildSerializedPair(token0Address: string, token1Address: string, chainId: number) {
   return {

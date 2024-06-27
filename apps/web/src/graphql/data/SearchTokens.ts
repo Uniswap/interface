@@ -80,7 +80,6 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
       searchQuery: searchQuery ?? '',
     },
     skip: !searchQuery,
-    errorPolicy: 'all',
   })
 
   const sortedTokens = useMemo(() => {

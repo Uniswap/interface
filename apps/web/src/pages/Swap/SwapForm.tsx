@@ -21,7 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
-import { useIsSupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -35,8 +35,6 @@ import useWrapCallback, { WrapErrorText } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { getIsReviewableQuote } from 'pages/Swap'
-import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -49,7 +47,6 @@ import { CurrencyState } from 'state/swap/types'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -63,6 +60,9 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+
+import { getIsReviewableQuote } from '.'
+import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,
@@ -612,7 +612,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               <Trans
                 i18nKey="common.connectingToChain"
                 values={{
-                  chainName: switchingChainIsSupported ? UNIVERSE_CHAIN_INFO[targetChain]?.label : '',
+                  chainName: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '',
                 }}
               />
             </ButtonPrimary>
@@ -643,10 +643,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }
               }}
             >
-              <Trans
-                i18nKey="common.connectToChain.button"
-                values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : '' }}
-              />
+              Connect to {isSupportedChain ? CHAIN_INFO[chainId].label : ''}
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary

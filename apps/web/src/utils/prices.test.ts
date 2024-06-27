@@ -11,7 +11,8 @@ import {
   TEST_TOKEN_3,
   toCurrencyAmount,
 } from 'test-utils/constants'
-import { computeRealizedLPFeeAmount, warningSeverity } from 'utils/prices'
+
+import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
 
 const pair12 = new Pair(
   CurrencyAmount.fromRawAmount(TEST_TOKEN_1, JSBI.BigInt(10000)),

@@ -4,14 +4,11 @@
 import React, { createContext, useContext, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
-import {
-  FORQuote,
-  FORServiceProvider,
-  FiatCurrencyInfo,
-  FiatOnRampCurrency,
-} from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
+import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -65,7 +62,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(
-    buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))
+    buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
   )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>({
     currencyInfo: ethCurrencyInfo,

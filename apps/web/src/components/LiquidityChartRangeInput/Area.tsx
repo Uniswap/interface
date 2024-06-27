@@ -1,7 +1,8 @@
-import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
 import { area, curveStepAfter, ScaleLinear } from 'd3'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+
+import { ChartEntry } from './types'
 
 const Path = styled.path<{ fill?: string }>`
   opacity: 0.5;

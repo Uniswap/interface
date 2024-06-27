@@ -1,4 +1,4 @@
-import { getTheme } from 'theme/index'
+import { getTheme } from './index'
 
 type InferredTheme = ReturnType<typeof getTheme>
 

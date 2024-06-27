@@ -1,6 +1,6 @@
 import { TokenItemData } from 'src/components/explore/TokenItem'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { token } from 'wallet/src/test/fixtures'
 import { createFixture } from 'wallet/src/test/utils'
@@ -18,7 +18,7 @@ export const tokenItemData = createFixture<TokenItemData, TokenItemDataOptions>(
   return {
     name: t?.name ?? defaultToken.name,
     logoUrl: t?.project?.logo?.url ?? defaultToken.project.logo.url,
-    chainId: fromGraphQLChain(chain) ?? UniverseChainId.Mainnet,
+    chainId: fromGraphQLChain(chain) ?? ChainId.Mainnet,
     address: t?.address ?? defaultToken.address,
     symbol: t?.symbol ?? defaultToken.symbol,
   }

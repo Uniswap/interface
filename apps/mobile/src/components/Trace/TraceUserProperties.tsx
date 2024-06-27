@@ -22,7 +22,7 @@ import {
   useActiveAccount,
   useHideSmallBalancesSetting,
   useHideSpamTokensSetting,
-  useSignerAccounts,
+  useNonPendingSignerAccounts,
   useSwapProtectionSetting,
   useViewOnlyAccounts,
 } from 'wallet/src/features/wallet/hooks'
@@ -32,7 +32,7 @@ export function TraceUserProperties(): null {
   const isDarkMode = useIsDarkMode()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const activeAccount = useActiveAccount()
-  const signerAccounts = useSignerAccounts()
+  const signerAccounts = useNonPendingSignerAccounts()
   const biometricsAppSettingsState = useBiometricAppSettings()
   const { touchId, faceId } = useDeviceSupportsBiometricAuth()
   const swapProtectionSetting = useSwapProtectionSetting()

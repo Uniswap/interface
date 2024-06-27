@@ -1,6 +1,7 @@
-import { ListingMarket, WalletAsset } from 'nft/types'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+
+import { ListingMarket, WalletAsset } from '../types'
 
 interface SellAssetState {
   sellAssets: WalletAsset[]

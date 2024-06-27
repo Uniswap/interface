@@ -1,5 +1,6 @@
-import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { render, screen } from 'test-utils/render'
+
+import { UnavailableCollectionPage } from './UnavailableCollectionPage'
 
 describe('Nonexistent Collection', () => {
   it('displays informative message', () => {

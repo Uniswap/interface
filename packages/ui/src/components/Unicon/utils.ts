@@ -1,5 +1,5 @@
 import { isAddress, keccak256, toUtf8Bytes } from 'ethers/lib/utils'
-import { UNICON_COLORS } from 'ui/src/components/Unicon/Colors'
+import { UNICON_COLORS } from './Colors'
 
 export const getUniconsDeterministicHash = (address: string): bigint => {
   if (!isValidEthAddress(address)) {
@@ -22,7 +22,7 @@ export const isValidEthAddress = (address: string): boolean => {
 
 export const getUniconColors = (
   activeAddress: string,
-  isDark: boolean
+  isDark: boolean = false
 ): {
   color: string
 } => {

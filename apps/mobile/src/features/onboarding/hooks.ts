@@ -5,7 +5,6 @@ import { MobileAppsFlyerEvents } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
@@ -33,9 +32,7 @@ export function useCompleteOnboardingCallback({
 
     // Send appsflyer event for mobile attribution
     if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
-      sendAppsFlyerEvent(MobileAppsFlyerEvents.OnboardingCompleted, { importType }).catch((error) =>
-        logger.debug('hooks', 'useCompleteOnboardingCallback', error)
-      )
+      await sendAppsFlyerEvent(MobileAppsFlyerEvents.OnboardingCompleted, { importType })
     }
 
     // Log TOS acceptance for new wallets after they are activated

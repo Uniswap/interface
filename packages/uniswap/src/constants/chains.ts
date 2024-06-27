@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { CurrencyAmount, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import {
   ARBITRUM_LOGO,
   AVALANCHE_LOGO,
@@ -11,9 +11,18 @@ import {
   MUMBAI_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-  ZKSYNC_LOGO,
   ZORA_LOGO,
 } from 'ui/src/assets'
+import {
+  ArbiscanLogoDark,
+  ArbiscanLogoLight,
+  EtherscanLogoDark,
+  EtherscanLogoLight,
+  OpEtherscanLogoDark,
+  OpEtherscanLogoLight,
+  PolygonscanLogoDark,
+  PolygonscanLogoLight,
+} from 'ui/src/components/logos'
 import { config } from 'uniswap/src/config'
 import {
   CUSD_CELO,
@@ -37,7 +46,6 @@ import {
   USDC_POLYGON,
   USDC_POLYGON_MUMBAI,
   USDC_SEPOLIA,
-  USDC_ZKSYNC,
   USDC_ZORA,
   USDT,
   USDT_BSC,
@@ -70,7 +78,6 @@ import {
   polygon,
   polygonMumbai,
   sepolia,
-  zkSync,
   zora,
 } from 'wagmi/chains'
 
@@ -80,48 +87,10 @@ export const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 10, minWait: 250, maxWai
 
 export const DEFAULT_MS_BEFORE_WARNING = ONE_MINUTE_MS * 10
 
-export const ETHEREUM_CHAIN_IDS = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Goerli,
-  UniverseChainId.Sepolia,
-] as const
-
-type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
-
-export const L2_CHAIN_IDS = [
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.ArbitrumGoerli,
-  UniverseChainId.Avalanche,
-  UniverseChainId.Base,
-  UniverseChainId.Celo,
-  UniverseChainId.CeloAlfajores,
-  UniverseChainId.Optimism,
-  UniverseChainId.OptimismGoerli,
-  UniverseChainId.Polygon,
-  UniverseChainId.PolygonMumbai,
-  UniverseChainId.Bnb,
-  UniverseChainId.Blast,
-  UniverseChainId.Zora,
-  UniverseChainId.Zksync,
-] as const
-
-export type L2ChainId = (typeof L2_CHAIN_IDS)[number]
-
-export type L1ChainInfo = UniverseChainInfo
-export interface L2ChainInfo extends L1ChainInfo {
-  readonly bridge: string
-  readonly statusPage?: string
-}
-
-export type ChainInfo = {
-  readonly [chainId in L2ChainId]: L2ChainInfo
-} & { readonly [chainId in EthereumChainId]: L1ChainInfo }
-
-export const UNIVERSE_CHAIN_INFO: ChainInfo = {
+export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Mainnet]: {
     ...mainnet,
-    id: UniverseChainId.Mainnet,
-    sdkId: UniswapSDKChainId.MAINNET,
+    id: UniverseChainId.MAINNET,
     assetRepoNetworkName: 'ethereum',
     backendChain: {
       chain: BackendChainId.Ethereum as InterfaceGqlChain,
@@ -138,6 +107,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://etherscan.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -181,10 +152,9 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
     },
   } as const satisfies UniverseChainInfo,
-  [UniverseChainId.Sepolia]: {
+  [UniverseChainId.SEPOLIA]: {
     ...sepolia,
-    id: UniverseChainId.Sepolia,
-    sdkId: UniswapSDKChainId.SEPOLIA,
+    id: UniverseChainId.SEPOLIA,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.EthereumSepolia as InterfaceGqlChain,
@@ -201,6 +171,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://sepolia.etherscan.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -245,11 +217,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9',
     },
-  } as const satisfies L1ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Goerli]: {
     ...goerli,
-    id: UniverseChainId.Goerli,
-    sdkId: UniswapSDKChainId.GOERLI,
+    id: UniverseChainId.GOERLI,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.EthereumGoerli as InterfaceGqlChain,
@@ -266,6 +237,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://goerli.etherscan.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -306,11 +279,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     },
-  } as const satisfies L1ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.ArbitrumOne]: {
     ...arbitrum,
-    id: UniverseChainId.ArbitrumOne,
-    sdkId: UniswapSDKChainId.ARBITRUM_ONE,
+    id: UniverseChainId.ARBITRUM_ONE,
     assetRepoNetworkName: 'arbitrum',
     backendChain: {
       chain: BackendChainId.Arbitrum as InterfaceGqlChain,
@@ -327,6 +299,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Arbiscan',
       url: 'https://arbiscan.io/',
+      logoLight: ArbiscanLogoLight,
+      logoDark: ArbiscanLogoDark,
     },
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
@@ -366,11 +340,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.ArbitrumGoerli]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.ARBITRUM_GOERLI]: {
     ...arbitrumGoerli,
-    id: UniverseChainId.ArbitrumGoerli,
-    sdkId: UniswapSDKChainId.ARBITRUM_GOERLI,
+    id: UniverseChainId.ARBITRUM_GOERLI,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.Arbitrum as InterfaceGqlChain,
@@ -387,6 +360,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Arbiscan',
       url: 'https://goerli.arbiscan.io/',
+      logoLight: ArbiscanLogoLight,
+      logoDark: ArbiscanLogoDark,
     },
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
@@ -420,11 +395,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Optimism]: {
     ...optimism,
-    id: UniverseChainId.Optimism,
-    sdkId: UniswapSDKChainId.OPTIMISM,
+    id: UniverseChainId.OPTIMISM,
     assetRepoNetworkName: 'optimism',
     backendChain: {
       chain: BackendChainId.Optimism as InterfaceGqlChain,
@@ -441,6 +415,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'OP Etherscan',
       url: 'https://optimistic.etherscan.io/',
+      logoLight: OpEtherscanLogoLight,
+      logoDark: OpEtherscanLogoDark,
     },
     helpCenterUrl:
       'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
@@ -476,11 +452,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Base]: {
     ...base,
-    id: UniverseChainId.Base,
-    sdkId: UniswapSDKChainId.BASE,
+    id: UniverseChainId.BASE,
     backendChain: {
       chain: BackendChainId.Base as InterfaceGqlChain,
       backendSupported: true,
@@ -496,6 +471,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BaseScan',
       url: 'https://basescan.org/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/base',
@@ -531,11 +508,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.OptimismGoerli]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.OPTIMISM_GOERLI]: {
     ...optimismGoerli,
-    id: UniverseChainId.OptimismGoerli,
-    sdkId: UniswapSDKChainId.OPTIMISM_GOERLI,
+    id: UniverseChainId.OPTIMISM_GOERLI,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.Optimism as InterfaceGqlChain,
@@ -552,6 +528,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'OP Etherscan',
       url: 'https://goerli-optimism.etherscan.io/',
+      logoLight: OpEtherscanLogoLight,
+      logoDark: OpEtherscanLogoDark,
     },
     helpCenterUrl:
       'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
@@ -585,10 +563,9 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.Bnb]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.BNB]: {
     ...bsc,
-    sdkId: UniswapSDKChainId.BNB,
     assetRepoNetworkName: 'smartchain',
     backendChain: {
       chain: BackendChainId.Bnb as InterfaceGqlChain,
@@ -605,9 +582,11 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BscScan',
       url: 'https://bscscan.com/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
-    id: UniverseChainId.Bnb,
+    id: UniverseChainId.BNB,
     infoLink: 'https://app.uniswap.org/explore/tokens/bnb',
     infuraPrefix: undefined,
     interfaceName: 'bnb',
@@ -639,11 +618,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     },
-  } as const satisfies L1ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Polygon]: {
     ...polygon,
-    id: UniverseChainId.Polygon,
-    sdkId: UniswapSDKChainId.POLYGON,
+    id: UniverseChainId.POLYGON,
     assetRepoNetworkName: 'polygon',
     blockPerMainnetEpochForChainId: 5,
     backendChain: {
@@ -660,6 +638,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'PolygonScan',
       url: 'https://polygonscan.com/',
+      logoLight: PolygonscanLogoLight,
+      logoDark: PolygonscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
@@ -693,11 +673,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.PolygonMumbai]: {
     ...polygonMumbai,
-    id: UniverseChainId.PolygonMumbai,
-    sdkId: UniswapSDKChainId.POLYGON_MUMBAI,
+    id: UniverseChainId.POLYGON_MUMBAI,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.Polygon as InterfaceGqlChain,
@@ -714,6 +693,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'PolygonScan',
       url: 'https://mumbai.polygonscan.com/',
+      logoLight: PolygonscanLogoLight,
+      logoDark: PolygonscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
@@ -746,11 +727,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Blast]: {
     ...blast,
-    id: UniverseChainId.Blast,
-    sdkId: UniswapSDKChainId.BLAST,
+    id: UniverseChainId.BLAST,
     assetRepoNetworkName: 'blast',
     backendChain: {
       chain: BackendChainId.Blast as InterfaceGqlChain,
@@ -767,6 +747,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BlastScan',
       url: 'https://blastscan.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/blast',
@@ -799,15 +781,14 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x4300000000000000000000000000000000000004',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.Avalanche]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.AVALANCHE]: {
     ...avalanche,
-    id: UniverseChainId.Avalanche,
-    sdkId: UniswapSDKChainId.AVALANCHE,
+    id: UniverseChainId.AVALANCHE,
     assetRepoNetworkName: 'avalanchec',
     backendChain: {
       chain: BackendChainId.Avalanche as InterfaceGqlChain,
-      backendSupported: true,
+      backendSupported: false,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },
@@ -820,6 +801,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Snowtrace',
       url: 'https://snowtrace.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/avalanche',
@@ -848,11 +831,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.Celo]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.CELO]: {
     ...celo,
-    id: UniverseChainId.Celo,
-    sdkId: UniswapSDKChainId.CELO,
+    id: UniverseChainId.CELO,
     assetRepoNetworkName: 'celo',
     backendChain: {
       chain: BackendChainId.Celo as InterfaceGqlChain,
@@ -869,6 +851,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Celoscan',
       url: 'https://celoscan.io/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/celo',
@@ -902,11 +886,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.CeloAlfajores]: {
+  } as const satisfies UniverseChainInfo,
+  [UniverseChainId.CELO_ALFAJORES]: {
     ...celoAlfajores,
-    id: UniverseChainId.CeloAlfajores,
-    sdkId: UniswapSDKChainId.CELO_ALFAJORES,
+    id: UniverseChainId.CELO_ALFAJORES,
     assetRepoNetworkName: undefined,
     backendChain: {
       chain: BackendChainId.Celo as InterfaceGqlChain,
@@ -923,6 +906,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Celo Explorer',
       url: 'https://explorer.celo.org/alfajores/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/celo',
@@ -955,15 +940,13 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x2DEf4285787d58a2f811AF24755A8150622f4361',
     },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
   [UniverseChainId.Zora]: {
     ...zora,
-    id: UniverseChainId.Zora,
-    sdkId: UniswapSDKChainId.ZORA,
     assetRepoNetworkName: 'zora',
     backendChain: {
       chain: BackendChainId.Zora as InterfaceGqlChain,
-      backendSupported: false,
+      backendSupported: true,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },
@@ -976,6 +959,8 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Zora explorer',
       url: 'https://explorer.zora.energy/',
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/zora',
@@ -997,7 +982,7 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       appOnly: { http: [config.quicknodeZoraRpcUrl] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
-    stablecoins: [USDC_ZORA],
+    stablecoins: [],
     statusPage: undefined,
     supportsClientSideRouting: false,
     supportsGasEstimates: true,
@@ -1008,58 +993,5 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies L2ChainInfo,
-  [UniverseChainId.Zksync]: {
-    ...zkSync,
-    id: UniverseChainId.Zksync,
-    sdkId: UniswapSDKChainId.ZKSYNC,
-    assetRepoNetworkName: 'zksync',
-    backendChain: {
-      chain: BackendChainId.Zksync as InterfaceGqlChain,
-      backendSupported: false,
-      isSecondaryChain: false,
-      nativeTokenBackendAddress: undefined,
-    },
-    blockPerMainnetEpochForChainId: 12,
-    blockWaitMsBeforeWarning: 600000,
-    bridge: 'https://portal.zksync.io/bridge/',
-    chainPriority: 10,
-    docs: 'https://docs.zksync.io/',
-    elementName: ElementName.ChainZkSync,
-    explorer: {
-      name: 'ZKsync Explorer',
-      url: 'https://explorer.zksync.io/',
-    },
-    helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/zksync',
-    infuraPrefix: undefined,
-    interfaceName: 'zksync',
-    label: 'ZKsync',
-    logo: ZKSYNC_LOGO,
-    nativeCurrency: {
-      name: 'ZKsync ETH',
-      symbol: 'ETH',
-      decimals: 18,
-      address: DEFAULT_NATIVE_ADDRESS,
-    },
-    networkLayer: NetworkLayer.L2,
-    pendingTransactionsRetryOptions: undefined,
-    rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeZkSyncRpcUrl] },
-      default: { http: ['https://mainnet.era.zksync.io/'] },
-      appOnly: { http: [config.quicknodeZkSyncRpcUrl] },
-    },
-    urlParam: 'zksync',
-    statusPage: undefined,
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
-    stablecoins: [USDC_ZKSYNC],
-    supportsClientSideRouting: false,
-    supportsGasEstimates: false,
-    wrappedNativeCurrency: {
-      name: 'Wrapped Ether',
-      symbol: 'WETH',
-      decimals: 18,
-      address: '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
-    },
-  } as const satisfies L2ChainInfo,
+  } as const satisfies UniverseChainInfo,
 }

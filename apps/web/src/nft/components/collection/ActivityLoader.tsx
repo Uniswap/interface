@@ -1,8 +1,9 @@
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { HeaderRow } from 'nft/components/collection/Activity'
-import { eventRow } from 'nft/components/collection/Activity.css'
-import * as styles from 'nft/components/collection/ActivityLoader.css'
+
+import { HeaderRow } from './Activity'
+import { eventRow } from './Activity.css'
+import * as styles from './ActivityLoader.css'
 
 const LoadingSquare = () => {
   return <Box className={styles.loadingSquare} />

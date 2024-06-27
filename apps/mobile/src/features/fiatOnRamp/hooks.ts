@@ -4,12 +4,13 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
+import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useFiatOnRampAggregatorSupportedTokensQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORSupportedToken, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
@@ -17,7 +18,6 @@ import {
   useCurrencies,
 } from 'wallet/src/components/TokenSelector/hooks'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { fromMoonpayNetwork, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import {
   useFiatOnRampBuyQuoteQuery,
@@ -72,7 +72,7 @@ export function useFormatExactCurrencyAmount(
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
-  chainId: WalletChainId,
+  chainId: ChainId,
   initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>
 ): {
   externalTransactionId: string
@@ -86,7 +86,6 @@ export function useFiatOnRampTransactionCreator(
     // adds a dummy transaction detail for now
     // later, we will attempt to look up information for that id
     const transactionDetail: TransactionDetails = {
-      routing: Routing.CLASSIC,
       chainId,
       id: externalTransactionId.current,
       from: ownerAddress,
@@ -119,7 +118,7 @@ export function useMoonpayFiatOnRamp({
 }: {
   baseCurrencyAmount: string
   quoteCurrencyCode: string | undefined
-  quoteChainId: WalletChainId
+  quoteChainId: ChainId
 }): {
   eligible: boolean
   quoteAmount: number

@@ -3,7 +3,8 @@ import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { TickData } from 'graphql/data/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
-import computeSurroundingTicks from 'utils/computeSurroundingTicks'
+
+import computeSurroundingTicks from './computeSurroundingTicks'
 
 const getV3Tick = (tick: number, liquidityNet: number): TickData => ({
   tick,

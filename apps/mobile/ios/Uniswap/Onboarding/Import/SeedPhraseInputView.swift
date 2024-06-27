@@ -122,10 +122,7 @@ struct SeedPhraseInput: View {
             if (viewModel.input.isEmpty) {
               Text(viewModel.strings.inputPlaceholder)
                 .font(subtitleFont)
-                .padding(.horizontal, 6)
-                .padding(.vertical, 8)
                 .foregroundColor(Colors.neutral3)
-                .allowsHitTesting(false) // Prevents capturing touch events by the placeholder instead of input
             }
           }
           .fixedSize(horizontal: false, vertical: true)
@@ -151,14 +148,13 @@ struct SeedPhraseInput: View {
               if viewModel.input.isEmpty {
                 HStack {
                   Spacer()
-                  RelativeOffsetView(y: 0.5) {
-                    PasteButton(
-                      pasteButtonText: viewModel.strings.pasteButton,
-                      onPaste: handlePastePress
-                    )
-                  }
+                  PasteButton(
+                    pasteButtonText: viewModel.strings.pasteButton,
+                    onPaste: handlePastePress
+                  )
                   Spacer()
                 }
+                .relativeOffset(y: 0.5)
               }
             },
             alignment: .bottom
@@ -167,7 +163,7 @@ struct SeedPhraseInput: View {
         
         if (errorMessage() != nil) {
           HStack(spacing: 4) {
-            AlertTriangleIcon()
+            AlertTriangeIcon()
               .frame(width: 14, height: 14)
               .foregroundColor(Colors.statusCritical)
             Text(errorMessage() ?? "")

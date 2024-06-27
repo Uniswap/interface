@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@uniswap/sdk-core'
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
@@ -23,7 +23,6 @@ import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -76,7 +75,7 @@ function PoolDescription({
   token0: Token
   token1: Token
   feeTier: number
-  chainId: InterfaceChainId
+  chainId: ChainId
   protocolVersion: ProtocolVersion
 }) {
   const currencies = [gqlToCurrency(token0), gqlToCurrency(token1)]

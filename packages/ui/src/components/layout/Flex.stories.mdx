@@ -1,0 +1,46 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+import { Box } from './Box'
+import { Flex } from './Flex'
+import { Text } from '../text/Text'
+
+<Meta title="WIP/Layout/Flex" component={Flex} />
+
+export const Template = (args) => <Flex {...args} />
+
+# Flex
+
+`Flex` is ...
+
+<Canvas>
+  <Story
+    name="Flex"
+    args={{
+      children: [
+        <Box backgroundColor='$surface2' padding='$spacing16'>
+            <Text>Lorem ipsum dolor sit amet</Text>
+        </Box>,
+        <Box backgroundColor='$surface2' padding='$spacing16'>
+            <Text theme="secondary">Lorem ipsum dolor sit amet</Text>
+        </Box>,
+        <Flex row space='$spacing8' backgroundColor='$accent1' padding='$spacing16'>
+            <Box backgroundColor='$surface1' padding='$spacing16'>
+                <Text>Lorem ipsum dolor sit amet</Text>
+            </Box>
+            <Box backgroundColor='$surface2' padding='$spacing16'>
+                <Text>Lorem ipsum dolor sit amet</Text>
+            </Box>
+            <Box backgroundColor='$surface2' padding='$spacing16'>
+                <Text>Lorem ipsum dolor sit amet</Text>
+            </Box>
+        </Flex>
+        ],
+        borderRadius: '$rounded16',
+        padding: '$spacing16',
+        space: '$spacing16'
+    }}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Flex" />

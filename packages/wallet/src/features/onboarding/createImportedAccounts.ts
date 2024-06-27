@@ -5,8 +5,7 @@ import {
   BackupType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
-
-export const NUMBER_OF_WALLETS_TO_IMPORT = 10
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 
 export const createImportedAccounts = async (
   mnemonicId: string,

@@ -1,6 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Allowance } from 'hooks/usePermit2Allowance'
-import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { buildAllTradeRouteInputs } from 'nft/utils/tokenRoutes'
 import { useEffect } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -10,6 +9,8 @@ import {
   TokenTradeRoutesInput,
   TokenTradeType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
+import { useTokenInput } from './useTokenInput'
 
 export default function usePayWithAnyTokenSwap(
   trade?: InterfaceTrade | undefined,

@@ -1,8 +1,9 @@
 import searchIcon from 'assets/svg/search.svg'
-import { AutoColumn } from 'components/Column'
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
-import { RowBetween } from 'components/Row'
 import styled from 'styled-components'
+
+import { AutoColumn } from '../Column'
+import { RowBetween } from '../Row'
 
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;

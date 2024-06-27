@@ -1,11 +1,11 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { getChainFromChainUrlParam, isChainUrlParam } from 'constants/chains'
 import { manualChainOutageAtom, useOutageBanners } from 'featureFlags/flags/outageBanner'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export function Banners() {
@@ -18,7 +18,7 @@ export function Banners() {
   // Calculate the chainId for the current page's contextual chain (e.g. /tokens/ethereum or /tokens/arbitrum), if it exists.
   const pageChainId = useMemo(() => {
     const chainUrlParam = pathname.split('/').find(isChainUrlParam)
-    return chainUrlParam ? getChainFromChainUrlParam(chainUrlParam)?.id : UniverseChainId.Mainnet
+    return chainUrlParam ? getChainFromChainUrlParam(chainUrlParam)?.id : ChainId.MAINNET
   }, [pathname])
   const currentPageHasManualOutage = manualOutage?.chainId === pageChainId
 

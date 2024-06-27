@@ -42,7 +42,6 @@ export interface UniversalImageProps {
 export interface PlainImageProps {
   uri: string
   size: SharedImageSizeProps
-  fallback?: JSX.Element
   style?: UniversalImageStyle
   resizeMode?: UniversalImageResizeMode
   testID?: string

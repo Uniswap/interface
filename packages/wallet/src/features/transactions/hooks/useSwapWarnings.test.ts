@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import i18n from 'uniswap/src/i18n/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
@@ -18,7 +18,7 @@ import {
 } from 'wallet/src/test/fixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
 
-const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
+const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const emptySwapInfo: Pick<
   DerivedSwapInfo,

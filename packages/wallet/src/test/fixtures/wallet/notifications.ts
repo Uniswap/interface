@@ -1,4 +1,4 @@
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -75,7 +75,7 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
   txHash: faker.datatype.uuid(),
   txId: faker.datatype.uuid(),
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomEnumValue(ChainId),
 }))
 
 export const approveTxNotification = createFixture<ApproveTxNotification>()(() => ({
@@ -163,7 +163,7 @@ export const successNotification = createFixture<SuccessNotification>()(() => ({
 export const swapNetworkNotification = createFixture<NetworkChangedNotification>()(() => ({
   ...appNotificationBase(),
   type: AppNotificationType.NetworkChanged,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomEnumValue(ChainId),
   flow: 'swap',
 }))
 

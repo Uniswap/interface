@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SupportedLocale } from 'constants/locales'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
-import { RouterPreference } from 'state/routing/types'
-import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+
+import { SupportedLocale } from '../../constants/locales'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
+import { RouterPreference } from '../../state/routing/types'
+import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
 
 const currentTimestamp = () => new Date().getTime()
 

@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import {
   SwapFormContextProvider,
   SwapFormState,
@@ -17,12 +17,12 @@ import { SwapTxContextProviderTradingApi } from 'wallet/src/features/transaction
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapFormScreen } from 'wallet/src/features/transactions/swap/SwapFormScreen'
 import { SwapReviewScreen } from 'wallet/src/features/transactions/swap/SwapReviewScreen'
+import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
   TransactionModal,
   TransactionModalFooterContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { TransactionModalProps } from 'wallet/src/features/transactions/swap/TransactionModalProps'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 
 export function SwapFlow({
   prefilledState,

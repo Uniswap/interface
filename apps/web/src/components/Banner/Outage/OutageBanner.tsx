@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { Container, PopupContainer, StyledXButton, TextContainer } from 'components/Banner/shared/styled'
 import { chainIdToBackendChain } from 'constants/chains'
 import { ChainOutageData } from 'featureFlags/flags/outageBanner'
@@ -7,7 +8,6 @@ import { Globe } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const IconContainer = styled.div`
   height: 100%;
@@ -35,7 +35,7 @@ const HelpCenterLink = styled(ExternalLink)`
   margin-top: 4px;
 `
 
-export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
+export function getOutageBannerSessionStorageKey(chainId: ChainId) {
   return `hideOutageBanner-${chainId}`
 }
 

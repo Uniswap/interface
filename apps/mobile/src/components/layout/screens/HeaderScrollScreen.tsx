@@ -8,7 +8,7 @@ import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { ColorTokens, Flex, flexStyles, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 
 // Distance to scroll to show scrolled state header elements
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50

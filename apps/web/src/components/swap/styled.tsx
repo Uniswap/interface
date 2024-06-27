@@ -1,10 +1,11 @@
-import { AutoColumn } from 'components/Column'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
-import { ButtonText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+
+import { ButtonText } from 'theme/components'
+import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
   padding: 68px 8px 0px;

@@ -1,38 +1,31 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
+import { useAccount } from 'hooks/useAccount'
+import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
+import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
+import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { ParsedQs } from 'qs'
+import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { isAddress } from 'utilities/src/addresses'
+
 import { useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
-import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
-import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
-import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
-import {
-  CurrencyState,
-  SerializedCurrencyState,
-  SwapAndLimitContext,
-  SwapContext,
-  SwapInfo,
-  SwapState,
-} from 'state/swap/types'
-import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
-import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chains'
+import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
+import { CurrencyState, SerializedCurrencyState, SwapAndLimitContext, SwapContext, SwapInfo, SwapState } from './types'
 
 export function useSwapContext() {
   return useContext(SwapContext)
@@ -333,7 +326,7 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
 export function useInitialCurrencyState(): {
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
-  chainId: InterfaceChainId
+  chainId: ChainId
 } {
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
@@ -343,8 +336,7 @@ export function useInitialCurrencyState(): {
   }, [parsedQs])
 
   const account = useAccount()
-  const supportedChainId =
-    useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? UniverseChainId.Mainnet
+  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? ChainId.MAINNET
 
   const { data: balanceQuery } = useTokenBalancesQuery({ cacheOnly: !multichainUXEnabled })
   const balances = balanceQuery?.portfolios?.[0]?.tokenBalances
@@ -370,7 +362,7 @@ export function useInitialCurrencyState(): {
     // If no query params & connected, return the native token where user has the highest USD value
     let highestBalance = 0
     let highestBalanceNativeTokenAddress = 'ETH'
-    let highestBalanceChainId = UniverseChainId.Mainnet
+    let highestBalanceChainId = ChainId.MAINNET
     balances.forEach((balance) => {
       if (
         balance?.token?.standard === NATIVE_CHAIN_ID &&
@@ -379,7 +371,7 @@ export function useInitialCurrencyState(): {
       ) {
         highestBalance = balance.denominatedValue.value
         highestBalanceNativeTokenAddress = balance?.token.address ?? 'ETH'
-        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? UniverseChainId.Mainnet
+        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? ChainId.MAINNET
       }
     })
     return { initialInputCurrencyAddress: highestBalanceNativeTokenAddress, chainId: highestBalanceChainId }

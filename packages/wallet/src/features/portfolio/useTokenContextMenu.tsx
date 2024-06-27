@@ -8,7 +8,7 @@ import type {
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -53,7 +53,7 @@ export function useTokenContextMenu({
   const isHidden = !!portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
-  const currencyChainId = currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet
+  const currencyChainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speed-bump if user is trying to send tokens they own

@@ -2,12 +2,13 @@ import { parseEther } from 'ethers/lib/utils'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+
 import {
   AssetQueryVariables,
   NftAssetEdge,
+  NftAssetsFilterInput,
   NftAssetSortableField,
   NftAssetTraitInput,
-  NftAssetsFilterInput,
   NftMarketplace,
   useAssetQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

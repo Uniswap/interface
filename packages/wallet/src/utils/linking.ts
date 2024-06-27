@@ -1,15 +1,12 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { colorsLight } from 'ui/src/theme'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import {
-  FiatPurchaseTransactionInfo,
-  ServiceProviderInfo,
-} from 'wallet/src/features/transactions/types'
+import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
@@ -75,7 +72,7 @@ export function dismissInAppBrowser(): void {
 
 export async function openTransactionLink(
   hash: string | undefined,
-  chainId: WalletChainId
+  chainId: ChainId
 ): Promise<void> {
   if (!hash) {
     return
@@ -85,32 +82,15 @@ export async function openTransactionLink(
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri(uniswapUrls.helpRequestUrl)
+  return openUri(`${uniswapUrls.helpRequestUrl}`)
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {
   return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
 }
 
-const SERVICE_PROVIDER_SUPPORT_URLS: Record<string, string> = {
-  MOONPAY: 'https://www.moonpay.com/contact-us',
-  ROBINHOOD: 'https://robinhood.com/support/articles/how-to-contact-support/',
-  COINBASEPAY: 'https://help.coinbase.com/',
-  TRANSAK: 'https://support.transak.com/collections/3985810-customer-help-center',
-  BANXA: 'https://support.banxa.com/support/home',
-  STRIPE: 'https://support.stripe.com/',
-}
-
-export async function openLegacyFiatOnRampServiceProviderLink(
-  serviceProvider: string
-): Promise<void> {
-  const helpUrl =
-    SERVICE_PROVIDER_SUPPORT_URLS[serviceProvider] ?? 'https://www.moonpay.com/contact-us'
-  return openUri(helpUrl)
-}
-
-export async function openOnRampSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
-  return openUri(serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl)
+export async function openMoonpayHelpLink(): Promise<void> {
+  return openUri('https://support.moonpay.com/')
 }
 
 export async function openSettings(): Promise<void> {
@@ -130,12 +110,8 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(
-  chainId: WalletChainId,
-  data: string,
-  type: ExplorerDataType
-): string {
-  const prefix = UNIVERSE_CHAIN_INFO[chainId].explorer.url
+export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDataType): string {
+  const prefix = CHAIN_INFO[chainId].explorer.url
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -143,15 +119,15 @@ export function getExplorerLink(
 
     case ExplorerDataType.TOKEN:
       if (
-        data === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address &&
-        UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink
+        data === CHAIN_INFO[chainId].nativeCurrency.address &&
+        CHAIN_INFO[chainId].nativeCurrency.explorerLink
       ) {
-        return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+        return CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
       }
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === UniverseChainId.Optimism) {
+      if (chainId === ChainId.Optimism) {
         return `${prefix}tx/${data}`
       }
       return `${prefix}block/${data}`

@@ -8,7 +8,7 @@ import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/featu
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -22,7 +22,7 @@ import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
-  chainId: WalletChainId
+  chainId: ChainId
   analyticsSection: SectionNameType
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void

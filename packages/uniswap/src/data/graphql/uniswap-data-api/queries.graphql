@@ -259,7 +259,6 @@ query NftsTab(
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
     first: $first
     after: $after
@@ -326,7 +325,6 @@ query PortfolioBalances(
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
     valueModifiers: $valueModifiers
   ) {
@@ -392,7 +390,6 @@ query MultiplePortfolioBalances(
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
     valueModifiers: $valueModifiers
   ) {
@@ -456,7 +453,6 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
   ) {
     id
@@ -484,7 +480,6 @@ query TransactionHistoryUpdater(
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
   ) {
     id
@@ -503,7 +498,6 @@ query TransactionHistoryUpdater(
         ZORA
         CELO
         AVALANCHE
-        ZKSYNC
       ]
       onRampTransactionsAuth: $onRampAuth
     ) {
@@ -646,7 +640,6 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
   ) {
     id
@@ -664,7 +657,6 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
         ZORA
         CELO
         AVALANCHE
-        ZKSYNC
       ]
       onRampTransactionsAuth: $onRampAuth
     ) {
@@ -833,7 +825,6 @@ query FeedTransactionList($addresses: [String!]!) {
       ZORA
       CELO
       AVALANCHE
-      ZKSYNC
     ]
   ) {
     id
@@ -852,7 +843,6 @@ query FeedTransactionList($addresses: [String!]!) {
         ZORA
         CELO
         AVALANCHE
-        ZKSYNC
       ]
     ) {
       id

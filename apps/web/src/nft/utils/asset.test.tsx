@@ -1,5 +1,6 @@
 import { Markets } from 'nft/types'
-import { getMarketplaceIcon } from 'nft/utils/asset'
+
+import { getMarketplaceIcon } from './asset'
 
 describe('Marketplace icons', () => {
   it('all of marketplaces returns an icon', () => {

@@ -1,7 +1,8 @@
-import { useAccount } from 'hooks/useAccount'
-import { useArgentWalletDetectorContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+
+import { useAccount } from 'hooks/useAccount'
+import { useArgentWalletDetectorContract } from './useContract'
 
 export default function useIsArgentWallet(): boolean {
   const account = useAccount()

@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useCallback } from 'react'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWethContract } from 'wallet/src/features/transactions/swap/wrapSaga'
@@ -36,7 +36,7 @@ export function useWrapTransactionRequest(
 
 const getWrapTransactionRequest = async (
   provider: providers.Provider,
-  chainId: WalletChainId,
+  chainId: ChainId,
   address: Address,
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>

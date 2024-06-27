@@ -1,4 +1,4 @@
-import { currentTimeInSeconds, inXMinutesUnix, isStale } from 'utilities/src/time/time'
+import { currentTimeInSeconds, inXMinutesUnix, isStale } from './time'
 
 jest.useFakeTimers()
 

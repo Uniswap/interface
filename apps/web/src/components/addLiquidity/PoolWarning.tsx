@@ -4,8 +4,8 @@ import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
-import { Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 
 const Container = styled.div`

@@ -10,7 +10,7 @@ import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 
-const WEB_BALANCE_FONT_WEIGHT = 535
+const BALANCE_FONT_WEIGHT = 535
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -45,7 +45,9 @@ export const PortfolioBalance = memo(function _PortfolioBalance({
     <Flex gap="$spacing4">
       {/* Web currently doesnt support reanimated, so can not use the annimated number component */}
       {isWeb ? (
-        <WebBalanceWithFadedDecimals value={totalBalance} />
+        <Text style={{ fontWeight: BALANCE_FONT_WEIGHT }} variant="heading2">
+          {totalBalance}
+        </Text>
       ) : (
         <AnimatedNumber
           disableAnimations
@@ -71,28 +73,3 @@ export const PortfolioBalance = memo(function _PortfolioBalance({
     </Flex>
   )
 })
-
-const WebBalanceWithFadedDecimals = ({ value }: { value: string }): JSX.Element | null => {
-  const currency = useAppFiatCurrencyInfo()
-  const amountOfCurrency = value?.split(currency.decimalSeparator)
-  if (amountOfCurrency?.length > 0) {
-    return (
-      <Text
-        allowFontScaling={false}
-        color="$neutral1"
-        style={{
-          fontWeight: WEB_BALANCE_FONT_WEIGHT,
-        }}
-        variant="heading2">
-        {amountOfCurrency[0]}
-        {amountOfCurrency.length > 1 && (
-          <Text color="$neutral3" variant="heading2">
-            {currency.decimalSeparator}
-            {amountOfCurrency[1]}
-          </Text>
-        )}
-      </Text>
-    )
-  }
-  return null
-}

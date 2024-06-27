@@ -6,32 +6,30 @@ import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useMoonpayFiatOnRamp, useMoonpaySupportedTokens } from 'src/features/fiatOnRamp/hooks'
+import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
+import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
+import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { openUri } from 'wallet/src/utils/linking'
+import { FiatOnRampTokenSelectorModal } from './FiatOnRampTokenSelector'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -84,7 +82,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(
-    buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))
+    buildCurrencyId(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))
   )
 
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
@@ -125,7 +123,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   } = useMoonpayFiatOnRamp({
     baseCurrencyAmount: value,
     quoteCurrencyCode: currency.moonpayCurrencyCode,
-    quoteChainId: currency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
+    quoteChainId: currency.currencyInfo?.currency.chainId ?? ChainId.Mainnet,
   })
 
   useTimeout(
@@ -151,14 +149,11 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const buttonEnabled =
     !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
 
-  const fiatToUSDConverter = useLocalFiatToUSDConverter()
-
   const onChangeValue =
     (source: UniverseEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
       sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
         source,
-        amountUSD: fiatToUSDConverter(parseFloat(newAmount)),
       })
       setValue(newAmount)
     }

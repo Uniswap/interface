@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import styled from 'styled-components'
 
-export enum PreferencesView {
+export enum Views {
   SETTINGS = 'Settings',
   LANGUAGE = 'Language',
   CURRENCY = 'Currency',

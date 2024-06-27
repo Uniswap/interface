@@ -2,7 +2,7 @@ import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Bytes, Signer, UnsignedTransaction, providers, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring.native'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -33,11 +33,7 @@ export class NativeSigner extends Signer {
     }
 
     // chainID isn't available here, but is not needed for signing hashes so just default to Mainnet
-    return Keyring.signHashForAddress(
-      this.address,
-      hexlify(message).slice(2),
-      UniverseChainId.Mainnet
-    )
+    return Keyring.signHashForAddress(this.address, hexlify(message).slice(2), ChainId.Mainnet)
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135
@@ -49,7 +45,7 @@ export class NativeSigner extends Signer {
     const signature = await Keyring.signHashForAddress(
       this.address,
       _TypedDataEncoder.hash(domain, types, value).slice(2),
-      toSupportedChainId(domain.chainId) || UniverseChainId.Mainnet
+      toSupportedChainId(domain.chainId) || ChainId.Mainnet
     )
     return signature
   }

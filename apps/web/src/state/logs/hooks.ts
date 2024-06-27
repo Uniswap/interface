@@ -1,10 +1,11 @@
 import type { Filter } from '@ethersproject/providers'
-import { useAccount } from 'hooks/useAccount'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { addListener, removeListener } from 'state/logs/slice'
-import { Log, filterToKey, isHistoricalLog } from 'state/logs/utils'
+
+import { useAccount } from 'hooks/useAccount'
+import { useAppDispatch, useAppSelector } from '../hooks'
+import { addListener, removeListener } from './slice'
+import { Log, filterToKey, isHistoricalLog } from './utils'
 
 enum LogsState {
   // The filter is invalid

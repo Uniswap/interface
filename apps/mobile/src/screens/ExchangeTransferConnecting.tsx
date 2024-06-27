@@ -11,7 +11,7 @@ import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
@@ -43,7 +43,7 @@ export function ExchangeTransferConnecting({
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
-    UniverseChainId.Mainnet,
+    ChainId.Mainnet,
     initialTypeInfo
   )
 

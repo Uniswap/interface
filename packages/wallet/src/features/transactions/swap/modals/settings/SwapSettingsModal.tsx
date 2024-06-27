@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
 import {
@@ -205,7 +205,7 @@ function SwapSettingsOptions({
   )
 }
 
-function SwapProtectionSettingsRow({ chainId }: { chainId: WalletChainId }): JSX.Element {
+function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const swapProtectionSetting = useSwapProtectionSetting()
@@ -222,7 +222,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: WalletChainId }): JSX
   const [showInfoModal, setShowInfoModal] = useState(false)
 
   const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
-  const chainName = UNIVERSE_CHAIN_INFO[chainId].label
+  const chainName = CHAIN_INFO[chainId].label
   const subText = privateRpcSupportedOnChain
     ? t('swap.settings.protection.subtitle.supported', { chainName })
     : t('swap.settings.protection.subtitle.unavailable', { chainName })

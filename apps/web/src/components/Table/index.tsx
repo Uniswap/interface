@@ -10,6 +10,15 @@ import {
 } from '@tanstack/react-table'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
+import useDebounce from 'hooks/useDebounce'
+import { Trans } from 'i18n'
+import { useEffect, useRef, useState } from 'react'
+import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { ThemedText } from 'theme/components'
+import { FadePresence } from 'theme/components/FadePresence'
+import { Z_INDEX } from 'theme/zIndex'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   CellContainer,
   DataRow,
@@ -26,17 +35,7 @@ import {
   TableContainer,
   TableHead,
   TableRowLink,
-} from 'components/Table/styled'
-import useDebounce from 'hooks/useDebounce'
-import { Trans } from 'i18n'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
-import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
-import { FadePresence } from 'theme/components/FadePresence'
-import { Z_INDEX } from 'theme/zIndex'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+} from './styled'
 
 function TableBody<Data extends RowData>({
   table,
@@ -147,7 +146,6 @@ export function Table<Data extends RowData>({
     distanceToBottom: LOAD_MORE_BOTTOM_OFFSET,
   })
   const { distanceFromTop, distanceToBottom } = useDebounce(scrollPosition, 125)
-  const theme = useTheme()
   const tableBodyRef = useRef<HTMLDivElement>(null)
   const lastLoadedLengthRef = useRef(data?.length ?? 0)
   const canLoadMore = useRef(true)
@@ -202,16 +200,12 @@ export function Table<Data extends RowData>({
     data,
     getCoreRowModel: getCoreRowModel(),
   })
-  const headerHeight = useMemo(() => {
-    const header = document.getElementById('AppHeader')
-    return header?.clientHeight || theme.navHeight
-  }, [theme.navHeight])
 
   return (
     <div>
       <ScrollSync>
         <TableContainer $maxWidth={maxWidth} $maxHeight={maxHeight}>
-          <TableHead $isSticky={!maxHeight} $top={headerHeight}>
+          <TableHead $isSticky={!maxHeight}>
             <ScrollSyncPane>
               <HeaderRow $dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (

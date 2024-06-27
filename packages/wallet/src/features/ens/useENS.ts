@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENS.ts
 
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useAddressFromEns, useENSName } from 'wallet/src/features/ens/api'
 import { getValidAddress } from 'wallet/src/utils/addresses'
@@ -10,7 +10,7 @@ import { getValidAddress } from 'wallet/src/utils/addresses'
  * @param nameOrAddress ENS name or address
  */
 export function useENS(
-  chainId: WalletChainId,
+  chainId: ChainId,
   nameOrAddress?: string | null,
   autocompleteDomain?: boolean
 ): {

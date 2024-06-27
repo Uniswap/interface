@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -16,7 +16,7 @@ export function SpendingDetails({
   chainId,
 }: {
   value: string
-  chainId: WalletChainId
+  chainId: ChainId
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()

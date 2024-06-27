@@ -101,7 +101,6 @@ exports[`TokenItem renders without error 1`] = `
         >
           <Image
             height={40}
-            onError={[Function]}
             source={
               {
                 "uri": "https://loremflickr.com/640/480",

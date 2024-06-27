@@ -1,9 +1,9 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI, nativeOnChain } from 'constants/tokens'
 import { act, renderHook } from 'test-utils/render'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { useCreateTransferTransaction } from 'utils/transfer'
+
+import { useCreateTransferTransaction } from './transfer'
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] }
 
@@ -27,7 +27,7 @@ describe('useCreateTransfer', () => {
       account: wallet,
       chainId: 1,
       toAddress: '0xaDd287e6d0213e662D400d815C481b4b2ddE5d65',
-      currencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 1e18),
+      currencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 1e18),
     }
     const transaction = renderHook(() => useCreateTransferTransaction(transferInfo)).result
 

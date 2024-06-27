@@ -367,8 +367,8 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 50vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 90vh;
   max-width: 420px;
+  max-height: 90vh;
   display: inline-table;
   border-radius: 20px;
 }
@@ -939,8 +939,8 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 50vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 90vh;
   max-width: 420px;
+  max-height: 90vh;
   display: inline-table;
   border-radius: 20px;
 }

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
@@ -32,7 +33,7 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
   const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
   const usdPriceOfCurrency = useUSDCPrice(exactCurrency?.currency ?? undefined)
-  const { convertFiatAmount } = useLocalizationContext()
+  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')
 
@@ -53,7 +54,12 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
       const tokenAmount = stablecoinAmount
         ? usdPriceOfCurrency?.invert().quote(stablecoinAmount)
         : undefined
-      updateSwapForm({ exactAmountToken: tokenAmount?.toExact() })
+      const tokenAmountFormatted = formatCurrencyAmount({
+        value: tokenAmount,
+        type: NumberType.SwapTradeAmount,
+        placeholder: '',
+      })
+      updateSwapForm({ exactAmountToken: tokenAmountFormatted })
     }
 
     // Special case when we have token amount, but not fiat, which can occur when we hit "max"
@@ -75,6 +81,7 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
     exactAmountToken,
     exactCurrency,
     conversionRate,
+    formatCurrencyAmount,
     updateSwapForm,
     chainId,
     usdPriceOfCurrency,

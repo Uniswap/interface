@@ -1,5 +1,5 @@
 import { ErrorEvent } from '@sentry/types'
-import { beforeSend } from 'tracing/errors'
+import { beforeSend } from './errors'
 
 Object.defineProperty(window.performance, 'getEntriesByType', {
   writable: true,

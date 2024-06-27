@@ -1,20 +1,16 @@
-import {
-  UniverseChainId,
-  WALLET_SUPPORTED_CHAIN_IDS,
-  WalletChainId,
-} from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { AssetType } from 'wallet/src/entities/assets'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
+import { render } from 'wallet/src/test/test-utils'
+import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 import {
   DappLogoWithTxStatus,
   DappLogoWithWCBadge,
   LogoWithTxStatus,
   LogoWithTxStatusProps,
-} from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'wallet/src/entities/assets'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
-import { render } from 'wallet/src/test/test-utils'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+} from './LogoWithTxStatus'
 
 const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   assetType: AssetType.Currency,
@@ -22,7 +18,7 @@ const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   currencyInfo: ethCurrencyInfo(),
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomEnumValue(ChainId),
 }))
 
 const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
@@ -30,7 +26,7 @@ const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   txType: TransactionType.NFTMint,
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomEnumValue(ChainId),
 }))
 
 describe(LogoWithTxStatus, () => {
@@ -40,7 +36,7 @@ describe(LogoWithTxStatus, () => {
         {...currencyLogoProps({
           currencyInfo: ETH_CURRENCY_INFO,
           txStatus: TransactionStatus.Pending,
-          chainId: UniverseChainId.Mainnet,
+          chainId: ChainId.Mainnet,
         })}
       />
     )
@@ -80,7 +76,7 @@ describe(LogoWithTxStatus, () => {
     describe('transaction summary network logo', () => {
       it('shows network logo if chainId is specified and is not Mainnet', () => {
         const { queryByTestId } = render(
-          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.ArbitrumOne })} />
+          <LogoWithTxStatus {...currencyLogoProps({ chainId: ChainId.ArbitrumOne })} />
         )
 
         expect(queryByTestId('network-logo')).toBeTruthy()
@@ -96,7 +92,7 @@ describe(LogoWithTxStatus, () => {
 
       it('does not show network logo if chainId is Mainnet', () => {
         const { queryByTestId } = render(
-          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} />
+          <LogoWithTxStatus {...currencyLogoProps({ chainId: ChainId.Mainnet })} />
         )
 
         expect(queryByTestId('network-logo')).toBeFalsy()
@@ -109,8 +105,6 @@ describe(LogoWithTxStatus, () => {
         TransactionType.NFTApprove,
         TransactionType.Send,
         TransactionType.FiatPurchase,
-        TransactionType.OnRampPurchase,
-        TransactionType.OnRampTransfer,
         TransactionType.Receive,
         TransactionType.NFTMint,
         TransactionType.Unknown,
@@ -128,7 +122,7 @@ describe(LogoWithTxStatus, () => {
         it(`shows icon for ${txType}`, () => {
           const { queryByTestId } = render(
             <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
+              {...currencyLogoProps({ chainId: ChainId.Mainnet })}
               txType={txType}
             />
           )
@@ -141,7 +135,7 @@ describe(LogoWithTxStatus, () => {
         it(`shows icon for NFTTrade if asset type ${assetType}`, () => {
           const { queryByTestId } = render(
             <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
+              {...currencyLogoProps({ chainId: ChainId.Mainnet })}
               assetType={assetType}
               txType={TransactionType.NFTTrade}
             />
@@ -158,7 +152,7 @@ describe(LogoWithTxStatus, () => {
 
           const { queryByTestId } = render(
             <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
+              {...currencyLogoProps({ chainId: ChainId.Mainnet })}
               txType={txType}
             />
           )
@@ -180,7 +174,7 @@ describe(LogoWithTxStatus, () => {
 
           const { queryByTestId } = render(
             <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
+              {...currencyLogoProps({ chainId: ChainId.Mainnet })}
               assetType={assetType}
               txType={TransactionType.NFTTrade}
             />
@@ -210,7 +204,7 @@ describe(DappLogoWithTxStatus, () => {
   const props = {
     event: WalletConnectEvent.Connected,
     size: 40,
-    chainId: UniverseChainId.ArbitrumOne as WalletChainId,
+    chainId: ChainId.ArbitrumOne,
     dappImageUrl: 'https://example.com/dapp.png',
     dappName: 'Dapp',
   }
@@ -278,7 +272,7 @@ describe(DappLogoWithTxStatus, () => {
 describe(DappLogoWithWCBadge, () => {
   const props = {
     size: 40,
-    chainId: UniverseChainId.ArbitrumOne as WalletChainId,
+    chainId: ChainId.ArbitrumOne,
     dappImageUrl: 'https://example.com/dapp.png',
     dappName: 'Dapp',
   }
@@ -314,9 +308,7 @@ describe(DappLogoWithWCBadge, () => {
     })
 
     it('renders wallet connect logo if chain is Mainnet', () => {
-      const { queryByTestId } = render(
-        <DappLogoWithWCBadge {...props} chainId={UniverseChainId.Mainnet} />
-      )
+      const { queryByTestId } = render(<DappLogoWithWCBadge {...props} chainId={ChainId.Mainnet} />)
 
       expect(queryByTestId('network-logo')).toBeFalsy()
       expect(queryByTestId('wallet-connect-logo')).toBeTruthy()

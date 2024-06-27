@@ -2,26 +2,26 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { useIsSupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
-import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
-import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
-import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
-import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
-import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { useIsSmartContractAddress } from 'utils/transfer'
+
+import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
+import SendCurrencyInputForm from './SendCurrencyInputForm'
+import { SendRecipientForm } from './SendRecipientForm'
+import { SendReviewModal } from './SendReviewModal'
+import { SmartContractSpeedBumpModal } from './SmartContractSpeedBump'
 
 type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -219,7 +219,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           >
             <Trans
               i18nKey="common.connectToChain.button"
-              values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : undefined }}
+              values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}
             />
           </ButtonPrimary>
         ) : (

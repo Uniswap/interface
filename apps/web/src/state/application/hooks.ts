@@ -1,6 +1,10 @@
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import {
   ApplicationModal,
   PopupContent,
@@ -11,11 +15,7 @@ import {
   removeSuppressedPopups,
   setFiatOnrampAvailability,
   setOpenModal,
-} from 'state/application/reducer'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
+} from './reducer'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -65,7 +65,12 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
           callback()
         }
       } catch (e) {
-        logger.warn('useFiatOnrampAvailability', 'checkAvailability', 'Error fetching FOR availability', e)
+        logger.error(e, {
+          tags: {
+            file: 'application/hooks',
+            function: 'useFiatOnrampAvailability',
+          },
+        })
         if (stale) {
           return
         }

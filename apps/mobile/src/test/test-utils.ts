@@ -1,4 +1,4 @@
-import { renderHookWithProviders, renderWithProviders } from 'src/test/render'
+import { renderHookWithProviders, renderWithProviders } from './render'
 
 // re-export everything
 export * from '@testing-library/react-native'

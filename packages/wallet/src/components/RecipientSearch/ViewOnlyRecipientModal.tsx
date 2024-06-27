@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 type ViewOnlyRecipientModalProps = {
   onConfirm: () => void

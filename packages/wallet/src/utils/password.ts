@@ -16,7 +16,7 @@ export enum PasswordStrength {
   STRONG,
 }
 
-export const PASSWORD_VALIDATION_DEBOUNCE_MS = 500
+export const PASSWORD_VALIDATION_DEBOUNCE_MS = 750
 
 export function isPasswordStrongEnough({
   minStrength,
@@ -101,21 +101,15 @@ export function usePasswordForm(): {
     [passwordStrength, password]
   )
 
-  const debouncedPassword = useDebounce(password, PASSWORD_VALIDATION_DEBOUNCE_MS)
-  const debouncedConfirmPassword = useDebounce(confirmPassword, PASSWORD_VALIDATION_DEBOUNCE_MS)
+  const debouncedPassword = useDebounce(password, PASSWORD_VALIDATION_DEBOUNCE_MS * 2)
+  const debouncedConfirmPassword = useDebounce(confirmPassword, PASSWORD_VALIDATION_DEBOUNCE_MS * 2)
 
-  // Used to disable the continue button right away
-  const passwordsDiffer = useMemo(
-    () => doPasswordsDiffer(password, confirmPassword),
-    [password, confirmPassword]
-  )
-  // Used to show the error message after debounce time
   const debouncedPasswordsDiffer = useMemo(
     () => doPasswordsDiffer(debouncedPassword, debouncedConfirmPassword),
     [debouncedPassword, debouncedConfirmPassword]
   )
 
-  const enableNext = Boolean(password && confirmPassword) && !isWeakPassword && !passwordsDiffer
+  const enableNext = Boolean(password && confirmPassword) && !isWeakPassword
 
   const onChangePassword = (text: string): void => {
     setPassword(text)

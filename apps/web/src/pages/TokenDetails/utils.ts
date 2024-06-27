@@ -1,8 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId } from 'constants/chains'
+import { ChainId, Currency } from '@uniswap/sdk-core'
+import { CHAIN_INFO, SupportedInterfaceChainId } from 'constants/chains'
 import { t } from 'i18n'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const getTokenPageTitle = (currency?: Currency, chainId?: SupportedInterfaceChainId) => {
   const tokenName = currency?.name
@@ -12,7 +10,7 @@ export const getTokenPageTitle = (currency?: Currency, chainId?: SupportedInterf
     return baseTitle
   }
 
-  const chainSuffix = chainId && chainId !== UniverseChainId.Mainnet ? ` on ${UNIVERSE_CHAIN_INFO[chainId].label}` : ''
+  const chainSuffix = chainId && chainId !== ChainId.MAINNET ? ` on ${CHAIN_INFO[chainId].label}` : ''
   if (!tokenName && tokenSymbol) {
     return `${tokenSymbol}${chainSuffix}: ${baseTitle}`
   }
@@ -27,7 +25,7 @@ export const getTokenPageDescription = (currency?: Currency, chainId?: Supported
     currency?.name && currency?.symbol
       ? `${currency?.name} (${currency?.symbol})`
       : currency?.name ?? currency?.symbol ?? 'tokens'
-  const chainSuffix = chainId && chainId !== UniverseChainId.Mainnet ? ` on ${UNIVERSE_CHAIN_INFO[chainId].label}` : ''
+  const chainSuffix = chainId && chainId !== ChainId.MAINNET ? ` on ${CHAIN_INFO[chainId].label}` : ''
 
   return `Buy, sell, and swap ${tokenPageName}${chainSuffix}. Real-time prices, charts, transaction data, and more.`
 }

@@ -1,12 +1,13 @@
 import { screen } from '@testing-library/react'
 import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@uniswap/sdk-core'
-import CurrencyList, { CurrencyListRow } from 'components/SearchModal/CurrencyList'
 import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
-import { useAccount } from 'hooks/useAccount'
 import * as mockJSBI from 'jsbi'
-import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
+
+import { useAccount } from 'hooks/useAccount'
+import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
+import CurrencyList, { CurrencyListRow } from '.'
 
 const noOp = function () {
   // do nothing

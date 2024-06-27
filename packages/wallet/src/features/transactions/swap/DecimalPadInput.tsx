@@ -7,9 +7,8 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
-import { DecimalPad, KeyAction, KeyLabel } from 'wallet/src/features/transactions/swap/DecimalPad'
+import { TextInputProps } from 'wallet/src/components/input/TextInput'
+import { DecimalPad, KeyAction, KeyLabel } from './DecimalPad'
 
 type DisableKeyCondition = (value: string) => boolean
 
@@ -21,8 +20,6 @@ type DecimalPadInputProps = {
   selectionRef: React.MutableRefObject<TextInputProps['selection']>
   setValue: (newValue: string) => void
   valueRef: React.MutableRefObject<string>
-  maxDecimals: number
-  onTriggerInputShakeAnimation: () => void
 }
 
 export type DecimalPadInputRef = {
@@ -32,17 +29,7 @@ export type DecimalPadInputRef = {
 
 export const DecimalPadInput = memo(
   forwardRef<DecimalPadInputRef, DecimalPadInputProps>(function DecimalPadInput(
-    {
-      disabled,
-      hideDecimal,
-      onReady,
-      resetSelection,
-      selectionRef,
-      setValue,
-      valueRef,
-      maxDecimals,
-      onTriggerInputShakeAnimation,
-    },
+    { disabled, hideDecimal, onReady, resetSelection, selectionRef, setValue, valueRef },
     ref
   ): JSX.Element {
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
@@ -69,16 +56,6 @@ export const DecimalPadInput = memo(
 
     const disableKeysConditions = useMemo<Partial<Record<KeyLabel, DisableKeyCondition>>>(
       () => ({
-        '0': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '1': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '2': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '3': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '4': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '5': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '6': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '7': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '8': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '9': (v) => maxDecimalsReached({ value: v, maxDecimals }),
         '.': (v) => v.includes('.'),
         backspace: (v): boolean => {
           const { start, end } = getCurrentSelection()
@@ -86,7 +63,7 @@ export const DecimalPadInput = memo(
           return cursorAtStart || v.length === 0
         },
       }),
-      [getCurrentSelection, maxDecimals]
+      [getCurrentSelection]
     )
 
     const updateDisabledKeys = useCallback(
@@ -187,7 +164,6 @@ export const DecimalPadInput = memo(
         onKeyLongPress={onLongPress}
         onKeyPress={onPress}
         onReady={onReady}
-        onTriggerInputShakeAnimation={onTriggerInputShakeAnimation}
       />
     )
   })

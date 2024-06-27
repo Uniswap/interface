@@ -1,11 +1,10 @@
-import { WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
-const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
+const UNI_MAINNET = UNI[ChainId.MAINNET]
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 

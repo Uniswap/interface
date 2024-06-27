@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BaseDerivedInfo } from 'wallet/src/features/transactions/transfer/types'
@@ -10,7 +10,7 @@ export type DerivedSwapInfo<
   TInput = CurrencyInfo,
   TOutput extends CurrencyInfo = CurrencyInfo
 > = BaseDerivedInfo<TInput> & {
-  chainId: WalletChainId
+  chainId: ChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
     [CurrencyField.OUTPUT]: Maybe<TOutput>
   }

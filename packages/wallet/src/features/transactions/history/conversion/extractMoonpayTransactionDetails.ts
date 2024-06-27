@@ -1,7 +1,6 @@
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import {
   FiatOnRampTransactionDetails,
@@ -17,7 +16,7 @@ const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000
 
 function parseFiatPurchaseTransaction(
   transaction: Partial<MoonpayTransactionsResponse[0]>
-): FiatPurchaseTransactionInfo & { chainId: WalletChainId } {
+): FiatPurchaseTransactionInfo & { chainId: ChainId } {
   const {
     currency: outputCurrency,
     baseCurrencyAmount: inputCurrencyAmount,
@@ -120,7 +119,6 @@ export function extractMoonpayTransactionDetails(
     }
 
     return {
-      routing: Routing.CLASSIC,
       id: transaction.externalTransactionId,
       chainId,
       hash: transaction.cryptoTransactionId,

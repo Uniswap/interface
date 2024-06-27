@@ -1,7 +1,8 @@
 import { ChainSlug, isChainUrlParam } from 'constants/chains'
 import { t } from 'i18n'
-import { ExploreTab } from 'pages/Explore'
 import { capitalize } from 'tsafe/capitalize'
+
+import { ExploreTab } from './Explore'
 
 export const getExploreTitle = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')

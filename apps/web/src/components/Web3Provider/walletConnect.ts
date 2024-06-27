@@ -1,9 +1,9 @@
-import { CONNECTION } from 'components/Web3Provider/constants'
+import { ChainId } from '@uniswap/sdk-core'
 import { Z_INDEX } from 'theme/zIndex'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector, createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
+import { CONNECTION } from './constants'
 
 if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
   throw new Error('REACT_APP_WALLET_CONNECT_PROJECT_ID must be a defined environment variable')
@@ -12,7 +12,7 @@ const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_P
 
 export interface WalletConnectConnector extends Connector {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => InterfaceChainId[]
+  getNamespaceChainsIds: () => ChainId[]
   getProvider(): Promise<{ modal: { setTheme: ({ themeMode }: { themeMode: 'dark' | 'light' }) => void } }>
 }
 

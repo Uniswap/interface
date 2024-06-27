@@ -1,7 +1,11 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import {
   INITIAL_TRANSACTION_STATE,
   selectCurrency,
@@ -9,21 +13,17 @@ import {
   transactionStateReducer,
   updateExactAmountFiat,
   updateExactAmountToken,
-} from 'wallet/src/features/transactions/transactionState/transactionState'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+} from './transactionState'
 
-const chainId = UniverseChainId.Goerli
-const ethAddress = getNativeAddress(UniverseChainId.Goerli)
+const chainId = ChainId.Goerli
+const ethAddress = getNativeAddress(ChainId.Goerli)
 const daiTradeableAsset: CurrencyAsset = { address: 'DAI', chainId, type: AssetType.Currency }
 const ethTradeableAsset: CurrencyAsset = { address: ethAddress, chainId, type: AssetType.Currency }
 
 const testInitialState: Readonly<TransactionState> = {
   [CurrencyField.INPUT]: {
     address: ethAddress,
-    chainId: UniverseChainId.Goerli,
+    chainId: ChainId.Goerli,
     type: AssetType.Currency,
   },
   [CurrencyField.OUTPUT]: null,

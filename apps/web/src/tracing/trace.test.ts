@@ -1,8 +1,9 @@
 import { Span } from '@sentry/core'
 import * as Sentry from '@sentry/react'
 import { mocked } from 'test-utils/mocked'
-import { trace } from 'tracing/trace'
-import { OpCode, TraceContext } from 'tracing/types'
+
+import { trace } from './trace'
+import { OpCode, TraceContext } from './types'
 
 jest.mock('@sentry/react', () => {
   return {

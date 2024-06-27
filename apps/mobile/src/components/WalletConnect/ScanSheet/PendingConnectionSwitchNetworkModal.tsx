@@ -4,14 +4,14 @@ import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ActionSheetModal } from 'uniswap/src/components/modals/ActionSheetModal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 type Props = {
-  selectedChainId: WalletChainId
-  onPressChain: (chainId: WalletChainId) => void
+  selectedChainId: ChainId
+  onPressChain: (chainId: ChainId) => void
   onClose: () => void
 }
 
@@ -25,8 +25,8 @@ export const PendingConnectionSwitchNetworkModal = ({
 
   const options = useMemo(
     () =>
-      WALLET_SUPPORTED_CHAIN_IDS.map((chainId) => {
-        const info = UNIVERSE_CHAIN_INFO[chainId]
+      ALL_SUPPORTED_CHAIN_IDS.map((chainId) => {
+        const info = CHAIN_INFO[chainId]
         return {
           key: `${ElementName.NetworkButton}-${chainId}`,
           onPress: () => onPressChain(chainId),

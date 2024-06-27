@@ -4,7 +4,6 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
-import LandingV2 from 'pages/Landing/LandingV2'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
@@ -12,6 +11,7 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import LandingV2 from './LandingV2'
 
 export default function Landing() {
   const account = useAccount()
@@ -28,7 +28,7 @@ export default function Landing() {
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
-  const prevAccount = usePrevious(account.address)
+  const prevAccount = usePrevious(account)
   const redirectOnConnect = useRef(false)
   // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {

@@ -1,29 +1,24 @@
 import { BigNumber, BigNumberish } from 'ethers'
-import { L2ChainId, L2_CHAIN_IDS } from 'uniswap/src/constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
-  UniverseChainId,
-  WALLET_SUPPORTED_CHAIN_IDS,
-  WalletChainId,
-} from 'uniswap/src/types/chains'
-import { isJestRun } from 'utilities/src/environment'
+  ALL_SUPPORTED_CHAINS,
+  L2ChainId,
+  L2_CHAIN_IDS,
+  TESTNET_CHAIN_IDS,
+} from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
-export function toSupportedChainId(chainId?: BigNumberish): WalletChainId | null {
-  // Support Goerli for testing
-  const ids = isJestRun
-    ? [UniverseChainId.Goerli, ...WALLET_SUPPORTED_CHAIN_IDS]
-    : WALLET_SUPPORTED_CHAIN_IDS
-
-  if (!chainId || !ids.map((c) => c.toString()).includes(chainId.toString())) {
+export function toSupportedChainId(chainId?: BigNumberish): ChainId | null {
+  if (!chainId || !ALL_SUPPORTED_CHAINS.includes(chainId.toString())) {
     return null
   }
-  return parseInt(chainId.toString(), 10) as WalletChainId
+  return parseInt(chainId.toString(), 10) as ChainId
 }
 
-export function chainIdToHexadecimalString(chainId: WalletChainId): string {
+export function chainIdToHexadecimalString(chainId: ChainId): string {
   return BigNumber.from(chainId).toHexString()
 }
 
@@ -31,123 +26,125 @@ export function hexadecimalStringToInt(hex: string): number {
   return parseInt(hex, 16)
 }
 
-export const isL2Chain = (chainId?: UniverseChainId): boolean =>
+export const isL2Chain = (chainId?: ChainId): boolean =>
   Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
-export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null {
+export function isTestnet(chainId?: ChainId): boolean {
+  if (!chainId) {
+    return false
+  }
+
+  return TESTNET_CHAIN_IDS.includes(chainId)
+}
+
+export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
   switch (chain) {
     case Chain.Ethereum:
-      return UniverseChainId.Mainnet
+      return ChainId.Mainnet
     case Chain.Arbitrum:
-      return UniverseChainId.ArbitrumOne
+      return ChainId.ArbitrumOne
     case Chain.EthereumGoerli:
-      return UniverseChainId.Goerli
+      return ChainId.Goerli
     case Chain.Optimism:
-      return UniverseChainId.Optimism
+      return ChainId.Optimism
     case Chain.Polygon:
-      return UniverseChainId.Polygon
+      return ChainId.Polygon
     case Chain.Base:
-      return UniverseChainId.Base
+      return ChainId.Base
     case Chain.Bnb:
-      return UniverseChainId.Bnb
+      return ChainId.Bnb
     case Chain.Blast:
-      return UniverseChainId.Blast
+      return ChainId.Blast
     case Chain.Avalanche:
-      return UniverseChainId.Avalanche
+      return ChainId.Avalanche
     case Chain.Celo:
-      return UniverseChainId.Celo
+      return ChainId.Celo
     case Chain.Zora:
-      return UniverseChainId.Zora
-    case Chain.Zksync:
-      return UniverseChainId.Zksync
+      return ChainId.Zora
   }
 
   return null
 }
 
-export function getPollingIntervalByBlocktime(chainId?: WalletChainId): PollingInterval {
+export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
   return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
 }
 
-export function fromMoonpayNetwork(moonpayNetwork: string | undefined): WalletChainId | undefined {
+export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId | undefined {
   switch (moonpayNetwork) {
     case Chain.Arbitrum.toLowerCase():
-      return UniverseChainId.ArbitrumOne
+      return ChainId.ArbitrumOne
     case Chain.Optimism.toLowerCase():
-      return UniverseChainId.Optimism
+      return ChainId.Optimism
     case Chain.Polygon.toLowerCase():
-      return UniverseChainId.Polygon
+      return ChainId.Polygon
     case Chain.Bnb.toLowerCase():
-      return UniverseChainId.Bnb
+      return ChainId.Bnb
     // Moonpay still refers to BNB chain as BSC so including both BNB and BSC cases
     case 'bsc':
-      return UniverseChainId.Bnb
+      return ChainId.Bnb
     case Chain.Base.toLowerCase():
-      return UniverseChainId.Base
+      return ChainId.Base
     case Chain.Avalanche.toLowerCase():
-      return UniverseChainId.Avalanche
+      return ChainId.Avalanche
     case Chain.Celo.toLowerCase():
-      return UniverseChainId.Celo
+      return ChainId.Celo
     case undefined:
-      return UniverseChainId.Mainnet
+      return ChainId.Mainnet
     default:
       return undefined
   }
 }
 
-export function fromUniswapWebAppLink(network: string | null): WalletChainId | null {
+export function fromUniswapWebAppLink(network: string | null): ChainId | null {
   switch (network) {
     case Chain.Ethereum.toLowerCase():
-      return UniverseChainId.Mainnet
+      return ChainId.Mainnet
     case Chain.Arbitrum.toLowerCase():
-      return UniverseChainId.ArbitrumOne
+      return ChainId.ArbitrumOne
     case Chain.Optimism.toLowerCase():
-      return UniverseChainId.Optimism
+      return ChainId.Optimism
     case Chain.Polygon.toLowerCase():
-      return UniverseChainId.Polygon
+      return ChainId.Polygon
     case Chain.Base.toLowerCase():
-      return UniverseChainId.Base
+      return ChainId.Base
     case Chain.Bnb.toLowerCase():
-      return UniverseChainId.Bnb
+      return ChainId.Bnb
     case Chain.Blast.toLowerCase():
-      return UniverseChainId.Blast
+      return ChainId.Blast
     case Chain.Avalanche.toLowerCase():
-      return UniverseChainId.Avalanche
+      return ChainId.Avalanche
     case Chain.Celo.toLowerCase():
-      return UniverseChainId.Celo
+      return ChainId.Celo
     case Chain.Zora.toLowerCase():
-      return UniverseChainId.Zora
-    case Chain.Zksync.toLowerCase():
-      return UniverseChainId.Zksync
+      return ChainId.Zora
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
 }
 
-export function toUniswapWebAppLink(chainId: WalletChainId): string | null {
+export function toUniswapWebAppLink(chainId: ChainId): string | null {
   switch (chainId) {
-    case UniverseChainId.Mainnet:
+    case ChainId.Mainnet:
       return Chain.Ethereum.toLowerCase()
-    case UniverseChainId.ArbitrumOne:
+    case ChainId.ArbitrumOne:
       return Chain.Arbitrum.toLowerCase()
-    case UniverseChainId.Optimism:
+    case ChainId.Optimism:
       return Chain.Optimism.toLowerCase()
-    case UniverseChainId.Polygon:
+    case ChainId.Polygon:
       return Chain.Polygon.toLowerCase()
-    case UniverseChainId.Base:
+    case ChainId.Base:
       return Chain.Base.toLowerCase()
-    case UniverseChainId.Bnb:
+    case ChainId.Bnb:
       return Chain.Bnb.toLowerCase()
-    case UniverseChainId.Blast:
+    case ChainId.Blast:
       return Chain.Blast.toLowerCase()
-    case UniverseChainId.Avalanche:
+    case ChainId.Avalanche:
       return Chain.Avalanche.toLowerCase()
-    case UniverseChainId.Celo:
+    case ChainId.Celo:
       return Chain.Celo.toLowerCase()
-    case UniverseChainId.Zora:
+    case ChainId.Zora:
       return Chain.Zora.toLowerCase()
-    case UniverseChainId.Zksync:
-      return Chain.Zksync.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }

@@ -4,14 +4,15 @@ import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ModalWithOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ModalWithOverlay'
 import { UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, SpinningLoader, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -132,7 +133,7 @@ function UwULinkErc20SendModalContent({
           <Text color="red">
             {t('uwulink.error.insufficientTokens', {
               tokenSymbol: symbol,
-              chain: UNIVERSE_CHAIN_INFO[chainId].label,
+              chain: CHAIN_INFO[chainId].label,
             })}
           </Text>
         )}

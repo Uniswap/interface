@@ -1,4 +1,3 @@
-import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans } from 'i18n'
@@ -16,7 +15,9 @@ import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feat
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { anonymizeLink } from 'utils/anonymizeLink'
+
+import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
+import { anonymizeLink } from '../../utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 

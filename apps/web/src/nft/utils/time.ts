@@ -1,5 +1,6 @@
 import ms from 'ms'
-import { roundAndPluralize } from 'nft/utils/roundAndPluralize'
+
+import { roundAndPluralize } from './roundAndPluralize'
 
 const MINUTE = ms(`1m`)
 const HOUR = ms(`1h`)

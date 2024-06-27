@@ -1,8 +1,7 @@
-import { MaxUint256, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, MaxUint256, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
-const UNI_MAINNET = UNI_ADDRESSES[UniverseChainId.Mainnet]
+const UNI_MAINNET = UNI_ADDRESSES[ChainId.MAINNET]
 
 describe('Remove Liquidity', () => {
   it('loads the token pair in v2', () => {

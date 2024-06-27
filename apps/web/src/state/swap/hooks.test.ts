@@ -1,15 +1,15 @@
-import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
-import { MATIC_POLYGON, UNI } from 'constants/tokens'
 import { parse } from 'qs'
-import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
+
+import { ChainId, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { MATIC_POLYGON, UNI } from 'constants/tokens'
 import { queryParametersToSwapState } from 'state/swap/types'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { queryParametersToCurrencyState, useInitialCurrencyState } from './hooks'
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
@@ -103,7 +103,7 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: undefined,
-            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
+            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
             chainId: 10,
           }),
         }))
@@ -125,7 +125,7 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: 'ETH',
-            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
+            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
             chainId: 10,
           }),
         }))
@@ -186,7 +186,7 @@ describe('hooks', () => {
                     },
                   },
                   {
-                    token: UNI[UniverseChainId.Optimism],
+                    token: UNI[ChainId.OPTIMISM],
                     denominatedValue: {
                       value: 500,
                     },
@@ -202,7 +202,7 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: undefined,
-            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
+            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
             chainId: 10,
           }),
         }))
@@ -246,7 +246,7 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: 'ETH',
-            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
+            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
             chainId: 10,
           }),
         }))

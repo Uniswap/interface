@@ -1,5 +1,6 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ChainId } from '@uniswap/sdk-core'
+
+import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
 
 describe('#getExplorerLink', () => {
   it('correct for tx', () => {
@@ -18,9 +19,7 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(42161, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://arbiscan.io/address/abc')
   })
   it('bnb chain', () => {
-    expect(getExplorerLink(UniverseChainId.Bnb, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://bscscan.com/address/abc'
-    )
+    expect(getExplorerLink(ChainId.BNB, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://bscscan.com/address/abc')
   })
   it('polygon', () => {
     expect(getExplorerLink(137, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://polygonscan.com/address/abc')
@@ -32,18 +31,14 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(5, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://goerli.etherscan.io/address/abc')
   })
   it('avalanche', () => {
-    expect(getExplorerLink(UniverseChainId.Avalanche, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+    expect(getExplorerLink(ChainId.AVALANCHE, 'abc', ExplorerDataType.ADDRESS)).toEqual(
       'https://snowtrace.io/address/abc'
     )
   })
   it('base', () => {
-    expect(getExplorerLink(UniverseChainId.Base, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://basescan.org/address/abc'
-    )
+    expect(getExplorerLink(ChainId.BASE, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
   })
   it('blast', () => {
-    expect(getExplorerLink(UniverseChainId.Blast, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://blastscan.io/address/abc'
-    )
+    expect(getExplorerLink(ChainId.BLAST, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://blastscan.io/address/abc')
   })
 })

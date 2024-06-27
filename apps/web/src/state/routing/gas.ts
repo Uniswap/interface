@@ -1,14 +1,14 @@
-import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
-import { Currency } from '@uniswap/sdk-core'
+import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { ApproveInfo, WrapInfo } from 'state/routing/types'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
+
+import { ApproveInfo, WrapInfo } from './types'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
 const WRAP_FALLBACK_GAS_LIMIT = 45_000
@@ -32,7 +32,7 @@ export async function getApproveInfo(
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === UniverseChainId.ArbitrumOne || currency.chainId === UniverseChainId.ArbitrumGoerli) {
+  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI) {
     return { needsApprove: false }
   }
 
@@ -41,7 +41,7 @@ export async function getApproveInfo(
 
   let approveGasUseEstimate
   try {
-    const allowance = await tokenContract.callStatic.allowance(account, permit2Address(currency.chainId))
+    const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
     if (allowance.gte(amount)) {
       return { needsApprove: false }
     }
@@ -51,7 +51,7 @@ export async function getApproveInfo(
   }
 
   try {
-    const approveTx = await tokenContract.populateTransaction.approve(permit2Address(currency.chainId), MaxUint256)
+    const approveTx = await tokenContract.populateTransaction.approve(PERMIT2_ADDRESS, MaxUint256)
     approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
   } catch (_) {
     // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway

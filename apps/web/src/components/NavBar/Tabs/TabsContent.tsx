@@ -2,7 +2,6 @@ import { Limit } from 'components/Icons/Limit'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { useTheme } from 'styled-components'
@@ -27,7 +26,6 @@ export const useTabsContent = (): TabsSection[] => {
   const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
   const { pathname } = useLocation()
   const theme = useTheme()
-  const areTabsVisible = useTabsVisible()
 
   return isLegacyNav
     ? [
@@ -76,7 +74,7 @@ export const useTabsContent = (): TabsSection[] => {
         {
           title: t('common.explore'),
           href: '/explore',
-          isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
+          isActive: pathname.startsWith('/explore'),
           items: [
             { label: t('common.tokens'), quickKey: t`T`, href: '/explore/tokens', internal: true },
             { label: t('common.pools'), quickKey: t`P`, href: '/explore/pools', internal: true },
@@ -87,15 +85,7 @@ export const useTabsContent = (): TabsSection[] => {
         {
           title: t('common.pool'),
           href: '/pool',
-          isActive: pathname.startsWith('/pool'),
+          isActive: pathname.startsWith('/pools'),
         },
-        ...(!areTabsVisible
-          ? [
-              {
-                title: t('common.nfts'),
-                href: '/nfts',
-              },
-            ]
-          : []),
       ]
 }

@@ -5,6 +5,7 @@ import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
+  CHAIN_INFO,
   useChainFromUrlParam,
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
@@ -17,7 +18,6 @@ import { Check } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
@@ -91,7 +91,7 @@ export default function NetworkFilter() {
             {BACKEND_SUPPORTED_CHAINS.map((network) => {
               const chainId = supportedChainIdFromGQLChain(network)
               const isSupportedChain = isSupportedChainCallaback(chainId)
-              const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
+              const chainInfo = isSupportedChain ? CHAIN_INFO[chainId] : undefined
               return (
                 <InternalMenuItem
                   key={network}
@@ -112,15 +112,15 @@ export default function NetworkFilter() {
             })}
             {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
               const isSupportedChain = isSupportedChainCallaback(network)
-              const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[network] : undefined
-              return chainInfo ? (
+              const chainInfo = isSupportedChain ? CHAIN_INFO[network] : undefined
+              return (
                 <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>
                   <NetworkLabel>
-                    <ChainLogo chainId={network} size={20} /> {chainInfo.label}
+                    <ChainLogo chainId={network} size={20} /> {chainInfo?.label}
                   </NetworkLabel>
                   <Tag>Coming soon</Tag>
                 </InternalMenuItem>
-              ) : null
+              )
             })}
           </>
         }

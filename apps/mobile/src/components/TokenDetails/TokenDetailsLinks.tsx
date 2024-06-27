@@ -1,21 +1,21 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
-import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import {
   currencyIdToAddress,
   currencyIdToChain,
   isDefaultNativeAddress,
 } from 'wallet/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
+import { LinkButton, LinkButtonType } from './LinkButton'
 
 export function TokenDetailsLinks({
   currencyId,
@@ -27,10 +27,10 @@ export function TokenDetailsLinks({
   const { t } = useTranslation()
 
   const { homepageUrl, twitterName } = data?.token?.project ?? {}
-  const chainId = currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet
+  const chainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
   const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
-  const explorerName = UNIVERSE_CHAIN_INFO[chainId].explorer.name
+  const explorerName = CHAIN_INFO[chainId].explorer.name
 
   return (
     <View style={{ marginHorizontal: -14 }}>

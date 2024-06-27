@@ -1,5 +1,5 @@
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from './chains'
 
 const MATIC_MAINNET_ADDRESS = '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'
 const MATIC_BNB_ADDRESS = '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'
@@ -21,15 +21,15 @@ export const BRIDGED_BASE_ADDRESSES = [
   AVAX_BNB,
 ]
 
-export function getNativeAddress(chainId: WalletChainId): string {
-  return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address
+export function getNativeAddress(chainId: ChainId): string {
+  return CHAIN_INFO[chainId].nativeCurrency.address
 }
 
-export function getWrappedNativeAddress(chainId: WalletChainId): string {
-  return UNIVERSE_CHAIN_INFO[chainId].wrappedNativeCurrency.address
+export function getWrappedNativeAddress(chainId: ChainId): string {
+  return CHAIN_INFO[chainId].wrappedNativeCurrency.address
 }
 
 export const UNI_ADDRESS = {
-  [UniverseChainId.Mainnet]: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-  [UniverseChainId.Goerli]: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+  [ChainId.Mainnet]: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+  [ChainId.Goerli]: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
 }

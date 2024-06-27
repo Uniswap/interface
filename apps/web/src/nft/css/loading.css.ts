@@ -1,5 +1,6 @@
 import { keyframes, style } from '@vanilla-extract/css'
-import { sprinkles, vars } from 'nft/css/sprinkles.css'
+
+import { sprinkles, vars } from './sprinkles.css'
 
 const loadingAnimation = keyframes({
   '0%': {

@@ -1,12 +1,9 @@
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { ChainId } from '@uniswap/sdk-core'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
@@ -17,9 +14,13 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+
+import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
@@ -177,7 +178,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>
-              {chainId === UniverseChainId.Mainnet ? (
+              {chainId === ChainId.MAINNET ? (
                 <EtherscanLogo width="16px" height="16px" fill={theme.neutral1} />
               ) : (
                 <ExplorerIcon width="16px" height="16px" fill={theme.neutral1} />

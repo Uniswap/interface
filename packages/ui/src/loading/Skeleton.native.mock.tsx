@@ -1,4 +1,4 @@
-import { SkeletonProps } from 'ui/src/loading/SkeletonProps'
+import { SkeletonProps } from './SkeletonProps'
 
 /**
  * Replaces Skeleton component during e2e testing to avoid test freezes

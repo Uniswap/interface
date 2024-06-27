@@ -151,6 +151,12 @@ export interface GlobalPalette {
   slate800: string
   slate900: string
   slateVibrant: string
+  networkEthereum: string
+  networkOptimism: string
+  networkPolygon: string
+  networkArbitrum: string
+  networkCelo: string
+  networkAvalanche: string
 }
 
 export interface Palette {
@@ -203,5 +209,4 @@ export interface Palette {
   chain_42220: string
   chain_43114: string
   chain_7777777: string
-  chain_324: string
 }

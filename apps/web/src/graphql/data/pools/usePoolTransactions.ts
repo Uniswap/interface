@@ -1,5 +1,5 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   PoolTransactionType,
@@ -10,13 +10,14 @@ import {
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
   SELL = 'Sell',
-  REMOVE = 'Remove',
-  ADD = 'Add',
+  BURN = 'Burn',
+  MINT = 'Mint',
 }
 
 export interface PoolTableTransaction {
@@ -48,13 +49,14 @@ export function usePoolTransactions(
   filter: PoolTableTransactionType[] = [
     PoolTableTransactionType.BUY,
     PoolTableTransactionType.SELL,
-    PoolTableTransactionType.REMOVE,
-    PoolTableTransactionType.ADD,
+    PoolTableTransactionType.BURN,
+    PoolTableTransactionType.MINT,
   ],
   token0?: Token,
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize
 ) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -71,7 +73,7 @@ export function usePoolTransactions(
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
     variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
-    skip: !chainId || protocolVersion !== ProtocolVersion.V2,
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2 || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =
@@ -129,19 +131,15 @@ export function usePoolTransactions(
           return undefined
         }
         const tokenIn = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
-        const token0Address =
-          token0?.address === NATIVE_CHAIN_ID
-            ? WRAPPED_NATIVE_CURRENCY[chainId ?? UniverseChainId.Mainnet]?.address
-            : token0?.address
-        const isSell = tokenIn?.address?.toLowerCase() === token0Address?.toLowerCase()
+        const isSell = tokenIn?.address?.toLowerCase() === token0?.address?.toLowerCase()
         const type =
           tx.type === PoolTransactionType.Swap
             ? isSell
               ? PoolTableTransactionType.SELL
               : PoolTableTransactionType.BUY
             : tx.type === PoolTransactionType.Remove
-            ? PoolTableTransactionType.REMOVE
-            : PoolTableTransactionType.ADD
+            ? PoolTableTransactionType.BURN
+            : PoolTableTransactionType.MINT
         if (!filter.includes(type)) {
           return undefined
         }
@@ -166,7 +164,7 @@ export function usePoolTransactions(
         }
       })
       .filter((value: PoolTableTransaction | undefined): value is PoolTableTransaction => value !== undefined)
-  }, [transactions, token0?.address, chainId, filter])
+  }, [transactions, filter, token0?.address])
 
   return useMemo(() => {
     return {

@@ -1,6 +1,7 @@
 import fs from 'fs'
-import { findRouteByPath, routes } from 'pages/RouteDefinitions'
 import { parseStringPromise } from 'xml2js'
+
+import { findRouteByPath, routes } from './RouteDefinitions'
 
 describe('Routes', () => {
   it('sitemap URLs should exist as Router paths', async () => {

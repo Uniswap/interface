@@ -1,13 +1,10 @@
-import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
-import {
-  OffchainOrderLineItem,
-  OffchainOrderLineItemType,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
+import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+
+import { OffchainOrderLineItem, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
 describe('OffchainOrderLineItem', () => {
   it('should render type EXCHANGE_RATE', () => {
@@ -41,7 +38,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+            outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -79,7 +76,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+            outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

@@ -8,6 +8,7 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
 import {
+  ChainId,
   CurrencyAmount,
   GOVERNANCE_ALPHA_V0_ADDRESSES,
   GOVERNANCE_ALPHA_V1_ADDRESSES,
@@ -16,28 +17,28 @@ import {
 } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
+import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { useAccount } from 'hooks/useAccount'
+import { useContract } from 'hooks/useContract'
+import { t } from 'i18n'
+import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useCallback, useMemo } from 'react'
+import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
   ONE_BIP_START_BLOCK,
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
-} from 'constants/proposals'
-import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
-import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { UNI } from 'constants/tokens'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
-import { t } from 'i18n'
-import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
-import { useCallback, useMemo } from 'react'
-import { VoteOption } from 'state/governance/types'
-import { useLogs } from 'state/logs/hooks'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
-import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+} from '../../constants/proposals'
+import { UNI } from '../../constants/tokens'
+import { useLogs } from '../logs/hooks'
+import { useTransactionAdder } from '../transactions/hooks'
+import { TransactionType } from '../transactions/types'
+import { VoteOption } from './types'
 
 function useGovernanceV0Contract(): Contract | null {
   return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi, false)
@@ -245,10 +246,10 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   const proposalCount2 = useProposalCount(gov2)
 
   const gov0ProposalIndexes = useMemo(() => {
-    return chainId === UniverseChainId.Mainnet ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
+    return chainId === ChainId.MAINNET ? V0_PROPOSAL_IDS : countToIndices(proposalCount0)
   }, [chainId, proposalCount0])
   const gov1ProposalIndexes = useMemo(() => {
-    return chainId === UniverseChainId.Mainnet ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
+    return chainId === ChainId.MAINNET ? V1_PROPOSAL_IDS : countToIndices(proposalCount1)
   }, [chainId, proposalCount1])
   const gov2ProposalIndexes = useMemo(() => {
     return countToIndices(proposalCount2, 8)
@@ -349,7 +350,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    chainId !== UniverseChainId.Mainnet ||
+    chainId !== ChainId.MAINNET ||
     !uni ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   ) {

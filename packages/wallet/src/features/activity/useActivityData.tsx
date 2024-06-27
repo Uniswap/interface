@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text, isWeb } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
@@ -35,7 +35,7 @@ type ActivityDataProps = {
   owner: string
   authTrigger?: AuthTrigger
   isExternalProfile?: boolean
-  emptyComponentStyle?: StyleProp<ViewStyle>
+  emptyContainerStyle?: StyleProp<ViewStyle>
   onPressEmptyState?: () => void
 }
 
@@ -51,7 +51,7 @@ export function useActivityData({
   owner,
   authTrigger,
   isExternalProfile,
-  emptyComponentStyle,
+  emptyContainerStyle,
   onPressEmptyState,
 }: ActivityDataProps): ActivityData {
   const { t } = useTranslation()
@@ -93,7 +93,7 @@ export function useActivityData({
     )
 
   const errorCard = (
-    <Flex grow style={emptyComponentStyle}>
+    <Flex grow style={emptyContainerStyle}>
       <BaseCard.ErrorState
         retryButtonLabel={t('common.button.retry')}
         title={t('home.activity.error.load')}
@@ -103,7 +103,7 @@ export function useActivityData({
   )
 
   const emptyListView = (
-    <Flex centered grow pt="$spacing48" px="$spacing36" style={emptyComponentStyle}>
+    <Flex grow pt="$spacing48" px="$spacing36" style={emptyContainerStyle}>
       <BaseCard.EmptyState
         buttonLabel={
           isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')

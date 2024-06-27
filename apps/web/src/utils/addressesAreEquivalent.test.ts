@@ -1,4 +1,4 @@
-import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { addressesAreEquivalent } from './addressesAreEquivalent'
 
 describe('addressesAreEquivalent', () => {
   it('should return false for undefined addresses', () => {

@@ -1,5 +1,4 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   DAI_CURRENCY_INFO,
   ETH_CURRENCY_INFO,
@@ -7,12 +6,13 @@ import {
   ethCurrencyInfo,
 } from 'wallet/src/test/fixtures'
 import { render, within } from 'wallet/src/test/test-utils'
+import { SplitLogo } from './SplitLogo'
 
 describe(SplitLogo, () => {
   it('renders without error', () => {
     const tree = render(
       <SplitLogo
-        chainId={UniverseChainId.ArbitrumOne}
+        chainId={ChainId.ArbitrumOne}
         inputCurrencyInfo={DAI_CURRENCY_INFO}
         outputCurrencyInfo={ETH_CURRENCY_INFO}
         size={10}
@@ -26,7 +26,7 @@ describe(SplitLogo, () => {
     it('renders input currency logo when inputCurrencyInfo is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={UniverseChainId.ArbitrumOne}
+          chainId={ChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
@@ -41,7 +41,7 @@ describe(SplitLogo, () => {
     it('renders input currency logo when inputCurrencyInfo is not specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={UniverseChainId.ArbitrumOne}
+          chainId={ChainId.ArbitrumOne}
           inputCurrencyInfo={null}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
@@ -58,7 +58,7 @@ describe(SplitLogo, () => {
     it('renders output currency logo when outputCurrencyInfo is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={UniverseChainId.ArbitrumOne}
+          chainId={ChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
@@ -73,7 +73,7 @@ describe(SplitLogo, () => {
     it('renders output currency logo when outputCurrencyInfo is not specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={UniverseChainId.ArbitrumOne}
+          chainId={ChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={null}
           size={10}
@@ -90,7 +90,7 @@ describe(SplitLogo, () => {
     it('renders icon when chainId is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={UniverseChainId.ArbitrumOne}
+          chainId={ChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}

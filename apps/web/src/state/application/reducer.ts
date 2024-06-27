@@ -1,6 +1,6 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { ChainId } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export enum PopupType {
   Transaction = 'transaction',
@@ -19,7 +19,7 @@ export type PopupContent =
     }
   | {
       type: PopupType.FailedSwitchNetwork
-      failedSwitchNetwork: InterfaceChainId
+      failedSwitchNetwork: ChainId
     }
 
 export enum ApplicationModal {

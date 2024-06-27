@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   NFTApproveTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -17,10 +16,9 @@ const meta: Meta<typeof NFTApproveSummaryItem> = {
 
 export default meta
 
-const baseApproveTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseApproveTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: NFTApproveTransactionInfo
 } = {
-  routing: Routing.CLASSIC,
   from: '',
   addedTime: Date.now() - 30000,
   hash: '',
@@ -68,7 +66,7 @@ export const NFTApprove: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

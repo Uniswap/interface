@@ -1,6 +1,7 @@
 import defaultTokenList from '@uniswap/default-token-list'
 import fetch from 'jest-fetch-mock'
-import fetchTokenList from 'lib/hooks/useTokenList/fetchTokenList'
+
+import fetchTokenList from './fetchTokenList'
 
 fetch.enableMocks()
 

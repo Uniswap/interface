@@ -1,16 +1,17 @@
-import React, { memo, useCallback, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
-import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
+import { filterRecipientByNameAndAddress } from 'wallet/src/components/RecipientSearch/filter'
+import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
+import { filterSections } from 'wallet/src/components/RecipientSearch/utils'
+import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { SearchBar } from 'wallet/src/features/search/SearchBar'
 
 interface RecipientSelectProps {
@@ -41,9 +42,17 @@ export function _RecipientSelect({
   const { t } = useTranslation()
   const { isSheetReady } = useBottomSheetContext()
 
-  const [pattern, setPattern] = useState('')
   const [showQRScanner, setShowQRScanner] = useState(false)
-  const sections = useFilteredRecipientSections(pattern)
+  const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
+    useRecipients()
+
+  const filteredSections = useMemo(() => {
+    const filteredAddresses = filterRecipientByNameAndAddress(
+      pattern,
+      searchableRecipientOptions
+    ).map((item) => item.data.address)
+    return filterSections(sections, filteredAddresses)
+  }, [pattern, searchableRecipientOptions, sections])
 
   const onPressQRScanner = useCallback(() => {
     Keyboard.dismiss()
@@ -53,6 +62,8 @@ export function _RecipientSelect({
   const onCloseQRScanner = useCallback(() => {
     setShowQRScanner(false)
   }, [setShowQRScanner])
+
+  const noResults = pattern && pattern?.length > 0 && !loading && filteredSections.length === 0
 
   return (
     <>
@@ -73,9 +84,9 @@ export function _RecipientSelect({
           placeholder={t('qrScanner.recipient.input.placeholder')}
           value={pattern ?? ''}
           onBack={recipient ? onToggleShowRecipientSelector : undefined}
-          onChangeText={setPattern}
+          onChangeText={onChangePattern}
         />
-        {!sections.length ? (
+        {noResults ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
             <Text variant="buttonLabel2">{t('qrScanner.recipient.results.empty')}</Text>
             <Text color="$neutral3" textAlign="center" variant="body1">
@@ -85,7 +96,11 @@ export function _RecipientSelect({
         ) : (
           // Show either suggested recipients or filtered sections based on query
           isSheetReady && (
-            <RecipientList renderedInModal sections={sections} onPress={onSelectRecipient} />
+            <RecipientList
+              renderedInModal
+              sections={filteredSections.length === 0 ? sections : filteredSections}
+              onPress={onSelectRecipient}
+            />
           )
         )}
       </AnimatedFlex>

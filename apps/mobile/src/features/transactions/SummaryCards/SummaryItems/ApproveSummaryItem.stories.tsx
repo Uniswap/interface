@@ -1,12 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
   ApproveTransactionInfo,
-  ClassicTransactionDetails,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -83,10 +82,9 @@ const meta: Meta<typeof ApproveSummaryItem> = {
 
 export default meta
 
-const baseApproveTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseApproveTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: ApproveTransactionInfo
 } = {
-  routing: Routing.CLASSIC,
   from: '',
   addedTime: Date.now() - 30000,
   hash: '',
@@ -166,7 +164,7 @@ export const Approve: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseApproveUnlimitedTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />
@@ -202,7 +200,7 @@ export const Revoke: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseRevokeTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

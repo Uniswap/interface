@@ -11,15 +11,4 @@
     "types": ["cypress", "node"],
   },
   "include": ["**/*.ts"],
-  "references": [
-    {
-      "path": "../../../packages/ui"
-    },
-    {
-      "path": "../../../packages/utilities"
-    },
-    {
-      "path": "../../../packages/uniswap"
-    }
-  ]
 }

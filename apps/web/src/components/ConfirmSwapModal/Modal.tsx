@@ -55,7 +55,7 @@ export function SwapModal({
 
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal isOpen $scrollOverlay onDismiss={onDismiss} maxHeight="90vh" slideIn>
+      <Modal isOpen $scrollOverlay onDismiss={onDismiss} maxHeight={90} slideIn>
         <AnimatedContainer style={prevConfirmModalState.current !== confirmModalState ? springProps : undefined}>
           <div ref={ref}>
             <Content>{children}</Content>

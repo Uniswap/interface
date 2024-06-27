@@ -1,12 +1,8 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
+import { ChainId } from '@uniswap/sdk-core'
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { useRecentlySearchedAssets } from 'components/NavBar/LEGACY/SearchBar/RecentlySearchedAssets'
-import * as styles from 'components/NavBar/LEGACY/SearchBar/SearchBar.css'
-import { SkeletonRow, SuggestionRow } from 'components/NavBar/LEGACY/SearchBar/SuggestionRow'
-import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
-import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
@@ -17,7 +13,6 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { ClockIcon, TrendingArrow } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
@@ -26,8 +21,13 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { ClockIcon, TrendingArrow } from '../../../../nft/components/icons'
+import { SuspendConditionally } from '../../../Suspense/SuspendConditionally'
+import { SuspenseWithPreviousRenderAsFallback } from '../../../Suspense/SuspenseWithPreviousRenderAsFallback'
+import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
+import * as styles from './SearchBar.css'
+import { SkeletonRow, SuggestionRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
@@ -113,9 +113,8 @@ interface SearchBarDropdownProps {
 
 export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
   const { isLoading } = props
-  const account = useAccount()
-  const showChainComingSoonBadge =
-    account.chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(account.chainId) && !isLoading
+  const { chainId } = useAccount()
+  const showChainComingSoonBadge = chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) && !isLoading
 
   return (
     <Column overflow="hidden" className={clsx(styles.searchBarDropdownNft, styles.searchBarScrollable)}>
@@ -125,11 +124,11 @@ export const SearchBarDropdown = (props: SearchBarDropdownProps) => {
             <SearchBarDropdownContents {...props} />
           </SuspendConditionally>
         </SuspenseWithPreviousRenderAsFallback>
-        {showChainComingSoonBadge && account.chainId && (
+        {showChainComingSoonBadge && (
           <ChainComingSoonBadge>
-            <ChainLogo chainId={account.chainId} size={20} />
+            <ChainLogo chainId={chainId} size={20} />
             <ThemedText.BodySmall color="neutral2" fontSize="14px" fontWeight="400" lineHeight="20px">
-              <ComingSoonText chainId={account.chainId} />
+              <ComingSoonText chainId={chainId} />
             </ThemedText.BodySmall>
           </ChainComingSoonBadge>
         )}
@@ -337,9 +336,9 @@ function SearchBarDropdownContents({
   )
 }
 
-function ComingSoonText({ chainId }: { chainId: InterfaceChainId }) {
+function ComingSoonText({ chainId }: { chainId: ChainId }) {
   switch (chainId) {
-    case UniverseChainId.Avalanche:
+    case ChainId.AVALANCHE:
       return <Trans i18nKey="search.avalancheComing" />
     default:
       return null

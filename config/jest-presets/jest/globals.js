@@ -16,7 +16,6 @@ module.exports = {
     QUICKNODE_BNB_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_MAINNET_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_ZORA_RPC_URL: 'https://api.uniswap.org',
-    QUICKNODE_ZKSYNC_RPC_URL: 'https://api.uniswap.org',
     SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,
     SHAKE_CLIENT_SECRET: 123,

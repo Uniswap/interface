@@ -66,8 +66,6 @@ module.exports = {
     'apps/stretch/src/**/*.ts',
     'packages/wallet/src/**/*.ts',
     'packages/wallet/src/**/*.tsx',
-    'packages/uniswap/src/**/*.ts',
-    'packages/uniswap/src/**/*.tsx',
   ],
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)

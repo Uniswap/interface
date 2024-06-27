@@ -1,13 +1,7 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import Column from 'components/Column'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
-import Row, { RowBetween } from 'components/Row'
-import CommonBases from 'components/SearchModal/CommonBases'
-import CurrencyList, { CurrencyRow, formatAnalyticsEventProperties } from 'components/SearchModal/CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from 'components/SearchModal/styled'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -20,12 +14,18 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useRef, 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
+
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { currencyKey } from 'utils/currencyKey'
+import Column from '../Column'
+import Row, { RowBetween } from '../Row'
+import CommonBases from './CommonBases'
+import CurrencyList, { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
+import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.surface1};
@@ -76,10 +76,7 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const account = useAccount()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
-
+  const { chainId } = useSwapAndLimitContext()
   const theme = useTheme()
 
   // refs for fixed size lists

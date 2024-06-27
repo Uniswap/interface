@@ -4,7 +4,7 @@ import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
@@ -22,7 +22,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   const { address } = etherscanResult
 
   const onPressViewEtherscan = async (): Promise<void> => {
-    const explorerLink = getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS)
+    const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
     await openUri(explorerLink)
     dispatch(
       addToSearchHistory({
@@ -31,7 +31,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     )
   }
 
-  const EtherscanIcon = getBlockExplorerIcon(UniverseChainId.Mainnet)
+  const EtherscanIcon = getBlockExplorerIcon(ChainId.Mainnet)
 
   return (
     <TouchableArea

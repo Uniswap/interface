@@ -1,6 +1,9 @@
-import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import {
+  FiatCurrencyInfo,
+  useAppFiatCurrencyInfo,
+  useFiatCurrencyInfo,
+} from 'wallet/src/features/fiatCurrency/hooks'
 
 // MoonPay supported fiat currencies (https://support.moonpay.com/hc/en-gb/articles/360011931457-Which-fiat-currencies-are-supported-)
 const MOONPAY_FIAT_CURRENCY_CODES = [

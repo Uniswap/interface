@@ -5,14 +5,14 @@ import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
 import { APP_STORE_LINK } from 'src/constants/urls'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { openUri } from 'wallet/src/utils/linking'
 
 export function ForceUpgradeModal(): JSX.Element {
@@ -24,7 +24,7 @@ export function ForceUpgradeModal(): JSX.Element {
   const [upgradeStatus, setUpgradeStatus] = useState(UpgradeStatus.NotRequired)
 
   // signerAccounts could be empty if no seed phrase imported or in onboarding
-  const signerAccounts = useSignerAccounts()
+  const signerAccounts = useNonPendingSignerAccounts()
   const mnemonicId =
     signerAccounts.length > 0
       ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId

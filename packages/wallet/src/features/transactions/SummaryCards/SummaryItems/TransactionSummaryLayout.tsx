@@ -2,20 +2,17 @@
 import { providers } from 'ethers'
 import { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { CancelConfirmationView } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/CancelConfirmationView'
 import TransactionActionsModal from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionActionsModal'
-import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   TXN_HISTORY_ICON_SIZE,
@@ -23,10 +20,9 @@ import {
   getTransactionSummaryTitle,
   useFormattedTime,
 } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
+import { useLowestPendingNonce } from 'wallet/src/features/transactions/hooks'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
@@ -45,7 +41,6 @@ function TransactionSummaryLayout({
 }: TransactionSummaryLayoutProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const isTransactionDetailsModalEnabled = useFeatureFlag(FeatureFlags.TransactionDetailsSheet)
 
   const { navigateToTokenDetails } = useWalletNavigation()
 
@@ -54,7 +49,6 @@ function TransactionSummaryLayout({
 
   const [showActionsModal, setShowActionsModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
-  const [showDetailsModal, setShowDetailsModal] = useState(false)
   const dispatch = useAppDispatch()
 
   const { status, addedTime, hash, chainId, typeInfo } = transaction
@@ -68,9 +62,14 @@ function TransactionSummaryLayout({
     status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
 
   // Monitor latest nonce to identify queued transactions.
-  const queued = useIsQueuedTransaction(transaction)
+  const lowestPendingNonce = useLowestPendingNonce()
+  const nonce = transaction?.options?.request?.nonce
+  const queued = nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 
-  const isCancelable = !readonly && getIsCancelable(transaction)
+  const isCancelable =
+    status === TransactionStatus.Pending &&
+    !readonly &&
+    Object.keys(transaction.options?.request).length > 0
 
   function handleCancel(txRequest: providers.TransactionRequest): void {
     if (!transaction) {
@@ -98,11 +97,7 @@ function TransactionSummaryLayout({
     if (readonly) {
       await openTransactionLink(hash, chainId)
     } else {
-      if (isTransactionDetailsModalEnabled) {
-        setShowDetailsModal(true)
-      } else {
-        setShowActionsModal(true)
-      }
+      setShowActionsModal(true)
     }
   }
 
@@ -160,7 +155,9 @@ function TransactionSummaryLayout({
                       textProps={{ color: '$accent1', variant: 'body1' }}
                     />
                   ) : null}
-                  <TransactionSummaryTitle title={title} transaction={transaction} />
+                  <Text color="$neutral2" numberOfLines={1} variant="body2">
+                    {title}
+                  </Text>
                 </Flex>
                 {!inProgress && rightBlock}
               </Flex>
@@ -244,12 +241,6 @@ function TransactionSummaryLayout({
             />
           )}
         </BottomSheetModal>
-      )}
-      {showDetailsModal && (
-        <TransactionDetailsModal
-          transactionDetails={transaction}
-          onClose={(): void => setShowDetailsModal(false)}
-        />
       )}
     </>
   )

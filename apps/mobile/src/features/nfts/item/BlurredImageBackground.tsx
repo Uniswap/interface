@@ -2,8 +2,7 @@ import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { Flex } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimatedFlex, Flex } from 'ui/src'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 /**

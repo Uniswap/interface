@@ -1,5 +1,6 @@
-import * as styles from 'nft/components/common/Loading/LoadingSparkle.css'
 import { themeVars } from 'nft/css/sprinkles.css'
+
+import * as styles from './LoadingSparkle.css'
 
 export const LoadingSparkle = () => {
   return (

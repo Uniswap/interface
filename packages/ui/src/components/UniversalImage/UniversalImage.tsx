@@ -105,7 +105,7 @@ export function UniversalImage({
         overflow="hidden"
         testID={testID ? `svg-${testID}` : undefined}
         width={size.width}>
-        <SvgImage autoplay={true} fallback={fallback} size={size} uri={imageHttpUrl} />
+        <SvgImage autoplay={true} size={size} uri={imageHttpUrl} />
       </Flex>
     )
   }
@@ -113,7 +113,6 @@ export function UniversalImage({
   // Handle a plain image
   return (
     <PlainImage
-      fallback={fallback}
       resizeMode={size.resizeMode}
       size={computedSize}
       style={style?.image}

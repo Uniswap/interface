@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_CURRENCY_DECIMALS = 18
@@ -35,8 +35,6 @@ export const MIN_CELO_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
 export const MIN_ZORA_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
-export const MIN_ZKSYNC_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
-
 /**
  * Given some token amount, return the max that can be spent of it
  * https://github.com/Uniswap/interface/blob/main/src/utils/maxAmountSpend.ts
@@ -54,38 +52,35 @@ export function maxAmountSpend(
 
   let minAmount
   switch (currencyAmount.currency.chainId) {
-    case UniverseChainId.Mainnet:
+    case ChainId.Mainnet:
       minAmount = MIN_ETH_FOR_GAS
       break
-    case UniverseChainId.Polygon:
+    case ChainId.Polygon:
       minAmount = MIN_POLYGON_FOR_GAS
       break
-    case UniverseChainId.ArbitrumOne:
+    case ChainId.ArbitrumOne:
       minAmount = MIN_ARBITRUM_FOR_GAS
       break
-    case UniverseChainId.Optimism:
+    case ChainId.Optimism:
       minAmount = MIN_OPTIMISM_FOR_GAS
       break
-    case UniverseChainId.Base:
+    case ChainId.Base:
       minAmount = MIN_BASE_FOR_GAS
       break
-    case UniverseChainId.Bnb:
+    case ChainId.Bnb:
       minAmount = MIN_BNB_FOR_GAS
       break
-    case UniverseChainId.Blast:
+    case ChainId.Blast:
       minAmount = MIN_BLAST_FOR_GAS
       break
-    case UniverseChainId.Avalanche:
+    case ChainId.Avalanche:
       minAmount = MIN_AVALANCHE_FOR_GAS
       break
-    case UniverseChainId.Celo:
+    case ChainId.Celo:
       minAmount = MIN_CELO_FOR_GAS
       break
-    case UniverseChainId.Zora:
+    case ChainId.Zora:
       minAmount = MIN_ZORA_FOR_GAS
-      break
-    case UniverseChainId.Zksync:
-      minAmount = MIN_ZKSYNC_FOR_GAS
       break
     default:
       return undefined

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import {
@@ -9,8 +9,8 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
-  address: getNativeAddress(UniverseChainId.Mainnet),
-  chainId: UniverseChainId.Mainnet,
+  address: getNativeAddress(ChainId.Mainnet),
+  chainId: ChainId.Mainnet,
   type: AssetType.Currency,
 }
 

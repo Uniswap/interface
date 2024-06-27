@@ -4,14 +4,13 @@ import {
   Chain,
   TokenDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   FiatPurchaseTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -57,10 +56,9 @@ const meta: Meta<typeof FiatPurchaseSummaryItem> = {
 
 export default meta
 
-const baseFiatPurchaseTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseFiatPurchaseTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: FiatPurchaseTransactionInfo
 } = {
-  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -77,7 +75,7 @@ const baseFiatPurchaseTx: Omit<ClassicTransactionDetails, 'status'> & {
     outputCurrency: {
       type: 'crypto',
       metadata: {
-        contractAddress: getNativeAddress(UniverseChainId.Mainnet),
+        contractAddress: getNativeAddress(ChainId.Mainnet),
         chainId: Chain.Ethereum,
       },
     },
@@ -150,7 +148,7 @@ export const FiatPurchase: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseFiatPurchaseTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

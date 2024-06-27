@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
@@ -16,12 +17,17 @@ import {
   FORMAT_DATE_TIME_SHORT,
   useLocalizedDayjs,
 } from 'wallet/src/features/language/localizedDayjs'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
   const localizedDayjs = useLocalizedDayjs()
 
@@ -30,6 +36,9 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
   const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
+    // Clear any existing pending accounts
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+
     navigation.navigate({
       name: OnboardingScreens.RestoreCloudBackupPassword,
       params: { ...params, mnemonicId: backup.mnemonicId },

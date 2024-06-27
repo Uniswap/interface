@@ -5,7 +5,8 @@ import {
   TokenBalance,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { splitHiddenTokens } from 'utils/splitHiddenTokens'
+
+import { splitHiddenTokens } from './splitHiddenTokens'
 
 const nativeToken: Token = {
   id: 'native-token',

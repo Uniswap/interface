@@ -15,6 +15,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
+  AnimatedFlex,
   Flex,
   FlexProps,
   HapticFeedback,
@@ -26,7 +27,6 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

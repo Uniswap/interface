@@ -2,12 +2,13 @@ import 'test-utils/tokens/mocks'
 
 import userEvent from '@testing-library/user-event'
 import { Token } from '@uniswap/sdk-core'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getExplorerLink } from 'utils/getExplorerLink'
+
+import { useCurrencyInfo } from 'hooks/Tokens'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import UnsupportedCurrencyFooter from './UnsupportedCurrencyFooter'
 
 const unsupportedTokenAddress = '0x4e83b6287588a96321B2661c5E041845fF7814af'
 const unsupportedTokenSymbol = 'ALTDOM-MAR2021'

@@ -1,4 +1,4 @@
-import { ShineProps } from 'ui/src/loading/ShineProps'
+import { ShineProps } from './ShineProps'
 
 /**
  * Replaces Shine component during e2e testing because expo LinearGradient

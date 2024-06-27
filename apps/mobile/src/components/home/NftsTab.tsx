@@ -71,8 +71,8 @@ export const NftsTab = memo(
         <NftsList
           ref={ref}
           ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-          emptyStateStyle={containerProps?.emptyComponentStyle}
-          errorStateStyle={containerProps?.emptyComponentStyle}
+          emptyStateStyle={containerProps?.emptyContainerStyle}
+          errorStateStyle={containerProps?.emptyContainerStyle}
           footerHeight={footerHeight}
           isExternalProfile={isExternalProfile}
           owner={owner}

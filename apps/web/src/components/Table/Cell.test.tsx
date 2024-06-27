@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { Cell } from 'components/Table/Cell'
+
+import { Cell } from './Cell'
 
 describe('Table Cell', () => {
   it('shows loading bubble', () => {

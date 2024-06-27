@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
   makeSelectTransaction,
@@ -12,7 +12,6 @@ import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
 } from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
   TransactionDetails,
@@ -59,7 +58,7 @@ export function useSortedPendingTransactions(
 
 export function useSelectTransaction(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: ChainId | undefined,
   txId: string | undefined
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
@@ -68,7 +67,7 @@ export function useSelectTransaction(
 
 export function useCreateSwapFormState(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: ChainId | undefined,
   txId: string | undefined
 ): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
@@ -101,7 +100,7 @@ export function useCreateSwapFormState(
 
 export function useCreateWrapFormState(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: ChainId | undefined,
   txId: string | undefined,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>
@@ -248,7 +247,7 @@ export function useMergeLocalAndRemoteTransactions(
   }, [dispatch, localTransactions, remoteTransactions])
 }
 
-function useLowestPendingNonce(): BigNumberish | undefined {
+export function useLowestPendingNonce(): BigNumberish | undefined {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const pending = usePendingTransactions(activeAccountAddress)
 
@@ -258,22 +257,9 @@ function useLowestPendingNonce(): BigNumberish | undefined {
       return
     }
     pending.map((txn: TransactionDetails) => {
-      if (isClassic(txn)) {
-        const currentNonce = txn.options?.request?.nonce
-        min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
-      }
+      const currentNonce = txn.options?.request?.nonce
+      min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
     })
     return min
   }, [pending])
-}
-
-export function useIsQueuedTransaction(tx: TransactionDetails): boolean {
-  const lowestPendingNonce = useLowestPendingNonce()
-
-  if (isUniswapX(tx)) {
-    return false
-  }
-
-  const nonce = tx?.options?.request?.nonce
-  return nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 }

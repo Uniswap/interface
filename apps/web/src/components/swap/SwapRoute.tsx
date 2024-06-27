@@ -1,8 +1,6 @@
 import Column from 'components/Column'
-import RouterLabel from 'components/RouterLabel'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
-import { UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { Trans } from 'i18n'
@@ -11,6 +9,9 @@ import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
+
+import RouterLabel from '../RouterLabel'
+import { UniswapXDescription } from './GasBreakdownTooltip'
 
 // TODO(WEB-2022)
 // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?

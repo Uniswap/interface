@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { selectPercent } from 'state/burn/v3/actions'
+
+import { selectPercent } from './actions'
 
 export interface BurnV3State {
   readonly percent: number

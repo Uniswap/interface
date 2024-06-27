@@ -1,5 +1,5 @@
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { RPCType, UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId, RPCType } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 
 // Should match supported chains in `InfuraProvider` class within `getUrl` method
 export type InfuraChainName =
@@ -15,35 +15,35 @@ export type InfuraChainName =
   | 'avalanche-mainnet'
   | 'celo-mainnet'
 
-export function getInfuraChainName(chainId: WalletChainId): InfuraChainName {
+export function getInfuraChainName(chainId: ChainId): InfuraChainName {
   switch (chainId) {
-    case UniverseChainId.Mainnet:
+    case ChainId.Mainnet:
       return 'homestead'
-    case UniverseChainId.Goerli:
+    case ChainId.Goerli:
       return 'goerli'
-    case UniverseChainId.ArbitrumOne:
+    case ChainId.ArbitrumOne:
       return 'arbitrum'
-    case UniverseChainId.Base:
+    case ChainId.Base:
       return 'base'
-    case UniverseChainId.Bnb:
+    case ChainId.Bnb:
       return 'bnbsmartchain-mainnet'
-    case UniverseChainId.Optimism:
+    case ChainId.Optimism:
       return 'optimism'
-    case UniverseChainId.Polygon:
+    case ChainId.Polygon:
       return 'matic'
-    case UniverseChainId.PolygonMumbai:
+    case ChainId.PolygonMumbai:
       return 'maticmum'
-    case UniverseChainId.Blast:
+    case ChainId.Blast:
       return 'blast'
-    case UniverseChainId.Avalanche:
+    case ChainId.Avalanche:
       return 'avalanche-mainnet'
-    case UniverseChainId.Celo:
+    case ChainId.Celo:
       return 'celo-mainnet'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }
 }
 
-export function isPrivateRpcSupportedOnChain(chainId: WalletChainId): boolean {
-  return Boolean(UNIVERSE_CHAIN_INFO[chainId]?.rpcUrls?.[RPCType.Private])
+export function isPrivateRpcSupportedOnChain(chainId: ChainId): boolean {
+  return Boolean(CHAIN_INFO[chainId]?.rpcUrls?.[RPCType.Private])
 }

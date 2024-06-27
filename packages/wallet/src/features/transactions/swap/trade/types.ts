@@ -1,89 +1,21 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
-import { MixedRouteSDK, Trade as RouterSDKTrade, ZERO_PERCENT } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Trade as RouterSDKTrade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { V2DutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  ClassicQuote,
-  DutchQuoteV2,
-  QuoteResponse,
-  Routing,
-} from 'wallet/src/data/tradingApi/__generated__/index'
-import {
-  getSwapFee,
-  transformToDutchOrderInfo,
-} from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
-// TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
-// See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
-export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse
-
-export type DutchQuoteResponse = QuoteResponse & {
-  quote: DutchQuoteV2
-  routing: Routing.DUTCH_V2
-}
-
-export type ClassicQuoteResponse = QuoteResponse & {
-  quote: ClassicQuote
-  routing: Routing.CLASSIC
-}
-
-export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
-  readonly routing = Routing.DUTCH_V2
-  quote: DutchQuoteResponse
-  // TODO(WEB-4299): Update trade to include classicGasUseEstimateUSD once trading API supports it.
-  // classicGasUseEstimateUSD?: number
-  slippageTolerance: number
-  swapFee?: SwapFee
-
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    tradeType,
-  }: {
-    quote: DutchQuoteResponse
-    currencyIn: Currency
-    currencyOut: Currency
-    tradeType: TradeType
-  }) {
-    const orderInfo = transformToDutchOrderInfo(quote.quote.orderInfo)
-    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
-    this.quote = quote
-    this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getSwapFee(quote)
-  }
-
-  public get deadline(): number {
-    return this.order.info.deadline
-  }
-
-  public get priceImpact(): Percent {
-    return ZERO_PERCENT
-  }
-
-  public get inputTax(): Percent {
-    return ZERO_PERCENT
-  }
-
-  public get outputTax(): Percent {
-    return ZERO_PERCENT
-  }
-}
-
 // TODO: [MOB-238] use composition instead of inheritance
-export class ClassicTrade<
+export class Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
-  readonly quote?: ClassicQuoteResponse
-  readonly routing = Routing.CLASSIC
+  readonly quote?: QuoteResponse
   readonly deadline: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
@@ -92,9 +24,11 @@ export class ClassicTrade<
     quote,
     deadline,
     slippageTolerance,
+    swapFee,
     ...routes
   }: {
-    readonly quote?: ClassicQuoteResponse
+    readonly quote?: QuoteResponse
+    readonly swapFee?: SwapFee
     readonly deadline: number
     readonly slippageTolerance: number
     readonly v2Routes: {
@@ -118,20 +52,14 @@ export class ClassicTrade<
     this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = slippageTolerance
-    this.swapFee = getSwapFee(quote)
+    this.swapFee = swapFee
   }
 }
 
-export type Trade<
-  TInput extends Currency = Currency,
-  TOutput extends Currency = Currency,
-  TTradeType extends TradeType = TradeType
-> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade
-
-export interface TradeWithStatus<T extends Trade = Trade> {
+export interface TradeWithStatus {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
-  trade: null | T
+  trade: null | Trade<Currency, Currency, TradeType>
   isFetching?: boolean
 }
 

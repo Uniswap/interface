@@ -13,7 +13,7 @@ import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { useENSName } from 'wallet/src/features/ens/api'
@@ -40,7 +40,7 @@ export function ChooseProfilePictureScreen({
 
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { data: ensName } = useENSName(address, UniverseChainId.Mainnet)
+  const { data: ensName } = useENSName(address, ChainId.Mainnet)
   const claimUnitag = useClaimUnitag()
   const isDarkMode = useIsDarkMode()
 

@@ -1,5 +1,4 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import { forwardRef, RefObject, useEffect, useState } from 'react'
+import { forwardRef, RefObject, useEffect, useRef, useState } from 'react'
 import {
   findNodeHandle,
   NativeSyntheticEvent,
@@ -7,10 +6,6 @@ import {
   StyleSheet,
   UIManager,
 } from 'react-native'
-import { useNativeComponentKey } from 'src/app/hooks'
-import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'utilities/src/platform'
 
 export type MnemonicStoredEvent = {
   mnemonicId: string
@@ -47,7 +42,7 @@ const NativeSeedPhraseInput = requireNativeComponent<
     onHeightMeasured: (e: NativeSyntheticEvent<HeightMeasuredEvent>) => void
   }
 >('SeedPhraseInput')
-export type NativeSeedPhraseInputRef = typeof NativeSeedPhraseInput & { handleSubmit: () => void }
+type NativeSeedPhraseInputRef = typeof NativeSeedPhraseInput & { handleSubmit: () => void }
 
 const styles = StyleSheet.create({
   input: {
@@ -56,33 +51,33 @@ const styles = StyleSheet.create({
   },
 })
 
-export function handleSubmit(ref: RefObject<NativeSeedPhraseInputRef>): void {
-  UIManager.dispatchViewManagerCommand(findNodeHandle(ref.current), 'handleSubmit', [])
+export const useSeedPhraseInputRef = (): RefObject<NativeSeedPhraseInputRef> => {
+  const ref = useRef<NativeSeedPhraseInputRef>(null)
+  const current = ref.current
+
+  useEffect(() => {
+    if (current) {
+      current.handleSubmit = (): void => {
+        // Executes in Native as an external method in iOS (RCT_EXTERN_METHOD) or a command in Android
+        UIManager.dispatchViewManagerCommand(findNodeHandle(current), 'handleSubmit', [])
+      }
+    }
+  }, [current])
+
+  return ref
 }
 
-type SeedPhraseInputProps = NativeSeedPhraseInputProps & {
-  navigation: NativeStackNavigationProp<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
-}
-
-export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, SeedPhraseInputProps>(
-  ({ navigation, ...rest }, ref) => {
+export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, NativeSeedPhraseInputProps>(
+  (props, ref) => {
     const [height, setHeight] = useState(0)
-    const { key, triggerUpdate } = useNativeComponentKey(isAndroid)
-
-    useEffect(() => {
-      // Trigger update when the transition finishes to ensure the native component is mounted
-      // and auto-focus works correctly
-      return navigation.addListener('transitionEnd', triggerUpdate)
-    }, [navigation, triggerUpdate])
 
     return (
       <NativeSeedPhraseInput
-        key={key}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         ref={ref}
-        style={[styles.input, { minHeight: height }]}
-        {...rest}
+        style={[styles.input, { height }]}
+        {...props}
         onHeightMeasured={(e) => {
           // Round to limit state updates (was called with nearly the same value multiple times)
           setHeight(Math.round(e.nativeEvent.height))

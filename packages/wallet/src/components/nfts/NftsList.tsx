@@ -4,18 +4,19 @@ import { ComponentProps, CSSProperties, forwardRef, useCallback, useEffect, useS
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
-import { Flex, Loader } from 'ui/src'
 import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
-} from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+  Flex,
+  Loader,
+  useDeviceDimensions,
+} from 'ui/src'
 import { NoNfts } from 'ui/src/components/icons'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
@@ -198,9 +199,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
       ListFooterComponent={
         <>
-          {nfts.length > 0 && networkStatus === NetworkStatus.fetchMore && (
-            <Loader.NFT repeat={6} />
-          )}
+          {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
           {ListFooterComponent}
         </>
       }

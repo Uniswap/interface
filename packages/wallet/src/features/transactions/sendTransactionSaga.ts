@@ -1,11 +1,10 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId, RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {
@@ -28,7 +27,7 @@ export interface SendTransactionParams {
   // internal id used for tracking transactions before they're submitted
   // this is optional as an override in txDetail.id calculation
   txId?: string
-  chainId: WalletChainId
+  chainId: ChainId
   account: Account
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
@@ -42,11 +41,7 @@ export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
   const request = options.request
 
-  logger.debug(
-    'sendTransaction',
-    '',
-    `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`
-  )
+  logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
   if (account.type === AccountType.Readonly) {
     throw new Error('Account must support signing')
@@ -97,7 +92,6 @@ function* addTransaction(
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
 
   const transaction: TransactionDetails = {
-    routing: Routing.CLASSIC,
     id,
     chainId,
     hash,
@@ -119,7 +113,6 @@ function* addTransaction(
       })
     } else {
       yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        routing: transaction.routing,
         transaction_hash: hash,
         ...analytics,
       })

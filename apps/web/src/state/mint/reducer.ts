@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, resetMintState, typeInput } from 'state/mint/actions'
+
+import { Field, resetMintState, typeInput } from './actions'
 
 export interface MintState {
   readonly independentField: Field

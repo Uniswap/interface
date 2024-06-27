@@ -2,14 +2,13 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { TradeType } from '@uniswap/sdk-core'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -86,10 +85,9 @@ const meta: Meta<typeof SwapSummaryItem> = {
 
 export default meta
 
-const baseSwapTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseSwapTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
 } = {
-  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -102,9 +100,9 @@ const baseSwapTx: Omit<ClassicTransactionDetails, 'status'> & {
     outputCurrencyAmountRaw: '50000000000000000',
     expectedInputCurrencyAmountRaw: '50000000000000000',
     maximumInputCurrencyAmountRaw: '50000000000000000',
-    inputCurrencyId: buildNativeCurrencyId(UniverseChainId.Mainnet),
+    inputCurrencyId: buildNativeCurrencyId(ChainId.Mainnet),
     outputCurrencyId: buildCurrencyId(
-      UniverseChainId.Mainnet,
+      ChainId.Mainnet,
       '0x6b175474e89094c44da98b954eedeac495271d0f'
     ),
     transactedUSDValue: 105.21800000000002,
@@ -153,7 +151,7 @@ export const Swap: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

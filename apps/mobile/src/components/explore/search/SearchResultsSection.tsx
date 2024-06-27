@@ -4,7 +4,6 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
@@ -12,21 +11,19 @@ import { SearchNFTCollectionItem } from 'src/components/explore/search/items/Sea
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnitagItem'
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
-import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
@@ -34,6 +31,8 @@ import {
   TokenSearchResult,
 } from 'wallet/src/features/search/SearchResult'
 import { getValidAddress } from 'wallet/src/utils/addresses'
+import { SEARCH_RESULT_HEADER_KEY } from './constants'
+import { SearchResultOrHeader } from './types'
 
 const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'
@@ -56,7 +55,7 @@ const NFTHeaderItem: SearchResultOrHeader = {
 const EtherscanHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
+    blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
   }),
 }
 
@@ -175,9 +174,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   if (error) {
-    const filteredErrors = error.graphQLErrors.filter((e) => !IGNORED_ERRORS.includes(e.message))
-
-    if (filteredErrors.length === 0) {
+    if (IGNORED_ERRORS.includes(error?.message)) {
       logger.info('SearchResultSection', 'useExploreSearchQuery', error?.message)
     } else {
       return (

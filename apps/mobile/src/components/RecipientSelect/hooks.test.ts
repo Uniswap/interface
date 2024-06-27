@@ -1,9 +1,10 @@
 import { PreloadedState } from '@reduxjs/toolkit'
 import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
+import { act } from 'react-test-renderer'
 import { MobileState } from 'src/app/reducer'
 import { renderHookWithProviders } from 'src/test/render'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
@@ -120,13 +121,13 @@ describe(useRecipients, () => {
   it('returns correct initial values', () => {
     const { result } = renderHookWithProviders(useRecipients, {
       preloadedState: getPreloadedState(),
-      initialProps: '',
     })
 
     expect(result.current).toEqual({
       sections: [],
       searchableRecipientOptions: [],
-      debouncedPattern: '',
+      pattern: null,
+      onChangePattern: expect.any(Function),
       loading: false,
     })
   })
@@ -135,7 +136,6 @@ describe(useRecipients, () => {
     it('result does not contain Search Results section if there is no pattern', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -150,7 +150,11 @@ describe(useRecipients, () => {
     it('result contains Search Results section if there is a pattern', async () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: SAMPLE_SEED_ADDRESS_1,
+      })
+
+      // Set pattern
+      await act(() => {
+        result.current.onChangePattern(SAMPLE_SEED_ADDRESS_1)
       })
 
       await waitFor(() => {
@@ -161,7 +165,11 @@ describe(useRecipients, () => {
     it('searchableRecipientOptions contains validatedAddressRecipient', async () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: SAMPLE_SEED_ADDRESS_1,
+      })
+
+      // Set pattern
+      await act(() => {
+        result.current.onChangePattern(SAMPLE_SEED_ADDRESS_1)
       })
 
       expect(result.current.searchableRecipientOptions).toEqual(
@@ -179,7 +187,6 @@ describe(useRecipients, () => {
     it('result does not contain Recent section if there are no recent recipients', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -198,7 +205,6 @@ describe(useRecipients, () => {
             },
           },
         }),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -223,22 +229,12 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
-              [UniverseChainId.Mainnet as WalletChainId]: [
-                sendTxDetailsConfirmed,
-                sendTxDetailsFailed,
-              ],
-              [UniverseChainId.Bnb as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
+              [ChainId.Base as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [ChainId.Mainnet as ChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [ChainId.Bnb as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
-        initialProps: '',
       })
 
       const section = result.current.sections[0]!
@@ -273,7 +269,6 @@ describe(useRecipients, () => {
             },
           },
         }),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -288,22 +283,12 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
-              [UniverseChainId.Mainnet as WalletChainId]: [
-                sendTxDetailsConfirmed,
-                sendTxDetailsFailed,
-              ],
-              [UniverseChainId.Bnb as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
+              [ChainId.Base as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [ChainId.Mainnet as ChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [ChainId.Bnb as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
-        initialProps: '',
       })
 
       expect(result.current.searchableRecipientOptions).toEqual(recentRecipients)
@@ -314,7 +299,6 @@ describe(useRecipients, () => {
     it('result does not contain Your wallets section if there are no inactive accounts', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -329,7 +313,6 @@ describe(useRecipients, () => {
     it('result contains Your wallets section if there are inactive accounts', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({ hasInactiveAccounts: true }),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -342,7 +325,6 @@ describe(useRecipients, () => {
     it('searchableRecipientOptions contains inactive accounts', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({ hasInactiveAccounts: true }),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -357,7 +339,6 @@ describe(useRecipients, () => {
     it('result does not contain Favorite Wallets section if there are no watched wallets', () => {
       const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -374,7 +355,6 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           watchedAddresses,
         }),
-        initialProps: '',
       })
 
       expect(result.current).toEqual(
@@ -393,22 +373,16 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
-              [UniverseChainId.Mainnet as WalletChainId]: [
-                sendTxDetailsConfirmed,
-                sendTxDetailsFailed,
-              ],
-              [UniverseChainId.Bnb as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
+              [ChainId.Base as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [ChainId.Mainnet as ChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [ChainId.Bnb as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
-        initialProps: SAMPLE_SEED_ADDRESS_1,
+      })
+
+      await act(() => {
+        result.current.onChangePattern(SAMPLE_SEED_ADDRESS_1)
       })
 
       await waitFor(() => {
@@ -432,22 +406,16 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
-              [UniverseChainId.Mainnet as WalletChainId]: [
-                sendTxDetailsConfirmed,
-                sendTxDetailsFailed,
-              ],
-              [UniverseChainId.Bnb as WalletChainId]: [
-                sendTxDetailsPending,
-                sendTxDetailsConfirmed,
-              ],
+              [ChainId.Base as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [ChainId.Mainnet as ChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [ChainId.Bnb as ChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
-        initialProps: SAMPLE_SEED_ADDRESS_1,
+      })
+
+      await act(() => {
+        result.current.onChangePattern(SAMPLE_SEED_ADDRESS_1)
       })
 
       await waitFor(() => {

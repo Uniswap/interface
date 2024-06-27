@@ -4,9 +4,13 @@ import { MobileState } from 'src/app/reducer'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { ACCOUNT, preloadedSharedState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import {
+  ACCOUNT,
+  ON_PRESS_EVENT_PAYLOAD,
+  preloadedSharedState,
+  signerMnemonicAccount,
+} from 'wallet/src/test/fixtures'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const preloadedState = preloadedSharedState({ account: ACCOUNT })

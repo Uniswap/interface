@@ -1,32 +1,33 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from 'components/Button'
-import Card from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import FullPositionCard from 'components/PositionCard'
-import Row, { RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
-import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
-import { Dots } from 'components/swap/styled'
-import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { useV2Pairs } from 'hooks/useV2Pairs'
+import { useTokenBalances } from 'hooks/useTokenBalances'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useStakingInfo } from 'state/stake/hooks'
-import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { currencyKey } from 'utils/currencyKey'
+import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import Card from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import FullPositionCard from '../../components/PositionCard'
+import Row, { RowBetween, RowFixed } from '../../components/Row'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { Dots } from '../../components/swap/styled'
+import { BIG_INT_ZERO } from '../../constants/misc'
+import { useV2Pairs } from '../../hooks/useV2Pairs'
+import { useStakingInfo } from '../../state/stake/hooks'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -99,17 +100,14 @@ export default function Pool() {
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
-  const [balanceMap, fetchingV2PairBalances] = useRpcTokenBalancesWithLoadingIndicator(
-    account.address,
-    tokenPairsWithLiquidityTokens.map(({ liquidityToken }) => liquidityToken),
-    !account?.address,
-  )
+  const { balanceMap, loading: fetchingV2PairBalances } = useTokenBalances()
 
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
-        return balanceMap[liquidityToken.address]?.greaterThan(0)
+        const liquidityTokenKey = currencyKey(liquidityToken)
+        return balanceMap[liquidityTokenKey]?.balance > 0
       }),
     [tokenPairsWithLiquidityTokens, balanceMap]
   )

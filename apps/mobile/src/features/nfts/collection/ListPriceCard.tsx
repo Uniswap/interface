@@ -1,8 +1,7 @@
 import { BlurView } from 'expo-blur'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { ColorTokens, Flex, FlexProps, SpaceTokens, Text, useSporeColors } from 'ui/src'
-import { Ethereum } from 'ui/src/components/logos'
+import { ColorTokens, Flex, FlexProps, Logos, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { IAmount } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
@@ -64,7 +63,7 @@ export function PriceAmount({
     <Flex centered row gap={gap} overflow="hidden">
       {!isUSD && (
         // @ts-expect-error TODO(MOB-1566) convert to specific icon size token, avoiding doing too big of a change in this PR
-        <Ethereum color={iconColor || '$neutral1'} height={iconSize} width={iconSize} />
+        <Logos.Ethereum color={iconColor || '$neutral1'} height={iconSize} width={iconSize} />
       )}
       <Text color={textColor} variant={textVariant}>
         {formattedAmount}

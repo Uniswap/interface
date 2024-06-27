@@ -1,5 +1,5 @@
 import { MobileState } from 'src/app/reducer'
-import { ModalsState } from 'src/features/modals/ModalsState'
+import { ModalsState } from './ModalsState'
 
 export function selectModalState<T extends keyof ModalsState>(
   name: T

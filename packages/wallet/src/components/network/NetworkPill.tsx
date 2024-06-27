@@ -2,12 +2,12 @@ import { ComponentProps } from 'react'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { useNetworkColors } from 'wallet/src/utils/colors'
 
 export type NetworkPillProps = {
-  chainId: WalletChainId
+  chainId: ChainId
   showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
@@ -20,7 +20,7 @@ export function NetworkPill({
   showIcon = false,
   ...rest
 }: NetworkPillProps): JSX.Element {
-  const info = UNIVERSE_CHAIN_INFO[chainId]
+  const info = CHAIN_INFO[chainId]
   const colors = useNetworkColors(chainId)
 
   return (

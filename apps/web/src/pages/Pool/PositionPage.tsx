@@ -1,21 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
-import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
-import { SmallButtonPrimary } from 'components/Button/index'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
-import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Dots } from 'components/swap/styled'
@@ -32,33 +27,37 @@ import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
-import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { LoadingRows } from 'pages/Pool/styled'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import RangeBadge from '../../components/Badge/RangeBadge'
+import { SmallButtonPrimary } from '../../components/Button/index'
+import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
+import RateToggle from '../../components/RateToggle'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
+import { TransactionType } from '../../state/transactions/types'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { LoadingRows } from './styled'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -577,8 +576,6 @@ function PositionPageContent() {
           sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
             source: LiquiditySource.V3,
             label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            type: LiquiditySource.V3,
-            fee_tier: feeAmount,
           })
 
           addTransaction(response, {
@@ -614,7 +611,6 @@ function PositionPageContent() {
     signer,
     feeValue0,
     feeValue1,
-    feeAmount,
     addTransaction,
   ])
 
@@ -843,10 +839,7 @@ function PositionPageContent() {
                     <LightCard padding="12px 16px">
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <LinkedCurrency
-                            chainId={account.chainId ?? UniverseChainId.Mainnet}
-                            currency={currencyQuote}
-                          />
+                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyQuote} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount0 : position?.amount1 })}
@@ -861,10 +854,7 @@ function PositionPageContent() {
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
-                          <LinkedCurrency
-                            chainId={account.chainId ?? UniverseChainId.Mainnet}
-                            currency={currencyBase}
-                          />
+                          <LinkedCurrency chainId={account.chainId ?? ChainId.MAINNET} currency={currencyBase} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount1 : position?.amount0 })}

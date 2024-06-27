@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonPrimary } from 'components/Button'
 import GetHelp from 'components/Button/GetHelp'
@@ -14,7 +15,6 @@ import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
 import { Unitag } from 'ui/src/components/icons'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -93,7 +93,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     : [currencySymbolAmount, formattedFiatInputAmount]
 
   return (
-    <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight="90vh">
+    <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight={90}>
       <ModalWrapper data-testid="send-review-modal" gap="md">
         <Row width="100%" padding="8px 12px 4px" align="center">
           <Row justify="left">
@@ -112,9 +112,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               label={<Trans i18nKey="common.youreSending" />}
               header={primaryInputView}
               subheader={secondaryInputView}
-              image={
-                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
-              }
+              image={<PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />}
             />
             <SendModalHeader
               label={<Trans i18nKey="common.to.caps" />}
@@ -138,7 +136,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               <Trans i18nKey="common.networkCost" />
             </ThemedText.BodySmall>
             <Row width="min-content" gap="xs">
-              <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={16} />
+              <ChainLogo chainId={chainId ?? ChainId.MAINNET} size={16} />
               <ThemedText.BodySmall>{gasFeeFormatted}</ThemedText.BodySmall>
             </Row>
           </Row>

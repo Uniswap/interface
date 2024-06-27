@@ -1,4 +1,4 @@
-import { parseValue, replaceSeparators } from 'wallet/src/components/input/AmountInput'
+import { parseValue, replaceSeparators } from './AmountInput'
 
 describe(replaceSeparators, () => {
   describe('it can strip grouping separators', () => {

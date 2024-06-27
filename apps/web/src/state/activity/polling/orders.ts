@@ -3,7 +3,6 @@ import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import { OnActivityUpdate, OrderUpdate } from 'state/activity/types'
 import { OffchainOrderType } from 'state/routing/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
@@ -12,6 +11,7 @@ import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 't
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { OnActivityUpdate, OrderUpdate } from '../types'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -116,7 +116,12 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           })
         })
       } catch (e) {
-        logger.debug('usePollPendingOrders', 'getOrderStatuses', 'Failed to fetch order statuses', e)
+        logger.error(e, {
+          tags: {
+            file: 'orders',
+            function: 'usePollPendingOrders',
+          },
+        })
       }
       setCurrentDelay((currentDelay) => Math.min(currentDelay * 2, ms('30s')))
       timeout = setTimeout(getOrderStatuses, currentDelay)

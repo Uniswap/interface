@@ -1,7 +1,6 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 /**
  * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
@@ -9,7 +8,7 @@ import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export type Activity = {
   hash: string
-  chainId: InterfaceChainId
+  chainId: ChainId
   status: TransactionStatus
   offchainOrderDetails?: UniswapXOrderDetails
   statusMessage?: string

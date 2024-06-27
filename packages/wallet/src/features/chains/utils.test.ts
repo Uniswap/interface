@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
+import { TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   chainIdToHexadecimalString,
@@ -9,6 +10,7 @@ import {
   fromUniswapWebAppLink,
   getPollingIntervalByBlocktime,
   hexadecimalStringToInt,
+  isTestnet,
   toSupportedChainId,
   toUniswapWebAppLink,
 } from 'wallet/src/features/chains/utils'
@@ -23,7 +25,17 @@ describe(toSupportedChainId, () => {
   })
 
   it('handles supported chain ID', () => {
-    expect(toSupportedChainId(UniverseChainId.Polygon)).toEqual(137)
+    expect(toSupportedChainId(ChainId.Polygon)).toEqual(137)
+  })
+})
+
+describe(isTestnet, () => {
+  it('handles non-testnet', () => {
+    expect(isTestnet(ChainId.Mainnet)).toEqual(false)
+  })
+
+  it('handles testnet', () => {
+    expect(isTestnet(TESTNET_CHAIN_IDS[0])).toEqual(true)
   })
 })
 
@@ -33,7 +45,7 @@ describe(fromGraphQLChain, () => {
   })
 
   it('handles supported chain', () => {
-    expect(fromGraphQLChain(Chain.Arbitrum)).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromGraphQLChain(Chain.Arbitrum)).toEqual(ChainId.ArbitrumOne)
   })
 
   it('handles unsupported chain', () => {
@@ -43,11 +55,11 @@ describe(fromGraphQLChain, () => {
 
 describe(fromMoonpayNetwork, () => {
   it('handles supported chain', () => {
-    expect(fromMoonpayNetwork(undefined)).toEqual(UniverseChainId.Mainnet)
-    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
-    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
-    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
-    expect(fromMoonpayNetwork(Chain.Base.toLowerCase())).toEqual(UniverseChainId.Base)
+    expect(fromMoonpayNetwork(undefined)).toEqual(ChainId.Mainnet)
+    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
+    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
+    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
+    expect(fromMoonpayNetwork(Chain.Base.toLowerCase())).toEqual(ChainId.Base)
   })
 
   it('handle unsupported chain', () => {
@@ -57,22 +69,20 @@ describe(fromMoonpayNetwork, () => {
 
 describe(getPollingIntervalByBlocktime, () => {
   it('returns the correct value for L1', () => {
-    expect(getPollingIntervalByBlocktime(UniverseChainId.Mainnet)).toEqual(PollingInterval.Fast)
+    expect(getPollingIntervalByBlocktime(ChainId.Mainnet)).toEqual(PollingInterval.Fast)
   })
 
   it('returns the correct value for L2', () => {
-    expect(getPollingIntervalByBlocktime(UniverseChainId.Polygon)).toEqual(
-      PollingInterval.LightningMcQueen
-    )
+    expect(getPollingIntervalByBlocktime(ChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
   })
 })
 
 describe(fromUniswapWebAppLink, () => {
   it('handles supported chain', () => {
-    expect(fromUniswapWebAppLink(Chain.Ethereum.toLowerCase())).toEqual(UniverseChainId.Mainnet)
-    expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
-    expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
-    expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
+    expect(fromUniswapWebAppLink(Chain.Ethereum.toLowerCase())).toEqual(ChainId.Mainnet)
+    expect(fromUniswapWebAppLink(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
+    expect(fromUniswapWebAppLink(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
+    expect(fromUniswapWebAppLink(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
     // TODO: add Base test once Chain includes Base (GQL reliant)
   })
 
@@ -83,10 +93,10 @@ describe(fromUniswapWebAppLink, () => {
 
 describe(toUniswapWebAppLink, () => {
   it('handles supported chain', () => {
-    expect(toUniswapWebAppLink(UniverseChainId.Mainnet)).toEqual(Chain.Ethereum.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.ArbitrumOne)).toEqual(Chain.Arbitrum.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.Optimism)).toEqual(Chain.Optimism.toLowerCase())
-    expect(toUniswapWebAppLink(UniverseChainId.Polygon)).toEqual(Chain.Polygon.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.Mainnet)).toEqual(Chain.Ethereum.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.ArbitrumOne)).toEqual(Chain.Arbitrum.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.Optimism)).toEqual(Chain.Optimism.toLowerCase())
+    expect(toUniswapWebAppLink(ChainId.Polygon)).toEqual(Chain.Polygon.toLowerCase())
     // TODO: add Base test once Chain includes Base (GQL reliant)
   })
 
@@ -97,7 +107,7 @@ describe(toUniswapWebAppLink, () => {
 
 describe(chainIdToHexadecimalString, () => {
   it('handles supported chain', () => {
-    expect(chainIdToHexadecimalString(UniverseChainId.ArbitrumOne)).toEqual('0xa4b1')
+    expect(chainIdToHexadecimalString(ChainId.ArbitrumOne)).toEqual('0xa4b1')
   })
 })
 

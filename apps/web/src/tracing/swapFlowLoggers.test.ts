@@ -1,6 +1,4 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
-import { logSwapQuoteRequest, logSwapSuccess, maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 jest.mock('uniswap/src/features/telemetry/send', () => ({
@@ -21,6 +19,10 @@ jest.mock('./SwapEventTimestampTracker', () => ({
     getElapsedTime: () => 100,
   },
 }))
+
+import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+
+import { logSwapQuoteRequest, logSwapSuccess, maybeLogFirstSwapAction } from './swapFlowLoggers'
 
 describe('swapFlowLoggers', () => {
   beforeEach(() => {

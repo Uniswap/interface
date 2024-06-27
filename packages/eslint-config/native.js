@@ -58,6 +58,12 @@ module.exports = {
     'no-ex-assign': 'error',
     curly: 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
+    'no-relative-import-paths/no-relative-import-paths': [
+      2,
+      {
+        allowSameFolder: true,
+      },
+    ],
     'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
@@ -173,7 +179,7 @@ module.exports = {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
             message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/BottomSheetModal`.',
+              'Use our internal `BottomSheetTextInput` wrapper from `/wallet/src/components/modals/BottomSheetModal`.',
           },
           {
             name: 'expo-haptics',
@@ -298,7 +304,7 @@ module.exports = {
       },
     },
     {
-      // enable these rules specifically for TypeScript files
+      // enable the rule specifically for TypeScript files
       files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: ['useEffect'] }],

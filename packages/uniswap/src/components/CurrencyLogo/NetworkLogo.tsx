@@ -2,10 +2,10 @@ import React from 'react'
 import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 
 type NetworkLogoProps = FlexProps & {
-  chainId: UniverseChainId
+  chainId: ChainId
   size?: number
   shape?: 'circle' | 'square'
 }
@@ -31,7 +31,7 @@ function _NetworkLogo({
   shape,
   size = iconSizes.icon20,
 }: NetworkLogoProps): JSX.Element | null {
-  const logo = UNIVERSE_CHAIN_INFO[chainId].logo
+  const logo = UNIVERSE_CHAIN_INFO[chainId]?.logo
   const colors = useSporeColors()
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (

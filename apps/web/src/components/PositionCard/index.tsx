@@ -1,17 +1,5 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button'
-import { GrayCard, LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { CardNoise } from 'components/earn/styled'
-import { Dots } from 'components/swap/styled'
-import { BIG_INT_ZERO } from 'constants/misc'
-import { useAccount } from 'hooks/useAccount'
-import { useColor } from 'hooks/useColor'
-import { useTotalSupply } from 'hooks/useTotalSupply'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
@@ -19,11 +7,24 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTokenBalance } from 'state/connection/hooks'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { currencyId } from 'utils/currencyId'
-import { unwrappedToken } from 'utils/unwrappedToken'
+
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { useAccount } from 'hooks/useAccount'
+import { BIG_INT_ZERO } from '../../constants/misc'
+import { useColor } from '../../hooks/useColor'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useTokenBalance } from '../../state/connection/hooks'
+import { currencyId } from '../../utils/currencyId'
+import { unwrappedToken } from '../../utils/unwrappedToken'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
+import { GrayCard, LightCard } from '../Card'
+import { AutoColumn } from '../Column'
+import CurrencyLogo from '../Logo/CurrencyLogo'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { CardNoise } from '../earn/styled'
+import { Dots } from '../swap/styled'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -102,7 +103,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans i18nKey="pool.share.label" />
+                  <Trans i18nKey="share.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}

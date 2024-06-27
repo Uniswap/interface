@@ -1,5 +1,4 @@
 import { isAddress } from '@ethersproject/address'
-import { formatCollectionQueryData, useCollection } from 'graphql/data/nft/Collection'
 import { GenieCollection } from 'nft/types'
 import { blocklistedCollections } from 'nft/utils'
 import { useMemo } from 'react'
@@ -7,6 +6,7 @@ import {
   NftCollection,
   useCollectionSearchQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { formatCollectionQueryData, useCollection } from './Collection'
 
 const MAX_SEARCH_RESULTS = 6
 

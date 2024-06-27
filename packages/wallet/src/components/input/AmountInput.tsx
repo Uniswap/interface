@@ -2,10 +2,8 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
 import { Text } from 'ui/src'
-import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { TextInput, TextInputProps } from 'wallet/src/components/input/TextInput'
+import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
 
@@ -76,14 +74,13 @@ export function parseValue({
     decimalOverride: '.',
   })
 
-  if (maxDecimals === undefined) {
+  const [beforeDecimalSeparator, afterDecimalSeparator] = parsedValue.split('.')
+
+  if (maxDecimals === undefined || afterDecimalSeparator === undefined) {
     return parsedValue
   }
 
-  return truncateToMaxDecimals({
-    value: parsedValue,
-    maxDecimals,
-  })
+  return `${beforeDecimalSeparator}.${afterDecimalSeparator.substring(0, maxDecimals)}`
 }
 
 export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountInput(

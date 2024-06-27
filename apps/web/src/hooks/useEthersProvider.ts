@@ -1,23 +1,21 @@
 import { Web3Provider } from '@ethersproject/providers'
+import { SupportedInterfaceChain } from 'constants/chains'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/types/chains'
 import type { Client, Transport } from 'viem'
 import { useClient, useConnectorClient } from 'wagmi'
 
 const providers = new WeakMap<Client, Web3Provider>()
 
-function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId?: number) {
+function clientToProvider(client?: Client<Transport, SupportedInterfaceChain>, chainId?: number) {
   if (!client) {
     return undefined
   }
   const { chain, transport } = client
-
-  const ensAddress = chain.contracts?.ensRegistry?.address
   const network = chain
     ? {
         chainId: chain.id,
         name: chain.name,
-        ensAddress,
+        ensAddress: 'ensRegistry' in chain.contracts ? chain.contracts.ensRegistry.address : undefined,
       }
     : chainId
     ? { chainId, name: 'Unsupported' }

@@ -1,8 +1,10 @@
+import { ReactNode } from 'react'
+import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
 import {
   AUD_ICON,
   BRL_ICON,
   CAD_ICON,
-  CNY_ICON,
   EUR_ICON,
   GBP_ICON,
   HKD_ICON,
@@ -18,16 +20,13 @@ import {
   UAH_ICON,
   USD_ICON,
   VND_ICON,
-} from 'constants/localCurrencyIcons'
-import { ReactNode } from 'react'
-import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from './localCurrencyIcons'
 
 export const SUPPORTED_LOCAL_CURRENCIES = [
   Currency.Usd,
   Currency.Aud,
   Currency.Brl,
   Currency.Cad,
-  Currency.Cny,
   Currency.Eur,
   Currency.Gbp,
   Currency.Hkd,
@@ -55,7 +54,6 @@ export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = Currency.Usd
 export const LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE: Record<SupportedLocalCurrency, 'narrowSymbol' | 'symbol'> = {
   USD: 'narrowSymbol',
   EUR: 'narrowSymbol',
-  CNY: 'narrowSymbol',
   RUB: 'narrowSymbol',
   INR: 'narrowSymbol',
   GBP: 'narrowSymbol',
@@ -112,8 +110,6 @@ export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size
       return <UAH_ICON width={size} height={size} />
     case Currency.Thb:
       return <THB_ICON width={size} height={size} />
-    case Currency.Cny:
-      return <CNY_ICON width={size} height={size} />
     default:
       return null
   }

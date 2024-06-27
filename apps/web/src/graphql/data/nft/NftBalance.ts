@@ -3,6 +3,7 @@ import { parseEther } from 'ethers/lib/utils'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+
 import { NftAsset, useNftBalanceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function useNftBalance(

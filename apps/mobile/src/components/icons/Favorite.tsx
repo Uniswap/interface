@@ -5,9 +5,8 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import { useSporeColors } from 'ui/src'
+import { AnimatedFlex, useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 interface FavoriteButtonProps {
   isFavorited: boolean

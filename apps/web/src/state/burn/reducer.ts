@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, typeInput } from 'state/burn/actions'
+
+import { Field, typeInput } from './actions'
 
 export interface BurnState {
   readonly independentField: Field

@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react'
-import useInterval from 'lib/hooks/useInterval'
+
+import useInterval from './useInterval'
 
 describe('useInterval', () => {
   const spy = jest.fn()

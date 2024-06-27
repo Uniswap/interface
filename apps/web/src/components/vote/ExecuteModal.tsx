@@ -1,17 +1,17 @@
-import Circle from 'assets/images/blue-loader.svg'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn, ColumnCenter } from 'components/Column'
-import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
-import { useExecuteCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { logger } from 'utilities/src/logger/logger'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import Circle from '../../assets/images/blue-loader.svg'
+import { useExecuteCallback } from '../../state/governance/hooks'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ButtonPrimary } from '../Button'
+import { AutoColumn, ColumnCenter } from '../Column'
+import Modal from '../Modal'
+import { RowBetween } from '../Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -77,7 +77,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

@@ -1,7 +1,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -39,7 +39,7 @@ export class NativeSigner extends Signer {
     const signature = await Keyring.signHashForAddress(
       this.address,
       _TypedDataEncoder.hash(domain, types, value),
-      toSupportedChainId(domain.chainId) || UniverseChainId.Mainnet
+      toSupportedChainId(domain.chainId) || ChainId.Mainnet
     )
     return signature
   }
@@ -63,7 +63,7 @@ export class NativeSigner extends Signer {
     const signature = await Keyring.signTransactionHashForAddress(
       this.address,
       hashedTx,
-      tx.chainId || UniverseChainId.Mainnet
+      tx.chainId || ChainId.Mainnet
     )
 
     return utils.serializeTransaction(ut, signature)

@@ -1,6 +1,6 @@
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -13,7 +13,7 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
  * 3. MEV blocker is supported on chain
  *
  */
-export function useShouldUseMEVBlocker(chainId: Maybe<WalletChainId>): boolean {
+export function useShouldUseMEVBlocker(chainId: Maybe<ChainId>): boolean {
   const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
   const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
   const isMevBlockerSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false

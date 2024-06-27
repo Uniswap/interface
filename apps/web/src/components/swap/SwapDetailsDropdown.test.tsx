@@ -1,5 +1,4 @@
 import userEvent from '@testing-library/user-event'
-import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import {
   TEST_ALLOWED_SLIPPAGE,
   TEST_TOKEN_1,
@@ -9,6 +8,7 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
+import SwapDetailsDropdown from './SwapDetailsDropdown'
 
 describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {

@@ -10,27 +10,30 @@ import {
   AccountType,
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
+import { useAppSelector } from 'wallet/src/state'
+import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
+  selectNonPendingAccounts,
+  selectNonPendingSignerMnemonicAccounts,
+  selectPendingAccounts,
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
   selectWalletSwapProtectionSetting,
-} from 'wallet/src/features/wallet/selectors'
-import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppSelector } from 'wallet/src/state'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+} from './selectors'
 
 const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
-  return useAppSelector<Record<string, Account>>(selectAccounts)
+  return useAppSelector<Record<string, Account>>(selectNonPendingAccounts)
 }
 
 export function useAccount(address: Address): Account {
@@ -46,8 +49,16 @@ export function useAccountIfExists(address: Address): Account | undefined {
   return account
 }
 
+export function usePendingAccounts(): AddressTo<Account> {
+  return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
+}
+
 export function useSignerAccounts(): SignerMnemonicAccount[] {
   return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
+}
+
+export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
+  return useAppSelector<SignerMnemonicAccount[]>(selectNonPendingSignerMnemonicAccounts)
 }
 
 export function useViewOnlyAccounts(): Account[] {

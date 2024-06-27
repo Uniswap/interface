@@ -2,7 +2,7 @@ import { call } from '@redux-saga/core/effects'
 import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { DAI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -29,18 +29,18 @@ const erc20TranferParams: TransferCurrencyParams = {
   type: AssetType.Currency,
   account,
   tokenAddress: DAI.address,
-  chainId: UniverseChainId.Goerli,
+  chainId: ChainId.Goerli,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
 }
 const nativeTranferParams: TransferCurrencyParams = {
   ...erc20TranferParams,
-  tokenAddress: getNativeAddress(UniverseChainId.Goerli),
+  tokenAddress: getNativeAddress(ChainId.Goerli),
 }
 const erc721TransferParams: TransferNFTParams = {
   txId: '1',
   type: AssetType.ERC721,
-  chainId: UniverseChainId.Goerli,
+  chainId: ChainId.Goerli,
   account,
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',

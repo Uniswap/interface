@@ -1,15 +1,9 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
   CancelOrdersDialog,
   CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
-import {
-  OffchainOrderLineItem,
-  OffchainOrderLineItemProps,
-  OffchainOrderLineItemType,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column, { AutoColumn } from 'components/Column'
@@ -34,9 +28,10 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { PortfolioLogo } from '../PortfolioLogo'
+import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
 type Logos = {
   inputLogo?: string
@@ -224,7 +219,7 @@ export function OrderContent({
     <Column>
       <Row gap="md">
         <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? UniverseChainId.Mainnet}
+          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
           currencies={currencies}
           images={[logos?.inputLogo, logos?.outputLogo]}
         />

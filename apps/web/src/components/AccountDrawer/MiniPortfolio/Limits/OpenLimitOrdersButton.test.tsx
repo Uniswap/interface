@@ -1,9 +1,9 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
   ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
@@ -12,7 +12,7 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
 
 const mockLimitActivity = {
   hash: '0x123',
-  chainId: UniverseChainId.Mainnet,
+  chainId: ChainId.MAINNET,
   status: TransactionStatus.Pending,
   timestamp: 1,
   title: 'Limit pending',

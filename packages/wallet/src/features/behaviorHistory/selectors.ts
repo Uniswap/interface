@@ -1,7 +1,4 @@
-import {
-  ExtensionBetaFeedbackState,
-  ExtensionOnboardingState,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { SharedState } from 'wallet/src/state/reducer'
 
 export const selectHasViewedReviewScreen = (state: SharedState): boolean =>
@@ -18,7 +15,3 @@ export const selectHasCompletedUnitagsIntroModal = (state: SharedState): boolean
 
 export const selectExtensionOnboardingState = (state: SharedState): ExtensionOnboardingState =>
   state.behaviorHistory.extensionOnboardingState
-
-export const selectExtensionBetaFeedbackState = (
-  state: SharedState
-): ExtensionBetaFeedbackState | undefined => state.behaviorHistory.extensionBetaFeedbackState

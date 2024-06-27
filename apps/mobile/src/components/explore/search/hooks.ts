@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
@@ -25,14 +25,14 @@ export function useWalletSearchResults(query: string): {
     address: dotEthAddress,
     name: dotEthName,
     loading: dotEthLoading,
-  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, true)
+  } = useENS(ChainId.Mainnet, querySkippedIfValidAddress, true)
 
   // Search for exact match for ENS if not a valid address
   const {
     address: ensAddress,
     name: ensName,
     loading: ensLoading,
-  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, false)
+  } = useENS(ChainId.Mainnet, querySkippedIfValidAddress, false)
 
   // Search for matching Unitag by name
   const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(query)
@@ -43,7 +43,7 @@ export function useWalletSearchResults(query: string): {
 
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } =
-    useIsSmartContractAddress(validAddress, UniverseChainId.Mainnet)
+    useIsSmartContractAddress(validAddress, ChainId.Mainnet)
 
   const hasENSResult = dotEthName && dotEthAddress
   const hasEOAResult = validAddress && !isSmartContractAddress

@@ -1,6 +1,3 @@
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
-
 export type FORCountry = {
   countryCode: string
   displayName: string
@@ -164,20 +161,3 @@ export type FORTransactionRequest = {
 export type FORTransactionResponse = {
   transaction?: FORTransaction
 }
-
-export type FiatOnRampCurrency = {
-  currencyInfo: Maybe<CurrencyInfo>
-  moonpayCurrencyCode?: string
-  meldCurrencyCode?: string
-}
-
-export enum InitialQuoteSelection {
-  MostRecent,
-  Best,
-}
-
-export type FiatCurrencyInfo = {
-  name: string
-  shortName: string
-  code: string
-} & FiatCurrencyComponents

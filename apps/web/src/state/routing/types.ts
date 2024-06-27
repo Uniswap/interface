@@ -1,7 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
@@ -14,7 +14,6 @@ import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -50,11 +49,11 @@ export enum QuoteIntent {
 
 export interface GetQuoteArgs {
   tokenInAddress: string
-  tokenInChainId: InterfaceChainId
+  tokenInChainId: ChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: InterfaceChainId
+  tokenOutChainId: ChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
@@ -75,11 +74,11 @@ export interface GetQuoteArgs {
 export type GetQuickQuoteArgs = {
   amount: string
   tokenInAddress: string
-  tokenInChainId: InterfaceChainId
+  tokenInChainId: ChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: InterfaceChainId
+  tokenOutChainId: ChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   tradeType: TradeType

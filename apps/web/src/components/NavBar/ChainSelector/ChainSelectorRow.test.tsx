@@ -1,9 +1,10 @@
-import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
+import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { render } from 'test-utils/render'
-import { UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+
+import ChainSelectorRow from './ChainSelectorRow'
 
 describe('ChainSelectorRow', () => {
-  WEB_SUPPORTED_CHAIN_IDS.forEach((chainId) => {
+  SUPPORTED_CHAINS.forEach((chainId) => {
     it(`should match snapshot for chainId ${chainId}`, () => {
       const { container } = render(
         <ChainSelectorRow targetChain={chainId} onSelectChain={jest.fn()} isPending={false} disabled={false} />
@@ -16,7 +17,7 @@ describe('ChainSelectorRow', () => {
     const onSelectChain = jest.fn()
     const { getByTestId } = render(
       <ChainSelectorRow
-        targetChain={UniverseChainId.Optimism}
+        targetChain={ChainId.OPTIMISM}
         onSelectChain={onSelectChain}
         isPending={false}
         disabled={false}
@@ -31,7 +32,7 @@ describe('ChainSelectorRow', () => {
     const onSelectChain = jest.fn()
     const { getByTestId } = render(
       <ChainSelectorRow
-        targetChain={UniverseChainId.Optimism}
+        targetChain={ChainId.OPTIMISM}
         onSelectChain={onSelectChain}
         isPending={false}
         disabled={true}

@@ -1,7 +1,8 @@
 import { useV3Positions } from 'hooks/useV3Positions'
-import CTACards from 'pages/Pool/CTACards'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+
+import CTACards from './CTACards'
 
 jest.mock('hooks/useV3Positions')
 

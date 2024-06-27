@@ -19,10 +19,3 @@ declare type ArrayOfLength<L extends number, T, Acc extends T[] = []> = Acc['len
 declare type Require<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 declare type RequireNonNullable<T, K extends keyof T> = T & { [P in K]-?: NonNullable<T[P]> }
-
-// Utility type to create a range of numbers (inclusive of start but exclusive of end -- python style)
-declare type NumberRange<
-  Start extends number,
-  End extends number,
-  Acc extends number[] = []
-> = Acc['length'] extends End ? Acc[number] : NumberRange<Start, End, [...Acc, Acc['length'] & number]>

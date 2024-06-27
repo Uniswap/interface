@@ -25,18 +25,18 @@ import {
 import { Pen, TripleDots } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
-import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { TextInput } from 'wallet/src/components/input/TextInput'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -86,7 +86,7 @@ export function EditUnitagProfileScreen({
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address)
+  const { name: ensName } = useENS(ChainId.Mainnet, address)
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const { unitag: retrievedUnitag, loading } = useUnitagByAddress(address)
   const unitagMetadata = retrievedUnitag?.metadata
@@ -133,7 +133,7 @@ export function EditUnitagProfileScreen({
 
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
-  const { color: uniconColor } = getUniconColors(address, false)
+  const { color: uniconColor } = getUniconColors(address)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {

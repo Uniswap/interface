@@ -1,5 +1,6 @@
 import { assignInlineVars } from '@vanilla-extract/dynamic'
-import { Theme, themeVars } from 'nft/css/sprinkles.css'
+
+import { Theme, themeVars } from './sprinkles.css'
 
 const resolveTheme = (theme: Theme | (() => Theme)) => (typeof theme === 'function' ? theme() : theme)
 

@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext } from 'react'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import {
@@ -15,11 +15,11 @@ type NavigateToTransactionFlowTransactionState = {
 type NavigateToSwapFlowPartialState = {
   currencyField: CurrencyField
   currencyAddress: Address
-  currencyChainId: WalletChainId
+  currencyChainId: ChainId
 }
 
 type NavigateToSendFlowPartialState = {
-  chainId: WalletChainId
+  chainId: ChainId
   currencyAddress?: Address
 }
 

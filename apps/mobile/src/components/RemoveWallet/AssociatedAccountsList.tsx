@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { Flex, Text } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { Flex, Text, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { AccountListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'

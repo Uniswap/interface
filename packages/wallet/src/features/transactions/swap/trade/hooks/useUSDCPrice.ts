@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   CUSD,
@@ -12,29 +12,26 @@ import {
   USDC_GOERLI,
   USDC_OPTIMISM,
   USDC_POLYGON,
-  USDC_ZKSYNC,
   USDT_BNB,
   USDzC,
 } from 'wallet/src/constants/tokens'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
 export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
-  [UniverseChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  [UniverseChainId.Goerli]: CurrencyAmount.fromRawAmount(USDC_GOERLI, 100_000e6),
-  [UniverseChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-  [UniverseChainId.Base]: CurrencyAmount.fromRawAmount(USDBC_BASE, 10_000e6),
-  [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e6),
-  [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
-  [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
-  [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB, 10_000e18),
-  [UniverseChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
-  [UniverseChainId.Celo]: CurrencyAmount.fromRawAmount(CUSD, 10_000e18),
-  [UniverseChainId.Zora]: CurrencyAmount.fromRawAmount(USDzC, 10_000e6),
-  [UniverseChainId.Zksync]: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
+  [ChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
+  [ChainId.Goerli]: CurrencyAmount.fromRawAmount(USDC_GOERLI, 100_000e6),
+  [ChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  [ChainId.Base]: CurrencyAmount.fromRawAmount(USDBC_BASE, 10_000e6),
+  [ChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e6),
+  [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
+  [ChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
+  [ChainId.Blast]: CurrencyAmount.fromRawAmount(USDB, 10_000e18),
+  [ChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  [ChainId.Celo]: CurrencyAmount.fromRawAmount(CUSD, 10_000e18),
+  [ChainId.Zora]: CurrencyAmount.fromRawAmount(USDzC, 10_000e6),
 }
 
 /**
@@ -71,7 +68,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    if (!trade || !isClassic(trade) || !trade.routes?.[0] || !quoteAmount || !currency) {
+    if (!trade || !trade.routes.length || !trade.routes[0] || !quoteAmount || !currency) {
       return
     }
 

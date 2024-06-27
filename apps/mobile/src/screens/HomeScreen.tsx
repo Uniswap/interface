@@ -46,13 +46,14 @@ import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import {
+  AnimatedFlex,
   Flex,
   HapticFeedback,
   Text,
   TouchableArea,
+  useDeviceDimensions,
   useDeviceInsets,
   useMedia,
   useSporeColors,
@@ -61,8 +62,6 @@ import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -90,7 +89,16 @@ import {
   useShowExtensionPromoBanner,
 } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import {
+  useActiveAccountWithThrow,
+  useNonPendingSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
+import { HomeScreenTabIndex } from './HomeScreenTabIndex'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
 
@@ -111,6 +119,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
 
+  // Ensure if a user is here and has completed onboarding, they have at least one non-pending signer account
+  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+  const nonPendingSignerAccounts = useNonPendingSignerAccounts()
+  useEffect(() => {
+    if (finishedOnboarding && activeAccount.pending && nonPendingSignerAccounts.length === 0) {
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
+    }
+  }, [activeAccount, dispatch, finishedOnboarding, nonPendingSignerAccounts.length])
+
   const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
 
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
@@ -124,6 +141,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   const lastBalancesReporter = useLastBalancesReporter()
   useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
+
+  const listBottomPadding = media.short ? spacing.spacing36 : spacing.spacing12
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
@@ -457,34 +476,45 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop = headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop
-  const paddingBottom =
-    insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
-
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => ({ paddingTop, paddingBottom }),
-    [paddingTop, paddingBottom]
+    () => ({
+      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
+      paddingBottom:
+        insets.bottom +
+        SWAP_BUTTON_HEIGHT +
+        TAB_STYLES.tabListInner.paddingBottom +
+        listBottomPadding,
+    }),
+    [headerHeight, insets.bottom, listBottomPadding]
   )
 
-  const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
+  const loadingContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      minHeight: dimensions.fullHeight - (paddingTop + paddingBottom),
-      paddingTop: spacing.none,
-      paddingLeft: media.short ? spacing.none : spacing.spacing12,
-      paddingRight: media.short ? spacing.none : spacing.spacing12,
+      paddingTop: headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop,
+      paddingBottom: insets.bottom,
     }),
-    [dimensions.fullHeight, media.short, paddingBottom, paddingTop]
+    [headerHeight, insets.bottom]
+  )
+
+  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => ({
+      paddingTop: media.short ? spacing.none : spacing.spacing60,
+      paddingBottom: insets.bottom,
+      paddingHorizontal: media.short ? spacing.spacing12 : spacing.spacing48,
+    }),
+    [insets.bottom, media.short]
   )
 
   const sharedProps = useMemo<TabContentProps>(
     () => ({
+      loadingContainerStyle,
+      emptyContainerStyle,
       contentContainerStyle,
-      emptyComponentStyle,
       onMomentumScrollEnd: sync,
       onScrollEndDrag: sync,
       scrollEventThrottle: TAB_VIEW_SCROLL_THROTTLE,
     }),
-    [contentContainerStyle, emptyComponentStyle, sync]
+    [contentContainerStyle, emptyContainerStyle, loadingContainerStyle, sync]
   )
 
   const tabBarStyle = useMemo<StyleProp<ViewStyle>>(

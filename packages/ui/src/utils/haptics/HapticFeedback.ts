@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
-import { ImpactFeedbackStyle, NotificationFeedbackType } from 'expo-haptics'
+import type { ImpactFeedbackStyle, NotificationFeedbackType } from 'expo-haptics'
+import { NotImplementedError } from 'utilities/src/errors'
 
 // eslint-disable-next-line no-restricted-imports
 export { ImpactFeedbackStyle, NotificationFeedbackType } from 'expo-haptics'
@@ -17,14 +18,29 @@ export type THapticFeedback = {
   selection: () => Promise<void>
 }
 
-// Every haptic feedback is a no-op on web.
 export const HapticFeedback: THapticFeedback = {
-  impact: async (): Promise<void> => Promise.resolve(),
-  light: async (): Promise<void> => Promise.resolve(),
-  medium: async (): Promise<void> => Promise.resolve(),
-  heavy: async (): Promise<void> => Promise.resolve(),
-  success: async (): Promise<void> => Promise.resolve(),
-  warning: async (): Promise<void> => Promise.resolve(),
-  error: async (): Promise<void> => Promise.resolve(),
-  selection: async (): Promise<void> => Promise.resolve(),
+  impact: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  light: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  medium: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  heavy: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  success: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  warning: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  error: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
+  selection: async (): Promise<void> => {
+    throw new NotImplementedError('Only implemented in `.native.tsx` and `.web.tsx`')
+  },
 } as const

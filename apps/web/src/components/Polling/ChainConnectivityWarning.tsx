@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { getChain, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
@@ -5,7 +6,6 @@ import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { ExternalLink } from 'theme/components'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -65,7 +65,7 @@ export function ChainConnectivityWarning() {
         </TitleText>
       </TitleRow>
       <BodyRow>
-        {chainId === UniverseChainId.Mainnet ? (
+        {chainId === ChainId.MAINNET ? (
           <Trans i18nKey="network.lostConnection" />
         ) : (
           <Trans i18nKey="network.mightBeDown" values={{ label }} />

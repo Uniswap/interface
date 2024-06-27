@@ -1,7 +1,8 @@
-import { getLoadingTitle, TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
+import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import { render } from 'test-utils/render'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+
+import { getLoadingTitle, TokenDetailsPageSkeleton } from './Skeleton'
 
 describe('TDP Skeleton', () => {
   it('should render correctly', () => {
@@ -13,7 +14,7 @@ describe('TDP Skeleton', () => {
 describe('getLoadingTitle', () => {
   it('should return correct title', () => {
     const { asFragment } = render(
-      <>{getLoadingTitle(USDC_MAINNET, USDC_MAINNET.address, UniverseChainId.Mainnet, 'ethereum')}</>
+      <>{getLoadingTitle(USDC_MAINNET, USDC_MAINNET.address, ChainId.MAINNET, 'ethereum')}</>
     )
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('token data for')

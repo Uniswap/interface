@@ -1,5 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+
 import { isAddress } from 'utilities/src/addresses'
 
 type TagDetails = Tags[keyof Tags]

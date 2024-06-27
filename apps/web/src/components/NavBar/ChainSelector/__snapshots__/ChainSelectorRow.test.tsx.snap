@@ -271,6 +271,71 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
 </div>
 `;
 
+exports[`ChainSelectorRow should match snapshot for chainId 30 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  outline: none;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 100%;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+        data-testid="undefined-selector"
+      >
+        <div
+          class="c1"
+        />
+      </button>
+    </span>
+  </span>
+</div>
+`;
+
 exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
 .c0 {
   -webkit-align-items: center;
@@ -431,91 +496,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
           class="c1"
         >
           Polygon
-        </div>
-        <div
-          class="c2"
-        />
-      </button>
-    </span>
-  </span>
-</div>
-`;
-
-exports[`ChainSelectorRow should match snapshot for chainId 324 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=" _dsp_contents"
-  >
-    <span
-      class=" t_light _dsp_contents is_Theme"
-    >
-      <button
-        class="c0"
-        data-testid="ZKsync-selector"
-      >
-        <img
-          alt="ZKsync logo"
-          aria-labelledby="titleID"
-          height="20px"
-          src="zksync-logo.png"
-          style="margin-right: 12px; border-radius: 6px;"
-          width="20px"
-        />
-        <div
-          class="c1"
-        >
-          ZKsync
         </div>
         <div
           class="c2"
@@ -1206,6 +1186,71 @@ exports[`ChainSelectorRow should match snapshot for chainId 81457 1`] = `
 </div>
 `;
 
+exports[`ChainSelectorRow should match snapshot for chainId 84531 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  outline: none;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 100%;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+        data-testid="undefined-selector"
+      >
+        <div
+          class="c1"
+        />
+      </button>
+    </span>
+  </span>
+</div>
+`;
+
 exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
 .c0 {
   -webkit-align-items: center;
@@ -1284,6 +1329,71 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
         </div>
         <div
           class="c2"
+        />
+      </button>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 421614 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  outline: none;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 100%;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+        data-testid="undefined-selector"
+      >
+        <div
+          class="c1"
         />
       </button>
     </span>
@@ -1434,6 +1544,136 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
         </div>
         <div
           class="c2"
+        />
+      </button>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 11155420 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  outline: none;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 100%;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+        data-testid="undefined-selector"
+      >
+        <div
+          class="c1"
+        />
+      </button>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`ChainSelectorRow should match snapshot for chainId 999999999 1`] = `
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: #222222;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  line-height: 20px;
+  opacity: 1;
+  padding: 10px 8px;
+  text-align: left;
+  outline: none;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  width: 100%;
+}
+
+.c0:hover {
+  background-color: #22222212;
+}
+
+.c1 {
+  grid-column: 3;
+  grid-row: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 20px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+        data-testid="undefined-selector"
+      >
+        <div
+          class="c1"
         />
       </button>
     </span>

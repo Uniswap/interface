@@ -1,5 +1,6 @@
-import { Box, BoxProps } from 'nft/components/Box'
 import { ForwardedRef, forwardRef } from 'react'
+
+import { Box, BoxProps } from './Box'
 
 export const Row = forwardRef((props: BoxProps, ref: ForwardedRef<HTMLElement>) => {
   return <Box ref={ref} display="flex" flexDirection="row" alignItems="center" {...props} />

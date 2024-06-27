@@ -1,4 +1,4 @@
-import { SwapEventTimestampTracker, SwapEventType } from 'tracing/SwapEventTimestampTracker'
+import { SwapEventTimestampTracker, SwapEventType } from './SwapEventTimestampTracker'
 
 describe('SwapEventTimestampTracker', () => {
   let swapSuccessTime: number | undefined

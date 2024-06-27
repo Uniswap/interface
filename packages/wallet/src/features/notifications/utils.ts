@@ -1,8 +1,8 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
@@ -25,7 +25,7 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
         const supportedChainId = toSupportedChainId(chainId)
         if (supportedChainId) {
           return i18n.t('notification.walletConnect.networkChanged.full', {
-            networkName: UNIVERSE_CHAIN_INFO[supportedChainId].label,
+            networkName: CHAIN_INFO[supportedChainId].label,
           })
         }
       }

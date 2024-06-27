@@ -41,23 +41,8 @@ fragment PortfolioTokenBalanceParts on TokenBalance {
   }
 }
 
-query PortfolioBalancesWeb(
-  $ownerAddress: String!
-  $chains: [Chain!]!
-  $includeSmallBalances: Boolean = false
-  $includeSpamTokens: Boolean = false
-) {
-  portfolios(
-    ownerAddresses: [$ownerAddress]
-    chains: $chains
-    valueModifiers: [
-      {
-        ownerAddress: $ownerAddress
-        includeSpamTokens: $includeSpamTokens
-        includeSmallBalances: $includeSmallBalances
-      }
-    ]
-  ) {
+query PortfolioBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
     id
     tokensTotalDenominatedValue {
       id

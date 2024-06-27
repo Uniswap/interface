@@ -3,7 +3,7 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -39,23 +39,23 @@ export const getSessionNamespaces = (
 /**
  * Convert list of chains from a WalletConnect namespace to a list of supported ChainIds
  * @param {string[]} chains list of chain strings as received from WalletConnect (ex. "eip155:1")
- * @returns {WalletChainId[]} list of supported ChainIds
+ * @returns {ChainId[]} list of supported ChainIds
  */
-export const getSupportedWalletConnectChains = (chains?: string[]): WalletChainId[] | undefined => {
+export const getSupportedWalletConnectChains = (chains?: string[]): ChainId[] | undefined => {
   if (!chains) {
     return
   }
 
   return chains
     .map((chain) => getChainIdFromEIP155String(chain))
-    .filter((c): c is WalletChainId => Boolean(c))
+    .filter((c): c is ChainId => Boolean(c))
 }
 
 /**
  * Convert chain from `eip155:[CHAIN_ID]` format to supported ChainId.
  * Returns null if chain doesn't match correct `eip155:` format or is an unsupported chain.
  */
-export const getChainIdFromEIP155String = (chain: string): WalletChainId | null => {
+export const getChainIdFromEIP155String = (chain: string): ChainId | null => {
   const chainStr = chain.startsWith('eip155:') ? chain.split(':')[1] : undefined
   return toSupportedChainId(chainStr)
 }
@@ -87,7 +87,7 @@ export const parseSignRequest = (
   method: EthSignMethod,
   topic: string,
   internalId: number,
-  chainId: WalletChainId,
+  chainId: ChainId,
   dapp: SignClientTypes.Metadata,
   requestParams: Web3WalletTypes.SessionRequest['params']['request']['params']
 ): { account: Address; request: SignRequest } => {
@@ -120,7 +120,7 @@ export const parseSignRequest = (
  * @param {EthMethod.EthSendTransaction} method type of method to sign (only support `eth_signTransaction`)
  * @param {string} topic id for the WalletConnect session
  * @param {number} internalId id for the WalletConnect transaction request
- * @param {WalletChainId} chainId chain the signature is being requested on
+ * @param {ChainId} chainId chain the signature is being requested on
  * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting the transaction
  * @param {Web3WalletTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, TransactionRequest}} address of the account receiving the request and formatted TransactionRequest object
@@ -129,7 +129,7 @@ export const parseTransactionRequest = (
   method: EthMethod.EthSendTransaction,
   topic: string,
   internalId: number,
-  chainId: WalletChainId,
+  chainId: ChainId,
   dapp: SignClientTypes.Metadata,
   requestParams: Web3WalletTypes.SessionRequest['params']['request']['params']
 ): { account: Address; request: TransactionRequest } => {

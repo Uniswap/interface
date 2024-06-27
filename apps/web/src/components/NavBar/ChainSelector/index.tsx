@@ -1,9 +1,10 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/Column'
 import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
+import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
   L1_CHAIN_IDS,
@@ -21,12 +22,11 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { css, useTheme } from 'styled-components'
-import { Flex, Popover } from 'ui/src'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { Popover } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
+import ChainSelectorRow from './ChainSelectorRow'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
@@ -43,12 +43,9 @@ const StyledDropdownButton = css`
 `
 const ChainsList = styled(Column)`
   width: 240px;
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    width: 100%;
-  }
 `
 const styledMobileMenuCss = css`
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
     bottom: 50px;
   }
 `
@@ -58,10 +55,10 @@ const ChainsDropdownWrapper = styled(Column)`
 
 type WalletConnectConnector = Connector & {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => InterfaceChainId[]
+  getNamespaceChainsIds: () => ChainId[]
 }
 
-function useWalletSupportedChains(): InterfaceChainId[] {
+function useWalletSupportedChains(): ChainId[] {
   const { connector } = useAccount()
 
   switch (connector?.type) {
@@ -80,9 +77,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const account = useAccount()
   const { chainId: swapChainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   const chainId = multichainUXEnabled ? swapChainId : account.chainId
-  // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
-  // flag can be true but multichainUXEnabled can be false (TDP page)
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   const theme = useTheme()
   const popoverRef = useRef<Popover>(null)
@@ -109,16 +103,16 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
           }
           return acc
         },
-        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>
+        { supported: [], unsupported: [] } as Record<string, ChainId[]>
       )
     return [supported, unsupported]
   }, [isSupportedChain, showTestnets, walletSupportsChain])
 
-  const [pendingChainId, setPendingChainId] = useState<InterfaceChainId | undefined>(undefined)
+  const [pendingChainId, setPendingChainId] = useState<ChainId | undefined>(undefined)
 
   const onSelectChain = useCallback(
-    async (targetChainId: UniverseChainId | null) => {
-      if (multichainUXEnabled || !targetChainId) {
+    async (targetChainId: ChainId) => {
+      if (multichainUXEnabled) {
         setSelectedChainId(targetChainId)
       } else {
         setPendingChainId(targetChainId)
@@ -141,14 +135,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   ) : (
     <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
   )
-
-  if (multichainFlagEnabled) {
-    return (
-      <Flex px={4}>
-        <NetworkFilter includeAllNetworks selectedChain={chainId ?? null} onPressChain={onSelectChain} />
-      </Flex>
-    )
-  }
 
   if (navRefreshEnabled) {
     return (

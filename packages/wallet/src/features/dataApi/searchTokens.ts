@@ -6,14 +6,14 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
 
 export const ALL_GQL_CHAINS = Object.values(Chain)
 
 export function useSearchTokens(
   searchQuery: string | null,
-  chainFilter: UniverseChainId | null,
+  chainFilter: ChainId | null,
   skip: boolean
 ): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = chainFilter ? toGraphQLChain(chainFilter) : null

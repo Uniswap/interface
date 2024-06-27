@@ -2,7 +2,7 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
@@ -87,7 +87,7 @@ export function useTransferWarnings(
 const checkIsMissingRequiredParams = (
   currencyInInfo: Maybe<CurrencyInfo>,
   nftIn: GQLNftAsset | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: ChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean

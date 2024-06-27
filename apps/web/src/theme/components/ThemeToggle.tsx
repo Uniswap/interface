@@ -1,15 +1,16 @@
 import Row from 'components/Row'
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components/text'
-import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
+
+import PillMultiToggle from 'components/Toggle/PillMultiToggle'
+import styled, { useTheme } from 'styled-components'
+import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
+import { ThemedText } from './text'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')

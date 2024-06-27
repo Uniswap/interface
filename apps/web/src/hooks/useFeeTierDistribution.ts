@@ -1,7 +1,6 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { chainIdToBackendChain } from 'constants/chains'
-import { PoolState, usePool } from 'hooks/usePools'
 import ms from 'ms'
 import { useMemo } from 'react'
 import {
@@ -9,6 +8,7 @@ import {
   useIsV3SubgraphStaleQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { PoolState, usePool } from './usePools'
 
 interface FeeTierDistribution {
   isLoading: boolean

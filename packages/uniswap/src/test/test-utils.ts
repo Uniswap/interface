@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-imports */
 
-import { renderWithProviders } from 'uniswap/src/test/render'
+import { renderWithProviders } from './render'
 
 // re-export everything
 export * from '@testing-library/react-native'

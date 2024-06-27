@@ -3,7 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { DAI, UNI } from 'wallet/src/constants/tokens'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -16,7 +16,7 @@ const account = signerMnemonicAccount()
 
 const formSwapUrl = (
   userAddress?: Address,
-  chain?: WalletChainId | number,
+  chain?: ChainId | number,
   inputAddress?: string,
   outputAddress?: string,
   currencyField?: string,
@@ -32,7 +32,7 @@ const formSwapUrl = (
   )
 
 const formTransactionState = (
-  chain?: WalletChainId,
+  chain?: ChainId,
   inputAddress?: string,
   outputAddress?: string,
   currencyField?: string,
@@ -40,12 +40,12 @@ const formTransactionState = (
 ): {
   input: {
     address: string | undefined
-    chainId: WalletChainId | undefined
+    chainId: ChainId | undefined
     type: AssetType
   }
   output: {
     address: string | undefined
-    chainId: WalletChainId | undefined
+    chainId: ChainId | undefined
     type: AssetType
   }
   exactCurrencyField: string | undefined
@@ -71,16 +71,16 @@ const formTransactionState = (
 
 const swapUrl = formSwapUrl(
   account.address,
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'input',
   '100'
 )
 
 const invalidOutputCurrencySwapUrl = formSwapUrl(
   account.address,
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   DAI.address,
   undefined,
   'input',
@@ -89,9 +89,9 @@ const invalidOutputCurrencySwapUrl = formSwapUrl(
 
 const invalidInputTokenSwapURl = formSwapUrl(
   account.address,
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   '0x00',
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'input',
   '100'
 )
@@ -100,33 +100,33 @@ const invalidChainSwapUrl = formSwapUrl(
   account.address,
   23,
   DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'input',
   '100'
 )
 
 const invalidAmountSwapUrl = formSwapUrl(
   account.address,
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'input',
   'not a number'
 )
 
 const invalidCurrencyFieldSwapUrl = formSwapUrl(
   account.address,
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'token1',
   '100'
 )
 
 const swapFormState = formTransactionState(
-  UniverseChainId.Mainnet,
+  ChainId.Mainnet,
   DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
+  UNI[ChainId.Mainnet].address,
   'input',
   '100'
 ) as TransactionState

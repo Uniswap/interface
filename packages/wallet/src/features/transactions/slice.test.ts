@@ -1,6 +1,5 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   addTransaction,
   cancelTransaction,
@@ -50,8 +49,7 @@ describe('transaction reducer', () => {
       const beforeTime = new Date().getTime()
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
-          chainId: UniverseChainId.Mainnet,
+          chainId: ChainId.Mainnet,
           id: '0',
           hash: '0x0',
           from: address,
@@ -62,9 +60,9 @@ describe('transaction reducer', () => {
         })
       )
       const txs = store.getState()[address]
-      expect(txs?.[UniverseChainId.Mainnet]).toBeTruthy()
-      expect(txs?.[UniverseChainId.Mainnet]?.['0']).toBeTruthy()
-      const tx = txs?.[UniverseChainId.Mainnet]?.['0']
+      expect(txs?.[ChainId.Mainnet]).toBeTruthy()
+      expect(txs?.[ChainId.Mainnet]?.['0']).toBeTruthy()
+      const tx = txs?.[ChainId.Mainnet]?.['0']
       expect(tx).toBeTruthy()
       expect(tx?.hash).toEqual('0x0')
       expect(tx?.from).toEqual(address)
@@ -78,10 +76,9 @@ describe('transaction reducer', () => {
 
     it('throws if attempting to add a transaction that already exists', () => {
       const id = '5'
-      const chainId = UniverseChainId.Mainnet
+      const chainId = ChainId.Mainnet
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId,
           id,
           hash: '0x0',
@@ -96,7 +93,6 @@ describe('transaction reducer', () => {
       try {
         store.dispatch(
           addTransaction({
-            routing: Routing.CLASSIC,
             chainId,
             id,
             hash: '0x0',
@@ -116,11 +112,10 @@ describe('transaction reducer', () => {
   describe('updateTransaction', () => {
     it('throws if attempting to update a missing transaction', () => {
       const id = '2'
-      const chainId = UniverseChainId.Polygon
+      const chainId = ChainId.Polygon
       try {
         store.dispatch(
           updateTransaction({
-            routing: Routing.CLASSIC,
             chainId,
             id,
             hash: '0x0',
@@ -141,9 +136,8 @@ describe('transaction reducer', () => {
 
     it('updates a transaction that was previoulsy added', () => {
       const id = '19'
-      const chainId = UniverseChainId.Polygon as WalletChainId
+      const chainId = ChainId.Polygon
       const transaction = {
-        routing: Routing.CLASSIC,
         chainId,
         id,
         hash: '0x0',
@@ -152,7 +146,7 @@ describe('transaction reducer', () => {
         typeInfo: approveTxTypeInfo,
         status: TransactionStatus.Pending,
         addedTime: Date.now(),
-      } as const
+      }
 
       store.dispatch(addTransaction(transaction))
       store.dispatch(updateTransaction({ ...transaction, status: TransactionStatus.Canceled }))
@@ -179,7 +173,6 @@ describe('transaction reducer', () => {
     it('finalizes a transaction that was previoulsy added', () => {
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId,
           id,
           hash: '0x0',
@@ -203,7 +196,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           cancelTransaction({
             address: '0xaddress',
-            chainId: UniverseChainId.Goerli,
+            chainId: ChainId.Goerli,
             cancelRequest: {},
             id,
           })
@@ -218,11 +211,10 @@ describe('transaction reducer', () => {
 
     it('cancels a tranasction that was previoulsy added', () => {
       const id = '420'
-      const chainId = UniverseChainId.ArbitrumOne
+      const chainId = ChainId.ArbitrumOne
 
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId,
           id,
           hash: '0x0',
@@ -248,7 +240,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           replaceTransaction({
             address: '0xaddress',
-            chainId: UniverseChainId.Goerli,
+            chainId: ChainId.Goerli,
             id,
             newTxParams,
           })
@@ -261,11 +253,10 @@ describe('transaction reducer', () => {
       expect(store.getState()).toEqual({})
     })
 
-    it('replaces a transaction that was previously added', () => {
+    it('replaces a tranasction that was previoulsy added', () => {
       const id = '101'
-      const chainId = UniverseChainId.Optimism as WalletChainId
+      const chainId = ChainId.Optimism
       const transaction = {
-        routing: Routing.CLASSIC,
         chainId,
         id,
         hash: '0x0',
@@ -274,7 +265,7 @@ describe('transaction reducer', () => {
         typeInfo: approveTxTypeInfo,
         status: TransactionStatus.Pending,
         addedTime: Date.now(),
-      } as const
+      }
 
       store.dispatch(addTransaction(transaction))
       store.dispatch(replaceTransaction({ chainId, id, newTxParams, address }))
@@ -287,11 +278,10 @@ describe('transaction reducer', () => {
     it('removes all transactions for the chain', () => {
       const address1 = '0x123'
       const address2 = '0xabc'
-      const chainId1 = UniverseChainId.Mainnet
-      const chainId2 = UniverseChainId.Goerli
+      const chainId1 = ChainId.Mainnet
+      const chainId2 = ChainId.Goerli
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId: chainId1,
           id: '0',
           hash: '0x0',
@@ -304,7 +294,6 @@ describe('transaction reducer', () => {
       )
       store.dispatch(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId: chainId2,
           id: '1',
           hash: '0x1',

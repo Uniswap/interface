@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
 import { opacify } from 'wallet/src/utils/colors'
 
@@ -31,7 +31,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
             </Text>
           </Flex>
           <Button theme="tertiary" onPress={() => onClose()}>
-            {t('common.button.close')}
+            {t('common.button.ok')}
           </Button>
         </Flex>
       </Flex>

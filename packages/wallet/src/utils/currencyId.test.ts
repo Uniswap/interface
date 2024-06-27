@@ -1,9 +1,8 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
-  NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -14,9 +13,10 @@ import {
   currencyIdToGraphQLAddress,
   getCurrencyAddressForAnalytics,
   isNativeCurrencyAddress,
-} from 'wallet/src/utils/currencyId'
+  NATIVE_ANALYTICS_ADDRESS_VALUE,
+} from './currencyId'
 
-const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
+const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
 
 describe(currencyId, () => {
@@ -25,16 +25,14 @@ describe(currencyId, () => {
   })
 
   it('builds correct ID for native asset', () => {
-    expect(currencyId(ETH)).toEqual(
-      `${UniverseChainId.Mainnet}-${getNativeAddress(UniverseChainId.Mainnet)}`
-    )
+    expect(currencyId(ETH)).toEqual(`${ChainId.Mainnet}-${getNativeAddress(ChainId.Mainnet)}`)
   })
 })
 
 describe(buildCurrencyId, () => {
   it('builds correct ID for token', () => {
-    expect(buildCurrencyId(UniverseChainId.Mainnet, DAI.address)).toEqual(
-      `${UniverseChainId.Mainnet}-${DAI.address}`
+    expect(buildCurrencyId(ChainId.Mainnet, DAI.address)).toEqual(
+      `${ChainId.Mainnet}-${DAI.address}`
     )
   })
 })
@@ -46,10 +44,7 @@ describe(areCurrencyIdsEqual, () => {
 
   it('returns correct comparison between a checksummed and lowercased currencyId', () => {
     expect(
-      areCurrencyIdsEqual(
-        currencyId(DAI),
-        `${UniverseChainId.Mainnet}-${DAI.address.toLowerCase()}`
-      )
+      areCurrencyIdsEqual(currencyId(DAI), `${ChainId.Mainnet}-${DAI.address.toLowerCase()}`)
     ).toBe(true)
   })
 
@@ -60,7 +55,7 @@ describe(areCurrencyIdsEqual, () => {
 
 describe(currencyAddress, () => {
   it('returns correct address for native asset', () => {
-    expect(currencyAddress(ETH)).toEqual(getNativeAddress(UniverseChainId.Mainnet))
+    expect(currencyAddress(ETH)).toEqual(getNativeAddress(ChainId.Mainnet))
   })
 
   it('returns correct address for token', () => {
@@ -80,19 +75,19 @@ describe(getCurrencyAddressForAnalytics, () => {
 
 describe(buildNativeCurrencyId, () => {
   it('builds correct ID for Mainnet', () => {
-    expect(buildNativeCurrencyId(UniverseChainId.Mainnet)).toEqual(
+    expect(buildNativeCurrencyId(ChainId.Mainnet)).toEqual(
       `1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`
     )
   })
 
   it('builds correct ID for Polygon', () => {
-    expect(buildNativeCurrencyId(UniverseChainId.Polygon)).toEqual(
+    expect(buildNativeCurrencyId(ChainId.Polygon)).toEqual(
       `137-0x0000000000000000000000000000000000001010`
     )
   })
 
   it('builds correct ID for BNB', () => {
-    expect(buildNativeCurrencyId(UniverseChainId.Bnb)).toEqual(
+    expect(buildNativeCurrencyId(ChainId.Bnb)).toEqual(
       `56-0xb8c77482e45f1f44de1745f52c74426c631bdd52`
     )
   })
@@ -100,29 +95,29 @@ describe(buildNativeCurrencyId, () => {
 
 describe(isNativeCurrencyAddress, () => {
   it('returns true for native address', () => {
-    expect(
-      isNativeCurrencyAddress(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))
-    ).toEqual(true)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, getNativeAddress(ChainId.Mainnet))).toEqual(
+      true
+    )
   })
 
   it('returns true for matic native address', () => {
-    expect(
-      isNativeCurrencyAddress(UniverseChainId.Polygon, getNativeAddress(UniverseChainId.Polygon))
-    ).toEqual(true)
+    expect(isNativeCurrencyAddress(ChainId.Polygon, getNativeAddress(ChainId.Polygon))).toEqual(
+      true
+    )
   })
 
   it('returns true for null currency addresses', () => {
-    expect(isNativeCurrencyAddress(UniverseChainId.Mainnet, null)).toEqual(true)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, null)).toEqual(true)
   })
 
   it('returns false for mainnet with Polygon native address', () => {
-    expect(
-      isNativeCurrencyAddress(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Polygon))
-    ).toEqual(false)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, getNativeAddress(ChainId.Polygon))).toEqual(
+      false
+    )
   })
 
   it('returns false for token address', () => {
-    expect(isNativeCurrencyAddress(UniverseChainId.Mainnet, DAI.address)).toEqual(false)
+    expect(isNativeCurrencyAddress(ChainId.Mainnet, DAI.address)).toEqual(false)
   })
 })
 
@@ -132,8 +127,8 @@ describe(currencyIdToAddress, () => {
   })
 
   it('returns correct address for native asset', () => {
-    expect(currencyIdToAddress(`1-${getNativeAddress(UniverseChainId.Mainnet)}`)).toEqual(
-      getNativeAddress(UniverseChainId.Mainnet)
+    expect(currencyIdToAddress(`1-${getNativeAddress(ChainId.Mainnet)}`)).toEqual(
+      getNativeAddress(ChainId.Mainnet)
     )
   })
 })
@@ -162,13 +157,11 @@ describe(currencyIdToGraphQLAddress, () => {
 
 describe(currencyIdToChain, () => {
   it('returns correct chain for token', () => {
-    expect(currencyIdToChain(`1-${DAI_ADDRESS}`)).toEqual(UniverseChainId.Mainnet)
+    expect(currencyIdToChain(`1-${DAI_ADDRESS}`)).toEqual(ChainId.Mainnet)
   })
 
   it('returns correct chain for native asset', () => {
-    expect(currencyIdToChain(`1-${getNativeAddress(UniverseChainId.Mainnet)}`)).toEqual(
-      UniverseChainId.Mainnet
-    )
+    expect(currencyIdToChain(`1-${getNativeAddress(ChainId.Mainnet)}`)).toEqual(ChainId.Mainnet)
   })
 
   it('handles invalid currencyId', () => {

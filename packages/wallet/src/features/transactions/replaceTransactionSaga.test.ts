@@ -4,7 +4,6 @@ import { BigNumber, providers } from 'ethers'
 import MockDate from 'mockdate'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   sendTransaction,
@@ -90,7 +89,6 @@ describe(sendTransaction, () => {
       ])
       .put(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId: transaction.chainId,
           id: NEW_UNIQUE_ID,
           hash: txResponse.hash,

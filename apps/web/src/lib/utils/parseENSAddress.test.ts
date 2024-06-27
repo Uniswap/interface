@@ -1,4 +1,4 @@
-import parseENSAddress from 'lib/utils/parseENSAddress'
+import parseENSAddress from './parseENSAddress'
 
 describe('parseENSAddress', () => {
   it('test cases', () => {

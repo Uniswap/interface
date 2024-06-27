@@ -1,4 +1,4 @@
-import { renderHookWithProviders, renderWithProviders } from 'wallet/src/test/render'
+import { renderHookWithProviders, renderWithProviders } from './render'
 
 export { MAX_FIXTURE_TIMESTAMP, faker } from './shared'
 export { createArray } from './utils'

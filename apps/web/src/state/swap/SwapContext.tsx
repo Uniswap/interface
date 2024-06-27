@@ -1,11 +1,11 @@
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
-import { useDerivedSwapInfo } from 'state/swap/hooks'
-import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+
+import { useDerivedSwapInfo } from './hooks'
+import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from './types'
 
 export function SwapAndLimitContextProvider({
   children,
@@ -14,12 +14,12 @@ export function SwapAndLimitContextProvider({
   initialOutputCurrency,
   multichainUXEnabled,
 }: PropsWithChildren<{
-  chainId?: InterfaceChainId
+  chainId?: ChainId
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   multichainUXEnabled?: boolean
 }>) {
-  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(chainId)
+  const [selectedChainId, setSelectedChainId] = useState<ChainId | undefined>(chainId)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -104,10 +104,19 @@ export function SwapAndLimitContextProvider({
       currentTab,
       setCurrentTab,
       prefilledState,
-      chainId: (multichainUXEnabled ? selectedChainId : chainId) ?? undefined,
+      chainId: multichainUXEnabled ? selectedChainId : chainId,
       multichainUXEnabled,
     }
-  }, [chainId, currencyState, currentTab, multichainUXEnabled, prefilledState, selectedChainId])
+  }, [
+    chainId,
+    currencyState,
+    setCurrencyState,
+    currentTab,
+    setCurrentTab,
+    prefilledState,
+    selectedChainId,
+    multichainUXEnabled,
+  ])
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }

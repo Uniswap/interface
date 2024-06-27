@@ -2,8 +2,7 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   sendTransaction,
   signAndSendTransaction,
@@ -25,7 +24,7 @@ const { txRequest, txResponse, txTypeInfo } = getTxFixtures()
 
 const sendParams = {
   txId: '0',
-  chainId: UniverseChainId.Mainnet as WalletChainId,
+  chainId: ChainId.Mainnet,
   account,
   options: { request: txRequest },
   typeInfo: txTypeInfo,
@@ -64,7 +63,6 @@ describe(sendTransaction, () => {
       ])
       .put(
         addTransaction({
-          routing: Routing.CLASSIC,
           chainId: sendParams.chainId,
           id: '0',
           hash: txResponse.hash,

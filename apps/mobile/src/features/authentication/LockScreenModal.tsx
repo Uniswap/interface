@@ -3,8 +3,7 @@ import { Modal } from 'src/components/modals/Modal'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { TouchableArea, useDeviceInsets } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { TouchableArea, useDeviceDimensions, useDeviceInsets } from 'ui/src'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 

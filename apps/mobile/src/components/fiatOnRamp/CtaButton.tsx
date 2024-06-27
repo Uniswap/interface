@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, SpinningLoader } from 'ui/src'
+import { Button } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 
 interface FiatOnRampCtaButtonProps {
   onPress: () => void

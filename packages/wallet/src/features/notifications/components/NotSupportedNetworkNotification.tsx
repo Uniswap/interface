@@ -13,9 +13,8 @@ export function NotSupportedNetworkNotification({
 
   return (
     <NotificationToast
-      smallToast
       hideDelay={hideDelay}
-      icon={<AlertTriangle color="$neutral2" size={iconSizes.icon20} />}
+      icon={<AlertTriangle color="$neutral2" size={iconSizes.icon36} />}
       title={t('extension.network.notSupported')}
     />
   )

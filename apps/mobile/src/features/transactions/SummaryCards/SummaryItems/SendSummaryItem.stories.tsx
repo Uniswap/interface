@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   SendTokenTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 
 const meta: Meta<typeof SendSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -84,10 +82,7 @@ const meta: Meta<typeof SendSummaryItem> = {
 
 export default meta
 
-const baseSendTx: Omit<ClassicTransactionDetails, 'status'> & {
-  typeInfo: SendTokenTransactionInfo
-} = {
-  routing: Routing.CLASSIC,
+const baseSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenTransactionInfo } = {
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -104,9 +99,7 @@ const baseSendTx: Omit<ClassicTransactionDetails, 'status'> & {
   },
 }
 
-const baseNFTSendTx: Omit<ClassicTransactionDetails, 'status'> & {
-  typeInfo: SendTokenTransactionInfo
-} = {
+const baseNFTSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenTransactionInfo } = {
   ...baseSendTx,
   typeInfo: {
     type: TransactionType.Send,
@@ -165,7 +158,7 @@ export const Send: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />
@@ -215,7 +208,7 @@ export const NFTSend: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

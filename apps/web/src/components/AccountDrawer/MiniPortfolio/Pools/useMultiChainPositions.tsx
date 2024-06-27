@@ -1,18 +1,6 @@
-import { CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
-import {
-  PositionInfo,
-  useCachedPositions,
-  useGetCachedTokens,
-  usePoolAddressCache,
-} from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
-import { Call, DEFAULT_GAS_LIMIT } from 'components/AccountDrawer/MiniPortfolio/Pools/getTokensAsync'
-import {
-  useInterfaceMulticallContracts,
-  usePoolPriceMap,
-  useV3ManagerContracts,
-} from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
@@ -20,15 +8,16 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyKey } from 'utils/currencyKey'
+import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
+import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'
+import { useInterfaceMulticallContracts, usePoolPriceMap, useV3ManagerContracts } from './hooks'
 
 function createPositionInfo(
   owner: string,
-  chainId: InterfaceChainId,
+  chainId: ChainId,
   details: PositionDetails,
   slot0: any,
   tokenA: Token,
@@ -123,7 +112,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
 
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
-    async (positionDetails: PositionDetails[], chainId: InterfaceChainId, multicall: UniswapInterfaceMulticall) => {
+    async (positionDetails: PositionDetails[], chainId: ChainId, multicall: UniswapInterfaceMulticall) => {
       const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as UniswapV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
@@ -139,13 +128,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         let poolAddress = poolAddressCache.get(details, chainId)
         if (!poolAddress) {
           const factoryAddress = V3_CORE_FACTORY_ADDRESSES[chainId]
-          poolAddress = computePoolAddress({
-            factoryAddress,
-            tokenA,
-            tokenB,
-            fee: details.fee,
-            chainId: UNIVERSE_CHAIN_INFO[chainId].sdkId,
-          })
+          poolAddress = computePoolAddress({ factoryAddress, tokenA, tokenB, fee: details.fee })
           poolAddressCache.set(details, chainId, poolAddress)
         }
         poolPairs.push([tokenA, tokenB])
@@ -161,7 +144,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
           const slot0 = poolInterface.decodeFunctionResult('slot0', result.returnData)
           acc.push(createPositionInfo(account, chainId, positionDetails[i], slot0, ...poolPairs[i]))
         } else {
-          logger.debug('useMultiChainPositions', 'fetchPositionInfo', 'slot0 fetch errored', result)
+          logger.warn('useMultiChainPositions', 'fetchPositionInfo', 'slot0 fetch errored', result)
         }
         return acc
       }, [])
@@ -170,7 +153,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
   )
 
   const fetchPositionsForChain = useCallback(
-    async (chainId: InterfaceChainId): Promise<PositionInfo[]> => {
+    async (chainId: ChainId): Promise<PositionInfo[]> => {
       if (!account || account.length === 0) {
         return []
       }
@@ -190,9 +173,12 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         return fetchPositionInfo(postionDetails, chainId, multicall)
       } catch (error) {
         const wrappedError = new Error('Failed to fetch positions for chain', { cause: error })
-        logger.debug('useMultiChainPositions', 'fetchPositionsForChain', wrappedError.message, {
-          error: wrappedError,
-          chainId,
+        logger.error(wrappedError, {
+          tags: {
+            file: 'useMultiChainPositions',
+            function: 'fetchPositionsForChain',
+          },
+          extra: { chainId },
         })
         return []
       }

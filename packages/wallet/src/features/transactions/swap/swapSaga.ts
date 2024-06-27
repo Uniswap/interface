@@ -11,7 +11,6 @@ import {
   sendTransaction,
 } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import {
   TransactionStatus,
@@ -135,7 +134,6 @@ function* getPendingPrivateTxCount(address: Address, chainId: number) {
     (tx) =>
       tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
-      isClassic(tx) &&
       Boolean(tx.options.submitViaPrivateRpc)
   ).length
 }

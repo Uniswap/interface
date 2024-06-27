@@ -1,9 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
-import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
 import store from 'state'
 import { updateUserSlippageTolerance } from 'state/user/reducer'
 import { SlippageTolerance } from 'state/user/types'
 import { fireEvent, render, screen } from 'test-utils/render'
+
+import MaxSlippageSettings from '.'
 
 const AUTO_SLIPPAGE = new Percent(5, 10_000)
 

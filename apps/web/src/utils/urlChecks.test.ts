@@ -1,4 +1,4 @@
-import { hasURL } from 'utils/urlChecks'
+import { hasURL } from './urlChecks'
 
 test('hasURL', () => {
   expect(hasURL('this is my personal website: https://www.example.com')).toBe(true)

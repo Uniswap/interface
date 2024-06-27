@@ -53,7 +53,12 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
       } catch (error) {
-        logger.warn('lists/hooks', 'useCombinedTokenMapFromUrls', 'Failed to combine tokens', error)
+        logger.error(error, {
+          tags: {
+            file: 'lists/hooks',
+            function: 'useCombinedTokenMapFromUrls',
+          },
+        })
         return allTokens
       }
     }, {})

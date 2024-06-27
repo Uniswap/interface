@@ -1,9 +1,9 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MISSING_PROVIDER = Symbol()
 export const BlockNumberContext = createContext<
@@ -50,10 +50,10 @@ export function BlockNumberProvider({ children }: PropsWithChildren) {
     setChainBlock((chainBlock) => {
       if (chainBlock.chainId === chainId) {
         if (!chainBlock.block || chainBlock.block < block) {
-          const mainnetBlock = chainId === UniverseChainId.Mainnet ? block : chainBlock.mainnetBlock
+          const mainnetBlock = chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock
           return { chainId, block, mainnetBlock }
         }
-      } else if (chainId === UniverseChainId.Mainnet) {
+      } else if (chainId === ChainId.MAINNET) {
         if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
           return { ...chainBlock, mainnetBlock: block }
         }
@@ -85,9 +85,9 @@ export function BlockNumberProvider({ children }: PropsWithChildren) {
 
   // Poll once for the mainnet block number using the network provider.
   useEffect(() => {
-    RPC_PROVIDERS[UniverseChainId.Mainnet]
+    RPC_PROVIDERS[ChainId.MAINNET]
       .getBlockNumber()
-      .then((block) => onChainBlock(UniverseChainId.Mainnet, block))
+      .then((block) => onChainBlock(ChainId.MAINNET, block))
       // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
       .catch(() => undefined)
   }, [onChainBlock])

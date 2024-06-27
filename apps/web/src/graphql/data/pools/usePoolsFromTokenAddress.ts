@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
@@ -5,6 +6,8 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -13,6 +16,7 @@ export function usePoolsFromTokenAddress(
   sortState: PoolTableSortState,
   chainId?: SupportedInterfaceChainId
 ) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -37,7 +41,7 @@ export function usePoolsFromTokenAddress(
       tokenAddress,
       chain: chainIdToBackendChain({ chainId, withFallback: true }),
     },
-    skip: !chainId,
+    skip: !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loading = loadingV3 || loadingV2
 
@@ -46,7 +50,7 @@ export function usePoolsFromTokenAddress(
   const sizeRef = useRef(DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || loadingMoreV2.current) {
+      if (loadingMoreV3.current || (loadingMoreV2.current && (chainId === ChainId.MAINNET || v2ExploreEnabled))) {
         return
       }
       loadingMoreV3.current = true
@@ -60,7 +64,7 @@ export function usePoolsFromTokenAddress(
           if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
             return prev
           }
-          if (!loadingMoreV2.current) {
+          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) {
             onComplete?.()
           }
           const mergedData = {
@@ -70,26 +74,28 @@ export function usePoolsFromTokenAddress(
           return mergedData
         },
       })
-      fetchMoreV2({
-        variables: {
-          cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
-            return prev
-          }
-          if (!loadingMoreV3.current) {
-            onComplete?.()
-          }
-          const mergedData = {
-            topV2Pairs: [...(prev.topV2Pairs ?? []).slice(), ...(fetchMoreResult.topV2Pairs ?? []).slice()],
-          }
-          loadingMoreV2.current = false
-          return mergedData
-        },
-      })
+      if (chainId === ChainId.MAINNET || v2ExploreEnabled) {
+        fetchMoreV2({
+          variables: {
+            cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult || !prev || !Object.keys(prev).length) {
+              return prev
+            }
+            if (!loadingMoreV3.current) {
+              onComplete?.()
+            }
+            const mergedData = {
+              topV2Pairs: [...(prev.topV2Pairs ?? []).slice(), ...(fetchMoreResult.topV2Pairs ?? []).slice()],
+            }
+            loadingMoreV2.current = false
+            return mergedData
+          },
+        })
+      }
     },
-    [dataV2?.topV2Pairs, dataV3?.topV3Pools, fetchMoreV2, fetchMoreV3]
+    [chainId, dataV2?.topV2Pairs, dataV3?.topV3Pools, fetchMoreV2, fetchMoreV3, v2ExploreEnabled]
   )
 
   return useMemo(() => {

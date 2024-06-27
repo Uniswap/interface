@@ -2,6 +2,7 @@ import { WatchQueryFetchPolicy } from '@apollo/client'
 import { ActivityEvent } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+
 import {
   NftActivityFilterInput,
   useNftActivityQuery,

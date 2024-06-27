@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   ReceiveTokenTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -83,10 +82,9 @@ const meta: Meta<typeof ReceiveSummaryItem> = {
 
 export default meta
 
-const baseReceiveTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseReceiveTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: ReceiveTokenTransactionInfo
 } = {
-  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -103,7 +101,7 @@ const baseReceiveTx: Omit<ClassicTransactionDetails, 'status'> & {
   },
 }
 
-const baseNFTReceiveTx: Omit<ClassicTransactionDetails, 'status'> & {
+const baseNFTReceiveTx: Omit<TransactionDetails, 'status'> & {
   typeInfo: ReceiveTokenTransactionInfo
 } = {
   ...baseReceiveTx,
@@ -136,7 +134,7 @@ export const Receive: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseReceiveTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />
@@ -158,7 +156,7 @@ export const NFTReceive: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTReceiveTx,
-          chainId: UniverseChainId.Optimism,
+          chainId: ChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

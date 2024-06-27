@@ -1,10 +1,10 @@
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 
 export type TradeableAsset = CurrencyAsset | NFTAsset
 
 interface BaseTradeableAsset {
   address: Address
-  chainId: WalletChainId
+  chainId: ChainId
   type: AssetType
 }
 

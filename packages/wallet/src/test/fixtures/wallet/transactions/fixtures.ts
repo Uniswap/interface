@@ -1,13 +1,11 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   BaseSwapTransactionInfo,
-  ClassicTransactionDetails,
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -20,6 +18,7 @@ import {
   NFTTradeType,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
+  TransactionDetails,
   TransactionId,
   TransactionOptions,
   TransactionReceipt,
@@ -31,11 +30,11 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { dappInfoWC } from 'wallet/src/test/fixtures/wallet/walletConnect'
 import { faker } from 'wallet/src/test/shared'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 
 export const transactionId = createFixture<TransactionId>()(() => ({
   id: faker.datatype.uuid(),
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomEnumValue(ChainId),
 }))
 
 export const nftSummaryInfo = createFixture<NFTSummaryInfo>()(() => ({
@@ -141,9 +140,8 @@ export const transactionOptions = createFixture<TransactionOptions>()(() => ({
   request: {} as TransactionRequest,
 }))
 
-export const transactionDetails = createFixture<ClassicTransactionDetails>()(() => ({
+export const transactionDetails = createFixture<TransactionDetails>()(() => ({
   ...transactionId(),
-  routing: Routing.CLASSIC,
   from: faker.finance.ethereumAddress(),
   typeInfo: approveTransactionInfo(),
   status: randomEnumValue(TransactionStatus),

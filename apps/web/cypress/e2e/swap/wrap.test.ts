@@ -1,8 +1,8 @@
-import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+
 import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 
-const WETH = WETH9[UniverseChainId.Mainnet]
+const WETH = WETH9[ChainId.MAINNET]
 
 describe('Swap wrap', () => {
   // Turn off automine so that intermediate screens are available to assert on.

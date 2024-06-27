@@ -2,13 +2,13 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
-  getTokenAddressForApi,
+  getTokenAddressForApiRequest,
   toTradingApiSupportedChainId,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import {
@@ -19,7 +19,7 @@ import { WrapType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenApprovalInfoParams {
-  chainId: WalletChainId
+  chainId: ChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   skip?: boolean
@@ -36,7 +36,7 @@ export function useTokenApprovalInfo(
   const currencyIn = currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
-  const tokenAddress = getTokenAddressForApi(currencyIn)
+  const tokenAddress = getTokenAddressForApiRequest(currencyIn)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const supportedChainId = toTradingApiSupportedChainId(chainId)

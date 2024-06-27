@@ -1,5 +1,6 @@
+// @ts-ignore
+import { ChainId } from '@uniswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { revertHardhat, setupHardhat } from '../utils'
 
 beforeEach(() => {
@@ -44,7 +45,7 @@ beforeEach(() => {
 
 // Reset hardhat between suites to ensure isolation.
 // This resets the fork, as well as options like automine.
-before(() => cy.hardhat().then((hardhat) => hardhat.reset(UniverseChainId.Mainnet)))
+before(() => cy.hardhat().then((hardhat) => hardhat.reset(ChainId.MAINNET)))
 
 // Reverts hardhat between tests to ensure isolation.
 // This reverts the fork, but not options like automine.

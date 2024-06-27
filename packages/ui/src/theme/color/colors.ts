@@ -131,8 +131,6 @@ export const colors = {
   violet800: '#121643',
   violet900: '#0E0D30',
   violetVibrant: '#5065FD',
-  uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#9646FA',
   cyan50: '#D6F5FE',
   cyan100: '#B0EDFE',
   cyan200: '#63CDE8',
@@ -155,54 +153,16 @@ export const colors = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
+  networkEthereum: '#627EEA',
+  networkOptimism: '#FF0420',
+  networkPolygon: '#A457FF',
+  networkArbitrum: '#28A0F0',
+  networkBsc: '#F0B90B',
+  networkBase: '#0052FF',
+  networkBlast: '#FCFC03',
+  networkAvalanche: '#E84142',
+  networkCelo: '#FCFF52',
   fiatOnRampBanner: '#FB36D0',
-}
-
-export const networkColors = {
-  ethereum: {
-    light: '#627EEA',
-    dark: '#627EEA',
-  },
-  optimism: {
-    light: '#FF0420',
-    dark: '#FF0420',
-  },
-  polygon: {
-    light: '#8247E5',
-    dark: '#8247E5',
-  },
-  arbitrum: {
-    light: '#12AAFF',
-    dark: '#12AAFF',
-  },
-  bnb: {
-    light: '#B08603',
-    dark: '#FFBF17',
-  },
-  base: {
-    light: '#0052FF',
-    dark: '#0052FF',
-  },
-  blast: {
-    light: '#222222',
-    dark: '#FCFC03',
-  },
-  avalanche: {
-    light: '#E84142',
-    dark: '#E84142',
-  },
-  celo: {
-    light: '#222222',
-    dark: '#FCFF52',
-  },
-  zora: {
-    light: '#222222',
-    dark: '#FFFFFF',
-  },
-  zksync: {
-    light: '#3667F6',
-    dark: '#3667F6',
-  },
 }
 
 // TODO: map named colors to new Spore colors
@@ -322,23 +282,20 @@ export const colorsLight = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.light,
-  chain_10: networkColors.optimism.light,
-  chain_137: networkColors.polygon.light,
-  chain_42161: networkColors.arbitrum.light,
-  chain_80001: networkColors.polygon.light,
-  chain_8453: networkColors.base.light,
-  chain_7777777: networkColors.zora.light,
-  chain_81457: networkColors.blast.light,
-  chain_56: networkColors.bnb.light,
-  chain_42220: networkColors.celo.light,
-  chain_43114: networkColors.avalanche.light,
-  chain_324: networkColors.zksync.light,
-
-  // Testnets
+  chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
+  chain_10: colors.networkOptimism,
+  chain_137: colors.networkPolygon,
+  chain_42161: colors.networkArbitrum,
+  chain_80001: colors.networkPolygon,
+  chain_8453: colors.networkBase,
+  chain_7777777: sporeLight.neutral1,
+  chain_81457: colors.networkBlast,
+  chain_56: colors.networkBsc,
+  chain_42220: colors.networkCelo,
+  chain_43114: colors.networkAvalanche,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -396,21 +353,18 @@ export const colorsDark = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.dark,
-  chain_10: networkColors.optimism.dark,
-  chain_137: networkColors.polygon.dark,
-  chain_42161: networkColors.arbitrum.dark,
-  chain_80001: networkColors.polygon.dark,
-  chain_8453: networkColors.base.dark,
-  chain_7777777: networkColors.zora.dark,
-  chain_81457: networkColors.blast.dark,
-  chain_56: networkColors.bnb.dark,
-  chain_42220: networkColors.celo.dark,
-  chain_43114: networkColors.avalanche.dark,
-  chain_324: networkColors.zksync.dark,
-
-  // Testnets
+  chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
+  chain_10: colors.networkOptimism,
+  chain_137: colors.networkPolygon,
+  chain_42161: colors.networkArbitrum,
+  chain_80001: colors.networkPolygon,
+  chain_8453: colors.networkBase,
+  chain_7777777: sporeDark.neutral1,
+  chain_81457: colors.networkBlast,
+  chain_56: colors.networkBsc,
+  chain_42220: colors.networkCelo,
+  chain_43114: colors.networkAvalanche,
 }

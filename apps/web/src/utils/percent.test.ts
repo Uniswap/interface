@@ -1,5 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
-import { largerPercentValue } from 'utils/percent'
+
+import { largerPercentValue } from './percent'
 
 describe('largerPercentValue', () => {
   it('should return the larger percent value', () => {

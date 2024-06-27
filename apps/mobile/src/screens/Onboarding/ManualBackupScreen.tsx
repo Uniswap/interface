@@ -12,10 +12,10 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ManualPageViewScreen, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -66,7 +66,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   useEffect(() => {
     if (continueButtonPressed && onboardingAccount?.backups?.includes(BackupType.Manual)) {
-      navigation.replace(OnboardingScreens.Notifications, params)
+      navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
     }
   }, [continueButtonPressed, navigation, params, onboardingAccount?.backups])
 

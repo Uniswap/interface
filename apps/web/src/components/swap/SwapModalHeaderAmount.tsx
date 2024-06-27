@@ -3,7 +3,6 @@ import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Field } from 'components/swap/constants'
 import { useWindowSize } from 'hooks/screenSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
@@ -11,6 +10,8 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { Field } from './constants'
 
 const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};

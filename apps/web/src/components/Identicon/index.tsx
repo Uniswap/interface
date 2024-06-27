@@ -1,11 +1,11 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import ENSAvatarIcon from 'components/Identicon/ENSAvatarIcon'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
-import { Unicon } from 'ui/src'
+import { Unicon } from 'ui/src/components/Unicon'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import ENSAvatarIcon from './ENSAvatarIcon'
 
 export enum IdenticonType {
   LOADING = 'loading',

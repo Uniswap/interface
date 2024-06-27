@@ -1,7 +1,7 @@
 import { routes } from 'pages/RouteDefinitions'
-import { getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
-import { paths } from 'pages/paths'
+import { getExploreTitle } from './getExploreTitle'
+import { paths } from './paths'
 
 describe('Paths', () => {
   it('should have every path in the app RouteDefinitions', () => {

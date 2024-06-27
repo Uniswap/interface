@@ -1,7 +1,6 @@
 import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { ColorTokens, Text } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimatedFlex, ColorTokens, Text } from 'ui/src'
 
 export const BANNER_HEIGHT = 45
 

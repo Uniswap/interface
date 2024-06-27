@@ -1,4 +1,3 @@
-import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,
@@ -9,6 +8,7 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
+import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from '../VolumeChart/utils'
 
 export interface LiquidityBarData extends CustomData {
   time: UTCTimestamp

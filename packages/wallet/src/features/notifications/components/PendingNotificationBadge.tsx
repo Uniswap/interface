@@ -1,7 +1,8 @@
-import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
-import { CheckmarkCircle } from 'ui/src/components/icons'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes } from 'ui/src/theme'
+import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -32,7 +33,15 @@ export function PendingNotificationBadge({
   if (currentNotification?.type === AppNotificationType.Transaction) {
     const { txStatus } = currentNotification
     if (txStatus === TransactionStatus.Success) {
-      return <CheckmarkCircle size={size} />
+      return (
+        <CheckmarkCircle
+          borderColor="$statusSuccess"
+          borderWidth={2}
+          checkmarkStrokeWidth={3}
+          color={colors.statusSuccess.val}
+          size={size}
+        />
+      )
     }
 
     return <AlertCircle color={colors.DEP_accentWarning.val} height={size} width={size} />

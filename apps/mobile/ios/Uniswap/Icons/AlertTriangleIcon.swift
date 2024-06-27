@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AlertTriangleIcon: Shape {
+struct AlertTriangeIcon: Shape {
   func path(in rect: CGRect) -> Path {
     var path = Path()
     let width = rect.size.width

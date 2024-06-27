@@ -2,17 +2,17 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { UNI } from '../../constants/tokens'
+import { useContract } from '../../hooks/useContract'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { useTransactionAdder } from '../transactions/hooks'
+import { TransactionType } from '../transactions/types'
 
 function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MerkleDistributorJSON.abi, true)
@@ -40,7 +40,12 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
     )
       .then((res) => res.json())
       .catch((error) => {
-        logger.warn('claim/hooks', 'fetchClaimMapping', 'Claim mapping fetch failed', error)
+        logger.error(error, {
+          tags: {
+            file: 'claim/hooks',
+            function: 'fetchClaimMapping',
+          },
+        })
         FETCH_CLAIM_MAPPING_PROMISE = null
       }))
   )
@@ -55,7 +60,13 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
     )
       .then((res) => res.json())
       .catch((error) => {
-        logger.warn('claim/hooks', 'fetchClaimFile', 'Claim file fetch failed', error)
+        logger.error(error, {
+          tags: {
+            file: 'claim/hooks',
+            function: 'fetchClaimFile',
+          },
+          extra: { address: key },
+        })
         delete FETCH_CLAIM_FILE_PROMISES[key]
       }))
   )

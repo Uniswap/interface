@@ -1,11 +1,10 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
-import { useSupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled, { css } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const CTASection = styled.section`
   display: grid;
@@ -71,7 +70,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useAccount()
-  const chain = UNIVERSE_CHAIN_INFO[useSupportedChainId(chainId) ?? UniverseChainId.Mainnet]
+  const chain = CHAIN_INFO[useSupportedChainId(chainId) ?? ChainId.MAINNET]
 
   return (
     <CTASection>

@@ -1,5 +1,4 @@
-import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
-import { MOONPAY_SENDER_ADDRESSES } from 'components/AccountDrawer/MiniPortfolio/constants'
+import { ChainId, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import { DAI } from 'constants/tokens'
 import {
   AssetActivityPartsFragment,
@@ -18,7 +17,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
 
 const MockOrderTimestamp = 10000
 const MockRecipientAddress = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
@@ -448,7 +447,7 @@ export const MockRemoveLiquidity = {
   ...mockAssetActivityPartsFragment,
   details: {
     ...commonTransactionDetailsFields,
-    to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[UniverseChainId.Mainnet],
+    to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[ChainId.MAINNET],
     type: TransactionType.Receive,
     assetChanges: [
       mockTokenTransferInPartsFragment,

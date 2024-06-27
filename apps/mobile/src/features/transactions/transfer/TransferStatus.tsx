@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { NumberType } from 'utilities/src/format/types'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import {
   LocalizationContextState,
   useLocalizationContext,

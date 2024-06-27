@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { AssetType, NFTAssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -10,7 +10,7 @@ interface BaseTransferParams {
   type: AssetType
   txId?: string
   account: Account
-  chainId: WalletChainId
+  chainId: ChainId
   toAddress: Address
   tokenAddress: Address
 }
@@ -45,7 +45,7 @@ export type BaseDerivedInfo<TInput = CurrencyInfo> = {
 export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
   currencyInInfo?: CurrencyInfo | null
-  chainId: WalletChainId
+  chainId: ChainId
   exactAmountFiat: string
   exactCurrencyField: CurrencyField.INPUT
   isFiatInput?: boolean

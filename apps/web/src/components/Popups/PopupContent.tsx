@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
   getSignatureToActivityQueryOptions,
@@ -10,7 +11,7 @@ import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
-import { SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
+import { CHAIN_INFO, SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
 import useENSName from 'hooks/useENSName'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
@@ -18,9 +19,7 @@ import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -69,9 +68,9 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
   height: 32px;
 `
 
-export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: InterfaceChainId; onClose: () => void }) {
+export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
-  const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
+  const chainInfo = isSupportedChain ? CHAIN_INFO[chainId] : undefined
 
   if (!chainInfo) {
     return null

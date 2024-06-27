@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useIsSmartContractAddress(
   address: string | undefined,
-  chainId: WalletChainId
+  chainId: ChainId
 ): {
   loading: boolean
   isSmartContractAddress: boolean

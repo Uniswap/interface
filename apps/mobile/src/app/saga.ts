@@ -36,6 +36,13 @@ import {
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
+import { pendingAccountSaga } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import {
+  importAccountActions,
+  importAccountReducer,
+  importAccountSaga,
+  importAccountSagaName,
+} from 'wallet/src/features/wallet/import/importAccountSaga'
 import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 const REHYDRATION_STATUS_POLLING_INTERVAL = 50
@@ -48,6 +55,7 @@ const sagas = [
   deepLinkWatcher,
   firebaseDataWatcher,
   modalWatcher,
+  pendingAccountSaga,
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
@@ -67,6 +75,12 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: editAccountSaga,
     reducer: editAccountReducer,
     actions: editAccountActions,
+  },
+  [importAccountSagaName]: {
+    name: importAccountSagaName,
+    wrappedSaga: importAccountSaga,
+    reducer: importAccountReducer,
+    actions: importAccountActions,
   },
   [swapSagaName]: {
     name: swapSagaName,

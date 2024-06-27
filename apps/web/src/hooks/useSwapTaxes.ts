@@ -1,34 +1,33 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
 import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { useContract } from './useContract'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
-function getFeeOnTransferAddress(chainId?: InterfaceChainId) {
+function getFeeOnTransferAddress(chainId?: ChainId) {
   switch (chainId) {
-    case UniverseChainId.Mainnet:
+    case ChainId.MAINNET:
       return '0x19C97dc2a25845C7f9d1d519c8C2d4809c58b43f'
-    case UniverseChainId.Optimism:
+    case ChainId.OPTIMISM:
       return '0xa7c17505B43955A474fb6AFE61E093907a7567c9'
-    case UniverseChainId.Bnb:
+    case ChainId.BNB:
       return '0x331f6D0AAB4A1F039f0d75A613a7F1593DbDE1BB'
-    case UniverseChainId.Polygon:
+    case ChainId.POLYGON:
       return '0x92bCCCb6c8c199AAcA38408621E38Ab6dBfA00B5'
-    case UniverseChainId.Base:
+    case ChainId.BASE:
       return '0x331f6D0AAB4A1F039f0d75A613a7F1593DbDE1BB'
-    case UniverseChainId.ArbitrumOne:
+    case ChainId.ARBITRUM_ONE:
       return '0x64CF365CC5CCf5E64380bc05Acd5df7D0618c118'
-    case UniverseChainId.Celo:
+    case ChainId.CELO:
       return '0x3dfF0145E68a5880EAbE8F56b6Bc30C4AdCF3413'
-    case UniverseChainId.Avalanche:
+    case ChainId.AVALANCHE:
       return '0xBF2B9F6A6eCc4541b31ab2dCF8156D33644Ca3F3'
     default:
       return undefined
@@ -61,7 +60,7 @@ async function getSwapTaxes(
   fotDetector: FeeOnTransferDetector,
   inputTokenAddress: string | undefined,
   outputTokenAddress: string | undefined,
-  chainId: InterfaceChainId
+  chainId: ChainId
 ) {
   const addresses = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
@@ -85,7 +84,7 @@ async function getSwapTaxes(
       })
     }
   } catch (e) {
-    logger.warn('useSwapTaxes', 'getSwapTaxes', 'Failed to get swap taxes for token(s):', addresses, e)
+    logger.debug('useSwapTaxes', 'getSwapTaxes', 'Failed to get swap taxes for token(s):', addresses, e)
   }
 
   const inputTax = (inputTokenAddress ? FEE_CACHE[inputTokenAddress]?.sellTax : ZERO_PERCENT) ?? ZERO_PERCENT

@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
     node: false,
   },
-  plugins: ['react', 'react-hooks', 'no-relative-import-paths'],
+  plugins: ['react', 'react-hooks'],
   ignorePatterns: ['**/__generated__/'],
   parserOptions: {
     ecmaFeatures: {

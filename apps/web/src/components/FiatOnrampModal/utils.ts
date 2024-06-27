@@ -1,6 +1,4 @@
-import { WETH9 } from '@uniswap/sdk-core'
-import { MoonpaySupportedCurrencyCode } from 'components/FiatOnrampModal/constants'
-import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,
@@ -13,7 +11,9 @@ import {
   WETH_POLYGON,
 } from 'constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+
+import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
+import { MoonpaySupportedCurrencyCode } from './constants'
 
 type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism | Chain.Base
 const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism, Chain.Base]
@@ -27,7 +27,7 @@ const CURRENCY_CODES: {
   }
 } = {
   [Chain.Ethereum]: {
-    [WETH9[UniverseChainId.Mainnet]?.address.toLowerCase()]: 'weth',
+    [WETH9[ChainId.MAINNET]?.address.toLowerCase()]: 'weth',
     [USDC_MAINNET.address.toLowerCase()]: 'usdc',
     [USDT.address.toLowerCase()]: 'usdt',
     [WBTC.address.toLowerCase()]: 'wbtc',

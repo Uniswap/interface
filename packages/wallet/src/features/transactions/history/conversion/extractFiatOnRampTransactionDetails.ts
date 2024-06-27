@@ -1,8 +1,7 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { fromGraphQLChain, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
@@ -17,7 +16,7 @@ import {
 
 function parseFiatPurchaseTransaction(
   transaction: FORTransaction
-): FiatPurchaseTransactionInfo & { chainId: WalletChainId } {
+): FiatPurchaseTransactionInfo & { chainId: ChainId } {
   const {
     sourceAmount: inputCurrencyAmount,
     sourceCurrencyCode: inputCurrency,
@@ -68,7 +67,6 @@ export function extractFiatOnRampTransactionDetails(
     }
 
     return {
-      routing: Routing.CLASSIC,
       id: transaction.externalSessionId,
       chainId,
       hash: transaction.cryptoDetails.blockchainTransactionId || '',
@@ -103,9 +101,8 @@ export function extractOnRampTransactionDetails(
   }
 
   return {
-    routing: Routing.CLASSIC,
     id: transaction.details.id,
-    chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
+    chainId: fromGraphQLChain(transaction.chain) ?? ChainId.Mainnet,
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteTxStatusToLocalTxStatus(RemoteTransactionType.OnRamp, transaction.details.status),
     from: transaction.details.receiverAddress, // This transaction is not on-chain, so use the receiver address as the from address

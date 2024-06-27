@@ -28,14 +28,16 @@ export function useSetTradeSlippage(
 
     const { loading, error, isFetching } = trade
     const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
+    const tokenInIsNative = inputAmount.currency.isNative
+    const tokenOutIsNative = outputAmount.currency.isNative
 
     if (!quote) {
       return { trade, autoSlippageTolerance }
     }
 
     const newTrade = transformTradingApiResponseToTrade({
-      currencyIn: inputAmount.currency,
-      currencyOut: outputAmount.currency,
+      tokenInIsNative,
+      tokenOutIsNative,
       tradeType,
       deadline,
       slippageTolerance: autoSlippageTolerance,

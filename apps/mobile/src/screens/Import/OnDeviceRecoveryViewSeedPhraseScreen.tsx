@@ -6,7 +6,6 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
 import { Text } from 'ui/src'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 type Props = NativeStackScreenProps<
@@ -27,13 +26,11 @@ export function OnDeviceRecoveryViewSeedPhraseScreen({
   }
 
   return (
-    <Trace logImpression screen={OnboardingScreens.OnDeviceRecoveryViewSeedPhrase}>
-      <Screen mb="$spacing12" mt="$spacing24">
-        <BackHeader alignment="center" px="$spacing16">
-          <Text variant="body1">{t('settings.setting.recoveryPhrase.title')}</Text>
-        </BackHeader>
-        <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={navigateBack} />
-      </Screen>
-    </Trace>
+    <Screen mb="$spacing12" mt="$spacing24">
+      <BackHeader alignment="center" px="$spacing16">
+        <Text variant="body1">{t('settings.setting.recoveryPhrase.title')}</Text>
+      </BackHeader>
+      <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={navigateBack} />
+    </Screen>
   )
 }

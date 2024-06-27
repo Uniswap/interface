@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
-  ClassicTransactionDetails,
   NFTMintTransactionInfo,
+  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
@@ -16,10 +15,7 @@ const meta: Meta<typeof NFTMintSummaryItem> = {
 
 export default meta
 
-const baseNFTMintTx: Omit<ClassicTransactionDetails, 'status'> & {
-  typeInfo: NFTMintTransactionInfo
-} = {
-  routing: Routing.CLASSIC,
+const baseNFTMintTx: Omit<TransactionDetails, 'status'> & { typeInfo: NFTMintTransactionInfo } = {
   from: '',
   addedTime: Date.now() - 30000,
   hash: '',

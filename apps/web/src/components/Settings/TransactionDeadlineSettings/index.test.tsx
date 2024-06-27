@@ -1,8 +1,9 @@
-import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import store from 'state'
 import { updateUserDeadline } from 'state/user/reducer'
 import { fireEvent, render, screen } from 'test-utils/render'
+
+import TransactionDeadlineSettings from '.'
 
 const renderTransactionDeadlineSettings = () => {
   render(<TransactionDeadlineSettings />)

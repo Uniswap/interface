@@ -1,8 +1,5 @@
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
-import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
-import { LOCALE_LABEL } from 'constants/locales'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { Views } from 'components/NavBar/PreferencesMenu/shared'
 import { Trans, t } from 'i18n'
 import { ChevronRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -55,12 +52,9 @@ export function PreferenceSettings({
   setSettingsView,
   showHeader = true,
 }: {
-  setSettingsView: (view: PreferencesView) => void
+  setSettingsView: (view: Views) => void
   showHeader?: boolean
 }) {
-  const activeLocalCurrency = useActiveLocalCurrency()
-  const activeLocale = useActiveLocale()
-
   const items: SettingItem[] = [
     {
       label: t('themeToggle.theme'),
@@ -68,13 +62,11 @@ export function PreferenceSettings({
     },
     {
       label: t('common.language'),
-      component: (
-        <SelectButton label={LOCALE_LABEL[activeLocale]} onClick={() => setSettingsView(PreferencesView.LANGUAGE)} />
-      ),
+      component: <SelectButton label="English" onClick={() => setSettingsView(Views.LANGUAGE)} />,
     },
     {
       label: t('common.currency'),
-      component: <SelectButton label={activeLocalCurrency} onClick={() => setSettingsView(PreferencesView.CURRENCY)} />,
+      component: <SelectButton label="USD" onClick={() => setSettingsView(Views.CURRENCY)} />,
     },
   ]
 

@@ -1,10 +1,10 @@
-import { isSupportedGQLChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { ChainId } from '@uniswap/sdk-core'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isSupportedGQLChain, supportedChainIdFromGQLChain } from './util'
 
 describe('fromGraphQLChain', () => {
   it('should return the corresponding chain ID for supported chains', () => {
-    expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(UniverseChainId.Mainnet)
+    expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(ChainId.MAINNET)
 
     for (const chain of Object.values(Chain)) {
       if (!isSupportedGQLChain(chain)) {

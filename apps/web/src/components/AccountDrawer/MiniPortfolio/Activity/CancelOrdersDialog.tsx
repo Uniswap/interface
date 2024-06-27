@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import GetHelp from 'components/Button/GetHelp'
@@ -15,7 +15,6 @@ import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -102,7 +101,7 @@ export function CancelOrdersDialog(
       (cancelState === CancellationState.CANCELLED || cancelState === CancellationState.PENDING_CONFIRMATION) &&
       cancelTxHash
     return (
-      <Modal isOpen $scrollOverlay onDismiss={onCancel} maxHeight="90vh">
+      <Modal isOpen $scrollOverlay onDismiss={onCancel} maxHeight={90}>
         <Container gap="lg">
           <Row gap="10px" width="100%" padding="4px 0px" justify="end" align="center">
             <GetHelp />
@@ -167,7 +166,7 @@ export function CancelOrdersDialog(
   }
 }
 
-function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: InterfaceChainId }) {
+function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: ChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
   const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()

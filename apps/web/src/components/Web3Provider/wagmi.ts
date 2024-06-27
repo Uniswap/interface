@@ -1,13 +1,13 @@
 import { QueryClient } from '@tanstack/react-query'
-import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
-import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
+import { ChainId } from '@uniswap/sdk-core'
+import { CHAIN_INFO } from 'constants/chains'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
 import { connect } from 'wagmi/actions'
 import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
+import { injectedWithFallback } from './injectedWithFallback'
+import { WC_PARAMS, uniswapWalletConnect } from './walletConnect'
 
 declare module 'wagmi' {
   interface Register {
@@ -16,10 +16,7 @@ declare module 'wagmi' {
 }
 
 export const wagmiConfig = createConfig({
-  chains: [
-    UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
-    ...WEB_SUPPORTED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId]),
-  ],
+  chains: [CHAIN_INFO[ChainId.MAINNET], ...Object.values(CHAIN_INFO)],
   connectors: [
     injectedWithFallback(),
     walletConnect(WC_PARAMS),
@@ -28,7 +25,6 @@ export const wagmiConfig = createConfig({
       appName: 'Uniswap',
       appLogoUrl: UNISWAP_LOGO,
       reloadOnDisconnect: false,
-      enableMobileWalletLink: true,
     }),
     safe(),
   ],

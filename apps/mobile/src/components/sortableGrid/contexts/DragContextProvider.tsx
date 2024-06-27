@@ -6,7 +6,6 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
 import { useStableCallback } from 'src/components/sortableGrid/hooks'
 import {
   ActiveItemDecorationSettings,
@@ -16,6 +15,7 @@ import {
   Vector,
 } from 'src/components/sortableGrid/types'
 import { HapticFeedback, ImpactFeedbackStyle } from 'ui/src'
+import { useLayoutContext } from './LayoutContextProvider'
 
 export type DragContextType = {
   // DRAG SETTINGS

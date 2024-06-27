@@ -2,8 +2,8 @@ import { BigNumber } from 'ethers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
   CurrencyField,
@@ -85,11 +85,11 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 
-  if (!WALLET_SUPPORTED_CHAIN_IDS.includes(inputChain)) {
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(inputChain)) {
     throw new Error('Invalid inputCurrencyId. Chain ID is not supported')
   }
 
-  if (!WALLET_SUPPORTED_CHAIN_IDS.includes(outputChain)) {
+  if (!ALL_SUPPORTED_CHAIN_IDS.includes(outputChain)) {
     throw new Error('Invalid outputCurrencyId. Chain ID is not supported')
   }
 

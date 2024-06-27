@@ -2,7 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
@@ -55,7 +55,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const currencyIn = currencyInInfo?.currency
   const currencyOut = currencyOutInfo?.currency
 
-  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? UniverseChainId.Mainnet
+  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? ChainId.Mainnet
 
   const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, activeAccount?.address)
   const { balance: tokenOutBalance } = useOnChainCurrencyBalance(

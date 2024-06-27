@@ -18,7 +18,6 @@ export const paths = [
   '/buy',
   '/limit',
   '/limits',
-  '/buy',
   '/pool/v2/find',
   '/pool/v2',
   '/pool',

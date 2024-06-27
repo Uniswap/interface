@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SignatureDetails } from 'state/signatures/types'
+
+import { SignatureDetails } from './types'
 
 export interface SignatureState {
   [account: string]: { [id: string]: SignatureDetails }

@@ -1,13 +1,13 @@
 import { nanoid } from '@reduxjs/toolkit'
+import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { RPC_PROVIDERS } from 'constants/providers'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
-import { fetchTokenList } from 'state/lists/actions'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { fetchTokenList } from '../state/lists/actions'
 
 export function useFetchListCallback(): (listUrl: string, skipValidation?: boolean) => Promise<TokenList> {
   const dispatch = useAppDispatch()
@@ -18,7 +18,7 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
       dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
       return getTokenList(
         listUrl,
-        (ensName: string) => resolveENSContentHash(ensName, RPC_PROVIDERS[UniverseChainId.Mainnet]),
+        (ensName: string) => resolveENSContentHash(ensName, RPC_PROVIDERS[ChainId.MAINNET]),
         skipValidation
       )
         .then((tokenList) => {
@@ -26,7 +26,15 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
           return tokenList
         })
         .catch((error) => {
-          logger.debug('useFetchListCallback', 'useFetchListCallback', 'Failed to fetch list', { error, listUrl })
+          logger.error(error, {
+            tags: {
+              file: 'useFetchListCallback',
+              function: 'useFetchListCallback',
+            },
+            extra: {
+              listUrl,
+            },
+          })
           dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
           throw error
         })

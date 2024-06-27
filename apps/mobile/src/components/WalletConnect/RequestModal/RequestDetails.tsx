@@ -13,7 +13,7 @@ import {
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
@@ -38,7 +38,7 @@ type AddressButtonProps = {
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
   const colors = useSporeColors()
-  const supportedChainId = toSupportedChainId(chainId) ?? UniverseChainId.Mainnet
+  const supportedChainId = toSupportedChainId(chainId) ?? ChainId.Mainnet
 
   return (
     <LinkButton
@@ -116,7 +116,7 @@ function TransactionDetails({
   chainId,
   transaction,
 }: {
-  chainId: WalletChainId
+  chainId: ChainId
   transaction: EthTransaction
 }): JSX.Element {
   const { t } = useTranslation()

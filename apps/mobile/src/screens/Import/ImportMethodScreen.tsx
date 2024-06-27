@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -18,6 +19,10 @@ import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/con
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { openSettings } from 'wallet/src/utils/linking'
 
 interface ImportMethodOption {
@@ -57,6 +62,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+  const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
 
   useAddBackButton(navigation)
@@ -92,6 +98,9 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   }
 
   const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
+    // Delete any pending accounts before entering flow.
+    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+
     if (importType === ImportType.Restore) {
       await handleOnPressRestoreBackup()
       return

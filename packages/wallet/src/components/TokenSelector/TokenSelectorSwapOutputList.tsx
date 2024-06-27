@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { GqlResult } from 'uniswap/src/data/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   useCommonTokensOptions,
@@ -17,7 +17,7 @@ import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/util
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapOutput(
-  chainFilter: UniverseChainId | null
+  chainFilter: ChainId | null
 ): GqlResult<TokenSelectorListSections> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -28,7 +28,7 @@ function useTokenSectionsForSwapOutput(
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
 
   const {
     data: favoriteTokenOptions,
@@ -43,7 +43,7 @@ function useTokenSectionsForSwapOutput(
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
 
   const error =
     (!popularTokenOptions && popularTokenOptionsError) ||
@@ -92,7 +92,7 @@ function _TokenSelectorSwapOutputList({
   chainFilter,
 }: {
   onSelectCurrency: OnSelectCurrency
-  chainFilter: UniverseChainId | null
+  chainFilter: ChainId | null
 }): JSX.Element {
   const { data: sections, loading, error, refetch } = useTokenSectionsForSwapOutput(chainFilter)
 

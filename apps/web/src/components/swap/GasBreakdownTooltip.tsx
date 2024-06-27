@@ -10,7 +10,6 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
@@ -108,7 +107,7 @@ export function UniswapXDescription() {
           logo: <InlineUniswapXGradient>UniswapX</InlineUniswapXGradient>,
         }}
       />{' '}
-      <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapXInfo}>
+      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
         <Trans i18nKey="common.learnMore.link" />
       </ExternalLink>
     </ThemedText.Caption>

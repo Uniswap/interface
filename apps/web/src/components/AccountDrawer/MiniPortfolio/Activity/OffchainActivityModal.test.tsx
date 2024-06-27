@@ -1,14 +1,14 @@
 import 'test-utils/tokens/mocks'
 
-import { WETH9 } from '@uniswap/sdk-core'
-import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { DAI } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
+
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { OrderContent } from './OffchainActivityModal'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
   formatTimestamp: jest.fn(),
@@ -37,7 +37,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: DAI.address,
-            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+            outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -66,7 +66,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+            outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -97,7 +97,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
+            outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

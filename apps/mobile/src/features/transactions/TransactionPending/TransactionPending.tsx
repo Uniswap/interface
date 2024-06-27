@@ -1,10 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -14,7 +13,7 @@ import { openTransactionLink } from 'wallet/src/utils/linking'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined
-  chainId: WalletChainId
+  chainId: ChainId
   title: string
   description: string
   onNext: () => void

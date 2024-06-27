@@ -5,17 +5,24 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Text,
+  TouchableArea,
+  isWeb,
+  useDeviceDimensions,
+  useSporeColors,
+} from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
+import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -217,8 +224,6 @@ export function TransferTokenForm({
     setShowWarningModal(true)
   }
 
-  const { onToggleFiatInput } = useTokenFormActionHandlers(dispatch)
-
   const transferWarning = warnings.warnings.find(
     (warning) => warning.severity >= WarningSeverity.Low
   )
@@ -293,7 +298,6 @@ export function TransferTokenForm({
                   setCurrencyFieldFocused(false)
                 }}
                 onShowTokenSelector={(): void => onShowTokenSelector(CurrencyField.INPUT)}
-                onToggleFiatInput={onToggleFiatInput}
               />
             </Flex>
           )}

@@ -3,7 +3,7 @@ import {
   TransactionSummaryNetworkLogo,
 } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { render } from 'uniswap/src/test/test-utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/constants/chains', () => {
   const actualChains = jest.requireActual('uniswap/src/constants/chains')
@@ -25,20 +25,20 @@ describe('NetworkLogo', () => {
   const ACTUAL_CHAIN_INFO = jest.requireActual('uniswap/src/constants/chains').UNIVERSE_CHAIN_INFO
 
   it('renders without error', () => {
-    const tree = render(<NetworkLogo chainId={UniverseChainId.Base} />)
+    const tree = render(<NetworkLogo chainId={ChainId.Base} />)
 
     expect(tree).toMatchSnapshot()
   })
 
   it('renders logo when the chain info has a logo', () => {
     Object.keys(ACTUAL_CHAIN_INFO).forEach((chainId) => {
-      const tree = render(<NetworkLogo chainId={chainId as unknown as UniverseChainId} />)
+      const tree = render(<NetworkLogo chainId={chainId as unknown as ChainId} />)
       expect(tree.toJSON()).toBeTruthy()
     })
   })
 
   it('renders null when chain info has no logo', () => {
-    const tree = render(<NetworkLogo chainId={'chainWithoutLogo' as unknown as UniverseChainId} />)
+    const tree = render(<NetworkLogo chainId={'chainWithoutLogo' as unknown as ChainId} />)
 
     expect(tree.toJSON()).toBeNull()
   })
@@ -46,7 +46,7 @@ describe('NetworkLogo', () => {
 
 describe(TransactionSummaryNetworkLogo, () => {
   it('renders without error', () => {
-    const tree = render(<TransactionSummaryNetworkLogo chainId={UniverseChainId.Base} />)
+    const tree = render(<TransactionSummaryNetworkLogo chainId={ChainId.Base} />)
 
     expect(tree).toMatchSnapshot()
   })

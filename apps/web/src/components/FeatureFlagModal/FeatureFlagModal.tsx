@@ -1,3 +1,4 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
@@ -13,7 +14,6 @@ import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/confi
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -217,14 +217,11 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
           <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
           <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
+          <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavRefresh} label="Refreshed navigation features" />
-          <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption flag={FeatureFlags.ForAggregatorWeb} label="Enable FOR aggregator web" />
-          <FeatureFlagGroup name="New Chains">
-            <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-          </FeatureFlagGroup>
+          <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           <FeatureFlagGroup name="Multichain UX">
             <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
             <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
@@ -233,7 +230,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
             <DynamicConfigDropdown
               selected={useQuickRouteChains()}
-              options={WEB_SUPPORTED_CHAIN_IDS}
+              options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
               label="Enable quick routes for these chains"

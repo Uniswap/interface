@@ -1,7 +1,8 @@
-import { ReactComponent as WinterUni } from 'assets/svg/winter-uni.svg'
-import { SVGProps } from 'components/Logo/UniIcon'
 import { t } from 'i18n'
 import { ReactElement } from 'react'
+
+import { ReactComponent as WinterUni } from '../../assets/svg/winter-uni.svg'
+import { SVGProps } from './UniIcon'
 
 const MONTH_TO_HOLIDAY_UNI: { [date: string]: (props: SVGProps) => ReactElement } = {
   '12': (props) => <WinterUni title={t('common.happyHolidays')} {...props} />,

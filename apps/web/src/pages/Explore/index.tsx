@@ -6,22 +6,22 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { useChainFromUrlParam } from 'constants/chains'
-import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
-import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
-import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { Trans } from 'i18n'
-import { useResetAtom } from 'jotai/utils'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
-import { useExploreParams } from 'pages/Explore/redirects'
-import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+
+import { ChainId } from '@uniswap/sdk-core'
+import { CHAIN_INFO, useChainFromUrlParam } from 'constants/chains'
+import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
+import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
+import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useResetAtom } from 'jotai/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useExploreParams } from './redirects'
+import RecentTransactions from './tables/RecentTransactions'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -132,7 +132,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   // to allow backward navigation between tabs
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
-  const chain = useChainFromUrlParam() ?? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
+  const chain = useChainFromUrlParam() ?? CHAIN_INFO[ChainId.MAINNET]
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -171,7 +171,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   key={index}
                 >
                   <StyledInternalLink
-                    to={`/explore/${key}` + (chain.id !== UniverseChainId.Mainnet ? `/${chain.urlParam}` : '')}
+                    to={`/explore/${key}` + (chain.id !== ChainId.MAINNET ? `/${chain.urlParam}` : '')}
                   >
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}

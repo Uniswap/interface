@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
@@ -7,10 +7,7 @@ import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
 import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
-import { BuyForm } from 'pages/Swap/Buy/BuyForm'
-import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
-import { SwapForm } from 'pages/Swap/SwapForm'
 import { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -18,13 +15,14 @@ import { isPreviewTrade } from 'state/routing/utils'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Flex } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { useIsDarkMode } from '../../theme/components/ThemeToggle'
+import { LimitFormWrapper } from './Limit/LimitForm'
+import { SwapForm } from './SwapForm'
 
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
@@ -86,7 +84,7 @@ export function Swap({
   syncTabToUrl,
 }: {
   className?: string
-  chainId?: InterfaceChainId
+  chainId?: ChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
@@ -97,8 +95,6 @@ export function Swap({
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
-  const { isConnected } = useAccount()
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
 
   return (
     <SwapAndLimitContextProvider
@@ -120,9 +116,6 @@ export function Swap({
                 {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
                 {currentTab === SwapTab.Send && (
                   <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-                )}
-                {currentTab === SwapTab.Buy && forAggregatorEnabled && (
-                  <BuyForm disabled={disableTokenInputs || !isConnected} />
                 )}
               </SwapWrapper>
               <NetworkAlert />
