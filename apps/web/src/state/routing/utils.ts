@@ -237,6 +237,34 @@ function getClassicTradeDetails(
   }
 }
 
+function getClassicTaraTradeDetails(
+  args: GetQuoteArgs,
+  data: ClassicQuoteData | URADutchOrderQuoteData | URADutchOrderV2QuoteData
+): {
+  gasUseEstimate?: number
+  gasUseEstimateUSD?: number
+  blockNumber?: string
+  routes?: RouteResult[]
+  swapFee?: SwapFeeInfo
+} {
+  const classicQuote = data as any as ClassicQuoteData
+  console.log('classicQuote', classicQuote)
+
+  if (!classicQuote) {
+    return {}
+  }
+
+  console.log('quote route', classicQuote.route)
+
+  return {
+    gasUseEstimate: classicQuote.gasUseEstimate ? parseFloat(classicQuote.gasUseEstimate) : undefined,
+    gasUseEstimateUSD: classicQuote.gasUseEstimateUSD ? parseFloat(classicQuote.gasUseEstimateUSD) : undefined,
+    blockNumber: classicQuote.blockNumber,
+    routes: computeRoutes(args, classicQuote.route),
+    swapFee: getSwapFee(classicQuote),
+  }
+}
+
 export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickRouteResponse): PreviewTrade {
   const { amount, tradeType } = args
   const [currencyIn, currencyOut] = getTradeCurrencies(args, false)
@@ -254,6 +282,112 @@ export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: nu
     return undefined
   }
   return gasUseEstimateUSD / gasUseEstimate
+}
+
+export async function transformTaraQuoteToTrade(
+  args: GetQuoteArgs,
+  data: URAQuoteResponse,
+  quoteMethod: QuoteMethod
+): Promise<TradeResult> {
+  const { tradeType, needsWrapIfUniswapX, routerPreference, account, amount } = args
+  const showUniswapXTrade = data.routing === URAQuoteType.DUTCH_V1 && routerPreference === RouterPreference.X
+  console.log('showUniswapXTrade', showUniswapXTrade)
+  const [currencyIn, currencyOut] = getTradeCurrencies(args, showUniswapXTrade)
+  console.log('currencyIn', currencyIn)
+
+  const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTaraTradeDetails(
+    args,
+    data.quote
+  )
+  console.log('gasUseEstimateUSD', gasUseEstimateUSD)
+  const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
+
+  const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
+
+  const classicTrade = new ClassicTrade({
+    v2Routes:
+      routes
+        ?.filter(
+          (
+            r
+          ): r is RouteResult & {
+            routev2: NonNullable<RouteResult['routev2']>
+          } => r.routev2 !== null
+        )
+        .map(({ routev2, inputAmount, outputAmount }) => ({
+          routev2,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    v3Routes:
+      routes
+        ?.filter(
+          (
+            r
+          ): r is RouteResult & {
+            routev3: NonNullable<RouteResult['routev3']>
+          } => r.routev3 !== null
+        )
+        .map(({ routev3, inputAmount, outputAmount }) => ({
+          routev3,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    mixedRoutes:
+      routes
+        ?.filter(
+          (
+            r
+          ): r is RouteResult & {
+            mixedRoute: NonNullable<RouteResult['mixedRoute']>
+          } => r.mixedRoute !== null
+        )
+        .map(({ mixedRoute, inputAmount, outputAmount }) => ({
+          mixedRoute,
+          inputAmount,
+          outputAmount,
+        })) ?? [],
+    tradeType,
+    gasUseEstimateUSD,
+    gasUseEstimate,
+    approveInfo,
+    blockNumber,
+    requestId: data.quote.requestId,
+    quoteMethod,
+    swapFee,
+  })
+
+  // If the top-level URA quote type is DUTCH_LIMIT, then UniswapX is better for the user
+  const isUniswapXBetter = data.routing === URAQuoteType.DUTCH_V1
+  if (isUniswapXBetter) {
+    const orderInfo = toDutchOrderInfo(data.quote.orderInfo)
+    const swapFee = getSwapFee(data.quote)
+    const wrapInfo = await getWrapInfo(needsWrapIfUniswapX, account, currencyIn.chainId, amount, usdCostPerGas)
+
+    const uniswapXTrade = new DutchOrderTrade({
+      currencyIn,
+      currenciesOut: [currencyOut],
+      orderInfo,
+      tradeType,
+      quoteId: data.quote.quoteId,
+      requestId: data.quote.requestId,
+      classicGasUseEstimateUSD: classicTrade.totalGasUseEstimateUSD,
+      wrapInfo,
+      approveInfo,
+      auctionPeriodSecs: data.quote.auctionPeriodSecs,
+      startTimeBufferSecs: data.quote.startTimeBufferSecs,
+      deadlineBufferSecs: data.quote.deadlineBufferSecs,
+      slippageTolerance: toSlippagePercent(data.quote.slippageTolerance),
+      swapFee,
+    })
+
+    return {
+      state: QuoteState.SUCCESS,
+      trade: uniswapXTrade,
+    }
+  }
+
+  return { state: QuoteState.SUCCESS, trade: classicTrade }
 }
 
 export async function transformQuoteToTrade(
