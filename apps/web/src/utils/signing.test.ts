@@ -63,6 +63,8 @@ describe('signing', () => {
 
         await signTypedData(signer, domain, types, value)
         expect(console.warn).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
           expect.stringContaining('signTypedData: wallet does not implement EIP-712, falling back to eth_sign'),
           expect.anything()
         )

@@ -3,12 +3,12 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
 import { L2_CHAIN_IDS, SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
-
-import { useAccount } from 'hooks/useAccount'
+import { logger } from 'utilities/src/logger/logger'
 import useGasPrice from './useGasPrice'
 import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
 import { useUSDPrice } from './useUSDPrice'
@@ -50,7 +50,7 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
           } else if (section.every((pool) => pool instanceof Pair)) {
             return gas + V2_SWAP_BASE_GAS_ESTIMATE + (section.length - 1) * V2_SWAP_HOP_GAS_ESTIMATE
           } else {
-            console.warn('Invalid section')
+            logger.warn('useAutoSlippageTolerance', 'guesstimateGas', 'Invalid section', { section })
             return gas
           }
         }, 0)

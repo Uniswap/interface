@@ -11,7 +11,6 @@ import { Screen } from 'src/components/layout/Screen'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
-import { FiatOnRampCountryPicker } from 'src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import {
   useFiatOnRampQuotes,
@@ -21,6 +20,12 @@ import {
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
+import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
+import {
+  useFiatOnRampAggregatorGetCountryQuery,
+  useFiatOnRampAggregatorServiceProvidersQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
+import { FORQuote, FORServiceProvider, FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -30,12 +35,7 @@ import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
-import {
-  useFiatOnRampAggregatorGetCountryQuery,
-  useFiatOnRampAggregatorServiceProvidersQuery,
-  useFiatOnRampAggregatorTransactionQuery,
-} from 'wallet/src/features/fiatOnRamp/api'
-import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/features/fiatOnRamp/types'
+import { useFiatOnRampAggregatorTransactionQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'

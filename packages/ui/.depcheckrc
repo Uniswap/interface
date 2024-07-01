@@ -3,6 +3,7 @@ ignores: [
     "@tamagui/animations-react-native",
     "@tamagui/font-inter",
     "@tamagui/theme-base",
+    "jest-presets",
     ## Internal packages / workspaces
     "ui",
     "utilities",

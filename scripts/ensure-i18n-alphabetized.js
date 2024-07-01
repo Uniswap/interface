@@ -17,10 +17,23 @@ async function check(file) {
   }
 
   // check no duplicate values
-  const values = Object.values(json)
-  const dedupedValues = [...new Set(values)]
-  const duplicates = arrayDifference(values, dedupedValues)
-  if (duplicates.length) {
+  const entries = Object.entries(json)
+  const seen = new Map()
+  const duplicates = {}
+  for (const [key, value] of entries) {
+    const existing = seen.get(value)
+    if (existing) {
+      const isAdjective = (str) => str.includes('.adjective')
+
+      // if both are tagged as adjectives, or both are not tagged as adjectives, treat as duplicate
+      if (isAdjective(existing) === isAdjective(key)) {
+        duplicates[value] = [key, existing]
+      }
+    }
+    seen.set(value, key)
+  }
+
+  if (Object.keys(duplicates).length){
     console.error(`Found duplicate values, please de-dupe!\n`, JSON.stringify(duplicates, null, 2))
     process.exit(1)
   }

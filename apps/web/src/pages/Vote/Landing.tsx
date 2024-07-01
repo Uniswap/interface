@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -11,6 +10,7 @@ import Toggle from 'components/Toggle'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
@@ -125,7 +125,7 @@ const Header = styled(ThemedText.H1Small)`
 
 export default function Landing() {
   const theme = useTheme()
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   const [hideCancelled, setHideCancelled] = useState(true)
 
@@ -139,8 +139,8 @@ export default function Landing() {
   // user data
   const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    chainId ? UNI[chainId] : undefined
+    account.address,
+    account.chainId ? UNI[account.chainId] : undefined
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
@@ -260,7 +260,7 @@ export default function Landing() {
                         href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
                         style={{ margin: '0 4px' }}
                       >
-                        {userDelegatee === account ? (
+                        {userDelegatee === account.address ? (
                           <Trans i18nKey="vote.landing.self" />
                         ) : (
                           shortenAddress(userDelegatee)

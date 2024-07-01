@@ -23,7 +23,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -210,7 +210,7 @@ function RecoveryPhraseTooltip({
       gap="$spacing8"
       py="$spacing8"
       onPress={onPressEducationButton}>
-      <QuestionInCircleFilled color="$surface1" size="$icon.20" />
+      <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
         {t('onboarding.tooltip.recoveryPhrase.trigger')}
       </Text>

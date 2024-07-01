@@ -1,6 +1,7 @@
 import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { Language } from 'wallet/src/features/language/constants'
 import {
@@ -12,7 +13,6 @@ import {
   tokenProjectMarket,
 } from 'wallet/src/test/fixtures'
 import { queryResolvers } from 'wallet/src/test/utils'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from './FavoriteTokenCard'
 
 const mockedNavigation = {

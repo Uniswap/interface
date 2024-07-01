@@ -7,7 +7,7 @@ import { Token } from './Token'
 import { mixArrays, randomFloat, randomInt } from './utils'
 
 const Container = styled.div`
-  width: 100%;
+  width: 100vw;
   position: absolute;
   display: flex;
   justify-content: center;

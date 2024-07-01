@@ -13,18 +13,11 @@ import {
   TAB_VIEW_SCROLL_THROTTLE,
   TabProps,
 } from 'src/components/layout/TabHelpers'
-import {
-  AnimatedFlex,
-  Flex,
-  Loader,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedFlex, Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
@@ -88,7 +81,7 @@ export const TokenBalanceListInner = forwardRef<
 
   const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
 
-  const { onContentSizeChange, adaptiveFooter, footerHeight } = useAdaptiveFooter(
+  const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
     containerProps?.contentContainerStyle
   )
 
@@ -145,11 +138,11 @@ export const TokenBalanceListInner = forwardRef<
   // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
   // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
   const renderItem = useCallback(
-    ({ item }: { item: TokenBalanceListRow }): JSX.Element => {
-      return <TokenBalanceItemRow footerHeight={footerHeight} item={item} />
-    },
-    [footerHeight]
+    ({ item }: { item: TokenBalanceListRow }): JSX.Element => <TokenBalanceItemRow item={item} />,
+    []
   )
+
+  const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
 
   const ListEmptyComponent = useMemo(() => {
     return (
@@ -222,6 +215,7 @@ export const TokenBalanceListInner = forwardRef<
           data={isFocused ? rows : cachedRows}
           getItemLayout={getItemLayout}
           initialNumToRender={20}
+          keyExtractor={keyExtractor}
           maxToRenderPerBatch={20}
           refreshControl={refreshControl}
           refreshing={refreshing}
@@ -243,13 +237,9 @@ export const TokenBalanceListInner = forwardRef<
 
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   item,
-  footerHeight,
 }: {
   item: TokenBalanceListRow
-  footerHeight: Animated.SharedValue<number>
 }) {
-  const { fullHeight } = useDeviceDimensions()
-
   const {
     balancesById,
     hiddenTokensCount,
@@ -266,9 +256,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
         isExpanded={hiddenTokensExpanded}
         numHidden={hiddenTokensCount}
         onPress={(): void => {
-          if (hiddenTokensExpanded) {
-            footerHeight.value = fullHeight
-          }
           setHiddenTokensExpanded(!hiddenTokensExpanded)
         }}
       />

@@ -14,9 +14,8 @@ export const createImportedAccounts = async (
   const addresses = await Promise.all(
     Array(NUMBER_OF_WALLETS_TO_IMPORT)
       .fill(null)
-      .map(async (_, index) => Keyring.generateAndStorePrivateKey(mnemonicId, index))
+      .map(async (_, index) => await Keyring.generateAndStorePrivateKey(mnemonicId, index))
   )
-
   const importedAccounts: SignerMnemonicAccount[] = addresses.map((address, index) => ({
     type: AccountType.SignerMnemonic,
     address,

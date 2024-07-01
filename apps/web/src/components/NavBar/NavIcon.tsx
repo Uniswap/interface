@@ -1,36 +1,44 @@
 import { t } from 'i18n'
-import { Box } from 'nft/components/Box'
 import { ReactNode } from 'react'
+import styled from 'styled-components'
 
-import * as styles from './NavIcon.css'
+const Container = styled.div<{ size: number; isActive: boolean }>`
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral2)};
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: 250;
+  z-index: 1;
+  transform: translateY(-1px) translateX(4px);
+`
 
 interface NavIconProps {
   children: ReactNode
+  size?: number
   isActive?: boolean
   label?: string
   onClick: () => void
-  activeBackground?: boolean
 }
 
 export const NavIcon = ({
   children,
-  isActive,
+  isActive = false,
+  size = 40,
   label = t('common.navigationButton'),
   onClick,
-  activeBackground,
 }: NavIconProps) => {
   return (
-    <Box
-      as="button"
-      className={styles.navIcon}
-      color={isActive ? 'neutral1' : 'neutral2'}
-      onClick={onClick}
-      height="40"
-      width="40"
-      aria-label={label}
-      backgroundColor={activeBackground ? 'accent2' : 'transparent'}
-    >
+    <Container size={size} isActive={isActive} onClick={onClick} aria-label={label}>
       {children}
-    </Box>
+    </Container>
   )
 }

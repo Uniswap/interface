@@ -1,7 +1,7 @@
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { SwapPendingNotification as SwapPendingNotificationType } from 'wallet/src/features/notifications/types'
 import { WrapType } from 'wallet/src/features/transactions/types'

@@ -1,5 +1,4 @@
 import { Pool } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import Column from 'components/Column'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
@@ -12,6 +11,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { useChainFromUrlParam } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { PoolDetailsTransactionsTable } from './PoolDetailsTransactionsTable'
 
 enum PoolDetailsTableTabs {
@@ -38,8 +38,8 @@ export function PoolDetailsTableTab({
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-  const { account } = useWeb3React()
-  const { positions } = useMultiChainPositions(account ?? '', [chain.id])
+  const account = useAccount()
+  const { positions } = useMultiChainPositions(account.address ?? '', [chain.id])
   const positionsInThisPool = useMemo(
     () =>
       positions?.filter(

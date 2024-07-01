@@ -30,7 +30,8 @@ export const TIME_RANGES = [
     i18n.t('token.priceExplorer.timeRangeLabel.year'),
     ElementName.TimeFrame1Y,
   ],
-  [HistoryDuration.Max, i18n.t('token.priceExplorer.timeRangeLabel.all'), ElementName.TimeFrameAll],
+  // TODO (MOB-3585): fix performance issue with All time range and re-enable
+  // [HistoryDuration.Max, i18n.t('token.priceExplorer.timeRangeLabel.all'), ElementName.TimeFrameAll],
 ] as const
 
 export const NUM_GRAPHS = TIME_RANGES.length

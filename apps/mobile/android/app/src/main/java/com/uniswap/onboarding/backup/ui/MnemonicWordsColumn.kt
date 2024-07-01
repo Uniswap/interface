@@ -14,21 +14,17 @@ import com.uniswap.theme.UniswapTheme
 fun MnemonicWordsColumn(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
-  showCompact: Boolean = false,
-  onClick: ((word: MnemonicWordUiState) -> Unit)? = null,
+  shouldShowSmallText: Boolean = false,
 ) {
   Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(
-      if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
-    ),
+    verticalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing8),
   ) {
-    words.forEachIndexed { index, word ->
-
-      val onWordClick = onClick?.let {
-        { it(word) }
-      }
-      MnemonicWordCell(word = word, showCompact = showCompact, onClick = onWordClick)
+    words.forEach { word ->
+      MnemonicWordCell(
+        word = word,
+        shouldShowSmallText = shouldShowSmallText,
+      )
     }
   }
 }

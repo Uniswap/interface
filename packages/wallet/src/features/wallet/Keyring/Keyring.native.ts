@@ -18,18 +18,12 @@ class NativeKeyring implements IKeyring {
     throw new NotImplementedError('isUnlocked')
   }
 
-  removeMnemonic(_mnemonicId: string): Promise<boolean> {
-    // On mobile we don't currently handle this cleanup because it lives
-    // in secure enclave and is hard to handle when app is uninstalled
-    throw new NotImplementedError('removeMnemonic')
+  removeMnemonic(mnemonicId: string): Promise<boolean> {
+    return RNEthersRS.removeMnemonic(mnemonicId)
   }
 
-  removePrivateKey(_address: string): Promise<boolean> {
-    // On mobile we don't currently handle this cleanup because it lives
-    // in secure enclave and is hard to handle when app is uninstalled
-
-    // TODO (MOB-243): Cleanup account artifacts in native-land (i.e. keystore). Resolve to false for now
-    return Promise.resolve(false)
+  removePrivateKey(address: string): Promise<boolean> {
+    return RNEthersRS.removePrivateKey(address)
   }
 
   removePassword(): Promise<boolean> {

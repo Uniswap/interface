@@ -12,9 +12,9 @@ import {
 } from 'react-native'
 import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
-import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
+import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48
@@ -97,7 +97,7 @@ export type TabContentProps = Partial<FlatListProps<unknown>> & {
   scrollEventThrottle?: number
 }
 
-export const renderTabLabel = ({
+export const TabLabel = ({
   route,
   focused,
   isExternalProfile,

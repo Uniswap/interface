@@ -4,21 +4,17 @@ import { getTestSelector } from '../utils'
 describe('Wallet Dropdown', () => {
   function itChangesTheme() {
     it('should change theme', () => {
-      cy.get(getTestSelector('theme-lightmode')).click()
+      cy.get(getTestSelector('theme-light')).click()
 
-      cy.get(getTestSelector('theme-lightmode')).should('not.have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-darkmode')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-auto')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+      cy.get('html').should('have.class', 't_light')
 
-      cy.get(getTestSelector('theme-darkmode')).click()
-      cy.get(getTestSelector('theme-lightmode')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-darkmode')).should('not.have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-auto')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+      cy.get(getTestSelector('theme-dark')).click()
+
+      cy.get('html').should('have.class', 't_dark')
 
       cy.get(getTestSelector('theme-auto')).click()
-      cy.get(getTestSelector('theme-lightmode')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-darkmode')).should('have.css', 'background-color', 'rgba(0, 0, 0, 0)')
-      cy.get(getTestSelector('theme-auto')).should('not.have.css', 'background-color', 'rgba(0, 0, 0, 0)')
+
+      cy.get('html').should('not.have.class', 't_light')
     })
   }
 
@@ -32,11 +28,9 @@ describe('Wallet Dropdown', () => {
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
       cy.location('search').should('include', 'lng=af-ZA')
-      cy.contains('Uniswap available in: English')
 
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
       cy.location('search').should('include', 'lng=en-US')
-      cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
 

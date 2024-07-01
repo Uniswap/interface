@@ -13,10 +13,10 @@ const recentAccountIdentifierMapAtom = atomWithStorage<{
 // Returns an identifier for the current or recently connected account, prioritizing unitag -> ENS name -> address
 export function useAccountIdentifier() {
   const [recentAccountIdentifierMap, updateRecentAccountIdentifierMap] = useAtom(recentAccountIdentifierMapAtom)
-  const { address } = useAccount()
+  const account = useAccount()
 
-  const { unitag: unitagResponse } = useUnitagByAddress(address)
-  const { data: ensNameResponse } = useEnsName({ address })
+  const { unitag: unitagResponse } = useUnitagByAddress(account.address)
+  const { data: ensNameResponse } = useEnsName({ address: account.address })
 
   // Clear the `recent` account identifier when the user disconnects
   useAccountEffect({
@@ -27,11 +27,11 @@ export function useAccountIdentifier() {
 
   // Keep the stored account identifiers synced with the latest unitag and ENS name
   useEffect(() => {
-    if (!address) {
+    if (!account.address) {
       return
     }
     updateRecentAccountIdentifierMap((prev) => {
-      const updatedIdentifiers = prev[address] ?? {}
+      const updatedIdentifiers = prev[account.address as string] ?? {}
       if (unitagResponse) {
         updatedIdentifiers.unitag = unitagResponse.username
       }
@@ -39,15 +39,15 @@ export function useAccountIdentifier() {
         updatedIdentifiers.ensName = ensNameResponse
       }
 
-      return { ...prev, [address]: updatedIdentifiers, recent: updatedIdentifiers }
+      return { ...prev, [account.address as string]: updatedIdentifiers, recent: updatedIdentifiers }
     })
-  }, [address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
+  }, [account.address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
 
   // If there is no account yet, optimistically use the stored `recent` account identifier
   const { unitag, ensName } =
-    (address ? recentAccountIdentifierMap[address] : recentAccountIdentifierMap['recent']) ?? {}
+    (account.address ? recentAccountIdentifierMap[account.address] : recentAccountIdentifierMap['recent']) ?? {}
 
-  const accountIdentifier = unitag ?? ensName ?? shortenAddress(address)
+  const accountIdentifier = unitag ?? ensName ?? shortenAddress(account.address)
   return {
     accountIdentifier,
     hasUnitag: Boolean(unitag),

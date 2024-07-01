@@ -1,5 +1,6 @@
 import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
 import { getNativeLogoURI, getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import { USDC_ZORA } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
@@ -25,6 +26,7 @@ import {
   USDC_BASE,
   USDC_BSC,
   USDC_CELO,
+  USDC_CELO_ALFAJORES,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_OPTIMISM_GOERLI,
@@ -144,9 +146,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     buildCurrencyInfo
   ),
 
-  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES].map(
-    buildCurrencyInfo
-  ),
+  [ChainId.CELO_ALFAJORES]: [
+    nativeOnChain(ChainId.CELO_ALFAJORES),
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
+    USDC_CELO_ALFAJORES,
+  ].map(buildCurrencyInfo),
 
   [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC].map(
     buildCurrencyInfo
@@ -159,6 +164,10 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ].map(buildCurrencyInfo),
+
+  [ChainId.ZORA]: [nativeOnChain(ChainId.ZORA), WRAPPED_NATIVE_CURRENCY[ChainId.ZORA] as Token, USDC_ZORA].map(
+    buildCurrencyInfo
+  ),
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

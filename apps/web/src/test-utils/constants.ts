@@ -15,6 +15,7 @@ import {
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { UseAccountReturnType } from 'wagmi'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {
@@ -326,3 +327,14 @@ export const USDC_ARBITRUM_INFO: CurrencyInfo = {
   currencyId: USDC_ARBITRUM.address,
   safetyLevel: SafetyLevel.Verified,
 }
+
+export const USE_DISCONNECTED_ACCOUNT = {
+  address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
+  chainId: 1,
+} as unknown as UseAccountReturnType
+
+export const USE_CONNECTED_ACCOUNT = {
+  address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
+  chainId: 1,
+  isConnected: true,
+} as unknown as UseAccountReturnType

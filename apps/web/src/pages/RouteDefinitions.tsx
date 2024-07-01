@@ -174,6 +174,11 @@ export const routes: RouteDefinition[] = [
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
+    path: '/buy',
+    getElement: () => <Swap />,
+    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
     getTitle: () => t('title.sendTokens'),

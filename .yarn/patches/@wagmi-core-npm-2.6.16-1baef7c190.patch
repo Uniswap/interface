@@ -1,0 +1,23 @@
+diff --git a/dist/esm/connectors/injected.js b/dist/esm/connectors/injected.js
+index 26f420d68ed9a12deea30a3dca195e2bcf3b3c44..70fc93a7db7b9f4db10e71edd73ee81bd0e28f1e 100644
+--- a/dist/esm/connectors/injected.js
++++ b/dist/esm/connectors/injected.js
+@@ -405,6 +405,18 @@ export function injected(parameters = {}) {
+         onChainChanged(chain) {
+             console.log('[injected] onChainChanged', chain);
+             const chainId = Number(chain);
++            if (this.id === 'io.metamask')
++                this.getProvider()
++                  .then((provider) =>
++                    provider
++                      ?.request({
++                        method: 'wallet_switchEthereumChain',
++                        params: [{ chainId: numberToHex(chainId) }],
++                      })
++                      .then(() => {})
++                      .catch(() => {}),
++                  )
++                  .catch(() => {})
+             config.emitter.emit('change', { chainId });
+         },
+         async onConnect(connectInfo) {

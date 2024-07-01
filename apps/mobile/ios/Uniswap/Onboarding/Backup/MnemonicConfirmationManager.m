@@ -18,6 +18,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicConfirmationView);
 RCT_EXPORT_SWIFTUI_PROPERTY(shouldShowSmallText, BOOL, MnemonicConfirmationView);
 RCT_EXPORT_SWIFTUI_CALLBACK(onConfirmComplete, RCTDirectEventBlock, MnemonicConfirmationView);
+RCT_EXPORT_SWIFTUI_PROPERTY(selectedWordPlaceholder, NSString, MnemonicConfirmationView);
 
 - (UIView *)view
 {

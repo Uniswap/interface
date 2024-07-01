@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { deserializeToken } from 'state/user/utils'
@@ -20,5 +20,5 @@ function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] 
 }
 
 export function useUserAddedTokens(): Token[] {
-  return useUserAddedTokensOnChain(useWeb3React().chainId)
+  return useUserAddedTokensOnChain(useAccount().chainId)
 }

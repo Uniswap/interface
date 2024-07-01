@@ -1,10 +1,7 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { ColorTokens, Flex, Unicon, UniconV2, useUniconColors } from 'ui/src'
+import { ColorTokens, Flex, Unicon } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
-import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 // Determines view only icon size in relation to Account Icon size
@@ -19,7 +16,6 @@ export interface AccountIconProps {
   showBorder?: boolean // Display border stroke around image
   borderWidth?: number
   borderColor?: ColorTokens
-  backgroundPadding?: number
 }
 
 export function AccountIcon({
@@ -31,31 +27,13 @@ export function AccountIcon({
   showBorder,
   borderColor = '$surface1',
   borderWidth = 2,
-  backgroundPadding = spacing.spacing12,
 }: AccountIconProps): JSX.Element {
-  // add padding to unicon if background is displayed
-  const uniconPadding = showBackground ? backgroundPadding : spacing.none
-
-  // adjust unicon size to account for potential padding
-  const uniconSize = size - uniconPadding * 2
-
   // scale eye icon to be a portion of container size
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
 
-  // Color for gradient background.
-  const { gradientEnd: uniconColor } = useUniconColors(address)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-
   const uniconImage = (
     <>
-      {isUniconsV2Enabled ? (
-        <UniconV2 address={address} size={size} />
-      ) : (
-        <Flex centered borderRadius="$roundedFull" height={size} p={uniconPadding} width={size}>
-          <Unicon address={address} size={uniconSize} />
-          {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
-        </Flex>
-      )}
+      <Unicon address={address} size={size} />
     </>
   )
 

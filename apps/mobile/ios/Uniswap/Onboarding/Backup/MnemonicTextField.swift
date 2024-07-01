@@ -7,92 +7,55 @@
 
 import SwiftUI
 
-enum InputFocusState {
-  case notFocused
-  case focusedNoInput
-  case focusedWrongInput
-  case notFocusedWrongInput
+enum MnemonicInputStatus {
+  case noInput
+  case correctInput
+  case wrongInput
 }
 
 struct MnemonicTextField: View {
-  
-  @Environment(\.colorScheme) var colorScheme
-
   let smallFont = UIFont(name: "Basel-Book", size: 14)
   let mediumFont = UIFont(name: "Basel-Book", size: 16)
   
   var index: Int
-  var initialText = ""
+  var word = ""
   var shouldShowSmallText: Bool
-  var onFieldTapped: ((Int) -> Void)?
-  var focusState: InputFocusState
-  
+  var status: MnemonicInputStatus
   
   init(index: Int,
-       initialText: String,
-       shouldShowSmallText: Bool = false,
-       focusState: InputFocusState = InputFocusState.notFocused,
-       onFieldTapped: ((Int) -> Void)? = nil
+       word: String,
+       status: MnemonicInputStatus = .correctInput,
+       shouldShowSmallText: Bool = false
   ) {
     self.index = index
-    self.initialText = initialText
+    self.word = word
+    self.status = status
     self.shouldShowSmallText = shouldShowSmallText
-    self.focusState = focusState
-    self.onFieldTapped = onFieldTapped
   }
   
-  func getLabelBackground(focusState: InputFocusState) -> some View {
-    switch (focusState) {
-    case .focusedNoInput:
-      return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.accent1, lineWidth: 2)
-        .background(Colors.surface2)
-        .cornerRadius(100)
-      )
-      
-    case .focusedWrongInput:
-      return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.statusCritical, lineWidth: 2)
-        .background(Colors.surface2)
-        .cornerRadius(100)
-      )
-      
-    case .notFocusedWrongInput:
-      return AnyView(RoundedRectangle(cornerRadius: 100)
-        .strokeBorder(Colors.statusCritical, lineWidth: 2)
-        .background(Colors.surface2)
-        .cornerRadius(100)
-      )
-      
-    case .notFocused:
-      return AnyView(
-        RoundedRectangle(cornerRadius: 100, style: .continuous)
-          .fill(Colors.surface2)
-      )
+  func getLabelColor() -> Color {
+    switch (status) {
+    case .noInput:
+      return Colors.neutral3
+    case .correctInput:
+      return Colors.neutral1
+    case .wrongInput:
+      return Colors.statusCritical
     }
   }
-  
-  
+
   var body: some View {
-    HStack(alignment: VerticalAlignment.center, spacing: 0) {
-      
-      Text(String(index)).cornerRadius(16)
+    HStack(alignment: VerticalAlignment.center, spacing: 18) {
+      Text(String(index))
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
-        .foregroundColor(Colors.neutral3)
-        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 12) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 12))
-        .frame(alignment: Alignment.leading)
+        .foregroundColor(Colors.neutral2)
+        .frame(width: shouldShowSmallText ? 14 : 16, alignment: Alignment.leading)
       
-      Text(initialText)
+      Text(word)
         .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
-        .multilineTextAlignment(TextAlignment.leading)
-        .foregroundColor(Colors.neutral1)
-        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 16))
-        .frame(maxWidth: .infinity, alignment: Alignment.leading)
+        .foregroundColor(getLabelColor())
+        .multilineTextAlignment(.leading)
     }
-    .background(getLabelBackground(focusState: focusState))
     .frame(maxWidth: .infinity, alignment: .leading)
-    .onTapGesture {
-      onFieldTapped?(index)
-    }
   }
 }

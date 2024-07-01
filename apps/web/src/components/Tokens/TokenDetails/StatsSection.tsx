@@ -115,7 +115,7 @@ export default function StatsSection(props: StatsSectionProps) {
             <Stat
               dataCy="tvl"
               value={TVL}
-              description={<Trans i18nKey="common.totalValueLocked.description" />}
+              description={<Trans i18nKey="stats.tvl.description" />}
               title={<Trans i18nKey="common.totalValueLocked" />}
             />
             <Stat

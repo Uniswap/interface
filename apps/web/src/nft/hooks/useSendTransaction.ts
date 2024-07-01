@@ -7,9 +7,9 @@ import { NFTEventName } from '@uniswap/analytics-events'
 import ERC1155 from 'uniswap/src/abis/erc1155.json'
 import ERC721 from 'uniswap/src/abis/erc721.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-
 import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
 import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
 import { compareAssetsWithTransactionRoute } from '../utils/txRoute/combineItemsWithTxRoute'
@@ -77,10 +77,15 @@ export const useSendTransaction = create<TxState>()(
             }
           }
         } catch (e) {
-          console.log('Error creating multiAssetSwap Transaction', e)
           if (e.code === 4001) {
             set({ state: TxStateType.Denied })
           } else {
+            logger.error(e, {
+              tags: {
+                file: 'nft/hooks/useSendTransaction',
+                function: 'useSendTransaction',
+              },
+            })
             set({ state: TxStateType.Invalid })
           }
           return

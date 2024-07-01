@@ -1,6 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import styled from 'styled-components'
@@ -87,7 +87,7 @@ export default function MobileBalanceSummaryFooter() {
   const supportedChain = useSupportedChainId(currency.chainId)
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { formatNumber } = useFormatter()
 
   const formattedGqlBalance = formatNumber({
@@ -102,7 +102,7 @@ export default function MobileBalanceSummaryFooter() {
 
   return (
     <Wrapper>
-      {Boolean(account && pageChainBalance) && (
+      {Boolean(account.isConnected && pageChainBalance) && (
         <BalanceInfo>
           <Trans i18nKey="tdp.balanceSummary.title" />
           <Balance>

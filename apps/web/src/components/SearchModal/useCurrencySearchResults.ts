@@ -4,12 +4,12 @@ import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { getSortedPortfolioTokens } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { UserAddedToken } from 'types/tokens'
 import {
@@ -20,6 +20,7 @@ import {
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isSameAddress } from 'utilities/src/addresses'
+import { currencyKey } from 'utils/currencyKey'
 
 interface CurrencySearchParams {
   searchQuery?: string
@@ -51,7 +52,7 @@ export function useCurrencySearchResults({
   selectedCurrency,
   otherSelectedCurrency,
 }: CurrencySearchParams): CurrencySearchResults {
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
 
   /**
@@ -137,11 +138,8 @@ export function useCurrencySearchResults({
 
     // Filter out tokens with balances so they aren't duplicated when we merge below.
     const filteredListTokens = fullBaseList.filter((token) => {
-      if (token.isNative) {
-        return !((token.symbol ?? 'ETH') in balanceMap)
-      } else {
-        return !(token.address?.toLowerCase() in balanceMap)
-      }
+      const key = currencyKey(token)
+      return !(key in balanceMap)
     })
 
     if (balancesLoading) {
@@ -161,12 +159,13 @@ export function useCurrencySearchResults({
     // This is where we apply extra filtering based on the callsite's
     // customization, on top of the basic searchQuery filtering.
     const currencyFilter = (currency: Currency) => {
+      const key = currencyKey(currency)
       if (filters?.onlyShowCurrenciesWithBalance) {
         if (currency.isNative) {
-          return balanceMap[currency.symbol ?? 'ETH']?.usdValue > 0
+          return balanceMap[key]?.usdValue > 0
         }
 
-        return balanceMap[currency.address?.toLowerCase()]?.usdValue > 0
+        return balanceMap[key]?.usdValue > 0
       }
 
       if (currency.isNative && filters?.disableNonToken) {
@@ -178,7 +177,7 @@ export function useCurrencySearchResults({
         if (selectedCurrency?.equals(currency) || otherSelectedCurrency?.equals(currency)) {
           return true
         }
-        return balanceMap[currency.address.toLowerCase()]?.usdValue > 0
+        return balanceMap[key]?.usdValue > 0
       }
 
       return true

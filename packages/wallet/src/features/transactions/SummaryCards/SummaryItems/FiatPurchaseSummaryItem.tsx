@@ -1,6 +1,7 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'ui/src'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -16,7 +17,6 @@ import {
   FiatPurchaseTransactionInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function FiatPurchaseSummaryItem({

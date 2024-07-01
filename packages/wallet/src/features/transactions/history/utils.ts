@@ -5,6 +5,8 @@ import {
   Chain,
   Currency,
   FeedTransactionListQuery,
+  TransactionStatus as RemoteTransactionStatus,
+  TransactionType as RemoteTransactionType,
   TokenStandard,
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -18,6 +20,7 @@ import {
   LocalizedDayjs,
 } from 'wallet/src/features/language/localizedDayjs'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import {
   TransactionDetails,
@@ -114,6 +117,11 @@ export function parseDataResponseToTransactionDetails(
         const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
 
         if (parsed && !(hideSpamTokens && isSpam && !spamOverride)) {
+          accum.push(parsed)
+        }
+      } else if (t?.details?.__typename === 'OnRampTransactionDetails') {
+        const parsed = extractOnRampTransactionDetails(t as TransactionListQueryResponse)
+        if (parsed) {
           accum.push(parsed)
         }
       }
@@ -243,5 +251,28 @@ function extractCurrencyIdFromTx(transaction: TransactionDetails | null): Curren
   if (transaction.typeInfo.type === TransactionType.Swap) {
     // We only care about output currency because that's the net new asset
     return transaction.typeInfo.outputCurrencyId
+  }
+}
+
+export function remoteTxStatusToLocalTxStatus(
+  type: RemoteTransactionType,
+  status: RemoteTransactionStatus
+): TransactionStatus {
+  switch (status) {
+    case RemoteTransactionStatus.Failed:
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.FailedCancel
+      }
+      return TransactionStatus.Failed
+    case RemoteTransactionStatus.Pending:
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.Cancelling
+      }
+      return TransactionStatus.Pending
+    case RemoteTransactionStatus.Confirmed:
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.Canceled
+      }
+      return TransactionStatus.Success
   }
 }

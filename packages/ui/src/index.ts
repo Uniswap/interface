@@ -9,6 +9,7 @@ export {
   Popover,
   Portal,
   ScrollView,
+  Select,
   Sheet,
   Square,
   Switch,
@@ -43,13 +44,10 @@ export {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
 } from './components/AnimatedFlashList/AnimatedFlashList'
-export * from './components/Unicon'
-export * from './components/Unicon/Container'
-export * from './components/Unicon/Emblem'
-export * from './components/Unicon/types'
+export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
-export * from './components/UniconV2'
-export * from './components/UniconV2/utils'
+export * from './components/UniversalImage/UniversalImage'
+export * from './components/UniversalImage/utils'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'

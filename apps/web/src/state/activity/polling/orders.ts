@@ -1,5 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { OffchainOrderType } from 'state/routing/types'
@@ -9,6 +10,7 @@ import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { logger } from 'utilities/src/logger/logger'
 import { OnActivityUpdate, OrderUpdate } from '../types'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
@@ -52,7 +54,8 @@ const OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL = ms(`2s`)
 export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
-  const { account, provider } = useWeb3React()
+  const { provider } = useWeb3React()
+  const account = useAccount()
   const pendingOrders = usePendingOrders()
 
   const [currentDelay, setCurrentDelay] = useState(OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL)
@@ -60,7 +63,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   useEffect(() => {
     let timeout: NodeJS.Timeout
     async function getOrderStatuses() {
-      if (!account || pendingOrders.length === 0) {
+      if (!account.address || pendingOrders.length === 0) {
         return
       }
 
@@ -71,7 +74,10 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       }
       try {
         const statuses = (
-          await Promise.all([fetchOrderStatuses(account, pendingOrders), fetchLimitStatuses(account, pendingOrders)])
+          await Promise.all([
+            fetchOrderStatuses(account.address, pendingOrders),
+            fetchLimitStatuses(account.address, pendingOrders),
+          ])
         ).flat()
 
         pendingOrders.forEach(async (pendingOrder) => {
@@ -110,7 +116,12 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           })
         })
       } catch (e) {
-        console.error('Error fetching order statuses', e)
+        logger.error(e, {
+          tags: {
+            file: 'orders',
+            function: 'usePollPendingOrders',
+          },
+        })
       }
       setCurrentDelay((currentDelay) => Math.min(currentDelay * 2, ms('30s')))
       timeout = setTimeout(getOrderStatuses, currentDelay)
@@ -121,7 +132,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       return () => clearTimeout(timeout)
     }
     return
-  }, [account, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
+  }, [account.address, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
 
   return null
 }

@@ -1,6 +1,7 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedInterfaceChainId, getChain, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
@@ -12,9 +13,10 @@ import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { RetryOptions } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { OnActivityUpdate } from '../types'
-import { CanceledError, RetryOptions, RetryableError, retry } from './retry'
+import { CanceledError, RetryableError, retry } from './retry'
 
 interface Transaction {
   addedTime: number
@@ -66,13 +68,14 @@ function usePendingTransactions(chainId?: SupportedInterfaceChainId) {
 
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
   const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
-  const { account, chainId, provider } = useWeb3React()
+  const { provider } = useWeb3React()
+  const account = useAccount()
 
   const pendingTransactions = usePendingTransactions(
     // We can skip polling when the app's current chain is supported by the subscription service.
-    realtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId) ? undefined : chainId
+    realtimeEnabled && account.chainId && SUBSCRIPTION_CHAINIDS.includes(account.chainId) ? undefined : account.chainId
   )
-  const supportedChain = useSupportedChainId(chainId)
+  const supportedChain = useSupportedChainId(account.chainId)
   const hasPending = pendingTransactions.length > 0
   const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
 
@@ -92,7 +95,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         () =>
           provider.getTransactionReceipt(tx.hash).then(async (receipt) => {
             if (receipt === null) {
-              if (account) {
+              if (account.isConnected) {
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
                 if (tx.deadline) {
                   // Deadlines are expressed as seconds since epoch, as they are used on-chain.
@@ -110,11 +113,11 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         retryOptions
       )
     },
-    [account, blockTimestamp, provider, removeTransaction, supportedChain]
+    [account.isConnected, blockTimestamp, provider, removeTransaction, supportedChain]
   )
 
   useEffect(() => {
-    if (!chainId || !provider || !lastBlockNumber || !hasPending) {
+    if (!account.chainId || !provider || !lastBlockNumber || !hasPending) {
       return
     }
 
@@ -124,10 +127,13 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         const { promise, cancel } = getReceipt(tx)
         promise
           .then((receipt) => {
+            if (!account.chainId) {
+              return
+            }
             fastForwardBlockNumber(receipt.blockNumber)
             onActivityUpdate({
               type: 'transaction',
-              chainId,
+              chainId: account.chainId,
               original: tx,
               update: {
                 status: receipt.status === 1 ? TransactionStatus.Confirmed : TransactionStatus.Failed,
@@ -136,10 +142,10 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             })
           })
           .catch((error) => {
-            if (error instanceof CanceledError) {
+            if (error instanceof CanceledError || !account.chainId) {
               return
             }
-            dispatch(checkedTransaction({ chainId, hash: tx.hash, blockNumber: lastBlockNumber }))
+            dispatch(checkedTransaction({ chainId: account.chainId, hash: tx.hash, blockNumber: lastBlockNumber }))
           })
         return cancel
       })
@@ -148,7 +154,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       cancels.forEach((cancel) => cancel())
     }
   }, [
-    chainId,
+    account.chainId,
     provider,
     lastBlockNumber,
     getReceipt,

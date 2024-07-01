@@ -144,7 +144,7 @@ const LearnMoreArrow = styled(ArrowRightCircle)`
 const ProtocolDescription = () => <Trans i18nKey="landing.protocolDescription" />
 function LearnMore() {
   return (
-    <LearnMoreButton href="https://info.uniswap.org">
+    <LearnMoreButton href="/explore">
       <Row gap="sm" align="center">
         <Trans i18nKey="common.learnMore.link" />
         <LearnMoreArrow />

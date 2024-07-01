@@ -1,15 +1,18 @@
-import { isExtension, isInterface } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
-const EXTENSION_ID_DEV = 'chrome-extension://afhngfaoadjjlhbgopehflaabbgfbcmn'
-const EXTENSION_ID_BETA = 'chrome-extension://foilfbjokdonehdajefeadkclfpmhdga'
-const EXTENSION_ID_PROD = 'chrome-extension://nnpmfplkfogfpmcngplhnbdnnilmcdcg'
+const EXTENSION_ID_LOCAL = 'ceofpnbcmdjbibjjdniemjemmgaibeih'
+const EXTENSION_ID_DEV = 'afhngfaoadjjlhbgopehflaabbgfbcmn'
+const EXTENSION_ID_BETA = 'foilfbjokdonehdajefeadkclfpmhdga'
+const EXTENSION_ID_PROD = 'nnpmfplkfogfpmcngplhnbdnnilmcdcg'
 
 export function isDevEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'development'
   } else if (isExtension) {
-    return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV
+    return (
+      __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
+    )
   } else {
     throw createAndLogError('isProdEnv')
   }

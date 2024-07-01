@@ -1,5 +1,4 @@
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
@@ -20,11 +19,11 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { getParsedChainId } from 'hooks/useSyncChainQuery'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getParsedChainId } from 'utils/chains'
 import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
 import { CurrencyState, SerializedCurrencyState, SwapAndLimitContext, SwapContext, SwapInfo, SwapState } from './types'
 
@@ -58,6 +57,13 @@ export function useSwapActionHandlers(): {
         setSwapState((swapState) => ({
           ...swapState,
           independentField: swapState.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
+        }))
+        // multichain ux case where we set input or output to different chain
+      } else if (otherCurrency?.chainId !== currency.chainId) {
+        setCurrencyState((state) => ({
+          ...state,
+          [currentCurrencyKey]: currency,
+          [otherCurrencyKey]: undefined,
         }))
       } else {
         setCurrencyState((state) => ({
@@ -120,9 +126,10 @@ export function useSwapActionHandlers(): {
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
-  const balance = useCurrencyBalance(account ?? undefined, nativeCurrency)
+  const balance = useCurrencyBalance(account.address, nativeCurrency, chainId)
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -135,8 +142,9 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   )
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
+    account.address,
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
+    chainId
   )
 
   const isExactIn: boolean = independentField === Field.INPUT
@@ -154,7 +162,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     parsedAmount,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     state.routerPreferenceOverride as RouterPreference.API | undefined,
-    account
+    account.address
   )
 
   const { data: nativeCurrencyBalanceUSD } = useUSDPrice(balance, nativeCurrency)
@@ -203,7 +211,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
-    if (!account) {
+    if (!account.isConnected) {
       inputError = isDisconnected ? (
         <Trans i18nKey="common.connectWallet.button" />
       ) : (
@@ -246,7 +254,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
     return inputError
   }, [
-    account,
+    account.isConnected,
     currencies,
     parsedAmount,
     currencyBalances,

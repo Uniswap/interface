@@ -5,21 +5,23 @@ import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useState } from 'react'
 import { useAppDispatch } from 'state/hooks'
 
+import { useAccount } from 'hooks/useAccount'
 import { updateChainId } from './reducer'
 
 export default function Updater(): null {
-  const { chainId, provider } = useWeb3React()
-  const supportedChain = useSupportedChainId(chainId)
+  const account = useAccount()
+  const { provider } = useWeb3React()
+  const supportedChain = useSupportedChainId(account.chainId)
   const dispatch = useAppDispatch()
   const windowVisible = useIsWindowVisible()
 
-  const [activeChainId, setActiveChainId] = useState(chainId)
+  const [activeChainId, setActiveChainId] = useState(account.chainId)
 
   useEffect(() => {
-    if (provider && chainId && windowVisible) {
-      setActiveChainId(chainId)
+    if (provider && account.chainId && windowVisible) {
+      setActiveChainId(account.chainId)
     }
-  }, [dispatch, chainId, provider, windowVisible])
+  }, [dispatch, account.chainId, provider, windowVisible])
 
   const debouncedChainId = useDebounce(activeChainId, 100)
 

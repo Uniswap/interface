@@ -547,6 +547,9 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
           </svg>
         </div>
       </div>
+      <div
+        tabindex="0"
+      />
     </div>
   </span>
 </span>
@@ -1083,6 +1086,9 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
           </svg>
         </div>
       </div>
+      <div
+        tabindex="0"
+      />
     </div>
   </span>
 </span>
@@ -1634,6 +1640,9 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
           </svg>
         </div>
       </div>
+      <div
+        tabindex="0"
+      />
     </div>
   </span>
 </span>

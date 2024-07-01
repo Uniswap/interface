@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export function SwapSettingsMessage({
   inputWarning,
@@ -42,20 +42,17 @@ export function SwapSettingsMessage({
     <Flex centered gap="$spacing8" py="$spacing4">
       <Text color="$neutral2" textAlign="center" variant="body2">
         {trade.tradeType === TradeType.EXACT_INPUT
-          ? t('swap.settings.slippage.input.receive.unformatted', {
-              amount: formatCurrencyAmount({
-                value: trade.minimumAmountOut(slippageTolerancePercent),
-                type: NumberType.TokenTx,
-              }),
-              tokenSymbol: getSymbolDisplayText(trade.outputAmount.currency.symbol),
-            })
-          : t('swap.settings.slippage.output.spend.unformatted', {
-              amount: formatCurrencyAmount({
-                value: trade.maximumAmountIn(slippageTolerancePercent),
-                type: NumberType.TokenTx,
-              }),
-              tokenSymbol: getSymbolDisplayText(trade.inputAmount.currency.symbol),
-            })}
+          ? t('swap.settings.slippage.input.receive.title')
+          : t('swap.settings.slippage.output.spend.title')}{' '}
+        {formatCurrencyAmount({
+          value: trade.minimumAmountOut(slippageTolerancePercent),
+          type: NumberType.TokenTx,
+        })}{' '}
+        {getSymbolDisplayText(
+          trade.tradeType === TradeType.EXACT_INPUT
+            ? trade.outputAmount.currency.symbol
+            : trade.inputAmount.currency.symbol
+        )}
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">

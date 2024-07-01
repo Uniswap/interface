@@ -18,6 +18,7 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
       value={{
         currencyState: { inputCurrency: undefined, outputCurrency: undefined },
         setCurrencyState: props.setCurrencyState ?? jest.fn(),
+        setSelectedChainId: jest.fn(),
         prefilledState: {
           inputCurrency: undefined,
           outputCurrency: undefined,

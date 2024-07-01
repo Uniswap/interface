@@ -17,7 +17,7 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const MAX_CONTENT_WIDTH = '1200px'
+const MAX_CONTENT_WIDTH_PX = 1200
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
   MEDIA_WIDTHS
@@ -92,10 +92,9 @@ function getSettings(darkMode: boolean) {
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
     navHeight: navDimensions.height,
-    promoBannerHeight: 56,
     navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 48,
-    maxWidth: MAX_CONTENT_WIDTH,
+    maxWidth: MAX_CONTENT_WIDTH_PX,
 
     // deprecated - please use hardcoded exported values instead of
     // adding to the theme object

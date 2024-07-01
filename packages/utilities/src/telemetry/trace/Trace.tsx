@@ -1,7 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { isWeb } from '@tamagui/constants'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
+import { isWeb } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from './AnalyticsNavigationContext'

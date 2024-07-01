@@ -2,6 +2,7 @@ import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,
+  USDC_BASE,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
@@ -14,8 +15,8 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import { MoonpaySupportedCurrencyCode } from './constants'
 
-type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism
-const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism]
+type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism | Chain.Base
+const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism, Chain.Base]
 const isMoonpaySupportedChain = (chain?: Chain): chain is MoonpaySupportedChain =>
   !!chain && moonPaySupportedChains.includes(chain)
 
@@ -46,14 +47,18 @@ const CURRENCY_CODES: {
     [WETH_POLYGON.address.toLowerCase()]: 'eth_polygon',
     native: 'matic_polygon',
   },
+  [Chain.Base]: {
+    [USDC_BASE.address.toLowerCase()]: 'usdc_base',
+    native: 'eth_base',
+  },
 }
 
-export function getDefaultCurrencyCode(
-  address: string | undefined,
-  gqlChain?: InterfaceGqlChain
-): MoonpaySupportedCurrencyCode {
-  if (!address || !gqlChain) {
+export function getDefaultCurrencyCode(address?: string, gqlChain?: InterfaceGqlChain): MoonpaySupportedCurrencyCode {
+  if (!gqlChain) {
     return 'eth'
+  }
+  if (!address) {
+    return isMoonpaySupportedChain(gqlChain) ? CURRENCY_CODES[gqlChain]?.native : 'eth'
   }
   if (isMoonpaySupportedChain(gqlChain)) {
     const code = CURRENCY_CODES[gqlChain]?.[address.toLowerCase()]

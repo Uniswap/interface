@@ -1,7 +1,8 @@
 import type { TokenList } from '@uniswap/token-lists'
 import contenthashToUri from 'lib/utils/contenthashToUri'
 import parseENSAddress from 'lib/utils/parseENSAddress'
-import uriToHttp from 'lib/utils/uriToHttp'
+import { uriToHttpUrls } from 'utilities/src/format/urls'
+import { logger } from 'utilities/src/logger/logger'
 import { validateTokenList } from 'utils/validateTokenList'
 
 const listCache = new Map<string, TokenList>()
@@ -29,7 +30,7 @@ export default async function fetchTokenList(
       contentHashUri = await resolveENSContentHash(parsedENS.ensName)
     } catch (error) {
       const message = `failed to resolve ENS name: ${parsedENS.ensName}`
-      console.debug(message, error)
+      logger.debug('fetchTokenList', 'fetchTokenList', message, error)
       throw new Error(message)
     }
     let translatedUri
@@ -37,12 +38,12 @@ export default async function fetchTokenList(
       translatedUri = contenthashToUri(contentHashUri)
     } catch (error) {
       const message = `failed to translate contenthash to URI: ${contentHashUri}`
-      console.debug(message, error)
+      logger.debug('fetchTokenList', 'fetchTokenList', message, error)
       throw new Error(message)
     }
-    urls = uriToHttp(`${translatedUri}${parsedENS.ensPath ?? ''}`)
+    urls = uriToHttpUrls(`${translatedUri}${parsedENS.ensPath ?? ''}`)
   } else {
-    urls = uriToHttp(listUrl)
+    urls = uriToHttpUrls(listUrl)
   }
 
   if (urls.length === 0) {
@@ -56,12 +57,12 @@ export default async function fetchTokenList(
     try {
       response = await fetch(url, { credentials: 'omit' })
     } catch (error) {
-      console.debug(`failed to fetch list: ${listUrl} (${url})`, error)
+      logger.debug('fetchTokenList', 'fetchTokenList', `failed to fetch list: ${listUrl} (${url})`, error)
       continue
     }
 
     if (!response.ok) {
-      console.debug(`failed to fetch list ${listUrl} (${url})`, response.statusText)
+      logger.debug('fetchTokenList', 'fetchTokenList', `failed to fetch list ${listUrl} (${url})`, response.statusText)
       continue
     }
 
@@ -73,7 +74,12 @@ export default async function fetchTokenList(
       listCache?.set(listUrl, list)
       return list
     } catch (error) {
-      console.debug(`failed to parse and validate list response: ${listUrl} (${url})`, error)
+      logger.debug(
+        'fetchTokenList',
+        'fetchTokenList',
+        `failed to parse and validate list response: ${listUrl} (${url})`,
+        error
+      )
       continue
     }
   }

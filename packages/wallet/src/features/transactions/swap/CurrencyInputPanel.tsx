@@ -247,25 +247,31 @@ export const CurrencyInputPanel = memo(
           <Flex
             row
             alignItems="center"
-            gap="$spacing8"
             justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
             py="$spacing8">
+            {isFiatMode && (
+              <Text
+                allowFontScaling
+                color={inputColor}
+                fontSize={fontSize}
+                height={fontSize}
+                lineHeight={fontSize}
+                mr="$spacing4">
+                {fiatCurrencySymbol}
+              </Text>
+            )}
             <AnimatedFlex
               fill
               grow
               row
               alignItems="center"
               height={MAX_INPUT_FONT_SIZE}
+              mr="$spacing8"
               overflow="hidden"
               style={loadingStyle}
               onLayout={onLayout}>
-              {isFiatMode && (
-                <Text allowFontScaling color={inputColor} fontSize={fontSize} variant="heading2">
-                  {fiatCurrencySymbol}
-                </Text>
-              )}
               {currencyInfo ? (
-                <Flex>
+                <Flex flexShrink={isWeb ? 1 : 0}>
                   {disabled && (
                     // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
                     <TouchableArea
@@ -283,12 +289,12 @@ export const CurrencyInputPanel = memo(
                     flex={1}
                     focusable={!disabled && Boolean(currencyInfo)}
                     fontFamily="$heading"
-                    fontSize={fontSize}
-                    maxDecimals={currencyInfo.currency.decimals}
-                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     // This is a hacky workaround for Android to prevent text from being cut off
                     // (the text input height is greater than the font size and the input is
                     // centered vertically, so the caret is cut off but the text is not)
+                    fontSize={fontSize}
+                    maxDecimals={currencyInfo.currency.decimals}
+                    maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={2 * MAX_INPUT_FONT_SIZE}
                     overflow="visible"
                     placeholder="0"
@@ -296,8 +302,6 @@ export const CurrencyInputPanel = memo(
                     px="$none"
                     py="$none"
                     returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-                    // Inline for better interaction with custom selection refs
-                    showCurrencySign={false}
                     showSoftInputOnFocus={showSoftInputOnFocus}
                     testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
                     value={isLoading ? loadingTextValue : value}

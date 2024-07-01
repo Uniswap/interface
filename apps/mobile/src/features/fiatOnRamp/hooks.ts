@@ -8,6 +8,8 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useFiatOnRampAggregatorSupportedTokensQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { ChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -18,7 +20,6 @@ import {
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { fromMoonpayNetwork, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import {
-  useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampBuyQuoteQuery,
   useFiatOnRampIpAddressQuery,
   useFiatOnRampLimitsQuery,
@@ -26,7 +27,7 @@ import {
   useFiatOnRampWidgetUrlQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
-import { FORSupportedToken, MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {

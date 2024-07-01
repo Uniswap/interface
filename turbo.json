@@ -72,12 +72,10 @@
     },
     "graphql:schema": {
       "env": [
-        "THE_GRAPH_SCHEMA_ENDPOINT",
         "REACT_APP_AWS_API_ENDPOINT",
         "scripts/**"
       ],
       "inputs": [
-        "scripts/fetch-schema.js",
         ".env.production",
         "graphql.*.ts"
       ],
@@ -90,7 +88,6 @@
       "inputs": [
         "codegen.ts",
         "src/**/schema.graphql",
-        "scripts/fetch-schema.js",
         "src/graphql/**",
         "src/data/**/*.graphql"
       ],
@@ -128,8 +125,7 @@
     },
     "test": {
       "dependsOn": [
-        "prepare",
-        "^test"
+        "^prepare"
       ]
     },
     "start": {

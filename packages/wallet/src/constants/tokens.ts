@@ -85,6 +85,30 @@ export const USDB = new Token(
   'USDB'
 )
 
+export const CUSD = new Token(
+  ChainId.Celo,
+  '0x765de816845861e75a25fca122bb6898b8b1282a',
+  18,
+  'CUSD',
+  'CUSD'
+)
+
+export const USDC_AVALANCHE = new Token(
+  ChainId.Avalanche,
+  '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
+  6,
+  'USDC',
+  'USDC'
+)
+
+export const USDzC = new Token(
+  ChainId.Zora,
+  '0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4',
+  6,
+  'USDzC',
+  'USD Coin'
+)
+
 export const WBTC = new Token(
   ChainId.Mainnet,
   '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',

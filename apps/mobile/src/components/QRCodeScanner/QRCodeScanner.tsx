@@ -10,11 +10,11 @@ import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import { AnimatedFlex, Button, Flex, Text, useDeviceDimensions, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, Photo } from 'ui/src/components/icons'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type QRCodeScannerProps = {

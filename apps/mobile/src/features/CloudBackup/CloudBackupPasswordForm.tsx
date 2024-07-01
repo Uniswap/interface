@@ -59,7 +59,6 @@ export function CloudBackupPasswordForm({
 
   const onPasswordSubmitEditing = (): void => {
     if (!isConfirmation && !isStrongPassword) {
-      setError(PasswordErrors.WeakPassword)
       return
     }
     if (isConfirmation && passwordToConfirm !== password) {
@@ -71,10 +70,6 @@ export function CloudBackupPasswordForm({
   }
 
   const onPressNext = (): void => {
-    if (!isConfirmation && !isStrongPassword) {
-      setError(PasswordErrors.WeakPassword)
-      return
-    }
     if (isConfirmation && passwordToConfirm !== password) {
       setError(PasswordErrors.PasswordsDoNotMatch)
       return
@@ -86,9 +81,7 @@ export function CloudBackupPasswordForm({
   }
 
   let errorText = ''
-  if (error === PasswordErrors.WeakPassword) {
-    errorText = t('settings.setting.backup.password.error.weak')
-  } else if (error === PasswordErrors.PasswordsDoNotMatch) {
+  if (error === PasswordErrors.PasswordsDoNotMatch) {
     errorText = t('settings.setting.backup.password.error.mismatch')
   } else if (error) {
     // use the upstream zxcvbn error message

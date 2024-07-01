@@ -6,6 +6,7 @@ Object {
     Object {
       "lg": false,
       "md": true,
+      "navDropdownMobileDrawer": true,
       "navSearchInputVisible": false,
       "sm": true,
       "xl": false,
@@ -17,6 +18,7 @@ Object {
   "current": Object {
     "lg": false,
     "md": true,
+    "navDropdownMobileDrawer": true,
     "navSearchInputVisible": false,
     "sm": true,
     "xl": false,

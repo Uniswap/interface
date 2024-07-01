@@ -267,7 +267,7 @@ const PoolDetailsHeaderActions = ({
           menuFlyoutCss={ContractsModalContainer}
         />
       </div>
-      <ShareButton name={poolName} />
+      <ShareButton name={poolName} utmSource="share-pool" />
     </Row>
   )
 }

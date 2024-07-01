@@ -20,5 +20,5 @@ export async function sendAppsFlyerEvent<EventName extends keyof AppsFlyerEventP
     ? [EventName] | [EventName, AppsFlyerEventProperties[EventName]]
     : [EventName, AppsFlyerEventProperties[EventName]]
 ): Promise<void> {
-  logger.info('telemetry/index.web.ts', 'sendWalletAppsFlyerEvent', 'method not supported', args)
+  logger.warn('telemetry/index.web.ts', 'sendWalletAppsFlyerEvent', 'method not supported', args)
 }

@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobileApp } from 'uniswap/src/utils/platform'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
+import { isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { initAndPersistCache } from 'wallet/src/data/apollo/cache'
 import {
@@ -85,7 +85,7 @@ export const usePersistedApolloClient = ({
     const cache = await initAndPersistCache({ storage: storageWrapper, maxCacheSizeInBytes })
 
     if (customEndpoint) {
-      logger.info(
+      logger.debug(
         'usePersistedApolloClient',
         'usePersistedApolloClient',
         `Using custom endpoint ${customEndpoint.url}`

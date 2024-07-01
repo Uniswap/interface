@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ChainId } from 'uniswap/src/types/chains'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -20,7 +21,7 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTokenSummaryItem({

@@ -1,7 +1,6 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -11,6 +10,7 @@ import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import Tooltip from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import ms from 'ms'
 import { darken } from 'polished'
@@ -19,9 +19,11 @@ import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -267,9 +269,10 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     ref
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
-    const { account, chainId } = useWeb3React()
+    const account = useAccount()
+    const { chainId } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
-    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined, chainId)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
 

@@ -123,7 +123,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   width: calc(100vw - ${LIST_PAGE_MARGIN * 2}px);
   left: 50%;
   transform: translateX(-50%);
-  max-width: ${({ theme }) => theme.maxWidth};
+  max-width: ${({ theme }) => `${theme.maxWidth}px`};
   z-index: ${Z_INDEX.under_dropdown};
   box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
 

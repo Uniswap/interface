@@ -1,12 +1,12 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -213,9 +213,9 @@ export default function CurrencyInputPanel({
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const { account, chainId } = useWeb3React()
-  const chainAllowed = useIsSupportedChainId(chainId)
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const account = useAccount()
+  const chainAllowed = useIsSupportedChainId(account.chainId)
+  const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
   const theme = useTheme()
   const { formatCurrencyAmount } = useFormatter()
 

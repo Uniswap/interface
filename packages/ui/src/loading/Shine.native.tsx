@@ -40,37 +40,39 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
     ],
   }))
 
+  if (disabled) {
+    return children
+  }
+
   if (!layout) {
     return (
       <Flex
         opacity={0}
         onLayout={(event: {
           nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> }
-        }): void => setLayout(event.nativeEvent.layout)}>
+        }): void => {
+          setLayout(event.nativeEvent.layout)
+        }}>
         {children}
       </Flex>
     )
   }
 
-  if (!disabled) {
-    return (
-      <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
-        <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
-        <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
-          <LinearGradient
-            colors={[
-              opacify(0, colors.neutral2.val.slice(0, 7)),
-              opacify(44, colors.surface2.val.slice(0, 7)),
-              opacify(0, colors.neutral2.val.slice(0, 7)),
-            ]}
-            end={{ x: 1, y: 0 }}
-            start={{ x: 0, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-        </Reanimated.View>
-      </MaskedView>
-    )
-  }
-
-  return children
+  return (
+    <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
+      <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
+      <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
+        <LinearGradient
+          colors={[
+            opacify(0, colors.neutral2.val.slice(0, 7)),
+            opacify(44, colors.surface2.val.slice(0, 7)),
+            opacify(0, colors.neutral2.val.slice(0, 7)),
+          ]}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Reanimated.View>
+    </MaskedView>
+  )
 }

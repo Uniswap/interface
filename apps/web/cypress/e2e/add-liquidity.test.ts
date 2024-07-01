@@ -1,15 +1,7 @@
-import { CyHttpMessages } from 'cypress/types/net-stubbing'
-
 import { getTestSelector, resetHardhatChain } from '../utils'
-import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
+import { waitsForActiveChain } from './wallet-connection/switch-network.test'
 
 describe('Add Liquidity', () => {
-  beforeEach(() => {
-    cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3?source=uniswap', (req) => {
-      aliasQuery(req, 'feeTierDistribution')
-    })
-  })
-
   it('loads the token pair', () => {
     cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
@@ -26,7 +18,7 @@ describe('Add Liquidity', () => {
       cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
       cy.get(getTestSelector('chain-selector')).last().click()
       cy.contains('Polygon').click()
-      cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', `Polygon`)
+      waitsForActiveChain('Polygon')
       cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MATIC')
       cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
     })
@@ -44,33 +36,11 @@ describe('Add Liquidity', () => {
   })
 
   it('loads fee tier distribution', () => {
-    cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
-      cy.intercept(
-        'POST',
-        '/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
-        (req: CyHttpMessages.IncomingHttpRequest) => {
-          if (hasQuery(req, 'FeeTierDistribution')) {
-            req.alias = 'FeeTierDistribution'
+    cy.interceptGraphqlOperation('FeeTierDistribution', 'feeTierDistribution.json')
 
-            req.reply({
-              body: {
-                data: {
-                  ...feeTierDistribution,
-                },
-              },
-              headers: {
-                'access-control-allow-origin': '*',
-              },
-            })
-          }
-        }
-      )
-
-      cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
-      cy.wait('@FeeTierDistribution')
-      cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.30% fee tier')
-      cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40% select')
-    })
+    cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH')
+    cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.30% fee tier')
+    cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '77% select')
   })
 
   it('disables increment and decrement until initial prices are inputted', () => {

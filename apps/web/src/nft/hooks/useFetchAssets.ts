@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { BagStatus } from 'nft/types'
 import { buildNftTradeInputFromBagItems, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
@@ -6,12 +5,13 @@ import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { useCallback, useMemo } from 'react'
 import { useNftRouteLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
+import { useAccount } from 'hooks/useAccount'
 import { useBag } from './useBag'
 import { usePurchaseAssets } from './usePurchaseAssets'
 import { useTokenInput } from './useTokenInput'
 
 export function useFetchAssets(): () => Promise<void> {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const {
     itemsInBag: uncheckedItemsInBag,
@@ -57,7 +57,7 @@ export function useFetchAssets(): () => Promise<void> {
 
     fetchGqlRoute({
       variables: {
-        senderAddress: account ? account : '',
+        senderAddress: account.address ? account.address : '',
         nftTrades: buildNftTradeInputFromBagItems(itemsInBag),
         tokenTrades: tokenTradeInput ? tokenTradeInput : undefined,
       },
@@ -87,7 +87,7 @@ export function useFetchAssets(): () => Promise<void> {
       },
     })
   }, [
-    account,
+    account.address,
     fetchGqlRoute,
     itemsInBag,
     purchaseAssets,

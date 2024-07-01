@@ -1,8 +1,9 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
+import { useTokenBalances } from 'hooks/useTokenBalances'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { PoolVersionMenu } from 'pages/Pool/shared'
@@ -14,6 +15,7 @@ import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { currencyKey } from 'utils/currencyKey'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -24,7 +26,6 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/
 import { Dots } from '../../components/swap/styled'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 
@@ -87,7 +88,7 @@ const Header = styled(ThemedText.H1Small)`
 
 export default function Pool() {
   const theme = useTheme()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const networkSupportsV2 = useNetworkSupportsV2()
 
   // fetch the user's balances of all tracked V2 LP tokens
@@ -99,22 +100,16 @@ export default function Pool() {
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
-  const liquidityTokens = useMemo(
-    () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),
-    [tokenPairsWithLiquidityTokens]
-  )
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens
-  )
+  const { balanceMap, loading: fetchingV2PairBalances } = useTokenBalances()
 
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
+        const liquidityTokenKey = currencyKey(liquidityToken)
+        return balanceMap[liquidityTokenKey]?.balance > 0
+      }),
+    [tokenPairsWithLiquidityTokens, balanceMap]
   )
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))

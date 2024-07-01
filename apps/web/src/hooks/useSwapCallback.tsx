@@ -1,7 +1,6 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'
@@ -10,6 +9,9 @@ import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 
+import { useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
@@ -49,7 +51,9 @@ export function useSwapCallback(
 ) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
+  const supportedChainId = useSupportedChainId(chainId)
 
   const uniswapXSwapCallback = useUniswapXSwapCallback({
     trade: isUniswapXTrade(trade) ? trade : undefined,
@@ -73,8 +77,11 @@ export function useSwapCallback(
     if (!trade) {
       throw new Error('missing trade')
     }
-    if (!account || !chainId) {
+    if (!account.address || !account.chainId) {
       throw new Error('wallet must be connected to swap')
+    }
+    if (!supportedChainId) {
+      throw new Error('unsupported chain')
     }
 
     const result = await swapCallback()
@@ -103,9 +110,9 @@ export function useSwapCallback(
       case TradeFillType.UniswapX:
       case TradeFillType.UniswapXv2:
         addOrder(
-          account,
+          account.address,
           result.response.orderHash,
-          chainId,
+          supportedChainId,
           result.response.deadline,
           swapInfo as UniswapXOrderDetails['swapInfo'],
           result.response.encodedOrder,
@@ -117,5 +124,14 @@ export function useSwapCallback(
     }
 
     return result
-  }, [account, addOrder, addTransaction, allowedSlippage, chainId, swapCallback, trade])
+  }, [
+    account.address,
+    account.chainId,
+    addOrder,
+    addTransaction,
+    allowedSlippage,
+    supportedChainId,
+    swapCallback,
+    trade,
+  ])
 }

@@ -92,13 +92,25 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     !tokenInChainId ||
     !tokenOutChainId ||
     !amount ||
-    currencyInEqualsCurrencyOut
+    currencyInEqualsCurrencyOut ||
+    !activeAccountAddress
 
   const quoteRequestArgs: TradingApiQuoteRequest | undefined = useMemo(() => {
+    // Temporary logging to help debug invalid requests with missing `swappper` param
+    if (!activeAccountAddress) {
+      logger.error(new Error('Missing account address in /swap request'), {
+        tags: { file: 'useTradingApiTrade', function: 'quote' },
+        extra: {
+          activeAccountAddress,
+        },
+      })
+    }
+
     if (skipQuery) {
       return undefined
     }
-    return {
+
+    const quoteArgs: TradingApiQuoteRequest = {
       type: requestTradeType,
       amount: amount.quotient.toString(),
       swapper: activeAccountAddress,
@@ -107,10 +119,10 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
-      includeGasInfo: true,
       routingPreference,
-      deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS),
     }
+
+    return quoteArgs
   }, [
     activeAccountAddress,
     amount,
@@ -134,7 +146,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   >(
     uniswapUrls.tradingApiPaths.quote,
     quoteRequestArgs ?? {},
-    ['quote', 'permitData'],
+    ['quote', 'permitData', 'requestId', 'routing'],
     {
       pollInterval: internalPollInterval,
       // We set the `ttlMs` to 15 seconds longer than the poll interval so that there's more than enough time for a refetch to complete before we clear the stale data.

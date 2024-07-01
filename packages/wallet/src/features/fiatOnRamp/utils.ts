@@ -1,8 +1,4 @@
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
-import { FORLogo } from './types'
-
-const APPLE_PAY = 'Apple Pay'
-const GOOGLE_PAY = 'Google Pay'
+import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
 
 export interface FORApiError {
   data: {
@@ -67,10 +63,6 @@ export function isNoQuotesError(error: FORApiError): error is InvalidRequestAmou
   return e.data.statusCode === 400 && e.data.errorName === 'NoQuotes'
 }
 
-export function getCountryFlagSvgUrl(countryCode: string): string {
-  return `https://images-country.meld.io/${countryCode}/flag.svg`
-}
-
 export function isFiatOnRampApiError(error: unknown): error is FORApiError {
   if (typeof error === 'object' && error !== null) {
     const e = error as FORApiError
@@ -93,10 +85,4 @@ export function getOptionalServiceProviderLogo(
 
 export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): string {
   return isDarkMode ? logos.darkLogo : logos.lightLogo
-}
-
-export function transformPaymentMethods(paymentMethods: string[]): string[] {
-  return paymentMethods.filter(
-    (pm) => !(pm === APPLE_PAY && isAndroid) && !(pm === GOOGLE_PAY && isIOS)
-  )
 }

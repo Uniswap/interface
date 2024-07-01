@@ -1,8 +1,8 @@
-import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
 import Row from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -117,7 +117,7 @@ const AutocompleteRow = ({
   numberOfTransfers: number
   selectRecipient: (recipient: RecipientData) => void
 }) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { unitag } = useUnitagByAddress(address)
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
@@ -158,7 +158,7 @@ const AutocompleteRow = ({
           )}
         </Column>
       </Row>
-      {account && (
+      {account.isConnected && (
         <StyledTransferText>
           {numberOfTransfers}{' '}
           <Plural value={numberOfTransfers} one={t('common.transfer')} other={t('common.transfers')} />
@@ -216,12 +216,12 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 AutocompleteFlyout.displayName = 'AutocompleteFlyout'
 
 export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
 
-  const { transfers: recentTransfers } = useGroupedRecentTransfers(account)
+  const { transfers: recentTransfers } = useGroupedRecentTransfers(account.address)
 
   const [[isFocusing, isForcingFocus], setFocus] = useState([false, false])
   const handleFocus = useCallback((focus: boolean) => setFocus([focus, false]), [])

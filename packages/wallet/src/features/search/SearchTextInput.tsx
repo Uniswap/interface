@@ -8,6 +8,7 @@ import {
   Platform,
   TextInputFocusEventData,
 } from 'react-native'
+import { NativeViewGestureHandler } from 'react-native-gesture-handler'
 import {
   AnimatePresence,
   Button,
@@ -155,43 +156,45 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           )}
 
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
-            <Input
-              ref={combinedRef}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={autoFocus}
-              backgroundColor="$transparent"
-              borderWidth={0}
-              fontFamily="$body"
-              height="100%"
-              maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
-              outlineColor="transparent"
-              outlineWidth={0}
-              p="$none"
-              placeholder={placeholder}
-              placeholderTextColor="$neutral3"
-              position="absolute"
-              returnKeyType="done"
-              textContentType="none"
-              top={0}
-              // fix horizontal text wobble on iOS
-              {...(Platform.OS === 'ios' && {
-                width: '100%',
-              })}
-              // avoid turning into a controlled input if not wanting to
-              {...(typeof value !== 'undefined' && {
-                value,
-              })}
-              // fix Android TextInput issue when the width is changed
-              // (the placeholder text was wrapping in 2 lines when the width was changed)
-              {...(Platform.OS === 'android' && {
-                width: value ? undefined : 9999,
-              })}
-              width="100%"
-              onChangeText={onChangeTextInput}
-              onFocus={onTextInputFocus}
-              onSubmitEditing={onTextInputSubmitEditing}
-            />
+            <NativeViewGestureHandler>
+              <Input
+                ref={combinedRef}
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoFocus={autoFocus}
+                backgroundColor="$transparent"
+                borderWidth={0}
+                fontFamily="$body"
+                height="100%"
+                maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+                outlineColor="transparent"
+                outlineWidth={0}
+                p="$none"
+                placeholder={placeholder}
+                placeholderTextColor="$neutral3"
+                position="absolute"
+                returnKeyType="done"
+                textContentType="none"
+                top={0}
+                // fix horizontal text wobble on iOS
+                {...(Platform.OS === 'ios' && {
+                  width: '100%',
+                })}
+                // avoid turning into a controlled input if not wanting to
+                {...(typeof value !== 'undefined' && {
+                  value,
+                })}
+                // fix Android TextInput issue when the width is changed
+                // (the placeholder text was wrapping in 2 lines when the width was changed)
+                {...(Platform.OS === 'android' && {
+                  width: value ? undefined : 9999,
+                })}
+                width="100%"
+                onChangeText={onChangeTextInput}
+                onFocus={onTextInputFocus}
+                onSubmitEditing={onTextInputSubmitEditing}
+              />
+            </NativeViewGestureHandler>
           </Flex>
 
           <AnimatePresence>

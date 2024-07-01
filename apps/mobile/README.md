@@ -96,11 +96,10 @@ And select the version that pops up.
 Taken from [RN instructions](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
 
 ```
-brew tap homebrew/cask-versions
-brew install --cask zulu17
+brew install --cask zulu@17
 
 # Get path to where cask was installed to double-click installer
-brew info --cask zulu17
+brew info --cask zulu@17
 ```
 
 Add the following to your .rc file

@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { PopupType, addPopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-
+import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'viem'
 import { useSwitchChain } from './useSwitchChain'
 
@@ -20,7 +20,7 @@ export default function useSelectChain() {
           !error?.message?.includes("Request of type 'wallet_switchEthereumChain' already pending") &&
           !(error instanceof UserRejectedRequestError) /* request already pending */
         ) {
-          console.error('Failed to switch networks', error)
+          logger.warn('useSelectChain', 'useSelectChain', error.message)
           dispatch(
             addPopup({
               content: { failedSwitchNetwork: targetChain, type: PopupType.FailedSwitchNetwork },

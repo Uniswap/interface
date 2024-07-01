@@ -18,7 +18,7 @@ describe('TokenLinkCell', () => {
 
   it('renders known token on a different chain', () => {
     const { asFragment } = render(<TokenLinkCell token={{ ...validBEPoolToken0, chain: Chain.Polygon }} />)
-    expect(screen.getByText('Polygon logo')).toBeDefined()
+    expect(screen.getByAltText('Polygon logo')).toBeDefined()
     expect(asFragment()).toMatchSnapshot()
   })
 })

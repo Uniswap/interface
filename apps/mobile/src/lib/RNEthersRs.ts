@@ -18,6 +18,10 @@ export function importMnemonic(mnemonic: string): Promise<string> {
   return RNEthersRS.importMnemonic(mnemonic)
 }
 
+export function removeMnemonic(mnemonicId: string): Promise<boolean> {
+  return RNEthersRS.removeMnemonic(mnemonicId)
+}
+
 // returns the mnemonicId (derived address at index 0) of the stored mnemonic
 export function generateAndStoreMnemonic(): Promise<string> {
   return RNEthersRS.generateAndStoreMnemonic()
@@ -41,6 +45,10 @@ export function generateAndStorePrivateKey(
   derivationIndex: number
 ): Promise<string> {
   return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)
+}
+
+export function removePrivateKey(address: string): Promise<boolean> {
+  return RNEthersRS.removePrivateKey(address)
 }
 
 export function signTransactionHashForAddress(

@@ -1,11 +1,11 @@
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-
-import { useAccount } from 'hooks/useAccount'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useUserVotes, useVoteCallback } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
@@ -72,7 +72,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
     // try delegation and store hash
     const hash = await voteCallback(proposalId, voteOption)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('VoteModal', 'onVote', error)
     })
 
     if (hash) {

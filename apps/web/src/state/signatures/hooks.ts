@@ -1,5 +1,5 @@
-import { useWeb3React } from '@web3-react/core'
 import { SupportedInterfaceChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
@@ -9,12 +9,12 @@ import { addSignature } from './reducer'
 import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const signatures = useAppSelector((state) => state.signatures) ?? {}
-  if (!account || !signatures[account]) {
+  if (!account.address || !signatures[account.address]) {
     return {}
   }
-  return signatures[account]
+  return signatures[account.address]
 }
 
 export function usePendingOrders(): UniswapXOrderDetails[] {

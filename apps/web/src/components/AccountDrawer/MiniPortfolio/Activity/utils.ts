@@ -18,6 +18,7 @@ import { Permit2 } from 'uniswap/src/abis/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { Activity } from './types'
@@ -200,7 +201,12 @@ async function cancelMultipleUniswapXOrders({
     return transactions
   } catch (error) {
     if (!didUserReject(error)) {
-      console.error(error)
+      logger.error(error, {
+        tags: {
+          file: 'utils',
+          function: 'cancelMultipleUniswapXOrders',
+        },
+      })
     }
     return undefined
   }
@@ -222,7 +228,13 @@ async function getCancelMultipleUniswapXOrdersTransaction(
       chainId,
     }
   } catch (error) {
-    console.error('could not populate cancel transaction')
+    const wrappedError = new Error('could not populate cancel transaction', { cause: error })
+    logger.error(wrappedError, {
+      tags: {
+        file: 'utils',
+        function: 'getCancelMultipleUniswapXOrdersTransaction',
+      },
+    })
     return undefined
   }
 }

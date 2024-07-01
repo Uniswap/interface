@@ -60,25 +60,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -185,6 +166,25 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {
@@ -517,25 +517,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -642,6 +623,25 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {
@@ -974,25 +974,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1099,6 +1080,25 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {
@@ -1431,25 +1431,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1556,6 +1537,25 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {
@@ -1888,25 +1888,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2013,6 +1994,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {
@@ -2343,25 +2343,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2468,6 +2449,25 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c21 {

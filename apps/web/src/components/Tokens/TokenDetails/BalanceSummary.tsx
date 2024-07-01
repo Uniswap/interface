@@ -1,5 +1,4 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Trans } from 'i18n'
@@ -13,6 +12,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { useAccount } from 'hooks/useAccount'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 
 const BalancesCard = styled.div`
@@ -156,7 +156,7 @@ const OtherChainsBalanceSummary = ({
 }
 
 export default function BalanceSummary() {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { currencyChain, multiChainMap } = useTDPContext()
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
@@ -168,7 +168,7 @@ export default function BalanceSummary() {
   }
   const hasBalances = pageChainBalance || Boolean(otherChainBalances.length)
 
-  if (!account || !hasBalances) {
+  if (!account.isConnected || !hasBalances) {
     return null
   }
   return (

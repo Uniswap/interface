@@ -2,8 +2,7 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
 import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useConnectWithLogs } from 'connection/activate'
-import { useAccount } from 'hooks/useAccount'
+import { useConnect } from 'hooks/useConnect'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -91,21 +90,16 @@ const RecentBadge = () => (
   </StyledBadge>
 )
 
-export function Option({
-  connector,
-  connectWithLogs,
-}: {
-  connector: Connector
-  connectWithLogs: ReturnType<typeof useConnectWithLogs>
-}) {
-  const { isConnecting, isReconnecting } = useAccount()
-  const { variables, connect } = connectWithLogs
+export function Option({ connector }: { connector: Connector }) {
+  const connection = useConnect()
+
+  const isPendingConnection = connection.isPending && connection.variables?.connector === connector
+
   const isRecent = connector.id === useRecentConnectorId()
-  const isCurrentOptionPending = isConnecting && variables?.connector === connector
-  const rightSideDetail = isCurrentOptionPending ? <Loader /> : isRecent ? <RecentBadge /> : null
+  const rightSideDetail = isPendingConnection ? <Loader /> : isRecent ? <RecentBadge /> : null
   const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  const isDisabled = (isConnecting || isReconnecting) && !isIFramed()
+  const isDisabled = Boolean(connection?.isPending && !isIFramed())
 
   return (
     <Wrapper disabled={isDisabled}>
@@ -117,8 +111,8 @@ export function Option({
       >
         <OptionCardClickable
           disabled={isDisabled}
-          onClick={() => connect(connector)}
-          selected={isCurrentOptionPending}
+          onClick={() => connection.connect({ connector })}
+          selected={isPendingConnection}
           data-testid={`wallet-option-${connector.type}`}
         >
           <OptionCardLeft>

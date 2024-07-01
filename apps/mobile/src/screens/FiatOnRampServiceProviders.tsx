@@ -13,10 +13,10 @@ import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { AnimatedFlex, ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons'
+import { FORQuote } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 

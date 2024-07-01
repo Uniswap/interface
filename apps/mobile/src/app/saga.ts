@@ -31,12 +31,6 @@ import {
   editAccountSagaName,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import {
-  createAccountActions,
-  createAccountReducer,
-  createAccountSaga,
-  createAccountSagaName,
-} from 'wallet/src/features/wallet/create/createAccountSaga'
-import {
   createAccountsActions,
   createAccountsReducer,
   createAccountsSaga,
@@ -70,12 +64,6 @@ const sagas = [
 
 // All monitored sagas must be included here
 export const monitoredSagas: Record<string, MonitoredSaga> = {
-  [createAccountSagaName]: {
-    name: createAccountSagaName,
-    wrappedSaga: createAccountSaga,
-    reducer: createAccountReducer,
-    actions: createAccountActions,
-  },
   [createAccountsSagaName]: {
     name: createAccountsSagaName,
     wrappedSaga: createAccountsSaga,

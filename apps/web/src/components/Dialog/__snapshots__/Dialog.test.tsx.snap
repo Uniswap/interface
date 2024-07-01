@@ -467,7 +467,11 @@ exports[`<Dialog /> renders different button types 1`] = `
     >
       <span
         class=" t_light _dsp_contents is_Theme"
-      />
+      >
+        <div
+          tabindex="0"
+        />
+      </span>
     </span>
   </div>
   <reach-portal>
@@ -1035,7 +1039,11 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
     >
       <span
         class=" t_light _dsp_contents is_Theme"
-      />
+      >
+        <div
+          tabindex="0"
+        />
+      </span>
     </span>
   </div>
   <reach-portal>

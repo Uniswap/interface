@@ -1,12 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
-import { isUniswapXSupportedChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { Provider } from 'jotai'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
 
-jest.mock('constants/chains')
 jest.mock('hooks/useAccount')
 
 describe('Multiple routing options', () => {
@@ -17,10 +15,9 @@ describe('Multiple routing options', () => {
   })
 
   it('optimal routing is enabled by default', () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
+        <MultipleRoutingOptions chainId={ChainId.MAINNET} />
       </Provider>
     )
 
@@ -31,10 +28,9 @@ describe('Multiple routing options', () => {
   })
 
   it('when optimal routing is toggled other toggles are enabled', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
+        <MultipleRoutingOptions chainId={ChainId.MAINNET} />
       </Provider>
     )
 
@@ -54,10 +50,9 @@ describe('Multiple routing options', () => {
   })
 
   it('can only deselect one pool at a time', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
+        <MultipleRoutingOptions chainId={ChainId.MAINNET} />
       </Provider>
     )
 
@@ -90,10 +85,9 @@ describe('Multiple routing options', () => {
   })
 
   it('does not render uniswapx toggle when uniswapx is not enabled', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(false)
     render(
       <Provider>
-        <MultipleRoutingOptions />
+        <MultipleRoutingOptions chainId={ChainId.OPTIMISM} />
       </Provider>
     )
 

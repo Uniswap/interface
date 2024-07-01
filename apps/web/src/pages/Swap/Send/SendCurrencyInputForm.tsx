@@ -1,5 +1,4 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
@@ -10,6 +9,7 @@ import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { getChain, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
@@ -228,7 +228,7 @@ export default function SendCurrencyInputForm({
 }) {
   const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
@@ -333,9 +333,9 @@ export default function SendCurrencyInputForm({
 
   const currencyFilters = useMemo(
     () => ({
-      onlyShowCurrenciesWithBalance: Boolean(account),
+      onlyShowCurrenciesWithBalance: account.isConnected,
     }),
-    [account]
+    [account.isConnected]
   )
 
   return (

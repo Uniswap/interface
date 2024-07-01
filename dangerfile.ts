@@ -157,23 +157,6 @@ checkCocoaPodsVersion()
 // check translations use the correct apostrophes
 checkApostrophes()
 
-// Stories for new components
-const createdComponents = danger.git.created_files.filter(
-  (f) =>
-    f.includes('components/buttons') ||
-    f.includes('components/input') ||
-    f.includes('components/layout/') ||
-    f.includes('components/text')
-)
-const hasCreatedComponent = createdComponents.length > 0
-const createdStories = createdComponents.filter((filepath) => filepath.includes('stories/'))
-const hasCreatedStories = createdStories.length > 0
-if (hasCreatedComponent && !hasCreatedStories) {
-  warn(
-    'There are new primitive components, but not stories. Consider documenting the new component with Storybook'
-  )
-}
-
 // check the PR size
 checkPRSize()
 
@@ -189,12 +172,6 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
   message(
     `✂️ Thanks for removing  ${danger.github.pr.deletions - danger.github.pr.additions} lines!`
   )
-}
-
-// Stories congratulations
-const stories = danger.git.fileMatch('**/*stories*')
-if (stories.edited) {
-  message('🙌 Thanks for keeping stories up to date!')
 }
 
 // GraphQL update warnings

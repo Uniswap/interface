@@ -99,36 +99,14 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
         <div
           class="c3"
         >
-          <svg
+          <img
+            alt="Arbitrum logo"
             aria-labelledby="titleID"
             height="100%"
-            style="width: 100%; height: 100%;"
+            src="arbitrum-logo.png"
+            style="border-radius: 2px;"
             width="100%"
-          >
-            <title
-              id="titleID"
-            >
-              Arbitrum logo
-            </title>
-            <rect
-              fill="#F9F9F9"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <rect
-              fill="#00A3FF33"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <svg
-              height="100%"
-              width="100%"
-            >
-              arbitrum.svg
-            </svg>
-          </svg>
+          />
         </div>
       </div>
     </span>

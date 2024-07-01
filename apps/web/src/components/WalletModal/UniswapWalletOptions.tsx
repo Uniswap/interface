@@ -2,7 +2,7 @@ import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { CONNECTION } from 'components/Web3Provider/constants'
-import { useConnectWithLogs } from 'connection/activate'
+import { useConnect } from 'hooks/useConnect'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { Text } from 'ui/src'
@@ -34,22 +34,20 @@ const TagContainer = styled.div`
     display: none;
   }
 `
-export function UniswapWalletOptions({
-  connectWithLogs: { connect },
-}: {
-  connectWithLogs: ReturnType<typeof useConnectWithLogs>
-}) {
+export function UniswapWalletOptions() {
   const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
   const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
     shouldThrow: true,
   })
+
+  const { connect } = useConnect()
 
   return (
     <Column gap="16px">
       <Column gap="md">
         {/* TODO(WEB-3931): If extension is not installed, show onboarding option instead */}
         {uniswapExtensionConnector && (
-          <OptionContainer onClick={() => connect(uniswapExtensionConnector)}>
+          <OptionContainer onClick={() => connect({ connector: uniswapExtensionConnector })}>
             <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
             <Row gap="xs">
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
@@ -63,7 +61,7 @@ export function UniswapWalletOptions({
             </TagContainer>
           </OptionContainer>
         )}
-        <OptionContainer gap="md" onClick={() => connect(uniswapWalletConnectConnector)}>
+        <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
           <Mobile size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
           <Row gap="xs">
             <Column>

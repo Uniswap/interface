@@ -12,12 +12,14 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { AnimatedFlex, Button, ColorTokens, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { logger } from 'utilities/src/logger/logger'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import {
   EditAccountAction,
   editAccountActions,
@@ -74,15 +76,34 @@ export function RemoveWalletModal(): JSX.Element | null {
       })
     }
     const accountsToRemove = isReplacing ? associatedAccounts : account ? [account] : []
-    accountsToRemove.forEach(({ address: accAddress, pushNotificationsEnabled }) => {
+
+    // Remove mnemonic if it's replacing or there is only one signer mnemonic account left
+    if (isReplacing || associatedAccounts.length === 1) {
+      if (associatedAccounts[0]) {
+        Keyring.removeMnemonic(associatedAccounts[0].mnemonicId)
+          .then(() => {
+            // Only remove accounts if mnemonic is successfully removed
+            dispatch(
+              editAccountActions.trigger({
+                type: EditAccountAction.Remove,
+                accounts: accountsToRemove,
+              })
+            )
+          })
+          .catch((error) => {
+            logger.error(error, {
+              tags: { file: 'RemoveWalletModal', function: 'Keyring.removeMnemonic' },
+            })
+          })
+      }
+    } else {
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.Remove,
-          address: accAddress,
-          notificationsEnabled: !!pushNotificationsEnabled,
+          accounts: accountsToRemove,
         })
       )
-    })
+    }
 
     onClose()
     setInProgress(false)

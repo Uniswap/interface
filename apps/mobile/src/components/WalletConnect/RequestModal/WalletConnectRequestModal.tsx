@@ -5,6 +5,7 @@ import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { ModalWithOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ModalWithOverlay'
+import { KidSuperCheckinModal } from 'src/components/WalletConnect/RequestModal/KidSuperCheckinModal'
 import {
   WalletConnectRequestModalContent,
   methodCostsGas,
@@ -230,6 +231,18 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       <UwULinkErc20SendModal
         gasFee={gasFee}
         hasSufficientGasFunds={hasSufficientFunds}
+        request={request}
+        onClose={handleClose}
+        onConfirm={onConfirmPress}
+        onReject={onReject}
+      />
+    )
+  }
+
+  // KidSuper Uniswap Cafe check-in screen
+  if (request.type === EthMethod.PersonalSign && request.dapp.name === 'Uniswap Cafe') {
+    return (
+      <KidSuperCheckinModal
         request={request}
         onClose={handleClose}
         onConfirm={onConfirmPress}

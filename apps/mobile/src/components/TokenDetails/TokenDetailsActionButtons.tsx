@@ -41,10 +41,12 @@ export function TokenDetailsActionButtons({
   onPressBuy,
   onPressSell,
   tokenColor,
+  userHasBalance,
 }: {
   onPressBuy: () => void
   onPressSell: () => void
   tokenColor?: Maybe<string>
+  userHasBalance: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -64,12 +66,14 @@ export function TokenDetailsActionButtons({
         tokenColor={tokenColor}
         onPress={onPressBuy}
       />
-      <CTAButton
-        element={ElementName.Sell}
-        title={t('common.button.sell')}
-        tokenColor={tokenColor}
-        onPress={onPressSell}
-      />
+      {userHasBalance && (
+        <CTAButton
+          element={ElementName.Sell}
+          title={t('common.button.sell')}
+          tokenColor={tokenColor}
+          onPress={onPressSell}
+        />
+      )}
     </Flex>
   )
 }

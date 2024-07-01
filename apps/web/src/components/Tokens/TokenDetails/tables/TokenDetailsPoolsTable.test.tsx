@@ -6,7 +6,7 @@ import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/To
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
-import { validBEPoolToken0, validBEPoolToken1, validParams, validPoolToken0 } from 'test-utils/pools/fixtures'
+import { validBEPoolToken0, validBEPoolToken1, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -16,7 +16,7 @@ jest.mock('react-router-dom', () => ({
   useParams: jest.fn(),
 }))
 
-const mockToken = new Token(ChainId.MAINNET, validPoolToken0.id, 18)
+const mockToken = new Token(ChainId.MAINNET, validBEPoolToken0.id, 18)
 
 describe('TDPPoolTable', () => {
   beforeEach(() => {
@@ -75,7 +75,7 @@ describe('TDPPoolTable', () => {
     })
 
     const { asFragment } = render(<TokenDetailsPoolsTable chainId={ChainId.MAINNET} referenceToken={mockToken} />)
-    expect(screen.getByTestId(`tdp-pools-table-${validPoolToken0.id}`)).not.toBeNull()
+    expect(screen.getByTestId(`tdp-pools-table-${validBEPoolToken0.id}`)).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
 })

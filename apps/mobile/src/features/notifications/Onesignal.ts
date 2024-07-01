@@ -1,10 +1,10 @@
 import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
 import { config } from 'uniswap/src/config'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
+import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 
 export const initOneSignal = (): void => {
   OneSignal.setAppId(config.onesignalAppId)
@@ -24,7 +24,7 @@ export const initOneSignal = (): void => {
     setTimeout(
       () =>
         apolloClientRef.current?.refetchQueries({
-          include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+          include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
         }),
       ONE_SECOND_MS // Delay by 1s to give a buffer for data sources to synchronize
     )

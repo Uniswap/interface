@@ -1,11 +1,16 @@
 package com.uniswap.onboarding.backup.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.uniswap.onboarding.backup.ui.model.MnemonicWordUiState
 import com.uniswap.theme.UniswapTheme
 
@@ -17,15 +22,24 @@ fun MnemonicWordsGroup(
   modifier: Modifier = Modifier,
   words: List<MnemonicWordUiState>,
   columnCount: Int = DEFAULT_COLUMN_COUNT,
-  showCompact: Boolean = false,
-  onClick: ((word: MnemonicWordUiState) -> Unit)? = null,
+  shouldShowSmallText: Boolean = false,
 ) {
   Row(
     modifier = modifier
       .fillMaxWidth()
-      .wrapContentHeight(),
+      .wrapContentHeight()
+      .background(color = UniswapTheme.colors.surface2, shape = RoundedCornerShape(20.dp))
+      .border(
+        width = 1.dp,
+        color = UniswapTheme.colors.surface3,
+        shape = RoundedCornerShape(20.dp),
+      )
+      .padding(
+        vertical = UniswapTheme.spacing.spacing24,
+        horizontal = UniswapTheme.spacing.spacing32
+      ),
     horizontalArrangement = Arrangement.spacedBy(
-      if (showCompact) UniswapTheme.spacing.spacing8 else UniswapTheme.spacing.spacing12
+      if (shouldShowSmallText) UniswapTheme.spacing.spacing16 else UniswapTheme.spacing.spacing24
     )
   ) {
     val size = words.size / columnCount
@@ -35,8 +49,7 @@ fun MnemonicWordsGroup(
       MnemonicWordsColumn(
         modifier = Modifier.weight(1f),
         words = words.subList(starting, ending),
-        showCompact = showCompact,
-        onClick = onClick,
+        shouldShowSmallText = shouldShowSmallText,
       )
     }
   }

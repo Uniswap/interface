@@ -35,10 +35,11 @@ export interface IKeyring {
    * mnemonic ID key as the public address.
 
    * @param mnemonic The mnemonic phrase to import
-   * @param password The password used to encrypt the mnemonic. Marked as optional depending on the platform.
+   * @param password The password used to encrypt the mnemonic. Implemented on web only.
+   * @param allowOverwrite Allows to overwrite previously imported mnemonic phrase. Implemented on web only.
    * @returns public address from the mnemonic's first derived private key
    */
-  importMnemonic(mnemonic: string, password?: string): Promise<string>
+  importMnemonic(mnemonic: string, password?: string, allowOverwrite?: boolean): Promise<string>
 
   /**
    * Removes the mnemonic from storage / keychain.
@@ -87,6 +88,8 @@ export interface IKeyring {
    */
   generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string>
 
+  removePrivateKey(address: string): Promise<boolean>
+
   signTransactionHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 
   signMessageForAddress(address: string, message: string): Promise<string>
@@ -127,7 +130,11 @@ class NullKeyring implements IKeyring {
   }
 
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
-  importMnemonic(_mnemonic: string): Promise<string> {
+  importMnemonic(
+    _mnemonic: string,
+    _password?: string,
+    _allowOverwrite?: boolean
+  ): Promise<string> {
     throw new NotImplementedError('importMnemonic')
   }
 

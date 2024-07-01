@@ -13,12 +13,14 @@
 @end
 
 @implementation MnemonicDisplayManager
-RCT_EXPORT_MODULE()
+RCT_EXPORT_MODULE(MnemonicDisplay)
 
 RCT_EXPORT_SWIFTUI_PROPERTY(mnemonicId, NSString, MnemonicDisplayView);
+RCT_EXPORT_SWIFTUI_PROPERTY(copyText, NSString, MnemonicDisplayView);
+RCT_EXPORT_SWIFTUI_PROPERTY(copiedText, NSString, MnemonicDisplayView);
+RCT_EXPORT_SWIFTUI_CALLBACK(onHeightMeasured,  RCTDirectEventBlock, MnemonicDisplayView)
 
-- (UIView *)view
-{
+- (UIView *)view {
   MnemonicDisplayView *proxy = [[MnemonicDisplayView alloc] init];
   UIView *view = [proxy view];
   NSMutableDictionary *storage = [MnemonicDisplayView storage];
