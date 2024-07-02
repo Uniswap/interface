@@ -8,7 +8,9 @@ import {
 } from 'react-native-reanimated'
 import { TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
-import { AnimatedFlex, AnimatedText, Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimatedText } from 'ui/src/components/text/AnimatedText'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

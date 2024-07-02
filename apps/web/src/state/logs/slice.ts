@@ -1,7 +1,6 @@
 import type { Filter } from '@ethersproject/providers'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-import { filterToKey, Log } from './utils'
+import { filterToKey, Log } from 'state/logs/utils'
 
 export interface LogsState {
   [chainId: number]: {

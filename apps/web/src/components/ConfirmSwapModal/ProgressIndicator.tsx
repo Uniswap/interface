@@ -1,9 +1,9 @@
 import Column from 'components/Column'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
+import { Step, StepDetails, StepStatus } from 'components/ConfirmSwapModal/Step'
 import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { useAccount } from 'hooks/useAccount'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
@@ -19,10 +19,9 @@ import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { Divider } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SignatureExpiredError } from 'utils/errors'
-
-import { Step, StepDetails, StepStatus } from './Step'
 
 const DividerContainer = styled(Column)`
   height: 28px;
@@ -122,7 +121,7 @@ export default function ProgressIndicator({
         actionRequiredTitle: t('common.wrapIn', { symbol: nativeCurrency.symbol }),
         inProgressTitle: t('common.wrappingToken', { symbol: nativeCurrency.symbol }),
         learnMoreLinkText: t('common.whyWrap', { symbol: nativeCurrency.symbol }),
-        learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
+        learnMoreLinkHref: uniswapUrls.helpArticleUrls.wethExplainer,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
@@ -138,7 +137,7 @@ export default function ProgressIndicator({
         actionRequiredTitle: t('common.wallet.approve'),
         inProgressTitle: t('common.approvePending'),
         learnMoreLinkText: t('common.whyApprove'),
-        learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
+        learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PERMITTING]: {
         icon: <Sign />,
@@ -146,7 +145,7 @@ export default function ProgressIndicator({
         previewTitle: t('common.signMessage'),
         actionRequiredTitle: t('common.signMessageWallet'),
         learnMoreLinkText: t('common.whySign'),
-        learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
+        learnMoreLinkHref: uniswapUrls.helpArticleUrls.approvalsExplainer,
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
         icon: <Swap />,
@@ -160,8 +159,8 @@ export default function ProgressIndicator({
         }),
         learnMoreLinkText: isLimitTrade(trade) ? t('limits.learnMore') : t('common.learnMoreSwap'),
         learnMoreLinkHref: isLimitTrade(trade)
-          ? SupportArticleURL.LEARN_ABOUT_LIMITS
-          : SupportArticleURL.HOW_TO_SWAP_TOKENS,
+          ? uniswapUrls.helpArticleUrls.limitsInfo
+          : uniswapUrls.helpArticleUrls.howToSwapTokens,
       },
     }),
     [inputTokenColor, nativeCurrency.symbol, trade, theme.accent1]

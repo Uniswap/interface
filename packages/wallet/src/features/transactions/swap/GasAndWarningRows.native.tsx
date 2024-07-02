@@ -1,12 +1,14 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
@@ -33,7 +35,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
   const { isBlocked } = useIsBlockedActiveAddress()
 
-  const { formScreenWarning } = useParsedSwapWarnings()
+  const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
@@ -125,13 +127,15 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
           </TouchableArea>
         )}
 
+        <InsufficientNativeTokenWarning flow="swap" gasFee={gasFee} warnings={warnings} />
+
         {/*
         When there is no gas or no warning, we render an empty row to keep the layout consistent when calculating the container height.
         This is used when calculating the size of the `DecimalPad`.
         */}
 
         {!gasFeeUSD && renderEmptyRows && <EmptyRow />}
-        {!formScreenWarning && renderEmptyRows && <EmptyRow />}
+        {!showFormWarning && !insufficientGasFundsWarning && renderEmptyRows && <EmptyRow />}
       </Flex>
     </>
   )

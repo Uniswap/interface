@@ -19,7 +19,7 @@ import {
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
 } from 'uniswap/src/features/fiatOnRamp/types'
-import { transformPaymentMethods } from './utils'
+import { transformPaymentMethods } from 'uniswap/src/features/fiatOnRamp/utils'
 
 export const fiatOnRampAggregatorApi = createApi({
   reducerPath: 'fiatOnRampAggregatorApi-uniswap',

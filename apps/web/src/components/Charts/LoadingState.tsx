@@ -1,3 +1,4 @@
+import { ChartType } from 'components/Charts/utils'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MissingDataIcon } from 'components/Table/icons'
@@ -8,7 +9,6 @@ import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
-import { ChartType } from './utils'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;

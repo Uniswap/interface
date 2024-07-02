@@ -1,8 +1,8 @@
-import { ChainId, Currency, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Token, TradeType } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
-
-import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute } from './types'
-import { computeRoutes } from './utils'
+import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute } from 'state/routing/types'
+import { computeRoutes } from 'state/routing/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', undefined, false)
 const USDC_IN_ROUTE = toTokenInRoute(USDC)
@@ -11,7 +11,7 @@ const DAI_IN_ROUTE = toTokenInRoute(DAI)
 const MKR = new Token(1, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 6, 'MKR', undefined, false)
 const MKR_IN_ROUTE = toTokenInRoute(MKR)
 
-const ETH = nativeOnChain(ChainId.MAINNET)
+const ETH = nativeOnChain(UniverseChainId.Mainnet)
 const WETH_IN_ROUTE = toTokenInRoute(ETH.wrapped)
 
 // helper function to make amounts more readable

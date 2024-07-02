@@ -1,6 +1,6 @@
 import { PoolData } from 'graphql/data/pools/usePoolData'
+import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
-import { getPoolDetailPageTitle } from './utils'
 
 describe('getPoolDetailPageTitle', () => {
   it('should return the base title when poolData is undefined', () => {

@@ -1,7 +1,7 @@
+import celoLogo from 'assets/svg/celo_logo.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
 import { isCelo, nativeOnChain } from 'constants/tokens'
 import { isAddress } from 'utilities/src/addresses'
-import celoLogo from '../assets/svg/celo_logo.svg'
 
 export function getInitialLogoUrl(
   address?: string | null,

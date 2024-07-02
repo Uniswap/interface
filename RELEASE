@@ -1,8 +1,24 @@
-Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn`
+- CIDv1: `bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom`
 
-Expanded network support — we now support 3 new networks; Zora, Celo, and Avalanche!
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes:
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Transfer more assets from CEXs to the wallet using our built-in integration
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom.ipfs.dweb.link/
+- https://bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom.ipfs.cf-ipfs.com/
+- [ipfs://Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn/](ipfs://Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn/)
+
+### 5.37.1 (2024-07-02)
+
+
+### Bug Fixes
+
+* **web:** avalanche isToken check hotfix (#9790) a60c130
+
+

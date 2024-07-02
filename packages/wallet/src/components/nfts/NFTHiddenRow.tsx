@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {

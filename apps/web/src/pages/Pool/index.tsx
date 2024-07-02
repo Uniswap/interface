@@ -12,7 +12,9 @@ import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMali
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
+import CTACards from 'pages/Pool/CTACards'
 import { PoolVersionMenu } from 'pages/Pool/shared'
+import { LoadingRows } from 'pages/Pool/styled'
 import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -23,8 +25,6 @@ import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import CTACards from './CTACards'
-import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

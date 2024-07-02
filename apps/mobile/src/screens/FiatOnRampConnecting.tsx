@@ -17,7 +17,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -61,7 +61,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
-    quoteCurrency.currencyInfo?.currency.chainId ?? ChainId.Mainnet,
+    quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
     initialTypeInfo
   )
 

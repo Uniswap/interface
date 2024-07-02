@@ -8,13 +8,13 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   erc20ApproveAssetChange,
+  erc20TokenTransferOut,
   erc20TransferIn,
 } from 'wallet/src/test/fixtures/gql/activities/tokens'
 import { GQL_CHAINS } from 'wallet/src/test/fixtures/gql/misc'
 import { gqlTransaction, gqlTransactionDetails } from 'wallet/src/test/fixtures/gql/transactions'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
-import { erc20TokenTransferOut } from './tokens'
 export * from './nfts'
 export * from './swap'
 export * from './tokens'

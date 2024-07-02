@@ -38,13 +38,16 @@ export default function WalletPreviewCard({
       borderWidth={1}
       px="$spacing16"
       py="$spacing16"
+      shadowColor={selected ? '$shadowColor' : '$transparent'}
+      shadowOpacity={0.05}
+      shadowRadius={selected ? '$spacing8' : '$none'}
       onPress={(): void => onSelect(address)}
       {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">
         <AddressDisplay address={address} captionVariant="body2" size={iconSizes.icon36} />
         <Flex row gap="$spacing8">
           {Boolean(balance) && (
-            <Text color="$neutral3" variant="body3">
+            <Text color="$neutral2" variant="body3">
               {balanceFormatted}
             </Text>
           )}

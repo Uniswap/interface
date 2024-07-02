@@ -5,9 +5,9 @@ import { PersistState } from 'redux-persist'
 import createSagaMiddleware, { Saga } from 'redux-saga'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { sharedRootReducer } from 'wallet/src/state/reducer'
+import { rootSaga } from 'wallet/src/state/saga'
 import { SagaState } from 'wallet/src/utils/saga'
-import { sharedRootReducer } from './reducer'
-import { rootSaga } from './saga'
 
 interface CreateStoreProps {
   reducer: Reducer

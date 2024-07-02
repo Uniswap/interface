@@ -1,7 +1,12 @@
-import { useCallback, useMemo, useState } from 'react'
+import { isEqual } from 'lodash'
+import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useMemoCompare } from 'utilities/src/react/hooks'
+import { useDebounce } from 'utilities/src/time/timing'
+import { filterRecipientByNameAndAddress } from 'wallet/src/components/RecipientSearch/filter'
+import { filterSections } from 'wallet/src/components/RecipientSearch/utils'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -20,8 +25,12 @@ type RecipientSection = {
   data: SearchableRecipient[]
 }
 
-function useValidatedSearchedAddress(searchTerm: string | null): {
+function useValidatedSearchedAddress(
+  searchTerm: string,
+  debounceDelayMs?: number
+): {
   recipients: SearchableRecipient[]
+  searchTerm: string
   loading: boolean
 } {
   // Check ENS (.eth and any direct subdomain) and Unitag
@@ -29,17 +38,21 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
     loading: dotEthLoading,
     address: dotEthAddress,
     name: dotEthName,
-  } = useENS(ChainId.Mainnet, searchTerm, true)
+  } = useENS(UniverseChainId.Mainnet, searchTerm, true)
 
   const {
     loading: ensLoading,
     address: ensAddress,
     name: ensName,
-  } = useENS(ChainId.Mainnet, searchTerm, false)
+  } = useENS(UniverseChainId.Mainnet, searchTerm, false)
 
   const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
 
-  return useMemo(() => {
+  const getRecipients = useCallback((): SearchableRecipient[] => {
+    if (!searchTerm) {
+      return []
+    }
+
     // Check for a valid unitag, ENS address, or literal address
     const unitagValidatedAddress = getValidAddress(unitag?.address?.address, true, false)
     const dotEthValidatedAddress = getValidAddress(dotEthAddress, true, false)
@@ -84,37 +97,40 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
       recipients.push({ address: literalValidatedAddress })
     }
 
-    return {
-      recipients,
-      loading: ensLoading || dotEthLoading || unitagLoading,
-    }
-  }, [
-    unitag?.address?.address,
-    unitag?.username,
-    dotEthAddress,
-    ensAddress,
-    searchTerm,
-    dotEthName,
-    ensLoading,
-    dotEthLoading,
-    unitagLoading,
-    ensName,
-  ])
+    return recipients
+  }, [dotEthAddress, dotEthName, ensAddress, ensName, searchTerm, unitag])
+
+  // Use previously created array if its contents haven't changed
+  const memoRecipients = useMemoCompare(getRecipients, isEqual)
+  const memoResult = useMemo(
+    () => ({
+      recipients: memoRecipients,
+      searchTerm,
+      loading: dotEthLoading || ensLoading || unitagLoading,
+    }),
+    [memoRecipients, searchTerm, dotEthLoading, ensLoading, unitagLoading]
+  )
+  // Debounce search results to prevent flickering
+  const debouncedResult = useDebounce(memoResult, debounceDelayMs)
+
+  // If the searchTerm is empty, we don't have to debounce the result
+  // and we can return it right away to prevent unnecessary delay
+  return searchTerm ? debouncedResult : memoResult
 }
 
-export function useRecipients(): {
+export function useRecipients(
+  pattern: string,
+  debounceDelayMs?: number
+): {
   sections: RecipientSection[]
   searchableRecipientOptions: {
     data: SearchableRecipient
     key: string
   }[]
-  pattern: string | null
-  onChangePattern: (newPattern: string | null) => void
   loading: boolean
+  debouncedPattern: string
 } {
   const { t } = useTranslation()
-
-  const [pattern, setPattern] = useState<string | null>(null)
 
   const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts)
   const { importedWallets, viewOnlyWallets } = useMemo(
@@ -134,8 +150,14 @@ export function useRecipients(): {
   )
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
-  const { recipients: validatedAddressRecipients, loading } = useValidatedSearchedAddress(pattern)
+  const {
+    recipients: validatedAddressRecipients,
+    loading,
+    searchTerm,
+  } = useValidatedSearchedAddress(pattern, debounceDelayMs)
+
   const watchedWallets = useAppSelector(selectWatchedAddressSet)
+  const isPatternEmpty = pattern.length === 0
 
   const sections = useMemo(() => {
     const sectionsArr = []
@@ -145,7 +167,7 @@ export function useRecipients(): {
       watchedWallets.delete(address)
     }
 
-    if (validatedAddressRecipients.length) {
+    if (validatedAddressRecipients.length && !isPatternEmpty) {
       sectionsArr.push({
         title: t('send.recipient.section.search'),
         data: validatedAddressRecipients,
@@ -187,6 +209,7 @@ export function useRecipients(): {
 
     return sectionsArr
   }, [
+    isPatternEmpty,
     validatedAddressRecipients,
     recentRecipients,
     t,
@@ -205,16 +228,41 @@ export function useRecipients(): {
     [recentRecipients, validatedAddressRecipients, inactiveLocalAccounts]
   )
 
-  const onChangePattern = useCallback((newPattern: string | null) => setPattern(newPattern), [])
-
   return useMemo(
     () => ({
       sections,
       searchableRecipientOptions,
-      pattern,
-      onChangePattern,
       loading,
+      debouncedPattern: searchTerm,
     }),
-    [pattern, onChangePattern, searchableRecipientOptions, sections, loading]
+    [loading, searchableRecipientOptions, sections, searchTerm]
   )
+}
+
+export function useFilteredRecipientSections(
+  searchPattern: string,
+  debounceDelayMs?: number
+): RecipientSection[] {
+  const sectionsRef = useRef<RecipientSection[]>([])
+  const { sections, searchableRecipientOptions, loading, debouncedPattern } = useRecipients(
+    searchPattern,
+    debounceDelayMs
+  )
+
+  const getFilteredSections = useCallback(() => {
+    const filteredAddresses = filterRecipientByNameAndAddress(
+      debouncedPattern,
+      searchableRecipientOptions
+    ).map((item) => item.data.address)
+    return filterSections(sections, filteredAddresses)
+  }, [debouncedPattern, searchableRecipientOptions, sections])
+
+  // Update displayed sections only if debouncing is finished and the new result is not being loaded
+  if (searchPattern === debouncedPattern && !loading) {
+    const filteredSections = getFilteredSections()
+    const noResult = debouncedPattern.length > 0 && filteredSections.length === 0
+    sectionsRef.current = noResult ? [] : filteredSections.length ? filteredSections : sections
+  }
+
+  return sectionsRef.current
 }

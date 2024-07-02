@@ -1,4 +1,6 @@
 import { SubscriptionResult } from '@apollo/client'
+import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import {
@@ -23,8 +25,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuidV4 } from 'uuid'
-import { GQL_MAINNET_CHAINS_MUTABLE } from '../util'
-import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
 
 const { Provider: AdaptiveAssetActivityProvider, useQuery: useAssetActivityQuery } =
   createAdaptiveRefetchContext<ActivityWebQueryResult>()

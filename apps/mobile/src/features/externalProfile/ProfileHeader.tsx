@@ -11,7 +11,6 @@ import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextM
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
-  AnimatedFlex,
   Flex,
   Image,
   LinearGradient,
@@ -25,6 +24,7 @@ import {
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -78,7 +78,7 @@ export const ProfileHeader = memo(function ProfileHeader({
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
-  const { color } = getUniconColors(address)
+  const { color } = getUniconColors(address, false)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {

@@ -1,5 +1,9 @@
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import {
+  RoundedCandleSeries,
+  RoundedCandleSeriesOptions,
+} from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { RowBetween } from 'components/Row'
@@ -22,7 +26,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { RoundedCandleSeries, RoundedCandleSeriesOptions } from './RoundedCandlestickSeries/rounded-candles-series'
 
 export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
 

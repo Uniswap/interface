@@ -1,15 +1,16 @@
-import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
 import { useAccount } from 'hooks/useAccount'
+import { PoolState, usePoolMultichain } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
-import { PoolState, usePoolMultichain } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -31,7 +32,7 @@ function useTicksFromSubgraph(
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   skip = 0,
-  chainId: ChainId
+  chainId: InterfaceChainId
 ) {
   const poolAddress =
     currencyA && currencyB && feeAmount
@@ -62,7 +63,7 @@ function useAllV3Ticks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId: ChainId
+  chainId: InterfaceChainId
 ): {
   isLoading: boolean
   error: unknown
@@ -93,7 +94,7 @@ export function usePoolActiveLiquidity(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId?: ChainId
+  chainId?: InterfaceChainId
 ): {
   isLoading: boolean
   error: any
@@ -104,7 +105,7 @@ export function usePoolActiveLiquidity(
   data?: TickProcessed[]
 } {
   const account = useAccount()
-  const defaultChainId = account.chainId ?? ChainId.MAINNET
+  const defaultChainId = account.chainId ?? UniverseChainId.Mainnet
   const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96

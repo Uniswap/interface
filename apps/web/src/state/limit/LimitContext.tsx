@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react'
+import { useDerivedLimitInfo } from 'state/limit/hooks'
+import { LimitContextType, LimitState } from 'state/limit/types'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
-import { useDerivedLimitInfo } from './hooks'
-import { LimitContextType, LimitState } from './types'
 
 const DEFAULT_LIMIT_STATE = {
   inputAmount: '',

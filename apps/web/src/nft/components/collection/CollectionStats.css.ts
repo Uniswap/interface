@@ -1,8 +1,7 @@
 import { style } from '@vanilla-extract/css'
 import { headlineSmall, subheadSmall } from 'nft/css/common.css'
 import { loadingAsset, loadingBlock } from 'nft/css/loading.css'
-
-import { breakpoints, sprinkles, vars } from '../../css/sprinkles.css'
+import { breakpoints, sprinkles, vars } from 'nft/css/sprinkles.css'
 
 export const statsText = style([
   sprinkles({

@@ -1,7 +1,6 @@
-import { fireEvent, render, screen } from 'test-utils/render'
-
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
-import { SwapHead } from './Head'
+import { SwapHead } from 'components/ConfirmSwapModal/Head'
+import { fireEvent, render, screen } from 'test-utils/render'
 
 describe('ConfirmSwapModal/Head', () => {
   it('should render correctly for a classic swap', () => {

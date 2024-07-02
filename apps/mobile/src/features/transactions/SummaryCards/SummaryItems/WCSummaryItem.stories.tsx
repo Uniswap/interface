@@ -1,10 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
 import {
-  TransactionDetails,
+  ClassicTransactionDetails,
   TransactionStatus,
   TransactionType,
   WCConfirmInfo,
@@ -16,7 +17,8 @@ const meta: Meta<typeof WCSummaryItem> = {
 
 export default meta
 
-const baseUnknownItem: Omit<TransactionDetails, 'status'> & { typeInfo: WCConfirmInfo } = {
+const baseUnknownItem: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WCConfirmInfo } = {
+  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -62,7 +64,7 @@ export const WalletConnect: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnknownItem,
-          chainId: ChainId.Optimism,
+          chainId: UniverseChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

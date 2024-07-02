@@ -1,26 +1,25 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
+import { useSupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
+import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
+import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
+import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
 import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-
-import { useSupportedChainId } from 'constants/chains'
-import { useAccount } from 'hooks/useAccount'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
-} from '../state/transactions/types'
-import { currencyId } from '../utils/currencyId'
-import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
-import { useUniversalRouterSwapCallback } from './useUniversalRouter'
+} from 'state/transactions/types'
+import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 

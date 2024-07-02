@@ -1,4 +1,4 @@
-import { getValidAddress } from './addresses'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 it('returns lower case address for valid address', () => {
   const validAddress = '0x71C7656EC7ab88b098defB751B7401B5f6d8976F'

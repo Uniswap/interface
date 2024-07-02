@@ -1,9 +1,9 @@
 import Column from 'components/Column'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const Container = styled(Column)`
   height: 75vh;
@@ -36,7 +36,7 @@ export function UnavailableCollectionPage({ isBlocked }: { isBlocked?: boolean }
         <StyledInternalLink to="/nfts">
           <Trans i18nKey="nft.returnToExplore" />
         </StyledInternalLink>
-        <StyledExternalLink href={SupportArticleURL.UNSUPPORTED_TOKEN_AND_NFT_POLICY}>
+        <StyledExternalLink href={uniswapUrls.helpArticleUrls.unsupportedTokenPolicy}>
           <Trans i18nKey="nft.learnWhy" />
         </StyledExternalLink>
       </Container>

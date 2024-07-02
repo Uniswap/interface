@@ -1,5 +1,5 @@
+import { formatNumber } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
-import { formatNumber } from './localeBased'
 
 it('formats token reference numbers correctly', () => {
   expect(

@@ -1,5 +1,15 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Position } from '@uniswap/v3-sdk'
+import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
+import { useFeeValues } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
@@ -14,13 +24,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExpandoRow } from '../ExpandoRow'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer } from '../hooks'
-import { PositionInfo } from './cache'
-import { useFeeValues } from './hooks'
-import useMultiChainPositions from './useMultiChainPositions'
 
 /**
  * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).

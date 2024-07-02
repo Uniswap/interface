@@ -3,7 +3,7 @@ import { BigNumber, providers } from 'ethers'
 import { merge } from 'lodash'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
-  TransactionDetails,
+  ClassicTransactionDetails,
   TransactionReceipt,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
@@ -20,7 +20,7 @@ import {
 } from 'wallet/src/test/fixtures/wallet/transactions/fixtures'
 import { faker } from 'wallet/src/test/shared'
 
-type TxFixtures<T extends TransactionDetails> = {
+type TxFixtures<T extends ClassicTransactionDetails> = {
   txDetailsPending: T
   txDetailsSuccess: T
   txDetailsFailed: T
@@ -32,7 +32,9 @@ type TxFixtures<T extends TransactionDetails> = {
   finalizedTxAction: ReturnType<typeof finalizeTransaction>
 }
 
-export const getTxFixtures = <T extends TransactionDetails>(transaction?: T): TxFixtures<T> => {
+export const getTxFixtures = <T extends ClassicTransactionDetails>(
+  transaction?: T
+): TxFixtures<T> => {
   const txBase = merge(
     {},
     transactionDetails({

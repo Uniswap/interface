@@ -6,9 +6,9 @@ import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
 import { NftCardLoader } from 'ui/src/loading/NftCardLoader'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { TokenLoader } from 'ui/src/loading/TokenLoader'
+import { TransactionLoader } from 'ui/src/loading/TransactionLoader'
+import { WalletLoader } from 'ui/src/loading/WalletLoader'
 import { fonts } from 'ui/src/theme'
-import { TransactionLoader } from './TransactionLoader'
-import { WalletLoader } from './WalletLoader'
 
 const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (

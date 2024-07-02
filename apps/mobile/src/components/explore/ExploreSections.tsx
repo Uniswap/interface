@@ -17,13 +17,13 @@ import {
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import {
   Chain,
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
@@ -78,7 +78,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-    const wethAddress = getWrappedNativeAddress(ChainId.Mainnet)
+    const wethAddress = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
     const topTokens = data.topTokens
       .map((token) => {

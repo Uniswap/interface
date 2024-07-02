@@ -1,5 +1,9 @@
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback } from 'react'
+import { usePollPendingOrders } from 'state/activity/polling/orders'
+import { usePollPendingTransactions } from 'state/activity/polling/transactions'
+import { useOnAssetActivity } from 'state/activity/subscription'
+import { ActivityUpdate, OnActivityUpdate } from 'state/activity/types'
 import { useAddPopup } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -12,10 +16,6 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { isL2ChainId } from 'utils/chains'
-import { usePollPendingOrders } from './polling/orders'
-import { usePollPendingTransactions } from './polling/transactions'
-import { useOnAssetActivity } from './subscription'
-import { ActivityUpdate, OnActivityUpdate } from './types'
 
 export function ActivityStateUpdater() {
   const onActivityUpdate = useOnActivityUpdate()

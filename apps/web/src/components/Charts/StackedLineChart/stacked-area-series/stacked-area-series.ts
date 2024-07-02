@@ -1,4 +1,10 @@
 /* Copied from: https://github.com/tradingview/lightweight-charts/blob/f13a3c1f3fefcace9d4da5b97c1638009298b3c8/plugin-examples/src/plugins/stacked-area-series */
+import { StackedAreaData } from 'components/Charts/StackedLineChart/stacked-area-series/data'
+import {
+  StackedAreaSeriesOptions,
+  defaultOptions,
+} from 'components/Charts/StackedLineChart/stacked-area-series/options'
+import { StackedAreaSeriesRenderer } from 'components/Charts/StackedLineChart/stacked-area-series/renderer'
 import {
   CustomSeriesPricePlotValues,
   ICustomSeriesPaneView,
@@ -6,10 +12,6 @@ import {
   Time,
   WhitespaceData,
 } from 'lightweight-charts'
-
-import { StackedAreaData } from './data'
-import { defaultOptions, StackedAreaSeriesOptions } from './options'
-import { StackedAreaSeriesRenderer } from './renderer'
 
 export class StackedAreaSeries<TData extends StackedAreaData>
   implements ICustomSeriesPaneView<Time, TData, StackedAreaSeriesOptions>

@@ -1,9 +1,8 @@
 import { createStore, Store } from 'redux'
 import { updateVersion } from 'state/global/actions'
-
+import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
+import reducer from 'state/lists/reducer'
 import { ListsState } from 'state/lists/types'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
-import reducer from './reducer'
 
 const STUB_TOKEN_LIST = {
   name: '',

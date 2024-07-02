@@ -1,36 +1,35 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { UniIcon } from 'components/Logo/UniIcon'
+import { Bag } from 'components/NavBar/Bag'
+import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { GetTheAppButton } from 'components/NavBar/DownloadApp/GetTheAppButton'
+import Blur from 'components/NavBar/LEGACY/Blur'
+import { More } from 'components/NavBar/LEGACY/Menu'
+import { SearchBar } from 'components/NavBar/LEGACY/SearchBar/SearchBar'
+import * as styles from 'components/NavBar/LEGACY/style.css'
 import Web3Status from 'components/Web3Status'
 import { chainIdToBackendChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
+import { useIsLimitPage } from 'hooks/useIsLimitPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
+import { useIsSendPage } from 'hooks/useIsSendPage'
+import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
+import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useIsNavSearchInputVisible } from '../../../nft/hooks/useIsNavSearchInputVisible'
-import { Bag } from '../Bag'
-import { ChainSelector } from '../ChainSelector'
-
-import { useIsLimitPage } from 'hooks/useIsLimitPage'
-import { useIsSendPage } from 'hooks/useIsSendPage'
-import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import Blur from './Blur'
-import { More } from './Menu'
-import { SearchBar } from './SearchBar/SearchBar'
-import * as styles from './style.css'
 
 const Nav = styled.nav`
   position: relative;
@@ -64,8 +63,8 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 
 export const PageTabs = () => {
   const { pathname } = useLocation()
-  const { chainId } = useAccount()
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
+  const account = useAccount()
+  const chainName = chainIdToBackendChain({ chainId: account.chainId, withFallback: true })
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()

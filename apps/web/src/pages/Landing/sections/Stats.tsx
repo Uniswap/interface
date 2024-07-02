@@ -1,5 +1,8 @@
 import Row from 'components/Row'
 import { Trans, t } from 'i18n'
+import { Body1, Box, H2 } from 'pages/Landing/components/Generics'
+import { StatCard } from 'pages/Landing/components/StatCard'
+import { useInView } from 'pages/Landing/sections/useInView'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
@@ -9,10 +12,6 @@ import {
   useDailyProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { Body1, Box, H2 } from '../components/Generics'
-import { StatCard } from '../components/StatCard'
-import { useInView } from './useInView'
 
 const Container = styled.div`
   width: 100%;

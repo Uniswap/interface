@@ -2,6 +2,12 @@ import { PriceChartData } from 'components/Charts/PriceChart'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import {
+  ChartQueryResult,
+  DataQuality,
+  checkDataQuality,
+  withUTCTimestamp,
+} from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useReducer } from 'react'
 import {
@@ -13,7 +19,6 @@ import {
   useTokenHistoricalVolumesQuery,
   useTokenPriceQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChartQueryResult, DataQuality, checkDataQuality, withUTCTimestamp } from './util'
 
 type TDPChartQueryVariables = { chain: Chain; address?: string; duration: HistoryDuration }
 

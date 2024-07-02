@@ -1,5 +1,6 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import MobileAppLogo from 'assets/svg/mobile-app-qr-logo.svg'
+import { DownloadButton } from 'components/AccountDrawer/DownloadButton'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
@@ -13,7 +14,6 @@ import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { DownloadButton } from './DownloadButton'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
   display: flex;

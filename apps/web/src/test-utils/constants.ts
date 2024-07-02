@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
@@ -14,6 +14,8 @@ import {
 } from 'state/routing/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { UseAccountReturnType } from 'wagmi'
 
@@ -41,7 +43,7 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
   currencyId: 'GHI',
   safetyLevel: SafetyLevel.Verified,
 }
-export const ETH_MAINNET = nativeOnChain(ChainId.MAINNET)
+export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
 
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
@@ -273,10 +275,10 @@ export const NATIVE_INFO: CurrencyInfo = {
 }
 
 export const WETH_INFO: CurrencyInfo = {
-  currency: WETH9[ChainId.MAINNET],
+  currency: WETH9[UniverseChainId.Mainnet],
   logoUrl:
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
-  currencyId: WETH9[ChainId.MAINNET].address,
+  currencyId: WETH9[UniverseChainId.Mainnet].address,
   safetyLevel: SafetyLevel.Verified,
 }
 
@@ -338,3 +340,11 @@ export const USE_CONNECTED_ACCOUNT = {
   chainId: 1,
   isConnected: true,
 } as unknown as UseAccountReturnType
+
+// Fiat On Ramp countries
+
+export const US: FORCountry = {
+  countryCode: 'US',
+  displayName: 'United States',
+  state: 'US-NY',
+}

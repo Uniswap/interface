@@ -1,27 +1,28 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import Circle from 'assets/images/blue-loader.svg'
+import { TransactionSummary } from 'components/AccountDetails/TransactionSummary'
 import Badge from 'components/Badge'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
+import { AutoColumn, ColumnCenter } from 'components/Column'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { CHAIN_INFO, SupportedL2ChainId, useIsSupportedChainId } from 'constants/chains'
+import Modal from 'components/Modal'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { isConfirmedTx, useTransaction } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { L2ChainId, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useAccount } from 'hooks/useAccount'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import Circle from '../../assets/images/blue-loader.svg'
-import { TransactionSummary } from '../AccountDetails/TransactionSummary'
-import { ButtonLight, ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
-import Modal from '../Modal'
-import Row, { RowBetween, RowFixed } from '../Row'
-import AnimatedConfirmation from './AnimatedConfirmation'
 
 const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.surface1};
@@ -103,11 +104,11 @@ function TransactionSubmittedContent({
   const [success, setSuccess] = useState<boolean | undefined>()
 
   const addToken = useCallback(() => {
-    if (!token?.symbol || !connector.watchAsset) {
+    if (!token?.symbol || !connector?.watchAsset) {
       return
     }
     connector
-      .watchAsset({
+      ?.watchAsset({
         address: token.address,
         symbol: token.symbol,
         decimals: token.decimals,
@@ -118,7 +119,7 @@ function TransactionSubmittedContent({
   }, [connector, logoURL, token])
 
   const explorerText =
-    chainId === ChainId.MAINNET ? (
+    chainId === UniverseChainId.Mainnet ? (
       <Trans i18nKey="common.etherscan.link" />
     ) : (
       <Trans i18nKey="common.viewOnBlockExplorer" />
@@ -138,9 +139,9 @@ function TransactionSubmittedContent({
         </ConfirmedIcon>
         <ConfirmationModalContentWrapper gap="md" justify="center">
           <ThemedText.MediumHeader textAlign="center">
-            <Trans i18nKey="transaction.confirmation.submitted" />
+            <Trans i18nKey="common.transactionSubmitted" />
           </ThemedText.MediumHeader>
-          {currencyToAdd && connector.watchAsset && (
+          {currencyToAdd && connector?.watchAsset && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
@@ -162,7 +163,7 @@ function TransactionSubmittedContent({
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} data-testid="dismiss-tx-confirmation">
             <ThemedText.HeadlineSmall color={theme.deprecated_accentTextLightPrimary}>
-              {inline ? <Trans i18nKey="transaction.confirmation.return" /> : <Trans i18nKey="common.close" />}
+              {inline ? <Trans i18nKey="common.return.label" /> : <Trans i18nKey="common.close" />}
             </ThemedText.HeadlineSmall>
           </ButtonPrimary>
           {chainId && hash && (
@@ -219,7 +220,7 @@ function L2Content({
 }: {
   onDismiss: () => void
   hash?: string
-  chainId: SupportedL2ChainId
+  chainId: L2ChainId
   currencyToAdd?: Currency
   pendingText: ReactNode
   inline?: boolean // not in modal
@@ -234,7 +235,7 @@ function L2Content({
   const secondsToConfirm =
     confirmed && transaction.confirmedTime ? (transaction.confirmedTime - transaction.addedTime) / 1000 : undefined
 
-  const info = CHAIN_INFO[chainId]
+  const info = UNIVERSE_CHAIN_INFO[chainId]
 
   return (
     <Wrapper>
@@ -267,7 +268,7 @@ function L2Content({
             {!hash ? (
               <Trans i18nKey="transaction.confirmation.pending.wallet" />
             ) : !confirmed ? (
-              <Trans i18nKey="transaction.confirmation.submitted" />
+              <Trans i18nKey="common.transactionSubmitted" />
             ) : transactionSuccess ? (
               <Trans i18nKey="common.success" />
             ) : (
@@ -299,7 +300,7 @@ function L2Content({
             )}
           </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            {inline ? <Trans i18nKey="transaction.confirmation.return" /> : <Trans i18nKey="common.close" />}
+            {inline ? <Trans i18nKey="common.return.label" /> : <Trans i18nKey="common.close" />}
           </ButtonPrimary>
         </AutoColumn>
       </AutoColumn>
@@ -335,7 +336,7 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight="90vh">
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (

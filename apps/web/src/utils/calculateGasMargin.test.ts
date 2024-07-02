@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-
-import { calculateGasMargin } from './calculateGasMargin'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 describe('#calculateGasMargin', () => {
   it('adds 20%', () => {

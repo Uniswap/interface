@@ -1,7 +1,5 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useNetInfo } from '@react-native-community/netinfo'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-
 import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
@@ -17,13 +15,14 @@ import {
 import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { NetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 

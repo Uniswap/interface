@@ -1,18 +1,20 @@
 import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
+import FavoriteWalletCard, {
+  FavoriteWalletCardProps,
+} from 'src/components/explore/FavoriteWalletCard'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import * as ensHooks from 'wallet/src/features/ens/api'
 import {
-  ON_PRESS_EVENT_PAYLOAD,
   SAMPLE_SEED_ADDRESS_1,
   preloadedWalletState,
   signerMnemonicAccount,
 } from 'wallet/src/test/fixtures'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import FavoriteWalletCard, { FavoriteWalletCardProps } from './FavoriteWalletCard'
 
 const mockedNavigation = {
   navigate: jest.fn(),

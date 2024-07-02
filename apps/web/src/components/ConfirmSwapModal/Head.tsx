@@ -1,12 +1,11 @@
+import GetHelpButton from 'components/Button/GetHelp'
+import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
-
-import { ConfirmModalState } from 'components/ConfirmSwapModal'
-import GetHelpButton from '../Button/GetHelp'
 
 const CloseIcon = styled(X)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.neutral1};

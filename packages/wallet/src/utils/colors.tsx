@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
 import { colors as GlobalColors, GlobalPalette, colorsLight } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { assert } from 'utilities/src/errors'
 import { hex } from 'wcag-contrast'
 
@@ -33,12 +33,12 @@ export function opacify(amount: number, hexColor: string): string {
   return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
-export function getNetworkColorKey(chainId: ChainId): `chain_${ChainId}` {
+export function getNetworkColorKey(chainId: WalletChainId): `chain_${WalletChainId}` {
   return `chain_${chainId}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
-export function useNetworkColors(chainId: ChainId): {
+export function useNetworkColors(chainId: WalletChainId): {
   foreground: string
   background: string
 } {

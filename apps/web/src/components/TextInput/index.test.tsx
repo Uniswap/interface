@@ -1,7 +1,6 @@
+import { ResizingTextArea, TextInput } from 'components/TextInput'
 import { fireEvent, render, screen } from 'test-utils/render'
 import noop from 'utilities/src/react/noop'
-
-import { ResizingTextArea, TextInput } from './'
 
 describe('TextInput', () => {
   it('renders correctly', () => {

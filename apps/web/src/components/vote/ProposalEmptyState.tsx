@@ -1,8 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral2};
@@ -38,7 +38,7 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 
 export default function ProposalEmptyState() {
   const { chainId } = useAccount()
-  if (chainId && chainId !== ChainId.MAINNET) {
+  if (chainId && chainId !== UniverseChainId.Mainnet) {
     return (
       <EmptyState
         HeaderContent={() => <Trans i18nKey="proposal.connectLayer1" />}

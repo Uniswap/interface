@@ -1,10 +1,11 @@
 import React, { memo, useMemo } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { ValueAndFormatted } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { TextVariantTokens, fonts } from 'ui/src/theme'
-import { ValueAndFormatted } from './usePrice'
 
 type AnimatedDecimalNumberProps = {
   number: ValueAndFormatted

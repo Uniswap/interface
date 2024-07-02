@@ -6,12 +6,12 @@ import {
   Image,
   Text,
   TouchableArea,
-  useDeviceDimensions,
   useIsDarkMode,
   useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
 import { EXTENSION_PROMO_BANNER_DARK, EXTENSION_PROMO_BANNER_LIGHT } from 'ui/src/assets'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

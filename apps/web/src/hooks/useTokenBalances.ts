@@ -26,11 +26,9 @@ export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
           chain: tokenBalance.token.chain,
           standard: tokenBalance.token.standard,
         })
-        if (tokenBalance.denominatedValue?.value !== undefined) {
-          const usdValue = tokenBalance.denominatedValue?.value
-          const balance = tokenBalance.quantity
-          balanceMap[key] = { usdValue, balance: balance ?? 0 }
-        }
+        const usdValue = tokenBalance.denominatedValue?.value ?? 0
+        const balance = tokenBalance.quantity ?? 0
+        balanceMap[key] = { usdValue, balance }
         return balanceMap
       }, {} as TokenBalances) ?? {}
     return { balanceMap, balanceList, loading }

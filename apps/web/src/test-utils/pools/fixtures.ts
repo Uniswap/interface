@@ -1,9 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
+import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 
@@ -64,7 +65,7 @@ export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
   USDC_MAINNET,
-  WETH9[ChainId.MAINNET],
+  WETH9[UniverseChainId.Mainnet],
   FeeAmount.MEDIUM,
   '1851127709498178402383049949138810',
   '7076437181775065414',
@@ -82,7 +83,7 @@ const details = {
   tokenId: BigNumber.from('0'),
   operator: '0x0',
   token0: USDC_MAINNET.address,
-  token1: WETH9[ChainId.MAINNET].address,
+  token1: WETH9[UniverseChainId.Mainnet].address,
   fee: FeeAmount.MEDIUM,
   tickLower: -100,
   tickUpper: 100,
@@ -96,7 +97,7 @@ export const useMultiChainPositionsReturnValue = {
   positions: [
     {
       owner,
-      chainId: ChainId.MAINNET,
+      chainId: UniverseChainId.Mainnet,
       position,
       pool,
       details,

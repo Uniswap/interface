@@ -1,15 +1,15 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { SwapHeaderTabButton } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
+import { useFiatOnrampAvailability, useOpenModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
-import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { SwapHeaderTabButton } from './styled'
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'

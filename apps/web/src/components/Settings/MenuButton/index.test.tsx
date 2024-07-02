@@ -1,12 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
+import MenuButton from 'components/Settings/MenuButton'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { lightDeprecatedTheme } from 'theme/deprecatedColors'
 import noop from 'utilities/src/react/noop'
-
-import MenuButton from '.'
 
 jest.mock('state/user/hooks')
 

@@ -1,13 +1,12 @@
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
+import { useScreenSize } from 'hooks/screenSize'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-
-import { useScreenSize } from 'hooks/screenSize'
-import { filterTimeAtom } from '../state'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',

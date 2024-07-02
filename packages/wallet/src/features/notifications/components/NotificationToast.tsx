@@ -11,16 +11,17 @@ import {
 } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import {
-  AnimatedFlex,
   Flex,
   Text,
   TouchableArea,
   isWeb,
-  largeShadowProps,
-  mediumShadowProps,
+  mediumShadowPropsDark,
+  mediumShadowPropsLight,
   styled,
   useDeviceInsets,
+  useIsDarkMode,
 } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
@@ -34,7 +35,7 @@ const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 
 const TOAST_BORDER_WIDTH = spacing.spacing1
-const LARGE_TOAST_RADIUS = borderRadii.rounded24
+const LARGE_TOAST_RADIUS = borderRadii.rounded16
 const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
 export interface NotificationContentProps {
@@ -82,6 +83,7 @@ export function NotificationToast({
   address,
   smallToast,
 }: NotificationToastProps): JSX.Element {
+  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
@@ -140,7 +142,7 @@ export function NotificationToast({
 
   const notificationContent = (
     <Flex
-      {...(isWeb ? largeShadowProps : mediumShadowProps)}
+      {...(isDarkMode ? mediumShadowPropsDark : mediumShadowPropsLight)}
       borderColor="$surface3"
       borderRadius={smallToast ? SMALL_TOAST_RADIUS : LARGE_TOAST_RADIUS}
       borderWidth={TOAST_BORDER_WIDTH}
@@ -199,7 +201,7 @@ function NotificationContent({
   return (
     <TouchableArea
       alignItems="center"
-      backgroundColor="$surface2"
+      backgroundColor="$surface1"
       borderRadius={LARGE_TOAST_RADIUS}
       flex={1}
       flexDirection="row"
@@ -250,7 +252,7 @@ function NotificationContentSmall({
   return (
     <Flex centered row shrink pointerEvents="box-none">
       <TouchableArea
-        backgroundColor="$surface2"
+        backgroundColor="$surface1"
         borderRadius={SMALL_TOAST_RADIUS}
         p="$spacing12"
         onPress={onPress}

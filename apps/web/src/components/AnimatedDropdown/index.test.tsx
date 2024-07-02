@@ -1,6 +1,5 @@
+import AnimatedDropdown from 'components/AnimatedDropdown/index'
 import { render, screen, waitFor } from 'test-utils/render'
-
-import AnimatedDropdown from './index'
 
 describe('AnimatedDropdown', () => {
   it('does not render children when closed', () => {

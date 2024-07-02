@@ -6,6 +6,17 @@ import {
   PortfolioBalanceDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import {
+  sortPortfolioBalances,
+  useHighestBalanceNativeCurrencyId,
+  usePortfolioBalances,
+  usePortfolioCacheUpdater,
+  usePortfolioTotalValue,
+  // eslint-disable-next-line no-restricted-imports
+  usePortfolioValueModifiers,
+  useSortedPortfolioBalances,
+  useTokenBalancesGroupedByVisibility,
+} from 'wallet/src/features/dataApi/balances'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
@@ -29,16 +40,6 @@ import {
 } from 'wallet/src/test/fixtures'
 import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils/resolvers'
-import {
-  sortPortfolioBalances,
-  useHighestBalanceNativeCurrencyId,
-  usePortfolioBalances,
-  usePortfolioCacheUpdater,
-  usePortfolioTotalValue,
-  usePortfolioValueModifiers,
-  useSortedPortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from './balances'
 
 const daiTokenBalance = tokenBalance({ token: daiToken(), isHidden: true })
 const ethTokenBalance = tokenBalance({ token: ethToken(), isHidden: false })

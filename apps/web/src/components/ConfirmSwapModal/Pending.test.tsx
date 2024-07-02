@@ -1,6 +1,6 @@
 import 'test-utils/tokens/mocks'
 
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@uniswap/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { BigNumber } from 'ethers/lib/ethers'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -13,6 +13,7 @@ import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('state/transactions/hooks', () => ({
   ...jest.requireActual('state/transactions/hooks'),
@@ -36,7 +37,7 @@ const classicSwapResult: SwapResult = {
     gasLimit: BigNumber.from(1000),
     data: '0x',
     value: BigNumber.from(0),
-    chainId: ChainId.MAINNET,
+    chainId: UniverseChainId.Mainnet,
     confirmations: 0,
     blockNumber: undefined,
     blockHash: undefined,
@@ -61,7 +62,7 @@ const filledOrderDetails: UniswapXOrderDetails = {
     type: 1,
     tradeType: 0,
     inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-    outputCurrencyId: WETH9[ChainId.MAINNET].address,
+    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -71,7 +72,7 @@ const filledOrderDetails: UniswapXOrderDetails = {
   encodedOrder: '0xencodedOrder',
   id: '0x1234',
   addedTime: 3,
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   expiry: 4,
   offerer: '0x1234',
 }

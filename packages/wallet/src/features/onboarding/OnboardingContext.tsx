@@ -40,7 +40,7 @@ export interface OnboardingContext {
   ) => Promise<void>
   addBackupMethod: (backupMethod: BackupType) => void
   enableNotifications: () => void
-  selectImportedAccounts: (accountAddresses: string[]) => SignerMnemonicAccount[]
+  selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
   finishOnboarding: (importType: ImportType, accounts?: SignerMnemonicAccount[]) => Promise<void>
   getAllOnboardingAccounts: () => SignerMnemonicAccount[]
   getOnboardingAccount: () => SignerMnemonicAccount | undefined
@@ -63,7 +63,7 @@ const initialOnboardingContext: OnboardingContext = {
   generateImportedAccountsByMnemonic: async () => undefined,
   addBackupMethod: () => undefined,
   enableNotifications: () => undefined,
-  selectImportedAccounts: () => [],
+  selectImportedAccounts: async () => [],
   finishOnboarding: async (_importType: ImportType, _accounts?: SignerMnemonicAccount[]) =>
     undefined,
   getAllOnboardingAccounts: () => [],
@@ -157,6 +157,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     mnemonicId: string,
     backupType?: BackupType.Cloud | BackupType.Manual
   ): Promise<void> => {
+    setImportedAccounts(undefined)
     setOnboardingAccount(undefined)
     setImportedAccounts(await createImportedAccounts(mnemonicId, backupType))
   }
@@ -186,7 +187,9 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    * Selects imported accounts from within the context and sets them as the.
    * selected imported accounts, overriding any previous selection.
    */
-  const selectImportedAccounts = (accountAddresses: string[]): SignerMnemonicAccount[] => {
+  const selectImportedAccounts = async (
+    accountAddresses: string[]
+  ): Promise<SignerMnemonicAccount[]> => {
     if (!importedAccounts) {
       throw new Error('No imported accounts available for toggling selecting imported accounts')
     }
@@ -197,6 +200,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       ...acc,
       name: t('onboarding.wallet.defaultName', { number: index + 1 }),
     }))
+
+    // Remove private keys form unselected accounts
+    const unselectedAddresses = importedAccounts
+      .map((acc) => acc.address)
+      .filter((address) => !accountAddresses.includes(address))
+
+    for (const address of unselectedAddresses) {
+      await Keyring.removePrivateKey(address)
+    }
     setImportedAccounts(namedImportedAccounts)
     return namedImportedAccounts
   }
@@ -269,7 +281,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       dispatch(
         createAccountsActions.trigger({
           accounts: onboardingAccounts,
-          activateFirst: true,
         })
       )
     }

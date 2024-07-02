@@ -14,14 +14,14 @@ const ClickableHeader = css`
     }
   }
 `
-const Header = styled.div<{ clickable: boolean }>`
+const Header = styled.div<{ $clickable: boolean }>`
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 8px;
   width: 100%;
   padding: 8px 0;
-  ${({ clickable }) => clickable && ClickableHeader}
+  ${({ $clickable }) => $clickable && ClickableHeader}
 `
 
 interface TPreferencesHeaderProps {
@@ -37,7 +37,7 @@ export function PreferencesHeader({ children, onExitMenu }: TPreferencesHeaderPr
   }, [onExitMenu])
 
   return (
-    <Header clickable={!!onExitMenu} onClick={exitMenu}>
+    <Header $clickable={!!onExitMenu} onClick={exitMenu}>
       {onExitMenu && <StyledChevron />}
       <Text variant="subheading1" color="$neutral1" textAlign="left" width="100%">
         {children}

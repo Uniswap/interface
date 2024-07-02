@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { DAI, NATIVE_CHAIN_ID, USDC_MAINNET, nativeOnChain } from 'constants/tokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import {
@@ -7,6 +6,7 @@ import {
   Token,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',
@@ -31,7 +31,7 @@ const MAINNET_NATIVE_GQL_TOKEN = {
 } as Token
 
 const MAINNET_NATIVE_CURRENCY_INFO = {
-  currency: nativeOnChain(ChainId.MAINNET),
+  currency: nativeOnChain(UniverseChainId.Mainnet),
   currencyId: 'ETH',
   isSpam: false,
   logoUrl: 'eth_url',

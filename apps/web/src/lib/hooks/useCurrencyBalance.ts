@@ -1,19 +1,16 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
-import { useMemo } from 'react'
-
-import { useTokenBalances } from 'hooks/useTokenBalances'
-import { currencyKey } from 'utils/currencyKey'
-
 import { Interface } from '@ethersproject/abi'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import { useInterfaceMulticall } from 'hooks/useContract'
+import { useTokenBalances } from 'hooks/useTokenBalances'
+import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-
-import { useAccount } from 'hooks/useAccount'
 import { isAddress } from 'utilities/src/addresses'
-import { nativeOnChain } from '../../constants/tokens'
-import { useInterfaceMulticall } from '../../hooks/useContract'
+import { currencyKey } from 'utils/currencyKey'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.

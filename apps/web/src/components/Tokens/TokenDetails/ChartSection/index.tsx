@@ -1,29 +1,32 @@
+import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
 import { LineChart, StackedLineData } from 'components/Charts/StackedLineChart'
 import { refitChartContentAtom } from 'components/Charts/TimeSelector'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { VolumeChart } from 'components/Charts/VolumeChart'
-import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { useMemo, useState } from 'react'
-import styled from 'styled-components'
-
-import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
 import PillMultiToggle, { PillMultiToggleOption } from 'components/Toggle/PillMultiToggle'
+import { AdvancedPriceChartToggle } from 'components/Tokens/TokenDetails/ChartSection/AdvancedPriceChartToggle'
+import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
+import {
+  useTDPPriceChartData,
+  useTDPTVLChartData,
+  useTDPVolumeChartData,
+} from 'components/Tokens/TokenDetails/ChartSection/hooks'
+import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import {
   DISPLAYS,
-  getTimePeriodFromDisplay,
   ORDERED_TIMES,
   TimePeriodDisplay,
+  getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
+import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
+import { useMemo, useState } from 'react'
+import styled from 'styled-components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { AdvancedPriceChartToggle } from './AdvancedPriceChartToggle'
-import { ChartTypeDropdown } from './ChartTypeSelector'
-import { useTDPPriceChartData, useTDPTVLChartData, useTDPVolumeChartData } from './hooks'
-import { ChartQueryResult, DataQuality } from './util'
 
 export const TDP_CHART_HEIGHT_PX = 356
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const

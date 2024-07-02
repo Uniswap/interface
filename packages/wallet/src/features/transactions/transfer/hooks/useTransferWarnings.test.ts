@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
@@ -11,7 +11,7 @@ import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/t
 import { isOffline } from 'wallet/src/features/transactions/utils'
 import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
-const ETH = NativeCurrency.onChain(ChainId.Mainnet)
+const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
 const emptyTransferInfo: Pick<
   DerivedTransferInfo,
@@ -37,7 +37,7 @@ const transferState: DerivedTransferInfo = {
   currencyBalances: {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
   },
-  chainId: ChainId.Mainnet,
+  chainId: UniverseChainId.Mainnet,
   currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
@@ -51,7 +51,7 @@ const transferState2: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
-  chainId: ChainId.Mainnet,
+  chainId: UniverseChainId.Mainnet,
   currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
@@ -88,7 +88,7 @@ const transferNFT: DerivedTransferInfo = {
     [CurrencyField.INPUT]: undefined,
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
-  chainId: ChainId.Mainnet,
+  chainId: UniverseChainId.Mainnet,
   currencyInInfo: undefined,
   nftIn: mockNFT,
 }
@@ -102,7 +102,7 @@ const transferCurrency: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '10000'),
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
-  chainId: ChainId.Mainnet,
+  chainId: UniverseChainId.Mainnet,
   currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
@@ -116,7 +116,7 @@ const insufficientBalanceState: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '1000'),
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
-  chainId: ChainId.Mainnet,
+  chainId: UniverseChainId.Mainnet,
   currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }

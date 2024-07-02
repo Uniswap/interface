@@ -8,10 +8,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,

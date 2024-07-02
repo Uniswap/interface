@@ -1,6 +1,22 @@
 import { EmptySpinner } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout'
-import { SpinningLoaderProps } from './types'
+import { SpinningLoaderProps } from 'ui/src/loading/types'
+
+const rotateCSS = `
+  @keyframes rotate360 {
+      from {
+          transform: rotate(0deg);
+      }
+      to {
+          transform: rotate(360deg);
+      }
+  }
+
+  .RotateElement {
+      animation: rotate360 3s linear infinite;
+      transform-origin: center center;
+  }
+`
 
 export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderProps): JSX.Element {
   if (disabled) {
@@ -8,32 +24,16 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
   }
   return (
     <>
-      <style>
-        {`
-            @keyframes rotate360 {
-                from {
-                    transform: rotate(0deg);
-                }
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-
-            .RotateElement {
-                animation: rotate360 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-            }
-        `}
-      </style>
+      <style>{rotateCSS}</style>
       <Flex
         alignItems="center"
-        animation="200ms"
-        className="StyledPolling"
+        className="RotateElement"
         height={16}
+        justifyContent="center"
         marginEnd={2}
         marginStart={2}
         width={16}>
         <Flex
-          animation="200ms"
           borderRadius="$roundedFull"
           height={8}
           minHeight={8}
@@ -41,7 +41,6 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
           position="relative"
           width={8}>
           <Flex
-            animation="200ms"
             backgroundColor="transparent"
             borderBottomColor="transparent"
             borderBottomWidth={1}
@@ -54,10 +53,9 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
             borderTopWidth={1}
             className="RotateElement"
             height={size}
-            left={-3}
+            left={-6}
             position="relative"
-            top={-3}
-            transform="translateZ(0)"
+            top={-6}
             width={size}
           />
         </Flex>

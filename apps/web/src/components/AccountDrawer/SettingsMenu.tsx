@@ -1,3 +1,10 @@
+import { AnalyticsToggle } from 'components/AccountDrawer/AnalyticsToggle'
+import { GitVersionRow } from 'components/AccountDrawer/GitVersionRow'
+import { LanguageMenuItems } from 'components/AccountDrawer/LanguageMenu'
+import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
+import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
+import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
+import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
@@ -11,13 +18,6 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { AnalyticsToggle } from './AnalyticsToggle'
-import { GitVersionRow } from './GitVersionRow'
-import { LanguageMenuItems } from './LanguageMenu'
-import { SlideOutMenu } from './SlideOutMenu'
-import { SmallBalanceToggle } from './SmallBalanceToggle'
-import { SpamToggle } from './SpamToggle'
-import { TestnetsToggle } from './TestnetsToggle'
 
 const Container = styled(Column)`
   height: 100%;
@@ -86,9 +86,6 @@ export default function SettingsMenu({
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
       <Container>
         <div>
-          <SectionTitle data-testid="wallet-header">
-            <Trans i18nKey="common.preferences" />
-          </SectionTitle>
           <ToggleWrapper currencyConversionEnabled={currencyConversionEnabled}>
             <ThemeToggle />
             <SmallBalanceToggle />

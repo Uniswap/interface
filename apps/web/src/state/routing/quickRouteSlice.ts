@@ -1,11 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import ms from 'ms'
+import {
+  GetQuickQuoteArgs,
+  PreviewTradeResult,
+  QuickRouteResponse,
+  QuoteState,
+  RouterPreference,
+} from 'state/routing/types'
+import { isExactInput, transformQuickRouteToTrade } from 'state/routing/utils'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, RouterPreference } from './types'
-import { isExactInput, transformQuickRouteToTrade } from './utils'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {

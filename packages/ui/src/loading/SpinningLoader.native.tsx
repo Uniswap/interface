@@ -8,8 +8,8 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { CircleSpinner, EmptySpinner } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout'
-import { SpinningLoaderProps } from './types'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { SpinningLoaderProps } from 'ui/src/loading/types'
 
 export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderProps): JSX.Element {
   const rotation = useSharedValue(0)

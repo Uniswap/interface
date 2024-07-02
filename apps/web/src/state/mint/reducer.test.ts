@@ -1,7 +1,6 @@
 import { createStore, Store } from 'redux'
-
-import { Field, typeInput } from './actions'
-import reducer, { initialState, MintState } from './reducer'
+import { Field, typeInput } from 'state/mint/actions'
+import reducer, { initialState, MintState } from 'state/mint/reducer'
 
 describe('mint reducer', () => {
   let store: Store<MintState>

@@ -1,4 +1,6 @@
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
@@ -8,8 +10,6 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
-import { parseRemoteActivities } from './parseRemote'
-import { Activity, ActivityMap } from './types'
 
 /** Detects transactions from same account with the same nonce and different hash */
 function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: string): string | undefined {

@@ -1,12 +1,11 @@
 import userEvent from '@testing-library/user-event'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { act, fireEvent, render, screen } from 'test-utils/render'
-
+import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from 'components/swap/SwapBuyFiatButton'
 import { useAccount } from 'hooks/useAccount'
+import { useFiatOnrampAvailability, useOpenModal } from 'state/application/hooks'
 import { USE_CONNECTED_ACCOUNT, USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
-import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
-import SwapBuyFiatButton, { MOONPAY_REGION_AVAILABILITY_ARTICLE } from './SwapBuyFiatButton'
+import { act, fireEvent, render, screen } from 'test-utils/render'
 
 jest.mock('../../state/application/hooks')
 const mockUseFiatOnrampAvailability = useFiatOnrampAvailability as jest.MockedFunction<typeof useFiatOnrampAvailability>

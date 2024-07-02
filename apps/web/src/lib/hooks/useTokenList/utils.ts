@@ -1,6 +1,5 @@
 import { TokenInfo, TokenList } from '@uniswap/token-lists'
 import { TokenFromList } from 'state/lists/tokenFromList'
-import { logger } from 'utilities/src/logger/logger'
 
 type TokenMap = Readonly<{ [tokenAddress: string]: { token: TokenFromList; list?: TokenList } }>
 // TODO(WEB-2347): replace usage of the misnomered TokenAddressMap w/ ChainTokenMap from src/hooks/Tokens.ts
@@ -23,7 +22,6 @@ export function tokensToChainTokenMap(tokens: TokenList | TokenInfo[]): TokenAdd
     try {
       const token = new TokenFromList(info, list)
       if (map[token.chainId]?.[token.address] !== undefined) {
-        logger.warn('useTokenList/utils', 'tokensToChainTokenMap', `Duplicate token skipped: ${token.address}`)
         return map
       }
       if (!map[token.chainId]) {

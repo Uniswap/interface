@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Fraction, Price, Token } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
-import { useUSDPrice } from './useUSDPrice'
 
 // Show warning if the price diverges by more than 5%
 const WARNING_THRESHOLD = new Fraction(5, 100)

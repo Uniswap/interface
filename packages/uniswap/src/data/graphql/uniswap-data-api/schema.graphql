@@ -186,6 +186,7 @@ enum Chain {
   BASE
   BLAST
   ZORA
+  ZKSYNC
   UNKNOWN_CHAIN
 }
 

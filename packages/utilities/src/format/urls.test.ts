@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/utils/uriToHttp.test.ts
 
-import { isGifUri, isSVGUri, uriToHttpUrls } from './urls'
+import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 
 describe(uriToHttpUrls, () => {
   it('returns .eth.link for ens names', () => {

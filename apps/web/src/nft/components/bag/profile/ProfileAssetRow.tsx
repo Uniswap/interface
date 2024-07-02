@@ -1,14 +1,13 @@
 import { ButtonEmphasis, ButtonSize } from 'components/Button'
+import { useIsMobile } from 'hooks/screenSize'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { RemoveAssetButton, RemoveButton } from 'nft/components/bag/BagRow'
+import * as styles from 'nft/components/bag/BagRow.css'
 import { VerifiedIcon } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { useState } from 'react'
-
-import { useIsMobile } from 'hooks/screenSize'
-import { RemoveAssetButton, RemoveButton } from '../BagRow'
-import * as styles from '../BagRow.css'
 
 const ProfileAssetRow = ({ asset }: { asset: WalletAsset }) => {
   const removeAsset = useSellAsset((state) => state.removeSellAsset)

@@ -1,10 +1,9 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
+import { darkTheme, lightTheme } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
-
-import { useAccount } from 'hooks/useAccount'
-import { darkTheme, lightTheme } from '../colors'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const initialStyles = {
   width: '200vw',
@@ -53,8 +52,8 @@ export default function RadialGradientByChainUpdater(): null {
     }
 
     switch (chainId) {
-      case ChainId.ARBITRUM_ONE:
-      case ChainId.ARBITRUM_GOERLI: {
+      case UniverseChainId.ArbitrumOne:
+      case UniverseChainId.ArbitrumGoerli: {
         setBackground(backgroundResetStyles)
         const arbitrumLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0) 0%, rgba(252, 243, 249, 0) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -63,8 +62,8 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
         break
       }
-      case ChainId.OPTIMISM:
-      case ChainId.OPTIMISM_GOERLI: {
+      case UniverseChainId.Optimism:
+      case UniverseChainId.OptimismGoerli: {
         setBackground(backgroundResetStyles)
         const optimismLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0) 0%, rgba(255, 244, 249, 0) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -73,8 +72,8 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? optimismDarkGradient : optimismLightGradient
         break
       }
-      case ChainId.POLYGON:
-      case ChainId.POLYGON_MUMBAI: {
+      case UniverseChainId.Polygon:
+      case UniverseChainId.PolygonMumbai: {
         setBackground(backgroundResetStyles)
         const polygonLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #FFFFFF'
@@ -83,8 +82,8 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
         break
       }
-      case ChainId.CELO:
-      case ChainId.CELO_ALFAJORES: {
+      case UniverseChainId.Celo:
+      case UniverseChainId.CeloAlfajores: {
         setBackground(backgroundResetStyles)
         const celoLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(186, 228, 210, 0) 0%, rgba(252, 243, 249, 0) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -93,7 +92,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? celoDarkGradient : celoLightGradient
         break
       }
-      case ChainId.BNB: {
+      case UniverseChainId.Bnb: {
         setBackground(backgroundResetStyles)
         const bscLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(242 , 186, 8, 0) 0%, rgba(238, 182, 6, 0) 50%, rgba(140, 185, 11, 0) 100%), #FFFFFF'
@@ -102,7 +101,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? bscDarkGradient : bscLightGradient
         break
       }
-      case ChainId.AVALANCHE: {
+      case UniverseChainId.Avalanche: {
         setBackground(backgroundResetStyles)
         const avaxLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0) 0%, rgba(255, 244, 249, 0.0) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -111,7 +110,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? avaxDarkGradient : avaxLightGradient
         break
       }
-      case ChainId.BASE: {
+      case UniverseChainId.Base: {
         setBackground(backgroundResetStyles)
         const baseLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(0, 82, 255, 0) 0%, rgba(0, 82, 255, 0) 40.0%, rgba(252, 255, 82, 0.00) 100%), rgb(255, 255, 255)'

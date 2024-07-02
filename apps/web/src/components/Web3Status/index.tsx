@@ -2,8 +2,11 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonSecondary } from 'components/Button'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
+import { RowBetween } from 'components/Row'
+import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
@@ -18,9 +21,6 @@ import { Unitag } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isIFramed } from 'utils/isIFramed'
-import { ButtonSecondary } from '../Button'
-import { RowBetween } from '../Row'
-import { useAccountIdentifier } from './useAccountIdentifier'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999

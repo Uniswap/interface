@@ -1,8 +1,7 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-
-import { useTokenContract } from './useContract'
 
 // returns undefined if input token is undefined, or fails to get token contract,
 // or contract total supply cannot be fetched

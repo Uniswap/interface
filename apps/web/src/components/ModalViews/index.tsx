@@ -1,14 +1,12 @@
+import Circle from 'assets/images/blue-loader.svg'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-import { CloseIcon, CustomLightSpinner, ThemedText } from 'theme/components'
-
-import { useAccount } from 'hooks/useAccount'
-import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink } from '../../theme/components'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { AutoColumn, ColumnCenter } from '../Column'
-import { RowBetween } from '../Row'
+import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;

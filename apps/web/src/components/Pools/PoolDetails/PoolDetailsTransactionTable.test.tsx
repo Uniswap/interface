@@ -1,12 +1,11 @@
 import { ApolloError } from '@apollo/client'
+import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
+import { PoolTableTransactionType, usePoolTransactions } from 'graphql/data/pools/usePoolTransactions'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { usdcWethPoolAddress, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-
-import { PoolTableTransactionType, usePoolTransactions } from 'graphql/data/pools/usePoolTransactions'
-import { PoolDetailsTransactionsTable } from './PoolDetailsTransactionsTable'
 
 jest.mock('graphql/data/pools/usePoolTransactions')
 jest.mock('components/Table/utils')

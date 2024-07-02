@@ -11,7 +11,8 @@ import {
   SortableGridChangeEvent,
   SortableGridRenderItem,
 } from 'src/components/sortableGrid'
-import { AnimatedFlex, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { setFavoriteWallets } from 'wallet/src/features/favorites/slice'
 import { useAppDispatch } from 'wallet/src/state'

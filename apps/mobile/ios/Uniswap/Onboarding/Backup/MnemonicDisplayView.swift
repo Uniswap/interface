@@ -110,16 +110,17 @@ struct MnemonicDisplay: View {
       .overlay(
         HStack {
           Spacer()
-          CopyButton(
-            copyButtonText: props.copyText,
-            copiedButtonText: props.copiedText,
-            textToCopy: props.mnemonicWords.joined(separator: " ")
-          )
-          Spacer()
-        }
-          .relativeOffset(y: -0.5) { _, offsetY in
+          RelativeOffsetView(y: -0.5, onOffsetCalculated: { _, offsetY in
             buttonPadding = abs(offsetY)
-          },
+          }) {
+            CopyButton(
+              copyButtonText: props.copyText,
+              copiedButtonText: props.copiedText,
+              textToCopy: props.mnemonicWords.joined(separator: " ")
+            )
+          }
+          Spacer()
+        },
         alignment: .top
       )
     }

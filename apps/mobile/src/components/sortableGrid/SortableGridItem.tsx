@@ -11,17 +11,21 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { getItemZIndex } from 'src/components/sortableGrid/utils'
 import {
   ACTIVATE_PAN_ANIMATION_DELAY,
   ITEM_ANIMATION_DURATION,
   OFFSET_EPS,
   TIME_TO_ACTIVATE_PAN,
-} from './constants'
-import { useAutoScrollContext, useDragContext, useLayoutContext } from './contexts'
-import { useItemPosition } from './hooks'
-import { GridItemExiting } from './layoutAnimations'
-import { SortableGridRenderItem } from './types'
+} from 'src/components/sortableGrid/constants'
+import {
+  useAutoScrollContext,
+  useDragContext,
+  useLayoutContext,
+} from 'src/components/sortableGrid/contexts'
+import { useItemPosition } from 'src/components/sortableGrid/hooks'
+import { GridItemExiting } from 'src/components/sortableGrid/layoutAnimations'
+import { SortableGridRenderItem } from 'src/components/sortableGrid/types'
+import { getItemZIndex } from 'src/components/sortableGrid/utils'
 
 type SortableGridItemProps<I> = {
   item: I

@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
@@ -24,7 +24,7 @@ export interface SwapSummaryCallbacks {
   useLatestSwapTransaction: (address: string) => TransactionDetails | undefined
   useSwapFormTransactionState: (
     address: Address | undefined,
-    chainId: ChainId | undefined,
+    chainId: WalletChainId | undefined,
     txId: string | undefined
   ) => TransactionState | undefined
   onRetryGenerator?: (swapFormState: TransactionState | undefined) => () => void

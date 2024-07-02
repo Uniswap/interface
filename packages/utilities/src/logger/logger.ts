@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Extras, ScopeContext } from '@sentry/types'
+import { Sentry } from 'utilities/src/logger/Sentry'
 import { isInterface, isWeb } from 'utilities/src/platform'
-import { Sentry } from './Sentry'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:

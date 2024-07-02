@@ -1,10 +1,9 @@
+import { Markets, Rarity, TokenType } from 'nft/types/common'
 import {
   NftActivityType,
   NftStandard,
   OrderStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { Markets, Rarity, TokenType } from '../common'
 export interface CollectionInfoForAsset {
   collectionDescription?: string | null
   collectionImageUrl?: string

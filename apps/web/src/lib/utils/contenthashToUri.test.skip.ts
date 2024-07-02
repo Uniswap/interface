@@ -1,4 +1,4 @@
-import contenthashToUri, { hexToUint8Array } from './contenthashToUri'
+import contenthashToUri, { hexToUint8Array } from 'lib/utils/contenthashToUri'
 
 // this test is skipped for now because importing CID results in
 // TypeError: TextDecoder is not a constructor

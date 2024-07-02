@@ -5,6 +5,10 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import {
+  TransactionHistoryUpdater,
+  getReceiveNotificationFromData,
+} from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -17,10 +21,6 @@ import {
 } from 'wallet/src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, faker, render } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'
-import {
-  TransactionHistoryUpdater,
-  getReceiveNotificationFromData,
-} from './TransactionHistoryUpdater'
 
 const mockedRefetchQueries = jest.fn()
 

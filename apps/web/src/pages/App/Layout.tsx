@@ -1,5 +1,5 @@
 import { PageTabs } from 'components/NavBar/LEGACY'
-import { MobileBottomBarLegacy } from 'components/NavBar/MobileBottomBar/MobileBottomBar'
+import { MobileBottomBarLegacy } from 'components/NavBar/MobileBottomBar'
 import { Body } from 'pages/App/Body'
 import { Header } from 'pages/App/Header'
 import { GRID_AREAS } from 'pages/App/utils/shared'

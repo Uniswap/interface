@@ -65,7 +65,7 @@ export const ActivityTab = memo(
       owner,
       authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
       isExternalProfile,
-      emptyContainerStyle: containerProps?.emptyContainerStyle,
+      emptyComponentStyle: containerProps?.emptyComponentStyle,
       onPressEmptyState: onPressReceive,
     })
 

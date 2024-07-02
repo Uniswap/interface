@@ -1,24 +1,23 @@
 import { isAddress } from '@ethersproject/address'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { RowBetween } from 'components/Row'
+import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import useENS from 'hooks/useENS'
 import { Trans } from 'i18n'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
+import { useDelegateCallback } from 'state/governance/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
-import { UNI } from '../../constants/tokens'
-import useENS from '../../hooks/useENS'
-import { useDelegateCallback } from '../../state/governance/hooks'
-import AddressInputPanel from '../AddressInputPanel'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { RowBetween } from '../Row'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -94,7 +93,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

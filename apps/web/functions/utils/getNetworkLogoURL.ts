@@ -18,6 +18,10 @@ export default function getNetworkLogoUrl(network: string, origin: string) {
       return origin + '/images/logos/Avax_Logo.png'
     case Chain.Blast:
       return origin + '/images/logos/Blast_Logo.png'
+    case Chain.Zora:
+      return origin + '/images/logos/Zora_Logo.png'
+    case Chain.Zksync:
+      return origin + '/images/logos/Zora_Logo.png'
     default:
       return ''
   }

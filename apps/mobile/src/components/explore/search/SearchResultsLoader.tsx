@@ -2,8 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex, Flex, Loader } from 'ui/src'
+import { Flex, Loader } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const SearchResultsLoader = (): JSX.Element => {
   const { t } = useTranslation()

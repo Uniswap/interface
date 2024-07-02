@@ -1,12 +1,12 @@
 import React from 'react'
 import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
+import { UniconProps } from 'ui/src/components/Unicon/types'
 import {
   getUniconColors,
   getUniconsDeterministicHash,
   isValidEthAddress,
 } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
-import { UniconProps } from './types'
 
 const styles = { transformOrigin: 'center center' }
 

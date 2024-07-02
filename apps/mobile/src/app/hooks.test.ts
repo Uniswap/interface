@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { LayoutChangeEvent } from 'react-native'
 import { act } from 'react-test-renderer'
-import { useShouldShowNativeKeyboard } from './hooks'
+import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 
 describe(useShouldShowNativeKeyboard, () => {
   it('returns false if layout calculation is pending', () => {

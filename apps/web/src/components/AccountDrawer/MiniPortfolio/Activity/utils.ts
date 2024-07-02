@@ -1,10 +1,10 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { ChainId } from '@uniswap/sdk-core'
-import { CosignedV2DutchOrder, DutchOrder } from '@uniswap/uniswapx-sdk'
+import { permit2Address } from '@uniswap/permit2-sdk'
+import { CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
-import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
+import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { t } from 'i18n'
@@ -18,10 +18,10 @@ import { Permit2 } from 'uniswap/src/abis/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { Activity } from './types'
 
 interface ActivityGroup {
   title: string
@@ -92,46 +92,9 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
   return transactionGroups.filter(({ transactions }) => transactions.length > 0)
 }
 
-// TODO(WEB-3594): just use the uniswapx-sdk when getCancelMultipleParams is available
-
-interface SplitNonce {
-  word: BigNumber
-  bitPos: BigNumber
-}
-
-function splitNonce(nonce: BigNumber): SplitNonce {
-  const word = nonce.div(256)
-  const bitPos = nonce.mod(256)
-  return { word, bitPos }
-}
-
-// Get parameters to cancel multiple nonces
-// source: https://github.com/Uniswap/uniswapx-sdk/pull/112
-function getCancelMultipleParams(noncesToCancel: BigNumber[]): {
-  word: BigNumber
-  mask: BigNumber
-}[] {
-  const splitNonces = noncesToCancel.map(splitNonce)
-  const splitNoncesByWord: { [word: string]: SplitNonce[] } = {}
-  splitNonces.forEach((splitNonce) => {
-    const word = splitNonce.word.toString()
-    if (!splitNoncesByWord[word]) {
-      splitNoncesByWord[word] = []
-    }
-    splitNoncesByWord[word].push(splitNonce)
-  })
-  return Object.entries(splitNoncesByWord).map(([word, splitNonce]) => {
-    let mask = BigNumber.from(0)
-    splitNonce.forEach((splitNonce) => {
-      mask = mask.or(BigNumber.from(2).pow(splitNonce.bitPos))
-    })
-    return { word: BigNumber.from(word), mask }
-  })
-}
-
 function getCancelMultipleUniswapXOrdersParams(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: ChainId
+  chainId: InterfaceChainId
 ) {
   const nonces = orders
     .map(({ encodedOrder, type }) =>
@@ -147,7 +110,7 @@ export function useCancelMultipleOrdersCallback(
   orders?: Array<UniswapXOrderDetails>
 ): () => Promise<ContractTransaction[] | undefined> {
   const provider = useEthersWeb3Provider()
-  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  const permit2 = useContract<Permit2>(permit2Address(orders?.[0]?.chainId), PERMIT2_ABI, true)
 
   return useCallback(async () => {
     if (!orders || orders.length === 0) {
@@ -184,7 +147,7 @@ async function cancelMultipleUniswapXOrders({
   provider,
 }: {
   orders: Array<{ encodedOrder: string; type: SignatureType }>
-  chainId: ChainId
+  chainId: InterfaceChainId
   permit2: Permit2 | null
   provider?: Web3Provider
 }) {
@@ -201,12 +164,7 @@ async function cancelMultipleUniswapXOrders({
     return transactions
   } catch (error) {
     if (!didUserReject(error)) {
-      logger.error(error, {
-        tags: {
-          file: 'utils',
-          function: 'cancelMultipleUniswapXOrders',
-        },
-      })
+      logger.debug('utils', 'cancelMultipleUniswapXOrders', 'Failed to cancel multiple orders', { error, orders })
     }
     return undefined
   }
@@ -214,7 +172,7 @@ async function cancelMultipleUniswapXOrders({
 
 async function getCancelMultipleUniswapXOrdersTransaction(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: ChainId,
+  chainId: InterfaceChainId,
   permit2: Permit2
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
@@ -229,11 +187,9 @@ async function getCancelMultipleUniswapXOrdersTransaction(
     }
   } catch (error) {
     const wrappedError = new Error('could not populate cancel transaction', { cause: error })
-    logger.error(wrappedError, {
-      tags: {
-        file: 'utils',
-        function: 'getCancelMultipleUniswapXOrdersTransaction',
-      },
+    logger.debug('utils', 'getCancelMultipleUniswapXOrdersTransaction', wrappedError.message, {
+      error: wrappedError,
+      orders,
     })
     return undefined
   }
@@ -243,11 +199,11 @@ export function useCreateCancelTransactionRequest(
   params:
     | {
         orders: Array<{ encodedOrder: string; type: SignatureType }>
-        chainId: ChainId
+        chainId: InterfaceChainId
       }
     | undefined
 ): TransactionRequest | undefined {
-  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  const permit2 = useContract<Permit2>(permit2Address(params?.chainId), PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {
     if (
       !params ||

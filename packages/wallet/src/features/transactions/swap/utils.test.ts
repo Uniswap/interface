@@ -1,12 +1,16 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
+import {
+  getWrapType,
+  requireAcceptNewTrade,
+  serializeQueryParams,
+} from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { mockPool } from 'wallet/src/test/mocks'
-import { getWrapType, requireAcceptNewTrade, serializeQueryParams } from './utils'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
@@ -21,11 +25,11 @@ describe(serializeQueryParams, () => {
 })
 
 describe(getWrapType, () => {
-  const eth = NativeCurrency.onChain(ChainId.Mainnet)
-  const weth = wrappedNativeCurrency(ChainId.Mainnet)
+  const eth = NativeCurrency.onChain(UniverseChainId.Mainnet)
+  const weth = wrappedNativeCurrency(UniverseChainId.Mainnet)
 
-  const goerliEth = NativeCurrency.onChain(ChainId.Goerli)
-  const goerliWeth = wrappedNativeCurrency(ChainId.Goerli)
+  const arbEth = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
+  const arbWeth = wrappedNativeCurrency(UniverseChainId.ArbitrumOne)
 
   it('handles undefined args', () => {
     expect(getWrapType(undefined, weth)).toEqual(WrapType.NotApplicable)
@@ -37,25 +41,25 @@ describe(getWrapType, () => {
     expect(getWrapType(eth, weth)).toEqual(WrapType.Wrap)
 
     // different chains
-    expect(getWrapType(goerliEth, weth)).toEqual(WrapType.NotApplicable)
-    expect(getWrapType(eth, goerliWeth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(arbEth, weth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(eth, arbWeth)).toEqual(WrapType.NotApplicable)
   })
 
   it('handles unwrap', () => {
     expect(getWrapType(weth, eth)).toEqual(WrapType.Unwrap)
 
     // different chains
-    expect(getWrapType(weth, goerliEth)).toEqual(WrapType.NotApplicable)
-    expect(getWrapType(goerliWeth, eth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(weth, arbEth)).toEqual(WrapType.NotApplicable)
+    expect(getWrapType(arbWeth, eth)).toEqual(WrapType.NotApplicable)
   })
 })
 
 describe(requireAcceptNewTrade, () => {
-  const oldTrade = new Trade({
+  const oldTrade = new ClassicTrade({
     v3Routes: [
       {
-        routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
-        inputAmount: CurrencyAmount.fromRawAmount(UNI[ChainId.Mainnet], 1000),
+        routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
+        inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
         outputAmount: CurrencyAmount.fromRawAmount(WBTC, 1000),
       },
     ],
@@ -67,11 +71,11 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns false when prices are within threshold', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
-          routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
-          inputAmount: CurrencyAmount.fromRawAmount(UNI[ChainId.Mainnet], 1000),
+          routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
+          inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
           // Update this number if `ACCEPT_NEW_TRADE_THRESHOLD` changes
           outputAmount: CurrencyAmount.fromRawAmount(WBTC, 990),
         },
@@ -86,11 +90,11 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns true when prices move above threshold', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
-          routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
-          inputAmount: CurrencyAmount.fromRawAmount(UNI[ChainId.Mainnet], 1000),
+          routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
+          inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
           // Update this number if `ACCEPT_NEW_TRADE_THRESHOLD` changes
           outputAmount: CurrencyAmount.fromRawAmount(WBTC, 979),
         },
@@ -105,11 +109,11 @@ describe(requireAcceptNewTrade, () => {
   })
 
   it('returns false when new price is better', () => {
-    const newTrade = new Trade({
+    const newTrade = new ClassicTrade({
       v3Routes: [
         {
-          routev3: new Route<Currency, Currency>([mockPool], UNI[ChainId.Mainnet], WBTC),
-          inputAmount: CurrencyAmount.fromRawAmount(UNI[ChainId.Mainnet], 1000),
+          routev3: new Route<Currency, Currency>([mockPool], UNI[UniverseChainId.Mainnet], WBTC),
+          inputAmount: CurrencyAmount.fromRawAmount(UNI[UniverseChainId.Mainnet], 1000),
           outputAmount: CurrencyAmount.fromRawAmount(WBTC, 2000000),
         },
       ],

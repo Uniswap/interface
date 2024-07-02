@@ -1,9 +1,8 @@
+import { useContract } from 'hooks/useContract'
+import useENSAddress from 'hooks/useENSAddress'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-
-import { useContract } from './useContract'
-import useENSAddress from './useENSAddress'
 
 const CHAIN_DATA_ABI = [
   {

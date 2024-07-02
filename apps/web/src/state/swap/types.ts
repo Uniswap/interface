@@ -1,9 +1,10 @@
-import { ChainId, Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'
 import { ParsedQs } from 'qs'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export type SwapInfo = {
@@ -75,13 +76,13 @@ type SwapAndLimitContextType = {
     inputCurrency?: Currency
     outputCurrency?: Currency
   }
-  setSelectedChainId: Dispatch<SetStateAction<ChainId | undefined>>
+  setSelectedChainId: Dispatch<SetStateAction<InterfaceChainId | undefined | null>>
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
   // The chainId of the page/context - can be different from the connected Chain ID if the
   // page is displaying content for a different chain or if multichain UX is enabled
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   multichainUXEnabled?: boolean
 }
 
@@ -96,7 +97,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     inputCurrency: undefined,
     outputCurrency: undefined,
   },
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
   multichainUXEnabled: false,

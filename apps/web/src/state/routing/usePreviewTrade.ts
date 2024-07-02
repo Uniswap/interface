@@ -1,15 +1,16 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { ZERO_PERCENT } from 'constants/misc'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from 'state/routing/quickRouteSlice'
+import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from 'state/routing/types'
+import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
-import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
-import { currencyAddressForSwapQuote } from './utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const
@@ -37,7 +38,7 @@ function useQuickRouteArguments({
     if (!tokenIn || !tokenOut || !amount) {
       return skipToken
     }
-    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET || !allRoutesEnabled) {
+    if (!enabledMainnet || tokenIn.chainId !== UniverseChainId.Mainnet || !allRoutesEnabled) {
       return skipToken
     }
 

@@ -1,26 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { isEqual } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Loader } from 'ui/src'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useSelectWalletScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { useAppDispatch } from 'wallet/src/state'
+import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/onboarding/createImportedAccounts'
+import { useSelectAccounts } from 'wallet/src/features/onboarding/hooks/useSelectAccounts'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
@@ -40,7 +35,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
   const { getImportedAccountsAddresses, selectImportedAccounts } = useOnboardingContext()
   const importedAccountsAddresses = getImportedAccountsAddresses()
 
@@ -91,58 +85,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     }
   }, [importedAccountsAddresses, allAddressBalances])
 
-  const initialSelectedAddresses = useMemo(
-    () =>
-      initialShownAccounts
-        ?.map((account) => account?.ownerAddress)
-        .filter((address): address is string => typeof address === 'string') ?? [],
-    [initialShownAccounts]
-  )
-
   const isOnlyOneAccount = initialShownAccounts?.length === 1
 
   const showError = error && !initialShownAccounts?.length
 
-  const [selectedAddresses, setSelectedAddresses] = useState(initialSelectedAddresses)
+  const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(initialShownAccounts)
 
-  // stores the last value of data extracted from useSelectWalletScreenQuery
-  const initialSelectedAddressesRef = useRef(initialSelectedAddresses)
-
-  // selects all accounts in case when useSelectWalletScreenQuery returns extra accounts
-  // after selectedAddresses useState initialization
-  useEffect(() => {
-    if (isEqual(initialSelectedAddressesRef.current, initialSelectedAddresses)) {
-      return
-    }
-    initialSelectedAddressesRef.current = initialSelectedAddresses
-    setSelectedAddresses(initialSelectedAddresses)
-  }, [initialSelectedAddresses])
-
-  useEffect(() => {
-    const beforeRemoveListener = (): void => {
-      // Remove all pending signer accounts when navigating back
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-    }
-    navigation.addListener('beforeRemove', beforeRemoveListener)
-    return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
-  }, [dispatch, navigation])
-
-  const onPress = (address: string): void => {
-    // prevents the last selected wallet from being deselected
-    if (selectedAddresses.length === 1 && selectedAddresses.includes(address)) {
-      return
-    }
-    if (selectedAddresses.includes(address)) {
-      setSelectedAddresses(
-        selectedAddresses.filter((selectedAddress) => selectedAddress !== address)
-      )
-    } else {
-      setSelectedAddresses([...selectedAddresses, address])
-    }
-  }
-
-  const onSubmit = useCallback(() => {
-    selectImportedAccounts(selectedAddresses)
+  const onSubmit = useCallback(async () => {
+    await selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
       name:
@@ -195,7 +145,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                     name={ElementName.WalletCard}
                     selected={selectedAddresses.includes(ownerAddress)}
                     testID={`${ElementName.WalletCard}-${i + 1}`}
-                    onSelect={onPress}
+                    onSelect={toggleAddressSelection}
                   />
                 )
               })}

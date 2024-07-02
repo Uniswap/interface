@@ -140,11 +140,11 @@ export const fonts = {
 } as const
 
 const baselMedium = isWeb
-  ? 'Basel-Medium, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : 'Basel-Medium'
 
 const baselBook = isWeb
-  ? 'Basel-Book, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : 'Basel-Book'
 
 export const headingFont = createFont({

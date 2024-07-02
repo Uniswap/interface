@@ -1,7 +1,6 @@
+import { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { render, screen } from 'test-utils/render'
 import noop from 'utilities/src/react/noop'
-
-import { ConfirmationModalContent } from '.'
 
 describe('ConfirmationModalContent', () => {
   it('should render the L2 icon for optimism', () => {

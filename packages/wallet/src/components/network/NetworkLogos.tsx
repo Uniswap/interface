@@ -2,12 +2,12 @@ import 'react-native-reanimated'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ChainId } from 'uniswap/src/types/chains'
-import { NetworksInSeries } from 'wallet/src/components/network/NetworkFilter'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { NetworksInSeries } from 'uniswap/src/components/network/NetworkFilter'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 
 export type NetworkLogosProps = {
-  chains: ChainId[]
+  chains: WalletChainId[]
   showFirstChainLabel?: boolean
   negativeGap?: boolean
   size?: number
@@ -27,7 +27,7 @@ export function NetworkLogos({
         <Flex fill row justifyContent="space-between">
           <NetworkLogo chainId={firstChain} />
           <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
-            {CHAIN_INFO[firstChain].label}
+            {UNIVERSE_CHAIN_INFO[firstChain].label}
           </Text>
           <Flex width={size} />
         </Flex>

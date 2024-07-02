@@ -1,8 +1,7 @@
 import { motion, MotionProps } from 'framer-motion'
+import { Box } from 'pages/Landing/components/Generics'
+import { ArrowRight } from 'pages/Landing/components/Icons'
 import styled from 'styled-components'
-
-import { Box } from '../Generics'
-import { ArrowRight } from '../Icons'
 
 const Button = styled(motion.button)<{ cursor?: string }>`
   display: flex;

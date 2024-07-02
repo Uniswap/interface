@@ -9,14 +9,15 @@ import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import {
   CurrencyField,
@@ -54,7 +55,7 @@ export function getWrapType(
     return WrapType.NotApplicable
   }
 
-  const inputChainId = inputCurrency.chainId as ChainId
+  const inputChainId = inputCurrency.chainId as WalletChainId
   const wrappedCurrencyId = buildWrappedNativeCurrencyId(inputChainId)
 
   if (
@@ -138,10 +139,18 @@ export const getRateToDisplay = (
   showInverseRate: boolean
 ): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
-  const formattedPrice = formatter.formatNumberOrString({
-    value: price.toSignificant(),
-    type: NumberType.SwapPrice,
-  })
+
+  let formattedPrice: string
+  try {
+    formattedPrice = formatter.formatNumberOrString({
+      value: price.toSignificant(),
+      type: NumberType.SwapPrice,
+    })
+  } catch (error) {
+    // This means the price impact is so high that the rate is basically 0 (an error is thrown because we try to divide by 0)
+    formattedPrice = '0'
+  }
+
   const quoteCurrencySymbol = getSymbolDisplayText(trade.executionPrice.quoteCurrency.symbol)
   const baseCurrencySymbol = getSymbolDisplayText(trade.executionPrice.baseCurrency.symbol)
   const rate = `1 ${quoteCurrencySymbol} = ${formattedPrice} ${baseCurrencySymbol}`
@@ -190,7 +199,7 @@ export const prepareSwapFormState = ({
         exactAmountToken: '',
         [CurrencyField.INPUT]: {
           address: currencyIdToAddress(inputCurrencyId),
-          chainId: currencyIdToChain(inputCurrencyId) ?? ChainId.Mainnet,
+          chainId: currencyIdToChain(inputCurrencyId) ?? UniverseChainId.Mainnet,
           type: AssetType.Currency,
         },
         [CurrencyField.OUTPUT]: null,
@@ -206,7 +215,7 @@ export const slippageToleranceToPercent = (slippage: number): Percent => {
 
 interface MethodParameterArgs {
   permit2Signature?: PermitSignatureInfo
-  trade: Trade
+  trade: ClassicTrade
   address: string
   feeOptions?: FeeOptions
   flatFeeOptions?: FlatFeeOptions
@@ -240,7 +249,11 @@ export const getSwapMethodParameters = ({
   return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
 }
 
-export function getProtocolVersionFromTrade(trade: Trade): Protocol {
+export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined {
+  if (!isClassic(trade)) {
+    return undefined
+  }
+
   if (trade.routes.every((r) => r.protocol === Protocol.V2)) {
     return Protocol.V2
   }

@@ -7,6 +7,7 @@ import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -23,7 +24,6 @@ import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
-import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
@@ -114,12 +114,7 @@ export function useUniversalRouterSwapCallback(
               isAutoSlippage,
             })
             const wrappedError = new Error('gas error', { cause: gasError })
-            logger.error(wrappedError, {
-              tags: {
-                file: 'useUniversalRouter',
-                function: 'useUniversalRouterSwapCallback',
-              },
-            })
+            logger.warn('useUniversalRouter', 'useUniversalRouterSwapCallback', 'Failed to estimate gas', wrappedError)
             throw new GasEstimationError()
           }
 

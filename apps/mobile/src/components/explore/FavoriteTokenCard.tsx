@@ -9,15 +9,16 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedFlex, AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, imageSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -60,7 +61,7 @@ function FavoriteTokenCard({
   const token = data?.token
 
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
-  const chainId = fromGraphQLChain(token?.chain) ?? ChainId.Mainnet
+  const chainId = fromGraphQLChain(token?.chain) ?? UniverseChainId.Mainnet
 
   const price = convertFiatAmountFormatted(
     token?.project?.markets?.[0]?.price?.value,

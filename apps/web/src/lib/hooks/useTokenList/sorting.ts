@@ -1,7 +1,8 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyKey } from 'utils/currencyKey'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 
@@ -41,7 +42,7 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 export function getSortedPortfolioTokens(
   portfolioTokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[] | undefined,
   balances: TokenBalances,
-  chainId: ChainId | undefined,
+  chainId: InterfaceChainId | undefined,
   splitOptions?: SplitOptions
 ): Token[] {
   const validVisiblePortfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [], splitOptions)
@@ -51,7 +52,7 @@ export function getSortedPortfolioTokens(
         return undefined
       }
 
-      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET
+      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? UniverseChainId.Mainnet
       if (tokenChainId !== chainId) {
         return undefined
       }

@@ -88,9 +88,8 @@ export type TabProps = {
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
-  loadingContainerStyle: StyleProp<ViewStyle>
-  emptyContainerStyle: StyleProp<ViewStyle>
-  contentContainerStyle?: StyleProp<ViewStyle>
+  contentContainerStyle: StyleProp<ViewStyle>
+  emptyComponentStyle?: StyleProp<ViewStyle>
   estimatedItemSize?: number
   onMomentumScrollEnd?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   onScrollEndDrag?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void

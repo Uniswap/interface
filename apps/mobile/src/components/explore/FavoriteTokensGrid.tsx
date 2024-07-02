@@ -13,7 +13,8 @@ import {
   SortableGridChangeEvent,
   SortableGridRenderItem,
 } from 'src/components/sortableGrid'
-import { AnimatedFlex, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'wallet/src/features/favorites/slice'
 import { useAppDispatch } from 'wallet/src/state'

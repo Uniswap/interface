@@ -1,7 +1,6 @@
+import Expand from 'components/Expand/index'
 import { fireEvent, render, screen } from 'test-utils/render'
 import noop from 'utilities/src/react/noop'
-
-import Expand from './index'
 
 describe('Expand', () => {
   it('does not render children when closed', () => {

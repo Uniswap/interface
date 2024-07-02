@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
@@ -15,24 +15,28 @@ import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
+import { useCombinedInactiveLists } from 'state/lists/hooks'
 import { TokenFromList } from 'state/lists/tokenFromList'
+import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import {
   Token as GqlToken,
   SafetyLevel,
   useSimpleTokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyId } from 'utils/currencyId'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { useCombinedInactiveLists } from '../state/lists/hooks'
-import { useUserAddedTokens } from '../state/user/userAddedTokens'
 
 type Maybe<T> = T | undefined
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<ChainId>): { [address: string]: TokenFromList } {
+function useTokensFromMap(
+  tokenMap: TokenAddressMap,
+  chainId: Maybe<InterfaceChainId>
+): { [address: string]: TokenFromList } {
   return useMemo(() => {
     if (!chainId) {
       return {}
@@ -47,7 +51,7 @@ function useTokensFromMap(tokenMap: TokenAddressMap, chainId: Maybe<ChainId>): {
 }
 
 /** Returns all tokens from local lists + user added tokens */
-export function useFallbackListTokens(chainId: Maybe<ChainId>): { [address: string]: Token } {
+export function useFallbackListTokens(chainId: Maybe<InterfaceChainId>): { [address: string]: Token } {
   const fallbackListTokens = useCombinedInactiveLists()
   const tokensFromMap = useTokensFromMap(fallbackListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
@@ -79,7 +83,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
   return !!userAddedTokens.find((token) => currency.equals(token))
 }
 
-export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean): Maybe<Currency> {
+export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
 }
@@ -88,10 +92,10 @@ export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean)
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
 export function useCurrencyInfo(currency?: Currency): Maybe<CurrencyInfo>
-export function useCurrencyInfo(address?: string, chainId?: ChainId, skip?: boolean): Maybe<CurrencyInfo>
+export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
-  chainId?: ChainId,
+  chainId?: InterfaceChainId,
   skip?: boolean
 ): Maybe<CurrencyInfo> {
   const { chainId: connectedChainId } = useAccount()
@@ -169,8 +173,9 @@ export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChai
     tokenAddress,
     getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported
   )
+
   return useMemo(() => {
-    if (currency && currency instanceof Token) {
+    if (currency && currency.isToken) {
       return currency
     }
     return networkToken

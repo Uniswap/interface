@@ -5,12 +5,12 @@ import { ReactNode, RefObject } from 'react'
 import styled from 'styled-components'
 import { Popover } from 'ui/src'
 
-const NavDropdownContent = styled.div<{ width?: number }>`
+const NavDropdownContent = styled.div<{ $width?: number }>`
   border-radius: 16px;
   border: 1px solid ${({ theme }) => theme.surface3};
   background: ${({ theme }) => theme.surface1};
   ${({ theme }) => !theme.darkMode && `box-shadow: 3px 3px 10px ${theme.surface3}`};
-  ${({ width }) => width && `width: ${width}px;`}
+  ${({ $width }) => $width && `width: ${$width}px;`}
   max-height: calc(100vh - ${({ theme }) => theme.navHeight}px);
   overflow: auto;
   ${ScrollBarStyles}
@@ -54,12 +54,12 @@ export function NavDropdown({ children, width, dropdownRef }: NavDropdownProps) 
         ]}
       >
         <Popover.Arrow />
-        <NavDropdownContent ref={dropdownRef} width={width}>
+        <NavDropdownContent ref={dropdownRef} $width={width}>
           {children}
         </NavDropdownContent>
       </Popover.Content>
       <Popover.Adapt when="sm">
-        <Popover.Sheet animation="bouncy" snapPointsMode="fit" modal dismissOnSnapToBottom dismissOnOverlayPress>
+        <Popover.Sheet animation="200ms" snapPointsMode="fit" modal dismissOnSnapToBottom dismissOnOverlayPress>
           <Popover.Sheet.Overlay
             opacity={0.2}
             animation="quick"

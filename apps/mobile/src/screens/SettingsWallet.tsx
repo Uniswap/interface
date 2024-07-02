@@ -34,7 +34,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
@@ -61,7 +61,7 @@ export function SettingsWallet({
   const colors = useSporeColors()
   const addressToAccount = useAccounts()
   const currentAccount = addressToAccount[address]
-  const ensName = useENS(ChainId.Mainnet, address)?.name
+  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -232,7 +232,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
-  const ensName = useENS(ChainId.Mainnet, address)?.name
+  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
   const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {

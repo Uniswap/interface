@@ -7,6 +7,7 @@ import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/TransactionCompleteModal.css'
 import { Portal } from 'nft/components/common/Portal'
 import { BackArrowIcon, ChevronUpIcon, LightningBoltIcon, TwitterIcon } from 'nft/components/icons'
 import { Overlay, stopPropagation } from 'nft/components/modals/Overlay'
@@ -21,7 +22,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import * as styles from './TransactionCompleteModal.css'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480

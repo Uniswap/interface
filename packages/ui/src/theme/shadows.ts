@@ -1,16 +1,14 @@
 import { ColorTokens } from 'tamagui'
 import { colors, opacify } from 'ui/src/theme/color'
 
-// TODO(EXT-142): standardize shadows better
-export const mediumShadowProps = {
-  shadowColor: '$sporeBlack',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.07,
-  shadowRadius: 8,
+export const mediumShadowPropsLight = {
+  shadowColor: opacify(16, colors.black) as ColorTokens,
+  shadowOffset: { width: 0, height: 6 },
+  shadowRadius: 12,
 } as const
 
-export const largeShadowProps = {
-  shadowColor: opacify(7, colors.black) as ColorTokens,
-  shadowOffset: { width: 0, height: 4 },
-  shadowRadius: 24,
+export const mediumShadowPropsDark = {
+  shadowColor: opacify(60, colors.black) as ColorTokens,
+  shadowOffset: { width: 0, height: 6 },
+  shadowRadius: 12,
 } as const

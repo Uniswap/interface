@@ -7,7 +7,7 @@ beforeEach(() => {
   }))
 })
 
-import { GetTheAppButton } from './GetTheAppButton'
+import { GetTheAppButton } from 'components/NavBar/DownloadApp/GetTheAppButton'
 
 describe('GetTheAppButton', () => {
   it('displays a button with call to action text and icons', () => {

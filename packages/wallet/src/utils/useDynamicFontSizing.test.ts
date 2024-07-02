@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-native'
 import { LayoutChangeEvent } from 'react-native'
-import { useDynamicFontSizing } from './useDynamicFontSizing'
+import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 42
 const MIN_INPUT_FONT_SIZE = 28

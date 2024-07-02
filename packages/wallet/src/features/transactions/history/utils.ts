@@ -22,6 +22,7 @@ import {
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   TransactionDetails,
   TransactionListQueryResponse,
@@ -68,8 +69,13 @@ export function formatTransactionsByDate(
     [[], [], []]
   )
 
-  // sort pending txns based on nonce, highest nonce first for reverse chronological order
   const pendingSorted = pending.sort((a, b) => {
+    // sort based on timestamp if a UniswapxX order is present, since pending UniswapX orders do not have a nonce.
+    if (isUniswapX(a) || isUniswapX(b)) {
+      return b.addedTime - a.addedTime
+    }
+
+    // sort based on nonce if available, highest nonce first for reverse chronological order.
     const nonceA = a.options?.request?.nonce
     const nonceB = b.options?.request?.nonce
     return nonceA && nonceB ? (nonceA < nonceB ? 1 : -1) : 1

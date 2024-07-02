@@ -1,5 +1,4 @@
 import { createStore, Store } from 'redux'
-
 import reducer, {
   addPopup,
   ApplicationModal,
@@ -7,7 +6,7 @@ import reducer, {
   removePopup,
   setOpenModal,
   updateChainId,
-} from './reducer'
+} from 'state/application/reducer'
 
 describe('application reducer', () => {
   let store: Store<ApplicationState>

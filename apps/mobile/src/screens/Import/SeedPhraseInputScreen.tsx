@@ -16,7 +16,7 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { openUri } from 'wallet/src/utils/linking'
 import {
   MnemonicValidationError,
@@ -49,7 +49,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   useAddBackButton(navigation)
 
-  const signerAccounts = useNonPendingSignerAccounts()
+  const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   // Add all accounts from mnemonic.

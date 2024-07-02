@@ -8,7 +8,7 @@ import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -22,7 +22,7 @@ import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
-  chainId: ChainId
+  chainId: WalletChainId
   gasFee: GasFeeResult
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo

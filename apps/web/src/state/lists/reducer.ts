@@ -1,10 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-
 import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
+import { updateVersion } from 'state/global/actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
 import { ListsState } from 'state/lists/types'
-import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
 type ListState = ListsState['byUrl'][string]
 

@@ -6,14 +6,13 @@ import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export interface CreateAccountsParams {
   accounts: SignerMnemonicAccount[]
-  activateFirst?: boolean
 }
 
-export function* createAccounts({ accounts, activateFirst }: CreateAccountsParams) {
+export function* createAccounts({ accounts }: CreateAccountsParams) {
   yield* put(addAccounts(accounts))
 
   const address = accounts[0]?.address
-  if (activateFirst && address) {
+  if (address) {
     yield* put(setAccountAsActive(address))
   }
 

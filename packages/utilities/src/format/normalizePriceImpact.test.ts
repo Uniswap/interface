@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { normalizePriceImpact } from './normalizePriceImpact'
+import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 
 describe('normalizePriceImpact', () => {
   it('returns negative price impact value as percentage for positive values', () => {

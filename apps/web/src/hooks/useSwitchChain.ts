@@ -1,5 +1,4 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
 import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'
@@ -9,6 +8,7 @@ import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
@@ -25,7 +25,7 @@ export function useSwitchChain() {
   const page = getCurrentPageFromLocation(pathname)
 
   return useCallback(
-    (chainId: ChainId) => {
+    (chainId: InterfaceChainId) => {
       const isSupportedChain = isSupportedChainCallback(chainId)
       if (!isSupportedChain) {
         throw new Error(`Chain ${chainId} not supported for connector (${connector?.name})`)
@@ -48,7 +48,10 @@ export function useSwitchChain() {
                       setSearchParams(searchParams, { replace: true })
                     }
                   } catch (error) {
-                    logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', error)
+                    logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', {
+                      error,
+                      searchParams,
+                    })
                   }
                 },
                 onSettled(_, error) {

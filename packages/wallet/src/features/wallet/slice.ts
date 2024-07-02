@@ -64,25 +64,9 @@ const slice = createSlice({
         state.accounts[id] = account
       })
     },
-    removeAccount: (state, action: PayloadAction<Address>) => {
-      const address = action.payload
-      const id = getValidAddress(address, true)
-      if (!id) {
-        throw new Error('Cannot remove an account with an invalid address')
-      }
-      if (!state.accounts[id]) {
-        throw new Error(`Cannot remove missing account ${id}`)
-      }
-      delete state.accounts[id]
-      // If removed account was active, reset active account to first account if it exists
-      if (state.activeAccountAddress && areAddressesEqual(state.activeAccountAddress, address)) {
-        const firstAccountId = Object.keys(state.accounts)[0]
-        state.activeAccountAddress = firstAccountId ?? null
-      }
-    },
     removeAccounts: (state, action: PayloadAction<Address[]>) => {
-      const addresses = action.payload
-      addresses.forEach((address) => {
+      const addressesToRemove = action.payload
+      addressesToRemove.forEach((address) => {
         const id = getValidAddress(address, true)
         if (!id) {
           throw new Error('Cannot remove an account with an invalid address')
@@ -92,23 +76,17 @@ const slice = createSlice({
         }
         delete state.accounts[id]
       })
-      // Reset active account to first account if it exists
-      const firstAccountId = Object.keys(state.accounts)[0]
-      state.activeAccountAddress = firstAccountId ?? null
-    },
-    setAccountsNonPending: (state, action: PayloadAction<Address[]>) => {
-      const addresses = action.payload
-      addresses.forEach((address) => {
-        const id = getValidAddress(address, true)
-        if (!id) {
-          throw new Error('Cannot operate on an invalid address')
-        }
-        const account = state.accounts[id]
-        if (!account) {
-          throw new Error(`Cannot enable missing account ${id}`)
-        }
-        account.pending = false
-      })
+
+      // Reset active account to first account if currently active account is deleted
+      if (
+        state.activeAccountAddress &&
+        addressesToRemove.some((addressToRemove) =>
+          areAddressesEqual(addressToRemove, state.activeAccountAddress)
+        )
+      ) {
+        const firstAccountId = Object.keys(state.accounts)[0]
+        state.activeAccountAddress = firstAccountId ?? null
+      }
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
@@ -184,9 +162,7 @@ const slice = createSlice({
 export const {
   addAccount,
   addAccounts,
-  removeAccount,
   removeAccounts,
-  setAccountsNonPending,
   editAccount,
   setAccountAsActive,
   resetWallet,

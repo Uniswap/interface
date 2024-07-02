@@ -10,14 +10,14 @@ import {
 } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-import { Analytics, UserPropertyValue } from './analytics'
+import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
   ANONYMOUS_EVENT_NAMES,
   DUMMY_KEY,
-} from './constants'
-import { generateAnalyticsLoggers } from './logging'
+} from 'utilities/src/telemetry/analytics/constants'
+import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 

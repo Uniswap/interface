@@ -1,5 +1,5 @@
 import { LayoutAnimation, withTiming } from 'react-native-reanimated'
-import { ITEM_ANIMATION_DURATION } from './constants'
+import { ITEM_ANIMATION_DURATION } from 'src/components/sortableGrid/constants'
 
 export const GridItemExiting = (): LayoutAnimation => {
   'worklet'

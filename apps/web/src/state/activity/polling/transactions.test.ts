@@ -1,4 +1,4 @@
-import { shouldCheck } from './transactions'
+import { shouldCheck } from 'state/activity/polling/transactions'
 
 describe('transactions updater', () => {
   describe('shouldCheck', () => {

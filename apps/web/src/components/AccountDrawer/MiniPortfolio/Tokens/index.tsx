@@ -1,4 +1,12 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { hideSmallBalancesAtom } from 'components/AccountDrawer/SmallBalanceToggle'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
@@ -16,11 +24,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
-import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
-import { ExpandoRow } from '../ExpandoRow'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer } from '../hooks'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()

@@ -1,9 +1,8 @@
 import { createMigrate } from 'redux-persist'
+import { migration1 } from 'state/migrations/1'
+import { migration2, PersistAppStateV2 } from 'state/migrations/2'
 import { RouterPreference } from 'state/routing/types'
 import { SlippageTolerance } from 'state/user/types'
-
-import { migration1 } from './1'
-import { migration2, PersistAppStateV2 } from './2'
 
 const previousState: PersistAppStateV2 = {
   user: {
