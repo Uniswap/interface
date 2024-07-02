@@ -190,7 +190,7 @@ export const USDC_ZKSYNC = new Token(
 
 export const USDT_TARAXA_TESTNET = new Token(
   UniverseChainId.TARAXA_TESTNET,
-  '0x0a66473ff369d43f1c63832f7bb2fd887ed16844',
+  '0x30c708A962641B223b6b78237A402FAeD9860fc2',
   6,
   'USDT',
   'Tether USD'

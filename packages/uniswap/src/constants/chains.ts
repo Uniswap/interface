@@ -1106,7 +1106,7 @@ export const UNIVERSE_CHAIN_INFO = {
       name: 'Wrapped TARA',
       symbol: 'WTARA',
       decimals: 18,
-      address: '0x5745CC77c362D459b78bC014d8940c2c98E08c54',
+      address: '0x77f0ceda294cb940b9704ddf3ca3a9faa742381f',
     },
   } as const satisfies UniverseChainInfo,
   [UniverseChainId.Taraxa]: {
@@ -1157,11 +1157,10 @@ export const UNIVERSE_CHAIN_INFO = {
     supportsClientSideRouting: false,
     supportsGasEstimates: false,
     wrappedNativeCurrency: {
-      //todo: replace with real address
       name: 'Wrapped TARA',
       symbol: 'WTARA',
       decimals: 18,
-      address: '0x5745CC77c362D459b78bC014d8940c2c98E08c54',
+      address: '0x5d0fa4c5668e5809c83c95a7cef3a9dd7c68d4fe',
     },
   } as const satisfies UniverseChainInfo,
 }
