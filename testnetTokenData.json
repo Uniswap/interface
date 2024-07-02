@@ -2,7 +2,7 @@
   "tokens": [
     {
       "chainId": 842,
-      "address": "0x5745CC77c362D459b78bC014d8940c2c98E08c54",
+      "address": "0x77f0ceda294cb940b9704ddf3ca3a9faa742381f",
       "name": "Wrapped TARA",
       "symbol": "WTARA",
       "decimals": 18,
@@ -10,7 +10,7 @@
     },
     {
       "chainId": 842,
-      "address": "0x0a66473ff369d43f1c63832f7bb2fd887ed16844",
+      "address": "0x30c708A962641B223b6b78237A402FAeD9860fc2",
       "name": "USDT",
       "symbol": "USDT",
       "decimals": 6,
@@ -18,7 +18,7 @@
     },
     {
       "chainId": 842,
-      "address": "0xF998808aA55d2570e979C27Ce47C8018e5fAdbE8",
+      "address": "0x705Ca5F051440EaC9956d9Aa89b07E5594d13Cb1",
       "name": "T1",
       "symbol": "T1",
       "decimals": 18,
@@ -26,7 +26,7 @@
     },
     {
       "chainId": 842,
-      "address": "0x7011596be357c709700710C9960cb366C41A4106",
+      "address": "0xA024De1ca9dA426e4300e8e741c81ABf9E23eEB3",
       "name": "T2",
       "symbol": "T2",
       "decimals": 18,
@@ -34,7 +34,7 @@
     },
     {
       "chainId": 842,
-      "address": "0x7a4Bccb79ab69852D857E5f77B0A3166700a9AB0",
+      "address": "0x622622a6063A45B3DDEA4b3889d12B18E62cdfa6",
       "name": "T3",
       "symbol": "T3",
       "decimals": 18,
@@ -42,7 +42,7 @@
     },
     {
       "chainId": 842,
-      "address": "0x869FFA5e06BE57200b01a1A373D1bA247364D94C",
+      "address": "0x5289040F08daD992FcE25fC3C3C6FC51B7E94932",
       "name": "Tarapepe",
       "symbol": "TPEPE",
       "decimals": 18,
@@ -50,7 +50,7 @@
     },
     {
       "chainId": 842,
-      "address": "0x3F48CB103C3172C24a9F6cF3be92d571bF7072af",
+      "address": "0x1F15130f50b25De000182914E06b5839290eEaF9",
       "name": "Lara Token",
       "symbol": "LARA",
       "decimals": 18,

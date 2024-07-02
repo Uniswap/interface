@@ -31,7 +31,7 @@
     "data:",
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
-    "https://kmswez0ba7.execute-api.eu-central-1.amazonaws.com/prod/quote",
+    "https://6gffx958h3.execute-api.eu-central-1.amazonaws.com/prod/quote",
     "https://*.alchemy.com",
     "https://*.arbitrum.io",
     "https://*.base.org/",
