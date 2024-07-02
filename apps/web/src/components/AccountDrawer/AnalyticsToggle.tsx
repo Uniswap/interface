@@ -10,7 +10,7 @@ export function AnalyticsToggle() {
   return (
     <SettingsToggle
       title={t`Allow analytics`}
-      description={t`We use anonymized data to enhance your experience with Ubeswap Labs products.`}
+      description={t`We use anonymized data to enhance your experience with Ubeswap Interface.`}
       isActive={allowAnalytics}
       toggle={() => void updateAllowAnalytics((value) => !value)}
     />

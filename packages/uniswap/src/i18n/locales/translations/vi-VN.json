@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Tôi đã sao lưu cụm từ khôi phục của mình và hiểu rằng Uniswap Labs không thể giúp tôi khôi phục ví của mình nếu tôi không làm như vậy.",
+        "check": "Tôi đã sao lưu cụm từ khôi phục của mình và hiểu rằng Ubeswap không thể giúp tôi khôi phục ví của mình nếu tôi không làm như vậy.",
         "title": "Xóa {{name}}",
         "viewOnly": "Bạn luôn có thể thêm ví chỉ xem lại bằng cách nhập địa chỉ của ví."
       },
@@ -756,7 +756,7 @@
         "new": "Chọn phương pháp sao lưu"
       },
       "view": {
-        "disclaimer": "Tôi hiểu rằng nếu tôi làm mất cụm từ khôi phục, Uniswap Labs không thể giúp tôi khôi phục nó",
+        "disclaimer": "Tôi hiểu rằng nếu tôi làm mất cụm từ khôi phục, Ubeswap không thể giúp tôi khôi phục nó",
         "subtitle": {
           "write": "Đọc kỹ phần sau trước khi tiếp tục"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Xóa cụm từ khôi phục",
         "confirm": {
-          "subtitle": "Tôi hiểu rằng Uniswap Labs không thể giúp tôi khôi phục ví nếu tôi không làm như vậy",
+          "subtitle": "Tôi hiểu rằng Ubeswap không thể giúp tôi khôi phục ví nếu tôi không làm như vậy",
           "title": "Tôi đã lưu cụm từ khôi phục của mình"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Vì các ví này có chung cụm từ khôi phục nên nó cũng sẽ xóa các bản sao lưu cho các ví này bên dưới",
             "title": "Bạn có chắc không?"
           },
-          "warning": "Nếu bạn xóa bản sao lưu {{cloudProviderName}} của mình, bạn sẽ chỉ có thể khôi phục ví của mình bằng bản sao lưu thủ công cụm từ khôi phục. Uniswap Labs không thể khôi phục tài sản của bạn nếu bạn mất cụm từ khôi phục."
+          "warning": "Nếu bạn xóa bản sao lưu {{cloudProviderName}} của mình, bạn sẽ chỉ có thể khôi phục ví của mình bằng bản sao lưu thủ công cụm từ khôi phục. Ubeswap không thể khôi phục tài sản của bạn nếu bạn mất cụm từ khôi phục."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Sao lưu cụm từ khôi phục vào {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs không lưu trữ mật khẩu của bạn và không thể khôi phục mật khẩu đó, vì vậy điều quan trọng là bạn phải nhớ mật khẩu đó.",
+          "disclaimer": "Ubeswap không lưu trữ mật khẩu của bạn và không thể khôi phục mật khẩu đó, vì vậy điều quan trọng là bạn phải nhớ mật khẩu đó.",
           "error": {
             "mismatch": "Mật khẩu không phù hợp",
             "weak": "Mật khẩu yếu"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Chúng tôi sử dụng dữ liệu sử dụng ẩn danh để nâng cao trải nghiệm của bạn trên các sản phẩm Uniswap Labs. Khi bị tắt, chúng tôi chỉ theo dõi lỗi và việc sử dụng thiết yếu.",
+          "description": "Chúng tôi sử dụng dữ liệu sử dụng ẩn danh để nâng cao trải nghiệm của bạn trên các sản phẩm Ubeswap. Khi bị tắt, chúng tôi chỉ theo dõi lỗi và việc sử dụng thiết yếu.",
           "title": "Cho phép phân tích"
         },
         "title": "Sự riêng tư"

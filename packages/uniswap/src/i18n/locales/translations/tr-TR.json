@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Kurtarma ifademi yedekledim ve bunu başaramazsam Uniswap Labs'ın cüzdanlarımı kurtarmama yardımcı olamayacağını anladım.",
+        "check": "Kurtarma ifademi yedekledim ve bunu başaramazsam Ubeswap'ın cüzdanlarımı kurtarmama yardımcı olamayacağını anladım.",
         "title": "{{name}}'yi kaldır",
         "viewOnly": "M-cüzdanın adresini girerek her zaman salt görüntülenebilir cüzdanları geri ekleyebilirsiniz."
       },
@@ -756,7 +756,7 @@
         "new": "Bir yedekleme yöntemi seçin"
       },
       "view": {
-        "disclaimer": "Kurtarma ifademi kaybedersem Uniswap Labs'in onu geri yüklememe yardımcı olamayacağını anlıyorum",
+        "disclaimer": "Kurtarma ifademi kaybedersem Ubeswap'in onu geri yüklememe yardımcı olamayacağını anlıyorum",
         "subtitle": {
           "write": "Devam etmeden önce aşağıdakileri dikkatlice okuyun"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Kurtarma ifadesini kaldır",
         "confirm": {
-          "subtitle": "Bunu başaramazsam Uniswap Labs'ın cüzdanımı kurtarmama yardım edemeyeceğini biliyorum",
+          "subtitle": "Bunu başaramazsam Ubeswap'ın cüzdanımı kurtarmama yardım edemeyeceğini biliyorum",
           "title": "Kurtarma ifademi kaydettim"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Bu cüzdanlar bir kurtarma ifadesini paylaştığından, bu cüzdanların aşağıdaki yedekleri de silinecektir.",
             "title": "Emin misin?"
           },
-          "warning": "{{cloudProviderName}} yedeklemenizi silerseniz, cüzdanınızı yalnızca kurtarma ifadenizin manuel olarak yedeklenmesiyle kurtarabilirsiniz. Kurtarma ifadenizi kaybederseniz Uniswap Labs varlıklarınızı kurtaramaz."
+          "warning": "{{cloudProviderName}} yedeklemenizi silerseniz, cüzdanınızı yalnızca kurtarma ifadenizin manuel olarak yedeklenmesiyle kurtarabilirsiniz. Kurtarma ifadenizi kaybederseniz Ubeswap varlıklarınızı kurtaramaz."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Kurtarma ifadesini {{cloudProviderName}}konumuna yedekle?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs şifrenizi saklamaz ve kurtaramaz; bu nedenle onu hatırlamanız çok önemlidir.",
+          "disclaimer": "Ubeswap şifrenizi saklamaz ve kurtaramaz; bu nedenle onu hatırlamanız çok önemlidir.",
           "error": {
             "mismatch": "Parolalar uyuşmuyor",
             "weak": "zayıf şifre"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Uniswap Labs ürünlerindeki deneyiminizi geliştirmek için anonim kullanım verilerini kullanıyoruz. Devre dışı bırakıldığında yalnızca hataları ve temel kullanımı izleriz.",
+          "description": "Ubeswap ürünlerindeki deneyiminizi geliştirmek için anonim kullanım verilerini kullanıyoruz. Devre dışı bırakıldığında yalnızca hataları ve temel kullanımı izleriz.",
           "title": "Analitiklere izin ver"
         },
         "title": "Mahremiyet"

@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "我备份了我的恢复短语，并了解如果我未能这样做，Uniswap Labs 无法帮助我恢复钱包。",
+        "check": "我备份了我的恢复短语，并了解如果我未能这样做，Ubeswap 无法帮助我恢复钱包。",
         "title": "删除 {{name}}",
         "viewOnly": "你始终可以通过输入钱包地址来添加仅返回查看的钱包。"
       },
@@ -756,7 +756,7 @@
         "new": "选择备份方法"
       },
       "view": {
-        "disclaimer": "我了解如果我丢失了恢复短语，Uniswap Labs 无法帮助我恢复它",
+        "disclaimer": "我了解如果我丢失了恢复短语，Ubeswap 无法帮助我恢复它",
         "subtitle": {
           "write": "在继续之前请仔细阅读以下内容"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "删除恢复短语",
         "confirm": {
-          "subtitle": "我了解如果我未能这样做，Uniswap Labs 无法帮助我找回钱包",
+          "subtitle": "我了解如果我未能这样做，Ubeswap 无法帮助我找回钱包",
           "title": "我保存了恢复短语"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "因为这些钱包共享一个恢复短语，所以它也会删除下面这些钱包的备份",
             "title": "你确定吗？"
           },
-          "warning": "如果你删除 {{cloudProviderName}} 备份，你只能通过手动备份恢复短语来恢复钱包。如果你丢失恢复短语，Uniswap Labs 无法恢复你的钱包。"
+          "warning": "如果你删除 {{cloudProviderName}} 备份，你只能通过手动备份恢复短语来恢复钱包。如果你丢失恢复短语，Ubeswap 无法恢复你的钱包。"
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "将恢复短语备份到 {{cloudProviderName}}？"
         },
         "password": {
-          "disclaimer": "Uniswap Labs 不会存储您的密码，也无法恢复它，因此记住它至关重要。",
+          "disclaimer": "Ubeswap 不会存储您的密码，也无法恢复它，因此记住它至关重要。",
           "error": {
             "mismatch": "密码不匹配",
             "weak": "密码弱"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "我们使用匿名使用数据来增强您对 Uniswap Labs 产品的体验。禁用后，我们仅跟踪错误和基本用法。",
+          "description": "我们使用匿名使用数据来增强您对 Ubeswap 产品的体验。禁用后，我们仅跟踪错误和基本用法。",
           "title": "允许分析"
         },
         "title": "隐私"

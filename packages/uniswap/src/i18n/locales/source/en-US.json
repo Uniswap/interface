@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "I backed up my recovery phrase and understand that Uniswap Labs can’t help me recover my wallets if I failed to do so.",
+        "check": "I backed up my recovery phrase and understand that Uniswap can’t help me recover my wallets if I failed to do so.",
         "title": "Remove {{name}}",
         "viewOnly": "You can always add back view-only wallets by entering the wallet’s address."
       },
@@ -756,7 +756,7 @@
         "new": "Choose a backup method"
       },
       "view": {
-        "disclaimer": "I understand that if I lose my recovery phrase, Uniswap Labs cannot help me restore it",
+        "disclaimer": "I understand that if I lose my recovery phrase, Uniswap cannot help me restore it",
         "subtitle": {
           "write": "Read the following carefully before continuing"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Remove recovery phrase",
         "confirm": {
-          "subtitle": "I understand that Uniswap Labs can’t help me recover my wallet if I failed to do so",
+          "subtitle": "I understand that Uniswap can’t help me recover my wallet if I failed to do so",
           "title": "I saved my recovery phrase"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Because these wallets share a recovery phrase, it will also delete the backups for these wallets below",
             "title": "Are you sure?"
           },
-          "warning": "If you delete your {{cloudProviderName}} backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase."
+          "warning": "If you delete your {{cloudProviderName}} backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap can’t recover your assets if you lose your recovery phrase."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Back up recovery phrase to {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs does not store your password and can’t recover it, so it’s crucial you remember it.",
+          "disclaimer": "Uniswap does not store your password and can’t recover it, so it’s crucial you remember it.",
           "error": {
             "mismatch": "Passwords do not match",
             "weak": "Weak password"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "We use anonymous usage data to enhance your experience across Ubeswap Labs products. When disabled, we only track errors and essential usage.",
+          "description": "We use anonymous usage data to enhance your experience across Ubeswap products. When disabled, we only track errors and essential usage.",
           "title": "Allow analytics"
         },
         "title": "Privacy"

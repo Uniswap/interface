@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Fiz backup da minha frase de recuperação e entendo que a Uniswap Labs não poderá me ajudar a recuperar minhas carteiras se eu não conseguir.",
+        "check": "Fiz backup da minha frase de recuperação e entendo que a Ubeswap não poderá me ajudar a recuperar minhas carteiras se eu não conseguir.",
         "title": "Remover {{name}}",
         "viewOnly": "Você sempre pode adicionar carteiras somente para visualização inserindo o endereço da carteira."
       },
@@ -756,7 +756,7 @@
         "new": "Escolha um método de backup"
       },
       "view": {
-        "disclaimer": "Entendo que se eu perder minha frase de recuperação, Uniswap Labs não poderá me ajudar a restaurá-la",
+        "disclaimer": "Entendo que se eu perder minha frase de recuperação, Ubeswap não poderá me ajudar a restaurá-la",
         "subtitle": {
           "write": "Leia atentamente o seguinte antes de continuar"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Remover frase de recuperação",
         "confirm": {
-          "subtitle": "Entendo que o Uniswap Labs não poderá me ajudar a recuperar minha carteira se eu não conseguir fazê-lo",
+          "subtitle": "Entendo que o Ubeswap não poderá me ajudar a recuperar minha carteira se eu não conseguir fazê-lo",
           "title": "Salvei minha frase de recuperação"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Como essas carteiras compartilham uma frase de recuperação, os backups das carteiras abaixo também serão excluídos",
             "title": "Tem certeza?"
           },
-          "warning": "Se você excluir o backup do {{cloudProviderName}}, só poderá recuperar sua carteira com um backup manual da sua frase de recuperação. A Uniswap Labs não poderá recuperar seus ativos se você perder sua frase de recuperação."
+          "warning": "Se você excluir o backup do {{cloudProviderName}}, só poderá recuperar sua carteira com um backup manual da sua frase de recuperação. A Ubeswap não poderá recuperar seus ativos se você perder sua frase de recuperação."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Faça backup da frase de recuperação para {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "O Uniswap Labs não armazena sua senha e não pode recuperá-la, por isso é crucial que você se lembre dela.",
+          "disclaimer": "O Ubeswap não armazena sua senha e não pode recuperá-la, por isso é crucial que você se lembre dela.",
           "error": {
             "mismatch": "As senhas não coincidem",
             "weak": "Senha fraca"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Usamos dados de uso anônimos para aprimorar sua experiência nos produtos Uniswap Labs. Quando desativado, rastreamos apenas erros e usos essenciais.",
+          "description": "Usamos dados de uso anônimos para aprimorar sua experiência nos produtos Ubeswap. Quando desativado, rastreamos apenas erros e usos essenciais.",
           "title": "Permitir analytics"
         },
         "title": "Privacidade"

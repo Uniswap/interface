@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Ik heb een back-up gemaakt van mijn herstelzin en begrijp dat Uniswap Labs mij niet kan helpen mijn portemonnee te herstellen als ik dit niet heb gedaan.",
+        "check": "Ik heb een back-up gemaakt van mijn herstelzin en begrijp dat Ubeswap mij niet kan helpen mijn portemonnee te herstellen als ik dit niet heb gedaan.",
         "title": "Verwijder {{name}}",
         "viewOnly": "U kunt altijd back-view-portemonnees toevoegen door het adres van de portemonnee in te voeren."
       },
@@ -756,7 +756,7 @@
         "new": "Kies een back-upmethode"
       },
       "view": {
-        "disclaimer": "Ik begrijp dat als ik mijn herstelzin kwijtraak, Uniswap Labs mij niet kan helpen deze te herstellen",
+        "disclaimer": "Ik begrijp dat als ik mijn herstelzin kwijtraak, Ubeswap mij niet kan helpen deze te herstellen",
         "subtitle": {
           "write": "Lees het volgende aandachtig voordat u verdergaat"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Herstelzin verwijderen",
         "confirm": {
-          "subtitle": "Ik begrijp dat Uniswap Labs mij niet kan helpen mijn portemonnee terug te krijgen als ik dit niet heb gedaan",
+          "subtitle": "Ik begrijp dat Ubeswap mij niet kan helpen mijn portemonnee terug te krijgen als ik dit niet heb gedaan",
           "title": "Ik heb mijn herstelzin opgeslagen"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Omdat deze portemonnees een herstelzin delen, worden ook de onderstaande back-ups voor deze portemonnees verwijderd",
             "title": "Weet je het zeker?"
           },
-          "warning": "Als u uw {{cloudProviderName}} back-up verwijdert, kunt u uw portemonnee alleen herstellen met een handmatige back-up van uw herstelzin. Uniswap Labs kan uw activa niet herstellen als u uw herstelzin kwijtraakt."
+          "warning": "Als u uw {{cloudProviderName}} back-up verwijdert, kunt u uw portemonnee alleen herstellen met een handmatige back-up van uw herstelzin. Ubeswap kan uw activa niet herstellen als u uw herstelzin kwijtraakt."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Maak een back-up van de herstelzin naar {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs slaat uw wachtwoord niet op en kan het niet herstellen, dus het is van cruciaal belang dat u het onthoudt.",
+          "disclaimer": "Ubeswap slaat uw wachtwoord niet op en kan het niet herstellen, dus het is van cruciaal belang dat u het onthoudt.",
           "error": {
             "mismatch": "Wachtwoorden komen niet overeen",
             "weak": "Zwak wachtwoord"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "We gebruiken anonieme gebruiksgegevens om uw ervaring met Uniswap Labs-producten te verbeteren. Indien uitgeschakeld, volgen we alleen fouten en essentieel gebruik.",
+          "description": "We gebruiken anonieme gebruiksgegevens om uw ervaring met Ubeswap-producten te verbeteren. Indien uitgeschakeld, volgen we alleen fouten en essentieel gebruik.",
           "title": "Analyses toestaan"
         },
         "title": "Privacy"

@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Hice una copia de seguridad de mi frase de recuperación y entiendo que Uniswap Labs no puede ayudarme a recuperar mis billeteras si no lo hago.",
+        "check": "Hice una copia de seguridad de mi frase de recuperación y entiendo que Ubeswap no puede ayudarme a recuperar mis billeteras si no lo hago.",
         "title": "Eliminar {{name}}",
         "viewOnly": "Siempre puedes volver a agregar wallets de sólo visualización ingresando la dirección de la billetera."
       },
@@ -756,7 +756,7 @@
         "new": "Elija un método de copia de seguridad"
       },
       "view": {
-        "disclaimer": "Entiendo que si pierdo mi frase de recuperación, Uniswap Labs no puede ayudarme a restaurarla",
+        "disclaimer": "Entiendo que si pierdo mi frase de recuperación, Ubeswap no puede ayudarme a restaurarla",
         "subtitle": {
           "write": "Lea atentamente lo siguiente antes de continuar."
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Eliminar frase de recuperación",
         "confirm": {
-          "subtitle": "Entiendo que Uniswap Labs no puede ayudarme a recuperar mi billetera si no lo hice",
+          "subtitle": "Entiendo que Ubeswap no puede ayudarme a recuperar mi billetera si no lo hice",
           "title": "Guardé mi frase de recuperación."
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Debido a que estas billeteras comparten una frase de recuperación, también se eliminarán las copias de seguridad de estas billeteras a continuación.",
             "title": "¿Estás seguro?"
           },
-          "warning": "Si eliminas tu respaldo de {{cloudProviderName}}, sólo podrás recuperar tu wallet con una copia de seguridad manual de tu frase de recuperación. Uniswap Labs no puede recuperar tus activos si pierdes tu frase de recuperación."
+          "warning": "Si eliminas tu respaldo de {{cloudProviderName}}, sólo podrás recuperar tu wallet con una copia de seguridad manual de tu frase de recuperación. Ubeswap no puede recuperar tus activos si pierdes tu frase de recuperación."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "¿Hacer copia de seguridad de la frase de recuperación en {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs no almacena su contraseña y no puede recuperarla, por lo que es fundamental que la recuerde.",
+          "disclaimer": "Ubeswap no almacena su contraseña y no puede recuperarla, por lo que es fundamental que la recuerde.",
           "error": {
             "mismatch": "Las contraseñas no coinciden",
             "weak": "Contraseña débil"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Utilizamos datos de uso anónimos para mejorar su experiencia en los productos de Uniswap Labs. Cuando está deshabilitado, solo realizamos un seguimiento de los errores y el uso esencial.",
+          "description": "Utilizamos datos de uso anónimos para mejorar su experiencia en los productos de Ubeswap. Cuando está deshabilitado, solo realizamos un seguimiento de los errores y el uso esencial.",
           "title": "Permitir análisis"
         },
         "title": "Privacidad"
