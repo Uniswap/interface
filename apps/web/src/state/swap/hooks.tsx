@@ -133,10 +133,8 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const { chainId } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
   const { address: smartPoolAddress } = useActiveSmartPool()
-  const userBalance = useCurrencyBalance(account.address, nativeCurrency, chainId)
-
   // this is used to check the user has enough base currency to cover gas fees
-  const userBalance = useCurrencyBalance(account ?? undefined, nativeCurrency)
+  const userBalance = useCurrencyBalance(account.address, nativeCurrency, chainId)
 
   const {
     currencyState: { inputCurrency, outputCurrency },

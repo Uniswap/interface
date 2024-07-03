@@ -107,8 +107,6 @@ export default function Landing() {
 
   const [hideCancelled, setHideCancelled] = useState(true)
 
-  const { account } = useWeb3React()
-
   // toggle for showing delegation modal
   const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
@@ -178,7 +176,7 @@ export default function Landing() {
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? (
                   <Loader />
-                ) : account ? (
+                ) : account.isConnected ? (
                   <ButtonPrimary
                     style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"

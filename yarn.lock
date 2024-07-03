@@ -11575,6 +11575,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chrome@npm:^0.0.114":
+  version: 0.0.114
+  resolution: "@types/chrome@npm:0.0.114"
+  dependencies:
+    "@types/filesystem": "*"
+    "@types/har-format": "*"
+  checksum: 7b7c7d7ae72e54011328709b23f6bb2b15e8626af01e7577deae34fd1a0ec52f3f911f9eb9eeb49110a6816ee993450119eb889a286e077c5ce194878415d63f
+  languageName: node
+  linkType: hard
+
 "@types/chrome@npm:^0.0.136":
   version: 0.0.136
   resolution: "@types/chrome@npm:0.0.136"
@@ -13750,84 +13760,6 @@ __metadata:
   checksum: 2bcd7761548d3d1d426096d0af8ee4a315e1b9c2d96186f6708e406da8bb1c3929579f6f457b1f3742289e8bb6d3dca465b6c511526ed1c43b92d5cdc16fea69
   languageName: node
   linkType: hard
-
-"@uniswap/stretch@workspace:apps/stretch":
-  version: 0.0.0-use.local
-  resolution: "@uniswap/stretch@workspace:apps/stretch"
-  dependencies:
-    "@apollo/client": 3.10.4
-    "@ethersproject/providers": 5.7.2
-    "@metamask/rpc-errors": 6.2.1
-    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
-    "@reduxjs/toolkit": 1.9.3
-    "@sentry/browser": 7.80.0
-    "@sentry/react": 7.80.0
-    "@sentry/webpack-plugin": 2.10.3
-    "@svgr/webpack": 8.0.1
-    "@tamagui/core": 1.95.1
-    "@testing-library/dom": ^7.11.0
-    "@testing-library/react": 13.4.0
-    "@types/chrome": 0.0.254
-    "@types/jest": 29.5.0
-    "@types/react": ^18.0.15
-    "@types/react-dom": ^18.0.6
-    "@types/redux-logger": 3.0.9
-    "@types/redux-persist-webextension-storage": 1.0.3
-    "@types/ua-parser-js": 0.7.31
-    "@types/uuid": 9.0.1
-    "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/universal-router-sdk": 2.1.0
-    "@uniswap/v3-sdk": 3.11.2
-    "@welldone-software/why-did-you-render": 8.0.1
-    clean-webpack-plugin: ^4.0.0
-    copy-webpack-plugin: ^11.0.0
-    dotenv-webpack: 8.0.1
-    esbuild-loader: ^3.0.1
-    eslint: 8.44.0
-    ethers: 5.7.2
-    eventemitter3: 5.0.1
-    i18next: 23.10.0
-    jest: 29.7.0
-    jest-chrome: 0.8.0
-    jest-environment-jsdom: 29.5.0
-    mini-css-extract-plugin: ^2.7.6
-    node-polyfill-webpack-plugin: 2.0.1
-    react: 18.2.0
-    react-dom: 18.2.0
-    react-i18next: 14.1.0
-    react-native: 0.73.6
-    react-native-gesture-handler: 2.15.0
-    react-native-reanimated: "npm:react-native-reanimated@3.8.1"
-    react-native-svg: 15.1.0
-    react-native-web: 0.19.10
-    react-qr-code: 2.0.12
-    react-redux: 8.0.5
-    react-refresh: ^0.14.0
-    react-router-dom: 6.10.0
-    redux: 4.2.1
-    redux-logger: 3.0.6
-    redux-persist: 6.0.0
-    redux-persist-webextension-storage: 1.0.2
-    redux-saga: 1.2.2
-    serve: ^14.2.0
-    statsig-js: 4.41.0
-    swc-loader: ^0.2.3
-    symbol-observable: 4.0.0
-    tamagui-loader: 1.95.1
-    typed-redux-saga: 1.5.0
-    typescript: 5.3.3
-    ua-parser-js: 1.0.37
-    ui: "workspace:^"
-    uniswap: "workspace:^"
-    utilities: "workspace:^"
-    uuid: 9.0.0
-    wallet: "workspace:^"
-    webpack: 5.90.0
-    webpack-cli: ^5.0.1
-    webpack-dev-server: ^4.13.1
-    zod: 3.22.4
-  languageName: unknown
-  linkType: soft
 
 "@uniswap/swap-router-contracts@npm:^1.3.0":
   version: 1.3.1
@@ -27697,6 +27629,17 @@ __metadata:
     jest-util: ^29.7.0
     p-limit: ^3.1.0
   checksum: 963e203893c396c5dfc75e00a49426688efea7361b0f0e040035809cecd2d46b3c01c02be2d9e8d38b1138357d2de7719ea5b5be21f66c10f2e9685a5a73bb99
+  languageName: node
+  linkType: hard
+
+"jest-chrome@npm:0.8.0":
+  version: 0.8.0
+  resolution: "jest-chrome@npm:0.8.0"
+  dependencies:
+    "@types/chrome": ^0.0.114
+  peerDependencies:
+    jest: ^26.0.1 || ^27.0.0
+  checksum: c34b3be1c7c13d08eafd8505d130d1dad3339836cb77d3997e09cf1dc2be618a5ca1f685190692d9872b8a1ce0f04d204b7b66476fea275b0bcf54779ebc5a72
   languageName: node
   linkType: hard
 

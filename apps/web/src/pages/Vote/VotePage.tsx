@@ -204,14 +204,14 @@ export default function VotePage() {
     proposalData?.startBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
     true
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
     true
   )
   const now = new Date()

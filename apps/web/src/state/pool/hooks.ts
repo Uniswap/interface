@@ -121,26 +121,26 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
 }
 
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
   const registry = useRegistryContract()
   const blockNumber = useBlockNumber()
 
   // get metadata from past events
   let registryStartBlock
 
-  if (chainId === ChainId.MAINNET) {
+  if (account.chainId === ChainId.MAINNET) {
     registryStartBlock = 15834693
-  } else if (chainId === ChainId.GOERLI) {
+  } else if (account.chainId === ChainId.GOERLI) {
     registryStartBlock = 7807806
-  } else if (chainId === ChainId.ARBITRUM_ONE) {
+  } else if (account.chainId === ChainId.ARBITRUM_ONE) {
     registryStartBlock = 35439804
-  } else if (chainId === ChainId.OPTIMISM) {
+  } else if (account.chainId === ChainId.OPTIMISM) {
     registryStartBlock = 34629059
-  } else if (chainId === ChainId.POLYGON) {
+  } else if (account.chainId === ChainId.POLYGON) {
     registryStartBlock = 35228892
-  } else if (chainId === ChainId.BASE && blockNumber) {
+  } else if (account.chainId === ChainId.BASE && blockNumber) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-  } else if (chainId === ChainId.BNB && blockNumber) {
+  } else if (account.chainId === ChainId.BNB && blockNumber) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
     registryStartBlock = blockNumber as number
@@ -148,7 +148,7 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 
   const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)
 
-  const poolsFromList = usePoolsFromList(registry, chainId)
+  const poolsFromList = usePoolsFromList(registry, account.chainId)
 
   // early return until events are fetched
   return useMemo(() => {
@@ -204,7 +204,8 @@ export function useCreateCallback(): (
   symbol: string | undefined,
   currencyValue: Currency | undefined
 ) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const factoryContract = usePoolFactoryContract()
 
@@ -213,10 +214,10 @@ export function useCreateCallback(): (
       const parsedAddress = currencyValue?.isNative ? ZERO_ADDRESS : currencyValue?.address
       // TODO: check name and symbol assertions
       //if (!provider || !chainId || !account || name === '' || symbol === '' || !isAddress(parsedAddress ?? ''))
-      if (!provider || !chainId || !account || !name || !symbol || !parsedAddress || !isAddress(parsedAddress ?? '')) {
+      if (!provider || !account.chainId || !account.address || !name || !symbol || !parsedAddress || !isAddress(parsedAddress ?? '')) {
         return undefined
       }
-      if (currencyValue?.chainId !== chainId) {
+      if (currencyValue?.chainId !== account.chainId) {
         throw new Error('User Switched Wallet On Open Create Modal')
       }
       if (!factoryContract) {
@@ -233,14 +234,14 @@ export function useCreateCallback(): (
           })
       })
     },
-    [account, addTransaction, chainId, provider, factoryContract]
+    [account.address, addTransaction, account.chainId, provider, factoryContract]
   )
 }
 
 export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
   const registry = useRegistryContract()
-  const fromBlock = useStartBlock(chainId)
+  const fromBlock = useStartBlock(account.chainId)
   // create filters for Registered events
   const filter = useMemo(() => {
     const filter = registry?.filters?.Registered()
@@ -253,10 +254,10 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
     }
   }, [registry, fromBlock])
   const logs = useAppSelector((state) => state.logs)
-  if (!chainId || !filter) {
+  if (!account.chainId || !filter) {
     return []
   }
-  const state = logs[chainId]?.[filterToKey(filter)]
+  const state = logs[account.chainId]?.[filterToKey(filter)]
   const result = state?.results
 
   return result?.logs
@@ -278,7 +279,8 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
 }
 
 export function useSetLockupCallback(): (lockup: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
@@ -286,7 +288,7 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
 
   return useCallback(
     (lockup: string | undefined) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!poolContract) {
@@ -303,12 +305,13 @@ export function useSetLockupCallback(): (lockup: string | undefined) => undefine
           })
       })
     },
-    [account, chainId, provider, poolContract, addTransaction]
+    [account.address, account.chainId, provider, poolContract, addTransaction]
   )
 }
 
 export function useSetSpreadCallback(): (spread: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
@@ -316,7 +319,7 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
 
   return useCallback(
     (spread: string | undefined) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!poolContract) {
@@ -333,12 +336,13 @@ export function useSetSpreadCallback(): (spread: string | undefined) => undefine
           })
       })
     },
-    [account, chainId, provider, poolContract, addTransaction]
+    [account.address, account.chainId, provider, poolContract, addTransaction]
   )
 }
 
 export function useSetValueCallback(): (value: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
@@ -346,7 +350,7 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
 
   return useCallback(
     (value: string | undefined) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!poolContract) {
@@ -363,7 +367,7 @@ export function useSetValueCallback(): (value: string | undefined) => undefined 
           })
       })
     },
-    [account, chainId, provider, poolContract, addTransaction]
+    [account.address, account.chainId, provider, poolContract, addTransaction]
   )
 }
 
@@ -457,8 +461,8 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   const totalDelegatedStake = delegatedStakes?.reduce((prev, curr) => prev + Number(curr.delegatedStake), 0)
   const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr) => prev + Number(curr.poolOwnStake), 0)
   // TODO: check if should pass supply from parent
-  const { chainId } = useWeb3React()
-  const supplyAmount = useTotalSupply(GRG[chainId ?? 1])
+  const account = useWeb3React()
+  const supplyAmount = useTotalSupply(GRG[account.chainId ?? 1])
 
   const yieldData = useMemo(() => {
     if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount) {
@@ -521,16 +525,16 @@ export function useOperatedPools() {
   const PoolInterface = new Interface(POOL_EXTENDED_ABI)
   const results = useMultipleContractSingleData(poolAddresses, PoolInterface, 'getPool')
 
-  const { address: account, chainId } = useAccount()
-  const prevAccount = usePrevious(account)
-  const accountChanged = prevAccount && prevAccount !== account
+  const account = useAccount()
+  const prevAccount = usePrevious(account.address)
+  const accountChanged = prevAccount && prevAccount !== account.address
 
   // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
   const operatedPools: Token[] | undefined = useMemo(() => {
-    if (!account || !chainId || !results || !poolAddresses) {
+    if (!account.address || !account.chainId || !results || !poolAddresses) {
       return
     }
-    const mockToken = new Token(0, account, 1)
+    const mockToken = new Token(0, account.address, 1)
     return results
       .map((result, i) => {
         const { result: pools, loading } = result
@@ -545,15 +549,15 @@ export function useOperatedPools() {
           return mockToken
         }
         //const poolWithAddress: PoolWithAddress = { name, symbol, decimals, owner, poolAddress }
-        const isPoolOperator = owner === account
+        const isPoolOperator = owner === account.address
         if (!isPoolOperator) {
           return mockToken
         }
-        return new Token(chainId ?? ChainId.MAINNET, poolAddress, decimals, symbol, name)
+        return new Token(account.chainId ?? ChainId.MAINNET, poolAddress, decimals, symbol, name)
       })
       .filter((p) => p !== mockToken)
     //.filter((p) => account.address === owner)
-  }, [account, chainId, poolAddresses, results])
+  }, [account.address, account.chainId, poolAddresses, results])
 
   const defaultPool = useMemo(() => {
     if (!operatedPools) {

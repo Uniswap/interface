@@ -22,7 +22,6 @@ import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { useTokenBalance } from '../../state/connection/hooks'
 import {
   useDelegateCallback,
   useDelegatePoolCallback,
@@ -69,7 +68,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   const theme = useTheme()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
 
@@ -185,7 +184,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
     parsedAmount ?? undefined,
-    GRG_TRANSFER_PROXY_ADDRESSES[chainId ?? 1] ?? undefined,
+    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? 1] ?? undefined,
     usingDelegate
   )
 
@@ -281,7 +280,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                 {usingDelegate ? <Trans i18nKey="grg.stakeFromPool" /> : <Trans i18nKey="grg.stakeFromWallet" />}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
-            {poolInfo?.owner === account && (
+            {poolInfo?.owner === account.address && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
                 <Text color={theme.accent1}>
                   {usingDelegate ? <Trans i18nKey="grg.stakeFromWallet" /> : <Trans i18nKey="grg.stakeFromPool" />}

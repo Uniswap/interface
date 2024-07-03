@@ -268,7 +268,7 @@ ${bodyValue}
       case ProposalAction.UPGRADE_IMPLEMENTATION: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(RB_POOL_FACTORY_ABI)]
-        targets = [RB_FACTORY_ADDRESSES[chainId ?? 1]]
+        targets = [RB_FACTORY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setImplementation']
         break
       }
@@ -276,20 +276,20 @@ ${bodyValue}
       case ProposalAction.UPGRADE_GOVERNANCE: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(GOVERNANCE_RB_ABI)]
-        targets = [GOVERNANCE_PROXY_ADDRESSES[chainId ?? 1]]
+        targets = [GOVERNANCE_PROXY_ADDRESSES[account.chainId ?? 1]]
         methods = ['upgradeImplementation']
         break
       }
 
       case ProposalAction.UPGRADE_STAKING: {
         values = [
-          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
           [],
           [getAddress(toAddressValue)],
-          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
         ]
         interfaces = [new Interface(STAKING_PROXY_ABI)]
-        targets = [STAKING_PROXY_ADDRESSES[chainId ?? 1]]
+        targets = [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]]
         methods = ['addAuthorizedAddress', 'detachStakingContract', 'attachStakingContract', 'removeAuthorizedAddress']
         break
       }
@@ -298,7 +298,7 @@ ${bodyValue}
       case ProposalAction.ADD_ADAPTER: {
         values = [[getAddress(toAddressValue), true]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setAdapter']
         break
       }
@@ -307,7 +307,7 @@ ${bodyValue}
       case ProposalAction.REMOVE_ADAPTER: {
         values = [[getAddress(toAddressValue), false]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setAdapter']
         break
       }

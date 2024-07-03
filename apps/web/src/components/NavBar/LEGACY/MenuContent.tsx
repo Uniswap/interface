@@ -97,7 +97,7 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 export function MenuContent({ close }: { close: () => void }) {
-  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
+  //const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
   const menuContent = useMenuContent()
 
   return (

@@ -1,7 +1,7 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader from 'components/Icons/LoadingSpinner'
 import { GRG } from 'constants/tokens'
 import { Trans } from 'i18n'
@@ -100,7 +100,7 @@ export default function Stake() {
   const { data: allPools, loading } = useAllPoolsData()
 
   const { account, chainId } = useWeb3React()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
   const poolAddresses = allPools?.map((p) => p.pool)
@@ -268,7 +268,7 @@ export default function Stake() {
                   >
                     <ButtonPrimary
                       style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                      onClick={toggleWalletDrawer}
+                      onClick={accountDrawer.open}
                     >
                       <Trans i18nKey="common.connectAWallet.button" />
                     </ButtonPrimary>

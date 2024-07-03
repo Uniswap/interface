@@ -17,17 +17,17 @@ export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.SEPOLIA,
   ChainId.POLYGON,
   ChainId.POLYGON_MUMBAI,
-  //ChainId.CELO,
+  ChainId.CELO,
   ChainId.CELO_ALFAJORES,
   ChainId.ARBITRUM_ONE,
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BNB,
-  //ChainId.AVALANCHE,
+  ChainId.AVALANCHE,
   ChainId.BASE,
-  //ChainId.BLAST,
-  //ChainId.ZORA,
+  ChainId.BLAST,
+  ChainId.ZORA,
 ] as const
 
 export function isSupportedChainId(chainId?: number | ChainId | null): chainId is SupportedInterfaceChainId {
@@ -40,10 +40,13 @@ function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, 
   // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
 
-  const zoraEnabled = useFeatureFlag(FeatureFlags.Zora)
+  const zoraEnabled = false //useFeatureFlag(FeatureFlags.Zora)
   return useMemo(
     () => ({
       [ChainId.ZORA]: zoraEnabled,
+      [ChainId.AVALANCHE]: false,
+      [ChainId.BLAST]: false,
+      [ChainId.CELO]: false,
     }),
     [zoraEnabled]
   )
@@ -107,13 +110,13 @@ const INTERFACE_SUPPORTED_CHAINS = [
   ARBITRUM_GOERLI,
   POLYGON,
   POLYGON_MUMBAI,
-  //AVALANCHE,
-  //CELO,
+  AVALANCHE,
+  CELO,
   CELO_ALFAJORES,
   BNB,
   BASE,
-  //BLAST,
-  //ZORA,
+  BLAST,
+  ZORA,
 ] as const
 
 type ExtractObject<TObject extends Record<string, unknown>, TNarrowedObject extends Partial<TObject>> = Extract<
@@ -138,13 +141,13 @@ export const CHAIN_INFO: ChainInfoMap = {
   [ChainId.ARBITRUM_GOERLI]: ARBITRUM_GOERLI,
   [ChainId.POLYGON]: POLYGON,
   [ChainId.POLYGON_MUMBAI]: POLYGON_MUMBAI,
-  //[ChainId.CELO]: CELO,
+  [ChainId.CELO]: CELO,
   [ChainId.CELO_ALFAJORES]: CELO_ALFAJORES,
   [ChainId.BNB]: BNB,
-  //[ChainId.AVALANCHE]: AVALANCHE,
+  [ChainId.AVALANCHE]: AVALANCHE,
   [ChainId.BASE]: BASE,
-  //[ChainId.BLAST]: BLAST,
-  //[ChainId.ZORA]: ZORA,
+  [ChainId.BLAST]: BLAST,
+  [ChainId.ZORA]: ZORA,
 } as const
 
 export type ChainSlug = SupportedInterfaceChain['urlParam']

@@ -7,6 +7,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { POP_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -248,13 +249,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 }
 
 export function useFreeStakeBalance(isDelegateFreeStake?: boolean): CurrencyAmount<Token> | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
   const freeStake = useSingleCallResult(stakingContract ?? undefined, 'getOwnerStakeByStatus', [
-    isDelegateFreeStake ? account : poolAddressFromUrl ?? account,
+    isDelegateFreeStake ? account.address : poolAddressFromUrl ?? account.address,
     StakeStatus.UNDELEGATED,
   ])?.result?.[0]
 
@@ -277,12 +278,12 @@ interface UnclaimedRewardsData {
 
 // TODO: check as from pool page we are passing [] if not pool operator, i.e. we want to skip the rpc call when normal user
 export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   //const members = Array(poolIds.length).fill(poolAddressFromUrl ?? account)
-  const farmer = poolAddressFromUrl ?? account
+  const farmer = poolAddressFromUrl ?? account.address
   // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
   //  we should check the logic of appending pool address as we should also append its pool id, but will result
   //  in a duplicate id, however the positive reward filter will return that id either for user or for pool, never both
@@ -321,13 +322,13 @@ interface UserStakeData {
 }
 
 export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
 
   const inputs = useMemo(() => {
     return poolIds.map((poolId) => {
-      return [account, poolId]
+      return [account.address, poolId]
     })
   }, [account, poolIds])
 
@@ -353,7 +354,8 @@ export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undef
 }
 
 export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: boolean) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
@@ -363,7 +365,7 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
 
   return useCallback(
     (amount: CurrencyAmount<Token>, isPool?: boolean) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!stakingContract) {
@@ -382,7 +384,7 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
             .then((response: TransactionResponse) => {
               addTransaction(response, {
                 type: TransactionType.CLAIM,
-                recipient: account,
+                recipient: account.address ?? '',
               })
               return response.hash
             })
@@ -404,12 +406,13 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract, addTransaction]
+    [account, account.chainId, provider, poolContract, stakingContract, addTransaction]
   )
 }
 
 export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
@@ -420,7 +423,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
 
   return useCallback(
     (poolIds: string[], isPool?: boolean) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!stakingContract || !stakingProxy) {
@@ -451,7 +454,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
             .then((response: TransactionResponse) => {
               addTransaction(response, {
                 type: TransactionType.CLAIM,
-                recipient: account,
+                recipient: account.address ?? '',
               })
               return response.hash
             })
@@ -473,7 +476,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
+    [account, account.chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
   )
 }
 
@@ -482,7 +485,8 @@ export function usePopContract(): Contract | null {
 }
 
 export function useRaceCallback(): (poolAddress: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const popContract = usePopContract()
 
   // state for pending and submitted txn views
@@ -490,7 +494,7 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
 
   return useCallback(
     (poolAddress: string | undefined) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!popContract) {
@@ -505,12 +509,12 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.CLAIM,
-              recipient: account,
+              recipient: account.address ?? '',
             })
             return response.hash
           })
       })
     },
-    [account, chainId, provider, popContract, addTransaction]
+    [account.address, account.chainId, provider, popContract, addTransaction]
   )
 }

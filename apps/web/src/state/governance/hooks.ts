@@ -15,6 +15,7 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { useAccount } from 'hooks/useAccount'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
 import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
@@ -535,17 +536,18 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 
 export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !account.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
+      if (!provider || !account?.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
         return undefined
       }
       //if (!stakeData.amount) return

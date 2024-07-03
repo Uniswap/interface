@@ -36,7 +36,7 @@ const SubscriptionContext = createContext<
 >(undefined)
 
 export function AssetActivityProvider({ children }: PropsWithChildren) {
-  let account = useAccount()
+  const account = useAccount()
   const previousAccount = usePrevious(account.address)
   const activeSmartPool = useActiveSmartPool()
 
@@ -44,13 +44,13 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
   const isSendPage = page === '/send'
   const shouldQueryPoolBalances = activeSmartPool.address && !isSendPage
 
-  account = shouldQueryPoolBalances ? activeSmartPool : account
+  const contextAddress = shouldQueryPoolBalances ? activeSmartPool.address : account.address
 
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
   const [attempt, incrementAttempt] = useReducer((attempt) => attempt + 1, 1)
   const subscriptionId = useMemo(uuidV4, [account, attempt])
   const result = useOnAssetActivitySubscription({
-    variables: { account: account.address ?? '', subscriptionId },
+    variables: { account: contextAddress ?? '', subscriptionId },
     skip: !account || !isRealtimeEnabled,
     onError: (error) => {
       logger.error(error, {
@@ -65,8 +65,8 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
 
   const [lazyFetch, query] = useActivityWebLazyQuery()
   const fetch = useCallback(
-    () => lazyFetch({ variables: { account: account.address ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
-    [account.address, lazyFetch]
+    () => lazyFetch({ variables: { account: contextAddress ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
+    [contextAddress, lazyFetch]
   )
 
   return (
@@ -90,8 +90,8 @@ function useSubscribedActivities() {
   const account = useAccount()
   const previousAccount = usePrevious(account.address)
 
-  const activeSmartPool = useActiveSmartPool().address
-  const previousSmartPool = usePrevious(activeSmartPool)
+  const activeSmartPool = useActiveSmartPool()
+  const previousSmartPool = usePrevious(activeSmartPool.address)
 
   const [subscribedActivities, setSubscribedActivities] = useState<AssetActivityPartsFragment[]>([])
 
