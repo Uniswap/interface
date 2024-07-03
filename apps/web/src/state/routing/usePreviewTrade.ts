@@ -65,7 +65,7 @@ export function usePreviewTrade(
   amountSpecified: CurrencyAmount<Currency> | undefined,
   otherCurrency: Currency | undefined,
   inputTax = ZERO_PERCENT,
-  outputTax = ZERO_PERCENT
+  outputTax = ZERO_PERCENT,
 ): {
   state: TradeState
   trade?: PreviewTrade
@@ -77,7 +77,7 @@ export function usePreviewTrade(
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+    [amountSpecified, otherCurrency, tradeType],
   )
 
   const queryArgs = useQuickRouteArguments({

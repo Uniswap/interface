@@ -55,7 +55,7 @@ interface SwapOptions {
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
-  options: SwapOptions
+  options: SwapOptions,
 ) {
   const account = useAccount()
   const provider = useEthersWeb3Provider()
@@ -132,7 +132,7 @@ export function useUniversalRouterSwapCallback(
                   throw error
                 }
               }
-            }
+            },
           )
           sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
             ...formatSwapSignedAnalyticsEventProperties({
@@ -192,6 +192,6 @@ export function useUniversalRouterSwapCallback(
       connectorName,
       blockNumber,
       isAutoSlippage,
-    ]
+    ],
   )
 }

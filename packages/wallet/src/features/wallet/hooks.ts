@@ -1,15 +1,12 @@
 import { useMemo, useRef } from 'react'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import {
-  Account,
-  AccountType,
-  SignerMnemonicAccount,
-} from 'wallet/src/features/wallet/accounts/types'
+import { Account, AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
@@ -25,7 +22,6 @@ import {
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppSelector } from 'wallet/src/state'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const ENS_TRIM_LENGTH = 8
 
@@ -44,6 +40,11 @@ export function useAccount(address: Address): Account {
 export function useAccountIfExists(address: Address): Account | undefined {
   const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
   return account
+}
+
+export function useSignerAccountIfExists(address: Address): SignerMnemonicAccount | undefined {
+  const signerAccounts = useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
+  return signerAccounts.find((account) => account.address === address)
 }
 
 export function useSignerAccounts(): SignerMnemonicAccount[] {
@@ -132,10 +133,7 @@ type DisplayNameOptions = {
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  * @param options.showLocalName - Whether to show the local wallet name
  */
-export function useDisplayName(
-  address: Maybe<string>,
-  options?: DisplayNameOptions
-): DisplayName | undefined {
+export function useDisplayName(address: Maybe<string>, options?: DisplayNameOptions): DisplayName | undefined {
   const defaultOptions = {
     showShortenedEns: false,
     includeUnitagSuffix: false,
@@ -160,9 +158,7 @@ export function useDisplayName(
 
   if (overrideDisplayName) {
     return {
-      name: showShortenedEns
-        ? trimToLength(overrideDisplayName, ENS_TRIM_LENGTH)
-        : overrideDisplayName,
+      name: showShortenedEns ? trimToLength(overrideDisplayName, ENS_TRIM_LENGTH) : overrideDisplayName,
       type: DisplayNameType.ENS,
     }
   }

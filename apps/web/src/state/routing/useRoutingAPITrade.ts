@@ -29,7 +29,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   account?: string,
   protocolPreferences?: Protocol[],
   inputTax?: Percent,
-  outputTax?: Percent
+  outputTax?: Percent,
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -46,7 +46,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   account?: string,
   protocolPreferences?: Protocol[],
   inputTax?: Percent,
-  outputTax?: Percent
+  outputTax?: Percent,
 ): {
   state: TradeState
   trade?: SubmittableTrade
@@ -67,7 +67,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   otherCurrency: Currency | undefined,
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE,
   account?: string,
-  protocolPreferences?: Protocol[]
+  protocolPreferences?: Protocol[],
 ): {
   state: TradeState
   trade?: SubmittableTrade
@@ -80,7 +80,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       tradeType === TradeType.EXACT_INPUT
         ? [amountSpecified?.currency, otherCurrency]
         : [otherCurrency, amountSpecified?.currency],
-    [amountSpecified, otherCurrency, tradeType]
+    [amountSpecified, otherCurrency, tradeType],
   )
 
   const queryArgs = useRoutingAPIArguments({

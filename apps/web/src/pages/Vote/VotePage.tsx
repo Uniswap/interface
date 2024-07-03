@@ -148,7 +148,7 @@ function getDateFromBlockOrTime(
   currentBlock: number | undefined,
   averageBlockTimeInSeconds: number | undefined,
   currentTimestamp: BigNumber | undefined,
-  isTimestamp?: boolean
+  isTimestamp?: boolean,
 ): Date | undefined {
   if (targetBlockOrTime && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
     const date = new Date()
@@ -159,7 +159,7 @@ function getDateFromBlockOrTime(
     date.setTime(
       currentTimestamp
         .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlockOrTime - currentBlock)))
-        .toNumber() * ms(`1s`)
+        .toNumber() * ms(`1s`),
     )
     return date
   }
@@ -205,14 +205,14 @@ export default function VotePage() {
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp,
-    true
+    true,
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp,
-    true
+    true,
   )
   const now = new Date()
   const locale = useActiveLocale()
@@ -252,13 +252,13 @@ export default function VotePage() {
 
   const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account.address,
-    account.chainId ? GRG[account.chainId] : undefined
+    account.chainId ? GRG[account.chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
 
   // show links in propsoal details if content is an address

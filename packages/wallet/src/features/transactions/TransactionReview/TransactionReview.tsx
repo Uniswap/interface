@@ -84,7 +84,7 @@ export function TransactionReview({
 
   const formattedInputFiatValue = convertFiatAmountFormatted(
     inputCurrencyUSDValue?.toExact(),
-    NumberType.FiatTokenQuantity
+    NumberType.FiatTokenQuantity,
   )
 
   return (
@@ -96,7 +96,8 @@ export function TransactionReview({
         entering={FadeInUp}
         // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
         exiting={isWeb ? undefined : FadeOut}
-        gap="$spacing4">
+        gap="$spacing4"
+      >
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
@@ -138,25 +139,15 @@ export function TransactionReview({
             <NFTTransfer asset={nftIn} nftSize={fullHeight / 5} />
           </Flex>
         ) : null}
-        <TransferArrowButton
-          disabled
-          backgroundColor="$transparent"
-          borderColor="$transparent"
-          p={arrowPadding}
-        />
+        <TransferArrowButton disabled backgroundColor="$transparent" borderColor="$transparent" p={arrowPadding} />
         {recipient ? (
           <Flex centered gap="$spacing12">
             <Text color="$neutral2" variant="body1">
               {/* TODO gary to come back and fix this later. More complicated with nested components */}
-              {t('send.review.summary.to')}
+              {t('common.text.recipient')}
             </Text>
             <Flex centered gap="$spacing8">
-              <AddressDisplay
-                hideAddressInSubtitle
-                address={recipient}
-                size={24}
-                variant="heading2"
-              />
+              <AddressDisplay hideAddressInSubtitle address={recipient} size={24} variant="heading2" />
               <RecipientPrevTransfers recipient={recipient} />
             </Flex>
           </Flex>
@@ -167,7 +158,8 @@ export function TransactionReview({
         // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
         exiting={isWeb ? undefined : FadeOut}
         gap="$spacing12"
-        justifyContent="flex-end">
+        justifyContent="flex-end"
+      >
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
@@ -176,7 +168,8 @@ export function TransactionReview({
             disabled={actionButtonProps.disabled}
             size="large"
             testID={actionButtonProps.name}
-            onPress={actionButtonProps.onPress}>
+            onPress={actionButtonProps.onPress}
+          >
             {actionButtonProps.label}
           </Button>
         </Flex>

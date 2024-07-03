@@ -7,6 +7,7 @@
     "@amplitude/analytics-react-native": "1.4.0",
     "@amplitude/analytics-types": "0.13.0",
     "@apollo/client": "3.10.4",
+    "@datadog/browser-logs": "^5.20.0",
     "@ethersproject/abstract-signer": "5.7.0",
     "@ethersproject/address": "5.7.0",
     "@ethersproject/constants": "5.7.0",
@@ -25,8 +26,10 @@
     "jsbi": "3.2.5",
     "react": "18.2.0",
     "react-native": "0.73.6",
+    "react-native-device-info": "10.0.2",
     "react-test-renderer": "18.2.0",
     "subscriptions-transport-ws": "0.11.0",
+    "uuid": "9.0.0",
     "zen-observable-ts": "1.2.5"
   },
   "devDependencies": {
@@ -34,6 +37,7 @@
     "@testing-library/react-hooks": "7.0.2",
     "@types/chrome": "0.0.254",
     "@types/react": "^18.0.15",
+    "@types/uuid": "9.0.1",
     "@uniswap/eslint-config": "workspace:^",
     "eslint": "8.44.0",
     "jest": "29.7.0",
@@ -45,6 +49,7 @@
   "scripts": {
     "build": "tsc -b",
     "check:deps:usage": "depcheck",
+    "format": "../../scripts/prettier.sh",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",

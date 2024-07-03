@@ -26,7 +26,8 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
       justifyContent={isWeb ? 'flex-start' : 'center'}
       mb="$spacing8"
       px={isWeb ? '$spacing16' : '$spacing60'}
-      py={isWeb ? '$spacing60' : '$spacing24'}>
+      py={isWeb ? '$spacing60' : '$spacing24'}
+    >
       <Flex py="$spacing12">
         <AddressDisplay
           includeUnitagSuffix

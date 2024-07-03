@@ -30,7 +30,8 @@ export function Switch({ value, onValueChange, disabled }: SwitchProps): JSX.Ele
           false: disabledTrackColor,
         },
       }}
-      onCheckedChange={disabled ? undefined : onValueChange}>
+      onCheckedChange={disabled ? undefined : onValueChange}
+    >
       <TamaguiSwitch.Thumb />
     </TamaguiSwitch>
   )
@@ -56,7 +57,8 @@ export function WebSwitch({ value, onValueChange }: SwitchProps): JSX.Element {
       minHeight={TRACK_HEIGHT}
       minWidth={spacing.spacing60}
       p="$spacing4"
-      onCheckedChange={onValueChange}>
+      onCheckedChange={onValueChange}
+    >
       <TamaguiSwitch.Thumb
         animation="semiBouncy"
         backgroundColor={checked ? '$accent1' : '$neutral3'}

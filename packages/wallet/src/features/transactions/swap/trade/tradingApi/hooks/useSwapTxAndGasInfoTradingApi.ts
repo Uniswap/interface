@@ -37,8 +37,7 @@ export function useSwapTxAndGasInfoTradingApi({
   const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
   const gasFeeError = transactionRequestInfo.gasFeeResult.error || approvalError
 
-  const areValuesReady =
-    tokenApprovalInfo && transactionRequestInfo.gasFeeResult.value !== undefined
+  const areValuesReady = tokenApprovalInfo && transactionRequestInfo.gasFeeResult.value !== undefined
 
   // Do not populate gas fee:
   //   - If errors exist on swap or approval requests.

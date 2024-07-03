@@ -42,8 +42,7 @@ export function CloudBackupPasswordForm({
     currentStrength: passwordStrength,
   })
 
-  const isButtonDisabled =
-    !!error || password.length === 0 || (!isConfirmation && !isStrongPassword)
+  const isButtonDisabled = !!error || password.length === 0 || (!isConfirmation && !isStrongPassword)
 
   const onPasswordChangeText = (newPassword: string): void => {
     if (isConfirmation && newPassword === password) {

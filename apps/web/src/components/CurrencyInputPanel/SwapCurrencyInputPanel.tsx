@@ -268,7 +268,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       label,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
@@ -278,8 +278,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     // TODO: check if should invert definition and modify swap currency input panel
     const selectedCurrencyBalance = useCurrencyBalance(
       !isAccount ? smartPoolAddress ?? undefined : account.address,
-      currency ?? undefined,
-      chainId
+      currency ?? undefined
     )
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
@@ -444,7 +443,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
       </InputPanel>
     )
-  }
+  },
 )
 SwapCurrencyInputPanel.displayName = 'SwapCurrencyInputPanel'
 

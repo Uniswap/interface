@@ -47,16 +47,8 @@ export function SearchEmptySection(): JSX.Element {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex
-                row
-                alignItems="center"
-                gap="$spacing16"
-                justifyContent="space-between"
-                mb="$spacing4">
-                <SectionHeaderText
-                  icon={<RecentIcon />}
-                  title={t('explore.search.section.recent')}
-                />
+              <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between" mb="$spacing4">
+                <SectionHeaderText icon={<RecentIcon />} title={t('explore.search.section.recent')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
                   <Text color="$accent1" variant="buttonLabel3">
                     {t('explore.search.action.clear')}
@@ -81,10 +73,7 @@ export function SearchEmptySection(): JSX.Element {
       </Flex>
       <FlatList
         ListHeaderComponent={
-          <SectionHeaderText
-            icon={TrendUpIcon}
-            title={t('explore.search.section.suggestedWallets')}
-          />
+          <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.suggestedWallets')} />
         }
         data={SUGGESTED_WALLETS}
         keyExtractor={walletKey}
@@ -100,7 +89,5 @@ const walletKey = (wallet: WalletSearchResult): string => {
 
 export const RecentIcon = (): JSX.Element => {
   const colors = useSporeColors()
-  return (
-    <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
-  )
+  return <ClockIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
 }

@@ -25,10 +25,7 @@ type FavoriteWalletsGridProps = AutoScrollProps & {
 }
 
 /** Renders the favorite wallets section on the Explore tab */
-export function FavoriteWalletsGrid({
-  showLoading,
-  ...rest
-}: FavoriteWalletsGridProps): JSX.Element {
+export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGridProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -48,7 +45,7 @@ export function FavoriteWalletsGrid({
     ({ data }: SortableGridChangeEvent<string>) => {
       dispatch(setFavoriteWallets({ addresses: data }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -62,7 +59,7 @@ export function FavoriteWalletsGrid({
         setIsEditing={setIsEditing}
       />
     ),
-    [isEditing]
+    [isEditing],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({

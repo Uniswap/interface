@@ -21,7 +21,7 @@ interface FeeTierDistribution {
 
 export function useFeeTierDistribution(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
 ): FeeTierDistribution {
   const { isLoading, error, distributions } = usePoolTVL(currencyA?.wrapped, currencyB?.wrapped)
 
@@ -122,7 +122,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
-      } as Record<FeeAmount, [number | undefined, number | undefined]>
+      } as Record<FeeAmount, [number | undefined, number | undefined]>,
     )
 
     // sum total tvl for token0 and token1
@@ -132,7 +132,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         acc[1] += value[1] ?? 0
         return acc
       },
-      [0, 0]
+      [0, 0],
     )
 
     // returns undefined if both tvl0 and tvl1 are undefined (pool not created)
@@ -144,20 +144,20 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         tvlByFeeTier[FeeAmount.LOWEST][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.LOWEST][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
       [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
       [FeeAmount.MEDIUM]: mean(
         tvlByFeeTier[FeeAmount.MEDIUM][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.MEDIUM][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
       [FeeAmount.HIGH]: mean(
         tvlByFeeTier[FeeAmount.HIGH][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.HIGH][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
     }
 

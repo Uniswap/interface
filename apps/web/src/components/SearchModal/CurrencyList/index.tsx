@@ -243,7 +243,7 @@ export const formatAnalyticsEventProperties = (
   index: number,
   data: any[],
   searchQuery: string,
-  isAddressSearch: string | false
+  isAddressSearch: string | false,
 ) => ({
   token_symbol: token?.symbol,
   token_address: token?.isToken ? token?.address : undefined,
@@ -275,7 +275,7 @@ export class CurrencyListRow {
       disabled?: boolean
       showAddress?: boolean
       tooltip?: string
-    }
+    },
   ) {}
 }
 
@@ -379,7 +379,7 @@ export default function CurrencyList({
       isAddressSearch,
       searchQuery,
       balances,
-    ]
+    ],
   )
 
   const itemKey = useCallback((index: number, data: typeof currencies) => {

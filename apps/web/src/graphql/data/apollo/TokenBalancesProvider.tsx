@@ -90,7 +90,7 @@ function usePortfolioValueModifiers(): {
       includeSmallBalances: !hideSmallBalances,
       includeSpamTokens: !hideSpamTokens,
     }),
-    [hideSmallBalances, hideSpamTokens]
+    [hideSmallBalances, hideSpamTokens],
   )
 }
 

@@ -6,7 +6,7 @@ import { createIcon } from '../factories/createIcon'
 export const [StarGroup, AnimatedStarGroup] = createIcon({
   name: 'StarGroup',
   getIcon: (props) => (
-    <Svg fill="none" viewBox="0 0 16 15" {...props}>
+    <Svg viewBox="0 0 16 15" fill="none" {...props}>
       <Path
         d="M15.8759 8.44882C15.8363 8.37027 15.7384 8.33088 15.6597 8.31125C15.2072 8.31125 11.317 8.15427 11.317 3.6347C11.317 3.49736 11.1992 3.37943 11.0612 3.37943C10.9242 3.37943 10.8063 3.49736 10.8063 3.6347C10.8063 8.15441 6.91568 8.31125 6.48307 8.31125C6.42416 8.31125 6.36513 8.33088 6.32586 8.37027C6.28647 8.38991 6.26661 8.42896 6.24731 8.44882C6.20793 8.52748 6.20793 8.62566 6.24731 8.70432C6.28659 8.78309 6.38466 8.84189 6.48295 8.84189H6.50259C6.95456 8.84189 10.8258 8.99921 10.8258 13.5184C10.8258 13.6558 10.9435 13.7739 11.0814 13.7739C11.219 13.7739 11.3366 13.6559 11.3366 13.5184C11.3366 9.01884 15.2074 8.84189 15.6598 8.84189C15.7579 8.84189 15.8364 8.7832 15.8957 8.70432C15.9345 8.62566 15.9345 8.5277 15.8758 8.44882H15.8759Z"
         fill="url(#paint0_linear_12336_349)"
@@ -21,32 +21,35 @@ export const [StarGroup, AnimatedStarGroup] = createIcon({
       />
       <Defs>
         <LinearGradient
-          gradientUnits="userSpaceOnUse"
           id="paint0_linear_12336_349"
           x1="7.1365"
-          x2="15.9626"
           y1="3.37947"
-          y2="13.0528">
+          x2="15.9626"
+          y2="13.0528"
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#FF79C9" />
           <Stop offset="1" stopColor="#FFB8E2" />
         </LinearGradient>
         <LinearGradient
-          gradientUnits="userSpaceOnUse"
           id="paint1_linear_12336_349"
           x1="0.620828"
-          x2="5.83257"
           y1="8.86154"
-          y2="14.5802">
+          x2="5.83257"
+          y2="14.5802"
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#FF79C9" />
           <Stop offset="1" stopColor="#FFB8E2" />
         </LinearGradient>
         <LinearGradient
-          gradientUnits="userSpaceOnUse"
           id="paint2_linear_12336_349"
           x1="2.88055"
-          x2="8.08687"
           y1="-3.61877e-05"
-          y2="5.71773">
+          x2="8.08687"
+          y2="5.71773"
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#FF79C9" />
           <Stop offset="1" stopColor="#FFB8E2" />
         </LinearGradient>

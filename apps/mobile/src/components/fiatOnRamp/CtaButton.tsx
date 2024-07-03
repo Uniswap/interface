@@ -34,7 +34,8 @@ export function FiatOnRampCtaButton({
       }
       size="large"
       theme={buttonAvailable ? 'primary' : 'tertiary'}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       {!isLoading && continueText}
     </Button>
   )

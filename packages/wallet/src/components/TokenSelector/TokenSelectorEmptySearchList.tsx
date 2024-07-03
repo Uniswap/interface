@@ -1,23 +1,19 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea } from 'ui/src'
+import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
-import {
-  OnSelectCurrency,
-  TokenOption,
-  TokenSection,
-} from 'wallet/src/components/TokenSelector/types'
-import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
 import { buildCurrency, gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 import { usePopularTokens } from 'wallet/src/features/tokens/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { currencyId } from 'wallet/src/utils/currencyId'
 
 function searchResultToCurrencyInfo({
   chainId,
@@ -50,9 +46,7 @@ function searchResultToCurrencyInfo({
   return currencyInfo
 }
 
-function currencyInfosToTokenOptions(
-  currencyInfos: Array<CurrencyInfo | null> | undefined
-): TokenOption[] | undefined {
+function currencyInfosToTokenOptions(currencyInfos: Array<CurrencyInfo | null> | undefined): TokenOption[] | undefined {
   return currencyInfos
     ?.filter((cI): cI is CurrencyInfo => Boolean(cI))
     .map((currencyInfo) => ({
@@ -92,20 +86,17 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
         t('tokens.selector.section.recent'),
         currencyInfosToTokenOptions(
           searchHistory
-            .filter(
-              (searchResult): searchResult is TokenSearchResult =>
-                searchResult.type === SearchResultType.Token
-            )
-            .map(searchResultToCurrencyInfo)
+            .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
+            .map(searchResultToCurrencyInfo),
         ),
-        <ClearAll onPress={onPressClearSearchHistory} />
+        <ClearAll onPress={onPressClearSearchHistory} />,
       ) ?? []),
       ...(getTokenOptionsSection(
         t('tokens.selector.section.popular'),
-        currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo))
+        currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
       ) ?? []),
     ],
-    [onPressClearSearchHistory, popularTokens, searchHistory, t]
+    [onPressClearSearchHistory, popularTokens, searchHistory, t],
   )
 
   return useMemo(
@@ -113,15 +104,11 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
       data: sections,
       loading,
     }),
-    [loading, sections]
+    [loading, sections],
   )
 }
 
-function _TokenSelectorEmptySearchList({
-  onSelectCurrency,
-}: {
-  onSelectCurrency: OnSelectCurrency
-}): JSX.Element {
+function _TokenSelectorEmptySearchList({ onSelectCurrency }: { onSelectCurrency: OnSelectCurrency }): JSX.Element {
   const { t } = useTranslation()
 
   const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearch()

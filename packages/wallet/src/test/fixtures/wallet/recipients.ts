@@ -12,10 +12,7 @@ type RecipientSectionOptions = {
   addresses: string[]
 }
 
-export const recipientSection = createFixture<
-  SectionListData<SearchableRecipient>,
-  RecipientSectionOptions
->(() => ({
+export const recipientSection = createFixture<SectionListData<SearchableRecipient>, RecipientSectionOptions>(() => ({
   addresses: [faker.finance.ethereumAddress(), faker.finance.ethereumAddress()],
 }))(({ addresses }) => ({
   title: faker.lorem.words(),

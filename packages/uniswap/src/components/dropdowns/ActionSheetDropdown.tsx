@@ -1,6 +1,6 @@
-/* eslint-disable no-restricted-imports */
 import { PropsWithChildren, useMemo, useRef, useState } from 'react'
-import { Platform, type View } from 'react-native'
+/* eslint-disable-next-line no-restricted-imports */
+import { type View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import {
   AnimatePresence,
@@ -19,6 +19,7 @@ import { spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { isAndroid } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
 
@@ -38,12 +39,14 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   options: MenuItemProp[]
   alignment?: 'left' | 'right'
   backdropOpacity?: number
+  testID?: string
   onDismiss?: () => void
 }>
 
 export function ActionSheetDropdown({
   children,
   backdropOpacity,
+  testID,
   onDismiss,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
@@ -65,7 +68,7 @@ export function ActionSheetDropdown({
           isOpen: true,
           toggleMeasurements: {
             x,
-            y: y + (Platform.OS === 'android' ? insets.top : 0),
+            y: y + (isAndroid ? insets.top : 0),
             width,
             height,
           },
@@ -80,14 +83,10 @@ export function ActionSheetDropdown({
 
   return (
     <>
-      <TouchableArea
-        hapticFeedback
-        hapticStyle={ImpactFeedbackStyle.Light}
-        py="$spacing8"
-        onPress={openDropdown}>
+      <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} py="$spacing8" onPress={openDropdown}>
         {/* collapsable property prevents removing view on Android. Without this property we were
         getting undefined in measureInWindow callback. (https://reactnative.dev/docs/view.html#collapsable-android) */}
-        <Flex ref={toggleRef} collapsable={false} testID="dropdown-toggle">
+        <Flex ref={toggleRef} collapsable={false} testID={testID || 'dropdown-toggle'}>
           {children}
         </Flex>
       </TouchableArea>
@@ -98,11 +97,7 @@ export function ActionSheetDropdown({
           {isOpen && toggleMeasurements && (
             <>
               <Backdrop handleClose={closeDropdown} opacity={backdropOpacity} />
-              <DropdownContent
-                {...contentProps}
-                handleClose={closeDropdown}
-                toggleMeasurements={toggleMeasurements}
-              />
+              <DropdownContent {...contentProps} handleClose={closeDropdown} toggleMeasurements={toggleMeasurements} />
             </>
           )}
         </AnimatePresence>
@@ -167,10 +162,7 @@ function DropdownContent({
   }, [alignment, fullWidth, toggleMeasurements])
 
   const bottomOffset = insets.bottom + spacing.spacing12
-  const maxHeight = Math.max(
-    fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset,
-    0
-  )
+  const maxHeight = Math.max(fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset, 0)
   const overflowsContainer = contentHeight > maxHeight
 
   return (
@@ -196,7 +188,8 @@ function DropdownContent({
       position="absolute"
       testID="dropdown-content"
       top={toggleMeasurements.y + toggleMeasurements.height}
-      {...containerProps}>
+      {...containerProps}
+    >
       <BaseCard.Shadow backgroundColor="$surface2" overflow="hidden" p="$none" {...rest}>
         <Flex row>
           <Animated.ScrollView
@@ -206,7 +199,8 @@ function DropdownContent({
             scrollEnabled={overflowsContainer}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={isWeb}
-            onScroll={scrollHandler}>
+            onScroll={scrollHandler}
+          >
             <Flex
               onLayout={({
                 nativeEvent: {
@@ -214,17 +208,18 @@ function DropdownContent({
                 },
               }) => {
                 setContentHight(height)
-              }}>
+              }}
+            >
               {options.map(({ key, onPress, render }: MenuItemProp) => (
                 <TouchableArea
                   key={key}
                   hapticFeedback
-                  testID={key}
                   onPress={() => {
                     onPress()
                     handleClose?.()
-                  }}>
-                  {render()}
+                  }}
+                >
+                  <Flex testID={key}>{render()}</Flex>
                 </TouchableArea>
               ))}
             </Flex>

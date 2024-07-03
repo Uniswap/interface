@@ -20,12 +20,10 @@ const BiometricContext = createContext<BiometricContextValue>(biometricContextVa
 
 export function BiometricContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   // global authenticationStatus
-  const [status, setStatus] = useState<BiometricAuthenticationStatus>(
-    BiometricAuthenticationStatus.Invalid
-  )
+  const [status, setStatus] = useState<BiometricAuthenticationStatus>(BiometricAuthenticationStatus.Invalid)
   const { triggerDebounce, cancelDebounce } = debounceCallback(
     () => setStatus(BiometricAuthenticationStatus.Invalid),
-    10000
+    10000,
   )
   const setAuthenticationStatus = (value: BiometricAuthenticationStatus): void => {
     setStatus(value)
@@ -43,7 +41,8 @@ export function BiometricContextProvider({ children }: PropsWithChildren<unknown
         authenticationStatus: status,
         setAuthenticationStatus,
         deviceSupportsBiometrics,
-      }}>
+      }}
+    >
       {children}
     </BiometricContext.Provider>
   )

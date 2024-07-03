@@ -79,7 +79,7 @@ export function TokenDescription() {
   const explorerUrl = getExplorerLink(
     currency.chainId,
     address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
   )
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -91,7 +91,7 @@ export function TokenDescription() {
   const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address, currency.chainId)
   const { formatPercent } = useFormatter()
   const { sellFeeString, buyFeeString } = {
     sellFeeString: formatPercent(sellFee),

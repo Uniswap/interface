@@ -1,42 +1,14 @@
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import {
-  RefObject,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
-import {
-  NativeSyntheticEvent,
-  TextInput,
-  TextInputProps,
-  TextInputSelectionChangeEventData,
-} from 'react-native'
-import {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated'
-import {
-  Flex,
-  FlexProps,
-  Text,
-  TouchableArea,
-  isWeb,
-  useIsShortMobileDevice,
-  useSporeColors,
-} from 'ui/src'
+import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
+import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
+import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isDetoxBuild } from 'utilities/src/environment'
+import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
@@ -111,7 +83,7 @@ export const CurrencyInputPanel = memo(
       onPressDisabled,
       ...rest
     },
-    forwardedRef
+    forwardedRef,
   ): JSX.Element {
     const colors = useSporeColors()
     const isShortMobileDevice = useIsShortMobileDevice()
@@ -125,7 +97,7 @@ export const CurrencyInputPanel = memo(
       () => ({
         transform: [{ translateX: shakeValue.value }],
       }),
-      [shakeValue.value]
+      [shakeValue.value],
     )
 
     const triggerShakeAnimation = useCallback(() => {
@@ -161,19 +133,12 @@ export const CurrencyInputPanel = memo(
       } else if (!focus && isTextInputRefActuallyFocused) {
         inputRef.current?.blur()
       }
-    }, [
-      currencyField,
-      focus,
-      inputRef,
-      isTextInputRefActuallyFocused,
-      resetSelection,
-      value?.length,
-    ])
+    }, [currencyField, focus, inputRef, isTextInputRefActuallyFocused, resetSelection, value?.length])
 
     const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
       MAX_CHAR_PIXEL_WIDTH,
       MAX_INPUT_FONT_SIZE,
-      MIN_INPUT_FONT_SIZE
+      MIN_INPUT_FONT_SIZE,
     )
 
     // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
@@ -192,7 +157,7 @@ export const CurrencyInputPanel = memo(
           selection: { start, end },
         },
       }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-      [selectionChange]
+      [selectionChange],
     )
 
     // Hide balance if panel is output, and no balance
@@ -223,10 +188,10 @@ export const CurrencyInputPanel = memo(
       loadingFlexProgress.value = withRepeat(
         withSequence(
           withTiming(0.4, { duration: 400, easing: Easing.ease }),
-          withTiming(1, { duration: 400, easing: Easing.ease })
+          withTiming(1, { duration: 400, easing: Easing.ease }),
         ),
         -1,
-        true
+        true,
       )
     }
 
@@ -234,7 +199,7 @@ export const CurrencyInputPanel = memo(
       () => ({
         opacity: isLoading ? loadingFlexProgress.value : 1,
       }),
-      [isLoading, loadingFlexProgress]
+      [isLoading, loadingFlexProgress],
     )
 
     const onPressDisabledWithShakeAnimation = useCallback((): void => {
@@ -248,30 +213,27 @@ export const CurrencyInputPanel = memo(
       (amount: string) => {
         onSetMax?.(amount, currencyField)
       },
-      [currencyField, onSetMax]
+      [currencyField, onSetMax],
     )
 
     return (
       <TouchableArea
         hapticFeedback
-        onPress={
-          disabled
-            ? onPressDisabledWithShakeAnimation
-            : currencyInfo
-            ? onPressIn
-            : onShowTokenSelector
-        }>
+        onPress={disabled ? onPressDisabledWithShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}
+      >
         <Flex
           {...rest}
           overflow="hidden"
           px="$spacing16"
-          py={isWeb ? '$spacing24' : isShortMobileDevice ? '$spacing8' : '$spacing20'}>
+          py={isWeb ? '$spacing24' : isShortMobileDevice ? '$spacing8' : '$spacing20'}
+        >
           <AnimatedFlex
             row
             alignItems="center"
             justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
             py="$spacing8"
-            style={shakeStyle}>
+            style={shakeStyle}
+          >
             {isFiatMode && (
               <Text
                 allowFontScaling
@@ -279,7 +241,8 @@ export const CurrencyInputPanel = memo(
                 fontSize={fontSize}
                 height={fontSize}
                 lineHeight={fontSize}
-                mr="$spacing4">
+                mr="$spacing4"
+              >
                 {fiatCurrencySymbol}
               </Text>
             )}
@@ -292,7 +255,8 @@ export const CurrencyInputPanel = memo(
               mr="$spacing8"
               overflow="hidden"
               style={loadingStyle}
-              onLayout={onLayout}>
+              onLayout={onLayout}
+            >
               {currencyInfo ? (
                 <Flex flexShrink={isWeb ? 1 : 0}>
                   {disabled && (
@@ -316,9 +280,7 @@ export const CurrencyInputPanel = memo(
                     // (the text input height is greater than the font size and the input is
                     // centered vertically, so the caret is cut off but the text is not)
                     fontSize={fontSize}
-                    maxDecimals={
-                      isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals
-                    }
+                    maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
                     maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={2 * MAX_INPUT_FONT_SIZE}
                     overflow="visible"
@@ -348,9 +310,7 @@ export const CurrencyInputPanel = memo(
               <SelectTokenButton
                 selectedCurrencyInfo={currencyInfo}
                 testID={
-                  currencyField === CurrencyField.INPUT
-                    ? ElementName.ChooseInputToken
-                    : ElementName.ChooseOutputToken
+                  currencyField === CurrencyField.INPUT ? ElementName.ChooseInputToken : ElementName.ChooseOutputToken
                 }
                 onPress={onShowTokenSelector}
               />
@@ -359,7 +319,9 @@ export const CurrencyInputPanel = memo(
           {currencyInfo && (
             <Flex row gap="$spacing8" justifyContent="space-between">
               <TouchableArea
-                onPress={disabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}>
+                flexShrink={1}
+                onPress={disabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
+              >
                 <Flex centered row shrink gap="$spacing4">
                   <Text color="$neutral2" numberOfLines={1} variant="body3">
                     {inputPanelFormattedValue}
@@ -390,5 +352,5 @@ export const CurrencyInputPanel = memo(
         </Flex>
       </TouchableArea>
     )
-  })
+  }),
 )

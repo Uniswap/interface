@@ -46,8 +46,8 @@ const StatusWrapper = styled(Row)<{ status: PositionStatus }>`
     status === PositionStatus.IN_RANGE
       ? theme.success
       : status === PositionStatus.OUT_OF_RANGE
-      ? theme.deprecated_accentWarning
-      : theme.neutral2};
+        ? theme.deprecated_accentWarning
+        : theme.neutral2};
 `
 
 const RangeWrapper = styled(Row)`
@@ -105,8 +105,8 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   const status = positionInfo.inRange
     ? PositionStatus.IN_RANGE
     : positionInfo.closed
-    ? PositionStatus.CLOSED
-    : PositionStatus.OUT_OF_RANGE
+      ? PositionStatus.CLOSED
+      : PositionStatus.OUT_OF_RANGE
 
   const priceUpper = positionInfo.position.token0PriceLower.invert()
   const priceLower = positionInfo.position.token0PriceUpper.invert()

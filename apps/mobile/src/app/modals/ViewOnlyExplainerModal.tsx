@@ -53,12 +53,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
           </Flex>
         </Flex>
         <Flex gap="$spacing8">
-          <Button
-            alignSelf="center"
-            borderRadius="$rounded20"
-            px={40}
-            theme="primary"
-            onPress={onPressImportWallet}>
+          <Button alignSelf="center" borderRadius="$rounded20" px={40} theme="primary" onPress={onPressImportWallet}>
             {t('account.wallet.viewOnly.button')}
           </Button>
           <Button
@@ -68,7 +63,8 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             color="$neutral2"
             px={40}
             theme="secondary"
-            onPress={onClose}>
+            onPress={onClose}
+          >
             {t('common.button.later')}
           </Button>
         </Flex>

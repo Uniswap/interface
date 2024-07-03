@@ -187,7 +187,7 @@ function useFormattedProposalCreatedLogs(
   contract: Contract | null,
   indices: number[][],
   fromBlock?: number,
-  toBlock?: number
+  toBlock?: number,
 ): FormattedProposalLog[] | undefined {
   // create filters for ProposalCreated events
   const filter = useMemo(() => {
@@ -574,7 +574,7 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
           })
       })
     },
-    [account.address, addTransaction, account.chainId, provider]
+    [account.address, addTransaction, account.chainId, provider],
   )
 }
 
@@ -712,7 +712,7 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
 
 export function useVoteCallback(): (
   proposalId: string | undefined,
-  voteOption: VoteOption
+  voteOption: VoteOption,
 ) => undefined | Promise<string> {
   const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
@@ -739,7 +739,7 @@ export function useVoteCallback(): (
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
@@ -767,7 +767,7 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
@@ -795,12 +795,12 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
 export function useCreateProposalCallback(): (
-  createProposalData: CreateProposalData | undefined
+  createProposalData: CreateProposalData | undefined,
 ) => undefined | Promise<string> {
   const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
@@ -831,7 +831,7 @@ export function useCreateProposalCallback(): (
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 

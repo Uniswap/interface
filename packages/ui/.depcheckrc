@@ -11,4 +11,5 @@ ignores: [
     "utilities",
     # used in package.json
     "esbuild-register",
+    "prettier"
   ]

@@ -1,11 +1,7 @@
 import React from 'react'
 import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
 import { UniconProps } from 'ui/src/components/Unicon/types'
-import {
-  getUniconColors,
-  getUniconsDeterministicHash,
-  isValidEthAddress,
-} from 'ui/src/components/Unicon/utils'
+import { getUniconColors, getUniconsDeterministicHash, isValidEthAddress } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 
 const styles = { transformOrigin: 'center center' }
@@ -45,14 +41,10 @@ export const Unicon: React.FC<UniconProps> = ({ address, size = 32 }) => {
       height={size} // Use the size prop to control SVG dimensions
       viewBox={`0 0 ${size} ${size}`}
       width={size}
-      xmlns="http://www.w3.org/2000/svg">
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <g style={styles}>
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          fill={color + `${isDarkMode ? '29' : '1F'}`}
-          r={size / 2}
-        />
+        <circle cx={size / 2} cy={size / 2} fill={color + `${isDarkMode ? '29' : '1F'}`} r={size / 2} />
         <g transform={`translate(${translateX}, ${translateY}) scale(${scaleValue})`}>
           {selectedIconPaths.map((pathData: string, index: number) => (
             <path key={index} clipRule="evenodd" d={pathData} fill={color} fillRule="evenodd" />

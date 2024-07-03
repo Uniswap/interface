@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { AccountType, ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
-import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export const createViewOnlyAccount = (address: string): ReadOnlyAccount => {
   const formattedAddress = getValidAddress(address, true)

@@ -36,9 +36,9 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 const NAV_SEARCH_MAX_WIDTH = '400px'
 const NAV_SEARCH_MIN_WIDTH = '280px'
 
-const Anchor = styled.div<{ fullScreen: boolean }>`
-  position: ${({ fullScreen }) => (fullScreen ? 'static' : 'relative')};
-  ${({ fullScreen }) => fullScreen && `z-index: ${Z_INDEX.modal}`}
+const Anchor = styled.div<{ $fullScreen: boolean }>`
+  position: ${({ $fullScreen }) => ($fullScreen ? 'static' : 'relative')};
+  ${({ $fullScreen }) => $fullScreen && `z-index: ${Z_INDEX.modal}`}
 `
 const FullScreenSearchContainer = css`
   position: absolute;
@@ -102,30 +102,34 @@ const FullScreenSearchInput = css`
   max-width: none;
   border: none;
   border-radius: 0;
+  gap: 8px;
+  height: 64px;
 `
 const ClosedSearchInputHover = css`
   &:hover {
     background-color: ${({ theme }) => theme.surface1Hovered};
   }
 `
-const SearchInput = styled(Column)<{ isOpen: boolean; fullScreen: boolean }>`
+const SearchInput = styled(Row)<{ $isOpen: boolean; $fullScreen: boolean }>`
   grid-area: input;
-  background-color: ${({ theme, isOpen }) => (isOpen ? theme.surface1 : theme.surface2)};
+  background-color: ${({ theme, $isOpen }) => ($isOpen ? theme.surface1 : theme.surface2)};
   border: 1px solid ${({ theme }) => theme.surface3};
   min-width: ${NAV_SEARCH_MIN_WIDTH};
   max-width: ${NAV_SEARCH_MAX_WIDTH};
   width: 100vw;
   padding: 8px 16px;
   border-radius: 20px;
-  ${({ isOpen }) => isOpen && OpenSearchInput}
-  ${({ fullScreen }) => fullScreen && FullScreenSearchInput}
   height: 40px;
   justify-content: center;
+  align-items: center;
+  gap: 4px;
+  ${({ $isOpen }) => $isOpen && OpenSearchInput}
+  ${({ $fullScreen }) => $fullScreen && FullScreenSearchInput}
+  ${({ $isOpen }) => !$isOpen && ClosedSearchInputHover}
 
   @media screen and (max-width: ${BREAKPOINTS.xs}px) {
     border: none;
   }
-  ${({ isOpen }) => !isOpen && ClosedSearchInputHover}
 `
 const OpenSearchDropdown = css`
   border-top-left-radius: 0;
@@ -136,15 +140,15 @@ const FullScreenSearchDropdown = css`
   border: none;
   border-radius: 0;
 `
-const SearchBarDropdownContainer = styled.div<{ isOpen: boolean; fullScreen: boolean }>`
+const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: boolean }>`
   grid-area: dropdown;
   background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
   max-height: 100%;
   overflow-y: scroll;
-  ${({ isOpen }) => isOpen && OpenSearchDropdown}
-  ${({ fullScreen }) => fullScreen && FullScreenSearchDropdown}
+  ${({ $isOpen }) => $isOpen && OpenSearchDropdown}
+  ${({ $fullScreen }) => $fullScreen && FullScreenSearchDropdown}
   @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
     border: none;
   }
@@ -298,7 +302,7 @@ export const SearchBar = ({
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-      <Anchor fullScreen={fullScreen}>
+      <Anchor $fullScreen={fullScreen}>
         <SearchContainer
           ref={searchRef}
           $isOpen={isOpen}
@@ -308,43 +312,41 @@ export const SearchBar = ({
           $fullScreen={fullScreen}
         >
           {(!!isNavSearchInputVisible || isOpen) && (
-            <SearchInput isOpen={isOpen} fullScreen={fullScreen}>
-              <Row>
-                <SearchIcon>
-                  <Search width="20px" height="20px" color={theme.neutral2} />
-                </SearchIcon>
-                <Trace
-                  logFocus
-                  eventOnTrigger={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
-                  element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
-                  properties={{ ...trace }}
-                >
-                  <Input
-                    ref={inputRef}
-                    data-cy="search-bar-input"
-                    width="100%"
-                    height="100%"
-                    backgroundColor="$transparent"
-                    placeholder={placeholderText}
-                    placeholderTextColor={theme.neutral2}
-                    onFocus={() => !isOpen && toggleOpen()}
-                    onChange={(event: any) => {
-                      !isOpen && toggleOpen()
-                      setSearchValue(event.target.value)
-                    }}
-                    onBlur={() =>
-                      sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
-                    }
-                    value={searchValue}
-                  />
-                </Trace>
-                {fullScreen && isOpen && <CloseIcon onClick={toggleOpen} />}
-                {!isOpen && <KeyShortcut>/</KeyShortcut>}
-              </Row>
+            <SearchInput $isOpen={isOpen} $fullScreen={fullScreen}>
+              <SearchIcon>
+                <Search width="20px" height="20px" color={theme.neutral2} />
+              </SearchIcon>
+              <Trace
+                logFocus
+                eventOnTrigger={InterfaceEventName.NAVBAR_SEARCH_SELECTED}
+                element={InterfaceElementName.NAVBAR_SEARCH_INPUT}
+                properties={{ ...trace }}
+              >
+                <Input
+                  ref={inputRef}
+                  data-cy="search-bar-input"
+                  width="100%"
+                  height="100%"
+                  backgroundColor="$transparent"
+                  placeholder={placeholderText}
+                  placeholderTextColor={theme.neutral2}
+                  onFocus={() => !isOpen && toggleOpen()}
+                  onChange={(event: any) => {
+                    !isOpen && toggleOpen()
+                    setSearchValue(event.target.value)
+                  }}
+                  onBlur={() =>
+                    sendAnalyticsEvent(InterfaceEventName.NAVBAR_SEARCH_EXITED, navbarSearchEventProperties)
+                  }
+                  value={searchValue}
+                />
+              </Trace>
+              {fullScreen && isOpen && <CloseIcon onClick={toggleOpen} />}
+              {!isOpen && <KeyShortcut>/</KeyShortcut>}
             </SearchInput>
           )}
           {isOpen && (
-            <SearchBarDropdownContainer isOpen={isOpen} fullScreen={fullScreen}>
+            <SearchBarDropdownContainer $isOpen={isOpen} $fullScreen={fullScreen}>
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
                 pools={reducedPools}

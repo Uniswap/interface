@@ -16,6 +16,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -23,7 +24,6 @@ import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createView
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
@@ -44,12 +44,7 @@ const validateForm = ({
   isSmartContractAddress: boolean
   isValidSmartContract: boolean
 }): boolean => {
-  return (
-    (!!isAddress || !!name) &&
-    !walletExists &&
-    !loading &&
-    (!isSmartContractAddress || isValidSmartContract)
-  )
+  return (!!isAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
 }
 
 const getErrorText = ({
@@ -88,15 +83,11 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
-  const { address: resolvedAddress, name } = useENS(
-    UniverseChainId.Mainnet,
-    normalizedValue,
-    !hasSuffixIncluded
-  )
+  const { address: resolvedAddress, name } = useENS(UniverseChainId.Mainnet, normalizedValue, !hasSuffixIncluded)
   const isAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (isAddress || resolvedAddress) ?? undefined,
-    UniverseChainId.Mainnet
+    UniverseChainId.Mainnet,
   )
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
@@ -109,8 +100,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const walletExists = Object.keys(initialAccounts).some(
     (accountAddress) =>
-      areAddressesEqual(accountAddress, resolvedAddress) ||
-      areAddressesEqual(accountAddress, normalizedValue)
+      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, normalizedValue),
   )
 
   // Form validation.
@@ -123,9 +113,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     isValidSmartContract,
   })
 
-  const errorText = !isValid
-    ? getErrorText({ walletExists, isSmartContractAddress, loading, t })
-    : undefined
+  const errorText = !isValid ? getErrorText({ walletExists, isSmartContractAddress, loading, t }) : undefined
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {
@@ -135,7 +123,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
       dispatch(
         createAccountsActions.trigger({
           accounts: [viewOnlyAccount],
-        })
+        }),
       )
 
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -188,7 +176,8 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           backgroundColor="$surface2"
           borderRadius="$rounded16"
           gap="$spacing16"
-          p="$spacing16">
+          p="$spacing16"
+        >
           <GraduationCap color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" flexShrink={1} variant="body3">
             {t('account.wallet.watch.message')}

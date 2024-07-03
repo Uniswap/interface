@@ -41,7 +41,7 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -55,10 +55,11 @@ const { abi: V2MigratorABI } = V3MigratorJson
 export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any,
-  withSignerIfPossible = true
+  withSignerIfPossible = true,
+  chainId?: InterfaceChainId,
 ): T | null {
   const account = useAccount()
-  const provider = useEthersProvider()
+  const provider = useEthersProvider({ chainId: chainId ?? account.chainId })
 
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !provider || !account.chainId) {
@@ -68,7 +69,7 @@ export function useContract<T extends Contract = Contract>(
     if (typeof addressOrAddressMap === 'string') {
       address = addressOrAddressMap
     } else {
-      address = addressOrAddressMap[account.chainId]
+      address = addressOrAddressMap[chainId ?? account.chainId]
     }
     if (!address) {
       return null
@@ -84,7 +85,7 @@ export function useContract<T extends Contract = Contract>(
       })
       return null
     }
-  }, [addressOrAddressMap, ABI, provider, account.chainId, account.address, withSignerIfPossible]) as T
+  }, [addressOrAddressMap, ABI, provider, chainId, account.chainId, account.address, withSignerIfPossible]) as T
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
@@ -122,12 +123,12 @@ export function usePoolContract(poolAddress?: string) {
   return useContract<AUniswap>(poolAddress, AUNISWAP_ABI, true)
 }
 
-export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useAccount()
+export function useWETHContract(withSignerIfPossible?: boolean, chainId?: InterfaceChainId) {
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
-    withSignerIfPossible
+    withSignerIfPossible,
+    chainId,
   )
 }
 
@@ -175,7 +176,7 @@ export function useInterfaceMulticall() {
 export function useMainnetInterfaceMulticall() {
   return useMainnetContract<UniswapInterfaceMulticall>(
     MULTICALL_ADDRESSES[UniverseChainId.Mainnet],
-    MulticallABI
+    MulticallABI,
   ) as UniswapInterfaceMulticall
 }
 
@@ -184,7 +185,7 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
   const contract = useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
-    withSignerIfPossible
+    withSignerIfPossible,
   )
   useEffect(() => {
     if (contract && account.isConnected) {

@@ -1,13 +1,7 @@
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
-export function DappIconPlaceholder({
-  name,
-  iconSize,
-}: {
-  name?: string
-  iconSize: number
-}): JSX.Element {
+export function DappIconPlaceholder({ name, iconSize }: { name?: string; iconSize: number }): JSX.Element {
   return (
     <Flex
       centered
@@ -17,11 +11,9 @@ export function DappIconPlaceholder({
       borderRadius="$roundedFull"
       height={iconSize}
       testID="dapp-icon-placeholder"
-      width={iconSize}>
-      <Text
-        color="$neutral2"
-        textAlign="center"
-        variant={iconSize >= iconSizes.icon40 ? 'subheading1' : 'body2'}>
+      width={iconSize}
+    >
+      <Text color="$neutral2" textAlign="center" variant={iconSize >= iconSizes.icon40 ? 'subheading1' : 'body2'}>
         {name && name.length > 0 ? name.charAt(0) : ' '}
       </Text>
     </Flex>

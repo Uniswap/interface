@@ -55,8 +55,7 @@ function isIgnoredMessage(msg: unknown, arg: unknown): boolean {
   return IGNORED_MESSAGES.some((ignoredMessage) => {
     const result =
       msg.includes(ignoredMessage.message) &&
-      (!ignoredMessage.firstArgValues ||
-        ignoredMessage.firstArgValues.some((argVal) => argVal === arg))
+      (!ignoredMessage.firstArgValues || ignoredMessage.firstArgValues.some((argVal) => argVal === arg))
     return result
   })
 }

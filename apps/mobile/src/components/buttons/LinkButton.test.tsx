@@ -32,7 +32,7 @@ describe(LinkButton, () => {
           label="link text"
           openExternalBrowser={openExternalBrowser}
           url="https://example.com"
-        />
+        />,
       )
 
       const button = getByText('link text')
@@ -41,7 +41,7 @@ describe(LinkButton, () => {
       expect(require('wallet/src/utils/linking').openUri).toHaveBeenCalledWith(
         'https://example.com',
         openExternalBrowser,
-        isSafeUri
+        isSafeUri,
       )
     })
   })

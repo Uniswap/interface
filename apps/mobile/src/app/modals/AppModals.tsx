@@ -16,7 +16,6 @@ import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferM
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { ExtensionWaitlistModal } from 'src/features/scantastic/ExtensionWaitlistModal'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
@@ -55,10 +54,6 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.Explore}>
         <ExploreModal />
-      </LazyModalRenderer>
-
-      <LazyModalRenderer name={ModalName.ExtensionWaitlistModal}>
-        <ExtensionWaitlistModal />
       </LazyModalRenderer>
 
       <ForceUpgradeModal />

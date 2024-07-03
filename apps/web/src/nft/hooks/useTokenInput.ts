@@ -21,7 +21,7 @@ export const useTokenInput = createWithEqualityFn<TokenInputState>()(
       clearInputCurrency: () => set(() => ({ inputCurrency: undefined })),
       setTokenTradeInput: (tokenTradeInput) => set(() => ({ tokenTradeInput })),
     }),
-    { name: 'useTokenInput' }
+    { name: 'useTokenInput' },
   ),
-  shallow
+  shallow,
 )

@@ -9,7 +9,7 @@ export function getInitialLogoUrl(
   address?: string | null,
   chainId?: number | null,
   isNative?: boolean,
-  backupImg?: string | null
+  backupImg?: string | null,
 ) {
   const networkName = isSupportedChainId(chainId)
     ? getChain({ chainId }).assetRepoNetworkName ?? 'ethereum'

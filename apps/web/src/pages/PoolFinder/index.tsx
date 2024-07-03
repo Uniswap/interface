@@ -51,7 +51,7 @@ export default function PoolFinder() {
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
   const [currency0, setCurrency0] = useState<Currency | null>(() =>
-    account.chainId ? nativeOnChain(account.chainId) : null
+    account.chainId ? nativeOnChain(account.chainId) : null,
   )
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
@@ -69,7 +69,7 @@ export default function PoolFinder() {
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.quotient, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0))
+        JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0)),
     )
 
   const position: CurrencyAmount<Token> | undefined = useTokenBalance(account.address, pair?.liquidityToken)
@@ -83,7 +83,7 @@ export default function PoolFinder() {
         setCurrency1(currency)
       }
     },
-    [activeField]
+    [activeField],
   )
 
   const handleSearchDismiss = useCallback(() => {

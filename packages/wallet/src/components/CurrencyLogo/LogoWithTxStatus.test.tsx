@@ -1,8 +1,4 @@
-import {
-  UniverseChainId,
-  WALLET_SUPPORTED_CHAIN_IDS,
-  WalletChainId,
-} from 'uniswap/src/types/chains'
+import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
   DappLogoWithTxStatus,
@@ -42,7 +38,7 @@ describe(LogoWithTxStatus, () => {
           txStatus: TransactionStatus.Pending,
           chainId: UniverseChainId.Mainnet,
         })}
-      />
+      />,
     )
 
     expect(tree).toMatchSnapshot()
@@ -51,7 +47,7 @@ describe(LogoWithTxStatus, () => {
   describe('logo', () => {
     it('shows Moonpay logo for fiat purchase', () => {
       const { queryByTestId } = render(
-        <LogoWithTxStatus {...currencyLogoProps({ txType: TransactionType.FiatPurchase })} />
+        <LogoWithTxStatus {...currencyLogoProps({ txType: TransactionType.FiatPurchase })} />,
       )
 
       expect(queryByTestId('moonpay-logo')).toBeTruthy()
@@ -80,23 +76,21 @@ describe(LogoWithTxStatus, () => {
     describe('transaction summary network logo', () => {
       it('shows network logo if chainId is specified and is not Mainnet', () => {
         const { queryByTestId } = render(
-          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.ArbitrumOne })} />
+          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.ArbitrumOne })} />,
         )
 
         expect(queryByTestId('network-logo')).toBeTruthy()
       })
 
       it('does not show network logo if chainId is not specified', () => {
-        const { queryByTestId } = render(
-          <LogoWithTxStatus {...currencyLogoProps({ chainId: null })} />
-        )
+        const { queryByTestId } = render(<LogoWithTxStatus {...currencyLogoProps({ chainId: null })} />)
 
         expect(queryByTestId('network-logo')).toBeFalsy()
       })
 
       it('does not show network logo if chainId is Mainnet', () => {
         const { queryByTestId } = render(
-          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} />
+          <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} />,
         )
 
         expect(queryByTestId('network-logo')).toBeFalsy()
@@ -116,21 +110,18 @@ describe(LogoWithTxStatus, () => {
         TransactionType.Unknown,
       ]
       const transactionWithoutIcons = Object.values(TransactionType).filter(
-        (txType) => !transactionWithIcons.includes(txType)
+        (txType) => !transactionWithIcons.includes(txType),
       )
 
       const nftAssetTypesWithIcons = [AssetType.ERC721, AssetType.ERC1155]
       const nftAssetTypesWithoutIcons = Object.values(AssetType).filter(
-        (assetType) => !nftAssetTypesWithIcons.includes(assetType)
+        (assetType) => !nftAssetTypesWithIcons.includes(assetType),
       )
 
       for (const txType of transactionWithIcons) {
         it(`shows icon for ${txType}`, () => {
           const { queryByTestId } = render(
-            <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
-              txType={txType}
-            />
+            <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} txType={txType} />,
           )
 
           expect(queryByTestId('status-icon')).toBeTruthy()
@@ -144,7 +135,7 @@ describe(LogoWithTxStatus, () => {
               {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
               assetType={assetType}
               txType={TransactionType.NFTTrade}
-            />
+            />,
           )
 
           expect(queryByTestId('status-icon')).toBeTruthy()
@@ -157,10 +148,7 @@ describe(LogoWithTxStatus, () => {
           jest.spyOn(console, 'warn').mockImplementation(consoleWarnMock)
 
           const { queryByTestId } = render(
-            <LogoWithTxStatus
-              {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
-              txType={txType}
-            />
+            <LogoWithTxStatus {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })} txType={txType} />,
           )
 
           expect(queryByTestId('status-icon')).toBeFalsy()
@@ -168,7 +156,7 @@ describe(LogoWithTxStatus, () => {
             expect.anything(),
             expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
-            txType
+            txType,
           )
         })
       }
@@ -183,7 +171,7 @@ describe(LogoWithTxStatus, () => {
               {...currencyLogoProps({ chainId: UniverseChainId.Mainnet })}
               assetType={assetType}
               txType={TransactionType.NFTTrade}
-            />
+            />,
           )
 
           expect(queryByTestId('status-icon')).toBeFalsy()
@@ -191,7 +179,7 @@ describe(LogoWithTxStatus, () => {
             expect.anything(),
             expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
-            TransactionType.NFTTrade
+            TransactionType.NFTTrade,
           )
         })
       }
@@ -203,7 +191,7 @@ describe(LogoWithTxStatus, () => {
 // (this is needed because native implementation is not used by default
 // with our test setup where we exclude files with native extensions)
 jest.mock('wallet/src/features/images/ImageUri', () =>
-  jest.requireActual('wallet/src/features/images/ImageUri.native.tsx')
+  jest.requireActual('wallet/src/features/images/ImageUri.native.tsx'),
 )
 
 describe(DappLogoWithTxStatus, () => {
@@ -314,9 +302,7 @@ describe(DappLogoWithWCBadge, () => {
     })
 
     it('renders wallet connect logo if chain is Mainnet', () => {
-      const { queryByTestId } = render(
-        <DappLogoWithWCBadge {...props} chainId={UniverseChainId.Mainnet} />
-      )
+      const { queryByTestId } = render(<DappLogoWithWCBadge {...props} chainId={UniverseChainId.Mainnet} />)
 
       expect(queryByTestId('network-logo')).toBeFalsy()
       expect(queryByTestId('wallet-connect-logo')).toBeTruthy()

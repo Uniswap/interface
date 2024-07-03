@@ -330,6 +330,7 @@ exports[`AccountHeader renders correctly 1`] = `
               style={
                 {
                   "flexDirection": "column",
+                  "position": "absolute",
                 }
               }
             >

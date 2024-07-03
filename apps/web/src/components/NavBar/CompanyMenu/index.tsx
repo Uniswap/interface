@@ -11,11 +11,11 @@ import styled from 'styled-components'
 import { Popover, Text } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons'
 
-const ArrowDown = styled(ArrowChangeDown)`
+const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
   height: 100%;
-  color: ${({ theme }) => theme.neutral2};
+  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
 `
-const UniIconContainer = styled.div`
+const Trigger = styled.div`
   position: relative;
   display: flex;
   align-items: center;
@@ -27,6 +27,11 @@ const UniIconContainer = styled.div`
       color: ${({ theme }) => theme.neutral1} !important;
     }
   }
+`
+const UniIcon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `
 
 export function CompanyMenu() {
@@ -54,16 +59,18 @@ export function CompanyMenu() {
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger>
-        <UniIconContainer>
-          <NavIcon width="48" height="48" data-testid="uniswap-logo" clickable onClick={handleLogoClick} />
-          {isLargeScreen && (
-            <Text variant="subheading1" color="$accent1" userSelect="none">
-              Uniswap
-            </Text>
-          )}
+        <Trigger>
+          <UniIcon onClick={handleLogoClick}>
+            <NavIcon width="48" height="48" data-testid="uniswap-logo" />
+            {isLargeScreen && (
+              <Text variant="subheading1" color="$accent1" userSelect="none">
+                Uniswap
+              </Text>
+            )}
+          </UniIcon>
           {(isSmallScreen || isTouchDevice) && <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />}
-          <ArrowDown width="12px" height="12px" />
-        </UniIconContainer>
+          <ArrowDown $isActive={isOpen} width="12px" height="12px" />
+        </Trigger>
       </Popover.Trigger>
       {isMobileDrawer ? <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} /> : <MenuDropdown close={closeMenu} />}
     </Popover>

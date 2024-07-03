@@ -31,7 +31,7 @@ export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTo
   const contract = useV3NFTPositionManagerContract()
   const inputs = useMemo(
     () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
-    [tokenId]
+    [tokenId],
   )
   const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
     ...NEVER_RELOAD,

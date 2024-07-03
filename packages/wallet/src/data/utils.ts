@@ -31,26 +31,22 @@ export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean
 }
 
 export function useRefetchQueries(): (
-  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include']
+  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include'],
 ) => void {
   const client = useApolloClient()
 
   return useCallback(
-    async (
-      include: Parameters<
-        ApolloClient<NormalizedCacheObject>['refetchQueries']
-      >[0]['include'] = 'active'
-    ) => {
+    async (include: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include'] = 'active') => {
       await client?.refetchQueries({ include })
     },
-    [client]
+    [client],
   )
 }
 
 export async function createSignedRequestBody<T>(
   data: T,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<{ requestBody: T & AuthData; signature: string }> {
   const requestBody: T & AuthData = {
     ...data,
@@ -65,7 +61,7 @@ export async function createSignedRequestBody<T>(
 export async function createSignedRequestParams<T>(
   params: T,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<{ requestParams: T & AuthData; signature: string }> {
   const requestParams: T & AuthData = {
     ...params,
@@ -80,12 +76,12 @@ export async function createSignedRequestParams<T>(
 export async function createOnRampTransactionsAuth(
   limit: number,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<OnRampTransactionsAuth> {
   const { requestParams, signature } = await createSignedRequestParams(
     { limit }, // Parameter needed by graphql server when fetching onramp transactions
     account,
-    signerManager
+    signerManager,
   )
   return { queryParams: objectToQueryString(requestParams), signature }
 }

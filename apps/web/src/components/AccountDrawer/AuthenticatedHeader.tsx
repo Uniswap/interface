@@ -28,6 +28,9 @@ import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { ArrowDownCircleFilled } from 'ui/src/components/icons'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -104,6 +107,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const { formatNumber, formatDelta } = useFormatter()
 
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
@@ -137,14 +141,27 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
 
   const handleBuyCryptoClick = useCallback(() => {
+    if (forAggregatorEnabled) {
+      accountDrawer.close()
+      navigate(`/buy`, { replace: true })
+      return
+    }
+
     if (!fiatOnrampAvailabilityChecked) {
       setShouldCheck(true)
     } else if (fiatOnrampAvailable) {
       openFoRModalWithAnalytics()
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
+  }, [
+    accountDrawer,
+    fiatOnrampAvailabilityChecked,
+    fiatOnrampAvailable,
+    forAggregatorEnabled,
+    navigate,
+    openFoRModalWithAnalytics,
+  ])
   const disableBuyCryptoButton = Boolean(
-    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
+    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading,
   )
 
   const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
@@ -223,12 +240,20 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               errorTooltip={t('moonpay.restricted.region')}
             />
           )}
-          {!shouldDisableNFTRoutes && (
+          {!shouldDisableNFTRoutes && !forAggregatorEnabled && (
             <ActionTile
               dataTestId="nft-view-self-nfts"
               Icon={<ImagesIcon />}
               name={t('nft.view')}
               onClick={navigateToProfile}
+            />
+          )}
+          {forAggregatorEnabled && (
+            <ActionTile
+              dataTestId="wallet-recieve-crypto"
+              Icon={<ArrowDownCircleFilled size={24} />}
+              name={t('common.receive')}
+              onClick={() => undefined} // TODO: implement when recieve modal is implemented
             />
           )}
         </Row>

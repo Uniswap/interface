@@ -27,7 +27,8 @@ export function ScantasticCompleteNotification({
             bottom={0}
             p="$spacing4"
             position="absolute"
-            right={0}>
+            right={0}
+          >
             <Check color="$white" size="$icon.8" />
           </Flex>
         </Flex>

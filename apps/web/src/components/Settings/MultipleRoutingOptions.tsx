@@ -144,7 +144,7 @@ export default function MultipleRoutingOptions({ chainId }: { chainId?: number }
       setRoutePreferenceOptions(options)
       setRoutingPreferences(routingPreferences)
     },
-    [setRoutePreferenceOptions, setRoutingPreferences]
+    [setRoutePreferenceOptions, setRoutingPreferences],
   )
 
   const handleRoutePreferenceToggle = useCallback(
@@ -171,7 +171,7 @@ export default function MultipleRoutingOptions({ chainId }: { chainId?: number }
         [toggledPreferenceOption]: !routePreferenceOptions[toggledPreferenceOption],
       })
     },
-    [handleSetRoutePreferenceOptions, routePreferenceOptions]
+    [handleSetRoutePreferenceOptions, routePreferenceOptions],
   )
 
   return (

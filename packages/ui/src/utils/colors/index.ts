@@ -15,8 +15,7 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png':
     '#F09241',
   // new WBTC
-  'https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1548822744':
-    '#F09241',
+  'https://assets.coingecko.com/coins/images/7598/large/wrapped_bitcoin_wbtc.png?1548822744': '#F09241',
   // DAI
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png':
     '#FAB01B',
@@ -31,16 +30,14 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   // ETH
   'https://token-icons.s3.amazonaws.com/eth.png': '#4970D5',
   // HARRYPOTTERSHIBAINUBITCOIN
-  'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567':
-    '#DE3110',
+  'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1684117567': '#DE3110',
   // PEPE
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6982508145454Ce325dDbE47a25d4ec3d2311933/logo.png':
     '#3EAE14',
   // Unibot V2
   'https://s2.coinmarketcap.com/static/img/coins/64x64/25436.png': '#4A0A4F',
   // UNIBOT v1
-  'https://assets.coingecko.com/coins/images/30462/small/logonoline_%281%29.png?1687510315':
-    '#4A0A4F',
+  'https://assets.coingecko.com/coins/images/30462/small/logonoline_%281%29.png?1687510315': '#4A0A4F',
   // USDC
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png':
     '#0066D9',
@@ -62,8 +59,7 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA35923162C49cF95e6BF26623385eb431ad920D3/logo.png':
     '#BD6E29',
   // AIDOGE
-  'https://assets.coingecko.com/coins/images/29852/large/photo_2023-04-18_14-25-28.jpg?1681799160':
-    '#29A1F1',
+  'https://assets.coingecko.com/coins/images/29852/large/photo_2023-04-18_14-25-28.jpg?1681799160': '#29A1F1',
   // SIMPSON
   'https://assets.coingecko.com/coins/images/30243/large/1111.png?1683692033': '#E88F00',
   // MAKER
@@ -72,8 +68,7 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   // OX
   'https://assets.coingecko.com/coins/images/30604/large/Logo2.png?1685522119': '#2959D9',
   // ANGLE
-  'https://assets.coingecko.com/coins/images/19060/large/ANGLE_Token-light.png?1666774221':
-    '#FF5555',
+  'https://assets.coingecko.com/coins/images/19060/large/ANGLE_Token-light.png?1666774221': '#FF5555',
   // APE
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x4d224452801ACEd8B2F0aebE155379bb5D594381/logo.png':
     '#054AA9',
@@ -100,11 +95,11 @@ const blackAndWhiteSpecialCase: Set<string> = new Set([
 export function useExtractedColors(
   imageUrl: Maybe<string>,
   fallback: ColorKeys = 'accent1',
-  cache = true
+  cache = true,
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
   const getImageColors = useCallback(
     async () => getExtractedColors(imageUrl, fallback, cache),
-    [imageUrl, fallback, cache]
+    [imageUrl, fallback, cache],
   )
 
   const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
@@ -148,7 +143,7 @@ export function useExtractedTokenColor(
   imageUrl: Maybe<string>,
   tokenName: Maybe<string>,
   backgroundColor: string,
-  defaultColor: string
+  defaultColor: string,
 ): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
   const sporeColors = useSporeColors()
   const { colors, colorsLoading } = useExtractedColors(imageUrl)
@@ -256,17 +251,11 @@ function getLogolessColorIndex(tokenName: string, numOptions: number): number {
 export function useLogolessColorScheme(tokenName: string): ColorScheme {
   return useMemo(() => {
     const index = getLogolessColorIndex(tokenName, Object.keys(LOGOLESS_COLORS).length)
-    return logolessColorSchemes[
-      LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]
-    ]
+    return logolessColorSchemes[LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]]
   }, [tokenName])
 }
 
-export function passesContrast(
-  color: string,
-  backgroundColor: string,
-  contrastThreshold: number
-): boolean {
+export function passesContrast(color: string, backgroundColor: string, contrastThreshold: number): boolean {
   // sometimes the extracted colors come back as black or white, discard those
   if (!color || color === '#000000' || color === '#FFFFFF') {
     return false
@@ -285,10 +274,7 @@ export function passesContrast(
  * color against
  * @returns a hex code that will pass a contrast check against the background
  */
-function pickContrastPassingTokenColor(
-  extractedColors: ExtractedColors,
-  backgroundHex: string
-): string {
+function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgroundHex: string): string {
   const colorsInOrder = [
     extractedColors.base,
     extractedColors.detail,

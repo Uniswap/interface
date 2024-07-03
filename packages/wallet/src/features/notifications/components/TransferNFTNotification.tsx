@@ -9,16 +9,10 @@ import { formTransferNFTNotificationTitle } from 'wallet/src/features/notificati
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-export function TransferNFTNotification({
-  notification,
-}: {
-  notification: TransferNFTTxNotification
-}): JSX.Element {
-  const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } =
-    notification
+export function TransferNFTNotification({ notification }: { notification: TransferNFTTxNotification }): JSX.Element {
+  const { address, assetType, chainId, tokenAddress, tokenId, txType, txStatus, hideDelay } = notification
   const userAddress = useActiveAccountAddressWithThrow()
-  const senderOrRecipient =
-    txType === TransactionType.Send ? notification.recipient : notification.sender
+  const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
   const { data: nft } = useNFT(nftOwner, tokenAddress, tokenId)
   const { name: ensName } = useENS(chainId, senderOrRecipient)
@@ -29,7 +23,7 @@ export function TransferNFTNotification({
     nft,
     tokenAddress,
     tokenId,
-    ensName ?? senderOrRecipient
+    ensName ?? senderOrRecipient,
   )
 
   const { navigateToAccountActivityList } = useWalletNavigation()

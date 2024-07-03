@@ -749,15 +749,18 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
-                disabled={true}
-                hitSlop={
-                  {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
-                  }
-                }
+                cancelable={true}
+                disabled={false}
+                focusable={true}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
@@ -775,7 +778,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
                     "flexDirection": "column",
-                    "opacity": 0.5,
+                    "opacity": 1,
                     "paddingBottom": 16,
                     "paddingLeft": 16,
                     "paddingRight": 16,

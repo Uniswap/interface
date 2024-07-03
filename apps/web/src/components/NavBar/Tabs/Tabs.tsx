@@ -98,7 +98,7 @@ const Tab = ({
     <NavLink to={path} style={{ textDecoration: 'none' }}>
       <TabText
         variant="subheading1"
-        color={isActive ? '$neutral1' : '$neutral2'}
+        color={isActive || isOpen ? '$neutral1' : '$neutral2'}
         m="8px"
         gap="4px"
         cursor="pointer"
@@ -125,7 +125,7 @@ const Tab = ({
       }
       closeMenu()
     },
-    [items, navigate, closeMenu, isOpen]
+    [items, navigate, closeMenu, isOpen],
   )
 
   useKeyPress({
@@ -141,7 +141,7 @@ const Tab = ({
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger>{Label}</Popover.Trigger>
-      <NavDropdown>
+      <NavDropdown isOpen={isOpen}>
         <NavDropdownTabWrapper>
           {items.map((item, index) => (
             <Item

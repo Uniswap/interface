@@ -4,23 +4,20 @@ import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import {
-  LANDING_ANIMATION_DURATION,
-  LandingBackground,
-} from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { isDevEnv } from 'uniswap/src/utils/env'
+import { isDevEnv } from 'utilities/src/environment'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
@@ -28,19 +25,12 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
 
   const actionButtonsOpacity = useSharedValue(0)
-  const actionButtonsStyle = useAnimatedStyle(
-    () => ({ opacity: actionButtonsOpacity.value }),
-    [actionButtonsOpacity]
-  )
+  const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
 
   useEffect(() => {
-    actionButtonsOpacity.value = withDelay(
-      LANDING_ANIMATION_DURATION,
-      withTiming(1, { duration: ONE_SECOND_MS })
-    )
+    actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
   }, [actionButtonsOpacity])
 
   const { canClaimUnitag } = useCanAddressClaimUnitag()
@@ -70,12 +60,10 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   useTimeout(hideSplashScreen, 1)
 
   return (
-    // TODO(blocked by MOB-1082): delete bg prop
-    // dark mode onboarding asset needs to be re-exported with #131313 (surface1) as background color
-    <Screen backgroundColor={isDarkMode ? '$sporeBlack' : '$surface1'} edges={['bottom']}>
+    <Screen backgroundColor="$surface1" edges={['bottom']}>
       <Flex fill gap="$spacing8">
         <Flex shrink height="100%" width="100%">
-          <LandingBackground />
+          <LandingBackground navigationEventConsumer={navigation} />
         </Flex>
         <AnimatedFlex grow height="auto" style={actionButtonsStyle}>
           <Flex grow $short={{ gap: '$spacing16' }} gap="$spacing24" mx="$spacing16">
@@ -94,7 +82,8 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   shadowColor="$accent1"
                   shadowOpacity={0.4}
                   shadowRadius="$spacing8"
-                  onPress={onPressCreateWallet}>
+                  onPress={onPressCreateWallet}
+                >
                   <Text color="$sporeWhite" variant="buttonLabel2">
                     {t('onboarding.landing.button.create')}
                   </Text>
@@ -113,11 +102,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     dispatch(openModal({ name: ModalName.Experiments }))
                   }
                 }}
-                onPress={onPressImportWallet}>
-                <Text
-                  $short={{ variant: 'buttonLabel2', fontSize: '$medium' }}
-                  color="$accent1"
-                  variant="buttonLabel2">
+                onPress={onPressImportWallet}
+              >
+                <Text $short={{ variant: 'buttonLabel2', fontSize: '$medium' }} color="$accent1" variant="buttonLabel2">
                   {t('onboarding.landing.button.add')}
                 </Text>
               </TouchableArea>

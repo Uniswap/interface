@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isNonJestDev } from 'utilities/src/environment'
+import { isNonJestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -28,9 +28,7 @@ export const apolloClientRef: ApolloClientRef = ((): ApolloClientRef => {
   let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
 
   const listeners: Array<
-    (
-      value: ApolloClient<NormalizedCacheObject> | PromiseLike<ApolloClient<NormalizedCacheObject>>
-    ) => void
+    (value: ApolloClient<NormalizedCacheObject> | PromiseLike<ApolloClient<NormalizedCacheObject>>) => void
   > = []
 
   const ref: ApolloClientRef = {
@@ -77,9 +75,7 @@ export const usePersistedApolloClient = ({
 }): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
-  const apolloLink = customEndpoint
-    ? getCustomGraphqlHttpLink(customEndpoint)
-    : getGraphqlHttpLink()
+  const apolloLink = customEndpoint ? getCustomGraphqlHttpLink(customEndpoint) : getGraphqlHttpLink()
 
   const init = useCallback(async () => {
     const cache = await initAndPersistCache({ storage: storageWrapper, maxCacheSizeInBytes })
@@ -88,7 +84,7 @@ export const usePersistedApolloClient = ({
       logger.debug(
         'usePersistedApolloClient',
         'usePersistedApolloClient',
-        `Using custom endpoint ${customEndpoint.url}`
+        `Using custom endpoint ${customEndpoint.url}`,
       )
     }
 
@@ -100,9 +96,7 @@ export const usePersistedApolloClient = ({
         getErrorLink(),
         // requires typing outside of wallet package
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getPerformanceLink((args: any) =>
-          sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)
-        ),
+        getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
         restLink,
         apolloLink,
       ]),

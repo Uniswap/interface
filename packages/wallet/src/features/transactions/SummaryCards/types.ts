@@ -25,7 +25,7 @@ export interface SwapSummaryCallbacks {
   useSwapFormTransactionState: (
     address: Address | undefined,
     chainId: WalletChainId | undefined,
-    txId: string | undefined
+    txId: string | undefined,
   ) => TransactionState | undefined
   onRetryGenerator?: (swapFormState: TransactionState | undefined) => () => void
 }

@@ -32,10 +32,7 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface2.get()}
-      isDismissible={false}
-      name={ModalName.RestoreWallet}>
+    <BottomSheetModal backgroundColor={colors.surface2.get()} isDismissible={false} name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex
           centered
@@ -43,12 +40,9 @@ export function RestoreWalletModal(): JSX.Element | null {
           p="$spacing12"
           style={{
             backgroundColor: opacify(12, colors.neutral1.val),
-          }}>
-          <LockIcon
-            color={colors.neutral1.get()}
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
+          }}
+        >
+          <LockIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('account.wallet.button.restore')}

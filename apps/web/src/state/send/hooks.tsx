@@ -81,9 +81,9 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   ])
 
   const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
-  const [inputCurrencyBalance, nativeCurencyBalance] = useCurrencyBalances(
+  const [inputCurrencyBalance, nativeCurrencyBalance] = useCurrencyBalances(
     account.address,
-    useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency])
+    useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency]),
   )
 
   const exactAmountOut = useUSDTokenUpdater(inputInFiat, exactAmountToken ?? exactAmountFiat, inputCurrency)
@@ -116,7 +116,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       return SendInputError.INSUFFICIENT_FUNDS
     }
 
-    if (!gasFee.value || !nativeCurrency || !nativeCurencyBalance) {
+    if (!gasFee.value || !nativeCurrency || !nativeCurrencyBalance) {
       return undefined
     }
 
@@ -125,12 +125,12 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       totalAmount = totalAmount?.add(parsedTokenAmount)
     }
 
-    if (!totalAmount || nativeCurencyBalance?.lessThan(totalAmount)) {
+    if (!totalAmount || nativeCurrencyBalance?.lessThan(totalAmount)) {
       return SendInputError.INSUFFICIENT_FUNDS_FOR_GAS
     }
 
     return undefined
-  }, [gasFee.value, inputCurrency, inputCurrencyBalance, nativeCurencyBalance, nativeCurrency, parsedTokenAmount])
+  }, [gasFee.value, inputCurrency, inputCurrencyBalance, nativeCurrencyBalance, nativeCurrency, parsedTokenAmount])
 
   return useMemo(
     () => ({
@@ -152,6 +152,6 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       parsedTokenAmount,
       recipientData,
       transferTransaction,
-    ]
+    ],
   )
 }

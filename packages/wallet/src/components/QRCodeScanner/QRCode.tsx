@@ -159,7 +159,8 @@ const _QRCodeDisplay = ({
       shadowColor={displayShadow ? '$sporeBlack' : 'transparent'}
       shadowOffset={{ width: 0, height: 16 }}
       shadowOpacity={displayShadow ? 0.1 : 0}
-      shadowRadius={16}>
+      shadowRadius={16}
+    >
       <AddressQRCode
         address={address}
         backgroundColor={containerBackgroundColor}
@@ -176,7 +177,8 @@ const _QRCodeDisplay = ({
         overflow="visible"
         pl="$spacing2"
         position="absolute"
-        pt="$spacing2">
+        pt="$spacing2"
+      >
         <AccountIcon
           address={address}
           avatarUri={avatar}

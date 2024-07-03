@@ -1,11 +1,5 @@
 import { PropsWithChildren } from 'react'
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated'
+import { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import { AnimatedTouchableArea } from 'ui/src/components/touchable'
 import { HapticFeedback, ImpactFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
 
@@ -22,9 +16,12 @@ export const Jiggly = ({
   duration?: number
 }>): JSX.Element => {
   const rotate = useSharedValue(0)
-  const style = useAnimatedStyle(() => ({
-    transform: [{ rotateZ: `${rotate.value}deg` }],
-  }))
+  const style = useAnimatedStyle(
+    () => ({
+      transform: [{ rotateZ: `${rotate.value}deg` }],
+    }),
+    [rotate],
+  )
 
   const onPress = async (): Promise<void> => {
     if (hapticFeedback) {
@@ -34,7 +31,7 @@ export const Jiggly = ({
     rotate.value = withSequence(
       withTiming(-offset, { duration: duration / 2 }),
       withRepeat(withTiming(offset, { duration }), 5, true),
-      withTiming(0, { duration: duration / 2 })
+      withTiming(0, { duration: duration / 2 }),
     )
   }
 

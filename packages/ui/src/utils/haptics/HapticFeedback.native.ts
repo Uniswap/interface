@@ -16,7 +16,7 @@ function isImpactFeedbackStyle(style: HapticFeedbackStyle): style is ImpactFeedb
 
 export const HapticFeedback: THapticFeedback = {
   impact: async (
-    style: ImpactFeedbackStyle | NotificationFeedbackType | undefined = ImpactFeedbackStyle.Light
+    style: ImpactFeedbackStyle | NotificationFeedbackType | undefined = ImpactFeedbackStyle.Light,
   ): Promise<void> => {
     return isImpactFeedbackStyle(style) ? await impactAsync(style) : await notificationAsync(style)
   },

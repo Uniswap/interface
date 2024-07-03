@@ -151,7 +151,7 @@ function AddLiquidity() {
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
-    tokenId ? BigNumber.from(tokenId) : undefined
+    tokenId ? BigNumber.from(tokenId) : undefined,
   )
   const hasExistingPosition = !!existingPositionDetails && !positionLoading
   const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails)
@@ -198,7 +198,7 @@ function AddLiquidity() {
     quoteCurrency ?? undefined,
     feeAmount,
     baseCurrency ?? undefined,
-    existingPosition
+    existingPosition,
   )
 
   const { formatPrice } = useFormatter()
@@ -239,7 +239,7 @@ function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -249,7 +249,7 @@ function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const argentWalletContract = useArgentWalletContract()
@@ -261,18 +261,18 @@ function AddLiquidity() {
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
       : undefined,
-    isRbPool
+    isRbPool,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
       : undefined,
-    isRbPool
+    isRbPool,
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
-    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
+    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE,
   )
 
   async function onAdd() {
@@ -376,7 +376,7 @@ function AddLiquidity() {
                       baseCurrency.wrapped,
                       quoteCurrency.wrapped,
                       feeAmount,
-                      account.chainId
+                      account.chainId,
                     )
                   : undefined,
             })
@@ -422,7 +422,7 @@ function AddLiquidity() {
         }
       }
     },
-    [account.chainId, account.status]
+    [account.chainId, account.status],
   )
 
   const handleCurrencyASelect = useCallback(
@@ -434,7 +434,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdB, navigate]
+    [handleCurrencySelect, currencyIdB, navigate],
   )
 
   const handleCurrencyBSelect = useCallback(
@@ -446,7 +446,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdA, navigate]
+    [handleCurrencySelect, currencyIdA, navigate],
   )
 
   const handleFeePoolSelect = useCallback(
@@ -455,7 +455,7 @@ function AddLiquidity() {
       onRightRangeInput('')
       navigate(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput]
+    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -642,14 +642,14 @@ function AddLiquidity() {
       data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyA]
+    [usdcValueCurrencyA],
   )
   const currencyBFiat = useMemo(
     () => ({
       data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyB]
+    [usdcValueCurrencyB],
   )
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
@@ -824,17 +824,17 @@ function AddLiquidity() {
                             handleRateToggle={() => {
                               if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
                                 onLeftRangeInput(
-                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onRightRangeInput(
-                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
                               }
                               navigate(
                                 `/add/${currencyIdB as string}/${currencyIdA as string}${
                                   feeAmount ? '/' + feeAmount : ''
-                                }`
+                                }`,
                               )
                             }}
                           />

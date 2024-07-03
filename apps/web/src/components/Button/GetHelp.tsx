@@ -25,9 +25,9 @@ const StyledExternalLink = styled(ExternalLink)`
   }
   stroke: none;
 `
-export default function GetHelp() {
+export default function GetHelp({ url }: { url?: string }) {
   return (
-    <StyledExternalLink href={RigoblockUrls.GET_HELP}>
+    <StyledExternalLink href={url ?? RigoblockUrls.GET_HELP}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
         <Trans i18nKey="common.getHelp.button" />

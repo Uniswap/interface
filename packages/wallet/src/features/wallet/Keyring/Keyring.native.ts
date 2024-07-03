@@ -14,6 +14,10 @@ const { RNEthersRS } = NativeModules
  * Simple wrapper around RNEthersRS
  */
 class NativeKeyring implements IKeyring {
+  removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
+    throw new NotImplementedError('removeAllMnemonicsAndPrivateKeys')
+  }
+
   isUnlocked(): Promise<boolean> {
     throw new NotImplementedError('isUnlocked')
   }

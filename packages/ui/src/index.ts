@@ -38,6 +38,7 @@ export type {
   TamaguiProviderProps,
   ThemeKeys,
   Tokens,
+  ViewProps,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export { Unicon } from './components/Unicon'
@@ -50,6 +51,9 @@ export type { GeneratedIcon, IconProps } from './components/factories/createIcon
 export * from './components/input/CheckBox'
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'
+export { ContextMenu } from './components/menu/ContextMenu'
+export { MenuContent } from './components/menu/MenuContent'
+export type { MenuContentItem } from './components/menu/types'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'

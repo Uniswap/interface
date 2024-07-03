@@ -3,8 +3,7 @@ import { AppNotification } from 'wallet/src/features/notifications/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { SharedState } from 'wallet/src/state/reducer'
 
-const selectNotificationQueue = (state: SharedState): AppNotification[] =>
-  state.notifications.notificationQueue
+const selectNotificationQueue = (state: SharedState): AppNotification[] => state.notifications.notificationQueue
 
 export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
@@ -15,20 +14,16 @@ export const selectActiveAccountNotifications = createSelector(
     }
     // If a notification doesn't have an address param assume it belongs to the active account
     return notificationQueue.filter((notif) => !notif.address || notif.address === address)
-  }
+  },
 )
 
 const selectNotificationStatus = (
-  state: SharedState
+  state: SharedState,
 ): {
   [userAddress: string]: boolean | undefined
 } => state.notifications.notificationStatus
 
-export const makeSelectHasNotifications = (): Selector<
-  SharedState,
-  boolean | undefined,
-  [Address | null]
-> =>
+export const makeSelectHasNotifications = (): Selector<SharedState, boolean | undefined, [Address | null]> =>
   createSelector(
     selectNotificationStatus,
     (_: SharedState, address: Address | null) => address,
@@ -37,11 +32,11 @@ export const makeSelectHasNotifications = (): Selector<
         return undefined
       }
       return notificationStatuses?.[address]
-    }
+    },
   )
 
 export const selectLastTxNotificationUpdate = (
-  state: SharedState
+  state: SharedState,
 ): {
   [address: string]: number | undefined
 } => state.notifications.lastTxNotificationUpdate

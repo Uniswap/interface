@@ -119,7 +119,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         spellCheck="false"
       />
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

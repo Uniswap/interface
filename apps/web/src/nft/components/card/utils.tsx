@@ -55,7 +55,7 @@ export function getNftDisplayComponent(
   uniformAspectRatio?: UniformAspectRatio,
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
   renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number | undefined) => void
+  setRenderedHeight?: (renderedHeight: number | undefined) => void,
 ) {
   switch (getAssetMediaType(asset)) {
     case AssetMediaType.Image:
@@ -129,7 +129,7 @@ export function useSelectAsset({
 
       return isSelected ? unselectAsset?.() : selectAsset?.()
     },
-    [selectAsset, isDisabled, onClick, unselectAsset, isSelected]
+    [selectAsset, isDisabled, onClick, unselectAsset, isSelected],
   )
 }
 
@@ -159,7 +159,7 @@ export const handleUniformAspectRatio = (
   e: React.SyntheticEvent<HTMLElement, Event>,
   setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
   renderedHeight?: number,
-  setRenderedHeight?: (renderedHeight: number | undefined) => void
+  setRenderedHeight?: (renderedHeight: number | undefined) => void,
 ) => {
   if (uniformAspectRatio !== UniformAspectRatios.square && setUniformAspectRatio) {
     const height = e.currentTarget.clientHeight
@@ -187,7 +187,7 @@ export const handleUniformAspectRatio = (
 
 export function getHeightFromAspectRatio(
   uniformAspectRatio: UniformAspectRatio,
-  renderedHeight?: number
+  renderedHeight?: number,
 ): number | undefined {
   return uniformAspectRatio === UniformAspectRatios.square || uniformAspectRatio === UniformAspectRatios.unset
     ? undefined
@@ -196,7 +196,7 @@ export function getHeightFromAspectRatio(
 
 export function getMediaAspectRatio(
   uniformAspectRatio?: UniformAspectRatio,
-  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void
+  setUniformAspectRatio?: (uniformAspectRatio: UniformAspectRatio) => void,
 ): string {
   return uniformAspectRatio === UniformAspectRatios.square || !setUniformAspectRatio ? '1' : 'auto'
 }

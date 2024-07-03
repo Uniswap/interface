@@ -18,7 +18,7 @@ const TokenTransactionDefaultQuerySize = 25
 export function useTokenTransactions(
   address: string,
   chainId: SupportedInterfaceChainId,
-  filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL]
+  filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
 ) {
   const {
     data: dataV3,
@@ -102,7 +102,7 @@ export function useTokenTransactions(
         },
       })
     },
-    [dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, fetchMoreV2, fetchMoreV3]
+    [dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, fetchMoreV2, fetchMoreV3],
   )
 
   const transactions = useMemo(
@@ -132,10 +132,10 @@ export function useTokenTransactions(
         }) ?? []),
       ]
         .sort((a, b): number =>
-          a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : a?.timestamp === null ? -1 : 1
+          a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : a?.timestamp === null ? -1 : 1,
         )
         .slice(0, querySizeRef.current),
-    [address, dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, filter]
+    [address, dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, filter],
   )
 
   return useMemo(() => {

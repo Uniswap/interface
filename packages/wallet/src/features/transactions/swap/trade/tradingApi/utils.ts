@@ -4,6 +4,8 @@ import { UnsignedV2DutchOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
@@ -28,12 +30,7 @@ import {
   Trade,
   UniswapXTrade,
 } from 'wallet/src/features/transactions/swap/trade/types'
-import {
-  CurrencyField,
-  TradeProtocolPreference,
-} from 'wallet/src/features/transactions/transactionState/types'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { currencyId } from 'wallet/src/utils/currencyId'
+import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -47,9 +44,7 @@ interface TradingApiResponseToTradeArgs {
   data: DiscriminatedQuoteResponse | undefined
 }
 
-export function transformTradingApiResponseToTrade(
-  params: TradingApiResponseToTradeArgs
-): Trade | null {
+export function transformTradingApiResponseToTrade(params: TradingApiResponseToTradeArgs): Trade | null {
   const { currencyIn, currencyOut, tradeType, deadline, slippageTolerance, data } = params
 
   switch (data?.routing) {
@@ -66,8 +61,7 @@ export function transformTradingApiResponseToTrade(
         slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
         v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
         v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
-        mixedRoutes:
-          routes?.flatMap((r) => (r?.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])) ?? [],
+        mixedRoutes: routes?.flatMap((r) => (r?.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])) ?? [],
         tradeType,
       })
     }
@@ -108,7 +102,7 @@ export function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee 
 export function computeRoutesTradingApi(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
-  quoteResponse?: QuoteResponse
+  quoteResponse?: QuoteResponse,
 ):
   | {
       routev3: V3Route<Currency, Currency> | null
@@ -146,13 +140,9 @@ export function computeRoutesTradingApi(
     throw new Error('Expected all token properties to be present')
   }
 
-  const parsedCurrencyIn = tokenInIsNative
-    ? NativeCurrency.onChain(tokenIn.chainId)
-    : parseTokenApi(tokenIn)
+  const parsedCurrencyIn = tokenInIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
 
-  const parsedCurrencyOut = tokenOutIsNative
-    ? NativeCurrency.onChain(tokenOut.chainId)
-    : parseTokenApi(tokenOut)
+  const parsedCurrencyOut = tokenOutIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   try {
     return quote.route.map((route) => {
@@ -179,12 +169,8 @@ export function computeRoutesTradingApi(
       const isOnlyV3 = isV3OnlyRouteApi(route)
 
       return {
-        routev3: isOnlyV3
-          ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut)
-          : null,
-        routev2: isOnlyV2
-          ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut)
-          : null,
+        routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         mixedRoute:
           !isOnlyV3 && !isOnlyV2
             ? new MixedRouteSDK(route.map(parseMixedRouteApi), parsedCurrencyIn, parsedCurrencyOut)
@@ -232,7 +218,7 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
     /**name=*/ undefined,
     false,
     buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
-    sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
+    sellFeeBps ? BigNumber.from(sellFeeBps) : undefined,
   )
 }
 
@@ -253,7 +239,7 @@ function parseV3PoolApi({
     parseInt(fee, 10) as FeeAmount,
     sqrtRatioX96,
     liquidity,
-    parseInt(tickCurrent, 10)
+    parseInt(tickCurrent, 10),
   )
 }
 
@@ -263,7 +249,7 @@ function parseV2PairApi({ reserve0, reserve1 }: TradingApiV2PoolInRoute): Pair {
   }
   return new Pair(
     CurrencyAmount.fromRawAmount(parseTokenApi(reserve0.token), reserve0.quotient),
-    CurrencyAmount.fromRawAmount(parseTokenApi(reserve1.token), reserve1.quotient)
+    CurrencyAmount.fromRawAmount(parseTokenApi(reserve1.token), reserve1.quotient),
   )
 }
 
@@ -287,7 +273,7 @@ export function getTokenAddressForApi(currency: Maybe<Currency>): string | undef
 }
 
 const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).filter(
-  (value): value is number => typeof value === 'number'
+  (value): value is number => typeof value === 'number',
 )
 
 // Parse any chain id to check if its supported by the API ChainId type
@@ -298,9 +284,7 @@ function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApiCh
   return Object.values(SUPPORTED_TRADING_API_CHAIN_IDS).includes(chainId)
 }
 
-export function toTradingApiSupportedChainId(
-  chainId: Maybe<number>
-): TradingApiChainId | undefined {
+export function toTradingApiSupportedChainId(chainId: Maybe<number>): TradingApiChainId | undefined {
   if (!chainId || !isTradingApiSupportedChainId(chainId)) {
     return undefined
   }
@@ -346,14 +330,8 @@ export function validateTrade({
     return null
   }
 
-  const inputsMatch = areAddressesEqual(
-    currencyIn.wrapped.address,
-    trade?.inputAmount.currency.wrapped.address
-  )
-  const outputsMatch = areAddressesEqual(
-    currencyOut.wrapped.address,
-    trade.outputAmount.currency.wrapped.address
-  )
+  const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped.address)
+  const outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
 
   // TODO(MOB-3028): check if this logic needs any adjustments once we add UniswapX support.
   // Verify the amount specified in the quote response matches the exact amount from input state
@@ -367,21 +345,18 @@ export function validateTrade({
   const exactAmountsMatch = exactAmount?.toExact() !== exactAmountFromQuote
 
   if (!(tokenAddressesMatch && exactAmountsMatch)) {
-    logger.error(
-      new Error(`Mismatched ${!tokenAddressesMatch ? 'address' : 'exact amount'} in swap trade`),
-      {
-        tags: { file: 'tradingApi/utils', function: 'validateTrade' },
-        extra: {
-          formState: {
-            currencyIdIn: currencyId(currencyIn),
-            currencyIdOut: currencyId(currencyOut),
-            exactAmount: exactAmount.toExact(),
-            exactCurrencyField,
-          },
-          tradeProperties: getBaseTradeAnalyticsProperties({ trade, formatter }),
+    logger.error(new Error(`Mismatched ${!tokenAddressesMatch ? 'address' : 'exact amount'} in swap trade`), {
+      tags: { file: 'tradingApi/utils', function: 'validateTrade' },
+      extra: {
+        formState: {
+          currencyIdIn: currencyId(currencyIn),
+          currencyIdOut: currencyId(currencyOut),
+          exactAmount: exactAmount.toExact(),
+          exactCurrencyField,
         },
-      }
-    )
+        tradeProperties: getBaseTradeAnalyticsProperties({ trade, formatter }),
+      },
+    })
 
     return null
   }
@@ -393,7 +368,7 @@ export function validateTrade({
 export function getRoutingPreferenceForSwapRequest(
   protocolPreference: TradeProtocolPreference | undefined,
   uniswapXEnabled: boolean,
-  isUSDQuote?: boolean
+  isUSDQuote?: boolean,
 ): RoutingPreference {
   if (isUSDQuote) {
     return RoutingPreference.CLASSIC

@@ -35,7 +35,7 @@ describe('MenuButton', () => {
     renderButton()
     expect(screen.getByTestId('settings-icon-with-slippage')).toHaveStyleRule(
       'background-color',
-      lightDeprecatedTheme.deprecated_accentWarningSoft
+      lightDeprecatedTheme.deprecated_accentWarningSoft,
     )
   })
 })

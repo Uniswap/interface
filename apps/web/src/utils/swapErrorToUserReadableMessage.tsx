@@ -77,7 +77,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
           'swapErrorToUserReadableMessage',
           'swapErrorToUserReadableMessage',
           'Undefined object error',
-          reason
+          reason,
         )
         return t`An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`
       }
@@ -85,7 +85,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
         `{{reason}} You may need to increase your slippage tolerance. Note: fee-on-transfer and rebase tokens are incompatible with Uniswap V3.`,
         {
           reason: reason ? reason : 'Unknown error.',
-        }
+        },
       )
   }
 }

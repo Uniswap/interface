@@ -17,18 +17,12 @@ type Props = {
   walletNeedsRestore?: boolean
 }
 
-export function SeedPhraseDisplay({
-  mnemonicId,
-  onDismiss,
-  walletNeedsRestore,
-}: Props): JSX.Element {
+export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
   const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(
-    !walletNeedsRestore
-  )
+  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
   const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
 
@@ -74,13 +68,8 @@ export function SeedPhraseDisplay({
         )}
       </Flex>
       <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <Button
-          testID={ElementName.Next}
-          theme="secondary"
-          onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
-          {showSeedPhrase
-            ? t('setting.recoveryPhrase.action.hide')
-            : t('setting.recoveryPhrase.account.show')}
+        <Button testID={ElementName.Next} theme="secondary" onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
+          {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
         </Button>
       </Flex>
 

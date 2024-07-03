@@ -35,12 +35,12 @@ export function useAddRecentlySearchedAsset() {
     (asset: RecentlySearchedAsset) => {
       // Removes the new asset if it was already in the array
       const newHistory = searchHistory.filter(
-        (oldAsset) => !(oldAsset.address === asset.address && oldAsset.chain === asset.chain)
+        (oldAsset) => !(oldAsset.address === asset.address && oldAsset.chain === asset.chain),
       )
       newHistory.unshift(asset)
       updateSearchHistory(newHistory)
     },
-    [searchHistory, updateSearchHistory]
+    [searchHistory, updateSearchHistory],
   )
 }
 
@@ -94,7 +94,7 @@ export function useRecentlySearchedAssets() {
           imageUrl: queryCollection?.image?.url ?? '',
         }
       },
-      [queryCollections]
+      [queryCollections],
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
     queryData?.tokens?.filter(Boolean).forEach((token) => {

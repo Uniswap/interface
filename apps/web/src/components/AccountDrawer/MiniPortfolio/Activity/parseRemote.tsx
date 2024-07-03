@@ -90,7 +90,7 @@ const SPAMMABLE_ACTIVITY_TYPES = [TransactionType.Receive, TransactionType.Mint,
 function isSpam(
   { NftTransfer, TokenTransfer }: TransactionChanges,
   details: TransactionDetailsPartsFragment,
-  account: string
+  account: string,
 ): boolean {
   if (!SPAMMABLE_ACTIVITY_TYPES.includes(details.type) || details.from === account) {
     return false
@@ -108,13 +108,16 @@ function callsPositionManagerContract(assetActivity: TransactionActivity) {
 
 // Gets counts for number of NFTs in each collection present
 function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: string]: number | undefined } {
-  return nftTransfers.reduce((acc, NFTChange) => {
-    const key = NFTChange.asset.collection?.name ?? NFTChange.asset.name
-    if (key) {
-      acc[key] = (acc?.[key] ?? 0) + 1
-    }
-    return acc
-  }, {} as { [key: string]: number | undefined })
+  return nftTransfers.reduce(
+    (acc, NFTChange) => {
+      const key = NFTChange.asset.collection?.name ?? NFTChange.asset.name
+      if (key) {
+        acc[key] = (acc?.[key] ?? 0) + 1
+      }
+      return acc
+    },
+    {} as { [key: string]: number | undefined },
+  )
 }
 
 function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
@@ -187,12 +190,12 @@ type SwapAmounts = {
 // eslint-disable-next-line import/no-unused-modules
 export function parseSwapAmounts(
   changes: TransactionChanges,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): SwapAmounts | undefined {
   const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
   // Any leftover native token is refunded on exact_out swaps where the input token is native
   const refund = changes.TokenTransfer.find(
-    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID
+    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID,
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
   if (!sent || !received) {
@@ -271,12 +274,12 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
 function parseSwapOrder(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   const offchainOrderDetails = offchainOrderDetailsFromGraphQLTransactionActivity(
     assetActivity,
     changes,
-    formatNumberOrString
+    formatNumberOrString,
   )
   return {
     ...parseSwap(changes, formatNumberOrString),
@@ -288,7 +291,7 @@ function parseSwapOrder(
 export function offchainOrderDetailsFromGraphQLTransactionActivity(
   activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
   changes: TransactionChanges,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): UniswapXOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
   if (!activity || !activity.details || !chainId) {
@@ -357,7 +360,7 @@ type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDe
 function parseSendReceive(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
@@ -415,7 +418,7 @@ function parseSendReceive(
 function parseMint(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
@@ -433,7 +436,7 @@ function parseMint(
 function parseUnknown(
   _changes: TransactionChanges,
   _formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   return { title: t('common.contractInteraction'), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
@@ -441,7 +444,7 @@ function parseUnknown(
 type TransactionTypeParser = (
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) => Partial<Activity>
 const ActivityParserByType: { [key: string]: TransactionTypeParser | undefined } = {
   [TransactionType.Swap]: parseSwap,
@@ -503,7 +506,7 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): Activity | undefined {
   try {
     if (!assetActivity) {
@@ -535,7 +538,7 @@ function parseRemoteActivity(
 
         return acc
       },
-      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
+      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] },
     )
 
     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
@@ -566,7 +569,7 @@ function parseRemoteActivity(
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
       changes,
       formatNumberOrString,
-      assetActivity as TransactionActivity
+      assetActivity as TransactionActivity,
     )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
@@ -581,7 +584,7 @@ function parseRemoteActivity(
 export function parseRemoteActivities(
   assetActivities: (AssetActivityPartsFragment | undefined)[] | undefined,
   account: string,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)

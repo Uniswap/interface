@@ -49,9 +49,7 @@ export const solidHeaderProps = {
   maxOpacity: HEADER_SOLID_COLOR_OPACITY,
 }
 
-export const ProfileHeader = memo(function ProfileHeader({
-  address,
-}: ProfileHeaderProps): JSX.Element {
+export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
@@ -61,8 +59,7 @@ export const ProfileHeader = memo(function ProfileHeader({
 
   // Note that if a user has a Unitag AND ENS, this prioritizes the Unitag's metadata over the ENS metadata
   const nameToFetchENSMetadata =
-    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) &&
-    displayName?.name
+    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName?.name
       ? displayName.name
       : undefined
 
@@ -109,7 +106,7 @@ export const ProfileHeader = memo(function ProfileHeader({
       openModal({
         name: ModalName.Send,
         ...{ initialState: initialSendState },
-      })
+      }),
     )
   }, [dispatch, initialSendState])
 
@@ -123,11 +120,7 @@ export const ProfileHeader = memo(function ProfileHeader({
 
   return (
     <Flex backgroundColor="$surface1" gap="$spacing16" pt="$spacing60">
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       {/* fixed gradient at 0.2 opacity overlaid on surface1 */}
       <AnimatedFlex
         bottom={0}
@@ -136,15 +129,9 @@ export const ProfileHeader = memo(function ProfileHeader({
         left={0}
         position="absolute"
         right={0}
-        top={0}>
-        <Flex
-          backgroundColor="$surface1"
-          bottom={0}
-          left={0}
-          position="absolute"
-          right={0}
-          top={0}
-        />
+        top={0}
+      >
+        <Flex backgroundColor="$surface1" bottom={0} left={0} position="absolute" right={0} top={0} />
         <Flex grow opacity={0.2}>
           <LinearGradient
             colors={fixedGradientColors}
@@ -185,15 +172,10 @@ export const ProfileHeader = memo(function ProfileHeader({
               textAlign="flex-start"
               variant="heading3"
             />
-            {bio ? (
-              <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} />
-            ) : null}
+            {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}
           </Flex>
           {(twitter || showENSName) && (
-            <ScrollView
-              horizontal
-              contentContainerStyle={{ px: '$spacing24' }}
-              showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal contentContainerStyle={{ px: '$spacing24' }} showsHorizontalScrollIndicator={false}>
               <Flex row gap="$spacing16">
                 {twitter ? (
                   <TouchableArea onPress={onPressTwitter}>
@@ -236,7 +218,8 @@ export const ProfileHeader = memo(function ProfileHeader({
               shadowColor="$neutral1"
               style={styles.buttonShadow}
               testID={ElementName.Favorite}
-              onPress={onPressFavorite}>
+              onPress={onPressFavorite}
+            >
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
             <TouchableArea
@@ -252,14 +235,11 @@ export const ProfileHeader = memo(function ProfileHeader({
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               style={styles.buttonShadow}
               testID={ElementName.Send}
-              onPress={onPressSend}>
+              onPress={onPressSend}
+            >
               <Flex row alignItems="center" gap="$spacing8">
                 <SendAction color="$neutral2" size="$icon.20" />
-                <Text
-                  allowFontScaling={true}
-                  color="$neutral2"
-                  maxFontSizeMultiplier={1.2}
-                  variant="buttonLabel2">
+                <Text allowFontScaling={true} color="$neutral2" maxFontSizeMultiplier={1.2} variant="buttonLabel2">
                   {t('common.button.send')}
                 </Text>
               </Flex>

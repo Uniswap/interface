@@ -4,7 +4,6 @@ import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -55,9 +54,7 @@ export function useCurrencySearchResults({
   otherSelectedCurrency,
   operatedPools,
 }: CurrencySearchParams): CurrencySearchResults {
-  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const account = useAccount()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
 
   /**
@@ -133,8 +130,8 @@ export function useCurrencySearchResults({
                   !pool.isNative && pool.address?.toLowerCase() !== userAddedToken.address.toLowerCase()
                 },
                 [operatedPools, userAddedToken]
-              ) && !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address))
-            )
+              ) && !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address)),
+            ),
           }),
         ]
       } else {

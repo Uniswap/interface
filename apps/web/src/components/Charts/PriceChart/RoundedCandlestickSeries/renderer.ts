@@ -75,7 +75,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
   private _drawWicks(
     renderingScope: BitmapCoordinatesRenderingScope,
     bars: readonly BarItem[],
-    visibleRange: Range<number>
+    visibleRange: Range<number>,
   ): void {
     if (this._data === null || this._options === null) {
       return
@@ -99,7 +99,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
     renderingScope: BitmapCoordinatesRenderingScope,
     bars: readonly BarItem[],
     visibleRange: Range<number>,
-    radius: number
+    radius: number,
   ): void {
     if (this._data === null || this._options === null) {
       return
@@ -117,7 +117,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
       const verticalPositions = positionsBox(
         Math.min(bar.openY, bar.closeY),
         Math.max(bar.openY, bar.closeY),
-        verticalPixelRatio
+        verticalPixelRatio,
       )
       const linePositions = positionsLine(bar.x, horizontalPixelRatio, candleBodyWidth)
 
@@ -131,7 +131,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
           verticalPositions.position,
           linePositions.length,
           Math.max(verticalPositions.length, 1),
-          radius
+          radius,
         )
         ctx.fill()
       } else {

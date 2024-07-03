@@ -1,21 +1,17 @@
 import dayjs from 'dayjs'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import {
-  AccountType,
-  BackupType,
-  SignerMnemonicAccount,
-} from 'wallet/src/features/wallet/accounts/types'
+import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 /**
  * Takes a list of existing mnemonic accounts to use as reference for pulling the next derivation index
  */
 export const createOnboardingAccount = async (
   sortedMnemonicAccounts: SignerMnemonicAccount[],
-  password?: string
+  password?: string,
 ): Promise<SignerMnemonicAccount> => {
   const { nextDerivationIndex, mnemonicId, existingBackups } = await getNewAccountParams(
     sortedMnemonicAccounts,
-    password
+    password,
   )
   const address = await Keyring.generateAndStorePrivateKey(mnemonicId, nextDerivationIndex)
   return {
@@ -31,7 +27,7 @@ export const createOnboardingAccount = async (
 
 export async function getNewAccountParams(
   sortedAccounts: SignerMnemonicAccount[],
-  password?: string
+  password?: string,
 ): Promise<{
   nextDerivationIndex: number
   mnemonicId: string

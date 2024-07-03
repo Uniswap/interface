@@ -37,10 +37,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   }
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
-  const balance = convertFiatAmountFormatted(
-    portfolioBalance.balanceUSD,
-    NumberType.FiatTokenQuantity
-  )
+  const balance = convertFiatAmountFormatted(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)
 
   return (
     <TouchableArea
@@ -55,7 +52,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
       onLongPress={disableOnPress}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <TokenLogo
           chainId={currency.chainId}

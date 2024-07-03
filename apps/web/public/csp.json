@@ -4,7 +4,6 @@
   ],
   "scriptSrc": [
     "'self'",
-    "'wasm-unsafe-eval'",
     "data:",
     "https://translate.googleapis.com/",
     "https://www.google-analytics.com",
@@ -74,6 +73,7 @@
     "https://lh3.googleusercontent.com/",
     "https://mainnet.base.org/",
     "https://o1037921.ingest.sentry.io",
+    "https://browser-intake-datadoghq.com",
     "https://openseauserdata.com/",
     "https://performance.radar.cloudflare.com/",
     "https://polygon-rpc.com/",
@@ -95,7 +95,6 @@
     "https://track.swipelux.com",
     "https://trustwallet.com",
     "https://uniswap.org",
-    "https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm",
     "https://us-central1-uniswap-mobile.cloudfunctions.net/",
     "https://valid.rpki.cloudflare.com",
     "https://vercel.com",

@@ -28,16 +28,8 @@ export function NFTTraitCard({
   const colors = useSporeColors()
 
   return (
-    <Flex
-      backgroundColor="$surface3"
-      borderRadius="$rounded16"
-      gap="$spacing4"
-      px="$spacing16"
-      py="$spacing12">
-      <Text
-        fontSize={14}
-        style={{ color: titleTextColor ?? colors.neutral2.get() }}
-        variant="buttonLabel4">
+    <Flex backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
+      <Text fontSize={14} style={{ color: titleTextColor ?? colors.neutral2.get() }} variant="buttonLabel4">
         {trait.name}
       </Text>
       <Text color="$neutral1" variant="subheading2">

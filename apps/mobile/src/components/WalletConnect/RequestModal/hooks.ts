@@ -18,10 +18,7 @@ export function useHasSufficientFunds({
   value?: string
 }): boolean {
   const nativeCurrency = NativeCurrency.onChain(chainId || UniverseChainId.Mainnet)
-  const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(
-    chainId ?? UniverseChainId.Mainnet,
-    account
-  )
+  const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(chainId ?? UniverseChainId.Mainnet, account)
 
   const hasSufficientFunds = useMemo(() => {
     const transactionAmount =

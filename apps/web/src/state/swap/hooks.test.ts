@@ -110,14 +110,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -132,14 +132,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -154,14 +154,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
     })
@@ -209,14 +209,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -231,14 +231,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
 
@@ -253,14 +253,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -275,14 +275,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(137)
+          expect(initialChainId).toEqual(137)
         })
       })
     })

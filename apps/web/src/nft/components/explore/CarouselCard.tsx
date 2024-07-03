@@ -270,7 +270,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
             </TableElement>
             {MARKETS_TO_CHECK.map((market) => {
               const marketplace = gqlCollection.marketplaceCount?.find(
-                (marketplace) => marketplace.marketplace === market
+                (marketplace) => marketplace.marketplace === market,
               )
               if (!marketplace) {
                 return null

@@ -1,3 +1,4 @@
+import { ComponentProps } from 'react'
 import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -13,7 +14,9 @@ interface SelectTokenButtonProps {
   amountReady?: boolean
   disabled?: boolean
   loading?: boolean
-  showCaret?: boolean
+  iconSize?: number
+  backgroundColor?: ComponentProps<typeof TouchableArea>['backgroundColor']
+  chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
 }
 
 export function SelectTokenButton({
@@ -23,36 +26,36 @@ export function SelectTokenButton({
   amountReady,
   disabled,
   loading,
-  showCaret = true,
+  iconSize = iconSizes.icon24,
+  chevronDirection = 'end',
+  backgroundColor,
 }: SelectTokenButtonProps): JSX.Element {
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
   return (
     <TouchableArea
       hapticFeedback
+      backgroundColor={backgroundColor ?? 'unset'}
       borderRadius="$roundedFull"
       disabled={disabled}
+      px="$spacing8"
+      py="$spacing4"
       testID={ElementName.TokenSelectorToggle}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
         {loading ? (
           <SpinningLoader />
         ) : (
-          <CurrencyLogo
-            currencyInfo={selectedCurrencyInfo}
-            networkLogoBorderWidth={spacing.spacing1}
-            size={iconSizes.icon24}
-          />
+          <CurrencyLogo currencyInfo={selectedCurrencyInfo} networkLogoBorderWidth={spacing.spacing1} size={iconSize} />
         )}
         <Text color={textColor} pl="$spacing8" variant="body1">
           {formattedAmount}
         </Text>
-        <Text color={textColor} pl="$spacing1" variant="body1">
+        <Text color={textColor} pl="$spacing4" variant="body1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
-        {showCaret && (
-          <RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
-        )}
+        <RotatableChevron color={textColor} direction={chevronDirection} height={iconSizes.icon16} />
       </Flex>
     </TouchableArea>
   )

@@ -88,7 +88,7 @@ const TxCompleteModal = () => {
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2
-      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`,
     )
   }
 
@@ -135,7 +135,7 @@ const TxCompleteModal = () => {
                       <img
                         className={clsx(
                           styles.successAssetImage,
-                          nftsPurchased.length > 1 && styles.successAssetImageGrid
+                          nftsPurchased.length > 1 && styles.successAssetImageGrid,
                         )}
                         style={{
                           maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,

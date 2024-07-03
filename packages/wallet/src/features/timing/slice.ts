@@ -20,10 +20,7 @@ export const slice = createSlice({
   name: 'timing',
   initialState: initialTimingState,
   reducers: {
-    updateSwapStartTimestamp: (
-      state,
-      { payload: { timestamp } }: PayloadAction<{ timestamp?: number }>
-    ) => {
+    updateSwapStartTimestamp: (state, { payload: { timestamp } }: PayloadAction<{ timestamp?: number }>) => {
       state.swap.startTimestamp = timestamp
     },
   },

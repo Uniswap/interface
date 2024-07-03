@@ -1,16 +1,13 @@
 import { useEffect } from 'react'
 import { NativeModules } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
-import {
-  useBiometricAppSettings,
-  useDeviceSupportsBiometricAuth,
-} from 'src/features/biometrics/hooks'
-import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
+import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
+import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
@@ -75,7 +72,7 @@ export function TraceUserProperties(): null {
     setUserProperty(MobileUserPropertyName.WalletSignerCount, signerAccounts.length)
     setUserProperty(
       MobileUserPropertyName.WalletSignerAccounts,
-      signerAccounts.map((account) => account.address)
+      signerAccounts.map((account) => account.address),
     )
   }, [allowAnalytics, signerAccounts])
 
@@ -89,14 +86,8 @@ export function TraceUserProperties(): null {
     }
     setUserProperty(MobileUserPropertyName.ActiveWalletAddress, activeAccount.address)
     setUserProperty(MobileUserPropertyName.ActiveWalletType, activeAccount.type)
-    setUserProperty(
-      MobileUserPropertyName.IsCloudBackedUp,
-      Boolean(activeAccount.backups?.includes(BackupType.Cloud))
-    )
-    setUserProperty(
-      MobileUserPropertyName.IsPushEnabled,
-      Boolean(activeAccount.pushNotificationsEnabled)
-    )
+    setUserProperty(MobileUserPropertyName.IsCloudBackedUp, Boolean(activeAccount.backups?.includes(BackupType.Cloud)))
+    setUserProperty(MobileUserPropertyName.IsPushEnabled, Boolean(activeAccount.pushNotificationsEnabled))
 
     setUserProperty(MobileUserPropertyName.IsHideSmallBalancesEnabled, hideSmallBalances)
     setUserProperty(MobileUserPropertyName.IsHideSpamTokensEnabled, hideSpamTokens)
@@ -105,11 +96,11 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(
       MobileUserPropertyName.AppOpenAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForAppAccess, touchId, faceId)
+      getAuthMethod(biometricsAppSettingsState.requiredForAppAccess, touchId, faceId),
     )
     setUserProperty(
       MobileUserPropertyName.TransactionAuthMethod,
-      getAuthMethod(biometricsAppSettingsState.requiredForTransactions, touchId, faceId)
+      getAuthMethod(biometricsAppSettingsState.requiredForTransactions, touchId, faceId),
     )
   }, [allowAnalytics, biometricsAppSettingsState, touchId, faceId])
 

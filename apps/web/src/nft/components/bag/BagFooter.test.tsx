@@ -60,7 +60,7 @@ describe('BagFooter.tsx', () => {
     }) as ReturnType<typeof useBag>
     mocked(useBagTotalEthPrice).mockReturnValue(BigNumber.from(12))
     mocked(useCurrencyBalance).mockReturnValue(
-      CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 100)
+      CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 100),
     )
 
     mocked(usePermit2Allowance).mockReturnValue({

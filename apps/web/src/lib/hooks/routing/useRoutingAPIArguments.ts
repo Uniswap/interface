@@ -89,6 +89,6 @@ export function useRoutingAPIArguments({
       priceImprovementBps,
       forceOpenOrders,
       deadlineBufferSecs,
-    ]
+    ],
   )
 }

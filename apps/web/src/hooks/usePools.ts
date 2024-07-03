@@ -30,7 +30,7 @@ export class PoolCache {
     tokenA: Token,
     tokenB: Token,
     fee: FeeAmount,
-    chainId: InterfaceChainId
+    chainId: InterfaceChainId,
   ): string {
     if (this.addresses.length > this.MAX_ENTRIES) {
       this.addresses = this.addresses.slice(0, this.MAX_ENTRIES / 2)
@@ -64,7 +64,7 @@ export class PoolCache {
     fee: FeeAmount,
     sqrtPriceX96: BigintIsh,
     liquidity: BigintIsh,
-    tick: number
+    tick: number,
   ): Pool {
     if (this.pools.length > this.MAX_ENTRIES) {
       this.pools = this.pools.slice(0, this.MAX_ENTRIES / 2)
@@ -77,7 +77,7 @@ export class PoolCache {
         pool.fee === fee &&
         JSBI.EQ(pool.sqrtRatioX96, sqrtPriceX96) &&
         JSBI.EQ(pool.liquidity, liquidity) &&
-        pool.tickCurrent === tick
+        pool.tickCurrent === tick,
     )
     if (found) {
       return found
@@ -97,7 +97,7 @@ export enum PoolState {
 }
 
 export function usePools(
-  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][]
+  poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
 ): [PoolState, Pool | null][] {
   const { chainId } = useAccount()
 
@@ -188,11 +188,11 @@ export function usePools(
 export function usePool(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
 ): [PoolState, Pool | null] {
   const poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][] = useMemo(
     () => [[currencyA, currencyB, feeAmount]],
-    [currencyA, currencyB, feeAmount]
+    [currencyA, currencyB, feeAmount],
   )
 
   return usePools(poolKeys)[0]
@@ -202,7 +202,7 @@ export function usePoolMultichain(
   tokenA: Token | undefined,
   tokenB: Token | undefined,
   fee: number | undefined,
-  chainId: InterfaceChainId
+  chainId: InterfaceChainId,
 ): [PoolState, Pool | null] {
   const poolData = useRef<[PoolState, Pool | null]>([PoolState.LOADING, null])
   const poolAddress =

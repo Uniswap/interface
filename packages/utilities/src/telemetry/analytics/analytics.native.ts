@@ -1,13 +1,5 @@
 /* eslint-disable no-restricted-imports */
-import {
-  Identify,
-  flush,
-  getUserId,
-  identify,
-  init,
-  setDeviceId,
-  track,
-} from '@amplitude/analytics-react-native'
+import { Identify, flush, getUserId, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
@@ -33,7 +25,7 @@ export const analytics: Analytics = {
     transportProvider: ApplicationTransport,
     allowed: boolean,
     _initHash?: string,
-    userIdGetter?: () => Promise<string>
+    userIdGetter?: () => Promise<string>,
   ): Promise<void> {
     try {
       allowAnalytics = allowed
@@ -47,7 +39,7 @@ export const analytics: Analytics = {
             ...AMPLITUDE_SHARED_TRACKING_OPTIONS,
             ...AMPLITUDE_NATIVE_TRACKING_OPTIONS,
           },
-        }
+        },
       )
 
       userId = userIdGetter ? await userIdGetter() : getUserId()

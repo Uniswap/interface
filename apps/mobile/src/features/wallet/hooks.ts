@@ -36,7 +36,7 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
       setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
     }
     openRestoreWalletModalIfNeeded().catch((error) =>
-      logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } })
+      logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } }),
     )
   }, [dispatch, hasImportedSeedPhrase, isRestoreWalletEnabled])
 

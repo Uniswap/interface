@@ -6,10 +6,7 @@ export function sleep(milliseconds: number): Promise<boolean> {
   return new Promise((resolve) => setTimeout(() => resolve(true), milliseconds))
 }
 
-export async function promiseTimeout<T>(
-  promise: Promise<T>,
-  milliseconds: number
-): Promise<T | null> {
+export async function promiseTimeout<T>(promise: Promise<T>, milliseconds: number): Promise<T | null> {
   // Create a promise that rejects in <ms> milliseconds
   const timeout = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
@@ -27,10 +24,7 @@ export async function promiseTimeout<T>(
  * @param promise to execute
  * @param milliseconds length of minimum delay time in ms
  */
-export async function promiseMinDelay(
-  promise: Promise<unknown>,
-  milliseconds: number
-): Promise<unknown> {
+export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: number): Promise<unknown> {
   const minDelay = new Promise<null>((resolve) => {
     const id = setTimeout(() => {
       clearTimeout(id)
@@ -43,11 +37,7 @@ export async function promiseMinDelay(
 }
 
 // https://usehooks-typescript.com/react-hook/use-interval
-export function useInterval(
-  callback: () => void,
-  delay: number | null,
-  immediateStart?: boolean
-): void {
+export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean): void {
   const savedCallback = useRef<() => void | null>()
 
   // Remember the latest callback.
@@ -81,7 +71,7 @@ type Timeout = ReturnType<typeof setTimeout>
 // https://medium.com/javascript-in-plain-english/usetimeout-react-hook-3cc58b94af1f
 export const useTimeout = (
   callback: () => void,
-  delay = 0 // in ms (default: immediately put into JS Event Queue)
+  delay = 0, // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
   const timeoutIdRef = useRef<Timeout>()
 
@@ -136,7 +126,7 @@ export function useDebounceWithStatus<T>(value: T, delay: number = DEFAULT_DELAY
 
 export function debounceCallback<T extends (...args: void[]) => void>(
   func: T,
-  wait: number
+  wait: number,
 ): { triggerDebounce: () => void; cancelDebounce: () => void } {
   let timeout: NodeJS.Timeout
 

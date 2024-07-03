@@ -20,7 +20,8 @@ export function TransactionModal({
         bottomSheetViewStyles={{}}
         openWalletRestoreModal={openWalletRestoreModal}
         walletNeedsRestore={walletNeedsRestore}
-        onClose={onClose}>
+        onClose={onClose}
+      >
         {children}
       </TransactionModalContextProvider>
     </Flex>
@@ -34,9 +35,7 @@ export function TransactionModalInnerContainer({
   return <Flex fill={fullscreen}>{children}</Flex>
 }
 
-export function TransactionModalFooterContainer({
-  children,
-}: TransactionModalFooterContainerProps): JSX.Element {
+export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
   return (
     <AnimatedFlex entering={FadeIn} position="relative" pt="$spacing24">
       {children}

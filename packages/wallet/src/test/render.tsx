@@ -13,6 +13,7 @@ import {
 import React, { PropsWithChildren } from 'react'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
 import { SharedProvider } from 'wallet/src/provider'
 import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
@@ -24,6 +25,20 @@ type ExtendedRenderOptions = RenderOptions & {
   resolvers?: Resolvers
   preloadedState?: PreloadedState<SharedState>
   store?: EnhancedStore<SharedState>
+}
+
+const mockNavigationFunctions: WalletNavigationContextState = {
+  navigateToAccountActivityList: jest.fn(),
+  navigateToAccountTokenList: jest.fn(),
+  navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
+  navigateToNftDetails: jest.fn(),
+  navigateToNftCollection: jest.fn(),
+  navigateToSwapFlow: jest.fn(),
+  navigateToTokenDetails: jest.fn(),
+  navigateToReceive: jest.fn(),
+  navigateToSend: jest.fn(),
+  handleShareNft: jest.fn(),
+  handleShareToken: jest.fn(),
 }
 
 /**
@@ -46,7 +61,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
     ...renderOptions
-  }: ExtendedRenderOptions = {}
+  }: ExtendedRenderOptions = {},
 ): RenderResult & {
   store: EnhancedStore
 } {
@@ -54,7 +69,9 @@ export function renderWithProviders(
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
         <SharedProvider reduxStore={store}>
-          <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
+          <WalletNavigationProvider {...mockNavigationFunctions}>
+            <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
+          </WalletNavigationProvider>
         </SharedProvider>
       </AutoMockedApolloProvider>
     )
@@ -84,13 +101,13 @@ type RenderHookWithProvidersResult<R, P extends any[] | undefined = undefined> =
 // Don't require hookOptions if hook doesn't take any arguments
 export function renderHookWithProviders<R>(
   hook: () => R,
-  hookOptions?: ExtendedRenderHookOptions<undefined>
+  hookOptions?: ExtendedRenderHookOptions<undefined>,
 ): RenderHookWithProvidersResult<R>
 
 // Require hookOptions if hook takes arguments
 export function renderHookWithProviders<R, P extends any[]>(
   hook: (...args: P) => R,
-  hookOptions: ExtendedRenderHookOptions<P>
+  hookOptions: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P>
 
 /**
@@ -102,7 +119,7 @@ export function renderHookWithProviders<R, P extends any[]>(
  */
 export function renderHookWithProviders<P extends any[], R>(
   hook: (...args: P) => R,
-  hookOptions?: ExtendedRenderHookOptions<P>
+  hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
     cache,

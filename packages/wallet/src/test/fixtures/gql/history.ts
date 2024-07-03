@@ -46,7 +46,7 @@ export const priceHistory = createFixture<TimestampedAmount[], PriceHistoryOptio
     timestampedAmount({
       // Timestamp in seconds
       timestamp: Math.floor((startDate + (endDate - startDate) * (i / size)) / 1000),
-    })
+    }),
   ) as TimestampedAmount[] // Simplify type
 })
 

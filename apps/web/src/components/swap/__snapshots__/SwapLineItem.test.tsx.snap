@@ -16,7 +16,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   min-width: 0;
 }
 
-.c21 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -76,7 +76,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   gap: 8px;
 }
 
-.c22 {
+.c20 {
   width: auto;
   display: -webkit-box;
   display: -webkit-flex;
@@ -147,19 +147,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   opacity: 0.4;
 }
 
-.c20 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -249,21 +243,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
 }
 
 .c15 {
@@ -497,38 +476,16 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                <div
-                  class="c19"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.0000000000000009 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c20"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c16"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -569,7 +526,8 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -618,7 +576,16 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -646,7 +613,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c21 c22"
+                  class="c19 c20"
                   style="display: inline-flex;"
                   width="auto"
                 >
@@ -751,7 +718,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   min-width: 0;
 }
 
-.c21 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -811,7 +778,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   gap: 8px;
 }
 
-.c22 {
+.c20 {
   width: auto;
   display: -webkit-box;
   display: -webkit-flex;
@@ -882,19 +849,13 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   opacity: 0.4;
 }
 
-.c20 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -984,21 +945,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
 }
 
 .c15 {
@@ -1232,38 +1178,16 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                <div
-                  class="c19"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.0000000000000009 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c20"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c16"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -1304,7 +1228,8 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -1353,7 +1278,16 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.0000000000000009 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -1381,7 +1315,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c21 c22"
+                  class="c19 c20"
                   style="display: inline-flex;"
                   width="auto"
                 >
@@ -1486,7 +1420,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   min-width: 0;
 }
 
-.c36 {
+.c34 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1546,7 +1480,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   gap: 8px;
 }
 
-.c37 {
+.c35 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1571,14 +1505,14 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: space-between;
 }
 
-.c38 {
+.c36 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c38 > * {
+.c36 > * {
   margin: 1px !important;
 }
 
@@ -1605,7 +1539,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c18 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -1631,19 +1565,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   opacity: 0.4;
 }
 
-.c19 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -1725,7 +1653,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c21 {
+.c19 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1742,7 +1670,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c41 {
+.c39 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1769,22 +1697,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1808,7 +1721,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   fill: #CECECE;
 }
 
-.c32 {
+.c30 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1829,7 +1742,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 535;
 }
 
-.c26 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1843,7 +1756,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   left: 0;
 }
 
-.c25 {
+.c23 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1851,7 +1764,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   display: flex;
 }
 
-.c27 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1862,13 +1775,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   left: 0;
 }
 
-.c27 img {
+.c25 img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c40 {
+.c38 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1879,29 +1792,29 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   left: 0;
 }
 
-.c40 img {
+.c38 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c40 img:first-child {
+.c38 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c40 img:last-child {
+.c38 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c28 {
+.c26 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c23 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1909,12 +1822,12 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   width: 100%;
 }
 
-.c24 {
+.c22 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c29 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1931,7 +1844,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   position: relative;
 }
 
-.c39 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1939,7 +1852,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   padding: 4px 4px;
 }
 
-.c30 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1954,11 +1867,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   opacity: 0.5;
 }
 
-.c31 path {
+.c29 path {
   stroke: #22222212;
 }
 
-.c33 {
+.c31 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -1972,7 +1885,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1020;
 }
 
-.c34 {
+.c32 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -1981,7 +1894,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1021;
 }
 
-.c35 {
+.c33 {
   word-break: normal;
 }
 
@@ -2167,38 +2080,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                <div
-                  class="c18"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c19"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -2239,7 +2130,8 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -2288,7 +2180,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -2316,7 +2217,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c20 css-142zc9n"
+                  class="c18 css-142zc9n"
                 >
                   Uniswap Client
                 </div>
@@ -2328,34 +2229,34 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             style="position: fixed; left: 0px; top: 0px;"
           >
             <div
-              class="c21"
+              class="c19"
             >
               <div
                 class="c11 css-obwv3p"
               >
                 <div
-                  class="c22"
+                  class="c20"
                 >
                   <div
-                    class="c23 css-vurnku"
+                    class="c21 css-vurnku"
                   >
                     <div
-                      class="c0 c1 c24"
+                      class="c0 c1 c22"
                     >
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                             />
@@ -2363,38 +2264,38 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c29"
+                        class="c0 c1 c27"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <svg
-                            class="c31"
+                            class="c29"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c32 c33"
+                          class="c30 c31"
                         >
                           <div
-                            class="c32 c34"
+                            class="c30 c32"
                           >
                             <div
-                              class="c3 c35 css-1m65e73"
+                              class="c3 c33 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c35 css-1m65e73"
+                            class="c11 c33 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c36 c37 c38"
+                          class="c34 c35 c36"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -2403,29 +2304,29 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                           >
                             <div>
                               <div
-                                class="c32 c39"
+                                class="c30 c37"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c40"
+                                    class="c38"
                                     size="20"
                                   >
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c35 css-1m65e73"
+                                  class="c11 c33 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -2437,7 +2338,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c41"
+                              class="c39"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -2449,19 +2350,19 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                             />
@@ -2506,7 +2407,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   min-width: 0;
 }
 
-.c36 {
+.c34 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -2566,7 +2467,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   gap: 8px;
 }
 
-.c37 {
+.c35 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2591,14 +2492,14 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: space-between;
 }
 
-.c38 {
+.c36 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c38 > * {
+.c36 > * {
   margin: 1px !important;
 }
 
@@ -2625,7 +2526,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c18 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -2651,19 +2552,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   opacity: 0.4;
 }
 
-.c19 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -2745,7 +2640,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c21 {
+.c19 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2762,7 +2657,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c41 {
+.c39 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2789,22 +2684,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2828,7 +2708,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   fill: #CECECE;
 }
 
-.c32 {
+.c30 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2849,7 +2729,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 535;
 }
 
-.c26 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2863,7 +2743,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   left: 0;
 }
 
-.c25 {
+.c23 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2871,7 +2751,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   display: flex;
 }
 
-.c27 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2882,13 +2762,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   left: 0;
 }
 
-.c27 img {
+.c25 img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c40 {
+.c38 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2899,29 +2779,29 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   left: 0;
 }
 
-.c40 img {
+.c38 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c40 img:first-child {
+.c38 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c40 img:last-child {
+.c38 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c28 {
+.c26 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c23 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2929,12 +2809,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   width: 100%;
 }
 
-.c24 {
+.c22 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c29 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2951,7 +2831,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   position: relative;
 }
 
-.c39 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2959,7 +2839,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   padding: 4px 4px;
 }
 
-.c30 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2974,11 +2854,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   opacity: 0.5;
 }
 
-.c31 path {
+.c29 path {
   stroke: #22222212;
 }
 
-.c33 {
+.c31 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -2992,7 +2872,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1020;
 }
 
-.c34 {
+.c32 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -3001,7 +2881,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1021;
 }
 
-.c35 {
+.c33 {
   word-break: normal;
 }
 
@@ -3187,38 +3067,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                <div
-                  class="c18"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c19"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -3259,7 +3117,8 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -3308,7 +3167,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -3336,7 +3204,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c20 css-142zc9n"
+                  class="c18 css-142zc9n"
                 >
                   Uniswap API
                 </div>
@@ -3348,34 +3216,34 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             style="position: fixed; left: 0px; top: 0px;"
           >
             <div
-              class="c21"
+              class="c19"
             >
               <div
                 class="c11 css-obwv3p"
               >
                 <div
-                  class="c22"
+                  class="c20"
                 >
                   <div
-                    class="c23 css-vurnku"
+                    class="c21 css-vurnku"
                   >
                     <div
-                      class="c0 c1 c24"
+                      class="c0 c1 c22"
                     >
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                             />
@@ -3383,38 +3251,38 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c29"
+                        class="c0 c1 c27"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <svg
-                            class="c31"
+                            class="c29"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c32 c33"
+                          class="c30 c31"
                         >
                           <div
-                            class="c32 c34"
+                            class="c30 c32"
                           >
                             <div
-                              class="c3 c35 css-1m65e73"
+                              class="c3 c33 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c35 css-1m65e73"
+                            class="c11 c33 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c36 c37 c38"
+                          class="c34 c35 c36"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -3423,29 +3291,29 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                           >
                             <div>
                               <div
-                                class="c32 c39"
+                                class="c30 c37"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c40"
+                                    class="c38"
                                     size="20"
                                   >
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c35 css-1m65e73"
+                                  class="c11 c33 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -3457,7 +3325,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c41"
+                              class="c39"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -3469,19 +3337,19 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                             />
@@ -3526,7 +3394,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   min-width: 0;
 }
 
-.c36 {
+.c34 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -3586,7 +3454,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   gap: 8px;
 }
 
-.c37 {
+.c35 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3611,14 +3479,14 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: space-between;
 }
 
-.c38 {
+.c36 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c38 > * {
+.c36 > * {
   margin: 1px !important;
 }
 
@@ -3645,7 +3513,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c18 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -3671,19 +3539,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   opacity: 0.4;
 }
 
-.c19 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -3765,7 +3627,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c21 {
+.c19 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3782,7 +3644,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c41 {
+.c39 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3809,22 +3671,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3848,7 +3695,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   fill: #CECECE;
 }
 
-.c32 {
+.c30 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3869,7 +3716,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 535;
 }
 
-.c26 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3883,7 +3730,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   left: 0;
 }
 
-.c25 {
+.c23 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3891,7 +3738,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   display: flex;
 }
 
-.c27 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3902,13 +3749,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   left: 0;
 }
 
-.c27 img {
+.c25 img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c40 {
+.c38 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3919,29 +3766,29 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   left: 0;
 }
 
-.c40 img {
+.c38 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c40 img:first-child {
+.c38 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c40 img:last-child {
+.c38 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c28 {
+.c26 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c23 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3949,12 +3796,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   width: 100%;
 }
 
-.c24 {
+.c22 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c29 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3971,7 +3818,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   position: relative;
 }
 
-.c39 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3979,7 +3826,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   padding: 4px 4px;
 }
 
-.c30 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3994,11 +3841,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   opacity: 0.5;
 }
 
-.c31 path {
+.c29 path {
   stroke: #22222212;
 }
 
-.c33 {
+.c31 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -4012,7 +3859,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1020;
 }
 
-.c34 {
+.c32 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -4021,7 +3868,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1021;
 }
 
-.c35 {
+.c33 {
   word-break: normal;
 }
 
@@ -4207,38 +4054,16 @@ exports[`SwapLineItem.tsx exact output 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                <div
-                  class="c18"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Pay at most
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000102 ABC
-                    </div>
-                  </div>
-                  <div
-                    class="c19"
-                  />
-                  <div>
-                    If the price moves so that you will pay more than 0.00000000000000102 ABC, your transaction will be reverted. This is the maximum amount you are guaranteed to pay. 
-                    <a
-                      class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -4279,7 +4104,8 @@ exports[`SwapLineItem.tsx exact output 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -4346,6 +4172,56 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
+            Receive at least
+          </div>
+          <div
+            class="c5"
+          >
+            <div>
+              <div
+                class="c3 c6 css-142zc9n"
+              >
+                0.000000000000001 GHI
+              </div>
+            </div>
+          </div>
+          <div
+            class="c13"
+            style="position: fixed; left: 0px; top: 0px;"
+          >
+            <div
+              class="c14"
+            >
+              <div
+                class="c11 css-obwv3p"
+              >
+                If the price moves so that you will receive less than 0.000000000000001 GHI, your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
+            </div>
+            <div
+              class="c16 arrow-"
+              style="position: absolute;"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="c0 c1 c2"
+        >
+          <div
+            class="c3 c4 css-142zc9n"
+            data-testid="swap-li-label"
+          >
             Order routing
           </div>
           <div
@@ -4356,7 +4232,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c20 css-142zc9n"
+                  class="c18 css-142zc9n"
                 >
                   Uniswap Client
                 </div>
@@ -4368,34 +4244,34 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             style="position: fixed; left: 0px; top: 0px;"
           >
             <div
-              class="c21"
+              class="c19"
             >
               <div
                 class="c11 css-obwv3p"
               >
                 <div
-                  class="c22"
+                  class="c20"
                 >
                   <div
-                    class="c23 css-vurnku"
+                    class="c21 css-vurnku"
                   >
                     <div
-                      class="c0 c1 c24"
+                      class="c0 c1 c22"
                     >
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                             />
@@ -4403,38 +4279,38 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c29"
+                        class="c0 c1 c27"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <svg
-                            class="c31"
+                            class="c29"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c32 c33"
+                          class="c30 c31"
                         >
                           <div
-                            class="c32 c34"
+                            class="c30 c32"
                           >
                             <div
-                              class="c3 c35 css-1m65e73"
+                              class="c3 c33 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c35 css-1m65e73"
+                            class="c11 c33 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c36 c37 c38"
+                          class="c34 c35 c36"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -4443,29 +4319,29 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                           >
                             <div>
                               <div
-                                class="c32 c39"
+                                class="c30 c37"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c40"
+                                    class="c38"
                                     size="20"
                                   >
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                                     />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c35 css-1m65e73"
+                                  class="c11 c33 css-1m65e73"
                                 >
                                   0.3%
                                 </div>
@@ -4477,7 +4353,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c41"
+                              class="c39"
                             >
                               ABC/GHI 0.3% pool
                             </div>
@@ -4489,19 +4365,19 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                             />
@@ -4546,7 +4422,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   min-width: 0;
 }
 
-.c36 {
+.c34 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -4606,7 +4482,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   gap: 8px;
 }
 
-.c37 {
+.c35 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4631,14 +4507,14 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: space-between;
 }
 
-.c38 {
+.c36 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c38 > * {
+.c36 > * {
   margin: 1px !important;
 }
 
@@ -4665,7 +4541,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c18 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -4691,19 +4567,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   opacity: 0.4;
 }
 
-.c19 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -4785,7 +4655,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c21 {
+.c19 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4802,7 +4672,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c41 {
+.c39 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4829,22 +4699,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4868,7 +4723,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   fill: #CECECE;
 }
 
-.c32 {
+.c30 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4889,7 +4744,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 535;
 }
 
-.c26 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4903,7 +4758,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   left: 0;
 }
 
-.c25 {
+.c23 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4911,7 +4766,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   display: flex;
 }
 
-.c27 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4922,13 +4777,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   left: 0;
 }
 
-.c27 img {
+.c25 img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c40 {
+.c38 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4939,29 +4794,29 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   left: 0;
 }
 
-.c40 img {
+.c38 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c40 img:first-child {
+.c38 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c40 img:last-child {
+.c38 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c28 {
+.c26 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c23 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4969,12 +4824,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   width: 100%;
 }
 
-.c24 {
+.c22 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c29 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4991,7 +4846,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   position: relative;
 }
 
-.c39 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4999,7 +4854,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   padding: 4px 4px;
 }
 
-.c30 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5014,11 +4869,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   opacity: 0.5;
 }
 
-.c31 path {
+.c29 path {
   stroke: #22222212;
 }
 
-.c33 {
+.c31 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -5032,7 +4887,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1020;
 }
 
-.c34 {
+.c32 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -5041,7 +4896,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1021;
 }
 
-.c35 {
+.c33 {
   word-break: normal;
 }
 
@@ -5224,7 +5079,8 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
@@ -5280,38 +5136,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                <div
-                  class="c18"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c19"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -5352,7 +5186,8 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -5401,7 +5236,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -5429,7 +5273,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c20 css-142zc9n"
+                  class="c18 css-142zc9n"
                 >
                   Uniswap API
                 </div>
@@ -5441,34 +5285,34 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             style="position: fixed; left: 0px; top: 0px;"
           >
             <div
-              class="c21"
+              class="c19"
             >
               <div
                 class="c11 css-obwv3p"
               >
                 <div
-                  class="c22"
+                  class="c20"
                 >
                   <div
-                    class="c23 css-vurnku"
+                    class="c21 css-vurnku"
                   >
                     <div
-                      class="c0 c1 c24"
+                      class="c0 c1 c22"
                     >
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                             />
@@ -5476,38 +5320,38 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c29"
+                        class="c0 c1 c27"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <svg
-                            class="c31"
+                            class="c29"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c32 c33"
+                          class="c30 c31"
                         >
                           <div
-                            class="c32 c34"
+                            class="c30 c32"
                           >
                             <div
-                              class="c3 c35 css-1m65e73"
+                              class="c3 c33 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c35 css-1m65e73"
+                            class="c11 c33 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c36 c37 c38"
+                          class="c34 c35 c36"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -5516,29 +5360,29 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                           >
                             <div>
                               <div
-                                class="c32 c39"
+                                class="c30 c37"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c40"
+                                    class="c38"
                                     size="20"
                                   >
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c35 css-1m65e73"
+                                  class="c11 c33 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -5550,7 +5394,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c41"
+                              class="c39"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -5562,19 +5406,19 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                             />
@@ -5619,7 +5463,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   min-width: 0;
 }
 
-.c36 {
+.c34 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -5679,7 +5523,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   gap: 8px;
 }
 
-.c37 {
+.c35 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -5704,14 +5548,14 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: space-between;
 }
 
-.c38 {
+.c36 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c38 > * {
+.c36 > * {
   margin: 1px !important;
 }
 
@@ -5738,7 +5582,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c18 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -5764,19 +5608,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   opacity: 0.4;
 }
 
-.c19 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c13 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -5858,7 +5696,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c21 {
+.c19 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5875,7 +5713,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c41 {
+.c39 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5902,22 +5740,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   overflow-wrap: break-word;
 }
 
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5941,7 +5764,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   fill: #CECECE;
 }
 
-.c32 {
+.c30 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -5962,7 +5785,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 535;
 }
 
-.c26 {
+.c24 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5976,7 +5799,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   left: 0;
 }
 
-.c25 {
+.c23 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -5984,7 +5807,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   display: flex;
 }
 
-.c27 {
+.c25 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5995,13 +5818,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   left: 0;
 }
 
-.c27 img {
+.c25 img {
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c40 {
+.c38 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6012,29 +5835,29 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   left: 0;
 }
 
-.c40 img {
+.c38 img {
   width: 10px;
   height: 20px;
   object-fit: cover;
 }
 
-.c40 img:first-child {
+.c38 img:first-child {
   border-radius: 10px 0 0 10px;
   object-position: 0 0;
 }
 
-.c40 img:last-child {
+.c38 img:last-child {
   border-radius: 0 10px 10px 0;
   object-position: 100% 0;
 }
 
-.c28 {
+.c26 {
   width: 10px;
   height: 20px;
   border-radius: 50%;
 }
 
-.c23 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6042,12 +5865,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   width: 100%;
 }
 
-.c24 {
+.c22 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c29 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6064,7 +5887,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   position: relative;
 }
 
-.c39 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6072,7 +5895,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   padding: 4px 4px;
 }
 
-.c30 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6087,11 +5910,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   opacity: 0.5;
 }
 
-.c31 path {
+.c29 path {
   stroke: #22222212;
 }
 
-.c33 {
+.c31 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -6105,7 +5928,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1020;
 }
 
-.c34 {
+.c32 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -6114,7 +5937,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1021;
 }
 
-.c35 {
+.c33 {
   word-break: normal;
 }
 
@@ -6297,7 +6120,8 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees. 
+                Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-"
@@ -6353,38 +6177,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                <div
-                  class="c18"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c19"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c15"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -6425,7 +6227,8 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap.
+                <br />
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -6474,7 +6277,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c15"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -6502,7 +6314,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 class="c3 c6 css-142zc9n"
               >
                 <div
-                  class="c20 css-142zc9n"
+                  class="c18 css-142zc9n"
                 >
                   Uniswap API
                 </div>
@@ -6514,34 +6326,34 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             style="position: fixed; left: 0px; top: 0px;"
           >
             <div
-              class="c21"
+              class="c19"
             >
               <div
                 class="c11 css-obwv3p"
               >
                 <div
-                  class="c22"
+                  class="c20"
                 >
                   <div
-                    class="c23 css-vurnku"
+                    class="c21 css-vurnku"
                   >
                     <div
-                      class="c0 c1 c24"
+                      class="c0 c1 c22"
                     >
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                             />
@@ -6549,38 +6361,38 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c29"
+                        class="c0 c1 c27"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <svg
-                            class="c31"
+                            class="c29"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c32 c33"
+                          class="c30 c31"
                         >
                           <div
-                            class="c32 c34"
+                            class="c30 c32"
                           >
                             <div
-                              class="c3 c35 css-1m65e73"
+                              class="c3 c33 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c35 css-1m65e73"
+                            class="c11 c33 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c36 c37 c38"
+                          class="c34 c35 c36"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -6589,29 +6401,29 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                           >
                             <div>
                               <div
-                                class="c32 c39"
+                                class="c30 c37"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c40"
+                                    class="c38"
                                     size="20"
                                   >
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                     />
                                     <img
-                                      class="c28"
+                                      class="c26"
                                       size="20"
                                       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                     />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c35 css-1m65e73"
+                                  class="c11 c33 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -6623,7 +6435,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c41"
+                              class="c39"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -6635,19 +6447,19 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c25"
+                        class="c23"
                         style="height: 20px; width: 20px;"
                       >
                         <div
-                          class="c26"
+                          class="c24"
                         >
                           <div
-                            class="c27"
+                            class="c25"
                             size="20"
                           >
                              
                             <img
-                              class="c28"
+                              class="c26"
                               size="20"
                               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                             />
@@ -6774,19 +6586,13 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   opacity: 0.4;
 }
 
-.c16 {
-  width: 100%;
-  height: 1px;
-  background-color: #22222212;
-}
-
 .c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -6873,7 +6679,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   color: #7D7D7D;
 }
 
-.c17 {
+.c15 {
   cursor: auto;
   color: #7D7D7D;
 }
@@ -6881,21 +6687,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 .c6 {
   text-align: right;
   overflow-wrap: break-word;
-}
-
-.c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
 }
 
 .c14 {
@@ -7020,38 +6811,16 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                <div
-                  class="c15"
+                The maximum price movement before your transaction will revert.
+                <br />
+                <a
+                  class="c11"
+                  href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+                  rel="noopener noreferrer"
+                  target="_blank"
                 >
-                  <div
-                    class="c0 c1 c2"
-                  >
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      Receive at least
-                    </div>
-                    <div
-                      class="c3 css-obwv3p"
-                    >
-                      0.00000000000000098 DEF
-                    </div>
-                  </div>
-                  <div
-                    class="c16"
-                  />
-                  <div>
-                    If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will be reverted. This is the minimum amount you are guaranteed to receive. 
-                    <a
-                      class="c11"
-                      href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-"
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      Learn more
-                    </a>
-                  </div>
-                </div>
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -7066,7 +6835,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           class="c0 c1 c2"
         >
           <div
-            class="c3 c17 css-142zc9n"
+            class="c3 c15 css-142zc9n"
             data-testid="swap-li-label"
           >
             Fee
@@ -7114,7 +6883,16 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.
+                If the price moves so that you will receive less than 0.00000000000000098 DEF, your transaction will revert.
+                <br />
+                <a
+                  class="c11"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
               </div>
             </div>
             <div
@@ -7129,7 +6907,7 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
           class="c0 c1 c2"
         >
           <div
-            class="c3 c17 css-142zc9n"
+            class="c3 c15 css-142zc9n"
             data-testid="swap-li-label"
           >
             Order routing

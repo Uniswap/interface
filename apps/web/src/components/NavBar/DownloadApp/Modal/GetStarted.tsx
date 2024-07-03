@@ -2,6 +2,7 @@ import ExtensionIllustration from 'assets/images/extensionIllustration.jpg'
 import WalletIllustration from 'assets/images/walletIllustration.jpg'
 import Column from 'components/Column'
 import { AppleLogo } from 'components/Icons/AppleLogo'
+import { BraveBrowserLogo } from 'components/Icons/BraveBrowserLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { WiggleIcon } from 'components/NavBar/DownloadApp/GetTheAppButton'
@@ -78,9 +79,14 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
             <Illustration src={ExtensionIllustration} alt="Extension example page" />
           </IllustrationContainer>
           <CardInfo title={t('common.chromeExtension')} details={t('common.googleChrome')}>
-            <WiggleIcon>
-              <GoogleChromeLogo width="16px" height="16px" />
-            </WiggleIcon>
+            <Row gap="8px" width="auto">
+              <WiggleIcon>
+                <BraveBrowserLogo width="16px" height="16px" />
+              </WiggleIcon>
+              <WiggleIcon>
+                <GoogleChromeLogo width="16px" height="16px" />
+              </WiggleIcon>
+            </Row>
           </CardInfo>
         </Card>
       </Row>

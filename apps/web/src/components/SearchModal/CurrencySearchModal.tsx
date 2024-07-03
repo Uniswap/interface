@@ -63,7 +63,7 @@ export default memo(function CurrencySearchModal({
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens, currencySearchFilters?.onlyDisplaySmartPools]
+    [onDismiss, onCurrencySelect, userAddedTokens, currencySearchFilters?.onlyDisplaySmartPools],
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()

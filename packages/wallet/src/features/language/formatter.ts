@@ -43,29 +43,24 @@ export function useLocalizedFormatter(): LocalizedFormatter {
   const locale = useCurrentLocale()
 
   const formatNumberOrStringInner = useCallback(
-    ({
-      value,
-      type = NumberType.TokenNonTx,
-      currencyCode,
-      placeholder,
-    }: FormatNumberOrStringInput): string =>
+    ({ value, type = NumberType.TokenNonTx, currencyCode, placeholder }: FormatNumberOrStringInput): string =>
       formatNumberOrString({ price: value, locale, currencyCode, type, placeholder }),
-    [locale]
+    [locale],
   )
   const formatCurrencyAmountInner = useCallback(
     ({ value, type, placeholder }: FormatCurrencyAmountInput): string =>
       formatCurrencyAmount({ amount: value, locale, type, placeholder }),
-    [locale]
+    [locale],
   )
   const formatPercentInner = useCallback(
     (value: Maybe<number | string>): string => formatPercent(value, locale),
-    [locale]
+    [locale],
   )
 
   const addFiatSymbolToNumberInner = useCallback(
     ({ value, currencyCode, currencySymbol }: AddFiatSymbolToNumberInput): string =>
       addFiatSymbolToNumber({ value, currencyCode, currencySymbol, locale }),
-    [locale]
+    [locale],
   )
 
   return useMemo(
@@ -75,11 +70,6 @@ export function useLocalizedFormatter(): LocalizedFormatter {
       formatPercent: formatPercentInner,
       addFiatSymbolToNumber: addFiatSymbolToNumberInner,
     }),
-    [
-      formatNumberOrStringInner,
-      formatCurrencyAmountInner,
-      formatPercentInner,
-      addFiatSymbolToNumberInner,
-    ]
+    [formatNumberOrStringInner, formatCurrencyAmountInner, formatPercentInner, addFiatSymbolToNumberInner],
   )
 }

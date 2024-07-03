@@ -25,10 +25,7 @@ export function ForceUpgradeModal(): JSX.Element {
 
   // signerAccounts could be empty if no seed phrase imported or in onboarding
   const signerAccounts = useSignerAccounts()
-  const mnemonicId =
-    signerAccounts.length > 0
-      ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId
-      : undefined
+  const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
 
@@ -72,7 +69,8 @@ export function ForceUpgradeModal(): JSX.Element {
           severity={WarningSeverity.High}
           title={t('forceUpgrade.title')}
           onClose={onClose}
-          onConfirm={onPressConfirm}>
+          onConfirm={onPressConfirm}
+        >
           <Text color="$neutral2" textAlign="center" variant="body2">
             {t('forceUpgrade.description')}
           </Text>
@@ -88,7 +86,8 @@ export function ForceUpgradeModal(): JSX.Element {
           fullScreen
           backgroundColor={colors.surface1.get()}
           name={ModalName.ForceUpgradeModal}
-          onClose={onDismiss}>
+          onClose={onDismiss}
+        >
           <Flex fill gap="$spacing16" px="$spacing24" py="$spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>

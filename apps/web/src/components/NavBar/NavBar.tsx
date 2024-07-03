@@ -17,7 +17,7 @@ import { useIsSendPage } from 'hooks/useIsSendPage'
 import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -40,13 +40,22 @@ const NavContents = styled.div`
   justify-content: center;
   flex: 1 auto 1;
 `
+const NavItems = css`
+  gap: 12px;
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    gap: 4px;
+  }
+`
 const Left = styled(Row)`
   display: flex;
   align-items: center;
-  gap: 12px;
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    gap: 8px;
-  }
+  wrap: nowrap;
+  ${NavItems}
+`
+const Right = styled(Row)`
+  justify-content: flex-end;
+  align-self: flex-end;
+  ${NavItems}
 `
 const SearchContainer = styled.div`
   display: flex;
@@ -78,7 +87,7 @@ export const RefreshedNavbar = () => {
   return (
     <Nav>
       <NavContents>
-        <Left gap="12px" wrap="nowrap">
+        <Left>
           <CompanyMenu />
           {areTabsVisible && <Tabs />}
         </Left>
@@ -87,14 +96,14 @@ export const RefreshedNavbar = () => {
           {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
         </SearchContainer>
 
-        <Row gap="12px" justify="flex-end" alignSelf="flex-end">
+        <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {isLandingPage && !isSmallScreen && <GetTheAppButton showIcons={false} />}
-          {!account.isConnected && <PreferenceMenu />}
+          {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           <Web3Status />
-        </Row>
+        </Right>
       </NavContents>
     </Nav>
   )

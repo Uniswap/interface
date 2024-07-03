@@ -82,9 +82,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
     const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
-    const [showClearButton, setShowClearButton] = useState(
-      value && value.length > 0 && !disableClearable
-    )
+    const [showClearButton, setShowClearButton] = useState(value && value.length > 0 && !disableClearable)
 
     const onPressCancel = (): void => {
       inputRef.current?.clear()
@@ -120,7 +118,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         onChangeText?.(text)
         setShowClearButton(text.length > 0 && !disableClearable)
       },
-      [disableClearable, onChangeText]
+      [disableClearable, onChangeText],
     )
 
     return (
@@ -148,7 +146,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             '$theme-dark': {
               shadowColor: '$sporeBlack',
             },
-          })}>
+          })}
+        >
           {!hideIcon && (
             <Flex py="$spacing4">
               <Search color="$neutral2" size="$icon.20" />
@@ -216,7 +215,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               <Flex
                 animation="quick"
                 opacity={isFocus && showClearButton ? 0 : 1}
-                scale={isFocus && showClearButton ? 0 : 1}>
+                scale={isFocus && showClearButton ? 0 : 1}
+              >
                 {endAdornment}
               </Flex>
             ) : null}
@@ -253,7 +253,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             right={0}
             scale={isFocus ? 1 : 0}
             x={isFocus ? 0 : dimensions.fullWidth}
-            onLayout={onCancelButtonLayout}>
+            onLayout={onCancelButtonLayout}
+          >
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
               <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
             </TouchableArea>
@@ -261,5 +262,5 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         )}
       </Flex>
     )
-  }
+  },
 )

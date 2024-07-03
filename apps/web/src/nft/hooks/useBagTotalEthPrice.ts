@@ -16,11 +16,11 @@ export function useBagTotalEthPrice(): BigNumber {
         item.status !== BagItemStatus.UNAVAILABLE
           ? total.add(
               BigNumber.from(
-                item.asset.updatedPriceInfo ? item.asset.updatedPriceInfo.ETHPrice : item.asset.priceInfo.ETHPrice
-              )
+                item.asset.updatedPriceInfo ? item.asset.updatedPriceInfo.ETHPrice : item.asset.priceInfo.ETHPrice,
+              ),
             )
           : total,
-      BigNumber.from(0)
+      BigNumber.from(0),
     )
 
     return totalEthPrice

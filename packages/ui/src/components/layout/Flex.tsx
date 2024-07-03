@@ -1,10 +1,6 @@
 import type { Insets } from 'react-native'
 import { SizeTokens, View, ViewProps, styled } from 'tamagui'
-import {
-  animationsEnter,
-  animationsEnterExit,
-  animationsExit,
-} from 'ui/src/animations/animationPresets'
+import { animationsEnter, animationsEnterExit, animationsExit } from 'ui/src/animations/animationPresets'
 
 export const flexStyles = {
   fill: { flex: 1 },
@@ -40,8 +36,7 @@ export const Flex = styled(View, {
   flexDirection: 'column',
 
   variants: {
-    inset: (size: SizeOrNumber | Insets) =>
-      size && typeof size === 'object' ? size : getInset(size),
+    inset: (size: SizeOrNumber | Insets) => (size && typeof size === 'object' ? size : getInset(size)),
 
     row: {
       true: {

@@ -53,7 +53,7 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
   const volume48h = historicalVolume
     .filter(
       (entry): entry is VolumeChange =>
-        entry?.timestamp !== undefined && entry.timestamp >= twoDaysAgo && entry.timestamp < dayAgo
+        entry?.timestamp !== undefined && entry.timestamp >= twoDaysAgo && entry.timestamp < dayAgo,
     )
     .reduce((acc, cur) => acc + cur.value, 0)
   return ((volume24h - volume48h) / volume48h) * 100
@@ -67,7 +67,7 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
  */
 export function usePoolData(
   poolAddress: string,
-  chainId?: SupportedInterfaceChainId
+  chainId?: SupportedInterfaceChainId,
 ): {
   loading: boolean
   error: boolean

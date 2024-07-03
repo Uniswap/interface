@@ -67,7 +67,7 @@ function getNativeTransferRequest(params: TransferCurrencyParams): TransactionRe
 }
 
 async function getTokenTransferRequest(
-  transferParams: TransferCurrencyParams
+  transferParams: TransferCurrencyParams,
 ): Promise<TransactionRequest | undefined> {
   const { provider, account, chainId, toAddress, tokenAddress, amountInWei } = transferParams
   const tokenContract = getContract(tokenAddress, ERC20_ABI, provider, account) as Erc20

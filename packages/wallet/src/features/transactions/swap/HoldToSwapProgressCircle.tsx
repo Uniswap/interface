@@ -3,10 +3,7 @@ import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-na
 import Svg, { Circle } from 'react-native-svg'
 import { HapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import {
-  SwapScreen,
-  useSwapScreenContext,
-} from 'wallet/src/features/transactions/contexts/SwapScreenContext'
+import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3000
 
@@ -42,7 +39,7 @@ export function HoldToSwapProgressCircle(): JSX.Element {
     () => ({
       strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
     }),
-    [progress]
+    [progress],
   )
 
   useEffect(() => {
@@ -61,7 +58,8 @@ export function HoldToSwapProgressCircle(): JSX.Element {
       fill="none"
       height={PROGRESS_CIRCLE_SIZE}
       viewBox={`0 0 ${PROGRESS_CIRCLE_SIZE} ${PROGRESS_CIRCLE_SIZE}`}
-      width={PROGRESS_CIRCLE_SIZE}>
+      width={PROGRESS_CIRCLE_SIZE}
+    >
       <Circle {...CIRCLE_PROPS} stroke={BACKGROUND_STROKE_COLOR} />
       <AnimatedCircle animatedProps={animatedProps} {...CIRCLE_PROPS} stroke={STROKE_COLOR} />
     </Svg>

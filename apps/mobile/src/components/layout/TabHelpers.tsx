@@ -112,9 +112,7 @@ export const TabLabel = ({
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused
       and showing it only on the specific pending transactions. */}
-      {route.title === 'Activity' && !isExternalProfile && !focused ? (
-        <PendingNotificationBadge />
-      ) : null}
+      {route.title === 'Activity' && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
     </Flex>
   )
 }
@@ -125,35 +123,34 @@ export const TabLabel = ({
 export const useScrollSync = (
   currentTabIndex: SharedValue<number>,
   scrollPairs: ScrollPair[],
-  headerConfig: HeaderConfig
+  headerConfig: HeaderConfig,
 ): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
-  const sync:
-    | FlatListProps<unknown>['onMomentumScrollEnd']
-    | FlashListProps<unknown>['onMomentumScrollEnd'] = useCallback(
-    (event: { nativeEvent: NativeScrollEvent }) => {
-      const { y } = event.nativeEvent.contentOffset
+  const sync: FlatListProps<unknown>['onMomentumScrollEnd'] | FlashListProps<unknown>['onMomentumScrollEnd'] =
+    useCallback(
+      (event: { nativeEvent: NativeScrollEvent }) => {
+        const { y } = event.nativeEvent.contentOffset
 
-      const { heightCollapsed, heightExpanded } = headerConfig
+        const { heightCollapsed, heightExpanded } = headerConfig
 
-      const headerDiff = heightExpanded - heightCollapsed
+        const headerDiff = heightExpanded - heightCollapsed
 
-      for (const { list, position, index } of scrollPairs) {
-        const scrollPosition = position.value
+        for (const { list, position, index } of scrollPairs) {
+          const scrollPosition = position.value
 
-        if (scrollPosition > headerDiff && y > headerDiff) {
-          continue
+          if (scrollPosition > headerDiff && y > headerDiff) {
+            continue
+          }
+
+          if (index !== currentTabIndex.value) {
+            list.current?.scrollToOffset({
+              offset: Math.min(y, headerDiff),
+              animated: false,
+            })
+          }
         }
-
-        if (index !== currentTabIndex.value) {
-          list.current?.scrollToOffset({
-            offset: Math.min(y, headerDiff),
-            animated: false,
-          })
-        }
-      }
-    },
-    [currentTabIndex, scrollPairs, headerConfig]
-  )
+      },
+      [currentTabIndex, scrollPairs, headerConfig],
+    )
 
   return useMemo(() => ({ sync }), [sync])
 }

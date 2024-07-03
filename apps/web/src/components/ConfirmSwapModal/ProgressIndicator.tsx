@@ -163,7 +163,7 @@ export default function ProgressIndicator({
           : uniswapUrls.helpArticleUrls.howToSwapTokens,
       },
     }),
-    [inputTokenColor, nativeCurrency.symbol, trade, theme.accent1]
+    [inputTokenColor, nativeCurrency.symbol, trade, theme.accent1],
   )
 
   if (steps.length === 0) {

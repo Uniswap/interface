@@ -192,7 +192,7 @@ export const MarketplaceSelect = () => {
           {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
         />
       )),
-    [addMarket, marketCount, removeMarket, selectedMarkets]
+    [addMarket, marketCount, removeMarket, selectedMarkets],
   )
 
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {

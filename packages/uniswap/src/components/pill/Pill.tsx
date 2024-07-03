@@ -40,7 +40,8 @@ export function Pill({
         ...(customBackgroundColor ? { backgroundColor: customBackgroundColor } : {}),
         ...(customBorderColor ? { borderColor: customBorderColor } : {}),
       }}
-      {...rest}>
+      {...rest}
+    >
       {icon ?? null}
       {label ? (
         <Text style={{ color: foregroundColor, paddingTop: 1 }} variant={textVariant}>

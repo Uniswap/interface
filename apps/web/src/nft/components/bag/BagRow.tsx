@@ -112,7 +112,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
       e.stopPropagation()
       removeAsset([asset])
     },
-    [asset, removeAsset]
+    [asset, removeAsset],
   )
 
   return (
@@ -185,7 +185,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
       const toKeep = false
       markAssetAsReviewed(asset, toKeep)
     },
-    [asset, markAssetAsReviewed]
+    [asset, markAssetAsReviewed],
   )
   const handleKeep = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -194,7 +194,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
       const toKeep = true
       markAssetAsReviewed(asset, toKeep)
     },
-    [asset, markAssetAsReviewed]
+    [asset, markAssetAsReviewed],
   )
   return (
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>

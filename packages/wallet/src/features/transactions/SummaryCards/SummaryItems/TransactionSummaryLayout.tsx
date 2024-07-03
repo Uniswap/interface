@@ -1,20 +1,14 @@
-/* eslint-disable complexity */
-import { providers } from 'ethers'
-import { memo, useEffect, useState } from 'react'
+import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { CancelConfirmationView } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/CancelConfirmationView'
-import TransactionActionsModal from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionActionsModal'
+import { useTransactionActionsCancelModals } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActionsCancelModals'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
@@ -24,13 +18,10 @@ import {
   useFormattedTime,
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
-import { cancelTransaction } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { getIsCancelable } from 'wallet/src/features/transactions/utils'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
-import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
+import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
 
@@ -47,52 +38,27 @@ function TransactionSummaryLayout({
   const colors = useSporeColors()
   const isTransactionDetailsModalEnabled = useFeatureFlag(FeatureFlags.TransactionDetailsSheet)
 
-  const { navigateToTokenDetails } = useWalletNavigation()
-
   const { type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
 
-  const [showActionsModal, setShowActionsModal] = useState(false)
-  const [showCancelModal, setShowCancelModal] = useState(false)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
-  const dispatch = useAppDispatch()
 
-  const { status, addedTime, hash, chainId, typeInfo } = transaction
+  const { status, hash, chainId } = transaction
 
   const walletDisplayName = useDisplayName(transaction.ownerAddress)
 
   title = title ?? getTransactionSummaryTitle(transaction, t) ?? ''
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
-  const inCancelling =
-    status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
+  const isCancel = status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
 
   // Monitor latest nonce to identify queued transactions.
   const queued = useIsQueuedTransaction(transaction)
 
-  const isCancelable = !readonly && getIsCancelable(transaction)
-
-  function handleCancel(txRequest: providers.TransactionRequest): void {
-    if (!transaction) {
-      return
-    }
-    dispatch(
-      cancelTransaction({
-        chainId: transaction.chainId,
-        id: transaction.id,
-        address: transaction.from,
-        cancelRequest: txRequest,
-      })
-    )
-    setShowCancelModal(false)
-  }
-
-  // Hide cancelation modal if transaction is no longer pending.
-  useEffect(() => {
-    if (status !== TransactionStatus.Pending) {
-      setShowCancelModal(false)
-    }
-  }, [status])
+  const { openActionsModal, renderModals } = useTransactionActionsCancelModals({
+    authTrigger,
+    transaction,
+  })
 
   const onPress = async (): Promise<void> => {
     if (readonly) {
@@ -101,7 +67,7 @@ function TransactionSummaryLayout({
       if (isTransactionDetailsModalEnabled) {
         setShowDetailsModal(true)
       } else {
-        setShowActionsModal(true)
+        openActionsModal()
       }
     }
   }
@@ -110,7 +76,7 @@ function TransactionSummaryLayout({
 
   const statusIconFill = colors.surface1.get()
 
-  const rightBlock = inCancelling ? (
+  const rightBlock = isCancel ? (
     <SlashCircleIcon
       color={colors.statusCritical.val}
       fill={statusIconFill}
@@ -122,9 +88,8 @@ function TransactionSummaryLayout({
     <Flex grow alignItems="flex-end" justifyContent="space-between">
       <AlertTriangle
         color={colors.DEP_accentWarning.val}
-        fill={statusIconFill}
-        height={TXN_STATUS_ICON_SIZE}
-        width={TXN_STATUS_ICON_SIZE}
+        fill={colors.DEP_accentWarning.val}
+        size={TXN_STATUS_ICON_SIZE}
       />
     </Flex>
   ) : (
@@ -144,7 +109,8 @@ function TransactionSummaryLayout({
           gap="$spacing12"
           hoverStyle={{ backgroundColor: '$surface2' }}
           px={isWeb ? '$spacing8' : '$none'}
-          py="$spacing8">
+          py="$spacing8"
+        >
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}
@@ -160,6 +126,9 @@ function TransactionSummaryLayout({
                       textProps={{ color: '$accent1', variant: 'body1' }}
                     />
                   ) : null}
+                  {(transaction.routing === Routing.DUTCH_V2 || transaction.routing === Routing.DUTCH_LIMIT) && (
+                    <UniswapX size="$icon.16" />
+                  )}
                   <TransactionSummaryTitle title={title} transaction={transaction} />
                 </Flex>
                 {!inProgress && rightBlock}
@@ -188,69 +157,14 @@ function TransactionSummaryLayout({
           )}
         </Flex>
       </TouchableArea>
-      {showActionsModal && (
-        <TransactionActionsModal
-          msTimestampAdded={addedTime}
-          showCancelButton={isCancelable}
-          transactionDetails={transaction}
-          onCancel={(): void => {
-            setShowActionsModal(false)
-            setShowCancelModal(true)
-          }}
-          onClose={(): void => setShowActionsModal(false)}
-          onExplore={(): Promise<void> => {
-            setShowActionsModal(false)
-            return openTransactionLink(hash, chainId)
-          }}
-          onViewMoonpay={
-            typeInfo.type === TransactionType.FiatPurchase &&
-            // only display `View on Moonpay` when an explorer url was provided by Moonpay
-            typeInfo.explorerUrl
-              ? (): Promise<void> | undefined => {
-                  setShowActionsModal(false)
-                  // avoids type casting
-                  return transaction.typeInfo.type === TransactionType.FiatPurchase
-                    ? openMoonpayTransactionLink(transaction.typeInfo)
-                    : undefined
-                }
-              : undefined
-          }
-          onViewTokenDetails={
-            typeInfo.type === TransactionType.Swap
-              ? (currencyId: CurrencyId): void | undefined => {
-                  setShowActionsModal(false)
-                  if (transaction.typeInfo.type === TransactionType.Swap) {
-                    navigateToTokenDetails(currencyId)
-                  }
-                }
-              : undefined
-          }
-        />
-      )}
-      {showCancelModal && (
-        <BottomSheetModal
-          hideHandlebar={false}
-          name={ModalName.TransactionActions}
-          onClose={(): void => setShowCancelModal(false)}>
-          {transaction && (
-            <CancelConfirmationView
-              authTrigger={authTrigger}
-              transactionDetails={transaction}
-              onBack={(): void => {
-                setShowActionsModal(true)
-                setShowCancelModal(false)
-              }}
-              onCancel={handleCancel}
-            />
-          )}
-        </BottomSheetModal>
-      )}
       {showDetailsModal && (
         <TransactionDetailsModal
+          authTrigger={authTrigger}
           transactionDetails={transaction}
           onClose={(): void => setShowDetailsModal(false)}
         />
       )}
+      {renderModals()}
     </>
   )
 }

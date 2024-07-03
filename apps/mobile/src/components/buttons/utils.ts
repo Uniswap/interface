@@ -2,11 +2,8 @@ import { withSequence, withSpring, WithSpringConfig } from 'react-native-reanima
 
 export function pulseAnimation(
   activeScale: number,
-  spingAnimationConfig: WithSpringConfig = { damping: 1, stiffness: 200 }
+  spingAnimationConfig: WithSpringConfig = { damping: 1, stiffness: 200 },
 ): number {
   'worklet'
-  return withSequence(
-    withSpring(activeScale, spingAnimationConfig),
-    withSpring(1, spingAnimationConfig)
-  )
+  return withSequence(withSpring(activeScale, spingAnimationConfig), withSpring(1, spingAnimationConfig))
 }

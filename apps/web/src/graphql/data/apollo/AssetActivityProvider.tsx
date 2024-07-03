@@ -66,7 +66,7 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = useActivityWebLazyQuery()
   const fetch = useCallback(
     () => lazyFetch({ variables: { account: contextAddress ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
-    [contextAddress, lazyFetch]
+    [contextAddress, lazyFetch],
   )
 
   return (

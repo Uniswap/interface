@@ -653,6 +653,7 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
     assetActivities(
       pageSize: 100
       page: 1
+      includeOffChain: true
       chains: [
         ETHEREUM
         POLYGON
@@ -715,6 +716,13 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
           hash
           from
           status
+          application {
+            name
+            address
+            icon {
+              url
+            }
+          }
           assetChanges {
             __typename
             ... on TokenTransfer {
@@ -813,6 +821,37 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
               quantity
             }
           }
+          networkFee {
+            quantity
+            tokenSymbol
+            tokenAddress
+            tokenChain
+          }
+        }
+        ... on SwapOrderDetails {
+          id
+          offerer
+          hash
+          orderStatus: swapOrderStatus
+          expiry
+          swapOrderType
+          encodedOrder
+          inputToken {
+            id
+            symbol
+            address
+            decimals
+            chain
+          }
+          inputTokenQuantity
+          outputToken {
+            id
+            symbol
+            address
+            decimals
+            chain
+          }
+          outputTokenQuantity
         }
       }
     }

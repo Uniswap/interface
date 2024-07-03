@@ -164,7 +164,7 @@ const OtherChainsBalanceSummary = ({
                 getTokenDetailsURL({
                   address: balance.token?.address,
                   chain: balance.token?.chain ?? Chain.Ethereum,
-                })
+                }),
               )
             }
           />

@@ -20,8 +20,8 @@ function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId
         ensAddress,
       }
     : chainId
-    ? { chainId, name: 'Unsupported' }
-    : undefined
+      ? { chainId, name: 'Unsupported' }
+      : undefined
   if (!network) {
     return undefined
   }

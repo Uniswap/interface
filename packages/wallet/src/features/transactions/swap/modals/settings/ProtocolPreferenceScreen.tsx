@@ -46,10 +46,7 @@ export function ProtocolPreferenceScreen({
   )
 }
 
-export function getTitleFromProtocolPreference(
-  preference: TradeProtocolPreference,
-  t: TFunction
-): string {
+export function getTitleFromProtocolPreference(preference: TradeProtocolPreference, t: TFunction): string {
   switch (preference) {
     case TradeProtocolPreference.Default:
       return t('swap.settings.routingPreference.option.default.title')
@@ -79,10 +76,12 @@ function OptionRow({
         <Text color="$neutral1" variant="subheading2">
           {title}
         </Text>
-        {description && (
+        {typeof description === 'string' ? (
           <Text color="$neutral2" variant="body3">
             {description}
           </Text>
+        ) : (
+          description
         )}
       </Flex>
       {/* Only log this event if toggle value is off, and then turned on */}
@@ -94,14 +93,10 @@ function OptionRow({
             borderRadius="$roundedFull"
             borderWidth="$spacing2"
             height="$spacing24"
-            width="$spacing24">
+            width="$spacing24"
+          >
             {active && (
-              <Flex
-                backgroundColor="$accent1"
-                borderRadius="$roundedFull"
-                height="$spacing12"
-                width="$spacing12"
-              />
+              <Flex backgroundColor="$accent1" borderRadius="$roundedFull" height="$spacing12" width="$spacing12" />
             )}
           </Flex>
         </TouchableArea>
@@ -126,12 +121,7 @@ function DefaultOptionDescription(): JSX.Element {
           <Text alignItems="center" color="$neutral2" variant="body3">
             <Trans
               components={{
-                icon: (
-                  <UniswapX
-                    size="$icon.16"
-                    style={!isMobileApp && { transform: 'translateY(3px)' }}
-                  />
-                ),
+                icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
                 gradient: <UniswapXText height={18} variant="body3" />,
                 info: (
                   <InfoCircleFilled

@@ -5,11 +5,7 @@ import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  EnsLookupParams,
-  STUB_ONCHAIN_ENS_ENDPOINT,
-  getOnChainEnsFetch,
-} from 'wallet/src/features/ens/api'
+import { EnsLookupParams, STUB_ONCHAIN_ENS_ENDPOINT, getOnChainEnsFetch } from 'wallet/src/features/ens/api'
 import {
   BalanceLookupParams,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
@@ -18,12 +14,8 @@ import {
 
 // mapping from endpoint to custom fetcher, when needed
 function getCustomFetcherMap(
-  restUri: string
-): Record<
-  string,
-  | ((body: BalanceLookupParams) => Promise<Response>)
-  | ((body: EnsLookupParams) => Promise<Response>)
-> {
+  restUri: string,
+): Record<string, ((body: BalanceLookupParams) => Promise<Response>) | ((body: EnsLookupParams) => Promise<Response>)> {
   return {
     [restUri + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
     [restUri + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
@@ -107,7 +99,7 @@ export function sample(cb: () => void, rate: number): void {
 
 export function getErrorLink(
   graphqlErrorSamplingRate = APOLLO_GRAPHQL_ERROR_SAMPLING_RATE,
-  networkErrorSamplingRate = APOLLO_NETWORK_ERROR_SAMPLING_RATE
+  networkErrorSamplingRate = APOLLO_NETWORK_ERROR_SAMPLING_RATE,
 ): ApolloLink {
   // Log any GraphQL errors or network error that occurred
   const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -122,15 +114,14 @@ export function getErrorLink(
               },
               extra: { message, locations, path },
             }),
-          graphqlErrorSamplingRate
+          graphqlErrorSamplingRate,
         )
       })
     }
     if (networkError) {
       sample(
-        () =>
-          logger.error(networkError, { tags: { file: 'data/links', function: 'getErrorLink' } }),
-        networkErrorSamplingRate
+        () => logger.error(networkError, { tags: { file: 'data/links', function: 'getErrorLink' } }),
+        networkErrorSamplingRate,
       )
     }
   })
@@ -140,7 +131,7 @@ export function getErrorLink(
 
 export function getPerformanceLink(
   sendAnalyticsEvent: (args: Record<string, string>) => void,
-  samplingRate = APOLLO_PERFORMANCE_SAMPLING_RATE
+  samplingRate = APOLLO_PERFORMANCE_SAMPLING_RATE,
 ): ApolloLink {
   return new ApolloLink((operation, forward) => {
     const startTime = Date.now()
@@ -156,7 +147,7 @@ export function getPerformanceLink(
             duration,
             operationName: operation.operationName,
           }),
-        samplingRate
+        samplingRate,
       )
 
       return data

@@ -4,15 +4,7 @@ import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import {
-  Flex,
-  Image,
-  Text,
-  TouchableArea,
-  TouchableAreaProps,
-  useIsDarkMode,
-  useIsShortMobileDevice,
-} from 'ui/src'
+import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
@@ -102,14 +94,10 @@ export function UnitagBanner({
       py="$spacing12"
       shadowColor="$neutral3"
       shadowOpacity={0.4}
-      shadowRadius="$spacing4">
+      shadowRadius="$spacing4"
+    >
       {compact ? (
-        <Flex
-          fill
-          row
-          $short={{ mr: '$spacing32' }}
-          justifyContent="space-between"
-          onPress={onPressClaimNow}>
+        <Flex fill row $short={{ mr: '$spacing32' }} justifyContent="space-between" onPress={onPressClaimNow}>
           <Text color="$neutral2" variant="subheading2">
             <Trans
               components={{ highlight: <Text color="$accent1" variant="buttonLabel3" /> }}
@@ -134,10 +122,7 @@ export function UnitagBanner({
           </Flex>
           <Flex row gap="$spacing2">
             {/* TODO: replace with Button when it's extensible enough to accommodate designs */}
-            <TouchableArea
-              {...baseButtonStyle}
-              testID={ElementName.Confirm}
-              onPress={onPressClaimNow}>
+            <TouchableArea {...baseButtonStyle} testID={ElementName.Confirm} onPress={onPressClaimNow}>
               <Text color="white" variant="buttonLabel4">
                 {t('unitags.banner.button.claim')}
               </Text>
@@ -146,7 +131,8 @@ export function UnitagBanner({
               {...baseButtonStyle}
               backgroundColor="$transparent"
               testID={ElementName.Cancel}
-              onPress={onPressMaybeLater}>
+              onPress={onPressMaybeLater}
+            >
               <Text color="$neutral2" variant="buttonLabel4">
                 {t('common.button.later')}
               </Text>

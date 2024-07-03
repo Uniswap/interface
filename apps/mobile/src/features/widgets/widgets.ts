@@ -57,14 +57,15 @@ export const setFavoritesUserDefaults = (currencyIds: CurrencyId[]): void => {
 }
 
 export const setAccountAddressesUserDefaults = (accounts: Account[]): void => {
-  const userDefaultAccounts: Array<{ address: string; name: Maybe<string>; isSigner: boolean }> =
-    accounts.map((account: Account) => {
+  const userDefaultAccounts: Array<{ address: string; name: Maybe<string>; isSigner: boolean }> = accounts.map(
+    (account: Account) => {
       return {
         address: account.address,
         name: account.name,
         isSigner: account.type === AccountType.SignerMnemonic,
       }
-    })
+    },
+  )
   const data = {
     accounts: userDefaultAccounts,
   }

@@ -41,6 +41,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
   }
 >
   <View
+    pointerEvents="auto"
     style={
       {
         "borderBottomColor": "#2222220D",

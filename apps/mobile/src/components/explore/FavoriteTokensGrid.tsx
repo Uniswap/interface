@@ -3,9 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
-import FavoriteTokenCard, {
-  FAVORITE_TOKEN_CARD_LOADER_HEIGHT,
-} from 'src/components/explore/FavoriteTokenCard'
+import FavoriteTokenCard, { FAVORITE_TOKEN_CARD_LOADER_HEIGHT } from 'src/components/explore/FavoriteTokenCard'
 import { Loader } from 'src/components/loading'
 import {
   AutoScrollProps,
@@ -27,10 +25,7 @@ type FavoriteTokensGridProps = AutoScrollProps & {
 }
 
 /** Renders the favorite tokens section on the Explore tab */
-export function FavoriteTokensGrid({
-  showLoading,
-  ...rest
-}: FavoriteTokensGridProps): JSX.Element | null {
+export function FavoriteTokensGrid({ showLoading, ...rest }: FavoriteTokensGridProps): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -49,7 +44,7 @@ export function FavoriteTokensGrid({
     ({ data }: SortableGridChangeEvent<string>) => {
       dispatch(setFavoriteTokens({ currencyIds: data }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -63,7 +58,7 @@ export function FavoriteTokensGrid({
         setIsEditing={setIsEditing}
       />
     ),
-    [isEditing]
+    [isEditing],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({

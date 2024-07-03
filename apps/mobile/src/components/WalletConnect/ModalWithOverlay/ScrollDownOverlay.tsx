@@ -13,10 +13,7 @@ type ScrollDownOverlayProps = {
   onScrollDownPress: () => void
 }
 
-export function ScrollDownOverlay({
-  onScrollDownPress,
-  scrollDownButonText,
-}: ScrollDownOverlayProps): JSX.Element {
+export function ScrollDownOverlay({ onScrollDownPress, scrollDownButonText }: ScrollDownOverlayProps): JSX.Element {
   const { t } = useTranslation()
   const { fullHeight, fullWidth } = useDeviceDimensions()
   const colors = useSporeColors()
@@ -32,7 +29,8 @@ export function ScrollDownOverlay({
       pb="$spacing24"
       pointerEvents="box-none"
       position="absolute"
-      width="100%">
+      width="100%"
+    >
       <Flex pointerEvents="none" style={StyleSheet.absoluteFill}>
         <Svg height="100%" width={fullWidth}>
           <Defs>

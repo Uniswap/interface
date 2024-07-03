@@ -57,10 +57,7 @@ export function HeaderScrollScreen({
   })
 
   return (
-    <Screen
-      backgroundColor={backgroundColor}
-      edges={['top', 'left', 'right']}
-      noInsets={fullScreen}>
+    <Screen backgroundColor={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
       {showHandleBar ? <HandleBar backgroundColor={colors.surface1.get()} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}
@@ -81,7 +78,8 @@ export function HeaderScrollScreen({
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         style={flexStyles.fill}
-        onScroll={scrollHandler}>
+        onScroll={scrollHandler}
+      >
         {children}
       </VirtualizedList>
 

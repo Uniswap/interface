@@ -21,18 +21,14 @@ exports[`should inject metadata for valid pools 1`] = `
 
     <!-- Skip the CSP in specified test environments -->
     
-
-    <!-- 
-      Apple Smart App Banner for Safari on iOS
-      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
-     -->
-    <meta name="apple-itunes-app" content="app-id=6443944476">
-
-    <!--
-      manifest.json provides metadata used when the app is installed as a PWA.
-      See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="/manifest.json" />
+      
+      <!-- Allow vercel feedback in preview environments -->
+      
+      <meta
+        http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.opensea.io https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-eth.com https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://images-country.meld.io https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io https://mainnet.era.zksync.io/ wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
+      >
+    
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -130,7 +126,7 @@ exports[`should inject metadata for valid pools 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="WBTC/WETH on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/pools/ethereum/0xCBCdF9626bC03E24f779434178A73a0B4bad62eD" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="WBTC/WETH on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/pools/ethereum/0xCBCdF9626bC03E24f779434178A73a0B4bad62eD" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="WBTC/WETH on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/pools/ethereum/0xCBCdF9626bC03E24f779434178A73a0B4bad62eD" data-rh="true"><meta property="twitter:image:alt" content="WBTC/WETH on Uniswap" data-rh="true"></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -163,18 +159,14 @@ exports[`should inject metadata for valid pools 2`] = `
 
     <!-- Skip the CSP in specified test environments -->
     
-
-    <!-- 
-      Apple Smart App Banner for Safari on iOS
-      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
-     -->
-    <meta name="apple-itunes-app" content="app-id=6443944476">
-
-    <!--
-      manifest.json provides metadata used when the app is installed as a PWA.
-      See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="/manifest.json" />
+      
+      <!-- Allow vercel feedback in preview environments -->
+      
+      <meta
+        http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.opensea.io https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-eth.com https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://images-country.meld.io https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io https://mainnet.era.zksync.io/ wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
+      >
+    
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -272,7 +264,7 @@ exports[`should inject metadata for valid pools 2`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="DAI/MKR on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/pools/ethereum/0x517F9dD285e75b599234F7221227339478d0FcC8" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="DAI/MKR on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/pools/ethereum/0x517F9dD285e75b599234F7221227339478d0FcC8" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="DAI/MKR on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/pools/ethereum/0x517F9dD285e75b599234F7221227339478d0FcC8" data-rh="true"><meta property="twitter:image:alt" content="DAI/MKR on Uniswap" data-rh="true"></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -305,18 +297,14 @@ exports[`should inject metadata for valid pools 3`] = `
 
     <!-- Skip the CSP in specified test environments -->
     
-
-    <!-- 
-      Apple Smart App Banner for Safari on iOS
-      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
-     -->
-    <meta name="apple-itunes-app" content="app-id=6443944476">
-
-    <!--
-      manifest.json provides metadata used when the app is installed as a PWA.
-      See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="/manifest.json" />
+      
+      <!-- Allow vercel feedback in preview environments -->
+      
+      <meta
+        http-equiv="Content-Security-Policy" 
+        content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src * blob: data:; frame-src 'self' https://buy.moonpay.com/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src 'self' blob: data: https://*.alchemy.com https://*.arbitrum.io https://*.base.org/ https://*.coinbase.com https://*.coingecko.com/ https://*.coinmarketcap.com/ https://*.drpc.org/ https://*.gemini.com https://*.googleapis.com https://*.infura.io https://*.nodereal.io https://*.optimism.io https://*.quiknode.pro https://*.twnodes.com https://*.uniswap.org https://*.walletconnect.com https://*.zerion.io https://alfajores-forno.celo-testnet.org https://api.avax.network/ext/bc/C/rpc https://api.moonpay.com/ https://api.opensea.io https://bsc-dataseed1.binance.org/ https://bsc-dataseed1.bnbchain.org https://buy.moonpay.com/ https://cdn.center.app/ https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm https://celo-org.github.io https://cloudflare-eth.com https://cloudflare-ipfs.com https://ethereum-optimism.github.io/ https://forno.celo.org/ https://gateway.ipfs.io/ https://i.seadn.io/ https://images-country.meld.io https://invalid.rpki.cloudflare.com/ https://ipfs.io/ https://ipv4-check-perf.radar.cloudflare.com https://ipv6-check-perf.radar.cloudflare.com/ https://lh3.googleusercontent.com/ https://mainnet.base.org/ https://o1037921.ingest.sentry.io https://openseauserdata.com/ https://performance.radar.cloudflare.com/ https://polygon-rpc.com/ https://raw.githubusercontent.com https://raw.seadn.io/ https://rpc-mainnet.maticvigil.com https://rpc-mumbai.maticvigil.com https://rpc.ankr.com https://rpc.blast.io/ https://rpc.degen.tips https://rpc.goerli.mudit.blog/ https://rpc.mevblocker.io/ https://rpc.scroll.io/ https://rpc.sepolia.org/ https://sockjs-us3.pusher.com/ https://sparrow.cloudflare.com/ https://statsigapi.net https://trustwallet.com https://uniswap.org https://unpkg.com/@rive-app/canvas@2.8.3/rive.wasm https://us-central1-uniswap-mobile.cloudfunctions.net/ https://valid.rpki.cloudflare.com https://vercel.com https://vercel.live/ https://wallet.crypto.com https://web3.1inch.io https://mainnet.era.zksync.io/ wss://*.uniswap.org wss://relay.walletconnect.com wss://relay.walletconnect.org wss://ws-us3.pusher.com/ wss://www.walletlink.org; worker-src 'self' blob:;"
+      >
+    
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
@@ -414,7 +402,7 @@ exports[`should inject metadata for valid pools 3`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="USDC/WLD on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="USDC/WLD on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="USDC/WLD on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true"><meta property="twitter:image:alt" content="USDC/WLD on Uniswap" data-rh="true"></head>
+  <script defer src="/static/js/bundle.js"></script></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

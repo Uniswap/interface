@@ -4,7 +4,7 @@ import { LayoutChangeEvent } from 'react-native'
 export function useDynamicFontSizing(
   maxCharWidthAtMaxFontSize: number,
   maxFontSize: number,
-  minFontSize: number
+  minFontSize: number,
 ): {
   onLayout: (event: LayoutChangeEvent) => void
   fontSize: number
@@ -31,7 +31,7 @@ export function useDynamicFontSizing(
       const newFontSize = Math.round(Math.min(maxFontSize, scaledSizeWithMin))
       setFontSize(newFontSize)
     },
-    [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize]
+    [fontSize, maxFontSize, minFontSize, maxCharWidthAtMaxFontSize],
   )
 
   return { onLayout, fontSize, onSetFontSize }
@@ -41,7 +41,7 @@ const getStringWidth = (
   value: string,
   maxCharWidthAtMaxFontSize: number,
   currentFontSize: number,
-  maxFontSize: number
+  maxFontSize: number,
 ): number => {
   const widthAtMaxFontSize = value.length * maxCharWidthAtMaxFontSize
   return widthAtMaxFontSize * (currentFontSize / maxFontSize)

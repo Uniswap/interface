@@ -12,7 +12,7 @@ describe(NetworkChangedNotification, () => {
           chainId: UniverseChainId.Mainnet,
           flow: 'swap',
         }}
-      />
+      />,
     )
     const title = queryByText('Swapping on Ethereum')
     expect(title).toBeTruthy()
@@ -26,7 +26,7 @@ describe(NetworkChangedNotification, () => {
           chainId: UniverseChainId.Mainnet,
           flow: 'send',
         }}
-      />
+      />,
     )
     const title = queryByText('Sending on Ethereum')
     expect(title).toBeTruthy()
@@ -39,7 +39,7 @@ describe(NetworkChangedNotification, () => {
           type: AppNotificationType.NetworkChanged,
           chainId: UniverseChainId.Mainnet,
         }}
-      />
+      />,
     )
     const title = queryByText('Switched to Ethereum')
     expect(title).toBeTruthy()

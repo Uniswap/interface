@@ -11,7 +11,7 @@ export default function useCurrentBlockTimestamp(options?: ListenerOptions): Big
     multicall,
     'getCurrentBlockTimestamp',
     undefined,
-    options
+    options,
   )?.result?.[0]?.toString()
   return useMemo(() => (typeof resultStr === 'string' ? BigNumber.from(resultStr) : undefined), [resultStr])
 }

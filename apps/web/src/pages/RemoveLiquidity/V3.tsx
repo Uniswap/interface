@@ -183,7 +183,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     positionSDK.amount0.currency,
                     positionSDK.amount1.currency,
                     position.fee,
-                    account.chainId
+                    account.chainId,
                   )
                 : undefined,
           })
@@ -327,7 +327,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       (liquidityValue0.currency.isNative ||
         liquidityValue1.currency.isNative ||
         WRAPPED_NATIVE_CURRENCY[liquidityValue0.currency.chainId]?.equals(liquidityValue0.currency.wrapped) ||
-        WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped))
+        WRAPPED_NATIVE_CURRENCY[liquidityValue1.currency.chainId]?.equals(liquidityValue1.currency.wrapped)),
   )
   return (
     <AutoColumn>

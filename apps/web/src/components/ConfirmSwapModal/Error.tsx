@@ -114,7 +114,7 @@ export default function Error({ errorType, trade, showTrade, swapResult, onRetry
               href={getExplorerLink(
                 swapResult.response.chainId,
                 swapResult.response.hash,
-                ExplorerDataType.TRANSACTION
+                ExplorerDataType.TRANSACTION,
               )}
               color="neutral2"
             >

@@ -105,8 +105,8 @@ function RemoveLiquidity() {
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-      ? '<1'
-      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+        ? '<1'
+        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -125,7 +125,7 @@ function RemoveLiquidity() {
   // allowance handling
   const { gatherPermitSignature, signatureData } = useV2LiquidityTokenPermit(
     parsedAmounts[Field.LIQUIDITY],
-    router?.address
+    router?.address,
   )
   const isRbPool = true
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address, isRbPool)
@@ -158,20 +158,20 @@ function RemoveLiquidity() {
     (field: Field, typedValue: string) => {
       return _onUserInput(field, typedValue)
     },
-    [_onUserInput]
+    [_onUserInput],
   )
 
   const onLiquidityInput = useCallback(
     (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
   const onCurrencyAInput = useCallback(
     (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
   const onCurrencyBInput = useCallback(
     (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
 
   // tx sending
@@ -292,12 +292,12 @@ function RemoveLiquidity() {
               args,
             })
             return undefined
-          })
-      )
+          }),
+      ),
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex((safeGasEstimate) =>
-      BigNumber.isBigNumber(safeGasEstimate)
+      BigNumber.isBigNumber(safeGasEstimate),
     )
 
     // all estimations failed...
@@ -454,7 +454,7 @@ function RemoveLiquidity() {
     (value: number) => {
       onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
@@ -464,7 +464,7 @@ function RemoveLiquidity() {
       account.chainId &&
       WRAPPED_NATIVE_CURRENCY[account.chainId] &&
       ((currencyA && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyA)) ||
-        (currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB)))
+        (currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB))),
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -475,7 +475,7 @@ function RemoveLiquidity() {
         navigate(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, navigate]
+    [currencyIdA, currencyIdB, navigate],
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
@@ -485,7 +485,7 @@ function RemoveLiquidity() {
         navigate(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
       }
     },
-    [currencyIdA, currencyIdB, navigate]
+    [currencyIdA, currencyIdB, navigate],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -499,7 +499,7 @@ function RemoveLiquidity() {
 
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
+    liquidityPercentChangeCallback,
   )
 
   if (!networkSupportsV2) {

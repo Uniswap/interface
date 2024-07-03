@@ -17,19 +17,18 @@ import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
-import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
-import { NetworkPill } from 'wallet/src/components/network/NetworkPill'
+import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
+import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
-const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean =>
-  request.type !== EthMethod.PersonalSign
+const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean => request.type !== EthMethod.PersonalSign
 
 export const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction
@@ -86,64 +85,41 @@ export function WalletConnectRequestModalContent({
     height: animatedFooterHeight.value,
   }))
 
+  const hasGasFee = methodCostsGas(request)
+  const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
+
   return (
     <>
       <ClientDetails permitInfo={permitInfo} request={request} />
-      <Flex gap="$spacing12">
-        <Flex
-          backgroundColor="$surface2"
-          borderBottomColor="$surface2"
-          borderBottomWidth={1}
-          borderRadius="$rounded16">
+      <Flex pt="$spacing8">
+        <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth={1}>
           {!permitInfo && (
             <SectionContainer style={requestMessageStyle}>
-              <Flex gap="$spacing12">
-                <RequestDetails request={request} />
-              </Flex>
+              <RequestDetails request={request} />
             </SectionContainer>
           )}
-          <Flex px="$spacing16" py="$spacing8">
-            {methodCostsGas(request) ? (
-              <NetworkFee chainId={chainId} gasFee={gasFee} />
-            ) : (
-              <Flex row alignItems="center" justifyContent="space-between">
-                <Text color="$neutral1" variant="subheading2">
-                  {t('walletConnect.request.label.network')}
-                </Text>
-                <NetworkPill
-                  showIcon
-                  chainId={chainId}
-                  gap="$spacing4"
-                  pl="$spacing4"
-                  pr="$spacing8"
-                  py="$spacing2"
-                  textVariant="subheading2"
-                />
-              </Flex>
-            )}
-          </Flex>
-
-          <SectionContainer>
-            <AccountDetails address={request.account} />
-            {!hasSufficientFunds && (
-              <Text color="$DEP_accentWarning" pt="$spacing8" variant="body2">
-                {t('walletConnect.request.error.insufficientFunds', {
-                  currencySymbol: nativeCurrency?.symbol,
-                })}
-              </Text>
-            )}
-          </SectionContainer>
         </Flex>
+
+        <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
+          <NetworkFeeFooter chainId={chainId} gasFeeUSD={hasGasFee ? gasFeeUSD : '0'} showNetworkLogo={hasGasFee} />
+          <AddressFooter activeAccountAddress={request.account} />
+        </Flex>
+
+        {!hasSufficientFunds && (
+          <SectionContainer>
+            <Text color="$DEP_accentWarning" variant="body2">
+              {t('walletConnect.request.error.insufficientFunds', {
+                currencySymbol: nativeCurrency?.symbol,
+              })}
+            </Text>
+          </SectionContainer>
+        )}
 
         {!netInfo.isInternetReachable ? (
           <BaseCard.InlineErrorState
             backgroundColor="$DEP_accentWarningSoft"
             icon={
-              <AlertTriangle
-                color={colors.DEP_accentWarning.val}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
+              <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
             }
             textColor="$DEP_accentWarning"
             title={t('walletConnect.request.error.network')}
@@ -192,20 +168,18 @@ function WarningSection({
     return <BlockedAddressWarning centered row alignSelf="center" />
   }
 
-  return (
-    <Flex centered row alignSelf="center" gap="$spacing8">
-      <AlertTriangle
-        color={colors.DEP_accentWarning.val}
-        height={iconSizes.icon16}
-        width={iconSizes.icon16}
-      />
-      <Text color="$neutral2" fontStyle="italic" variant="body3">
-        {isTransactionRequest(request)
-          ? t('walletConnect.request.warning.general.transaction')
-          : t('walletConnect.request.warning.general.message')}
-      </Text>
-    </Flex>
-  )
+  if (!isTransactionRequest(request)) {
+    return (
+      <Flex centered row alignSelf="center" gap="$spacing8">
+        <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+        <Text color="$neutral2" fontStyle="italic" variant="body3">
+          {t('walletConnect.request.warning.general.message')}
+        </Text>
+      </Flex>
+    )
+  }
+
+  return null
 }
 
 const requestMessageStyle: StyleProp<ViewStyle> = {

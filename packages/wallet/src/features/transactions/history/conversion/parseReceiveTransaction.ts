@@ -1,6 +1,7 @@
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { SpamCode } from 'wallet/src/data/types'
 import { AssetType } from 'wallet/src/entities/assets'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
@@ -9,10 +10,10 @@ import {
 import {
   FiatPurchaseTransactionInfo,
   ReceiveTokenTransactionInfo,
+  TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 // Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
 const MOONPAY_SENDER_ADDRESSES = [
@@ -23,9 +24,9 @@ const MOONPAY_SENDER_ADDRESSES = [
 ]
 
 export default function parseReceiveTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): ReceiveTokenTransactionInfo | FiatPurchaseTransactionInfo | undefined {
-  if (transaction.details.__typename !== 'TransactionDetails') {
+  if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
@@ -60,6 +61,7 @@ export default function parseReceiveTransaction(
           collectionName,
           imageURL,
           tokenId,
+          address: tokenAddress,
         },
         isSpam,
       }
@@ -69,9 +71,7 @@ export default function parseReceiveTransaction(
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
     const sender = change.sender
-    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) =>
-      areAddressesEqual(address, sender)
-    )
+    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => areAddressesEqual(address, sender))
 
     const tokenAddress = getAddressFromAsset({
       chain: change.asset.chain,
@@ -84,15 +84,13 @@ export default function parseReceiveTransaction(
       change.asset.chain,
       change.asset.address,
       change.asset.decimals,
-      change.quantity
+      change.quantity,
     )
 
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
     // Filter out receive transactions with tokens that are either marked `isSpam` or with spam code 2 (token with URL name)
-    const isSpam = Boolean(
-      change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
-    )
+    const isSpam = Boolean(change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH)
 
     if (!(sender && tokenAddress)) {
       return undefined

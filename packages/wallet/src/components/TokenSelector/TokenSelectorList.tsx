@@ -5,32 +5,30 @@ import { Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import {
   SectionHeaderProps,
   TokenSectionBaseList,
   TokenSectionBaseListRef,
-} from 'wallet/src/components/TokenSelector/TokenSectionBaseList'
-import { renderSuggestedTokenItem } from 'wallet/src/components/TokenSelector/renderSuggestedTokenItem'
-import { suggestedTokensKeyExtractor } from 'wallet/src/components/TokenSelector/suggestedTokensKeyExtractor'
+} from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
+import { renderSuggestedTokenItem } from 'uniswap/src/components/TokenSelector/renderSuggestedTokenItem'
+import { suggestedTokensKeyExtractor } from 'uniswap/src/components/TokenSelector/suggestedTokensKeyExtractor'
 import {
   OnSelectCurrency,
   SuggestedTokenSection,
   TokenOption,
   TokenSection,
   TokenSelectorListSections,
-} from 'wallet/src/components/TokenSelector/types'
+} from 'uniswap/src/components/TokenSelector/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyId } from 'uniswap/src/types/currency'
+import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
 }
 
-function isSuggestedTokenSection(
-  section: SuggestedTokenSection | TokenSection
-): section is SuggestedTokenSection {
+function isSuggestedTokenSection(section: SuggestedTokenSection | TokenSection): section is SuggestedTokenSection {
   return Array.isArray((section as SuggestedTokenSection).data[0])
 }
 
@@ -53,15 +51,13 @@ function TokenOptionItemWrapper({
 }): JSX.Element {
   const onPress = useCallback(
     () => onSelectCurrency(tokenOption.currencyInfo, section, index),
-    [index, onSelectCurrency, section, tokenOption.currencyInfo]
+    [index, onSelectCurrency, section, tokenOption.currencyInfo],
   )
 
   return (
     <TokenOptionItem
       option={tokenOption}
-      showNetworkPill={
-        !chainFilter && tokenOption.currencyInfo.currency.chainId !== UniverseChainId.Mainnet
-      }
+      showNetworkPill={!chainFilter && tokenOption.currencyInfo.currency.chainId !== UniverseChainId.Mainnet}
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
       onPress={onPress}
@@ -137,14 +133,14 @@ function _TokenSelectorList({
 
       return null
     },
-    [chainFilter, onSelectCurrency, showTokenAddress, showTokenWarnings]
+    [chainFilter, onSelectCurrency, showTokenAddress, showTokenWarnings],
   )
 
   const renderSectionHeader = useCallback(
     ({ section: { title, rightElement } }: { section: SectionHeaderProps }): JSX.Element => (
       <SectionHeader rightElement={rightElement} title={title} />
     ),
-    []
+    [],
   )
 
   if (hasError) {
@@ -197,12 +193,7 @@ function _TokenSelectorList({
 
 export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.Element {
   return (
-    <Flex
-      row
-      backgroundColor="$surface1"
-      justifyContent="space-between"
-      pb="$spacing4"
-      pt="$spacing12">
+    <Flex row backgroundColor="$surface1" justifyContent="space-between" pb="$spacing4" pt="$spacing12">
       <Text color="$neutral2" variant={isWeb ? 'body2' : 'subheading2'}>
         {title}
       </Text>

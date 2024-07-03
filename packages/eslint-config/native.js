@@ -33,7 +33,6 @@ module.exports = {
     'eslint:recommended',
     '@react-native-community',
     'plugin:jest/recommended',
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
   ],
   plugins: [
@@ -50,6 +49,14 @@ module.exports = {
   ],
   rules: {
     ...complexityRules,
+
+    // disable prettier linting and linting that we leave to prettier:
+    'prettier/prettier': 0,
+    semi: 0,
+    quotes: 0,
+    'comma-dangle': 0,
+    'no-trailing-spaces': 0,
+
     // tamagui encourages inline styles and makes them fast
     'react-native/no-inline-styles': 'off',
     'guard-for-in': 'error',
@@ -277,16 +284,6 @@ module.exports = {
     'react/no-danger': 'error',
     'react/no-danger-with-children': 'error',
     'react/no-unsafe': 'error',
-    // Overwrite default Prettier settings - https://prettier.io/docs/en/options.html
-    'prettier/prettier': [
-      2,
-      {
-        bracketSameLine: true,
-        singleQuote: true,
-        printWidth: 100,
-        semi: false,
-      },
-    ],
   },
   overrides: [
     {
@@ -462,6 +459,19 @@ module.exports = {
           },
         ],
         'max-lines': ['off'], // cap file length
+      },
+    },
+    {
+      files: ['apps/stretch/src/contentScript/injected.ts'],
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'CallExpression[callee.object.name="logger"][callee.property.name!=/^(debug)$/]',
+            message:
+              'Only logger.debug is allowed in this file. Please handle errors and info logs explicitly using ErrorLog and InfoLog message passing.',
+          },
+        ],
       },
     },
   ],

@@ -3,8 +3,8 @@ import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { DAI } from 'wallet/src/constants/tokens'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -62,12 +62,9 @@ contractManager.getOrCreateContract(
   UniverseChainId.Mainnet,
   getWrappedNativeAddress(UniverseChainId.Mainnet),
   provider,
-  WETH_ABI
+  WETH_ABI,
 )
-export const tokenContract = contractManager.getContract(
-  UniverseChainId.Mainnet,
-  DAI.address
-) as Erc20
+export const tokenContract = contractManager.getContract(UniverseChainId.Mainnet, DAI.address) as Erc20
 
 export const mockTokenContract = {
   balanceOf: (): BigNumber => BigNumber.from('1000000000000000000'),

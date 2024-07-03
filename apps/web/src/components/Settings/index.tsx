@@ -44,7 +44,10 @@ const MenuFlyout = styled(AutoColumn)`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.01),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: absolute;
@@ -159,7 +162,7 @@ export default function SettingsTab({
         )}
       </>
     ),
-    [autoSlippage, chainId, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade]
+    [autoSlippage, chainId, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade],
   )
 
   return (

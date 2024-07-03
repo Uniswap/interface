@@ -75,3 +75,12 @@ export function isSVGUri(uri: Maybe<string>): boolean {
 export function isGifUri(uri: Maybe<string>): boolean {
   return isSegmentUri(uri, '.gif')
 }
+
+/**
+ * Removes safe prefixes and trailing slashes from URL to improve human readability.
+ *
+ * @param {string} url The URL to check.
+ */
+export function formatDappURL(url: string): string {
+  return url?.replace('https://', '').replace('www.', '').replace(/\/$/, '')
+}

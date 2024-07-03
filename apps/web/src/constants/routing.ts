@@ -60,7 +60,7 @@ type ChainCurrencyList = {
 const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
   Object.entries(WRAPPED_NATIVE_CURRENCY)
     .map(([key, value]) => [key, [value]])
-    .filter(Boolean)
+    .filter(Boolean),
 )
 
 export function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
@@ -120,7 +120,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH9[UniverseChainId.Optimism],
   ].map(buildCurrencyInfo),
   [UniverseChainId.OptimismGoerli]: [nativeOnChain(UniverseChainId.OptimismGoerli), USDC_OPTIMISM_GOERLI].map(
-    buildCurrencyInfo
+    buildCurrencyInfo,
   ),
 
   [UniverseChainId.Base]: [

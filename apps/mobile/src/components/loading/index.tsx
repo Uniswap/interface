@@ -11,11 +11,7 @@ function Graph(): JSX.Element {
   )
 }
 
-export const Transaction = memo(function _Transaction({
-  repeat = 1,
-}: {
-  repeat?: number
-}): JSX.Element {
+export const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
     <Skeleton>
       <Flex>

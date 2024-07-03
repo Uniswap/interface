@@ -7,9 +7,6 @@ export const DIRECT_LOG_ONLY_SCREENS: string[] = [
   MobileScreens.NFTCollection,
 ]
 
-export function shouldLogScreen(
-  directFromPage: boolean | undefined,
-  screen: string | undefined
-): boolean {
+export function shouldLogScreen(directFromPage: boolean | undefined, screen: string | undefined): boolean {
   return directFromPage || screen === undefined || !DIRECT_LOG_ONLY_SCREENS.includes(screen)
 }

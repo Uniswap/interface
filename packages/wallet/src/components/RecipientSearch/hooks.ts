@@ -3,6 +3,7 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { useDebounce } from 'utilities/src/time/timing'
 import { filterRecipientByNameAndAddress } from 'wallet/src/components/RecipientSearch/filter'
@@ -16,7 +17,6 @@ import { selectRecipientsByRecency } from 'wallet/src/features/transactions/sele
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
 import { useAppSelector } from 'wallet/src/state'
-import { getValidAddress } from 'wallet/src/utils/addresses'
 
 const MAX_RECENT_RECIPIENTS = 15
 
@@ -27,7 +27,7 @@ type RecipientSection = {
 
 function useValidatedSearchedAddress(
   searchTerm: string,
-  debounceDelayMs?: number
+  debounceDelayMs?: number,
 ): {
   recipients: SearchableRecipient[]
   searchTerm: string
@@ -40,11 +40,7 @@ function useValidatedSearchedAddress(
     name: dotEthName,
   } = useENS(UniverseChainId.Mainnet, searchTerm, true)
 
-  const {
-    loading: ensLoading,
-    address: ensAddress,
-    name: ensName,
-  } = useENS(UniverseChainId.Mainnet, searchTerm, false)
+  const { loading: ensLoading, address: ensAddress, name: ensName } = useENS(UniverseChainId.Mainnet, searchTerm, false)
 
   const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
 
@@ -108,7 +104,7 @@ function useValidatedSearchedAddress(
       searchTerm,
       loading: dotEthLoading || ensLoading || unitagLoading,
     }),
-    [memoRecipients, searchTerm, dotEthLoading, ensLoading, unitagLoading]
+    [memoRecipients, searchTerm, dotEthLoading, ensLoading, unitagLoading],
   )
   // Debounce search results to prevent flickering
   const debouncedResult = useDebounce(memoResult, debounceDelayMs)
@@ -120,7 +116,7 @@ function useValidatedSearchedAddress(
 
 export function useRecipients(
   pattern: string,
-  debounceDelayMs?: number
+  debounceDelayMs?: number,
 ): {
   sections: RecipientSection[]
   searchableRecipientOptions: {
@@ -144,9 +140,9 @@ export function useRecipients(
           }
           return acc
         },
-        { importedWallets: [], viewOnlyWallets: [] }
+        { importedWallets: [], viewOnlyWallets: [] },
       ),
-    [inactiveLocalAccounts]
+    [inactiveLocalAccounts],
   )
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
@@ -202,7 +198,7 @@ export function useRecipients(
           (address) =>
             <SearchableRecipient>{
               address,
-            }
+            },
         ),
       })
     }
@@ -220,12 +216,10 @@ export function useRecipients(
 
   const searchableRecipientOptions = useMemo(
     () =>
-      uniqueAddressesOnly([
-        ...validatedAddressRecipients,
-        ...inactiveLocalAccounts,
-        ...recentRecipients,
-      ]).map((item) => ({ data: item, key: item.address })),
-    [recentRecipients, validatedAddressRecipients, inactiveLocalAccounts]
+      uniqueAddressesOnly([...validatedAddressRecipients, ...inactiveLocalAccounts, ...recentRecipients]).map(
+        (item) => ({ data: item, key: item.address }),
+      ),
+    [recentRecipients, validatedAddressRecipients, inactiveLocalAccounts],
   )
 
   return useMemo(
@@ -235,25 +229,21 @@ export function useRecipients(
       loading,
       debouncedPattern: searchTerm,
     }),
-    [loading, searchableRecipientOptions, sections, searchTerm]
+    [loading, searchableRecipientOptions, sections, searchTerm],
   )
 }
 
-export function useFilteredRecipientSections(
-  searchPattern: string,
-  debounceDelayMs?: number
-): RecipientSection[] {
+export function useFilteredRecipientSections(searchPattern: string, debounceDelayMs?: number): RecipientSection[] {
   const sectionsRef = useRef<RecipientSection[]>([])
   const { sections, searchableRecipientOptions, loading, debouncedPattern } = useRecipients(
     searchPattern,
-    debounceDelayMs
+    debounceDelayMs,
   )
 
   const getFilteredSections = useCallback(() => {
-    const filteredAddresses = filterRecipientByNameAndAddress(
-      debouncedPattern,
-      searchableRecipientOptions
-    ).map((item) => item.data.address)
+    const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
+      (item) => item.data.address,
+    )
     return filterSections(sections, filteredAddresses)
   }, [debouncedPattern, searchableRecipientOptions, sections])
 

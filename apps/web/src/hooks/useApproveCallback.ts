@@ -27,7 +27,7 @@ function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) 
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
   spender?: string,
-  isRbPool?: boolean
+  isRbPool?: boolean,
 ): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useApproval(amountToApprove, spender, useHasPendingApproval, isRbPool)
   return [approval, useGetAndTrackApproval(getApproval)]

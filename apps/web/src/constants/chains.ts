@@ -35,7 +35,7 @@ function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, 
       [UniverseChainId.Blast]: false,
       [UniverseChainId.Celo]: false,
     }),
-    [zoraEnabled]
+    [zoraEnabled],
   )
 }
 
@@ -54,7 +54,7 @@ export function useIsSupportedChainIdCallback() {
       const chainIsNotEnabled = featureFlaggedChains[chainId as SupportedInterfaceChainId] === false
       return chainIsNotEnabled ? false : isSupportedChainId(chainId)
     },
-    [featureFlaggedChains]
+    [featureFlaggedChains],
   )
 }
 
@@ -93,12 +93,12 @@ export function getChain({
   return chainId
     ? UNIVERSE_CHAIN_INFO[chainId]
     : withFallback
-    ? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
-    : undefined
+      ? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
+      : undefined
 }
 
 export const CHAIN_IDS_TO_NAMES = Object.fromEntries(
-  Object.entries(UNIVERSE_CHAIN_INFO).map(([key, value]) => [key, value.interfaceName])
+  Object.entries(UNIVERSE_CHAIN_INFO).map(([key, value]) => [key, value.interfaceName]),
 ) as { [chainId in SupportedInterfaceChainId]: string }
 
 export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
@@ -113,7 +113,7 @@ const GQL_TESTNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
 export const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS]
 
 export const CHAIN_ID_TO_BACKEND_NAME = Object.fromEntries(
-  Object.entries(UNIVERSE_CHAIN_INFO).map(([key, value]) => [key, value.backendChain.chain])
+  Object.entries(UNIVERSE_CHAIN_INFO).map(([key, value]) => [key, value.backendChain.chain]),
 ) as { [chainId in SupportedInterfaceChainId]: InterfaceGqlChain }
 
 export function chainIdToBackendChain(options: { chainId: UniverseChainId }): InterfaceGqlChain
@@ -132,14 +132,14 @@ export function chainIdToBackendChain({
   return chainId
     ? CHAIN_ID_TO_BACKEND_NAME[chainId]
     : withFallback
-    ? CHAIN_ID_TO_BACKEND_NAME[UniverseChainId.Mainnet]
-    : undefined
+      ? CHAIN_ID_TO_BACKEND_NAME[UniverseChainId.Mainnet]
+      : undefined
 }
 
 export const CHAIN_NAME_TO_CHAIN_ID = Object.fromEntries(
   Object.entries(UNIVERSE_CHAIN_INFO)
     .filter(([, value]) => !value.backendChain.isSecondaryChain)
-    .map(([key, value]) => [value.backendChain.chain, parseInt(key) as SupportedInterfaceChainId])
+    .map(([key, value]) => [value.backendChain.chain, parseInt(key) as SupportedInterfaceChainId]),
 ) as { [chain in InterfaceGqlChain]: SupportedInterfaceChainId }
 
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
@@ -182,13 +182,13 @@ export const BACKEND_SUPPORTED_CHAINS = Object.keys(UNIVERSE_CHAIN_INFO)
   .map((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].backendChain.chain as InterfaceGqlChain)
 
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = GQL_MAINNET_CHAINS.filter(
-  (chain) => !BACKEND_SUPPORTED_CHAINS.includes(chain)
+  (chain) => !BACKEND_SUPPORTED_CHAINS.includes(chain),
 ).map((chain) => CHAIN_NAME_TO_CHAIN_ID[chain]) as [SupportedInterfaceChainId]
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: SupportedInterfaceChainId } = Object.fromEntries(
   Object.entries(UNIVERSE_CHAIN_INFO)
     .filter(([, value]) => !!value.infuraPrefix)
-    .map(([key, value]) => [value.infuraPrefix, parseInt(key) as SupportedInterfaceChainId])
+    .map(([key, value]) => [value.infuraPrefix, parseInt(key) as SupportedInterfaceChainId]),
 )
 
 /**
@@ -215,7 +215,7 @@ export function isStablecoin(currency?: Currency): boolean {
   }
 
   return getChain({ chainId: currency.chainId as SupportedInterfaceChainId }).stablecoins.some((stablecoin) =>
-    stablecoin.equals(currency)
+    stablecoin.equals(currency),
   )
 }
 

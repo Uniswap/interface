@@ -21,7 +21,7 @@ const transactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, ...details },
-      }: { payload: { chainId: InterfaceChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> }
+      }: { payload: { chainId: InterfaceChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> },
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
@@ -43,7 +43,7 @@ const transactionSlice = createSlice({
     },
     removeTransaction(
       transactions,
-      { payload: { chainId, hash } }: { payload: { chainId: InterfaceChainId; hash: string } }
+      { payload: { chainId, hash } }: { payload: { chainId: InterfaceChainId; hash: string } },
     ) {
       if (transactions[chainId][hash]) {
         delete transactions[chainId][hash]
@@ -53,7 +53,7 @@ const transactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, blockNumber },
-      }: { payload: { chainId: InterfaceChainId; hash: string; blockNumber: number } }
+      }: { payload: { chainId: InterfaceChainId; hash: string; blockNumber: number } },
     ) {
       const tx = transactions[chainId]?.[hash]
       if (!tx || tx.status !== TransactionStatus.Pending) {
@@ -76,7 +76,7 @@ const transactionSlice = createSlice({
           status: TransactionStatus
           info?: TransactionInfo
         }
-      }
+      },
     ) {
       const tx = transactions[chainId]?.[hash]
       if (!tx) {
@@ -93,7 +93,7 @@ const transactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, cancelHash },
-      }: { payload: { chainId: InterfaceChainId; hash: string; cancelHash: string } }
+      }: { payload: { chainId: InterfaceChainId; hash: string; cancelHash: string } },
     ) {
       const tx = transactions[chainId]?.[hash]
 

@@ -1,11 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
-import {
-  useBiometricAppSettings,
-  useBiometricPrompt,
-  useOsBiometricAuthEnabled,
-} from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'

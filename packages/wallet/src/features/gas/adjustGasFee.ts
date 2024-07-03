@@ -17,14 +17,12 @@ export type FeeDetails =
 export function getAdjustedGasFeeDetails(
   request: providers.TransactionRequest,
   currentGasFeeParams: NonNullable<GasFeeResult['params']>,
-  adjustmentFactor: number
+  adjustmentFactor: number,
 ): FeeDetails {
   // Txn needs to be submitted with legacy gas params
   if (request.gasPrice) {
     const currentGasPrice =
-      'gasPrice' in currentGasFeeParams
-        ? currentGasFeeParams.gasPrice
-        : currentGasFeeParams.maxFeePerGas
+      'gasPrice' in currentGasFeeParams ? currentGasFeeParams.gasPrice : currentGasFeeParams.maxFeePerGas
 
     return {
       type: FeeType.Legacy,
@@ -37,14 +35,10 @@ export function getAdjustedGasFeeDetails(
   // Txn needs to be submitted with EIP-1559 params
   if (request.maxFeePerGas && request.maxPriorityFeePerGas) {
     const currentMaxFeePerGas =
-      'maxFeePerGas' in currentGasFeeParams
-        ? currentGasFeeParams.maxFeePerGas
-        : currentGasFeeParams.gasPrice
+      'maxFeePerGas' in currentGasFeeParams ? currentGasFeeParams.maxFeePerGas : currentGasFeeParams.gasPrice
 
     const currentMaxPriorityFeePerGas =
-      'maxFeePerGas' in currentGasFeeParams
-        ? currentGasFeeParams.maxPriorityFeePerGas
-        : currentGasFeeParams.gasPrice
+      'maxFeePerGas' in currentGasFeeParams ? currentGasFeeParams.maxPriorityFeePerGas : currentGasFeeParams.gasPrice
 
     return {
       type: FeeType.Eip1559,
@@ -53,7 +47,7 @@ export function getAdjustedGasFeeDetails(
         maxPriorityFeePerGas: multiplyByFactor(
           request.maxPriorityFeePerGas,
           currentMaxPriorityFeePerGas,
-          adjustmentFactor
+          adjustmentFactor,
         ),
       },
     }
@@ -64,13 +58,11 @@ export function getAdjustedGasFeeDetails(
 
 function determineError(
   request: providers.TransactionRequest,
-  currentGasFeeParams: NonNullable<GasFeeResult['params']>
+  currentGasFeeParams: NonNullable<GasFeeResult['params']>,
 ): Error {
-  const isEIP1559Transaction =
-    request.maxFeePerGas !== undefined && request.maxPriorityFeePerGas !== undefined
+  const isEIP1559Transaction = request.maxFeePerGas !== undefined && request.maxPriorityFeePerGas !== undefined
 
-  const isEIP1559Params =
-    'maxFeePerGas' in currentGasFeeParams && 'maxPriorityFeePerGas' in currentGasFeeParams
+  const isEIP1559Params = 'maxFeePerGas' in currentGasFeeParams && 'maxPriorityFeePerGas' in currentGasFeeParams
 
   const isLegacyTransaction = request.gasPrice !== undefined
   const isLegacyParams = 'gasPrice' in currentGasFeeParams
@@ -84,12 +76,10 @@ function determineError(
   const transactionMissingGasInfo = !isEIP1559Transaction && !isLegacyTransaction
   if (transactionMissingGasInfo) {
     if (isEIP1559Params) {
-      return new Error(
-        'Transaction is missing gas values, but gasParams were provided for an EIP-1559 transaction.'
-      )
+      return new Error('Transaction is missing gas values, but gasParams were provided for an EIP-1559 transaction.')
     } else {
       return new Error(
-        'Transaction is missing gas values, but currentGasFeeParams were provided for a legacy transaction.'
+        'Transaction is missing gas values, but currentGasFeeParams were provided for a legacy transaction.',
       )
     }
   }
@@ -99,12 +89,10 @@ function determineError(
   if (missingGasParams) {
     if (isEIP1559Transaction) {
       return new Error(
-        'currentGasFeeParams is missing gas fee parameters. Required: maxFeePerGas and maxPriorityFeePerGas for EIP-1559 transactions.'
+        'currentGasFeeParams is missing gas fee parameters. Required: maxFeePerGas and maxPriorityFeePerGas for EIP-1559 transactions.',
       )
     } else {
-      return new Error(
-        'currentGasFeeParams is missing gas fee parameters. Required: gasPrice for legacy transactions.'
-      )
+      return new Error('currentGasFeeParams is missing gas fee parameters. Required: gasPrice for legacy transactions.')
     }
   }
 
@@ -112,7 +100,7 @@ function determineError(
   const EIP1559RequestMissingGasParams = isEIP1559Transaction && !isEIP1559Params
   if (EIP1559RequestMissingGasParams) {
     return new Error(
-      'Transaction request specifies EIP-1559 gas values, but currentGasFeeParams lacks corresponding EIP-1559 parameters.'
+      'Transaction request specifies EIP-1559 gas values, but currentGasFeeParams lacks corresponding EIP-1559 parameters.',
     )
   }
 
@@ -120,7 +108,7 @@ function determineError(
   const legacyRequestMissingGasParams = isLegacyTransaction && !isLegacyParams
   if (legacyRequestMissingGasParams) {
     return new Error(
-      'Transaction request specifies Legacy gasPrice, but currentGasFeeParams lacks a corresponding gasPrice.'
+      'Transaction request specifies Legacy gasPrice, but currentGasFeeParams lacks a corresponding gasPrice.',
     )
   }
 
@@ -129,11 +117,7 @@ function determineError(
   return new Error('Unable to determine gas fee structure.')
 }
 
-function multiplyByFactor(
-  value: BigNumberish,
-  minValue: BigNumberish | null,
-  adjustmentFactor: number
-): string {
+function multiplyByFactor(value: BigNumberish, minValue: BigNumberish | null, adjustmentFactor: number): string {
   const baseValue = BigNumberMax(BigNumber.from(value), BigNumber.from(minValue ?? 0))
   return Math.floor(baseValue.toNumber() * adjustmentFactor).toString()
 }

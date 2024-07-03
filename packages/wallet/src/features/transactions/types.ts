@@ -20,9 +20,7 @@ export enum WrapType {
   Unwrap,
 }
 
-export type ChainIdToTxIdToDetails = Partial<
-  Record<WalletChainId, { [txId: string]: TransactionDetails }>
->
+export type ChainIdToTxIdToDetails = Partial<Record<WalletChainId, { [txId: string]: TransactionDetails }>>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
@@ -56,10 +54,19 @@ interface BaseTransactionDetails extends TransactionId {
   // it should contain all the appropriate gas details in order
   // to get submitted first
   cancelRequest?: providers.TransactionRequest
+
+  networkFee?: TransactionNetworkFee
+}
+
+export type TransactionNetworkFee = {
+  quantity: string
+  tokenSymbol: string
+  tokenAddress: string
+  chainId: WalletChainId
 }
 
 export interface UniswapXOrderDetails extends BaseTransactionDetails {
-  routing: Routing.DUTCH_V2
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_LIMIT
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
@@ -84,6 +91,8 @@ export enum TransactionStatus {
   Failed = 'failed',
   Pending = 'pending',
   Replacing = 'replacing',
+  Expired = 'expired',
+  InsufficientFunds = 'insufficientFunds',
   Unknown = 'unknown',
   // May want more granular options here later like InMemPool
 }
@@ -121,6 +130,7 @@ export interface NFTSummaryInfo {
   name: string
   collectionName: string
   imageURL: string
+  address: string
 }
 
 export enum NFTTradeType {
@@ -169,6 +179,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   spender: string
   approvalAmount?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -289,6 +300,7 @@ export interface NFTMintTransactionInfo extends BaseTransactionInfo {
   nftSummaryInfo: NFTSummaryInfo
   purchaseCurrencyId?: string
   purchaseCurrencyAmountRaw?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface NFTTradeTransactionInfo extends BaseTransactionInfo {
@@ -303,6 +315,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTApprove
   nftSummaryInfo: NFTSummaryInfo
   spender: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface WCConfirmInfo extends BaseTransactionInfo {
@@ -310,9 +323,16 @@ export interface WCConfirmInfo extends BaseTransactionInfo {
   dapp: DappInfo
 }
 
+export interface DappInfoTransactionDetails {
+  name?: string
+  address: string
+  icon?: string
+}
+
 export interface UnknownTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Unknown
   tokenAddress?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export type TransactionTypeInfo =
@@ -332,18 +352,14 @@ export type TransactionTypeInfo =
   | OnRampPurchaseInfo
   | OnRampTransferInfo
 
-export function isConfirmedSwapTypeInfo(
-  typeInfo: TransactionTypeInfo
-): typeInfo is ConfirmedSwapTransactionInfo {
+export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
-      (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw
+      (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
   )
 }
 
-export function isFinalizedTx(
-  tx: TransactionDetails | FinalizedTransactionDetails
-): tx is FinalizedTransactionDetails {
+export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
   return (
     tx.status === TransactionStatus.Success ||
     tx.status === TransactionStatus.Failed ||
@@ -373,4 +389,10 @@ export interface TransferFlowProps {
   exactValue: string
   isFiatInput?: boolean
   showFiatToggle?: boolean
+}
+
+export enum TransactionDetailsType {
+  Transaction = 'TransactionDetails',
+  OnRamp = 'OnRampTransactionDetails',
+  UniswapXOrder = 'SwapOrderDetails',
 }

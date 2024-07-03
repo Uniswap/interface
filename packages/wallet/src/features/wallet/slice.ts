@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NFTViewType, TokensOrderBy } from 'wallet/src/features/wallet/types'
-import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -80,9 +80,7 @@ const slice = createSlice({
       // Reset active account to first account if currently active account is deleted
       if (
         state.activeAccountAddress &&
-        addressesToRemove.some((addressToRemove) =>
-          areAddressesEqual(addressToRemove, state.activeAccountAddress)
-        )
+        addressesToRemove.some((addressToRemove) => areAddressesEqual(addressToRemove, state.activeAccountAddress))
       ) {
         const firstAccountId = Object.keys(state.accounts)[0]
         state.activeAccountAddress = firstAccountId ?? null
@@ -112,7 +110,7 @@ const slice = createSlice({
     },
     setFinishedOnboarding: (
       state,
-      { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
+      { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>,
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
@@ -121,15 +119,13 @@ const slice = createSlice({
     },
     setTokensOrderBy: (
       state,
-      { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>
+      { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>,
     ) => {
       state.settings.tokensOrderBy = newTokensOrderBy
     },
     setSwapProtectionSetting: (
       state,
-      {
-        payload: { newSwapProtectionSetting },
-      }: PayloadAction<{ newSwapProtectionSetting: SwapProtectionSetting }>
+      { payload: { newSwapProtectionSetting } }: PayloadAction<{ newSwapProtectionSetting: SwapProtectionSetting }>,
     ) => {
       state.settings.swapProtection = newSwapProtectionSetting
     },
@@ -143,7 +139,7 @@ const slice = createSlice({
       state,
       {
         payload: { ratingProvided, feedbackProvided },
-      }: PayloadAction<{ ratingProvided?: boolean; feedbackProvided?: boolean }>
+      }: PayloadAction<{ ratingProvided?: boolean; feedbackProvided?: boolean }>,
     ) => {
       state.appRatingPromptedMs = Date.now()
 

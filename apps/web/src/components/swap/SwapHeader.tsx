@@ -38,7 +38,7 @@ const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const { initialChainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()
@@ -67,7 +67,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         setCurrentTab(tab)
       }
     },
-    [navigate, setCurrentTab, syncTabToUrl]
+    [navigate, setCurrentTab, syncTabToUrl],
   )
 
   return (
@@ -119,7 +119,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>
-          <SettingsTab autoSlippage={autoSlippage} chainId={chainId} compact={compact} trade={trade.trade} />
+          <SettingsTab autoSlippage={autoSlippage} chainId={initialChainId} compact={compact} trade={trade.trade} />
         </RowFixed>
       )}
     </StyledSwapHeader>

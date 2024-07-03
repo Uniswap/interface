@@ -97,7 +97,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
 
   const { entries, loading, dataQuality } = useHistoricalProtocolVolume(
     chainIdToBackendChain({ chainId, withFallback: true }),
-    isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod)
+    isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod),
   )
 
   const params = useMemo<{ data: StackedHistogramData[]; colors: [string, string]; headerHeight: number }>(
@@ -107,7 +107,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
       headerHeight: 85,
       stale: dataQuality === DataQuality.STALE,
     }),
-    [entries, dataQuality, theme.accent1, theme.accent3]
+    [entries, dataQuality, theme.accent1, theme.accent3],
   )
 
   const cumulativeVolume = useMemo(() => getCumulativeVolume(entries), [entries])
@@ -169,7 +169,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
       data: entries,
       colors: EXPLORE_PRICE_SOURCES?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1],
     }),
-    [entries, theme]
+    [entries, theme],
   )
 
   const isSmallScreen = !useScreenSize()['sm']

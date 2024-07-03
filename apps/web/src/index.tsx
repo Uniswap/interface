@@ -1,11 +1,16 @@
-/* eslint-disable prettier/prettier */
 // Ordering is intentional and must be preserved: styling, polyfilling, tracing, and then functionality.
+// prettier-ignore
 import '@reach/dialog/styles.css'
+// prettier-ignore
 import 'inter-ui'
+// prettier-ignore
 import 'polyfills'
+// prettier-ignore
 import 'tracing'
-import 'i18n' // ensure translations load before things
-/* eslint-enable prettier/prettier */
+// ensure translations load before things
+// prettier-ignore
+import 'i18n'
+import 'setupRive'
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
@@ -38,7 +43,8 @@ import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/Them
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
+import { getEnvName } from 'utilities/src/environment'
+import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 
@@ -83,7 +89,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
       userID: getDeviceId(),
       customIDs: { address: account.address ?? '' },
     }),
-    [account.address]
+    [account.address],
   )
   return (
     <BaseStatsigProvider
@@ -145,7 +151,7 @@ createRoot(container).render(
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>
-  </OptionalStrictMode>
+  </OptionalStrictMode>,
 )
 
 // TODO(EXT-1229): We had to remove `React.StrictMode` because it's not

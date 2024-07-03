@@ -36,27 +36,12 @@ const TransferInstitution = memo(function _TransferInstitution({
   return (
     <Flex>
       {new Array(itemsCount).fill(null).map((_, i) => (
-        <Flex
-          key={i}
-          row
-          alignItems="center"
-          gap="$spacing12"
-          mb="$spacing12"
-          mx="$spacing8"
-          p="$spacing16">
+        <Flex key={i} row alignItems="center" gap="$spacing12" mb="$spacing12" mx="$spacing8" p="$spacing16">
           <Flex grow row alignItems="center" gap="$spacing12">
             <Loader.Box borderRadius="$rounded12" height={iconSize} width={iconSize} />
-            <Loader.Box
-              borderRadius="$rounded4"
-              height={fonts.body3.lineHeight}
-              width={fullWidth / 3}
-            />
+            <Loader.Box borderRadius="$rounded4" height={fonts.body3.lineHeight} width={fullWidth / 3} />
           </Flex>
-          <Loader.Box
-            borderRadius="$rounded4"
-            height={fonts.body3.lineHeight}
-            width={LINKED_TEXT_WIDTH}
-          />
+          <Loader.Box borderRadius="$rounded4" height={fonts.body3.lineHeight} width={LINKED_TEXT_WIDTH} />
         </Flex>
       ))}
     </Flex>
@@ -111,7 +96,7 @@ function NFT({ repeat = 1 }: { repeat?: number }): JSX.Element {
           })}
         </Flex>
       ),
-    [repeat]
+    [repeat],
   )
 
   return <Skeleton>{loader}</Skeleton>

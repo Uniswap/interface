@@ -22,7 +22,7 @@ function useApprovalStateForSpender(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-  isRbPool: boolean | undefined
+  isRbPool: boolean | undefined,
 ): ApprovalState {
   // TODO: check how we can skip RPC call if Rigoblock pool
   const account = useAccount()
@@ -60,13 +60,13 @@ export function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean,
-  isRbPool: boolean | undefined
+  isRbPool: boolean | undefined,
 ): [
   ApprovalState,
   () => Promise<
     | { response: TransactionResponse; tokenAddress: string; spenderAddress: string; amount: CurrencyAmount<Currency> }
     | undefined
-  >
+  >,
 ] {
   const { chainId } = useAccount()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined

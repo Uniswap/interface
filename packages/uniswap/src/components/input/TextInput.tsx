@@ -7,7 +7,7 @@ export type TextInputProps = InputProps
 
 export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _TextInput(
   { onChangeText, onBlur, ...rest },
-  ref
+  ref,
 ) {
   const colors = useSporeColors()
   return (

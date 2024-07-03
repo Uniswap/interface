@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  TextProps as RNTextProps,
-  StyleSheet,
-  TextInput,
-  TextInputProps,
-  useWindowDimensions,
-} from 'react-native'
+import { TextProps as RNTextProps, StyleSheet, TextInput, TextInputProps, useWindowDimensions } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
 import { Flex, TextProps as TamaTextProps, TextFrame, usePropsAndStyle } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
@@ -58,9 +52,7 @@ export const BaseAnimatedText = ({
           {/* Use the text component to properly calculate the width of the loading shimmer.
           An input component with a width dependent on the length of the content was sometimes 
           rendered with a very small width regardless of the text passed as a value */}
-          <Animated.Text style={[style, styles.loadingPlaceholder]}>
-            {loadingPlaceholderText}
-          </Animated.Text>
+          <Animated.Text style={[style, styles.loadingPlaceholder]}>{loadingPlaceholderText}</Animated.Text>
         </Flex>
       </TextLoaderWrapper>
     )
@@ -96,7 +88,7 @@ export const AnimatedText = ({ style, ...propsIn }: TextProps): JSX.Element => {
     },
     {
       forComponent: TextFrame,
-    }
+    },
   )
 
   const { fontScale } = useWindowDimensions()

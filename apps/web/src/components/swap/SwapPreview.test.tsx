@@ -16,7 +16,7 @@ import { render, screen } from 'test-utils/render'
 describe('SwapPreview.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(
-      <SwapPreview trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
+      <SwapPreview trade={TEST_TRADE_EXACT_INPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
@@ -30,7 +30,7 @@ describe('SwapPreview.tsx', () => {
         inputCurrency={ETH_MAINNET}
         trade={TEST_DUTCH_TRADE_ETH_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
@@ -44,7 +44,7 @@ describe('SwapPreview.tsx', () => {
         inputCurrency={ETH_MAINNET}
         trade={TEST_DUTCH_V2_TRADE_ETH_INPUT}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
@@ -54,7 +54,7 @@ describe('SwapPreview.tsx', () => {
 
   it('test trade exact output, no recipient', () => {
     const { asFragment } = render(
-      <SwapPreview trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
+      <SwapPreview trade={TEST_TRADE_EXACT_OUTPUT} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()
@@ -69,7 +69,7 @@ describe('SwapPreview.tsx', () => {
         inputCurrency={TEST_TOKEN_2}
         trade={PREVIEW_EXACT_IN_TRADE}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
   })

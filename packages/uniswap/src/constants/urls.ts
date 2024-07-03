@@ -1,5 +1,4 @@
-import { isDevEnv } from 'uniswap/src/utils/env'
-import { isJestRun } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -37,6 +36,7 @@ export const uniswapUrls = {
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
     moonpayHelp: `${helpUrl}/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
+    fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
@@ -116,7 +116,7 @@ function getCloudflarePrefix(flow?: TrafficFlows): string {
     return 'interface'
   }
 
-  if (isJestRun) {
+  if (isTestEnv()) {
     return 'wallet'
   }
 

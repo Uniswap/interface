@@ -3,10 +3,10 @@ import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
@@ -18,7 +18,7 @@ import { toSupportedChainId } from 'wallet/src/features/chains/utils'
  */
 export const getSessionNamespaces = (
   account: Address,
-  proposalNamespaces: ProposalTypes.RequiredNamespaces
+  proposalNamespaces: ProposalTypes.RequiredNamespaces,
 ): SessionTypes.Namespaces => {
   // Below inspired from https://github.com/WalletConnect/web-examples/blob/main/wallets/react-wallet-v2/src/views/SessionProposalModal.tsx#L63
   const namespaces: SessionTypes.Namespaces = {}
@@ -46,9 +46,7 @@ export const getSupportedWalletConnectChains = (chains?: string[]): WalletChainI
     return
   }
 
-  return chains
-    .map((chain) => getChainIdFromEIP155String(chain))
-    .filter((c): c is WalletChainId => Boolean(c))
+  return chains.map((chain) => getChainIdFromEIP155String(chain)).filter((c): c is WalletChainId => Boolean(c))
 }
 
 /**
@@ -89,7 +87,7 @@ export const parseSignRequest = (
   internalId: number,
   chainId: WalletChainId,
   dapp: SignClientTypes.Metadata,
-  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params']
+  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { account: Address; request: SignRequest } => {
   const { address, rawMessage, message } = getAddressAndMessageToSign(method, requestParams)
   return {
@@ -131,7 +129,7 @@ export const parseTransactionRequest = (
   internalId: number,
   chainId: WalletChainId,
   dapp: SignClientTypes.Metadata,
-  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params']
+  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { account: Address; request: TransactionRequest } => {
   // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
   const { from, to, data, gasLimit, value } = requestParams[0]
@@ -170,7 +168,7 @@ export const parseTransactionRequest = (
  */
 export function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
-  params: Web3WalletTypes.SessionRequest['params']['request']['params']
+  params: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { address: string; rawMessage: string; message: string | null } {
   switch (ethMethod) {
     case EthMethod.PersonalSign:

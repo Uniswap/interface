@@ -34,7 +34,7 @@ export const ViewMyNftsAsset = ({
 
   const isSelected = useMemo(() => {
     return sellAssets.some(
-      (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address
+      (item) => item.tokenId === asset.tokenId && item.asset_contract.address === asset.asset_contract.address,
     )
   }, [asset, sellAssets])
 
@@ -55,7 +55,7 @@ export const ViewMyNftsAsset = ({
     if (
       !cartExpanded &&
       !sellAssets.find(
-        (x) => x.tokenId === asset.tokenId && x.asset_contract.address === asset.asset_contract.address
+        (x) => x.tokenId === asset.tokenId && x.asset_contract.address === asset.asset_contract.address,
       ) &&
       !isMobile
     ) {

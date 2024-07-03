@@ -6,6 +6,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
@@ -21,7 +22,6 @@ import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/se
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
-import { currencyId } from 'wallet/src/utils/currencyId'
 
 const account = signerMnemonicAccount()
 

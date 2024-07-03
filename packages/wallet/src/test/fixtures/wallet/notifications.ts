@@ -101,15 +101,13 @@ export const wrapTxNotification = createFixture<WrapTxNotification>()(() => ({
   unwrapped: faker.datatype.boolean(),
 }))
 
-const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(
-  () => ({
-    ...transactionNotificationBase(),
-    txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
-    assetType: AssetType.Currency,
-    tokenAddress: faker.finance.ethereumAddress(),
-    currencyAmountRaw: faker.datatype.number().toString(),
-  })
-)
+const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(() => ({
+  ...transactionNotificationBase(),
+  txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
+  assetType: AssetType.Currency,
+  tokenAddress: faker.finance.ethereumAddress(),
+  currencyAmountRaw: faker.datatype.number().toString(),
+}))
 
 export const sendCurrencyTxNotification = createFixture<SendCurrencyTxNotification>()(() => ({
   ...transferCurrencyTxNotificationBase(),
@@ -174,14 +172,12 @@ export const chooseCountryNotification = createFixture<ChooseCountryNotification
   countryCode: faker.address.countryCode(),
 }))
 
-export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.AssetVisibility,
-    visible: faker.datatype.boolean(),
-    assetName: faker.lorem.words(),
-  })
-)
+export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.AssetVisibility,
+  visible: faker.datatype.boolean(),
+  assetName: faker.lorem.words(),
+}))
 
 export const swapPendingNotification = createFixture<SwapPendingNotification>()(() => ({
   ...appNotificationBase(),
@@ -189,16 +185,13 @@ export const swapPendingNotification = createFixture<SwapPendingNotification>()(
   wrapType: randomEnumValue(WrapType),
 }))
 
-export const transferCurrencyPendingNotification =
-  createFixture<TransferCurrencyPendingNotification>()(() => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.TransferCurrencyPending,
-    currencyInfo: currencyInfo(),
-  }))
+export const transferCurrencyPendingNotification = createFixture<TransferCurrencyPendingNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.TransferCurrencyPending,
+  currencyInfo: currencyInfo(),
+}))
 
-export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.ScantasticComplete,
-  })
-)
+export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.ScantasticComplete,
+}))

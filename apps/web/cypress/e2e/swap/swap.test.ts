@@ -111,7 +111,7 @@ describe('Swap', () => {
           cy.wait('@PortfolioBalancesWeb')
           cy.get('#swap-currency-input .open-currency-select-button').click()
           cy.get(getTestSelector('chain-selector')).last().click()
-          cy.get(getTestSelector('Optimism-selector')).click()
+          cy.get(getTestSelector('network-button-10')).click()
           const sendSpy = cy.spy(hardhat.provider, 'send')
           cy.wrap(sendSpy).should('not.be.calledWith', 'wallet_switchEthereumChain')
           cy.get(getTestSelector('common-base-ETH')).click()
