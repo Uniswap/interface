@@ -29,7 +29,9 @@ import {
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   NftActivityType,
   NftItemScreenQuery,
@@ -37,12 +39,10 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -303,7 +303,7 @@ function NFTItemScreenContents({
                     collection={asset?.collection}
                     fallbackData={fallbackData}
                     loading={nftLoading}
-                    shouldDisableLink={chainId !== ChainId.Mainnet} // TODO(MOB-3447): Remove once backend has full L2 collection support
+                    shouldDisableLink={chainId !== UniverseChainId.Mainnet} // TODO(MOB-3447): Remove once backend has full L2 collection support
                     onPress={onPressCollection}
                   />
                 </Flex>
@@ -346,7 +346,7 @@ function NFTItemScreenContents({
                       valueComponent={
                         <Flex row alignItems="center" gap="$spacing8">
                           <Text color="$neutral1" variant="buttonLabel3">
-                            {CHAIN_INFO[chainId].label}
+                            {UNIVERSE_CHAIN_INFO[chainId].label}
                           </Text>
                           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
                         </Flex>

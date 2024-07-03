@@ -9,15 +9,16 @@ import {
 } from '@amplitude/analytics-browser'
 // eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
+// eslint-disable-next-line no-restricted-imports
+import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-import { Analytics, UserPropertyValue } from './analytics'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
   ANONYMOUS_EVENT_NAMES,
   DUMMY_KEY,
-} from './constants'
-import { generateAnalyticsLoggers } from './logging'
+} from 'utilities/src/telemetry/analytics/constants'
+import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 let allowAnalytics: boolean = true

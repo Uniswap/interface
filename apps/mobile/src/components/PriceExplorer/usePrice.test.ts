@@ -6,8 +6,11 @@ import {
   useLineChartPrice as useRNWagmiChartLineChartPrice,
 } from 'react-native-wagmi-charts'
 import { act } from 'react-test-renderer'
+import {
+  useLineChartPrice,
+  useLineChartRelativeChange,
+} from 'src/components/PriceExplorer/usePrice'
 import { renderHookWithProviders } from 'src/test/render'
-import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 jest.mock('react-native-wagmi-charts')
 

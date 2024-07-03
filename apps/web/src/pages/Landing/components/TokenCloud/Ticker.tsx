@@ -1,10 +1,9 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { motion } from 'framer-motion'
+import { TickerPosition } from 'pages/Landing/components/TokenCloud'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { TickerPosition } from '.'
 
 const PriceContainer = styled(motion.div)`
   display: flex;

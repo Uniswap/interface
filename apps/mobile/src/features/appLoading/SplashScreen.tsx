@@ -1,7 +1,8 @@
 import React from 'react'
 import { Image, StyleProp, StyleSheet, ViewStyle } from 'react-native'
-import { Flex, useDeviceDimensions, useIsDarkMode } from 'ui/src'
+import { Flex, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { isAndroid } from 'utilities/src/platform'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }

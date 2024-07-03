@@ -3,8 +3,12 @@ import type {
   AutoScrollProviderProps,
   DragContextProviderProps,
   LayoutContextProviderProps,
-} from './contexts'
-import { AutoScrollProvider, DragContextProvider, LayoutContextProvider } from './contexts'
+} from 'src/components/sortableGrid/contexts'
+import {
+  AutoScrollProvider,
+  DragContextProvider,
+  LayoutContextProvider,
+} from 'src/components/sortableGrid/contexts'
 
 type SortableGridProviderProps<I> = PropsWithChildren<
   Omit<

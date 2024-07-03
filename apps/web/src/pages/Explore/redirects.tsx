@@ -1,6 +1,5 @@
+import Explore, { ExploreTab } from 'pages/Explore'
 import { Navigate, useLocation, useParams } from 'react-router-dom'
-
-import Explore, { ExploreTab } from '.'
 
 // This function is needed to disambiguate URL params because useParams struggles to distinguish between /explore/:chainName and /explore/:tab
 export function useExploreParams(): {

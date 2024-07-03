@@ -15,13 +15,13 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Loader } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -47,7 +47,7 @@ export function RestoreCloudBackupLoadingScreen({
   const [isError, setIsError] = useState(false)
 
   // when we are restoring after phone migration
-  const signerAccounts = useNonPendingSignerAccounts()
+  const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const backups = useCloudBackups(mnemonicId)

@@ -1,9 +1,9 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { NumberType } from 'utilities/src/format/types'
 import {
   ACCOUNT,
-  ON_PRESS_EVENT_PAYLOAD,
   amounts,
   portfolio,
   readOnlyAccount,

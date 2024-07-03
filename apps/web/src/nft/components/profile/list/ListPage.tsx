@@ -9,6 +9,10 @@ import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ListingButton } from 'nft/components/profile/list/ListingButton'
+import { ListModal } from 'nft/components/profile/list/Modal/ListModal'
+import { NFTListingsGrid } from 'nft/components/profile/list/NFTListingsGrid'
+import { SelectMarketplacesDropdown } from 'nft/components/profile/list/SelectMarketplacesDropdown'
+import { SetDurationModal } from 'nft/components/profile/list/SetDurationModal'
 import {
   approveCollectionRow,
   getTotalEthValue,
@@ -28,10 +32,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ListModal } from './Modal/ListModal'
-import { NFTListingsGrid } from './NFTListingsGrid'
-import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
-import { SetDurationModal } from './SetDurationModal'
 
 const ListingHeader = styled(Column)`
   gap: 16px;

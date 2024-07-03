@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
-
-import { subhead } from '../../../nft/css/common.css'
-import { sprinkles, vars } from '../../../nft/css/sprinkles.css'
+import { subhead } from 'nft/css/common.css'
+import { sprinkles, vars } from 'nft/css/sprinkles.css'
 
 export const logoContainer = style([
   sprinkles({

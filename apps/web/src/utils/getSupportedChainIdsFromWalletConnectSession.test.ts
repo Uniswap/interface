@@ -1,6 +1,5 @@
 import { SessionTypes } from '@walletconnect/types'
-
-import { getSupportedChainIdsFromWalletConnectSession } from './getSupportedChainIdsFromWalletConnectSession'
+import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
 const testSession: SessionTypes.Struct = {
   topic: 'string',

@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
-export function useShowSendNetworkNotification({ chainId }: { chainId?: ChainId }): void {
+export function useShowSendNetworkNotification({ chainId }: { chainId?: WalletChainId }): void {
   const dispatch = useDispatch()
   const prevChainId = usePrevious(chainId)
 

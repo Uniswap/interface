@@ -3,17 +3,17 @@ import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks
 import Column from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
+import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
+import { Option } from 'components/WalletModal/Option'
+import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
+import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
+import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
-import ConnectionErrorView from './ConnectionErrorView'
-import { Option } from './Option'
-import PrivacyPolicyNotice from './PrivacyPolicyNotice'
-import { UniswapWalletOptions } from './UniswapWalletOptions'
-import { useOrderedConnections } from './useOrderedConnections'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};

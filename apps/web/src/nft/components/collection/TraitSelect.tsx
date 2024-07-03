@@ -2,7 +2,10 @@ import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/Filters.css'
+import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Checkbox } from 'nft/components/layout/Checkbox'
+import { Input } from 'nft/components/layout/Input'
 import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -11,9 +14,6 @@ import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Input } from '../layout/Input'
-import * as styles from './Filters.css'
-import { TraitsHeader } from './TraitsHeader'
 
 const TRAIT_ROW_HEIGHT = 44
 

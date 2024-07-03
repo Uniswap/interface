@@ -2,7 +2,23 @@
 
 exports[`PoolTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c30 {
+  height: 16px;
+  width: 16px;
+}
+
+.c30 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c31 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -57,22 +73,6 @@ exports[`PoolTable renders data filled state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c30 {
-  height: 16px;
-  width: 16px;
-}
-
-.c30 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c31 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c23 {
@@ -150,10 +150,10 @@ exports[`PoolTable renders data filled state 1`] = `
 .c3 {
   width: 100%;
   position: relative;
-  top: 73px;
   position: -webkit-sticky;
   position: sticky;
   position: -webkit-sticky;
+  top: 72px;
   z-index: 990;
   display: -webkit-box;
   display: -webkit-flex;
@@ -779,7 +779,23 @@ exports[`PoolTable renders data filled state 1`] = `
 
 exports[`PoolTable renders error state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c26 {
+  height: 16px;
+  width: 16px;
+}
+
+.c26 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c27 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -816,22 +832,6 @@ exports[`PoolTable renders error state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c26 {
-  height: 16px;
-  width: 16px;
-}
-
-.c26 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c27 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c1 {
@@ -900,10 +900,10 @@ exports[`PoolTable renders error state 1`] = `
 .c3 {
   width: 100%;
   position: relative;
-  top: 73px;
   position: -webkit-sticky;
   position: sticky;
   position: -webkit-sticky;
+  top: 72px;
   z-index: 990;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2067,7 +2067,23 @@ exports[`PoolTable renders error state 1`] = `
 
 exports[`PoolTable renders loading state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c24 {
+  height: 16px;
+  width: 16px;
+}
+
+.c24 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c25 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -2096,22 +2112,6 @@ exports[`PoolTable renders loading state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c24 {
-  height: 16px;
-  width: 16px;
-}
-
-.c24 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c25 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
 }
 
 .c1 {
@@ -2150,10 +2150,10 @@ exports[`PoolTable renders loading state 1`] = `
 .c3 {
   width: 100%;
   position: relative;
-  top: 73px;
   position: -webkit-sticky;
   position: sticky;
   position: -webkit-sticky;
+  top: 72px;
   z-index: 990;
   display: -webkit-box;
   display: -webkit-flex;

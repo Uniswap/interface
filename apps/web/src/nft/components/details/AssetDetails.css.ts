@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
-
-import { center, subhead } from '../../css/common.css'
-import { sprinkles, vars } from '../../css/sprinkles.css'
+import { center, subhead } from 'nft/css/common.css'
+import { sprinkles, vars } from 'nft/css/sprinkles.css'
 
 export const image = style([
   sprinkles({ borderRadius: '20', height: 'full', alignSelf: 'center' }),

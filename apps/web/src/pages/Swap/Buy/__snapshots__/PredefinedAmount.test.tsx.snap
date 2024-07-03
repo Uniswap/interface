@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1000" , disabled= false 1`] = `
+.c0 {
+  cursor: pointer;
+}
+
+.c0:hover {
+  background-color: #F9F9F9;
+  border-color: #22222212;
+}
+
+<span
+  class="t_light is_inversed _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _backgroundColor-568007324 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      style="border-color: #2222220d;"
+    >
+      <span
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        data-disable-theme="true"
+        style="color: rgb(125, 125, 125); padding-top: 1px;"
+      >
+        $100
+      </span>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1000" , disabled= true 1`] = `
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      aria-disabled="true"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _backgroundColor-568007324 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid "
+      style="border-color: #f9f9f9;"
+    >
+      <span
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        data-disable-theme="true"
+        style="color: rgb(206, 206, 206); padding-top: 1px;"
+      >
+        $300
+      </span>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "1000" , disabled= false 1`] = `
+.c0 {
+  cursor: pointer;
+}
+
+.c0:hover {
+  background-color: #F9F9F9;
+  border-color: #22222212;
+}
+
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _backgroundColor-568007293 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      style="border-color: #2222220d;"
+    >
+      <span
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        data-disable-theme="true"
+        style="color: rgb(34, 34, 34); padding-top: 1px;"
+      >
+        $1000
+      </span>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "1000" , disabled= true 1`] = `
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      aria-disabled="true"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _backgroundColor-568007324 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid "
+      style="border-color: #f9f9f9;"
+    >
+      <span
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        data-disable-theme="true"
+        style="color: rgb(206, 206, 206); padding-top: 1px;"
+      >
+        $1000
+      </span>
+    </div>
+  </span>
+</span>
+`;

@@ -9,7 +9,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { AnimatedFlex, ColorTokens, Flex, useDeviceInsets } from 'ui/src'
+import { ColorTokens, Flex, useDeviceInsets } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndices } from 'ui/src/theme'
 
 type ScrollHeaderProps = {

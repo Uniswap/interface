@@ -1,4 +1,8 @@
+import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
+import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
+import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
+import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { useAccount } from 'hooks/useAccount'
@@ -7,10 +11,6 @@ import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import AuthenticatedHeader from './AuthenticatedHeader'
-import LanguageMenu from './LanguageMenu'
-import LocalCurrencyMenu from './LocalCurrencyMenu'
-import SettingsMenu from './SettingsMenu'
 
 const DefaultMenuWrap = styled(Column)`
   width: 100%;

@@ -1,7 +1,14 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { SpamCode } from 'wallet/src/data/types'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
+import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'
+import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
+import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
+import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
+import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
 import {
   TransactionDetails,
@@ -9,12 +16,6 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
-import parseApproveTransaction from './parseApproveTransaction'
-import parseNFTMintTransaction from './parseMintTransaction'
-import parseOnRampTransaction from './parseOnRampTransaction'
-import parseReceiveTransaction from './parseReceiveTransaction'
-import parseSendTransaction from './parseSendTransaction'
-import parseTradeTransaction from './parseTradeTransaction'
 
 /**
  * Parses txn API response item and identifies known txn type. Helps strictly
@@ -76,9 +77,12 @@ export default function extractTransactionDetails(
   const chainId = fromGraphQLChain(transaction.chain)
 
   return {
+    routing:
+      // TODO(MOB-3535): Update query w/ flag to return SwapOrderDetails & set routing to DUTCH_V2 if details is of type SwapOrderDetails
+      Routing.CLASSIC,
     id: transaction.details.hash,
     // fallback to mainnet, although this should never happen
-    chainId: chainId ?? ChainId.Mainnet,
+    chainId: chainId ?? UniverseChainId.Mainnet,
     hash: transaction.details.hash,
     addedTime: transaction.timestamp * 1000, // convert to ms
     status: remoteTxStatusToLocalTxStatus(transaction.details.type, transaction.details.status),

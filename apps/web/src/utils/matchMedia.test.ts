@@ -1,4 +1,4 @@
-import { addMediaQueryListener, removeMediaQueryListener } from './matchMedia'
+import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 describe('addMediaQueryListener', () => {
   test('adds event listener to media query', () => {

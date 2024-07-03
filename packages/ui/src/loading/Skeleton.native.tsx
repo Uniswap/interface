@@ -10,7 +10,7 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { LinearGradient } from 'tamagui/linear-gradient'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { SkeletonProps } from './SkeletonProps'
+import { SkeletonProps } from 'ui/src/loading/SkeletonProps'
 
 const SHIMMER_DURATION = 2000 // 2 seconds
 

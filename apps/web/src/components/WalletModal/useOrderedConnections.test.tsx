@@ -1,3 +1,4 @@
+import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
@@ -12,7 +13,6 @@ import {
 } from 'test-utils/wagmi/fixtures'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useConnect } from 'wagmi'
-import { useOrderedConnections } from './useOrderedConnections'
 
 const UserAgentMock = jest.requireMock('utilities/src/platform')
 jest.mock('utilities/src/platform', () => ({

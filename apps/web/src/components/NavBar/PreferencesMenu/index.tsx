@@ -2,14 +2,14 @@ import { NavDropdown, NavDropdownDefaultWrapper } from 'components/NavBar/NavDro
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
-import { Views } from 'components/NavBar/PreferencesMenu/shared'
+import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useCallback, useState } from 'react'
 import { Popover } from 'ui/src'
 import { Global } from 'ui/src/components/icons'
 
 export function PreferenceMenu() {
-  const [settingsView, setSettingsView] = useState<Views>(Views.SETTINGS)
-  const onExitMenu = useCallback(() => setSettingsView(Views.SETTINGS), [setSettingsView])
+  const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
+  const onExitMenu = useCallback(() => setSettingsView(PreferencesView.SETTINGS), [setSettingsView])
 
   return (
     <Popover placement="bottom" stayInFrame allowFlip onOpenChange={onExitMenu}>
@@ -18,11 +18,11 @@ export function PreferenceMenu() {
       </Popover.Trigger>
       <NavDropdown width={310}>
         <NavDropdownDefaultWrapper>
-          {settingsView === Views.SETTINGS && (
-            <PreferenceSettings setSettingsView={(view: Views) => setSettingsView(view)} />
+          {settingsView === PreferencesView.SETTINGS && (
+            <PreferenceSettings setSettingsView={(view: PreferencesView) => setSettingsView(view)} />
           )}
-          {settingsView === Views.LANGUAGE && <LanguageSettings onExitMenu={onExitMenu} />}
-          {settingsView === Views.CURRENCY && <CurrencySettings onExitMenu={onExitMenu} />}
+          {settingsView === PreferencesView.LANGUAGE && <LanguageSettings onExitMenu={onExitMenu} />}
+          {settingsView === PreferencesView.CURRENCY && <CurrencySettings onExitMenu={onExitMenu} />}
         </NavDropdownDefaultWrapper>
       </NavDropdown>
     </Popover>

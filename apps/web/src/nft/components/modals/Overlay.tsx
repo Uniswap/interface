@@ -1,7 +1,6 @@
+import { Box } from 'nft/components/Box'
+import * as styles from 'nft/components/modals/Overlay.css'
 import noop from 'utilities/src/react/noop'
-
-import { Box } from '../Box'
-import * as styles from './Overlay.css'
 
 interface OverlayProps {
   onClick?: () => void

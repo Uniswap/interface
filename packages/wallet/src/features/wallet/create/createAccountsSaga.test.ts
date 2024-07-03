@@ -39,21 +39,6 @@ describe(createAccounts, () => {
 
   it('Imports one account', async () => {
     const state = await createNativeAccounts({ accounts: [ACCOUNT] })
-
-    const wallets = state.wallet.accounts
-    const accounts = Object.values(wallets)
-    const { activeAccountAddress } = state.wallet
-    const firstNewlyCreatedWallet = accounts[0] as SignerMnemonicAccount
-
-    expect(accounts).toHaveLength(1)
-    expect(firstNewlyCreatedWallet.timeImportedMs).toBeDefined()
-    expect(firstNewlyCreatedWallet.derivationIndex).toEqual(0)
-    expect(firstNewlyCreatedWallet.address).toEqual(firstNewlyCreatedWallet.mnemonicId)
-    expect(activeAccountAddress).not.toBeDefined()
-  })
-
-  it('Imports one account and actives it', async () => {
-    const state = await createNativeAccounts({ accounts: [ACCOUNT], activateFirst: true })
     const wallets = state.wallet.accounts
     const accounts = Object.values(wallets)
     const { activeAccountAddress } = state.wallet
@@ -66,25 +51,9 @@ describe(createAccounts, () => {
     expect(activeAccountAddress).toEqual(firstNewlyCreatedWallet.address)
   })
 
-  it('Imports couple wallets', async () => {
-    const state = await createNativeAccounts({ accounts: [ACCOUNT, ACCOUNT2, ACCOUNT3] })
-
-    const wallets = state.wallet.accounts
-    const accounts = Object.values(wallets)
-    const { activeAccountAddress } = state.wallet
-    const firstNewlyCreatedWallet = accounts[0] as SignerMnemonicAccount
-
-    expect(accounts).toHaveLength(3)
-    expect(firstNewlyCreatedWallet.timeImportedMs).toBeDefined()
-    expect(firstNewlyCreatedWallet.derivationIndex).toEqual(0)
-    expect(firstNewlyCreatedWallet.address).toEqual(firstNewlyCreatedWallet.mnemonicId)
-    expect(activeAccountAddress).not.toBeDefined()
-  })
-
   it('Imports couple wallets and activates the first one', async () => {
     const state = await createNativeAccounts({
       accounts: [ACCOUNT, ACCOUNT2, ACCOUNT3],
-      activateFirst: true,
     })
 
     const wallets = state.wallet.accounts
@@ -121,12 +90,12 @@ describe(createAccounts, () => {
     expect(wallets).toHaveProperty('0xaddress1')
     expect(wallets).toHaveProperty(ACCOUNT.address)
     expect(wallets).toHaveProperty(ACCOUNT2.address)
-    expect(activeAccountAddress).not.toBeDefined()
+    expect(activeAccountAddress).toEqual(ACCOUNT.address)
   })
 
   it('Imports two new wallet on top of existing watch only wallet and activate first', async () => {
     const state = await createNativeAccounts(
-      { accounts: [ACCOUNT2, ACCOUNT], activateFirst: true },
+      { accounts: [ACCOUNT2, ACCOUNT] },
       {
         '0xaddress1': {
           type: AccountType.Readonly,
@@ -165,12 +134,12 @@ describe(createAccounts, () => {
     expect(wallets).toHaveProperty(ACCOUNT3.address)
     expect(wallets).toHaveProperty(ACCOUNT2.address)
     expect(wallets).toHaveProperty(ACCOUNT.address)
-    expect(activeAccountAddress).not.toBeDefined()
+    expect(activeAccountAddress).toEqual(ACCOUNT2.address)
   })
 
   it('Imports two new wallet on top of existing signer mnemonic account and activate the first one', async () => {
     const state = await createNativeAccounts(
-      { accounts: [ACCOUNT2, ACCOUNT], activateFirst: true },
+      { accounts: [ACCOUNT2, ACCOUNT] },
       {
         [ACCOUNT3.address]: ACCOUNT3,
       }

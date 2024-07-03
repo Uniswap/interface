@@ -1,6 +1,5 @@
+import Row from 'components/Row'
 import styled from 'styled-components'
-
-import Row from '../../Row'
 
 export const Input = styled.input`
   width: 100%;

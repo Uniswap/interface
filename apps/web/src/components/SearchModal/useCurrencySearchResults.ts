@@ -4,6 +4,7 @@ import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -52,7 +53,9 @@ export function useCurrencySearchResults({
   selectedCurrency,
   otherSelectedCurrency,
 }: CurrencySearchParams): CurrencySearchResults {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
+  const account = useAccount()
+  const chainId = multichainUXEnabled ? swapChainId : account.chainId
   const supportedChain = useSupportedChainId(chainId)
 
   /**

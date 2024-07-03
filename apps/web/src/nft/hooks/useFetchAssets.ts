@@ -1,14 +1,13 @@
+import { useAccount } from 'hooks/useAccount'
+import { useBag } from 'nft/hooks/useBag'
+import { usePurchaseAssets } from 'nft/hooks/usePurchaseAssets'
+import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { BagStatus } from 'nft/types'
 import { buildNftTradeInputFromBagItems, recalculateBagUsingPooledAssets } from 'nft/utils'
 import { getNextBagState, getPurchasableAssets } from 'nft/utils/bag'
 import { buildRouteResponse } from 'nft/utils/nftRoute'
 import { useCallback, useMemo } from 'react'
 import { useNftRouteLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { useAccount } from 'hooks/useAccount'
-import { useBag } from './useBag'
-import { usePurchaseAssets } from './usePurchaseAssets'
-import { useTokenInput } from './useTokenInput'
 
 export function useFetchAssets(): () => Promise<void> {
   const account = useAccount()

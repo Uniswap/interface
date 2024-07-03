@@ -1,4 +1,4 @@
-import { SkeletonProps } from './SkeletonProps'
+import { SkeletonProps } from 'ui/src/loading/SkeletonProps'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function Skeleton(props: SkeletonProps): JSX.Element {

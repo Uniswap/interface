@@ -2,16 +2,15 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
+import { Dropdown } from 'nft/components/profile/list/Dropdown'
+import { NFTListRow } from 'nft/components/profile/list/NFTListRow'
+import { SetPriceMethod } from 'nft/components/profile/list/shared'
 import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-
-import { Dropdown } from './Dropdown'
-import { NFTListRow } from './NFTListRow'
-import { SetPriceMethod } from './shared'
 
 const TableHeader = styled.div`
   display: flex;

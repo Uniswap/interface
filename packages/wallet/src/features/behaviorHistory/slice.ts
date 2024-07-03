@@ -6,6 +6,11 @@ export enum ExtensionOnboardingState {
   Completed, // User has onboarded or dismissed call to action
 }
 
+export enum ExtensionBetaFeedbackState {
+  ReadyToShow, // Ready to show feedback modal
+  Shown, // Feedback modal shown
+}
+
 /**
  * Used to store persisted info about a users interactions with UI.
  * We use this to show conditional UI, usually only for the first time a user views a new feature.
@@ -16,6 +21,7 @@ export interface BehaviorHistoryState {
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
   extensionOnboardingState: ExtensionOnboardingState
+  extensionBetaFeedbackState: ExtensionBetaFeedbackState | undefined
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -24,6 +30,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
   extensionOnboardingState: ExtensionOnboardingState.Undefined,
+  extensionBetaFeedbackState: undefined,
 }
 
 const slice = createSlice({
@@ -45,6 +52,9 @@ const slice = createSlice({
     setExtensionOnboardingState: (state, action: PayloadAction<ExtensionOnboardingState>) => {
       state.extensionOnboardingState = action.payload
     },
+    setExtensionBetaFeedbackState: (state, action: PayloadAction<ExtensionBetaFeedbackState>) => {
+      state.extensionBetaFeedbackState = action.payload
+    },
   },
 })
 
@@ -54,6 +64,7 @@ export const {
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
   setExtensionOnboardingState,
+  setExtensionBetaFeedbackState,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

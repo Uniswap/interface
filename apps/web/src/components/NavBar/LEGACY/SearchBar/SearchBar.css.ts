@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { subheadSmall } from 'nft/css/common.css'
-
-import { breakpoints, sprinkles, vars } from '../../../../nft/css/sprinkles.css'
+import { breakpoints, sprinkles, vars } from 'nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 330
 const DESKTOP_NAVBAR_WIDTH_MD = 360

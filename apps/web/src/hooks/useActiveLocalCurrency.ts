@@ -1,10 +1,9 @@
 import { DEFAULT_LOCAL_CURRENCY, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { getFiatCurrencyComponents } from 'utils/formatNumbers'
-
-import { useActiveLocale } from './useActiveLocale'
-import useParsedQueryString from './useParsedQueryString'
 
 export const activeLocalCurrencyAtom = atomWithStorage<SupportedLocalCurrency>(
   'activeLocalCurrency',

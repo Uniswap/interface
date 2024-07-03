@@ -1,9 +1,8 @@
+import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import store from 'state'
 import { RouterPreference } from 'state/routing/types'
 import { updateUserRouterPreference } from 'state/user/reducer'
 import { fireEvent, render, screen } from 'test-utils/render'
-
-import RouterPreferenceSettings from '.'
 
 describe('RouterPreferenceSettings', () => {
   // Restore to default router preference before each unit test

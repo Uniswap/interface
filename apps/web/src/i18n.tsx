@@ -1,10 +1,10 @@
 import { dynamicActivate } from 'i18n/dynamicActivate'
 import { initialLocale } from 'i18n/initialLocale'
+import enUsLocale from 'i18n/locales/source/en-US.json'
 import i18n from 'i18next'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import { initReactI18next } from 'react-i18next'
 import { logger } from 'utilities/src/logger/logger'
-import enUsLocale from './i18n/locales/source/en-US.json'
 
 export { t } from 'i18next'
 export { Plural } from './i18n/Plural'

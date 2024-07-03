@@ -23,7 +23,7 @@ import { Check, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
@@ -109,7 +109,7 @@ const SitePermissions = (): JSX.Element => {
   )
 }
 
-const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
+const NetworksRow = ({ chains }: { chains: WalletChainId[] }): JSX.Element => {
   const { t } = useTranslation()
 
   return (

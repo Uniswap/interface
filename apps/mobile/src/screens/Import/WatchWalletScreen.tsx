@@ -14,15 +14,15 @@ import { Button, Flex, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
+import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
-import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
@@ -74,8 +74,8 @@ const getErrorText = ({
 }
 
 export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const initialAccounts = useRef(accounts)
 
@@ -89,14 +89,14 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
   const { address: resolvedAddress, name } = useENS(
-    ChainId.Mainnet,
+    UniverseChainId.Mainnet,
     normalizedValue,
     !hasSuffixIncluded
   )
   const isAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (isAddress || resolvedAddress) ?? undefined,
-    ChainId.Mainnet
+    UniverseChainId.Mainnet
   )
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
@@ -129,10 +129,12 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
 
   const onSubmit = useCallback(async () => {
     if (isValid && value) {
+      const viewOnlyAddress = resolvedAddress || normalizedValue
+      const viewOnlyAccount = createViewOnlyAccount(viewOnlyAddress)
+
       dispatch(
-        importAccountActions.trigger({
-          type: ImportAccountType.Address,
-          address: resolvedAddress || normalizedValue,
+        createAccountsActions.trigger({
+          accounts: [viewOnlyAccount],
         })
       )
 

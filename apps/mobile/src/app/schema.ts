@@ -501,6 +501,10 @@ delete v64SchemaIntermediate.behaviorHistory.hasViewedUniconV2IntroModal
 
 export const v64Schema = v64SchemaIntermediate
 
+export const v65Schema = { ...v64Schema }
+
+export const v66Schema = { ...v65Schema }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v64Schema => v64Schema
+export const getSchema = (): typeof v65Schema => v65Schema

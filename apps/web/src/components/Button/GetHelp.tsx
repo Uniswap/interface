@@ -1,9 +1,9 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/Row'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;
@@ -26,7 +26,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 export default function GetHelp() {
   return (
-    <StyledExternalLink href={SupportArticleURL.HOME}>
+    <StyledExternalLink href={uniswapUrls.helpUrl}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
         <Trans i18nKey="common.getHelp.button" />

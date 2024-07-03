@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
@@ -15,7 +16,7 @@ import { borderRadii } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
@@ -34,13 +35,13 @@ interface LogoWithTxStatusBaseProps {
   txType: TransactionType
   txStatus: TransactionStatus
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
 }
 
 interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
   dappImageUrl: Maybe<string>
   dappName: string
 }
@@ -110,7 +111,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   const color = colors.surface2
 
   let icon: JSX.Element | undefined
-  if (chainId && chainId !== ChainId.Mainnet) {
+  if (chainId && chainId !== UniverseChainId.Mainnet) {
     icon = <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
   } else {
     let Icon: React.NamedExoticComponent<IconProps> | undefined
@@ -133,6 +134,8 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         break
       // Fiat purchases use the same icon as receive
       case TransactionType.FiatPurchase:
+      case TransactionType.OnRampPurchase:
+      case TransactionType.OnRampTransfer:
       case TransactionType.Receive:
       case TransactionType.NFTMint:
         Icon = ArrowDownInCircle
@@ -258,7 +261,7 @@ export function DappLogoWithWCBadge({
   dappImageUrl: Maybe<string>
   dappName: string
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
 }): JSX.Element {
   const dappImageSize = size
   const statusSize = dappImageSize * STATUS_RATIO
@@ -280,7 +283,7 @@ export function DappLogoWithWCBadge({
       <Flex left={2} top={0}>
         {dappImage}
       </Flex>
-      {chainId && chainId !== ChainId.Mainnet ? (
+      {chainId && chainId !== UniverseChainId.Mainnet ? (
         <Flex bottom={-2} position="absolute" right={-2}>
           <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
         </Flex>

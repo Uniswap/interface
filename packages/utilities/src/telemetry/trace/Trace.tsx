@@ -4,9 +4,9 @@ import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } 
 import { isWeb } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { useAnalyticsNavigationContext } from './AnalyticsNavigationContext'
-import { ITraceContext, TraceContext, useTrace } from './TraceContext'
-import { getEventHandlers } from './utils'
+import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
+import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 
 export function getEventsFromProps(
   logPress?: boolean,

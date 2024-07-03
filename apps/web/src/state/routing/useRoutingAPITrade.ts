@@ -1,13 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
-
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
-import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
+import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
 import {
   ClassicTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
@@ -16,7 +15,7 @@ import {
   RouterPreference,
   SubmittableTrade,
   TradeState,
-} from './types'
+} from 'state/routing/types'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined, currentData: undefined } as const

@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { BackHandler } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { ModalsState } from 'src/features/modals/ModalsState'
 import { closeModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { useAppDispatch } from 'wallet/src/state'
-import { ModalsState } from './ModalsState'
-import { selectModalState } from './selectModalState'
 
 /* This hook is used to close the globally available modals (in Redux store) when the 
 back button is pressed. */

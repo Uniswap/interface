@@ -1,4 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
+import darkImage from 'assets/images/404-page-dark.png'
+import lightImage from 'assets/images/404-page-light.png'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
@@ -7,8 +9,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import darkImage from '../../assets/images/404-page-dark.png'
-import lightImage from '../../assets/images/404-page-light.png'
 
 const Image = styled.img`
   max-width: 510px;

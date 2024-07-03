@@ -1,4 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
+import { SwapDetails } from 'components/swap/SwapDetails'
 import {
   LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
@@ -6,7 +7,6 @@ import {
   TEST_TRADE_EXACT_INPUT,
 } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
-import { SwapDetails } from './SwapDetails'
 
 describe('SwapDetails.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {

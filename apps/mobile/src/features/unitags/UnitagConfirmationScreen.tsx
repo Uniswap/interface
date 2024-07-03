@@ -15,8 +15,9 @@ import {
   SwapElement,
   TextElement,
 } from 'src/screens/Onboarding/OnboardingElements'
-import { AnimatePresence, Button, Flex, Text, useDeviceDimensions, useDeviceInsets } from 'ui/src'
+import { AnimatePresence, Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'

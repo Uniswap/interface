@@ -2,7 +2,7 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -22,7 +22,7 @@ export enum EnsLookupType {
 export type EnsLookupParams = {
   type: EnsLookupType
   nameOrAddress: string
-  chainId: ChainId
+  chainId: WalletChainId
 }
 
 async function getNameFetch(address: string, provider: providers.JsonRpcProvider) {
@@ -56,7 +56,7 @@ async function getTextFetch(key: string, name: string, provider: providers.JsonR
 
 export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Response> => {
   const { type, nameOrAddress } = params
-  const provider = createEthersProvider(ChainId.Mainnet)
+  const provider = createEthersProvider(UniverseChainId.Mainnet)
   if (!provider) {
     return new Response(JSON.stringify({ data: undefined }))
   }
@@ -89,7 +89,7 @@ export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Respo
 function useEnsQuery(
   type: EnsLookupType,
   nameOrAddress?: string | null,
-  chainId: ChainId = ChainId.Mainnet
+  chainId: WalletChainId = UniverseChainId.Mainnet
 ) {
   const result = useRestQuery<{ data: Maybe<string>; timestamp: number }, EnsLookupParams>(
     STUB_ONCHAIN_ENS_ENDPOINT, // will invoke `getOnChainEnsFetch`
@@ -112,18 +112,30 @@ function useEnsQuery(
   )
 }
 
-export function useENSName(address?: Address, chainId: ChainId = ChainId.Mainnet) {
+export function useENSName(address?: Address, chainId: WalletChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Name, address, chainId)
 }
-export function useAddressFromEns(maybeName: string | null, chainId: ChainId = ChainId.Mainnet) {
+export function useAddressFromEns(
+  maybeName: string | null,
+  chainId: WalletChainId = UniverseChainId.Mainnet
+) {
   return useEnsQuery(EnsLookupType.Address, maybeName, chainId)
 }
-export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
+export function useENSAvatar(
+  address?: string | null,
+  chainId: WalletChainId = UniverseChainId.Mainnet
+) {
   return useEnsQuery(EnsLookupType.Avatar, address, chainId)
 }
-export function useENSDescription(name?: string | null, chainId: ChainId = ChainId.Mainnet) {
+export function useENSDescription(
+  name?: string | null,
+  chainId: WalletChainId = UniverseChainId.Mainnet
+) {
   return useEnsQuery(EnsLookupType.Description, name, chainId)
 }
-export function useENSTwitterUsername(name?: string | null, chainId: ChainId = ChainId.Mainnet) {
+export function useENSTwitterUsername(
+  name?: string | null,
+  chainId: WalletChainId = UniverseChainId.Mainnet
+) {
   return useEnsQuery(EnsLookupType.TwitterUsername, name, chainId)
 }

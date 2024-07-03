@@ -47,6 +47,7 @@ export function getSwapWarnings(
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+
   if (swapBalanceInsufficient) {
     warnings.push({
       type: WarningLabel.InsufficientFunds,

@@ -1,9 +1,8 @@
 import 'test-utils/tokens/mocks'
 
+import Error, { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
-
-import Error, { PendingModalError } from './Error'
 
 describe('ConfirmSwapModal/Error', () => {
   it.each([

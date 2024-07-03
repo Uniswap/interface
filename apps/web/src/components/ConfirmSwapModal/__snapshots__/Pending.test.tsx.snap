@@ -158,6 +158,14 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   align-items: center;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c16 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -193,14 +201,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -560,6 +560,14 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   align-items: center;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c16 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -595,14 +603,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -963,6 +963,14 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   align-items: center;
 }
 
+.c16 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c18 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -998,14 +1006,6 @@ exports[`Pending - classic trade titles renders classic trade correctly, with ap
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c16 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -1315,6 +1315,14 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   align-items: center;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c16 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1350,14 +1358,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -1700,6 +1700,14 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   align-items: center;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c16 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1735,14 +1743,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {
@@ -2103,6 +2103,14 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   align-items: center;
 }
 
+.c16 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c18 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2138,14 +2146,6 @@ exports[`Pending - uniswapX trade titles renders limit order correctly, with app
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c16 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c2 {

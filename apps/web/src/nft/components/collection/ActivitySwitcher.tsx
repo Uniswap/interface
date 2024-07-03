@@ -1,10 +1,10 @@
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/ActivitySwitcher.css'
 import { useIsCollectionLoading } from 'nft/hooks'
 import styled from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import * as styles from './ActivitySwitcher.css'
 
 const BaseActivityContainer = styled(Row)`
   border-bottom: 1px solid;

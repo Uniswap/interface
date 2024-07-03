@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/utils/parseENSAddress.test.ts
 
-import { parseENSAddress } from './parseENSAddress'
+import { parseENSAddress } from 'wallet/src/features/ens/parseENSAddress'
 
 describe('parseENSAddress', () => {
   it('test cases', () => {

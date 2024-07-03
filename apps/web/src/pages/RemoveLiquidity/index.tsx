@@ -7,21 +7,45 @@ import {
   LiquidityEventName,
   LiquiditySource,
 } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { computePairAddress } from '@uniswap/v2-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { BlueCard, LightCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import { MinimalPositionCard } from 'components/PositionCard'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import Slider from 'components/Slider'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { Dots } from 'components/swap/styled'
 import { useIsSupportedChainId } from 'constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { usePairContract, useV2RouterContract } from 'hooks/useContract'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { Trans } from 'i18n'
 import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
+import { ClickableText, MaxButton, Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Field } from 'state/burn/actions'
+import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/burn/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
@@ -29,32 +53,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/Logo/CurrencyLogo'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-import Slider from '../../components/Slider'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { Dots } from '../../components/swap/styled'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
-import { Field } from '../../state/burn/actions'
-import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
-import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
-import { currencyId } from '../../utils/currencyId'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
+import { currencyId } from 'utils/currencyId'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -324,8 +325,15 @@ function RemoveLiquidity() {
 
           sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
             label: [currencyA.symbol, currencyB.symbol].join('/'),
-            source: LiquiditySource.V3,
+            source: LiquiditySource.V2,
             ...trace,
+            type: LiquiditySource.V2,
+            transaction_hash: response.hash,
+            pool_address: computePairAddress({
+              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+              tokenA: currencyA.wrapped,
+              tokenB: currencyB.wrapped,
+            }),
           })
         })
         .catch((error: Error) => {

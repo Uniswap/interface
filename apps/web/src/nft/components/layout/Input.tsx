@@ -1,6 +1,5 @@
+import { Box, BoxProps } from 'nft/components/Box'
 import { FormEvent, forwardRef } from 'react'
-
-import { Box, BoxProps } from '../Box'
 
 const isNumber = (s: string): boolean => {
   const reg = /^-?\d+\.?\d*$/

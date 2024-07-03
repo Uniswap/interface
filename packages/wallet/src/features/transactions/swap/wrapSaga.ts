@@ -3,7 +3,7 @@ import { Contract, providers } from 'ethers'
 import { call } from 'typed-redux-saga'
 import { Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
@@ -23,7 +23,7 @@ export type WrapParams = {
 }
 
 export async function getWethContract(
-  chainId: ChainId,
+  chainId: WalletChainId,
   provider: providers.Provider
 ): Promise<Weth> {
   return new Contract(getWrappedNativeAddress(chainId), WETH_ABI, provider) as Weth

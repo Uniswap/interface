@@ -1,16 +1,16 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
+import { useFetchListCallback } from 'hooks/useFetchListCallback'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useStateRehydrated } from 'hooks/useStateRehydrated'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
+import { acceptListUpdate } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
 import { logger } from 'utilities/src/logger/logger'
-import { useFetchListCallback } from '../../hooks/useFetchListCallback'
-import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { acceptListUpdate } from './actions'
 
 // TODO(WEB-3839): delete this when lists are removed from redux
 export default function Updater(): null {

@@ -18,6 +18,18 @@ module.exports = {
 
   overrides: [
     {
+      files: ['src/**/*.ts', 'src/**/*.tsx'],
+      rules: {
+        'no-relative-import-paths/no-relative-import-paths': [
+          'error',
+          {
+            allowSameFolder: false,
+            rootDir: 'src',
+          },
+        ],
+      },
+    },
+    {
       files: ['**/*'],
       rules: {
         'multiline-comment-style': ['error', 'separate-lines'],
@@ -111,6 +123,10 @@ module.exports = {
             selector: `:matches(Literal[value='NATIVE'])`,
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
+          },
+          {
+            selector: `ImportDeclaration[source.value='@uniswap/sdk-core'] > ImportSpecifier[imported.name='ChainId']`,
+            message: "Don't use ChainId from @uniswap/sdk-core. Use the InterfaceChainId from universe/uniswap.",
           },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {

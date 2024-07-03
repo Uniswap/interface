@@ -1,13 +1,12 @@
 import { ApolloError } from '@apollo/client'
 import { Percent } from '@uniswap/sdk-core'
+import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { useTopPools } from 'graphql/data/pools/useTopPools'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { TopPoolTable } from './PoolTable'
 
 jest.mock('graphql/data/pools/useTopPools')
 jest.mock('react-router-dom', () => ({

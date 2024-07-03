@@ -1,9 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { wrap, WrapParams } from 'wallet/src/features/transactions/swap/wrapSaga'
+import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { TransactionType, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 import { ethersTransactionRequest, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
@@ -27,7 +27,7 @@ const params: WrapParams = {
   account,
   txRequest,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-    NativeCurrency.onChain(ChainId.Mainnet),
+    NativeCurrency.onChain(UniverseChainId.Mainnet),
     '200000'
   ),
 }
@@ -38,7 +38,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Mainnet,
+        chainId: UniverseChainId.Mainnet,
         account: params.account,
         typeInfo: wrapTxInfo,
         options: { request: txRequest },
@@ -51,7 +51,7 @@ describe(wrap, () => {
     const unwrapParams: WrapParams = {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-        NativeCurrency.onChain(ChainId.Mainnet).wrapped,
+        NativeCurrency.onChain(UniverseChainId.Mainnet).wrapped,
         '200000'
       ),
     }
@@ -59,7 +59,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
-        chainId: ChainId.Mainnet,
+        chainId: UniverseChainId.Mainnet,
         account: params.account,
         typeInfo: unwrapTxInfo,
         options: { request: txRequest },

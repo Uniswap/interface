@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAppDispatch } from 'wallet/src/state'
 
-export function useShowSwapNetworkNotification(chainId?: ChainId): void {
+export function useShowSwapNetworkNotification(chainId?: WalletChainId): void {
   const prevChainId = usePrevious(chainId)
   const appDispatch = useAppDispatch()
   useEffect(() => {

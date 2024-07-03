@@ -121,6 +121,8 @@ class RnEthersRs(applicationContext: Context) {
    */
   fun generateAndStorePrivateKey(mnemonicId: String, derivationIndex: Int): String {
     val mnemonic = retrieveMnemonic(mnemonicId)
+      ?: throw IllegalArgumentException("Mnemonic not found")
+
     val privateKey = privateKeyFromMnemonic(mnemonic, derivationIndex)
     val xprv = privateKey.privateKey
     val address = privateKey.address

@@ -1,14 +1,13 @@
+import { AutoColumn } from 'components/Column'
+import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
+import useENS from 'hooks/useENS'
 import { Trans, t } from 'i18n'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-
-import { useAccount } from 'hooks/useAccount'
-import useENS from '../../hooks/useENS'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const InputPanel = styled.div`
   ${flexColumnNoWrap};

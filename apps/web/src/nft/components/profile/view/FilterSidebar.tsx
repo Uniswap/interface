@@ -1,11 +1,14 @@
 import { ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { useIsMobile } from 'hooks/screenSize'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { checkbox } from 'nft/components/layout/Checkbox.css'
 import { Input } from 'nft/components/layout/Input'
+import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
+import * as styles from 'nft/components/profile/view/ProfilePage.css'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
@@ -29,10 +32,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import noop from 'utilities/src/react/noop'
-
-import { useIsMobile } from 'hooks/screenSize'
-import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from './ProfilePage'
-import * as styles from './ProfilePage.css'
 
 const COLLECTION_ROW_HEIGHT = 44
 

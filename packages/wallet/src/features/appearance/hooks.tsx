@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native'
+import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { useAppSelector } from 'wallet/src/state'
-import { AppearanceSettingType } from './slice'
 
 export function useCurrentAppearanceSetting(): AppearanceSettingType {
   const { selectedAppearanceSettings } = useAppSelector((state) => state.appearanceSettings)

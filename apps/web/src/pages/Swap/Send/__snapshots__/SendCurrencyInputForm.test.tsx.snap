@@ -1,36 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c14 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c25 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -122,6 +92,22 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   justify-content: space-between;
 }
 
+.c14 {
+  color: #CECECE;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c25 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c23 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -167,6 +153,20 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   position: relative;
   top: 0;
   left: 0;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c11 {
@@ -225,6 +225,62 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 
 .c8::placeholder {
   color: #CECECE;
+}
+
+.c6 {
+  position: relative;
+  max-width: 100%;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c9 {
+  max-height: 84px;
+  max-width: 100%;
+  width: 43px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
+}
+
+.c9::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+.c9::-moz-placeholder {
+  opacity: 1;
+}
+
+.c9:-ms-input-placeholder {
+  opacity: 1;
+}
+
+.c9::placeholder {
+  opacity: 1;
+}
+
+.c10 {
+  position: absolute;
+  visibility: hidden;
+  bottom: 0px;
+  right: 0px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
+}
+
+.c7 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
 }
 
 .c1 {
@@ -290,62 +346,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   position: absolute;
   top: 16px;
   left: 16px;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c9 {
-  max-height: 84px;
-  max-width: 100%;
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c9::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c9::-moz-placeholder {
-  opacity: 1;
-}
-
-.c9:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c9::placeholder {
-  opacity: 1;
-}
-
-.c10 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c7 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
 }
 
 .c15 {
@@ -556,36 +556,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c13 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c24 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -677,6 +647,22 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   justify-content: space-between;
 }
 
+.c13 {
+  color: #CECECE;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c24 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c22 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -722,6 +708,20 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   position: relative;
   top: 0;
   left: 0;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c10 {
@@ -780,6 +780,51 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 
 .c7::placeholder {
   color: #CECECE;
+}
+
+.c6 {
+  position: relative;
+  max-width: 100%;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c8 {
+  max-height: 84px;
+  max-width: 100%;
+  width: 43px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
+}
+
+.c8::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+.c8::-moz-placeholder {
+  opacity: 1;
+}
+
+.c8:-ms-input-placeholder {
+  opacity: 1;
+}
+
+.c8::placeholder {
+  opacity: 1;
+}
+
+.c9 {
+  position: absolute;
+  visibility: hidden;
+  bottom: 0px;
+  right: 0px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
 }
 
 .c1 {
@@ -845,51 +890,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   position: absolute;
   top: 16px;
   left: 16px;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c8 {
-  max-height: 84px;
-  max-width: 100%;
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c8::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c8::-moz-placeholder {
-  opacity: 1;
-}
-
-.c8:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c8::placeholder {
-  opacity: 1;
-}
-
-.c9 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
 }
 
 .c14 {
@@ -1095,36 +1095,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c14 {
-  color: #CECECE;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c25 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -1216,6 +1186,22 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   justify-content: space-between;
 }
 
+.c14 {
+  color: #CECECE;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c25 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c23 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1261,6 +1247,20 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   position: relative;
   top: 0;
   left: 0;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c11 {
@@ -1318,6 +1318,63 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
 }
 
 .c8::placeholder {
+  color: #CECECE;
+}
+
+.c6 {
+  position: relative;
+  max-width: 100%;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+}
+
+.c9 {
+  max-height: 84px;
+  max-width: 100%;
+  width: 43px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
+}
+
+.c9::-webkit-input-placeholder {
+  opacity: 1;
+}
+
+.c9::-moz-placeholder {
+  opacity: 1;
+}
+
+.c9:-ms-input-placeholder {
+  opacity: 1;
+}
+
+.c9::placeholder {
+  opacity: 1;
+}
+
+.c10 {
+  position: absolute;
+  visibility: hidden;
+  bottom: 0px;
+  right: 0px;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
+}
+
+.c7 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-align: left;
+  font-size: 70px;
+  font-weight: 500;
+  line-height: 60px;
   color: #CECECE;
 }
 
@@ -1384,63 +1441,6 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   position: absolute;
   top: 16px;
   left: 16px;
-}
-
-.c6 {
-  position: relative;
-  max-width: 100%;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c9 {
-  max-height: 84px;
-  max-width: 100%;
-  width: 43px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c9::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c9::-moz-placeholder {
-  opacity: 1;
-}
-
-.c9:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c9::placeholder {
-  opacity: 1;
-}
-
-.c10 {
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-}
-
-.c7 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-  color: #CECECE;
 }
 
 .c15 {

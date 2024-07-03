@@ -10,19 +10,12 @@ import { UnitagStackParamList } from 'src/app/navigation/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import {
-  AnimatePresence,
-  AnimatedFlex,
-  Button,
-  Flex,
-  Image,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatePresence, Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -32,7 +25,6 @@ import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import {

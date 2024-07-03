@@ -15,17 +15,14 @@ import {
   NFT_BANNER_HEIGHT,
 } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
-  Flex,
-  ImpactFeedbackStyle,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-} from 'ui/src'
+} from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
@@ -33,7 +30,6 @@ import {
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'

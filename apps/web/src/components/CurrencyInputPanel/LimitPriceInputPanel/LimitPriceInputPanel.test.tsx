@@ -1,10 +1,10 @@
+import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { LimitContext } from 'state/limit/LimitContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { LimitPriceInputPanel } from './LimitPriceInputPanel'
 
 const mockSwapAndLimitContextValue = {
   currencyState: {

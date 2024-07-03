@@ -1,15 +1,13 @@
 import { ColumnCenter } from 'components/Column'
-import { SupportArticleURL } from 'constants/supportArticles'
+import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
+import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
-
-import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
-import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
-import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { ExternalLink } from 'theme/components'
-
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export enum PendingModalError {
@@ -31,47 +29,47 @@ interface ErrorModalContentProps {
 function getErrorContent({ errorType, trade }: { errorType: PendingModalError; trade?: InterfaceTrade }): {
   title: JSX.Element
   message?: JSX.Element
-  supportArticleURL?: SupportArticleURL
+  supportArticleURL?: string
 } {
   switch (errorType) {
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
         title: <Trans i18nKey="error.tokenApproval" />,
         message: <Trans i18nKey="error.access.expiry" />,
-        supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
+        supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case PendingModalError.PERMIT_ERROR:
       return {
         title: <Trans i18nKey="permit.approval.fail" />,
         message: <Trans i18nKey="permit.approval.fail.message" />,
-        supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
+        supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case PendingModalError.XV2_HARD_QUOTE_ERROR:
       return {
         title: <Trans i18nKey="common.swap.failed" />,
         message: <Trans i18nKey="swap.fail.uniswapX" />,
-        supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
+        supportArticleURL: uniswapUrls.helpArticleUrls.uniswapXFailure,
       }
     case PendingModalError.CONFIRMATION_ERROR:
       if (isLimitTrade(trade)) {
         return {
           title: <Trans i18nKey="common.limit.failed" />,
-          supportArticleURL: SupportArticleURL.LIMIT_FAILURE,
+          supportArticleURL: uniswapUrls.helpArticleUrls.limitsFailure,
         }
       } else {
         return {
           title: <Trans i18nKey="common.swap.failed" />,
           message: <Trans i18nKey="swap.fail.message" />,
           supportArticleURL: isUniswapXTrade(trade)
-            ? SupportArticleURL.UNISWAP_X_FAILURE
-            : SupportArticleURL.TRANSACTION_FAILURE,
+            ? uniswapUrls.helpArticleUrls.uniswapXFailure
+            : uniswapUrls.helpArticleUrls.transactionFailure,
         }
       }
     case PendingModalError.WRAP_ERROR:
       return {
         title: <Trans i18nKey="common.wrap.failed" />,
         message: <Trans i18nKey="token.wrap.fail.message" />,
-        supportArticleURL: SupportArticleURL.WETH_EXPLAINER,
+        supportArticleURL: uniswapUrls.helpArticleUrls.wethExplainer,
       }
     default:
       return {

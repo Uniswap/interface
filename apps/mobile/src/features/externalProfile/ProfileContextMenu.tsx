@@ -7,14 +7,14 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { setClipboard } from 'wallet/src/utils/clipboard'
@@ -43,7 +43,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {
-    await openUri(getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS))
+    await openUri(getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS))
   }, [address])
 
   const onReportProfile = useCallback(async () => {
@@ -78,7 +78,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     const options: MenuAction[] = [
       {
         title: t('account.wallet.action.viewExplorer', {
-          blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
+          blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
         }),
         action: openExplorerLink,
         systemIcon: 'link',

@@ -2,13 +2,13 @@ import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import { rootCssString } from 'nft/css/cssStringFromTheme'
+import { navDimensions } from 'nft/css/sprinkles.css'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
-import { navDimensions } from '../nft/css/sprinkles.css'
-import { ThemeColors, darkTheme, lightTheme } from './colors'
-import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,

@@ -1,6 +1,6 @@
 import { SortBy } from 'nft/hooks'
+import { SellOrder } from 'nft/types/sell'
 import { MediaType, NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SellOrder } from '../sell'
 
 export enum TokenType {
   ERC20 = 'ERC20',

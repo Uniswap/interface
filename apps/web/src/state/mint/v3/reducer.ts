@@ -1,5 +1,4 @@
 import { createReducer } from '@reduxjs/toolkit'
-
 import {
   Field,
   resetMintState,
@@ -8,7 +7,7 @@ import {
   typeLeftRangeInput,
   typeRightRangeInput,
   typeStartPriceInput,
-} from './actions'
+} from 'state/mint/v3/actions'
 
 export type FullRange = true
 

@@ -1,9 +1,11 @@
 import localForage from 'localforage'
 import { createMigrate, MigrationManifest, PersistedState, PersistMigrate } from 'redux-persist'
 import { MigrationConfig } from 'redux-persist/es/createMigrate'
-
 import { migration0 } from 'state/migrations/0'
 import { migration1 } from 'state/migrations/1'
+import { migration10 } from 'state/migrations/10'
+import { migration11 } from 'state/migrations/11'
+import { migration12 } from 'state/migrations/12'
 import { migration2 } from 'state/migrations/2'
 import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
@@ -13,9 +15,6 @@ import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
 import { legacyLocalStorageMigration } from 'state/migrations/legacy'
-import { migration10 } from './migrations/10'
-import { migration11 } from './migrations/11'
-import { migration12 } from './migrations/12'
 
 /**
  * These run once per state re-hydration when a version mismatch is detected.

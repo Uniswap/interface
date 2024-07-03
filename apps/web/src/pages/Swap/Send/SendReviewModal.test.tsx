@@ -2,12 +2,12 @@ import 'test-utils/tokens/mocks'
 
 import { DAI } from 'constants/tokens'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
-import { SendReviewModal } from './SendReviewModal'
 
 const mockSwapAndLimitContextValue = {
   currencyState: {

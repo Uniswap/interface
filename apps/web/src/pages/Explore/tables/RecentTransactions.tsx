@@ -34,8 +34,8 @@ export default function RecentTransactions() {
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const [filter, setFilters] = useState<TransactionType[]>([
     TransactionType.SWAP,
-    TransactionType.BURN,
-    TransactionType.MINT,
+    TransactionType.REMOVE,
+    TransactionType.ADD,
   ])
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
 

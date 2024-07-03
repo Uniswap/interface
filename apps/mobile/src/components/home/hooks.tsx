@@ -2,7 +2,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { SharedValue, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
-import { useDeviceDimensions, useDeviceInsets } from 'ui/src'
+import { useDeviceInsets } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>): {

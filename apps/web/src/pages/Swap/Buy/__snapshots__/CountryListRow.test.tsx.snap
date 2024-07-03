@@ -1,0 +1,200 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CountryListRow should render 1`] = `
+.c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  height: 60px;
+  padding: 0 20px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.c2:hover {
+  background-color: #F9F9F9;
+}
+
+.c4 {
+  border-radius: 50%;
+}
+
+<span
+  class="t_light is_inversed _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c0 c3"
+      >
+        <img
+          alt="US"
+          class="c4"
+          height="32"
+          src="https://images-country.meld.io/US/flag.svg"
+          width="32"
+        />
+        <span
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+          data-disable-theme="true"
+        >
+          United States
+        </span>
+      </div>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`CountryListRow should render selected country 1`] = `
+.c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  height: 60px;
+  padding: 0 20px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.c2:hover {
+  background-color: #F9F9F9;
+}
+
+.c4 {
+  border-radius: 50%;
+}
+
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1 c2"
+    >
+      <div
+        class="c0 c3"
+      >
+        <img
+          alt="US"
+          class="c4"
+          height="32"
+          src="https://images-country.meld.io/US/flag.svg"
+          width="32"
+        />
+        <span
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+          data-disable-theme="true"
+        >
+          United States
+        </span>
+      </div>
+      <svg
+        fill="none"
+        height="24"
+        viewBox="0 0 16 16"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          id="Icon"
+        >
+          <path
+            d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+            fill="white"
+            id="Vector"
+          />
+        </g>
+      </svg>
+    </div>
+  </span>
+</span>
+`;

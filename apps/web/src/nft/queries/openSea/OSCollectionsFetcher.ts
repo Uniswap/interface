@@ -1,7 +1,7 @@
 import { infiniteQueryOptions } from '@tanstack/react-query'
 import { RefetchInterval } from 'constants/query'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
-import { WalletCollection } from '../../types'
+import { WalletCollection } from 'nft/types'
 
 export function getOSCollectionsInfiniteQueryOptions(address: string) {
   return infiniteQueryOptions({

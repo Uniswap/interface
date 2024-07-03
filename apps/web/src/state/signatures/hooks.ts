@@ -4,9 +4,14 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 import { OffchainOrderType } from 'state/routing/types'
+import { addSignature } from 'state/signatures/reducer'
+import {
+  OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE,
+  SignatureDetails,
+  SignatureType,
+  UniswapXOrderDetails,
+} from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { addSignature } from './reducer'
-import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()

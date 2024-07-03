@@ -1,4 +1,9 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import { useTimeSince } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
@@ -12,11 +17,6 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow from '../PortfolioRow'
-import { useOpenOffchainActivityModal } from './OffchainActivityModal'
-import { useTimeSince } from './parseRemote'
-import { Activity } from './types'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};

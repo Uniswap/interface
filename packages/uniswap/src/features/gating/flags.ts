@@ -21,18 +21,25 @@ export enum FeatureFlags {
   PortionFields,
   RestoreWallet,
   Scantastic,
+  ScantasticOnboardingOnly,
   SeedPhraseRefactorNative,
   SendRewrite,
   TransactionDetailsSheet,
   UnitagsDeviceAttestation,
   UwULink,
+  UniswapX,
+
+  // Extension
+  ExtensionBuyButton,
 
   // Web
   NavRefresh,
+  NavigationHotkeys,
   Eip6936Enabled,
   ExitAnimation,
   ExtensionBetaLaunch,
   ExtensionGeneralLaunch,
+  ForAggregatorWeb,
   GqlTokenLists,
   LimitsFees,
   MultichainUX,
@@ -44,7 +51,6 @@ export enum FeatureFlags {
   UniswapXSyntheticQuote,
   UniswapXv2,
   V2Everywhere,
-  V2Explore,
   Zora,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
@@ -57,6 +63,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
   // Web Specific
   [FeatureFlags.NavRefresh, 'navigation_refresh'],
+  [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
   [FeatureFlags.ExtensionBetaLaunch, 'extension_beta_launch'],
@@ -72,8 +79,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.V2Everywhere, 'v2_everywhere'],
-  [FeatureFlags.V2Explore, 'v2_explore'],
   [FeatureFlags.Zora, 'zora'],
+  [FeatureFlags.ForAggregatorWeb, 'for_aggregator_web'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
@@ -96,11 +103,15 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.RestoreWallet, 'restore-wallet'],
   [FeatureFlags.Scantastic, 'scantastic'],
+  [FeatureFlags.ScantasticOnboardingOnly, 'scantastic-onboarding-only'],
   [FeatureFlags.SeedPhraseRefactorNative, 'refactor-seed-phrase-native'],
   [FeatureFlags.SendRewrite, 'send-rewrite'],
   [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
+  [FeatureFlags.UniswapX, 'uniswapx'],
+  // Extension Specific
+  [FeatureFlags.ExtensionBuyButton, 'extension-buy-button'],
 ])
 
 export enum FeatureFlagClient {

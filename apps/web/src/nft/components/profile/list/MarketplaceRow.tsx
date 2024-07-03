@@ -3,6 +3,9 @@ import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { t } from 'i18n'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
+import { PriceTextInput } from 'nft/components/profile/list/PriceTextInput'
+import { RoyaltyTooltip } from 'nft/components/profile/list/RoyaltyTooltip'
+import { RemoveIconWrap, SetPriceMethod } from 'nft/components/profile/list/shared'
 import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
@@ -13,10 +16,6 @@ import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { PriceTextInput } from './PriceTextInput'
-import { RoyaltyTooltip } from './RoyaltyTooltip'
-import { RemoveIconWrap, SetPriceMethod } from './shared'
 
 const LastPriceInfo = styled(Column)`
   text-align: left;

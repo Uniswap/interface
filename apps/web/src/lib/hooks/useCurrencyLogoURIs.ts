@@ -1,32 +1,31 @@
-import { ChainId } from '@uniswap/sdk-core'
+import EthereumLogo from 'assets/images/ethereum-logo.png'
+import AvaxLogo from 'assets/svg/avax_logo.svg'
+import BnbLogo from 'assets/svg/bnb-logo.svg'
+import CeloLogo from 'assets/svg/celo_logo.svg'
+import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
+import { PORTAL_ETH_CELO, isCelo, nativeOnChain } from 'constants/tokens'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
-import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import AvaxLogo from '../../assets/svg/avax_logo.svg'
-import BnbLogo from '../../assets/svg/bnb-logo.svg'
-import CeloLogo from '../../assets/svg/celo_logo.svg'
-import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { PORTAL_ETH_CELO, isCelo, nativeOnChain } from '../../constants/tokens'
-
-export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: InterfaceChainId = UniverseChainId.Mainnet): string {
   switch (chainId) {
-    case ChainId.POLYGON:
-    case ChainId.POLYGON_MUMBAI:
+    case UniverseChainId.Polygon:
+    case UniverseChainId.PolygonMumbai:
       return MaticLogo
-    case ChainId.BNB:
+    case UniverseChainId.Bnb:
       return BnbLogo
-    case ChainId.CELO:
-    case ChainId.CELO_ALFAJORES:
+    case UniverseChainId.Celo:
+    case UniverseChainId.CeloAlfajores:
       return CeloLogo
-    case ChainId.AVALANCHE:
+    case UniverseChainId.Avalanche:
       return AvaxLogo
     default:
       return EthereumLogo
   }
 }
 
-export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
+export function getTokenLogoURI(address: string, chainId: InterfaceChainId = UniverseChainId.Mainnet): string | void {
   const networkName = isSupportedChainId(chainId) ? getChain({ chainId }).assetRepoNetworkName : undefined
 
   if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {

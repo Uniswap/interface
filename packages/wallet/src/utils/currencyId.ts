@@ -1,24 +1,24 @@
 import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { areAddressesEqual } from './addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
 
-export function buildCurrencyId(chainId: ChainId, address: string): string {
+export function buildCurrencyId(chainId: WalletChainId, address: string): string {
   return `${chainId}-${address}`
 }
 
-export function buildNativeCurrencyId(chainId: ChainId): string {
+export function buildNativeCurrencyId(chainId: WalletChainId): string {
   return buildCurrencyId(chainId, getNativeAddress(chainId))
 }
 
-export function buildWrappedNativeCurrencyId(chainId: ChainId): string {
+export function buildWrappedNativeCurrencyId(chainId: WalletChainId): string {
   return buildCurrencyId(chainId, getWrappedNativeAddress(chainId))
 }
 
@@ -44,7 +44,10 @@ export function getCurrencyAddressForAnalytics(currency: Currency): string {
   return currency.address
 }
 
-export const isNativeCurrencyAddress = (chainId: ChainId, address: Maybe<Address>): boolean => {
+export const isNativeCurrencyAddress = (
+  chainId: WalletChainId,
+  address: Maybe<Address>
+): boolean => {
   if (!address) {
     return true
   }
@@ -61,12 +64,14 @@ export function currencyIdToAddress(_currencyId: string): Address {
   return currencyIdParts[1]
 }
 
-function isPolygonChain(chainId: number): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
-  return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
+function isPolygonChain(
+  chainId: number
+): chainId is UniverseChainId.Polygon | UniverseChainId.PolygonMumbai {
+  return chainId === UniverseChainId.PolygonMumbai || chainId === UniverseChainId.Polygon
 }
 
-function isCeloChain(chainId: number): chainId is ChainId.Celo {
-  return chainId === ChainId.Celo
+function isCeloChain(chainId: number): chainId is UniverseChainId.Celo {
+  return chainId === UniverseChainId.Celo
 }
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
@@ -94,7 +99,7 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
   return address.toLowerCase()
 }
 
-export function currencyIdToChain(_currencyId: string): ChainId | null {
+export function currencyIdToChain(_currencyId: string): WalletChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
 }
 

@@ -1,8 +1,8 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+import { SwapEventType, timestampTracker } from 'tracing/SwapEventTimestampTracker'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
-import { SwapEventType, timestampTracker } from './SwapEventTimestampTracker'
 
 export function logSwapSuccess(hash: string, chainId: number, analyticsContext: ITraceContext) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FIRST_SWAP_SUCCESS)

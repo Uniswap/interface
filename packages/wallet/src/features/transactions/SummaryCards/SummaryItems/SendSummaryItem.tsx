@@ -1,10 +1,10 @@
+import { TransferTokenSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransferTokenSummaryItem'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { TransferTokenSummaryItem } from './TransferTokenSummaryItem'
 
 export function SendSummaryItem({
   transaction,

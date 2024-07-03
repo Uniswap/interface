@@ -1,10 +1,9 @@
+import Row from 'components/Row'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
 import styled, { DefaultTheme, css } from 'styled-components'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import useResizeObserver from 'use-resize-observer'
-
-import { TRANSITION_DURATIONS } from '../../theme/styles'
-import Row from '../Row'
 
 export const IconHoverText = styled.span`
   color: ${({ theme }) => theme.neutral1};

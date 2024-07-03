@@ -1,7 +1,4 @@
 import { act, renderHook } from '@testing-library/react'
-import ms from 'ms'
-
-import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 import {
   MockMint,
   MockMoonpayPurchase,
@@ -22,13 +19,15 @@ import {
   mockTokenTransferInPartsFragment,
   mockTokenTransferOutPartsFragment,
   mockTransactionDetailsPartsFragment,
-} from './fixtures/activity'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/fixtures/activity'
 import {
   offchainOrderDetailsFromGraphQLTransactionActivity,
   parseRemoteActivities,
   parseSwapAmounts,
   useTimeSince,
-} from './parseRemote'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import ms from 'ms'
+import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 
 const swapOrderTokenChanges = {
   TokenTransfer: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],

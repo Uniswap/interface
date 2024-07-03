@@ -5,11 +5,21 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
+import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import AppBody from 'pages/App/AppBody'
+import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
+import {
+  ProposalAction,
+  ProposalActionSelector,
+  ProposalActionSelectorModal,
+} from 'pages/CreateProposal/ProposalActionSelector'
+import { ProposalEditor } from 'pages/CreateProposal/ProposalEditor'
+import { ProposalSubmissionModal } from 'pages/CreateProposal/ProposalSubmissionModal'
 import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -26,12 +36,6 @@ import {
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { LATEST_GOVERNOR_INDEX } from '../../constants/governance'
-import { UNI } from '../../constants/tokens'
-import { ProposalActionDetail } from './ProposalActionDetail'
-import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
-import { ProposalEditor } from './ProposalEditor'
-import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

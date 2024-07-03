@@ -7,7 +7,7 @@ import {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from 'react-native'
-import { Flex, FlexProps, SpaceTokens, Text } from 'ui/src'
+import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -33,6 +33,7 @@ type CurrentInputPanelProps = {
   focus?: boolean
   isOutput?: boolean
   isFiatInput?: boolean
+  onToggleFiatInput?: (isFiatInput: boolean) => void
   onSetMax?: (amount: string) => void
   onPressIn?: () => void
   warnings: Warning[]
@@ -104,6 +105,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     autoFocus,
     isOutput = false,
     isFiatInput = false,
+    onToggleFiatInput,
     onPressIn,
     warnings,
     dimTextColor,
@@ -192,6 +194,10 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     [isOutput, currencyInfo]
   )
 
+  const handleToggleFiatInput = useCallback(() => {
+    onToggleFiatInput?.(!isFiatInput)
+  }, [isFiatInput, onToggleFiatInput])
+
   const { outerPadding, innerPadding } = paddingStyles
   const { paddingBottom, paddingTop, paddingHorizontal } = outerPadding
   const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
@@ -264,11 +270,13 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
 
       {currencyInfo && (
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
-          <Flex shrink>
-            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-              {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
-            </Text>
-          </Flex>
+          <TouchableArea onPress={handleToggleFiatInput}>
+            <Flex shrink>
+              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
+              </Text>
+            </Flex>
+          </TouchableArea>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
             <Text
               color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}

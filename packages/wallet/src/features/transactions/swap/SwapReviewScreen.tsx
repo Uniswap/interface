@@ -2,16 +2,16 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import {
-  AnimatedFlex,
   Button,
   Flex,
   HapticFeedback,
   Separator,
+  SpinningLoader,
   isWeb,
   useIsShortMobileDevice,
 } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'

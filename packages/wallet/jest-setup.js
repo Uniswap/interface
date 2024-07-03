@@ -39,7 +39,7 @@ jest.mock('ui/src/components/Unicon', () => {
 
 // Always use the web version, which is a no-op.
 jest.mock('ui/src/utils/haptics/HapticFeedback', () => {
-  return jest.requireActual('ui/src/utils/haptics/HapticFeedback.web.ts')
+  return jest.requireActual('ui/src/utils/haptics/HapticFeedback.ts')
 })
 
 import crypto from "crypto"

@@ -20,6 +20,7 @@ export const ModalName = {
   Explore: 'explore-modal',
   ExtensionPromoModal: 'extension-promo',
   ExtensionWaitlistModal: 'extension-waitlist',
+  ExtensionBetaFeedbackModal: 'extension-beta-feedback',
   FaceIDWarning: 'face-id-warning',
   FOTInfo: 'fee-on-transfer',
   FiatCurrencySelector: 'fiat-currency-selector',
@@ -60,6 +61,8 @@ export const ModalName = {
   TokenWarningModal: 'token-warning-modal',
   TooltipContent: 'tooltip-content',
   TransactionActions: 'transaction-actions',
+  TransactionDetails: 'transaction-details',
+  UniswapXInfo: 'uniswapx-info-modal',
   UnitagsChange: 'unitags-change-modal',
   UnitagsChangeConfirm: 'unitags-change-confirm-modal',
   UnitagsDelete: 'unitags-delete-modal',
@@ -109,6 +112,7 @@ export const ElementName = {
   ChainBase: 'chain-base',
   ChainBlast: 'chain-blast',
   ChainZora: 'chain-zora',
+  ChainZkSync: 'chain-zksync',
   ChooseInputToken: 'choose-input-token',
   ChooseOutputToken: 'choose-output-token',
   Confirm: 'confirm',
@@ -233,6 +237,7 @@ export type SectionNameType = (typeof SectionName)[keyof typeof SectionName] | I
 export const InterfacePageNameLocal = {
   Send: 'send-page',
   Limit: 'limit-page',
+  Buy: 'buy-page',
 }
 
 export type InterfacePageNameType =

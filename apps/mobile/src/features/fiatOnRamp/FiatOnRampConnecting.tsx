@@ -6,12 +6,13 @@ import {
   SERVICE_PROVIDER_ICON_BORDER_RADIUS,
   ServiceProviderLogoStyles,
 } from 'src/features/fiatOnRamp/constants'
-import { AnimatedFlex, Flex, Text, useDeviceInsets, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useDeviceInsets, useIsDarkMode } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 
 export function FiatOnRampConnectingView({

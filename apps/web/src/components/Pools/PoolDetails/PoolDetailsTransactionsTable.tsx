@@ -75,8 +75,8 @@ export function PoolDetailsTransactionsTable({
   const [filter, setFilters] = useState<PoolTableTransactionType[]>([
     PoolTableTransactionType.BUY,
     PoolTableTransactionType.SELL,
-    PoolTableTransactionType.BURN,
-    PoolTableTransactionType.MINT,
+    PoolTableTransactionType.REMOVE,
+    PoolTableTransactionType.ADD,
   ])
 
   const { transactions, loading, loadMore, error } = usePoolTransactions(
@@ -136,9 +136,9 @@ export function PoolDetailsTransactionsTable({
               </span>
             )
           } else {
-            color = row.type === PoolTableTransactionType.MINT ? 'success' : 'critical'
+            color = row.type === PoolTableTransactionType.ADD ? 'success' : 'critical'
             text =
-              row.type === PoolTableTransactionType.MINT ? (
+              row.type === PoolTableTransactionType.ADD ? (
                 <Trans i18nKey="common.add.label" />
               ) : (
                 <Trans i18nKey="common.remove.label" />

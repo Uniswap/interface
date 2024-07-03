@@ -1,7 +1,6 @@
+import { useConnectedWallets } from 'state/wallets/hooks'
+import { Wallet } from 'state/wallets/types'
 import { act, renderHook } from 'test-utils/render'
-
-import { useConnectedWallets } from './hooks'
-import { Wallet } from './types'
 
 describe('useConnectedWallets', () => {
   it('should return the connected wallets', () => {

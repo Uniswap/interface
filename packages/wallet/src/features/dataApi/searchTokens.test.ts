@@ -1,10 +1,10 @@
 import { waitFor } from '@testing-library/react-native'
+import { useSearchTokens } from 'wallet/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { token } from 'wallet/src/test/fixtures'
 import { createArray, renderHook } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'
-import { useSearchTokens } from './searchTokens'
 
 describe(useTokenProjects, () => {
   it('returns undefined when there is no data', async () => {

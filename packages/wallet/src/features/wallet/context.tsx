@@ -8,11 +8,11 @@ import {
   useState,
 } from 'react'
 import { call, getContext } from 'typed-redux-saga'
-import { ChainId, RPCType } from 'uniswap/src/types/chains'
+import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
-import { SignerManager } from './signing/SignerManager'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 export interface WalletContextValue {
   // Manages contracts
@@ -72,7 +72,7 @@ export function useProviderManager(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public) {
+export function useProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
   return useProviderManager().tryGetProvider(chainId, rpcType)
 }
 
@@ -81,10 +81,17 @@ export function* getProviderManager() {
   return (yield* getContext<ProviderManager>('providers')) ?? walletContextValue.providers
 }
 
-export function* getProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public) {
+export function* getProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
   const providerManager = yield* call(getProviderManager)
   // Note, unlike useWalletProvider above, this throws on missing provider
   return providerManager.getProvider(chainId, rpcType)
+}
+
+/**
+ * Non-generator version of getProvider
+ */
+export function getProviderSync(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
+  return walletContextValue.providers.getProvider(chainId, rpcType)
 }
 
 export function useContractManager(): ContractManager {

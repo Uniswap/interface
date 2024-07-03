@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
@@ -17,6 +16,7 @@ import styled, { css } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -29,13 +29,13 @@ export const TableContainer = styled(Column)<{ $maxWidth?: number; $maxHeight?: 
   align-items: center;
   margin: 0px auto 24px auto;
 `
-const StickyStyles = css`
-  top: 73px;
+const StickyStyles = css<{ $top: number }>`
   position: sticky;
   position: -webkit-sticky;
+  top: ${({ $top }) => $top}px;
   z-index: ${Z_INDEX.under_dropdown};
 `
-export const TableHead = styled.div<{ $isSticky?: boolean }>`
+export const TableHead = styled.div<{ $isSticky?: boolean; $top: number }>`
   width: 100%;
   position: relative;
   ${({ $isSticky }) => ($isSticky ? StickyStyles : '')}
@@ -240,7 +240,7 @@ const TokenSymbolText = styled(ThemedText.BodyPrimary)`
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
-  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET
+  const chainId = supportedChainIdFromGQLChain(token.chain) ?? UniverseChainId.Mainnet
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
   const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)

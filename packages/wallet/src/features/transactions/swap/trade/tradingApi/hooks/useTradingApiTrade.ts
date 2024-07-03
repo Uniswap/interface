@@ -3,14 +3,15 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { ChainId } from 'uniswap/src/types/chains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
-  QuoteRequest as TradingApiQuoteRequest,
-  QuoteResponse as TradingApiQuoteResponse,
+  QuoteRequest,
   TradeType as TradingApiTradeType,
 } from 'wallet/src/data/tradingApi/__generated__/index'
 import { isL2Chain } from 'wallet/src/features/chains/utils'
@@ -18,12 +19,16 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
   getRoutingPreferenceForSwapRequest,
-  getTokenAddressForApiRequest,
+  getTokenAddressForApi,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
   validateTrade,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { TradeWithStatus, UseTradeArgs } from 'wallet/src/features/transactions/swap/trade/types'
+import {
+  DiscriminatedQuoteResponse,
+  TradeWithStatus,
+  UseTradeArgs,
+} from 'wallet/src/features/transactions/swap/trade/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
@@ -56,6 +61,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   const formatter = useLocalizationContext()
 
+  const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+
   /***** Format request arguments ******/
 
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(
@@ -75,10 +82,14 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
-  const tokenInAddress = getTokenAddressForApiRequest(currencyIn)
-  const tokenOutAddress = getTokenAddressForApiRequest(currencyOut)
+  const tokenInAddress = getTokenAddressForApi(currencyIn)
+  const tokenOutAddress = getTokenAddressForApi(currencyOut)
 
-  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference)
+  const routingPreference = getRoutingPreferenceForSwapRequest(
+    tradeProtocolPreference,
+    uniswapXEnabled,
+    isUSDQuote
+  )
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT
@@ -95,7 +106,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     currencyInEqualsCurrencyOut ||
     !activeAccountAddress
 
-  const quoteRequestArgs: TradingApiQuoteRequest | undefined = useMemo(() => {
+  const quoteRequestArgs: QuoteRequest | undefined = useMemo(() => {
     // Temporary logging to help debug invalid requests with missing `swappper` param
     if (!activeAccountAddress) {
       logger.error(new Error('Missing account address in /swap request'), {
@@ -110,7 +121,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       return undefined
     }
 
-    const quoteArgs: TradingApiQuoteRequest = {
+    const quoteArgs: QuoteRequest = {
       type: requestTradeType,
       amount: amount.quotient.toString(),
       swapper: activeAccountAddress,
@@ -140,10 +151,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   const internalPollInterval = pollInterval ?? getPollIntervalByChain(currencyIn?.chainId)
 
-  const response = useRestQuery<
-    TradingApiQuoteResponse,
-    TradingApiQuoteRequest | Record<string, never>
-  >(
+  const response = useRestQuery<DiscriminatedQuoteResponse, QuoteRequest | Record<string, never>>(
     uniswapUrls.tradingApiPaths.quote,
     quoteRequestArgs ?? {},
     ['quote', 'permitData', 'requestId', 'routing'],
@@ -179,7 +187,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       })
     }
 
-    if (!data?.quote) {
+    if (!data?.quote || !currencyIn || !currencyOut) {
       // MOB(1193): Better handle Apollo 404s
       // https://github.com/apollographql/apollo-link-rest/pull/142/files#diff-018e2012bf1dae58fa1e87509b038abf51ace54994e63239343d717fb9a2d037R995
       // apollo-link-rest swallows 404 response errors, and instead just returns null data
@@ -198,8 +206,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     }
 
     const formattedTrade = transformTradingApiResponseToTrade({
-      tokenInIsNative: Boolean(currencyIn?.isNative),
-      tokenOutIsNative: Boolean(currencyOut?.isNative),
+      currencyIn,
+      currencyOut,
       tradeType,
       deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
       slippageTolerance: customSlippageTolerance,
@@ -255,7 +263,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   ])
 }
 
-function getPollIntervalByChain(chainId?: ChainId): number {
+function getPollIntervalByChain(chainId?: WalletChainId): number {
   return isL2Chain(chainId)
     ? PollingInterval.AverageL2BlockTime
     : PollingInterval.AverageL1BlockTime

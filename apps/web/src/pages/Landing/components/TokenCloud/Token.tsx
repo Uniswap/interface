@@ -1,6 +1,9 @@
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { motion } from 'framer-motion'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { TokenStandard } from 'pages/Landing/assets/approvedTokens'
+import { Ticker } from 'pages/Landing/components/TokenCloud/Ticker'
+import { randomChoice } from 'pages/Landing/components/TokenCloud/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
@@ -8,11 +11,7 @@ import {
   useCollectionPromoQuery,
   useTokenPromoQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenPoint } from '.'
-import { Ticker } from './Ticker'
-import { randomChoice } from './utils'
 
 const TokenIconPositioner = styled(motion.div)<{ size: number }>`
   width: ${(props) => `${props.size}px`};

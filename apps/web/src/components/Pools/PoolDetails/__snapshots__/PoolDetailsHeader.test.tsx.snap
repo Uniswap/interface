@@ -321,6 +321,11 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
+.c16 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c7 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -337,9 +342,43 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  display: inline-block;
-  height: inherit;
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c4 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c4 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c5 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c3 {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 .c17 {
@@ -449,45 +488,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 
 .c18:focus {
   background-color: #2222221f;
-}
-
-.c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 img {
-  width: 16px;
-  height: 32px;
-  object-fit: cover;
-}
-
-.c4 img:first-child {
-  border-radius: 16px 0 0 16px;
-  object-position: 0 0;
-}
-
-.c4 img:last-child {
-  border-radius: 0 16px 16px 0;
-  object-position: 100% 0;
-}
-
-.c5 {
-  width: 16px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.c3 {
-  position: relative;
-  top: 0;
-  left: 0;
 }
 
 .c0 {

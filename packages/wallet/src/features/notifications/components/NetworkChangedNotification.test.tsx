@@ -1,7 +1,7 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { renderWithProviders } from 'wallet/src/test/render'
-import { NetworkChangedNotification } from './NetworkChangedNotification'
 
 describe(NetworkChangedNotification, () => {
   it('renders with swap flow', () => {
@@ -9,7 +9,7 @@ describe(NetworkChangedNotification, () => {
       <NetworkChangedNotification
         notification={{
           type: AppNotificationType.NetworkChanged,
-          chainId: ChainId.Mainnet,
+          chainId: UniverseChainId.Mainnet,
           flow: 'swap',
         }}
       />
@@ -23,7 +23,7 @@ describe(NetworkChangedNotification, () => {
       <NetworkChangedNotification
         notification={{
           type: AppNotificationType.NetworkChanged,
-          chainId: ChainId.Mainnet,
+          chainId: UniverseChainId.Mainnet,
           flow: 'send',
         }}
       />
@@ -37,7 +37,7 @@ describe(NetworkChangedNotification, () => {
       <NetworkChangedNotification
         notification={{
           type: AppNotificationType.NetworkChanged,
-          chainId: ChainId.Mainnet,
+          chainId: UniverseChainId.Mainnet,
         }}
       />
     )

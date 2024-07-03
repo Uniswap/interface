@@ -1,5 +1,5 @@
 import { ColorKeys } from 'ui/src/theme'
-import ImageColors from './rn-image-colors'
+import ImageColors from 'ui/src/utils/colors/rn-image-colors'
 
 export type ExtractedColors = {
   primary?: string

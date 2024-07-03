@@ -2,10 +2,10 @@ import { t } from 'i18n'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 
-const Container = styled.div<{ size: number; isActive: boolean }>`
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
-  color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral2)};
+const Container = styled.div<{ $size: number; $isActive: boolean }>`
+  width: ${({ $size }) => $size}px;
+  height: ${({ $size }) => $size}px;
+  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@ export const NavIcon = ({
   onClick,
 }: NavIconProps) => {
   return (
-    <Container size={size} isActive={isActive} onClick={onClick} aria-label={label}>
+    <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
       {children}
     </Container>
   )

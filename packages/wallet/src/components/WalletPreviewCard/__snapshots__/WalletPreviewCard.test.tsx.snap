@@ -36,6 +36,13 @@ exports[`renders wallet preview card 1`] = `
       "paddingLeft": 16,
       "paddingRight": 16,
       "paddingTop": 16,
+      "shadowColor": "rgb(0,0,0)",
+      "shadowOffset": {
+        "height": 0,
+        "width": 0,
+      },
+      "shadowOpacity": 0.05,
+      "shadowRadius": 8,
       "transform": [
         {
           "scale": 1,

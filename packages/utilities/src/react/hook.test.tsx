@@ -1,8 +1,6 @@
-import { render } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
-import { createRef, forwardRef, useRef } from 'react'
 import { act } from 'react-test-renderer'
-import { useAsyncData, useForwardRef, useMemoCompare, usePrevious } from './hooks'
+import { useAsyncData, useMemoCompare, usePrevious } from 'utilities/src/react/hooks'
 
 describe('usePrevious', () => {
   it('returns undefined on first render', () => {
@@ -229,32 +227,5 @@ describe('useMemoCompare', () => {
     const newValue = { a: 2 }
     rerender(newValue)
     expect(result.current).toEqual(newValue) // Check that the reference is the same as the new value
-  })
-})
-
-describe('useForwardRef', () => {
-  it('should forward localRef properties into forwardedRef', async () => {
-    const fn1 = jest.fn()
-    const refData = { prop1: 'value1', prop2: 'value2', fn1 }
-
-    type RefType = typeof refData
-
-    const TestComponent = forwardRef<RefType>(function TestComponent(_, ref) {
-      const localRef = useRef<RefType>(refData)
-      useForwardRef(ref, localRef)
-
-      return null
-    })
-
-    const forwardedRef = createRef<RefType>()
-
-    await act(async () => {
-      render(<TestComponent ref={forwardedRef} />)
-    })
-
-    // Now check if forwardRef has the properties from the initial object
-    expect(forwardedRef.current?.prop1).toEqual('value1')
-    expect(forwardedRef.current?.prop2).toEqual('value2')
-    expect(forwardedRef.current?.fn1).toEqual(fn1)
   })
 })

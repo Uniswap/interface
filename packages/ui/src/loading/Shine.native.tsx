@@ -11,8 +11,8 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { Flex } from 'ui/src/components/layout'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { ShineProps } from 'ui/src/loading/ShineProps'
 import { opacify } from 'ui/src/theme'
-import { ShineProps } from './ShineProps'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 export function Shine({ children, disabled }: ShineProps): JSX.Element {

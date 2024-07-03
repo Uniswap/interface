@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import { persistStore } from 'redux-persist'
-import { updateVersion } from './global/actions'
-import { sentryEnhancer } from './logging'
-import reducer from './reducer'
-import { quickRouteApi } from './routing/quickRouteSlice'
-import { routingApi } from './routing/slice'
+import { updateVersion } from 'state/global/actions'
+import { sentryEnhancer } from 'state/logging'
+import reducer from 'state/reducer'
+import { quickRouteApi } from 'state/routing/quickRouteSlice'
+import { routingApi } from 'state/routing/slice'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 
 export function createDefaultStore() {
   return configureStore({
@@ -39,7 +40,8 @@ export function createDefaultStore() {
               },
       })
         .concat(routingApi.middleware)
-        .concat(quickRouteApi.middleware),
+        .concat(quickRouteApi.middleware)
+        .concat(fiatOnRampAggregatorApi.middleware),
   })
 }
 

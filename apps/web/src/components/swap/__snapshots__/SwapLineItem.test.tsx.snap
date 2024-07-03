@@ -2,7 +2,15 @@
 
 exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -100,6 +108,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   margin: -xs;
 }
 
+.c12 {
+  color: #4673fa;
+}
+
 .c3 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -114,14 +126,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c16 {
@@ -147,10 +151,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   width: 100%;
   height: 1px;
   background-color: #22222212;
-}
-
-.c12 {
-  color: #4673fa;
 }
 
 .c13 {
@@ -737,7 +737,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -835,6 +843,10 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   margin: -xs;
 }
 
+.c12 {
+  color: #4673fa;
+}
+
 .c3 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -849,14 +861,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c16 {
@@ -882,10 +886,6 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   width: 100%;
   height: 1px;
   background-color: #22222212;
-}
-
-.c12 {
-  color: #4673fa;
 }
 
 .c13 {
@@ -1472,7 +1472,15 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
 
 exports[`SwapLineItem.tsx exact input 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1602,14 +1610,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c15 {
@@ -1829,6 +1829,28 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 535;
 }
 
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c25 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c27 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1877,28 +1899,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
-}
-
-.c26 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c23 {
@@ -2492,7 +2492,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 exports[`SwapLineItem.tsx exact input api 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -2622,14 +2630,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c15 {
@@ -2849,6 +2849,28 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 535;
 }
 
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c25 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c27 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2897,28 +2919,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
-}
-
-.c26 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c23 {
@@ -3512,7 +3512,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 exports[`SwapLineItem.tsx exact output 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -3642,14 +3650,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c15 {
@@ -3869,6 +3869,28 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 535;
 }
 
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c25 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c27 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3917,28 +3939,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
-}
-
-.c26 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c23 {
@@ -4532,7 +4532,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 exports[`SwapLineItem.tsx fee on buy 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -4662,14 +4670,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c15 {
@@ -4889,6 +4889,28 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 535;
 }
 
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c25 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c27 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4937,28 +4959,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
-}
-
-.c26 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c23 {
@@ -5605,7 +5605,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 exports[`SwapLineItem.tsx fee on sell 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -5735,14 +5743,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
 }
 
 .c15 {
@@ -5962,6 +5962,28 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 535;
 }
 
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c25 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c27 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -6010,28 +6032,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
-}
-
-.c26 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c23 {
@@ -6678,7 +6678,20 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 exports[`SwapLineItem.tsx preview exact in 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c7 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -6740,19 +6753,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 50px;
 }
 
 .c11 {
@@ -7153,7 +7153,33 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 exports[`SwapLineItem.tsx syncing 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 50px;
+}
+
+.c6 {
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
+  background-size: 400%;
+  will-change: background-position;
+  border-radius: 12px;
+  height: 15px;
+  width: 70px;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -7189,32 +7215,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 50px;
-}
-
-.c6 {
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, #22222212 50%, #FFFFFF 75% );
-  background-size: 400%;
-  will-change: background-position;
-  border-radius: 12px;
-  height: 15px;
-  width: 70px;
 }
 
 .c4 {

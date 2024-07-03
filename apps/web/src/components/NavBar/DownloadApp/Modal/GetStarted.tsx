@@ -56,11 +56,7 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
   const theme = useTheme()
   const { t } = useTranslation()
   return (
-    <ModalContent
-      title={t('common.getStartedWithUniswap')}
-      // TODO: https://linear.app/uniswap/issue/WEB-4233/add-in-subtitle-text-under-the-title-in-the-get-the-app-modal
-      subtext=""
-    >
+    <ModalContent title={t('uniswap.wallet.modal.title')} subtext={t('uniswap.wallet.modal.subtitle')}>
       <Row gap="12px" width="100%" flex="auto" align="start">
         <Card flex="1 1 auto" onClick={toAppDownload}>
           <IllustrationContainer>

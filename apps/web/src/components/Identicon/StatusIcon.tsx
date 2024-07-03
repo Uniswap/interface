@@ -1,3 +1,4 @@
+import sockImg from 'assets/svg/socks.svg'
 import Identicon from 'components/Identicon'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
@@ -5,8 +6,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
-
-import sockImg from '../../assets/svg/socks.svg'
 
 export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;

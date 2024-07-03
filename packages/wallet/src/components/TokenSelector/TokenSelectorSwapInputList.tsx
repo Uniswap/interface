@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GqlResult } from 'uniswap/src/data/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   usePopularTokensOptions,
@@ -19,7 +19,7 @@ import {
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapInput(
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
 ): GqlResult<TokenSelectorListSections> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -37,7 +37,7 @@ function useTokenSectionsForSwapInput(
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? ChainId.Mainnet)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
@@ -85,7 +85,7 @@ function _TokenSelectorSwapInputList({
   chainFilter,
 }: {
   onSelectCurrency: OnSelectCurrency
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
 }): JSX.Element {
   const { data: sections, loading, error, refetch } = useTokenSectionsForSwapInput(chainFilter)
   return (

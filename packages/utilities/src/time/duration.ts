@@ -1,4 +1,4 @@
-import { ONE_HOUR_MS, ONE_MINUTE_MS, ONE_SECOND_MS } from './time'
+import { ONE_HOUR_MS, ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function getDurationRemainingString(expirationTime: number): string {
   const timeLeft = expirationTime - Date.now()

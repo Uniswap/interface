@@ -1,10 +1,9 @@
 import { approvedERC20, approvedERC721, InteractiveToken } from 'pages/Landing/assets/approvedTokens'
+import { Token } from 'pages/Landing/components/TokenCloud/Token'
+import { mixArrays, randomFloat, randomInt } from 'pages/Landing/components/TokenCloud/utils'
 import PoissonDiskSampling from 'poisson-disk-sampling'
 import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
-
-import { Token } from './Token'
-import { mixArrays, randomFloat, randomInt } from './utils'
 
 const Container = styled.div`
   width: 100vw;

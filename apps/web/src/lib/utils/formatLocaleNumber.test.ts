@@ -1,6 +1,5 @@
 import { SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
-
-import formatLocaleNumber from './formatLocaleNumber'
+import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
 
 const INPUT = 4000000.123 // 4 million
 

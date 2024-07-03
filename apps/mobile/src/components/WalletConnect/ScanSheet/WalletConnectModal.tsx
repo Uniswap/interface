@@ -24,6 +24,7 @@ import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColor
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -32,7 +33,6 @@ import { EthMethod, UwULinkMethod, UwULinkRequest } from 'uniswap/src/types/wall
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 

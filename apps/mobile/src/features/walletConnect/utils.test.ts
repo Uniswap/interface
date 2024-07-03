@@ -3,7 +3,7 @@ import {
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
 } from 'src/features/walletConnect/utils'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
@@ -34,23 +34,23 @@ describe(getSupportedWalletConnectChains, () => {
   it('handles list of valid chains', () => {
     expect(
       getSupportedWalletConnectChains([EIP155_MAINNET, EIP155_POLYGON, EIP155_OPTIMISM])
-    ).toEqual([ChainId.Mainnet, ChainId.Polygon, ChainId.Optimism])
+    ).toEqual([UniverseChainId.Mainnet, UniverseChainId.Polygon, UniverseChainId.Optimism])
   })
 
   it('handles list of valid chains including an invalid chain', () => {
     expect(
       getSupportedWalletConnectChains([EIP155_MAINNET, EIP155_POLYGON, EIP155_LINEA_UNSUPPORTED])
-    ).toEqual([ChainId.Mainnet, ChainId.Polygon])
+    ).toEqual([UniverseChainId.Mainnet, UniverseChainId.Polygon])
   })
 })
 
 describe(getChainIdFromEIP155String, () => {
   it('handles valid eip155 mainnet address', () => {
-    expect(getChainIdFromEIP155String(EIP155_MAINNET)).toBe(ChainId.Mainnet)
+    expect(getChainIdFromEIP155String(EIP155_MAINNET)).toBe(UniverseChainId.Mainnet)
   })
 
   it('handles valid eip155 optimism address', () => {
-    expect(getChainIdFromEIP155String(EIP155_OPTIMISM)).toBe(ChainId.Optimism)
+    expect(getChainIdFromEIP155String(EIP155_OPTIMISM)).toBe(UniverseChainId.Optimism)
   })
 
   it('handles invalid eip155 address', () => {

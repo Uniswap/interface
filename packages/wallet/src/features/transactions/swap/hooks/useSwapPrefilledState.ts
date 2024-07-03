@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
@@ -64,7 +64,7 @@ export function getSwapPrefilledState({
   currencyField,
 }: {
   currencyAddress: Address
-  currencyChainId: ChainId
+  currencyChainId: WalletChainId
   currencyField: CurrencyField
 }): TransactionState {
   const nativeTokenAddress = getNativeAddress(currencyChainId)

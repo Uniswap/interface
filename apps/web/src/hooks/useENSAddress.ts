@@ -1,10 +1,9 @@
+import { useENSRegistrarContract, useENSResolverContract } from 'hooks/useContract'
+import useDebounce from 'hooks/useDebounce'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import isZero from 'utils/isZero'
 import { safeNamehash } from 'utils/safeNamehash'
-
-import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract } from './useContract'
-import useDebounce from './useDebounce'
 
 /**
  * Does a lookup for an ENS name to find its address.

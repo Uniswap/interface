@@ -14,7 +14,7 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -146,7 +146,11 @@ export const useCanClaimUnitagName = (
   // Skip the backend calls if we found an error
   const unitagToSearch = error ? undefined : unitag
   const { loading: unitagLoading, data } = useUnitagQuery(unitagToSearch)
-  const { loading: ensLoading, address: ensAddress } = useENS(ChainId.Mainnet, unitagToSearch, true)
+  const { loading: ensLoading, address: ensAddress } = useENS(
+    UniverseChainId.Mainnet,
+    unitagToSearch,
+    true
+  )
   const loading = unitagLoading || ensLoading
 
   // Check for availability and ENS match

@@ -10,11 +10,11 @@ import {
   Text,
   TouchableArea,
   TouchableAreaProps,
-  useDeviceDimensions,
   useIsDarkMode,
   useIsShortMobileDevice,
 } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

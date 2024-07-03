@@ -1,13 +1,12 @@
 import { ApolloError } from '@apollo/client'
-import { ChainId } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type ChainOutageData = {
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   version?: ProtocolVersion
 }
 
@@ -17,7 +16,7 @@ export function useUpdateManualOutage({
   errorV3,
   errorV2,
 }: {
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   errorV3?: ApolloError
   errorV2?: ApolloError
 }) {
@@ -32,10 +31,10 @@ export function useUpdateManualOutage({
   }
 }
 
-export function useOutageBanners(): Partial<Record<SupportedInterfaceChainId, boolean>> {
+export function useOutageBanners(): Partial<Record<UniverseChainId, boolean>> {
   return {
-    [ChainId.OPTIMISM]: useFeatureFlag(FeatureFlags.OutageBannerOptimism),
-    [ChainId.ARBITRUM_ONE]: useFeatureFlag(FeatureFlags.OutageBannerArbitrum),
-    [ChainId.POLYGON]: useFeatureFlag(FeatureFlags.OutageBannerPolygon),
+    [UniverseChainId.Optimism]: useFeatureFlag(FeatureFlags.OutageBannerOptimism),
+    [UniverseChainId.ArbitrumOne]: useFeatureFlag(FeatureFlags.OutageBannerArbitrum),
+    [UniverseChainId.Polygon]: useFeatureFlag(FeatureFlags.OutageBannerPolygon),
   }
 }

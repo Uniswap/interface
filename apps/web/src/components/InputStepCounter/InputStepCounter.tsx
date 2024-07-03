@@ -3,14 +3,13 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import { Input as NumericalInput } from 'components/NumericalInput'
 import { Trans } from 'i18n'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-
-import { Input as NumericalInput } from '../NumericalInput'
 
 const pulse = (color: string) => keyframes`
   0% {

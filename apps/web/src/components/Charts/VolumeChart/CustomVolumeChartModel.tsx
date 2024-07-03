@@ -1,10 +1,9 @@
 import { ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import { CrosshairHighlightPrimitive } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
+import { CustomHistogramSeries } from 'components/Charts/VolumeChart/custom-histogram-series'
+import { CustomHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { BarPrice, ISeriesApi } from 'lightweight-charts'
 import { NumberType } from 'utils/formatNumbers'
-
-import { CrosshairHighlightPrimitive } from './CrosshairHighlightPrimitive'
-import { CustomHistogramSeries } from './custom-histogram-series'
-import { CustomHistogramData } from './renderer'
 
 export type CustomVolumeChartModelParams = {
   colors: string[]
