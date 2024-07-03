@@ -23,7 +23,7 @@ import { safeNamehash } from 'utils/safeNamehash'
  */
 export default function useENSAvatar(
   address?: string,
-  enforceOwnership = true
+  enforceOwnership = true,
 ): { avatar: string | null; loading: boolean } {
   const debouncedAddress = useDebounce(address, 200)
   const node = useMemo(() => {
@@ -49,7 +49,7 @@ export default function useENSAvatar(
       avatar: changed ? null : http ?? null,
       loading: changed || addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
     }),
-    [addressAvatar.loading, changed, http, nameAvatar.loading, nftAvatar.loading]
+    [addressAvatar.loading, changed, http, nameAvatar.loading, nftAvatar.loading],
   )
 }
 
@@ -60,7 +60,7 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
   const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', nodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
+    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
   )
   const avatar = useMainnetSingleCallResult(resolverContract, 'text', textArgument, NEVER_RELOAD)
 
@@ -69,14 +69,14 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
       avatar: avatar.result?.[0],
       loading: avatar.loading,
     }),
-    [avatar.loading, avatar.result]
+    [avatar.loading, avatar.result],
   )
 }
 
 function useAvatarFromNFT(
   nftUri = '',
   enforceOwnership: boolean,
-  address?: string
+  address?: string,
 ): { avatar?: string; loading: boolean } {
   const parts = nftUri.toLowerCase().split(':')
   const protocol = parts[0]
@@ -91,7 +91,7 @@ function useAvatarFromNFT(
     isERC1155 ? contractAddress : undefined,
     address,
     isERC1155 ? id : undefined,
-    enforceOwnership
+    enforceOwnership,
   )
   const uri = erc721.uri || erc1155.uri
   const http = uri && uriToHttpUrls(uri)[0]
@@ -116,14 +116,14 @@ function useAvatarFromNFT(
 
   return useMemo(
     () => ({ avatar, loading: erc721.loading || erc1155.loading || loading }),
-    [avatar, erc1155.loading, erc721.loading, loading]
+    [avatar, erc1155.loading, erc721.loading, loading],
   )
 }
 
 function useERC721Uri(
   contractAddress: string | undefined,
   id: string | undefined,
-  enforceOwnership: boolean
+  enforceOwnership: boolean,
 ): { uri?: string; loading: boolean } {
   const idArgument = useMemo(() => [id], [id])
   const account = useAccount()
@@ -135,7 +135,7 @@ function useERC721Uri(
       uri: !enforceOwnership || account.address === owner.result?.[0] ? uri.result?.[0] : undefined,
       loading: owner.loading || uri.loading,
     }),
-    [account.address, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result]
+    [account.address, enforceOwnership, owner.loading, owner.result, uri.loading, uri.result],
   )
 }
 
@@ -143,7 +143,7 @@ function useERC1155Uri(
   contractAddress: string | undefined,
   ownerAddress: string | undefined,
   id: string | undefined,
-  enforceOwnership: boolean
+  enforceOwnership: boolean,
 ): { uri?: string; loading: boolean } {
   const idArgument = useMemo(() => [id], [id])
   const accountArgument = useMemo(() => [ownerAddress, id], [ownerAddress, id])

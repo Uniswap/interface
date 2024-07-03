@@ -15,7 +15,7 @@ describe('BreadcrumbNav', () => {
       symbol: 'WBTC',
     })
     const { asFragment } = render(
-      <CurrentPageBreadcrumb address="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599" currency={currency} />
+      <CurrentPageBreadcrumb address="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599" currency={currency} />,
     )
     expect(asFragment()).toMatchSnapshot()
 

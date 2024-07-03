@@ -1,17 +1,12 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import {
-  LoadingItem,
-  SectionHeader,
-  isLoadingItem,
-  isSectionHeader,
-} from 'wallet/src/features/activity/utils'
+import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
@@ -27,7 +22,7 @@ const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING
 
 export function useFormattedTransactionDataForFeed(
   addresses: Address[],
-  hideSpamTokens: boolean
+  hideSpamTokens: boolean,
 ): {
   hasData: boolean
   isLoading: boolean
@@ -74,7 +69,7 @@ export function useFormattedTransactionDataForFeed(
   const localizedDayjs = useLocalizedDayjs()
   const { pending, last24hTransactionList, priorByMonthTransactionList } = useMemo(
     () => formatTransactionsByDate(transactions, localizedDayjs),
-    [transactions, localizedDayjs]
+    [transactions, localizedDayjs],
   )
 
   const hasTransactions = transactions && transactions.length > 0
@@ -84,8 +79,7 @@ export function useFormattedTransactionDataForFeed(
   const isError = usePersistedError(requestLoading, requestError)
 
   // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
-  const showLoading =
-    (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
+  const showLoading = (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
   const sectionData = useMemo(() => {
     if (showLoading) {
@@ -108,7 +102,7 @@ export function useFormattedTransactionDataForFeed(
           }
           return accum
         },
-        []
+        [],
       ),
     ]
   }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
@@ -127,8 +121,8 @@ export function useFormattedTransactionDataForActivity(
   hideSpamTokens: boolean,
   useMergeLocalFunction: (
     address: Address,
-    remoteTransactions: TransactionDetails[] | undefined
-  ) => TransactionDetails[] | undefined
+    remoteTransactions: TransactionDetails[] | undefined,
+  ) => TransactionDetails[] | undefined,
 ): {
   hasData: boolean
   isLoading: boolean
@@ -165,7 +159,7 @@ export function useFormattedTransactionDataForActivity(
       // for transactions, use the transaction hash as the key
       return info.id
     },
-    [address]
+    [address],
   )
 
   const formattedTransactions = useMemo(() => {
@@ -182,7 +176,7 @@ export function useFormattedTransactionDataForActivity(
   const localizedDayjs = useLocalizedDayjs()
   const { pending, last24hTransactionList, priorByMonthTransactionList } = useMemo(
     () => formatTransactionsByDate(transactions, localizedDayjs),
-    [transactions, localizedDayjs]
+    [transactions, localizedDayjs],
   )
 
   const hasTransactions = transactions && transactions.length > 0
@@ -192,8 +186,7 @@ export function useFormattedTransactionDataForActivity(
   const isError = usePersistedError(requestLoading, requestError)
 
   // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
-  const showLoading =
-    (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
+  const showLoading = (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
   const sectionData = useMemo(() => {
     if (showLoading) {
@@ -216,7 +209,7 @@ export function useFormattedTransactionDataForActivity(
           }
           return accum
         },
-        []
+        [],
       ),
     ]
   }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])

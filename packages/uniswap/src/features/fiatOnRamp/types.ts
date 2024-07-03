@@ -35,6 +35,7 @@ export type FORQuote = {
   destinationAmount: number
   destinationCurrencyCode: string
   serviceProvider: string
+  serviceProviderDetails: FORServiceProvider
   totalFee: number
 }
 

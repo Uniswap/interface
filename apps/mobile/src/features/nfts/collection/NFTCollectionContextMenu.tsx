@@ -102,14 +102,16 @@ export function NFTCollectionContextMenu({
       dropdownMenuMode={true}
       onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
         await menuActions[e.nativeEvent.index]?.action()
-      }}>
+      }}
+    >
       <TouchableArea
         hapticFeedback
         backgroundColor={showButtonOutline ? '$scrim' : '$transparent'}
         borderRadius="$roundedFull"
         style={{ padding: ICON_PADDING }}
         onLongPress={disableOnPress}
-        onPress={disableOnPress}>
+        onPress={disableOnPress}
+      >
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
           <TripleDot color={iconColor} size={3.5} />
         </Flex>

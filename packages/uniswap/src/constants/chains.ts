@@ -80,11 +80,7 @@ export const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 10, minWait: 250, maxWai
 
 export const DEFAULT_MS_BEFORE_WARNING = ONE_MINUTE_MS * 10
 
-export const ETHEREUM_CHAIN_IDS = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Goerli,
-  UniverseChainId.Sepolia,
-] as const
+export const ETHEREUM_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Goerli, UniverseChainId.Sepolia] as const
 
 type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
 
@@ -353,10 +349,7 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       default: { http: ['https://arb1.arbitrum.io/rpc'] },
       fallback: { http: ['https://arbitrum.public-rpc.com'] },
       appOnly: {
-        http: [
-          `https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`,
-          config.quicknodeArbitrumRpcUrl,
-        ],
+        http: [`https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeArbitrumRpcUrl],
       },
       [RPCType.PublicAlt]: { http: ['https://arb1.arbitrum.io/rpc'] },
     },
@@ -442,8 +435,7 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       name: 'OP Etherscan',
       url: 'https://optimistic.etherscan.io/',
     },
-    helpCenterUrl:
-      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
     infuraPrefix: 'optimism-mainnet',
     interfaceName: 'optimism',
@@ -553,8 +545,7 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       name: 'OP Etherscan',
       url: 'https://goerli-optimism.etherscan.io/',
     },
-    helpCenterUrl:
-      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
     infuraPrefix: 'optimism-goerli',
     interfaceName: 'optimism_goerli',

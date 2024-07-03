@@ -11,7 +11,7 @@ const DEFAULT_QUERY_SIZE = 20
 export function usePoolsFromTokenAddress(
   tokenAddress: string,
   sortState: PoolTableSortState,
-  chainId?: SupportedInterfaceChainId
+  chainId?: SupportedInterfaceChainId,
 ) {
   const {
     loading: loadingV3,
@@ -89,7 +89,7 @@ export function usePoolsFromTokenAddress(
         },
       })
     },
-    [dataV2?.topV2Pairs, dataV3?.topV3Pools, fetchMoreV2, fetchMoreV3]
+    [dataV2?.topV2Pairs, dataV3?.topV3Pools, fetchMoreV2, fetchMoreV3],
   )
 
   return useMemo(() => {

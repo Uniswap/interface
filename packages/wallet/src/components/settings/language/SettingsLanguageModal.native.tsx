@@ -23,10 +23,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
   return (
     <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
-        <Flex
-          borderRadius="$rounded12"
-          p="$spacing12"
-          style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
+        <Flex borderRadius="$rounded12" p="$spacing12" style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
           <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
         </Flex>
       </Flex>
@@ -39,10 +36,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
             {t('settings.setting.language.description.mobile')}
           </Text>
         </Flex>
-        <Button
-          testID={ElementName.OpenDeviceLanguageSettings}
-          theme="tertiary"
-          onPress={openLanguageSettings}>
+        <Button testID={ElementName.OpenDeviceLanguageSettings} theme="tertiary" onPress={openLanguageSettings}>
           {t('settings.setting.language.button.navigate')}
         </Button>
       </Flex>

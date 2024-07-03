@@ -9,15 +9,12 @@ import {
   useRef,
   useState,
 } from 'react'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
-import {
-  CurrencyField,
-  TradeProtocolPreference,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 export type SwapFormState = {
   customSlippageTolerance?: number
@@ -95,7 +92,7 @@ export function SwapFormContextProvider({
 
       setSwapForm((prevState) => ({ ...prevState, ...newState }))
     },
-    [setSwapForm]
+    [setSwapForm],
   )
 
   const derivedSwapInfo = useDerivedSwapInfo({
@@ -149,7 +146,7 @@ export function SwapFormContextProvider({
       swapForm.txId,
       derivedSwapInfo,
       updateSwapForm,
-    ]
+    ],
   )
 
   return <SwapFormContext.Provider value={state}>{children}</SwapFormContext.Provider>

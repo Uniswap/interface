@@ -10,13 +10,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
-function Page({
-  text,
-  params,
-}: {
-  text: ReactNode
-  params: OnboardingStackBaseParams
-}): JSX.Element {
+function Page({ text, params }: { text: ReactNode; params: OnboardingStackBaseParams }): JSX.Element {
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const { goToPrev, goToNext } = useContext(CarouselContext)
@@ -35,7 +29,7 @@ function Page({
           runOnJS(goToNext)()
         }
       }),
-    [goToPrev, goToNext, fullWidth]
+    [goToPrev, goToNext, fullWidth],
   )
 
   const dismissGesture = useMemo(
@@ -43,19 +37,14 @@ function Page({
       Gesture.Tap().onEnd(() => {
         runOnJS(onDismiss)()
       }),
-    [onDismiss]
+    [onDismiss],
   )
 
   return (
     <Flex fill>
       <GestureDetector gesture={slideChangeGesture}>
         <Flex centered gap="$spacing16">
-          <Flex
-            row
-            alignItems="center"
-            justifyContent="space-between"
-            px="$spacing24"
-            width={fullWidth}>
+          <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" width={fullWidth}>
             <Text color="$neutral2" variant="subheading2">
               {t('onboarding.tooltip.recoveryPhrase.trigger')}
             </Text>
@@ -78,31 +67,16 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
   const highlightComponent = <CustomHeadingText color="$accent1" />
 
   const pageContentList = [
-    <Trans
-      components={{ highlight: highlightComponent }}
-      i18nKey="account.recoveryPhrase.education.part1"
-    />,
-    <Trans
-      components={{ highlight: highlightComponent }}
-      i18nKey="account.recoveryPhrase.education.part2"
-    />,
-    <Trans
-      components={{ highlight: highlightComponent }}
-      i18nKey="account.recoveryPhrase.education.part3"
-    />,
+    <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part1" />,
+    <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part2" />,
+    <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part3" />,
     <Trans
       components={{ highlight: highlightComponent }}
       i18nKey="account.recoveryPhrase.education.part4"
       values={{ cloudProviderName }}
     />,
-    <Trans
-      components={{ highlight: highlightComponent }}
-      i18nKey="account.recoveryPhrase.education.part5"
-    />,
-    <Trans
-      components={{ highlight: highlightComponent }}
-      i18nKey="account.recoveryPhrase.education.part6"
-    />,
+    <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part5" />,
+    <Trans components={{ highlight: highlightComponent }} i18nKey="account.recoveryPhrase.education.part6" />,
   ]
 
   return pageContentList.map((content) => (

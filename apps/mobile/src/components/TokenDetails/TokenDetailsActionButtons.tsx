@@ -30,7 +30,8 @@ function CTAButton({
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}
         size="large"
-        backgroundColor={validColor(tokenColor) ?? '$accent1'}>
+        backgroundColor={validColor(tokenColor) ?? '$accent1'}
+      >
         {title}
       </Button>
     </Trace>
@@ -59,7 +60,8 @@ export function TokenDetailsActionButtons({
       gap="$spacing8"
       pb="$spacing16"
       pt="$spacing12"
-      px="$spacing16">
+      px="$spacing16"
+    >
       <CTAButton
         element={ElementName.Buy}
         title={t('common.button.buy')}

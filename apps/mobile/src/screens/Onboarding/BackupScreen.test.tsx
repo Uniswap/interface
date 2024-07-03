@@ -12,6 +12,14 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
 
+jest.mock('wallet/src/features/onboarding/OnboardingContext', () => ({
+  useOnboardingContext: jest.fn().mockReturnValue({
+    getOnboardingAccountAddress: jest.fn().mockReturnValue('mockedAccountAddress'),
+    getImportedAccountsAddresses: jest.fn(),
+    hasBackup: jest.fn(),
+  }),
+}))
+
 const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.Backup, undefined>,
   NativeStackNavigationProp<AppStackParamList, MobileScreens.Education, undefined>
@@ -39,7 +47,7 @@ describe(BackupScreen, () => {
       <TamaguiProvider>
         <BackupScreen navigation={navigationProp} route={routeProp} />
       </TamaguiProvider>,
-      { preloadedState: preloadedSharedState({ account: ACCOUNT }) }
+      { preloadedState: preloadedSharedState({ account: ACCOUNT }) },
     )
 
     await act(async () => {

@@ -83,7 +83,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
   }, [tabs])
 
   return (
-    <NavDropdown>
+    <NavDropdown isOpen={false}>
       <Container data-testid="nav-more-menu">
         <Column gap="20px">
           {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}

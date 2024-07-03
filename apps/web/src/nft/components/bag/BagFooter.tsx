@@ -288,7 +288,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const defaultCurrency = useCurrency('ETH')
   const inputCurrencyBalance = useTokenBalance(
     account.address,
-    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
+    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined,
   )
   const {
     isLocked: bagIsLocked,
@@ -322,7 +322,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const allowance = usePermit2Allowance(
     maximumAmountIn,
     getURAddress(isSupportedChain ? account.chainId : undefined, universalRouterAddress),
-    TradeFillType.Classic
+    TradeFillType.Classic,
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
@@ -451,7 +451,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         theme,
         fetchAssets,
         usingPayWithAnyToken,
-        priceImpact
+        priceImpact,
       )
     }
 

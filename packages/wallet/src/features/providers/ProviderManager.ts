@@ -74,11 +74,7 @@ export class ProviderManager {
   removeProviders(chainId: WalletChainId): void {
     const providersInfo = this._providers[chainId]
     if (!providersInfo) {
-      logger.warn(
-        'ProviderManager',
-        'removeProviders',
-        `Attempting to remove non-existent provider: ${chainId}`
-      )
+      logger.warn('ProviderManager', 'removeProviders', `Attempting to remove non-existent provider: ${chainId}`)
       return
     }
 

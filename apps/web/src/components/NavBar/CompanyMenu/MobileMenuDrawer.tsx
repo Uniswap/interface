@@ -1,8 +1,10 @@
+import { AnimatedSlider } from 'components/AnimatedSlider'
 import Column from 'components/Column'
 import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
+import { getSettingsViewIndex } from 'components/NavBar/PreferencesMenu'
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
@@ -74,7 +76,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
         })
       }
     },
-    [setSettingsView, dropdownRef]
+    [setSettingsView, dropdownRef],
   )
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
@@ -89,9 +91,12 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   }, [isOpen])
 
   return (
-    <NavDropdown dropdownRef={dropdownRef}>
+    <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen}>
       <MobileDrawer>
-        {settingsView === PreferencesView.SETTINGS && (
+        <AnimatedSlider
+          currentIndex={getSettingsViewIndex(settingsView)}
+          slideDirection={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
+        >
           <Accordion
             overflow="hidden"
             width="100%"
@@ -134,9 +139,10 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               <Socials iconSize="25px" />
             </Column>
           </Accordion>
-        )}
-        {settingsView === PreferencesView.LANGUAGE && <LanguageSettings onExitMenu={onExitPreferencesMenu} />}
-        {settingsView === PreferencesView.CURRENCY && <CurrencySettings onExitMenu={onExitPreferencesMenu} />}
+
+          <LanguageSettings onExitMenu={onExitPreferencesMenu} />
+          <CurrencySettings onExitMenu={onExitPreferencesMenu} />
+        </AnimatedSlider>
       </MobileDrawer>
     </NavDropdown>
   )

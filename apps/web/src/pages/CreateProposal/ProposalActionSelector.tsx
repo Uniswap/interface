@@ -95,7 +95,7 @@ export function ProposalActionSelectorModal({
       onProposalActionSelect(proposalAction)
       onDismiss()
     },
-    [onDismiss, onProposalActionSelect]
+    [onDismiss, onProposalActionSelect],
   )
 
   return (

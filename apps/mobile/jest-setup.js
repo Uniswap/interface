@@ -3,6 +3,7 @@
 
 import 'core-js' // necessary so setImmediate works in tests
 import 'uniswap/src/i18n/i18n' // Uses real translations for tests
+import 'utilities/src/logger/mocks'
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
@@ -68,10 +69,6 @@ jest.mock('react-native', () => {
 
   return RN
 })
-
-jest.mock('expo-localization', () => ({
-  getLocales: jest.fn(() => [{ languageCode: 'en', countryCode: 'US' }]),
-}))
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),

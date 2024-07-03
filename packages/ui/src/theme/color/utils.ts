@@ -5,9 +5,7 @@ export function opacify(amount: number, hexColor: string): string {
   }
 
   if (hexColor.length !== 7) {
-    throw new Error(
-      `opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`
-    )
+    throw new Error(`opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`)
   }
 
   if (amount < 0 || amount > 100) {

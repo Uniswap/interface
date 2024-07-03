@@ -30,6 +30,9 @@ export const EXTENSION_PROMO_BANNER_DARK = require('./graphics/extension-promo-b
 export const EXTENSION_PROMO_MODAL_LIGHT = require('./graphics/extension-promo-modal-light.png')
 export const EXTENSION_PROMO_MODAL_DARK = require('./graphics/extension-promo-modal-dark.png')
 
+export const EXTENSION_PROMO_BANNER_LIGHT_GA = require('./graphics/extension-promo-modal-light-ga.png')
+export const EXTENSION_PROMO_BANNER_DARK_GA = require('./graphics/extension-promo-modal-dark-ga.png')
+
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
 export const ETH_LOGO = require('./logos/png/eth-logo.png')

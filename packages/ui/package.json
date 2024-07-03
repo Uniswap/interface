@@ -55,6 +55,7 @@
     "build:icons:missing": "yarn build:icons --skip-existing",
     "check:deps:usage": "depcheck",
     "lint": "eslint src --max-warnings=0",
+    "format": "../../scripts/prettier.sh",
     "lint:fix": "eslint src --fix",
     "test": "jest && echo 'ignoring'",
     "typecheck": "tsc -b",

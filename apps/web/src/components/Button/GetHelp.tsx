@@ -24,9 +24,9 @@ const StyledExternalLink = styled(ExternalLink)`
   }
   stroke: none;
 `
-export default function GetHelp() {
+export default function GetHelp({ url }: { url?: string }) {
   return (
-    <StyledExternalLink href={uniswapUrls.helpUrl}>
+    <StyledExternalLink href={url ?? uniswapUrls.helpUrl}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
         <Trans i18nKey="common.getHelp.button" />

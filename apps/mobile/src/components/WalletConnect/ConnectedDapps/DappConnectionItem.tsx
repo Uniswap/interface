@@ -55,16 +55,14 @@ export function DappConnectionItem({
           event: WalletConnectEvent.Disconnected,
           imageUrl: dapp.icon,
           hideDelay: 3 * ONE_SECOND_MS,
-        })
+        }),
       )
     } catch (error) {
       logger.error(error, { tags: { file: 'DappConnectionItem', function: 'onDisconnect' } })
     }
   }
 
-  const menuActions = [
-    { title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true },
-  ]
+  const menuActions = [{ title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true }]
 
   const onPress = async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
     if (e.nativeEvent.index === 0) {
@@ -83,13 +81,15 @@ export function DappConnectionItem({
         mb="$spacing12"
         pb="$spacing12"
         pt="$spacing24"
-        px="$spacing12">
+        px="$spacing12"
+      >
         <Flex
           alignSelf="flex-end"
           position="absolute"
           right={spacing.spacing12}
           top={spacing.spacing12}
-          zIndex="$tooltip">
+          zIndex="$tooltip"
+        >
           {isEditing ? (
             <AnimatedTouchableArea
               hapticFeedback
@@ -103,7 +103,8 @@ export function DappConnectionItem({
               width={iconSizes.icon28}
               zIndex="$tooltip"
               onLongPress={disableOnPress}
-              onPress={onDisconnect}>
+              onPress={onDisconnect}
+            >
               <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={14} />
             </AnimatedTouchableArea>
           ) : (
@@ -125,7 +126,8 @@ export function DappConnectionItem({
           hapticStyle={ImpactFeedbackStyle.Medium}
           testID={ElementName.WCDappNetworks}
           onLongPress={disableOnPress}
-          onPress={(): void => onPressChangeNetwork(session)}>
+          onPress={(): void => onPressChangeNetwork(session)}
+        >
           <NetworkLogos
             showFirstChainLabel
             backgroundColor="$surface2"

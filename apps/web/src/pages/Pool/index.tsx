@@ -205,12 +205,12 @@ export default function Pool() {
       acc[p.liquidity?.isZero() ? 1 : 0].push(p)
       return acc
     },
-    [[], []]
+    [[], []],
   ) ?? [[], []]
 
   const userSelectedPositionSet = useMemo(
     () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
-    [closedPositions, openPositions, userHideClosedPositions]
+    [closedPositions, openPositions, userHideClosedPositions],
   )
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)

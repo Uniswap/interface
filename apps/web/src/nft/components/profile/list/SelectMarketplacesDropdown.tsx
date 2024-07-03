@@ -141,7 +141,7 @@ export const SelectMarketplacesDropdown = ({
   const [isOpen, toggleIsOpen] = useReducer((s) => !s, false)
   const dropdownDisplayText = useMemo(
     () => (selectedMarkets.length === 1 ? selectedMarkets[0].name : 'Multiple'),
-    [selectedMarkets]
+    [selectedMarkets],
   )
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleIsOpen())

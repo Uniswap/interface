@@ -31,7 +31,7 @@ export function useSwapCallback(
   txId?: string,
   isHoldToSwap?: boolean,
 
-  isFiatInputMode?: boolean
+  isFiatInputMode?: boolean,
 ): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
@@ -70,18 +70,12 @@ export function useSwapCallback(
         ...getBaseTradeAnalyticsProperties({ formatter, trade }),
         estimated_network_fee_wei: gasFee.value,
         gas_limit: toStringish(swapTxRequest.gasLimit),
-        token_in_amount_usd: currencyInAmountUSD
-          ? parseFloat(currencyInAmountUSD.toFixed(2))
-          : undefined,
-        token_out_amount_usd: currencyOutAmountUSD
-          ? parseFloat(currencyOutAmountUSD.toFixed(2))
-          : undefined,
+        token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
+        token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,
-        swap_flow_duration_milliseconds: swapStartTimestamp
-          ? Date.now() - swapStartTimestamp
-          : undefined,
+        swap_flow_duration_milliseconds: swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined,
         is_hold_to_swap: isHoldToSwap,
         is_fiat_input_mode: isFiatInputMode,
       })

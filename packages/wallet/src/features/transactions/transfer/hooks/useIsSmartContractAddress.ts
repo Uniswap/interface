@@ -5,7 +5,7 @@ import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useIsSmartContractAddress(
   address: string | undefined,
-  chainId: WalletChainId
+  chainId: WalletChainId,
 ): {
   loading: boolean
   isSmartContractAddress: boolean

@@ -1,6 +1,5 @@
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -29,7 +28,6 @@ export interface ModalsState {
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Scantastic]: AppModalState<ScantasticModalState>
-  [ModalName.ExtensionWaitlistModal]: AppModalState<ExtensionWaitlistModalState>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.UnitagsIntro]: AppModalState<{

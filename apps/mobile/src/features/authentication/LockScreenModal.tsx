@@ -3,16 +3,13 @@ import { Modal } from 'src/components/modals/Modal'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { TouchableArea, useDeviceInsets } from 'ui/src'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { TouchableArea } from 'ui/src'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
 export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))
-  const insets = useDeviceInsets()
-  const dimensions = useDeviceDimensions()
 
   if (!isLockScreenVisible) {
     return null
@@ -29,15 +26,10 @@ export function LockScreenModal(): JSX.Element | null {
       presentationStyle="fullScreen"
       showCloseButton={false}
       transparent={false}
-      width="100%">
+      width="100%"
+    >
       <TouchableArea onPress={(): Promise<void> => trigger()}>
-        <SplashScreen
-          style={{
-            width: dimensions.fullWidth,
-            height: dimensions.fullHeight,
-            paddingBottom: insets.bottom,
-          }}
-        />
+        <SplashScreen />
       </TouchableArea>
     </Modal>
   )

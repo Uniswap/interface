@@ -19,7 +19,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const data = await getRequest(
       cacheUrl,
       () => getToken(networkName, tokenAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.tokenData?.symbol && data.name)
+      (data): data is NonNullable<Awaited<ReturnType<typeof getToken>>> => Boolean(data.tokenData?.symbol && data.name),
     )
 
     if (!data) {
@@ -159,7 +159,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
             style: 'normal',
           },
         ],
-      }
+      },
     ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })

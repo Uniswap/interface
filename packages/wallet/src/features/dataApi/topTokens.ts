@@ -40,6 +40,6 @@ export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<Curren
 
   return useMemo(
     () => ({ data: formattedData, loading, error: persistedError, refetch }),
-    [formattedData, loading, persistedError, refetch]
+    [formattedData, loading, persistedError, refetch],
   )
 }

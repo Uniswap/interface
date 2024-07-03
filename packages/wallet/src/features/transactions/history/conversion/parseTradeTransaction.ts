@@ -5,7 +5,8 @@ import {
   TokenStandard,
   TransactionDirection,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -14,15 +15,11 @@ import {
   ConfirmedSwapTransactionInfo,
   NFTTradeTransactionInfo,
   NFTTradeType,
+  TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
   WrapTransactionInfo,
 } from 'wallet/src/features/transactions/types'
-import {
-  buildCurrencyId,
-  buildNativeCurrencyId,
-  buildWrappedNativeCurrencyId,
-} from 'wallet/src/utils/currencyId'
 
 type TransferAssetChange = Extract<
   NonNullable<
@@ -35,10 +32,10 @@ type TransferAssetChange = Extract<
 >
 
 export default function parseTradeTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): ConfirmedSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // ignore UniswapX transactions for now
-  if (transaction?.details?.__typename !== 'TransactionDetails') {
+  if (transaction?.details?.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
@@ -49,8 +46,7 @@ export default function parseTradeTransaction(
 
   const txAssetChanges =
     transaction.details.assetChanges?.filter(
-      (t): t is TransferAssetChange =>
-        t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer'
+      (t): t is TransferAssetChange => t?.__typename === 'TokenTransfer' || t?.__typename === 'NftTransfer',
     ) ?? []
 
   // for detecting wraps
@@ -69,9 +65,7 @@ export default function parseTradeTransaction(
       }
 
       const isRefundInternalTx =
-        t?.__typename === 'TokenTransfer' &&
-        t.asset.id === sent?.asset.id &&
-        t.tokenStandard === TokenStandard.Native
+        t?.__typename === 'TokenTransfer' && t.asset.id === sent?.asset.id && t.tokenStandard === TokenStandard.Native
 
       if (isRefundInternalTx) {
         acc.refund = t
@@ -84,7 +78,7 @@ export default function parseTradeTransaction(
     {
       refund: undefined,
       received: undefined,
-    }
+    },
   )
 
   // Invalid input/output info
@@ -92,8 +86,7 @@ export default function parseTradeTransaction(
     return
   }
 
-  const onlyERC20Tokens =
-    sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
+  const onlyERC20Tokens = sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
   // TODO: [MOB-235] Currently no spec for advanced transfer types.
@@ -107,20 +100,20 @@ export default function parseTradeTransaction(
       sent.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : sent.asset.address
-        ? buildCurrencyId(chainId, sent.asset.address)
-        : null
+          ? buildCurrencyId(chainId, sent.asset.address)
+          : null
     const outputCurrencyId =
       received.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : received.asset.address
-        ? buildCurrencyId(chainId, received.asset.address)
-        : null
+          ? buildCurrencyId(chainId, received.asset.address)
+          : null
     let inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       sent.tokenStandard,
       sent.asset.chain,
       sent.asset.address,
       sent.asset.decimals,
-      sent.quantity
+      sent.quantity,
     )
 
     if (refund && refund.tokenStandard === sent.tokenStandard) {
@@ -129,12 +122,10 @@ export default function parseTradeTransaction(
         refund.asset.chain,
         refund.asset.address,
         refund.asset.decimals,
-        refund.quantity
+        refund.quantity,
       )
 
-      inputCurrencyAmountRaw = BigNumber.from(inputCurrencyAmountRaw)
-        .sub(refundCurrencyAmountRaw)
-        .toString()
+      inputCurrencyAmountRaw = BigNumber.from(inputCurrencyAmountRaw).sub(refundCurrencyAmountRaw).toString()
     }
 
     const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
@@ -142,7 +133,7 @@ export default function parseTradeTransaction(
       received.asset.chain,
       received.asset.address,
       received.asset.decimals,
-      received.quantity
+      received.quantity,
     )
 
     const transactedUSDValue = parseUSDValueFromAssetChange(sent.transactedValue)
@@ -191,18 +182,20 @@ export default function parseTradeTransaction(
       tokenChange.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : tokenChange.asset?.address
-        ? buildCurrencyId(chainId, tokenChange.asset.address)
-        : undefined
+          ? buildCurrencyId(chainId, tokenChange.asset.address)
+          : undefined
     const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       tokenChange.tokenStandard,
       tokenChange.asset.chain,
       tokenChange.asset.address,
       tokenChange.asset.decimals,
-      tokenChange.quantity
+      tokenChange.quantity,
     )
     const tradeType = nftChange.direction === 'IN' ? NFTTradeType.BUY : NFTTradeType.SELL
 
     const transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
+
+    const address = nftChange.asset.nftContract?.address
 
     if (
       !name ||
@@ -210,7 +203,8 @@ export default function parseTradeTransaction(
       !imageURL ||
       !tokenId ||
       !purchaseCurrencyId ||
-      !purchaseCurrencyAmountRaw
+      !purchaseCurrencyAmountRaw ||
+      !address
     ) {
       return undefined
     }
@@ -222,6 +216,7 @@ export default function parseTradeTransaction(
         collectionName,
         imageURL,
         tokenId,
+        address,
       },
       purchaseCurrencyId,
       purchaseCurrencyAmountRaw,

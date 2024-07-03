@@ -18,7 +18,8 @@ export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): J
       icon={<ShieldCheck color="$statusSuccess" size="$icon.24" />}
       modalName={ModalName.SwapProtection}
       title={t('swap.settings.protection.title')}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapProtection} />
     </WarningModal>
   )

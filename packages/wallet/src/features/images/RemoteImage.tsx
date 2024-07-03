@@ -45,7 +45,8 @@ export function RemoteImage({
         height={height}
         overflow="hidden"
         testID={testID}
-        width={width}>
+        width={width}
+      >
         <WebSvgUri autoplay={true} maxHeight={height} uri={imageHttpUrl} />
       </Flex>
     )

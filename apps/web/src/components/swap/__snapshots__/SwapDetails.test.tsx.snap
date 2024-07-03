@@ -367,7 +367,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=" _dsp_contents"
   >
     <span
       class=" t_light _dsp_contents is_Theme"
@@ -1194,6 +1194,48 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
           </div>
         </button>
       </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
+<DocumentFragment>
+  .c0 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c0:hover {
+  opacity: 0.6;
+}
+
+.c0:active {
+  opacity: 0.4;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      The maximum price movement before your transaction will revert.
+      <br />
+      <a
+        class="c0"
+        href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
     </span>
   </span>
 </DocumentFragment>

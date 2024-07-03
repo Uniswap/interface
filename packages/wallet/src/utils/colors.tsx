@@ -18,9 +18,7 @@ export function opacify(amount: number, hexColor: string): string {
   }
 
   if (hexColor.length !== 7) {
-    throw new Error(
-      `opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`
-    )
+    throw new Error(`opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`)
   }
 
   if (amount < 0 || amount > 100) {
@@ -60,9 +58,7 @@ export function useNetworkColors(chainId: WalletChainId): {
  * @param backgroundColor The hex value of the background color to check contrast against
  * @returns either 'sporeWhite' or 'sporeBlack'
  */
-export function getContrastPassingTextColor(
-  backgroundColor: string
-): '$sporeWhite' | '$sporeBlack' {
+export function getContrastPassingTextColor(backgroundColor: string): '$sporeWhite' | '$sporeBlack' {
   const lightText = colorsLight.sporeWhite
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
     return '$sporeWhite'
@@ -115,7 +111,7 @@ const ColorVariant = {
  */
 export function adjustColorVariant(
   colorName: string | undefined,
-  adjustmentType: AdjustmentType
+  adjustmentType: AdjustmentType,
 ): keyof GlobalPalette | undefined {
   if (!colorName) {
     return undefined
@@ -161,17 +157,14 @@ export function findNearestThemeColor(hexString: string): keyof GlobalPalette | 
     } as {
       colorDiff: number | undefined
       colorName: keyof GlobalPalette | undefined
-    }
+    },
   ).colorName
 }
 
 /**
  * Returns a number representing the difference between two colors. Lower means more similar.
  */
-export function getColorDiffScore(
-  colorA: string | null,
-  colorB: string | null
-): number | undefined {
+export function getColorDiffScore(colorA: string | null, colorB: string | null): number | undefined {
   if (!colorA || !colorB) {
     return undefined
   }

@@ -1,7 +1,7 @@
 import { Placement } from '@popperjs/core'
 import Popover, { PopoverProps } from 'components/Popover'
 import { transparentize } from 'polished'
-import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
+import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import noop from 'utilities/src/react/noop'
 
@@ -118,5 +118,61 @@ export function MouseoverTooltip(props: MouseoverTooltipProps) {
         {children}
       </div>
     </Tooltip>
+  )
+}
+
+const CursorFollowerContainer = styled.div`
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+`
+
+type MouseFollowTooltipProps = Omit<MouseoverTooltipProps, 'timeout'>
+
+export function MouseFollowTooltip(props: MouseFollowTooltipProps) {
+  const [position, setPosition] = useState<{ x?: number; y?: number }>({
+    x: undefined,
+    y: undefined,
+  })
+  const { text, disabled, children, onOpen, forceShow, ...rest } = props
+  const [show, setShow] = useState(false)
+  const open = () => {
+    setShow(true)
+    onOpen?.()
+  }
+  const close = () => setShow(false)
+
+  const handleMouseMove = useCallback((event: MouseEvent) => {
+    setPosition({ x: event.clientX, y: event.clientY })
+  }, [])
+
+  useEffect(() => {
+    if (show && !disabled) {
+      document.addEventListener('mousemove', handleMouseMove)
+    }
+    return () => document.removeEventListener('mousemove', handleMouseMove)
+  }, [disabled, handleMouseMove, show])
+
+  return (
+    <div>
+      <CursorFollowerContainer
+        style={{
+          left: position.x ? `${position.x}px` : undefined,
+          top: position.y ? `${position.y + 16}px` : undefined,
+        }}
+      >
+        <Tooltip
+          {...rest}
+          open={open}
+          close={close}
+          disabled={disabled}
+          show={forceShow || show}
+          text={disabled ? null : text}
+        />
+      </CursorFollowerContainer>
+      <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
+        {children}
+      </div>
+    </div>
   )
 }

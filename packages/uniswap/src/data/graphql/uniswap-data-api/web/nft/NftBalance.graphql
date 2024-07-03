@@ -1,6 +1,7 @@
 query NftBalance(
   $ownerAddress: String!
   $filter: NftBalancesFilterInput
+  $chains: [Chain!] = [ETHEREUM]
   $first: Int
   $after: String
   $last: Int
@@ -8,6 +9,7 @@ query NftBalance(
 ) {
   nftBalances(
     ownerAddress: $ownerAddress
+    chains: $chains
     filter: $filter
     first: $first
     after: $after
@@ -45,6 +47,7 @@ query NftBalance(
               }
             }
           }
+          chain
           description
           flaggedBy
           image {

@@ -6,7 +6,7 @@ export const calculateFirstCardIndex = (
   i: number,
   firstVis: number,
   firstVisIdx: number,
-  idx: (x: number, l?: number) => number
+  idx: (x: number, l?: number) => number,
 ) => {
   return idx(i - firstVis + firstVisIdx)
 }

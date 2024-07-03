@@ -11,10 +11,7 @@ import {
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import {
-  ApprovalAction,
-  TokenApprovalInfo,
-} from 'wallet/src/features/transactions/swap/trade/types'
+import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -26,7 +23,7 @@ interface TokenApprovalInfoParams {
 }
 
 export function useTokenApprovalInfo(
-  params: TokenApprovalInfoParams
+  params: TokenApprovalInfoParams,
 ): (TokenApprovalInfo & { gasFee?: string }) | undefined {
   const { chainId, wrapType, currencyInAmount, skip } = params
 
@@ -62,7 +59,7 @@ export function useTokenApprovalInfo(
       skip: skip || !approvalRequestArgs || isWrap,
     },
     'POST',
-    TradingApiApolloClient
+    TradingApiApolloClient,
   )
 
   return useMemo(() => {

@@ -98,21 +98,18 @@ export function usePasswordForm(): {
         currentStrength: passwordStrength,
         minStrength: PasswordStrength.MEDIUM,
       }),
-    [passwordStrength, password]
+    [passwordStrength, password],
   )
 
   const debouncedPassword = useDebounce(password, PASSWORD_VALIDATION_DEBOUNCE_MS)
   const debouncedConfirmPassword = useDebounce(confirmPassword, PASSWORD_VALIDATION_DEBOUNCE_MS)
 
   // Used to disable the continue button right away
-  const passwordsDiffer = useMemo(
-    () => doPasswordsDiffer(password, confirmPassword),
-    [password, confirmPassword]
-  )
+  const passwordsDiffer = useMemo(() => doPasswordsDiffer(password, confirmPassword), [password, confirmPassword])
   // Used to show the error message after debounce time
   const debouncedPasswordsDiffer = useMemo(
     () => doPasswordsDiffer(debouncedPassword, debouncedConfirmPassword),
-    [debouncedPassword, debouncedConfirmPassword]
+    [debouncedPassword, debouncedConfirmPassword],
   )
 
   const enableNext = Boolean(password && confirmPassword) && !isWeakPassword && !passwordsDiffer

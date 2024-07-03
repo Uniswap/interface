@@ -58,10 +58,7 @@ export function SafeKeyboardOnboardingScreen({
     <LinearGradient
       colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
       locations={[0.6, 0.8]}
-      style={[
-        styles.gradient,
-        { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) },
-      ]}
+      style={[styles.gradient, { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) }]}
     />
   )
 
@@ -70,19 +67,16 @@ export function SafeKeyboardOnboardingScreen({
 
   // This makes sure this component behaves just like `behavior="padding"` when
   // there's enough space on the screen to show all components.
-  const minHeight =
-    minHeightWhenKeyboardExpanded && compact ? keyboard.containerHeight - footerHeight : 0
+  const minHeight = minHeightWhenKeyboardExpanded && compact ? keyboard.containerHeight - footerHeight : 0
 
   return (
     <Screen edges={['right', 'left', 'bottom']}>
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : 'height'}
         contentContainerStyle={containerStyle}
-        style={styles.base}>
-        <ScrollView
-          bounces={false}
-          contentContainerStyle={flexStyles.grow}
-          keyboardShouldPersistTaps="handled">
+        style={styles.base}
+      >
+        <ScrollView bounces={false} contentContainerStyle={flexStyles.grow} keyboardShouldPersistTaps="handled">
           <AnimatedFlex
             $short={{ gap: '$none' }}
             entering={FadeIn}
@@ -90,7 +84,8 @@ export function SafeKeyboardOnboardingScreen({
             gap="$spacing16"
             minHeight={minHeight}
             px="$spacing16"
-            style={[containerStyle, styles.container, { paddingTop: headerHeight }]}>
+            style={[containerStyle, styles.container, { paddingTop: headerHeight }]}
+          >
             {header}
             {page}
           </AnimatedFlex>
@@ -102,7 +97,8 @@ export function SafeKeyboardOnboardingScreen({
             },
           }) => {
             setFooterHeight(height)
-          }}>
+          }}
+        >
           {screenFooter}
         </Flex>
       </KeyboardAvoidingView>

@@ -35,7 +35,7 @@ export function DevScreen(): JSX.Element {
     dispatch(
       createAccountsActions.trigger({
         accounts: [await createOnboardingAccount(sortedMnemonicAccounts)],
-      })
+      }),
     )
   }
 
@@ -46,11 +46,7 @@ export function DevScreen(): JSX.Element {
   const onPressShowError = (): void => {
     const address = activeAccount?.address
     if (!address) {
-      logger.debug(
-        'DevScreen',
-        'onPressShowError',
-        'Cannot show error if activeAccount is undefined'
-      )
+      logger.debug('DevScreen', 'onPressShowError', 'Cannot show error if activeAccount is undefined')
       return
     }
 
@@ -59,7 +55,7 @@ export function DevScreen(): JSX.Element {
         type: AppNotificationType.Error,
         address,
         errorMessage: 'A scary new error has happened. Be afraid!!',
-      })
+      }),
     )
   }
 
@@ -92,11 +88,7 @@ export function DevScreen(): JSX.Element {
           </Text>
           <Flex centered row flexWrap="wrap">
             {Object.values(MobileScreens).map((s) => (
-              <TouchableArea
-                key={s}
-                m="$spacing8"
-                testID={`dev_screen/${s}`}
-                onPress={(): void => activateWormhole(s)}>
+              <TouchableArea key={s} m="$spacing8" testID={`dev_screen/${s}`} onPress={(): void => activateWormhole(s)}>
                 <Text color="$neutral1">{s}</Text>
               </TouchableArea>
             ))}

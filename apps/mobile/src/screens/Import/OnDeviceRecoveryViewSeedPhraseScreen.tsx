@@ -5,14 +5,12 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
+import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.OnDeviceRecoveryViewSeedPhrase
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.OnDeviceRecoveryViewSeedPhrase>
 
 export function OnDeviceRecoveryViewSeedPhraseScreen({
   navigation,
@@ -25,6 +23,8 @@ export function OnDeviceRecoveryViewSeedPhraseScreen({
   const navigateBack = (): void => {
     navigation.goBack()
   }
+
+  useLockScreenOnBlur()
 
   return (
     <Trace logImpression screen={OnboardingScreens.OnDeviceRecoveryViewSeedPhrase}>

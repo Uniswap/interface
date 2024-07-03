@@ -8,7 +8,7 @@ import { useCallback } from 'react'
 export function usePurchaseAssets(): (
   routingData: RouteResponse,
   assetsToBuy: UpdatedGenieAsset[],
-  purchasingWithErc20?: boolean
+  purchasingWithErc20?: boolean,
 ) => Promise<void> {
   const signer = useEthersSigner()
   const sendTransaction = useSendTransaction((state) => state.sendTransaction)
@@ -39,6 +39,6 @@ export function usePurchaseAssets(): (
         resetBag()
       }
     },
-    [signer, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse]
+    [signer, resetBag, sendTransaction, setBagExpanded, setBagLocked, setTransactionResponse],
   )
 }

@@ -65,10 +65,7 @@ export function GasAndWarningRows({
   return (
     <>
       {showWarningModal && formScreenWarning && (
-        <SwapWarningModal
-          parsedWarning={formScreenWarning}
-          onClose={(): void => setShowWarningModal(false)}
-        />
+        <SwapWarningModal parsedWarning={formScreenWarning} onClose={(): void => setShowWarningModal(false)} />
       )}
 
       {/*
@@ -105,13 +102,8 @@ export function GasAndWarningRows({
                 placement="bottom"
                 tooltipTrigger={
                   <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                    <Gas
-                      color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                      size="$icon.16"
-                    />
-                    <Text
-                      color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                      variant="body4">
+                    <Gas color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} size="$icon.16" />
+                    <Text color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} variant="body4">
                       {gasFeeFormatted}
                     </Text>
                   </AnimatedFlex>
@@ -146,7 +138,8 @@ export function GasAndWarningRows({
                 // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
                 exiting={undefined}
                 gap="$spacing8"
-                px="$spacing16">
+                px="$spacing16"
+              >
                 {formScreenWarning.Icon && (
                   <formScreenWarning.Icon
                     color={formScreenWarning.color.text}

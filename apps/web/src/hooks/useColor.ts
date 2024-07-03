@@ -19,7 +19,7 @@ export function useSrcColor(src?: string, currencyName?: string, backgroundColor
 
   const extractSrc = useMemo(
     () => (src?.includes('coingecko') ? 'https://corsproxy.io/?' + encodeURIComponent(src) : src),
-    [src]
+    [src],
   )
 
   return useExtractedTokenColor(extractSrc, currencyName, backgroundColor ?? theme.surface1, theme.accent1)

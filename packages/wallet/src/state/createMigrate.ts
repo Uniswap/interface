@@ -4,7 +4,7 @@ import { DEFAULT_VERSION } from 'redux-persist/es/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 export function createMigrate(
-  migrations: MigrationManifest
+  migrations: MigrationManifest,
 ): (state: PersistedState, currentVersion: number) => Promise<PersistedState> {
   return function (state: PersistedState, currentVersion: number): Promise<PersistedState> {
     try {
@@ -16,11 +16,7 @@ export function createMigrate(
       const inboundVersion: number = state._persist?.version ?? DEFAULT_VERSION
 
       if (inboundVersion === currentVersion) {
-        logger.debug(
-          'redux-persist',
-          'createMigrate',
-          `versions match (${currentVersion}), noop migration`
-        )
+        logger.debug('redux-persist', 'createMigrate', `versions match (${currentVersion}), noop migration`)
         return Promise.resolve(state)
       }
 
@@ -36,19 +32,12 @@ export function createMigrate(
 
       logger.debug('redux-persist', 'createMigrate', `migrationKeys: ${migrationKeys}`)
 
-      const migratedState: PersistedState = migrationKeys.reduce(
-        (versionState: PersistedState, versionKey) => {
-          logger.debug(
-            'redux-persist',
-            'createMigrate',
-            `running migration for versionKey: ${versionKey}`
-          )
-          // Safe non-null assertion because `versionKey` comes from `Object.keys(migrations)`
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          return migrations[versionKey]!(versionState)
-        },
-        state
-      )
+      const migratedState: PersistedState = migrationKeys.reduce((versionState: PersistedState, versionKey) => {
+        logger.debug('redux-persist', 'createMigrate', `running migration for versionKey: ${versionKey}`)
+        // Safe non-null assertion because `versionKey` comes from `Object.keys(migrations)`
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return migrations[versionKey]!(versionState)
+      }, state)
 
       return Promise.resolve(migratedState)
     } catch (error) {

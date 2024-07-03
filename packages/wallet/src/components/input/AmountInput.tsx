@@ -33,7 +33,7 @@ export function replaceSeparators({
   if (groupingSeparator && groupingOverride != null) {
     outputParts = outputParts.map((part) =>
       // eslint-disable-next-line security/detect-non-literal-regexp
-      part.replace(new RegExp(`\\${groupingSeparator}`, 'g'), groupingOverride)
+      part.replace(new RegExp(`\\${groupingSeparator}`, 'g'), groupingOverride),
     )
   }
   return outputParts.join(decimalOverride)
@@ -97,7 +97,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
     fiatCurrencyInfo,
     ...rest
   },
-  ref
+  ref,
 ) {
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const targetFiatCurrencyInfo = fiatCurrencyInfo || appFiatCurrencyInfo
@@ -123,7 +123,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
           showSoftInputOnFocus,
           nativeKeyboardDecimalSeparator,
           maxDecimals,
-        })
+        }),
       )
     },
     [
@@ -133,7 +133,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
       nativeKeyboardDecimalSeparator,
       onChangeText,
       showSoftInputOnFocus,
-    ]
+    ],
   )
 
   const formattedValue = replaceSeparators({
@@ -155,7 +155,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
       ...rest,
       ...(adjustWidthToContent ? { width } : {}),
     }),
-    [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent]
+    [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent],
   )
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
@@ -199,10 +199,11 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
             setWidth(
               Math.min(
                 e.nativeEvent.layout.width,
-                typeof textInputProps.maxWidth === 'number' ? textInputProps.maxWidth : +Infinity
-              )
+                typeof textInputProps.maxWidth === 'number' ? textInputProps.maxWidth : +Infinity,
+              ),
             )
-          }>
+          }
+        >
           {value || textInputProps.placeholder}
         </Text>
         {textInputElement}
@@ -213,8 +214,9 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   return textInputElement
 })
 
-const TextInputWithNativeKeyboard = forwardRef<NativeTextInput, TextInputProps>(
-  function _TextInputWithNativeKeyboard(props: TextInputProps, ref) {
-    return <TextInput ref={ref} {...props} />
-  }
-)
+const TextInputWithNativeKeyboard = forwardRef<NativeTextInput, TextInputProps>(function _TextInputWithNativeKeyboard(
+  props: TextInputProps,
+  ref,
+) {
+  return <TextInput ref={ref} {...props} />
+})

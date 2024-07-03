@@ -4,10 +4,7 @@ import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import {
-  getScantasticQueryParams,
-  parseScantasticParams,
-} from 'src/components/WalletConnect/ScanSheet/util'
+import { getScantasticQueryParams, parseScantasticParams } from 'src/components/WalletConnect/ScanSheet/util'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
@@ -22,6 +19,7 @@ import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -30,23 +28,11 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { WidgetType } from 'uniswap/src/types/widgets'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
-import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
-import {
-  fetchExtensionEligibityByAddresses,
-  fetchUnitagByAddresses,
-} from 'wallet/src/features/unitags/api'
-import {
-  selectAccounts,
-  selectActiveAccount,
-  selectActiveAccountAddress,
-  selectSignerMnemonicAccounts,
-} from 'wallet/src/features/wallet/selectors'
+import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
@@ -66,7 +52,7 @@ const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
 const TOKEN_SHARE_LINK_HASH_REGEX = RegExp(
   // eslint-disable-next-line no-useless-escape
-  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${UNISWAP_APP_NATIVE_TOKEN})$`
+  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${UNISWAP_APP_NATIVE_TOKEN})$`,
 )
 const ADDRESS_SHARE_LINK_HASH_REGEX = /^(#\/)?address\/(0x[a-fA-F0-9]{40})$/
 
@@ -98,7 +84,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
             isSpam: false,
           },
         },
-      })
+      }),
     )
     yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftItem,
@@ -122,7 +108,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
             collectionAddress: contractAddress,
           },
         },
-      })
+      }),
     )
     yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
       entity: ShareableEntity.NftCollection,
@@ -151,7 +137,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
             currencyId,
           },
         },
-      })
+      }),
     )
     if (linkSource === LinkSource.Share) {
       yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
@@ -192,7 +178,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
               address: accountAddress,
             },
           },
-        })
+        }),
       )
     }
     yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
@@ -342,7 +328,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
     Alert.alert(
       i18n.t('walletConnect.error.unsupportedV1.title'),
       i18n.t('walletConnect.error.unsupportedV1.message'),
-      [{ text: i18n.t('common.button.ok') }]
+      [{ text: i18n.t('common.button.ok') }],
     )
     return
   }
@@ -354,10 +340,7 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
       logger.error(error, {
         tags: { file: 'handleDeepLinkSaga', function: 'handleWalletConnectDeepLink' },
       })
-      Alert.alert(
-        i18n.t('walletConnect.error.general.title'),
-        i18n.t('walletConnect.error.general.message')
-      )
+      Alert.alert(i18n.t('walletConnect.error.general.title'), i18n.t('walletConnect.error.general.message'))
     }
   }
 
@@ -372,7 +355,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
 
   const userAccounts = yield* appSelect(selectAccounts)
   const matchingAccount = Object.values(userAccounts).find(
-    (account) => account.address.toLowerCase() === userAddress.toLowerCase()
+    (account) => account.address.toLowerCase() === userAddress.toLowerCase(),
   )
 
   if (!matchingAccount) {
@@ -384,58 +367,16 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
 
 export function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
   const params = parseScantasticParams(scantasticQueryParams)
-  const extensionOnboardingEnabled = Statsig.checkGate(
-    getFeatureFlagName(FeatureFlags.ExtensionOnboarding)
-  )
   const scantasticEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
 
   if (!params || !scantasticEnabled) {
-    Alert.alert(
-      i18n.t('walletConnect.error.scantastic.title'),
-      i18n.t('walletConnect.error.scantastic.message'),
-      [{ text: i18n.t('common.button.ok') }]
-    )
+    Alert.alert(i18n.t('walletConnect.error.scantastic.title'), i18n.t('walletConnect.error.scantastic.message'), [
+      { text: i18n.t('common.button.ok') },
+    ])
     return
   }
 
-  const extensionOnboardingState = yield* appSelect(selectExtensionOnboardingState)
-
-  if (
-    extensionOnboardingEnabled &&
-    extensionOnboardingState !== ExtensionOnboardingState.Undefined
-  ) {
-    // User has already passed extension onboarding eligibility check
-    yield* call(launchScantastic, params)
-    return
-  }
-
-  const signerAccounts = yield* appSelect(selectSignerMnemonicAccounts)
-
-  const waitlistPositionResponse = (yield* call(
-    fetchExtensionEligibityByAddresses,
-    signerAccounts.map((account) => account.address)
-  )).data
-
-  if (extensionOnboardingEnabled && waitlistPositionResponse?.isAccepted) {
-    yield* call(launchScantastic, params)
-  } else {
-    const activeAccount = yield* appSelect(selectActiveAccount)
-
-    const activeAccountUnitag = activeAccount
-      ? (yield* call(fetchUnitagByAddresses, [activeAccount.address])).data?.[activeAccount.address]
-          ?.username
-      : undefined
-
-    yield* put(closeAllModals())
-    yield* put(
-      openModal({
-        name: ModalName.ExtensionWaitlistModal,
-        initialState: {
-          isUserOnWaitlist: activeAccountUnitag !== undefined,
-        },
-      })
-    )
-  }
+  yield* call(launchScantastic, params)
 }
 
 function* launchScantastic(params: ScantasticParams): Generator {
@@ -446,6 +387,6 @@ function* launchScantastic(params: ScantasticParams): Generator {
       initialState: {
         params,
       },
-    })
+    }),
   )
 }

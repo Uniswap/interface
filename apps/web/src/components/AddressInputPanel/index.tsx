@@ -24,7 +24,8 @@ const ContainerRow = styled.div<{ error: boolean }>`
   align-items: center;
   border-radius: 1.25rem;
   border: 1px solid ${({ error, theme }) => (error ? theme.critical : theme.surface3)};
-  transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
+  transition:
+    border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.surface1};
 `
@@ -95,7 +96,7 @@ export default function AddressInputPanel({
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)
     },
-    [onChange]
+    [onChange],
   )
 
   const error = Boolean(value.length > 0 && !loading && !address)

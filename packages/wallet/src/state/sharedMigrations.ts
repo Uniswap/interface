@@ -81,7 +81,7 @@ export function activatePendingAccounts(state: any): any {
       (account: any) =>
         account.type === AccountType.SignerMnemonic &&
         account.mnemonicId === activeAccount.mnemonicId &&
-        account.pending === true
+        account.pending === true,
     )
 
     if (activeSignerAccountPendingWallets.length > MAX_WALLET_IMPORT) {

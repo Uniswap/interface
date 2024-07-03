@@ -62,7 +62,9 @@ const TokenRow = styled.div`
     padding: 12px;
     border-radius: 16px;
   }
-  transition: background-color 125ms ease-in, transform 125ms ease-in;
+  transition:
+    background-color 125ms ease-in,
+    transform 125ms ease-in;
   &:hover {
     background-color: ${({ theme }) => theme.surface2};
     transform: scale(1.03);
@@ -209,10 +211,10 @@ function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; addre
         getTokenDetailsURL({
           address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
           chain: chainIdToBackendChain({ chainId }),
-        })
+        }),
       )
     },
-    [address, chainId, navigate]
+    [address, chainId, navigate],
   )
   return (
     <TokenRow onClick={handleClick}>

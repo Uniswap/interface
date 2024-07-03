@@ -10,10 +10,7 @@ type ViewOnlyRecipientModalProps = {
   onCancel: () => void
 }
 
-export function ViewOnlyRecipientModal({
-  onConfirm,
-  onCancel,
-}: ViewOnlyRecipientModalProps): JSX.Element {
+export function ViewOnlyRecipientModal({ onConfirm, onCancel }: ViewOnlyRecipientModalProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -25,7 +22,8 @@ export function ViewOnlyRecipientModal({
           borderRadius="$rounded12"
           height={iconSizes.icon48}
           mb="$spacing8"
-          width={iconSizes.icon48}>
+          width={iconSizes.icon48}
+        >
           <Eye color="$neutral2" size={iconSizes.icon24} />
         </Flex>
 

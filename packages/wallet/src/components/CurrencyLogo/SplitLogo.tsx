@@ -15,12 +15,7 @@ interface Props {
  * Logo, where left 50% of width is taken from one icon (its left 50%)
  * and right side is taken from another icon (its right 50%)
  */
-export function SplitLogo({
-  size,
-  inputCurrencyInfo,
-  outputCurrencyInfo,
-  chainId,
-}: Props): JSX.Element {
+export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId }: Props): JSX.Element {
   const iconSize = size / 2
 
   const icon =
@@ -36,7 +31,8 @@ export function SplitLogo({
         position="absolute"
         testID="input-currency-logo-container"
         top={0}
-        width={iconSize - 1 /* -1 to allow for space between the icons */}>
+        width={iconSize - 1 /* -1 to allow for space between the icons */}
+      >
         <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
       </Flex>
       <Flex
@@ -46,7 +42,8 @@ export function SplitLogo({
         right={0}
         testID="output-currency-logo-container"
         top={0}
-        width={iconSize - 1 /* -1 to allow for space between the icons */}>
+        width={iconSize - 1 /* -1 to allow for space between the icons */}
+      >
         <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
       </Flex>
       {icon && (

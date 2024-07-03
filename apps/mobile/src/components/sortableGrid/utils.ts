@@ -1,20 +1,11 @@
 import { Vector } from 'src/components/sortableGrid/types'
 
-export const areArraysDifferent = <T>(
-  arr1: T[],
-  arr2: T[],
-  areEqual = (a: T, b: T): boolean => a === b
-): boolean => {
+export const areArraysDifferent = <T>(arr1: T[], arr2: T[], areEqual = (a: T, b: T): boolean => a === b): boolean => {
   'worklet'
-  return (
-    arr1.length !== arr2.length || arr1.some((item, index) => !areEqual(item, arr2[index] as T))
-  )
+  return arr1.length !== arr2.length || arr1.some((item, index) => !areEqual(item, arr2[index] as T))
 }
 
-const hasProp = <O extends object, P extends string>(
-  object: O,
-  prop: P
-): object is O & Record<P, unknown> => {
+const hasProp = <O extends object, P extends string>(object: O, prop: P): object is O & Record<P, unknown> => {
   return prop in object
 }
 
@@ -45,11 +36,7 @@ export const getColumnIndex = (index: number, numColumns: number): number => {
   return index % numColumns
 }
 
-export const getItemsInColumnCount = (
-  index: number,
-  numColumns: number,
-  itemsCount: number
-): number => {
+export const getItemsInColumnCount = (index: number, numColumns: number, itemsCount: number): number => {
   'worklet'
   const columnIndex = getColumnIndex(index, numColumns)
   return Math.floor(itemsCount / numColumns) + (columnIndex < itemsCount % numColumns ? 1 : 0)
@@ -59,7 +46,7 @@ export const getItemZIndex = (
   isActive: boolean,
   pressProgress: number,
   position: Vector,
-  targetPosition?: Vector
+  targetPosition?: Vector,
 ): number => {
   'worklet'
   if (isActive) {

@@ -74,7 +74,7 @@ export const ProfilePage = () => {
 
   const ownerCollections = useMemo(
     () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
-    [isSuccess, ownerCollectionsData]
+    [isSuccess, ownerCollectionsData],
   )
 
   useEffect(() => {
@@ -176,7 +176,11 @@ const ProfilePageNfts = ({
     loading,
     hasNext,
     loadMore,
-  } = useNftBalance(account.address ?? '', collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalance({
+    ownerAddress: account.address ?? '',
+    collectionFilters,
+    first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
+  })
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -202,7 +206,7 @@ const ProfilePageNfts = ({
           position={isMobile && isBagExpanded ? 'fixed' : 'static'}
           style={{
             transform: gridX.to(
-              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`,
             ),
           }}
           paddingY="20"

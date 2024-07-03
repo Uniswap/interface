@@ -111,6 +111,13 @@
     },
     "check:circular": {},
     "check:deps:usage": {},
+    "format": {
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js"
+      ]
+    },
     "lint": {
       "dependsOn": [
         "typecheck",

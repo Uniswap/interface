@@ -28,7 +28,7 @@ export function useUnmountingAnimation(
   node: RefObject<HTMLElement>,
   getAnimatingClass: () => string,
   animatedElements?: RefObject<HTMLElement>[],
-  skip = false
+  skip = false,
 ) {
   useEffect(() => {
     const current = node.current

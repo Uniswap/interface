@@ -73,15 +73,12 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             [
               { text: t('common.navigation.systemSettings'), onPress: openSettings },
               { text: t('common.button.notNow') },
-            ]
+            ],
           )
         : Alert.alert(
             t('onboarding.security.alert.biometrics.title.android'),
             t('onboarding.security.alert.biometrics.message.android'),
-            [
-              { text: t('onboarding.security.button.setup'), onPress: enroll },
-              { text: t('common.button.notNow') },
-            ]
+            [{ text: t('onboarding.security.button.setup'), onPress: enroll }, { text: t('common.button.notNow') }],
           )
       return
     }
@@ -99,20 +96,10 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   return (
     <>
       {showWarningModal && (
-        <BiometricAuthWarningModal
-          isTouchIdDevice={isTouchIdDevice}
-          onClose={onCloseModal}
-          onConfirm={onPressNext}
-        />
+        <BiometricAuthWarningModal isTouchIdDevice={isTouchIdDevice} onClose={onCloseModal} onConfirm={onPressNext} />
       )}
       {isLoadingAccount && (
-        <Flex
-          centered
-          mt="$spacing60"
-          position="absolute"
-          pt="$spacing36"
-          width="100%"
-          zIndex={100}>
+        <Flex centered mt="$spacing60" position="absolute" pt="$spacing36" width="100%" zIndex={100}>
           <ActivityIndicator color={colors.sporeWhite.val} />
         </Flex>
       )}
@@ -125,7 +112,8 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
               })
             : t('onboarding.security.subtitle.android')
         }
-        title={t('onboarding.security.title')}>
+        title={t('onboarding.security.title')}
+      >
         <Flex centered shrink gap="$spacing16" my="$spacing12" position="relative" py="$spacing24">
           <Flex pt="$spacing24">
             <SecurityBackgroundImage />
@@ -140,24 +128,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
               borderColor: opacify(15, colors.sporeWhite.val),
               backgroundColor: opacify(35, colors.surface1.val),
             }}
-            top={0}>
-            <BlurView
-              intensity={isDarkMode ? (isIOS ? 20 : 80) : 40}
-              style={styles.blurView}
-              tint="dark"
-            />
+            top={0}
+          >
+            <BlurView intensity={isDarkMode ? (isIOS ? 20 : 80) : 40} style={styles.blurView} tint="dark" />
             {isTouchIdDevice ? (
-              <FingerprintIcon
-                color={colors.sporeWhite.val}
-                height={imageSizes.image48}
-                width={imageSizes.image48}
-              />
+              <FingerprintIcon color={colors.sporeWhite.val} height={imageSizes.image48} width={imageSizes.image48} />
             ) : (
-              <FaceIcon
-                color={colors.sporeWhite.val}
-                height={imageSizes.image48}
-                width={imageSizes.image48}
-              />
+              <FaceIcon color={colors.sporeWhite.val} height={imageSizes.image48} width={imageSizes.image48} />
             )}
           </Flex>
         </Flex>

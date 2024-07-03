@@ -23,7 +23,8 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       testID="explore/remove-button"
       width={imageSizes.image24}
       zIndex="$tooltip"
-      {...rest}>
+      {...rest}
+    >
       <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
     </AnimatedTouchableArea>
   )

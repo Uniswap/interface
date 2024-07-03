@@ -6,10 +6,7 @@ export type HiddenFromScreenReadersProps = PropsWithChildren<{
   style?: ViewStyle
 }>
 
-export function HiddenFromScreenReaders({
-  children,
-  style,
-}: HiddenFromScreenReadersProps): JSX.Element {
+export function HiddenFromScreenReaders({ children, style }: HiddenFromScreenReadersProps): JSX.Element {
   // TODO(MOB-1533) Make hidden from screen reader functionality work with web too
   return <Flex style={style}>{children}</Flex>
 }

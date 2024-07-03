@@ -28,10 +28,6 @@ const slice = createSlice({
   },
 })
 
-export const {
-  incrementPasswordAttempts,
-  resetPasswordAttempts,
-  setLockoutEndTime,
-  resetLockoutEndTime,
-} = slice.actions
+export const { incrementPasswordAttempts, resetPasswordAttempts, setLockoutEndTime, resetLockoutEndTime } =
+  slice.actions
 export const { reducer: passwordLockoutReducer } = slice

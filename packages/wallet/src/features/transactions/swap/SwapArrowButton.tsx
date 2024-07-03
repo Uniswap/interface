@@ -10,14 +10,7 @@ type SwapArrowButtonProps = Pick<
 
 export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
   const colors = useSporeColors()
-  const {
-    testID,
-    onPress,
-    disabled,
-    backgroundColor = '$surface2',
-    size = iconSizes.icon24,
-    ...rest
-  } = props
+  const { testID, onPress, disabled, backgroundColor = '$surface2', size = iconSizes.icon24, ...rest } = props
   return useMemo(
     () => (
       <TouchableArea
@@ -33,13 +26,14 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         p="$spacing8"
         testID={testID}
         onPress={onPress}
-        {...rest}>
+        {...rest}
+      >
         {/* hack to add 2px more padding without adjusting design system values */}
         <Flex centered p="$spacing2">
           <Arrow color={colors.neutral2.val} direction="s" size={size} />
         </Flex>
       </TouchableArea>
     ),
-    [backgroundColor, disabled, onPress, testID, rest, colors.neutral2.val, size]
+    [backgroundColor, disabled, onPress, testID, rest, colors.neutral2.val, size],
   )
 }

@@ -1,14 +1,15 @@
 import {
   ApproveTransactionInfo,
   NFTApproveTransactionInfo,
+  TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 
 export default function parseApproveTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
-  if (transaction.details.__typename !== 'TransactionDetails') {
+  if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
@@ -24,11 +25,20 @@ export default function parseApproveTransaction(
     if (!(tokenAddress && spender)) {
       return undefined
     }
+
+    const dappInfo = transaction.details.application?.address
+      ? {
+          name: transaction.details.application?.name,
+          address: transaction.details.application.address,
+          icon: transaction.details.application?.icon?.url,
+        }
+      : undefined
     return {
       type: TransactionType.Approve,
       tokenAddress,
       spender,
       approvalAmount,
+      dappInfo,
     }
   }
   return undefined

@@ -96,7 +96,7 @@ function SearchBarDropdownSection({
                 selected_search_result_address: suggestion.address,
               }}
             />
-          )
+          ),
         )}
       </Column>
     </Column>
@@ -173,7 +173,7 @@ function SearchBarDropdownContents({
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
-    HistoryDuration.Day
+    HistoryDuration.Day,
   )
 
   const formattedTrendingCollections = useMemo(() => {
@@ -198,7 +198,7 @@ function SearchBarDropdownContents({
   const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
     () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
-    [trendingTokenData, trendingTokensLength]
+    [trendingTokenData, trendingTokensLength],
   )
 
   const totalSuggestions = hasInput

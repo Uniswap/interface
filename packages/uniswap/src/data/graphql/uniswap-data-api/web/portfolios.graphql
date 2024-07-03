@@ -1,3 +1,18 @@
+fragment QuickTokenBalanceParts on TokenBalance {
+  id
+  quantity
+  denominatedValue {
+    id
+    value
+  }
+  token {
+    id
+    address
+    chain
+    standard
+  }
+}
+
 fragment PortfolioTokenBalanceParts on TokenBalance {
   id
   quantity
@@ -75,6 +90,16 @@ query PortfolioBalancesWeb(
     }
     tokenBalances {
       ...PortfolioTokenBalanceParts
+    }
+  }
+}
+
+# Query only returns basic token, quantity, and denominated value.
+query QuickTokenBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
+    id
+    tokenBalances {
+      ...QuickTokenBalanceParts
     }
   }
 }

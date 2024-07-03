@@ -94,20 +94,20 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
 
 function getCancelMultipleUniswapXOrdersParams(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: InterfaceChainId
+  chainId: InterfaceChainId,
 ) {
   const nonces = orders
     .map(({ encodedOrder, type }) =>
       type === SignatureType.SIGN_UNISWAPX_V2_ORDER
         ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        : DutchOrder.parse(encodedOrder, chainId)
+        : DutchOrder.parse(encodedOrder, chainId),
     )
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
 }
 
 export function useCancelMultipleOrdersCallback(
-  orders?: Array<UniswapXOrderDetails>
+  orders?: Array<UniswapXOrderDetails>,
 ): () => Promise<ContractTransaction[] | undefined> {
   const provider = useEthersWeb3Provider()
   const permit2 = useContract<Permit2>(permit2Address(orders?.[0]?.chainId), PERMIT2_ABI, true)
@@ -173,7 +173,7 @@ async function cancelMultipleUniswapXOrders({
 async function getCancelMultipleUniswapXOrdersTransaction(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
   chainId: InterfaceChainId,
-  permit2: Permit2
+  permit2: Permit2,
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || cancelParams.length === 0) {
@@ -201,7 +201,7 @@ export function useCreateCancelTransactionRequest(
         orders: Array<{ encodedOrder: string; type: SignatureType }>
         chainId: InterfaceChainId
       }
-    | undefined
+    | undefined,
 ): TransactionRequest | undefined {
   const permit2 = useContract<Permit2>(permit2Address(params?.chainId), PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {

@@ -10,9 +10,7 @@ const selectTransaction = makeSelectTransaction()
 // Inspiration: https://github.com/MetaMask/metamask-extension/blob/develop/app/scripts/controllers/transactions/index.js#L744
 export function* attemptCancelTransaction(transaction: ClassicTransactionDetails) {
   const { from, chainId, id } = transaction
-  const tx = yield* select((state) =>
-    selectTransaction(state, { address: from, chainId, txId: id })
-  )
+  const tx = yield* select((state) => selectTransaction(state, { address: from, chainId, txId: id }))
   if (!tx?.cancelRequest) {
     throw new Error('attempted to cancel a transaction without cancelRequest set')
   }

@@ -17,12 +17,7 @@ export function RemoveLastMnemonicWalletFooter({
 
   return (
     <>
-      <Flex
-        backgroundColor="$surface2"
-        borderRadius="$rounded16"
-        mx="$spacing16"
-        p="$spacing12"
-        width="100%">
+      <Flex backgroundColor="$surface2" borderRadius="$rounded16" mx="$spacing16" p="$spacing12" width="100%">
         <CheckBox
           checked={checkBoxAccepted}
           text={
@@ -42,7 +37,8 @@ export function RemoveLastMnemonicWalletFooter({
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={ElementName.Confirm}
           theme="detrimental"
-          onPress={onPress}>
+          onPress={onPress}
+        >
           {!inProgress ? t('account.wallet.button.remove') : undefined}
         </Button>
       </Flex>

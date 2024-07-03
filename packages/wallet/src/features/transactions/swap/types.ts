@@ -8,7 +8,7 @@ import { WrapType } from 'wallet/src/features/transactions/types'
 
 export type DerivedSwapInfo<
   TInput = CurrencyInfo,
-  TOutput extends CurrencyInfo = CurrencyInfo
+  TOutput extends CurrencyInfo = CurrencyInfo,
 > = BaseDerivedInfo<TInput> & {
   chainId: WalletChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {

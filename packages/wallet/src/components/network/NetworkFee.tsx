@@ -45,10 +45,9 @@ export function NetworkFee({
           </Text>
         ) : (
           <Text
-            color={
-              isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'
-            }
-            variant="body3">
+            color={isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'}
+            variant="body3"
+          >
             {gasFeeFormatted}
           </Text>
         )}

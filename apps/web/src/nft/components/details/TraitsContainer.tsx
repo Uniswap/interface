@@ -60,7 +60,7 @@ const GridItem = ({ trait, collectionAddress }: { trait: Trait; collectionAddres
     { traits: [`("${trait_type}","${trait_value}")`] },
     {
       arrayFormat: 'comma',
-    }
+    },
   )
 
   return (

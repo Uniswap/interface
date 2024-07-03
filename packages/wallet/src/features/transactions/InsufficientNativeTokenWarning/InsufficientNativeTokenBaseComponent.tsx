@@ -2,28 +2,22 @@ import { Trans } from 'react-i18next'
 import { Flex, Text, isWeb } from 'ui/src'
 import { AlertTriangle, InfoCircle } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { insufficientNativeTokenTextVariant } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/constants'
 import { useInsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficentNativeTokenWarning,
 }: {
-  parsedInsufficentNativeTokenWarning: NonNullable<
-    ReturnType<typeof useInsufficientNativeTokenWarning>
-  >
+  parsedInsufficentNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
 }): JSX.Element | null {
   const { nativeCurrency, networkColors, networkName, flow } = parsedInsufficentNativeTokenWarning
 
   const currencySymbol = nativeCurrency.symbol
 
-  const shouldShowNetworkName =
-    nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
+  const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
   const textComponentWithNetworkColor = (
-    <Text
-      style={{ color: networkColors.foreground }}
-      variant={insufficientNativeTokenTextVariant}
-    />
+    <Text style={{ color: networkColors.foreground }} variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT} />
   )
 
   return (
@@ -33,7 +27,8 @@ export function InsufficientNativeTokenBaseComponent({
       backgroundColor={isWeb ? '$surface2' : undefined}
       borderRadius="$rounded12"
       gap="$spacing8"
-      p={isWeb ? '$spacing16' : '$none'}>
+      p={isWeb ? '$spacing16' : '$none'}
+    >
       {isWeb && (
         <Flex>
           <AlertTriangle color="$neutral2" size="$icon.16" />
@@ -41,7 +36,7 @@ export function InsufficientNativeTokenBaseComponent({
       )}
 
       <Flex fill={isWeb}>
-        <Text color="$neutral2" variant={insufficientNativeTokenTextVariant}>
+        <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
           {shouldShowNetworkName ? (
             flow === 'swap' ? (
               <Trans

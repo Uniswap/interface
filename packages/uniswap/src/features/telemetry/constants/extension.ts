@@ -9,5 +9,7 @@ export enum ExtensionEventName {
   ExtensionLoad = 'Extension Load',
   ExtensionEthMethodRequest = 'Extension Eth Method Request',
   ProviderDirectMethodRequest = 'Provider Direct Method Request',
+  SidebarDisconnect = 'Sidebar Disconnect',
+  SidebarSwitchChain = 'Sidebar Switch Chain',
   UnknownMethodRequest = 'Unknown Method Request',
 }

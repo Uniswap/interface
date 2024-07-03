@@ -20,7 +20,8 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
       overflow="hidden"
       px="$spacing16"
       py="$spacing16"
-      sentry-label="WalletLoader">
+      sentry-label="WalletLoader"
+    >
       <Flex row alignItems="center" gap="$spacing12" height={ADDRESS_WRAPPER_HEIGHT}>
         <Flex backgroundColor="$neutral3" borderRadius="$roundedFull" height={32} width={32} />
         <Flex alignItems="flex-start" width="100%">

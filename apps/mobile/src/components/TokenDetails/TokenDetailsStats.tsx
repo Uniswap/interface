@@ -3,13 +3,7 @@ import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import {
-  ChartBar,
-  ChartPie,
-  Language as LanguageIcon,
-  TrendDown,
-  TrendUp,
-} from 'ui/src/components/icons'
+import { ChartBar, ChartPie, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
@@ -65,35 +59,40 @@ export function TokenDetailsMarketData({
     <Flex gap="$spacing8">
       <StatsRow
         label={t('token.stats.marketCap')}
-        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+      >
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
-        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+      >
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.volume')}
-        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
+        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+      >
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.priceHighYear')}
-        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
+        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+      >
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.priceLowYear')}
-        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
+        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+      >
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
@@ -130,13 +129,10 @@ export function TokenDetailsStats({
   const name = offChainData?.name ?? onChainData?.name
   const marketCap = offChainData?.markets?.[0]?.marketCap?.value
   const volume = onChainData?.market?.volume?.value
-  const priceHight52W =
-    offChainData?.markets?.[0]?.priceHigh52W?.value ?? onChainData?.market?.priceHigh52W?.value
-  const priceLow52W =
-    offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
+  const priceHight52W = offChainData?.markets?.[0]?.priceHigh52W?.value ?? onChainData?.market?.priceHigh52W?.value
+  const priceLow52W = offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
   const fullyDilutedValuation = offChainData?.markets?.[0]?.fullyDilutedValuation?.value
-  const currentDescription =
-    showTranslation && translatedDescription ? translatedDescription : description
+  const currentDescription = showTranslation && translatedDescription ? translatedDescription : description
 
   return (
     <Flex gap="$spacing24">
@@ -157,14 +153,8 @@ export function TokenDetailsStats({
             />
           </Flex>
           {currentLanguage !== Language.English && !!translatedDescription && (
-            <TouchableArea
-              hapticFeedback
-              onPress={(): void => setShowTranslation(!showTranslation)}>
-              <Flex
-                alignItems="center"
-                backgroundColor="$surface3"
-                borderRadius="$rounded12"
-                p="$spacing12">
+            <TouchableArea hapticFeedback onPress={(): void => setShowTranslation(!showTranslation)}>
+              <Flex alignItems="center" backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
                 {showTranslation ? (
                   <Flex row alignItems="center" gap="$spacing12" width="100%">
                     <Flex fill row alignItems="center" gap="$spacing12">

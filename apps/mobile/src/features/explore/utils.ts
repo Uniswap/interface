@@ -1,11 +1,7 @@
 import { TokenItemData } from 'src/components/explore/TokenItem'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  ClientTokensOrderBy,
-  TokenMetadataDisplayType,
-  TokensOrderBy,
-} from 'wallet/src/features/wallet/types'
+import { ClientTokensOrderBy, TokenMetadataDisplayType, TokensOrderBy } from 'wallet/src/features/wallet/types'
 
 /**
  * Returns server and client orderBy values to use for topTokens query and client side sorting
@@ -28,14 +24,12 @@ export function getTokensOrderByValues(orderBy: TokensOrderBy): {
   const requiresClientOrderBy = Object.values<string>(ClientTokensOrderBy).includes(orderBy)
 
   return {
-    serverOrderBy: requiresClientOrderBy
-      ? TokenSortableField.Volume
-      : (orderBy as TokenSortableField),
+    serverOrderBy: requiresClientOrderBy ? TokenSortableField.Volume : (orderBy as TokenSortableField),
     clientOrderBy: requiresClientOrderBy
       ? (orderBy as ClientTokensOrderBy)
       : orderBy === TokenSortableField.Volume
-      ? ClientTokensOrderBy.Volume24hDesc
-      : undefined,
+        ? ClientTokensOrderBy.Volume24hDesc
+        : undefined,
   }
 }
 
@@ -43,7 +37,7 @@ export function getTokensOrderByValues(orderBy: TokensOrderBy): {
  * Returns a compare function to sort tokens client side.
  */
 export function getClientTokensOrderByCompareFn(
-  orderBy: ClientTokensOrderBy
+  orderBy: ClientTokensOrderBy,
 ): (a: TokenItemData, b: TokenItemData) => number {
   let compareField: keyof TokenItemData
   let direction = 0

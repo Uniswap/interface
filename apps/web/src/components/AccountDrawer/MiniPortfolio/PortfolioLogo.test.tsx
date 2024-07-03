@@ -14,7 +14,7 @@ describe('PortfolioLogo', () => {
 
   it('renders with L2 icon', () => {
     const { container } = render(
-      <PortfolioLogo chainId={UniverseChainId.ArbitrumOne} currencies={[DAI_ARBITRUM_ONE, USDC_ARBITRUM]} />
+      <PortfolioLogo chainId={UniverseChainId.ArbitrumOne} currencies={[DAI_ARBITRUM_ONE, USDC_ARBITRUM]} />,
     )
     expect(container).toMatchSnapshot()
   })

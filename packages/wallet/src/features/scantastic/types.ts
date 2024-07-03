@@ -18,7 +18,7 @@ export const ScantasticParamsSchema = z.object({
         invalid_type_error: 'Invalid public exponent',
       }),
     },
-    { required_error: 'Public key is required' }
+    { required_error: 'Public key is required' },
   ),
   vendor: z.string().nullish(),
   model: z.string().nullish(),

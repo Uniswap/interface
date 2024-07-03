@@ -12,11 +12,7 @@ type SwapTxContextState = {
 export const SwapTxContext = createContext<SwapTxContextState | undefined>(undefined)
 
 // Same as above, with different hook for data fetching.
-export function SwapTxContextProviderTradingApi({
-  children,
-}: {
-  children: ReactNode
-}): JSX.Element {
+export function SwapTxContextProviderTradingApi({ children }: { children: ReactNode }): JSX.Element {
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { txRequest, approveTxRequest, gasFee, approvalError } = useSwapTxAndGasInfoTradingApi({
@@ -30,7 +26,7 @@ export function SwapTxContextProviderTradingApi({
       gasFee,
       approvalError,
     }),
-    [approvalError, approveTxRequest, gasFee, txRequest]
+    [approvalError, approveTxRequest, gasFee, txRequest],
   )
 
   return <SwapTxContext.Provider value={state}>{children}</SwapTxContext.Provider>

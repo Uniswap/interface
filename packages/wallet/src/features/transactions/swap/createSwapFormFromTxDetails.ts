@@ -1,13 +1,10 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { currencyAddress, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 interface Props {
@@ -35,9 +32,7 @@ export function createSwapFormFromTxDetails({
     const { typeInfo } = transactionDetails
 
     if (typeInfo.type !== TransactionType.Swap) {
-      throw new Error(
-        `Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`
-      )
+      throw new Error(`Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`)
     }
 
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
@@ -100,9 +95,7 @@ export function createWrapFormFromTxDetails({
     const { typeInfo } = transactionDetails
 
     if (typeInfo.type !== TransactionType.Wrap) {
-      throw new Error(
-        `Tx hash ${txHash} does not correspond to a wrap tx. It is of type ${typeInfo.type}`
-      )
+      throw new Error(`Tx hash ${txHash} does not correspond to a wrap tx. It is of type ${typeInfo.type}`)
     }
 
     const currencyAmountRaw = typeInfo.currencyAmountRaw

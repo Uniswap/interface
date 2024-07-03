@@ -152,8 +152,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           navigate(getTokenExploreURL({ tab, chain }))
         }
       },
-      [navigate, tab]
-    )
+      [navigate, tab],
+    ),
   )
 
   return (

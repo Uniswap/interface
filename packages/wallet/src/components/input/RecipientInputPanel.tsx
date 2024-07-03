@@ -24,7 +24,8 @@ export function RecipientInputPanel({
       px="$spacing32"
       py="$spacing16"
       testID={ElementName.SelectRecipient}
-      onPress={onToggleShowRecipientSelector}>
+      onPress={onToggleShowRecipientSelector}
+    >
       <Flex gap="$spacing8" py="$spacing24">
         <Flex centered row gap="$spacing4">
           <AddressDisplay hideAddressInSubtitle address={recipientAddress} variant="heading3" />

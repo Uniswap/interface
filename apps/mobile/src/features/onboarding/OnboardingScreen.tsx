@@ -33,18 +33,14 @@ export function OnboardingScreen({
     <Screen
       $short={{ pt: headerHeight * SHORT_SCREEN_HEADER_HEIGHT_RATIO }}
       edges={['right', 'left']}
-      pt={headerHeight}>
+      pt={headerHeight}
+    >
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : undefined}
         enabled={keyboardAvoidingViewEnabled}
-        style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <AnimatedFlex
-          grow
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap={gapSize}
-          pb="$spacing16"
-          px="$spacing16">
+        style={[WrapperStyle.base, { marginBottom: insets.bottom }]}
+      >
+        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap={gapSize} pb="$spacing16" px="$spacing16">
           {/* Text content */}
           <Flex centered gap="$spacing12" m="$spacing12">
             {title && (
@@ -53,7 +49,8 @@ export function OnboardingScreen({
                 allowFontScaling={false}
                 pt={paddingTop}
                 textAlign="center"
-                variant="heading3">
+                variant="heading3"
+              >
                 {title}
               </Text>
             )}
@@ -63,7 +60,8 @@ export function OnboardingScreen({
                 color="$neutral2"
                 maxFontSizeMultiplier={media.short ? 1.1 : fonts.body2.maxFontSizeMultiplier}
                 textAlign="center"
-                variant="body2">
+                variant="body2"
+              >
                 {subtitle}
               </Text>
             ) : null}

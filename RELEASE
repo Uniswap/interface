@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn`
-- CIDv1: `bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom`
+- CIDv0: `QmagCqi7cKazCA4x7qyhwMvzpJPGHACvZGNZZ6LNLTS5La`
+- CIDv1: `bafybeifxj2n7miiatvhem2m2ghihgdzuzdhqfatqdm3vle55dgb7lc65e4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,56 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom.ipfs.dweb.link/
-- https://bafybeihygb3syfjqxcfwuu4ti6jbim4o2efhlbzg54qrk5feiwz4cqmvom.ipfs.cf-ipfs.com/
-- [ipfs://Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn/](ipfs://Qmf3UgVbYneiT58xJcLJYSpvoowcUmhgH1N21P68nkxpvn/)
+- https://bafybeifxj2n7miiatvhem2m2ghihgdzuzdhqfatqdm3vle55dgb7lc65e4.ipfs.dweb.link/
+- https://bafybeifxj2n7miiatvhem2m2ghihgdzuzdhqfatqdm3vle55dgb7lc65e4.ipfs.cf-ipfs.com/
+- [ipfs://QmagCqi7cKazCA4x7qyhwMvzpJPGHACvZGNZZ6LNLTS5La/](ipfs://QmagCqi7cKazCA4x7qyhwMvzpJPGHACvZGNZZ6LNLTS5La/)
 
-### 5.37.1 (2024-07-02)
+## 5.38.0 (2024-07-03)
+
+
+### Features
+
+* **web:** 4212 fix wrap in multichain world (#8454) 9a3b933
+* **web:** add datadog logs/errors alongside sentry (#8682) a9fb607
+* **web:** add l2 nfts feature flag (#9042) b6b378a
+* **web:** buy flow code cleanup / refactor (#8889) c1d14b7
+* **web:** buy flow errors states (#9206) 191b9a2
+* **web:** buy flow, connecting screen (#9173) 0dc94a7
+* **web:** complete in provider tab modal state (#9402) c276b4a
+* **web:** Disable Clicking on L2 NFTs in MiniPort (#9324) 1083d81
+* **web:** fetch FOR quotes and show provider modal (#9030) 5c9bcee
+* **web:** Have tooltip follow cursor (#9328) 68603c1
+* **web:** import Zora nfts into miniport and improve usNftBalance (#9043) f7f4539
+* **web:** kill useAutoRouterSupported hook (#9078) 74c0bcf
+* **web:** nav bar polishes (#9163) 299fa69
+* **web:** styled app qr code (#9514) 215ac3f
+* **web:** token selection for buy flow (#8869) 24ad20d
+* **web:** use quick portfolio balances query (#9285) e2f0d72
 
 
 ### Bug Fixes
 
-* **web:** avalanche isToken check hotfix (#9790) a60c130
+* **web:** avalanche istoken check (staging) (#9789) 53d34cd
+* **web:** check common bases in MiniPortfolio getCurrency function (#9632) f8be510
+* **web:** disable scroll when mobile drawer is open (#9335) c9ed125
+* **web:** fix broken link, translation, and importing v2 positions (#9435) 7c6c355
+* **web:** fix chain selector tests (#9376) 16fc2d9
+* **web:** fix multichain state when connected to unsupported chain (#9057) 7d9206e
+* **web:** fix token safety popup on prefilled currencies (#9487) 8fb464c
+* **web:** group hero title for better translations (#8729) 8962aa5
+* **web:** legacy nav should not transition out of view on scroll (#9542) 78313d5
+* **web:** prevent uniwallet displaying beneath wallet connect modal (#9798) 78eb31b
+* **web:** skip token lookup if search query is not address (#9539) 23eec13
+* **web:** swap context chainId (multichain) (#9143) db3f7ff
+* **web:** switch chain before confirm on limit orders (#8498) 30698e2
+* **web:** token URL switch on TDP should use correct chain (#8574) a62f72b
+* **web:** use chainId from currency in useCurrencyBalance (#9139) 3da2eb9
+* **web:** use correct chainId in transaction adder & swap tax hooks (#9354) 953fe51
+* **web:** use rive wasm internally to avoid potential side load attack (#9569) 6d332fb
+
+
+### Continuous Integration
+
+* **web:** update sitemaps d9e916f
 
 

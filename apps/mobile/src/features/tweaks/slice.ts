@@ -11,10 +11,7 @@ export const slice = createSlice({
   name: 'tweaks',
   initialState: initialTweaksState,
   reducers: {
-    setCustomEndpoint: (
-      state,
-      { payload: { customEndpoint } }: PayloadAction<{ customEndpoint?: CustomEndpoint }>
-    ) => {
+    setCustomEndpoint: (state, { payload: { customEndpoint } }: PayloadAction<{ customEndpoint?: CustomEndpoint }>) => {
       state.customEndpoint = customEndpoint
     },
   },

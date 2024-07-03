@@ -23,9 +23,11 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           inputCurrency: undefined,
           outputCurrency: undefined,
         },
+        initialChainId: props.chainId ?? UniverseChainId.Mainnet,
         chainId: props.chainId ?? UniverseChainId.Mainnet,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
+        isSwapAndLimitContext: true,
       }}
     >
       <SwapContext.Provider
@@ -49,7 +51,7 @@ describe('SwapHeader.tsx', () => {
     const { asFragment } = render(
       <Wrapper>
         <SwapHeader compact={false} syncTabToUrl={false} />
-      </Wrapper>
+      </Wrapper>,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Swap')).toBeInTheDocument()
@@ -62,7 +64,7 @@ describe('SwapHeader.tsx', () => {
     render(
       <Wrapper setCurrentTab={onClickTab}>
         <SwapHeader compact={false} syncTabToUrl={true} />
-      </Wrapper>
+      </Wrapper>,
     )
     act(() => {
       screen.getByText('Limit').click()

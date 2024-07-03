@@ -181,7 +181,7 @@ export function getLoadingTitle(
   token: Currency | undefined,
   tokenAddress: string,
   chainId: number,
-  chainName: string | undefined
+  chainName: string | undefined,
 ): ReactNode {
   let tokenName = ''
   if (token?.name && token?.symbol) {

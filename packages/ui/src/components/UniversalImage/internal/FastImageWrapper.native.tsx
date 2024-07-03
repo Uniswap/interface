@@ -15,8 +15,7 @@ export function FastImageWrapper({
   const isLoaded = useSharedValue(false)
 
   const aspectRatio =
-    size.aspectRatio ??
-    (size.width !== undefined && size.height !== undefined ? size.width / size.height : undefined)
+    size.aspectRatio ?? (size.width !== undefined && size.height !== undefined ? size.width / size.height : undefined)
 
   // Ensure that the image is displayed together with styles applied
   // to the container only after it has been loaded (e.g. to prevent
@@ -49,11 +48,7 @@ export function FastImageWrapper({
           uri,
           cache: FastImage.cacheControl.immutable,
         }}
-        style={[
-          styles.image,
-          [styles.fullWidth, { maxHeight: size.height ?? '100%' }, style],
-          { aspectRatio },
-        ]}
+        style={[styles.image, [styles.fullWidth, { maxHeight: size.height ?? '100%' }, style], { aspectRatio }]}
         onError={setError}
         onLoad={(): void => {
           isLoaded.value = true

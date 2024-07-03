@@ -70,12 +70,7 @@ import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import {
-  FiatOnRampScreens,
-  MobileScreens,
-  OnboardingScreens,
-  UnitagScreens,
-} from 'uniswap/src/types/screens/mobile'
+import { FiatOnRampScreens, MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -94,27 +89,19 @@ function SettingsStackGroup(): JSX.Element {
         ...navOptions.noHeader,
         fullScreenGestureEnabled: true,
         animation: 'slide_from_right',
-      }}>
+      }}
+    >
       <SettingsStack.Screen component={SettingsScreen} name={MobileScreens.Settings} />
       <SettingsStack.Screen component={SettingsWallet} name={MobileScreens.SettingsWallet} />
-      <SettingsStack.Screen
-        component={SettingsWalletEdit}
-        name={MobileScreens.SettingsWalletEdit}
-      />
+      <SettingsStack.Screen component={SettingsWalletEdit} name={MobileScreens.SettingsWalletEdit} />
       <SettingsStack.Screen
         component={SettingsWalletManageConnection}
         name={MobileScreens.SettingsWalletManageConnection}
       />
       <SettingsStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <SettingsStack.Screen component={DevScreen} name={MobileScreens.Dev} />
-      <SettingsStack.Screen
-        component={SettingsBiometricAuthScreen}
-        name={MobileScreens.SettingsBiometricAuth}
-      />
-      <SettingsStack.Screen
-        component={SettingsViewSeedPhraseScreen}
-        name={MobileScreens.SettingsViewSeedPhrase}
-      />
+      <SettingsStack.Screen component={SettingsBiometricAuthScreen} name={MobileScreens.SettingsBiometricAuth} />
+      <SettingsStack.Screen component={SettingsViewSeedPhraseScreen} name={MobileScreens.SettingsViewSeedPhrase} />
       <SettingsStack.Screen
         component={SettingsCloudBackupPasswordCreateScreen}
         name={MobileScreens.SettingsCloudBackupPasswordCreate}
@@ -127,18 +114,9 @@ function SettingsStackGroup(): JSX.Element {
         component={SettingsCloudBackupProcessingScreen}
         name={MobileScreens.SettingsCloudBackupProcessing}
       />
-      <SettingsStack.Screen
-        component={SettingsCloudBackupStatus}
-        name={MobileScreens.SettingsCloudBackupStatus}
-      />
-      <SettingsStack.Screen
-        component={SettingsAppearanceScreen}
-        name={MobileScreens.SettingsAppearance}
-      />
-      <SettingsStack.Screen
-        component={SettingsPrivacyScreen}
-        name={MobileScreens.SettingsPrivacy}
-      />
+      <SettingsStack.Screen component={SettingsCloudBackupStatus} name={MobileScreens.SettingsCloudBackupStatus} />
+      <SettingsStack.Screen component={SettingsAppearanceScreen} name={MobileScreens.SettingsAppearance} />
+      <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
     </SettingsStack.Navigator>
   )
 }
@@ -169,7 +147,8 @@ export function ExploreStackNavigator(): JSX.Element {
           border: 'transparent',
           notification: 'transparent',
         },
-      }}>
+      }}
+    >
       <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
         initialRouteName={MobileScreens.Explore}
@@ -178,10 +157,10 @@ export function ExploreStackNavigator(): JSX.Element {
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
           animation: 'slide_from_right',
-        }}>
+        }}
+      >
         <ExploreStack.Screen component={ExploreScreen} name={MobileScreens.Explore} />
-        <ExploreStack.Group
-          screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
+        <ExploreStack.Group screenOptions={{ contentStyle: { backgroundColor: colors.surface1.val } }}>
           <ExploreStack.Screen name={MobileScreens.ExternalProfile}>
             {(props): JSX.Element => <ExternalProfileScreen {...props} renderedInModal />}
           </ExploreStack.Screen>
@@ -208,19 +187,14 @@ export function FiatOnRampStackNavigator(): JSX.Element {
             fullScreenGestureEnabled: true,
             gestureEnabled: true,
             animation: 'slide_from_right',
-          }}>
-          <FiatOnRampStack.Screen
-            component={FiatOnRampScreen}
-            name={FiatOnRampScreens.AmountInput}
-          />
+          }}
+        >
+          <FiatOnRampStack.Screen component={FiatOnRampScreen} name={FiatOnRampScreens.AmountInput} />
           <FiatOnRampStack.Screen
             component={FiatOnRampServiceProvidersScreen}
             name={FiatOnRampScreens.ServiceProviders}
           />
-          <FiatOnRampStack.Screen
-            component={FiatOnRampConnectingScreen}
-            name={FiatOnRampScreens.Connecting}
-          />
+          <FiatOnRampStack.Screen component={FiatOnRampConnectingScreen} name={FiatOnRampScreens.Connecting} />
         </FiatOnRampStack.Navigator>
       </FiatOnRampProvider>
     </NavigationContainer>
@@ -232,9 +206,7 @@ const renderHeaderBackButton = (): JSX.Element => <BackButton color="$neutral2" 
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
-  const SeedPhraseInputComponent = seedPhraseRefactorEnabled
-    ? SeedPhraseInputScreenV2
-    : SeedPhraseInputScreen
+  const SeedPhraseInputComponent = seedPhraseRefactorEnabled ? SeedPhraseInputScreenV2 : SeedPhraseInputScreen
 
   const isOnboardingKeyringEnabled = useFeatureFlag(FeatureFlags.OnboardingKeyring)
 
@@ -249,7 +221,8 @@ export function OnboardingStackNavigator(): JSX.Element {
             headerTransparent: true,
             headerTintColor: colors.neutral2.val,
             animation: 'slide_from_right',
-          }}>
+          }}
+        >
           {isOnboardingKeyringEnabled && (
             <OnboardingStack.Screen
               component={AppLoadingScreen}
@@ -269,22 +242,10 @@ export function OnboardingStackNavigator(): JSX.Element {
             options={{ animation: 'fade' }}
           />
           <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
-          <OnboardingStack.Screen
-            component={NotificationsSetupScreen}
-            name={OnboardingScreens.Notifications}
-          />
-          <OnboardingStack.Screen
-            component={SecuritySetupScreen}
-            name={OnboardingScreens.Security}
-          />
-          <OnboardingStack.Screen
-            component={ManualBackupScreen}
-            name={OnboardingScreens.BackupManual}
-          />
-          <OnboardingStack.Screen
-            component={WelcomeWalletScreen}
-            name={OnboardingScreens.WelcomeWallet}
-          />
+          <OnboardingStack.Screen component={NotificationsSetupScreen} name={OnboardingScreens.Notifications} />
+          <OnboardingStack.Screen component={SecuritySetupScreen} name={OnboardingScreens.Security} />
+          <OnboardingStack.Screen component={ManualBackupScreen} name={OnboardingScreens.BackupManual} />
+          <OnboardingStack.Screen component={WelcomeWalletScreen} name={OnboardingScreens.WelcomeWallet} />
           <OnboardingStack.Screen
             component={CloudBackupProcessingScreen}
             name={OnboardingScreens.BackupCloudProcessing}
@@ -297,10 +258,7 @@ export function OnboardingStackNavigator(): JSX.Element {
             component={CloudBackupPasswordConfirmScreen}
             name={OnboardingScreens.BackupCloudPasswordConfirm}
           />
-          <OnboardingStack.Screen
-            component={ImportMethodScreen}
-            name={OnboardingScreens.ImportMethod}
-          />
+          <OnboardingStack.Screen component={ImportMethodScreen} name={OnboardingScreens.ImportMethod} />
           <OnboardingStack.Screen
             component={OnDeviceRecoveryScreen}
             name={OnboardingScreens.OnDeviceRecovery}
@@ -315,35 +273,21 @@ export function OnboardingStackNavigator(): JSX.Element {
             component={RestoreCloudBackupLoadingScreen}
             name={OnboardingScreens.RestoreCloudBackupLoading}
           />
-          <OnboardingStack.Screen
-            component={RestoreCloudBackupScreen}
-            name={OnboardingScreens.RestoreCloudBackup}
-          />
+          <OnboardingStack.Screen component={RestoreCloudBackupScreen} name={OnboardingScreens.RestoreCloudBackup} />
           <OnboardingStack.Screen
             component={RestoreCloudBackupPasswordScreen}
             name={OnboardingScreens.RestoreCloudBackupPassword}
           />
-          <OnboardingStack.Screen
-            component={SeedPhraseInputComponent}
-            name={OnboardingScreens.SeedPhraseInput}
-          />
-          <OnboardingStack.Screen
-            component={SelectWalletScreen}
-            name={OnboardingScreens.SelectWallet}
-          />
-          <OnboardingStack.Screen
-            component={WatchWalletScreen}
-            name={OnboardingScreens.WatchWallet}
-          />
+          <OnboardingStack.Screen component={SeedPhraseInputComponent} name={OnboardingScreens.SeedPhraseInput} />
+          <OnboardingStack.Screen component={SelectWalletScreen} name={OnboardingScreens.SelectWallet} />
+          <OnboardingStack.Screen component={WatchWalletScreen} name={OnboardingScreens.WatchWallet} />
         </OnboardingStack.Group>
       </OnboardingStack.Navigator>
     </OnboardingContextProvider>
   )
 }
 
-const renderHeaderBackImage = (): JSX.Element => (
-  <RotatableChevron color="$neutral2" height={28} width={28} />
-)
+const renderHeaderBackImage = (): JSX.Element => <RotatableChevron color="$neutral2" height={28} width={28} />
 
 export function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()
@@ -363,7 +307,8 @@ export function UnitagStackNavigator(): JSX.Element {
           headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
           headerRightContainerStyle: { paddingRight: spacing.spacing16 },
           ...TransitionPresets.SlideFromRightIOS,
-        }}>
+        }}
+      >
         <UnitagStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
         <UnitagStack.Screen
           component={ChooseProfilePictureScreen}
@@ -396,10 +341,9 @@ export function AppStackNavigator(): JSX.Element {
         fullScreenGestureEnabled: true,
         gestureEnabled: true,
         animation: 'slide_from_right',
-      }}>
-      {finishedOnboarding && (
-        <AppStack.Screen component={WrappedHomeScreen} name={MobileScreens.Home} />
-      )}
+      }}
+    >
+      {finishedOnboarding && <AppStack.Screen component={WrappedHomeScreen} name={MobileScreens.Home} />}
       <AppStack.Screen
         component={OnboardingStackNavigator}
         name={MobileScreens.OnboardingStack}

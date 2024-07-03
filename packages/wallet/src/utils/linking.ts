@@ -3,14 +3,11 @@ import { Linking } from 'react-native'
 import { colorsLight } from 'ui/src/theme'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import {
-  FiatPurchaseTransactionInfo,
-  ServiceProviderInfo,
-} from 'wallet/src/features/transactions/types'
-import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
+import { FiatPurchaseTransactionInfo, ServiceProviderInfo } from 'wallet/src/features/transactions/types'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
@@ -29,7 +26,7 @@ export async function openUri(
   openExternalBrowser = false,
   isSafeUri = false,
   // NOTE: okay to use colors object directly as we want the same color for light/dark modes
-  controlsColor = colorsLight.accent1
+  controlsColor = colorsLight.accent1,
 ): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
@@ -73,10 +70,7 @@ export function dismissInAppBrowser(): void {
   WebBrowser.dismissBrowser()
 }
 
-export async function openTransactionLink(
-  hash: string | undefined,
-  chainId: WalletChainId
-): Promise<void> {
+export async function openTransactionLink(hash: string | undefined, chainId: WalletChainId): Promise<void> {
   if (!hash) {
     return
   }
@@ -101,11 +95,8 @@ const SERVICE_PROVIDER_SUPPORT_URLS: Record<string, string> = {
   STRIPE: 'https://support.stripe.com/',
 }
 
-export async function openLegacyFiatOnRampServiceProviderLink(
-  serviceProvider: string
-): Promise<void> {
-  const helpUrl =
-    SERVICE_PROVIDER_SUPPORT_URLS[serviceProvider] ?? 'https://www.moonpay.com/contact-us'
+export async function openLegacyFiatOnRampServiceProviderLink(serviceProvider: string): Promise<void> {
+  const helpUrl = SERVICE_PROVIDER_SUPPORT_URLS[serviceProvider] ?? 'https://www.moonpay.com/contact-us'
   return openUri(helpUrl)
 }
 
@@ -130,11 +121,7 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(
-  chainId: WalletChainId,
-  data: string,
-  type: ExplorerDataType
-): string {
+export function getExplorerLink(chainId: WalletChainId, data: string, type: ExplorerDataType): string {
   const prefix = UNIVERSE_CHAIN_INFO[chainId].explorer.url
 
   switch (type) {
@@ -180,10 +167,7 @@ export function getProfileUrl(walletAddress: string): string {
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
-export function getTokenUrl(
-  currencyId: string,
-  addMobileUTMTags: boolean = false
-): string | undefined {
+export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return

@@ -47,7 +47,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
     ...renderOptions
-  }: ExtendedRenderOptions = {}
+  }: ExtendedRenderOptions = {},
 ): RenderResult & {
   store: EnhancedStore
 } {
@@ -85,13 +85,13 @@ type RenderHookWithProvidersResult<R, P = undefined> = Omit<RenderHookResult<R, 
 // Don't require hookOptions if hook doesn't take any arguments
 export function renderHookWithProviders<R>(
   hook: () => R,
-  hookOptions?: ExtendedRenderHookOptions<undefined>
+  hookOptions?: ExtendedRenderHookOptions<undefined>,
 ): RenderHookWithProvidersResult<R>
 
 // Require hookOptions if hook takes arguments
 export function renderHookWithProviders<R, P>(
   hook: (args: P) => R,
-  hookOptions: ExtendedRenderHookOptions<P>
+  hookOptions: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P>
 
 /**
@@ -103,7 +103,7 @@ export function renderHookWithProviders<R, P>(
  */
 export function renderHookWithProviders<P, R>(
   hook: (args: P) => R,
-  hookOptions?: ExtendedRenderHookOptions<P>
+  hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
     resolvers,

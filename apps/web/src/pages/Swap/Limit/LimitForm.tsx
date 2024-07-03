@@ -21,6 +21,7 @@ import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'const
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import useSelectChain from 'hooks/useSelectChain'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
@@ -85,6 +86,7 @@ type LimitFormProps = {
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const account = useAccount()
+  const selectChain = useSelectChain()
   const {
     chainId,
     currencyState: { inputCurrency, outputCurrency },
@@ -153,7 +155,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         isInputAmountFixed: type !== 'outputAmount',
       }))
     },
-    [setLimitState]
+    [setLimitState],
   )
 
   const switchTokens = useCallback(() => {
@@ -193,28 +195,22 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       onCurrencyChange?.(newCurrencyState)
       setCurrencyState(newCurrencyState)
     },
-    [inputCurrency, onCurrencyChange, outputCurrency, setCurrencyState, setLimitState, switchTokens]
+    [inputCurrency, onCurrencyChange, outputCurrency, setCurrencyState, setLimitState, switchTokens],
   )
 
   useEffect(() => {
-    if (!outputCurrency && isSupportedChain && account.chainId) {
-      onSelectCurrency('outputCurrency', getChain({ chainId: account.chainId }).spotPriceStablecoinAmount.currency)
+    if (!outputCurrency && isSupportedChain) {
+      onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
     }
-  }, [account.chainId, onSelectCurrency, outputCurrency, isSupportedChain])
+  }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId])
 
   useEffect(() => {
-    if (
-      isSupportedChain &&
-      inputCurrency &&
-      outputCurrency &&
-      (inputCurrency.isNative || outputCurrency.isNative) &&
-      account.chainId
-    ) {
+    if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
       const [nativeCurrency, nonNativeCurrency] = inputCurrency.isNative
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', getChain({ chainId: account.chainId }).spotPriceStablecoinAmount.currency)
+        onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,7 +218,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
-    [currencyBalances]
+    [currencyBalances],
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
@@ -235,8 +231,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const allowance = usePermit2Allowance(
     parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
-    isSupportedChain && account.chainId ? UNIVERSAL_ROUTER_ADDRESS(account.chainId) : undefined,
-    TradeFillType.UniswapX
+    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    TradeFillType.UniswapX,
   )
 
   const fiatValueTradeInput = useUSDPrice(parsedAmounts.INPUT)
@@ -287,7 +283,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     limitOrderTrade,
     fiatValues,
     ZERO_PERCENT,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
   )
 
   const handleSubmit = useCallback(async () => {
@@ -352,7 +348,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       {parsedLimitPrice && <LimitExpirySection />}
       <SubmitOrderButton
         inputCurrency={inputCurrency}
-        handleContinueToReview={() => {
+        handleContinueToReview={async () => {
+          if (chainId && chainId !== account.chainId) {
+            const didSwitchChain = await selectChain(chainId)
+            if (!didSwitchChain) {
+              return
+            }
+          }
           setShowConfirm(true)
         }}
         trade={limitOrderTrade}
@@ -378,12 +380,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         />
       )}
       <LimitDisclaimerContainer>
-        <StyledAlertIcon
-          size={20}
-          color={!isUniswapXSupportedChain(account.chainId) ? theme.critical : theme.neutral2}
-        />
+        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
         <DisclaimerText>
-          {!isUniswapXSupportedChain(account.chainId) ? (
+          {!isUniswapXSupportedChain(chainId) ? (
             <Trans i18nKey="limits.onlyMainnet">
               <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}>
                 <Trans i18nKey="common.learnMore.link" />
@@ -441,8 +440,9 @@ function SubmitOrderButton({
 }) {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
 
-  if (!isUniswapXSupportedChain(account.chainId)) {
+  if (!isUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
         <Trans i18nKey="limits.selectSupportedTokens" />

@@ -3,27 +3,21 @@ import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  insufficientNativeTokenTextVariant,
-  type InsufficientNativeTokenWarningProps,
-} from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { type InsufficientNativeTokenWarningProps } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/constants'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { useNetworkColors } from 'wallet/src/utils/colors'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
-export function useInsufficientNativeTokenWarning({
-  flow,
-  gasFee,
-  warnings,
-}: InsufficientNativeTokenWarningProps): {
+export function useInsufficientNativeTokenWarning({ flow, gasFee, warnings }: InsufficientNativeTokenWarningProps): {
   gasAmount: CurrencyAmount<NativeCurrency> | null | undefined
   gasAmountFiatFormatted: string
   nativeCurrency: Currency
@@ -48,19 +42,14 @@ export function useInsufficientNativeTokenWarning({
       getCurrencyAmount({
         value: gasFee.value,
         valueType: ValueType.Raw,
-        currency: nativeCurrency?.chainId
-          ? NativeCurrency.onChain(nativeCurrency.chainId)
-          : undefined,
+        currency: nativeCurrency?.chainId ? NativeCurrency.onChain(nativeCurrency.chainId) : undefined,
       }),
-    [gasFee.value, nativeCurrency?.chainId]
+    [gasFee.value, nativeCurrency?.chainId],
   )
 
   const gasAmountUsd = useUSDCValue(gasAmount)
 
-  const gasAmountFiatFormatted = convertFiatAmountFormatted(
-    gasAmountUsd?.toExact(),
-    NumberType.FiatGasPrice
-  )
+  const gasAmountFiatFormatted = convertFiatAmountFormatted(gasAmountUsd?.toExact(), NumberType.FiatGasPrice)
 
   if (!warning || !nativeCurrency || !nativeCurrencyInfo) {
     return null
@@ -81,7 +70,7 @@ export function useInsufficientNativeTokenWarning({
         // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
         // which causes the value `<$0.01` to be incorrectly escaped.
         fiatTokenAmount: (
-          <Text color="$neutral2" variant={insufficientNativeTokenTextVariant}>
+          <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
             {gasAmountFiatFormatted}
           </Text>
         ),

@@ -41,7 +41,7 @@ export function DeleteUnitagModal({
       pushNotification({
         type: AppNotificationType.Error,
         errorMessage: t('unitags.notification.delete.error'),
-      })
+      }),
     )
     onClose()
   }
@@ -68,7 +68,7 @@ export function DeleteUnitagModal({
           pushNotification({
             type: AppNotificationType.Success,
             title: t('unitags.notification.delete.title'),
-          })
+          }),
         )
         navigation.goBack()
         onClose()
@@ -90,7 +90,8 @@ export function DeleteUnitagModal({
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"
-          minWidth="$spacing48">
+          minWidth="$spacing48"
+        >
           <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
@@ -100,12 +101,7 @@ export function DeleteUnitagModal({
           {t('unitags.delete.confirm.subtitle')}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
-          <Button
-            fill
-            disabled={isDeleting}
-            testID={ElementName.Remove}
-            theme="detrimental"
-            onPress={onDelete}>
+          <Button fill disabled={isDeleting} testID={ElementName.Remove} theme="detrimental" onPress={onDelete}>
             {isDeleting ? (
               <Flex height={fonts.buttonLabel1.lineHeight}>
                 <ActivityIndicator color={colors.sporeWhite.val} />

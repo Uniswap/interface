@@ -103,8 +103,7 @@ export const fiatOnRampApi = createApi({
                   c.type === 'crypto' &&
                   c[moonpaySupportField] &&
                   (!isUserInUS ||
-                    (c.isSupportedInUS &&
-                      (!stateInUS || c.notAllowedUSStates.indexOf(stateInUS) === -1)))
+                    (c.isSupportedInUS && (!stateInUS || c.notAllowedUSStates.indexOf(stateInUS) === -1))),
               ),
             }
           })
@@ -124,14 +123,12 @@ export const fiatOnRampApi = createApi({
       queryFn: ({ quoteCurrencyCode, baseCurrencyCode, baseCurrencyAmount, areFeesIncluded }) =>
         // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(
-          `${
-            config.moonpayApiUrl
-          }/v3/currencies/${quoteCurrencyCode}/buy_quote?${serializeQueryParams({
+          `${config.moonpayApiUrl}/v3/currencies/${quoteCurrencyCode}/buy_quote?${serializeQueryParams({
             baseCurrencyCode,
             baseCurrencyAmount,
             areFeesIncluded,
             apiKey: config.moonpayApiKey,
-          })}`
+          })}`,
         )
           .then((response) => response.json())
           .then((response: MoonpayBuyQuoteResponse) => {
@@ -152,13 +149,11 @@ export const fiatOnRampApi = createApi({
       queryFn: ({ quoteCurrencyCode, baseCurrencyCode, areFeesIncluded }) =>
         // TODO: [MOB-223] consider a reverse proxy for privacy reasons
         fetch(
-          `${config.moonpayApiUrl}/v3/currencies/${quoteCurrencyCode}/limits?${serializeQueryParams(
-            {
-              baseCurrencyCode,
-              areFeesIncluded,
-              apiKey: config.moonpayApiKey,
-            }
-          )}`
+          `${config.moonpayApiUrl}/v3/currencies/${quoteCurrencyCode}/limits?${serializeQueryParams({
+            baseCurrencyCode,
+            areFeesIncluded,
+            apiKey: config.moonpayApiKey,
+          })}`,
         )
           .then((response) => response.json())
           .then((response: MoonpayLimitsResponse) => {
@@ -192,7 +187,7 @@ export const fiatOnRampApi = createApi({
             supportedCurrencyCodes.reduce<Record<string, Address>>((acc, code: string) => {
               acc[code] = ownerAddress
               return acc
-            }, {})
+            }, {}),
           ),
         },
         method: 'POST',
@@ -226,11 +221,7 @@ export const fiatOnRampAggregatorApi = createApi({
           if (!account) {
             throw new Error('No active account')
           }
-          const { requestParams, signature } = await createSignedRequestParams(
-            args,
-            account,
-            signerManager
-          )
+          const { requestParams, signature } = await createSignedRequestParams(args, account, signerManager)
           const result = await baseQuery({
             url: `/transaction?${objectToQueryString(requestParams)}`,
             method: 'GET',
@@ -256,10 +247,10 @@ export const { useFiatOnRampAggregatorTransactionQuery } = fiatOnRampAggregatorA
  * Utility to fetch fiat onramp transactions from moonpay
  */
 export function fetchMoonpayTransaction(
-  previousTransactionDetails: FiatOnRampTransactionDetails
+  previousTransactionDetails: FiatOnRampTransactionDetails,
 ): Promise<FiatOnRampTransactionDetails | undefined> {
   return fetch(
-    `${config.moonpayApiUrl}/v1/transactions/ext/${previousTransactionDetails.id}?${COMMON_QUERY_PARAMS}`
+    `${config.moonpayApiUrl}/v1/transactions/ext/${previousTransactionDetails.id}?${COMMON_QUERY_PARAMS}`,
   ).then((res) => {
     if (res.status === TRANSACTION_NOT_FOUND) {
       // If Moonpay API returned 404 for the given external transaction id
@@ -268,14 +259,14 @@ export function fetchMoonpayTransaction(
       // to avoid leaving placeholders as "pending" for too long, we mark them
       // as "unknown" after some time
       const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
-        dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')
+        dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms'),
       )
 
       if (isStale) {
         logger.debug(
           'fiatOnRamp/api',
           'fetchFiatOnRampTransaction',
-          `Transaction with id ${previousTransactionDetails.id} not found.`
+          `Transaction with id ${previousTransactionDetails.id} not found.`,
         )
 
         return {
@@ -288,11 +279,9 @@ export function fetchMoonpayTransaction(
         logger.debug(
           'fiatOnRamp/api',
           'fetchFiatOnRampTransaction',
-          `Transaction with id ${
-            previousTransactionDetails.id
-          } not found, but not stale yet (${dayjs()
+          `Transaction with id ${previousTransactionDetails.id} not found, but not stale yet (${dayjs()
             .subtract(previousTransactionDetails.addedTime, 'ms')
-            .unix()}s old).`
+            .unix()}s old).`,
         )
 
         return previousTransactionDetails
@@ -302,8 +291,8 @@ export function fetchMoonpayTransaction(
     return res.json().then((transactions: MoonpayTransactionsResponse) =>
       extractMoonpayTransactionDetails(
         // log while we have the full moonpay tx response
-        transactions.sort((a, b) => (dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1))?.[0]
-      )
+        transactions.sort((a, b) => (dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1))?.[0],
+      ),
     )
   })
 }
@@ -315,7 +304,7 @@ export async function fetchFiatOnRampTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
   forceFetch: boolean,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<FiatOnRampTransactionDetails | undefined> {
   // Force fetch if requested or for the first 3 minutes after the transaction was added
   const shouldForceFetch = shouldForceFetchTransaction(previousTransactionDetails, forceFetch)
@@ -323,28 +312,25 @@ export async function fetchFiatOnRampTransaction(
   const { requestParams, signature } = await createSignedRequestParams<FORTransactionRequest>(
     { sessionId: previousTransactionDetails.id, forceFetch: shouldForceFetch },
     account,
-    signerManager
+    signerManager,
   )
-  const res = await fetch(
-    `${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`,
-    {
-      headers: {
-        'x-uni-sig': signature,
-        ...FOR_API_HEADERS,
-      },
-    }
-  )
+  const res = await fetch(`${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`, {
+    headers: {
+      'x-uni-sig': signature,
+      ...FOR_API_HEADERS,
+    },
+  })
   const { transaction }: FORTransactionResponse = await res.json()
   if (!transaction) {
     const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
-      dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')
+      dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms'),
     )
 
     if (isStale) {
       logger.debug(
         'fiatOnRamp/api',
         'fetchFiatOnRampTransaction',
-        `Transaction with id ${previousTransactionDetails.id} not found.`
+        `Transaction with id ${previousTransactionDetails.id} not found.`,
       )
 
       return {
@@ -357,11 +343,9 @@ export async function fetchFiatOnRampTransaction(
       logger.debug(
         'fiatOnRamp/api',
         'fetchFiatOnRampTransaction',
-        `Transaction with id ${
-          previousTransactionDetails.id
-        } not found, but not stale yet (${dayjs()
+        `Transaction with id ${previousTransactionDetails.id} not found, but not stale yet (${dayjs()
           .subtract(previousTransactionDetails.addedTime, 'ms')
-          .unix()}s old).`
+          .unix()}s old).`,
       )
 
       return previousTransactionDetails
@@ -373,10 +357,10 @@ export async function fetchFiatOnRampTransaction(
 
 function shouldForceFetchTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
-  forceFetch: boolean
+  forceFetch: boolean,
 ): boolean {
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
-    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms')
+    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
   )
   const isSyncedWithBackend = previousTransactionDetails.typeInfo?.syncedWithBackend
   return forceFetch || (isRecent && !isSyncedWithBackend)

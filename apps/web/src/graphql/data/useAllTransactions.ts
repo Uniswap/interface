@@ -24,7 +24,7 @@ const ALL_TX_DEFAULT_QUERY_SIZE = 20
 
 export function useAllTransactions(
   chain: Chain,
-  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE]
+  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE],
 ) {
   const isWindowVisible = useIsWindowVisible()
 
@@ -94,17 +94,17 @@ export function useAllTransactions(
         },
       })
     },
-    [dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3]
+    [dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3],
   )
 
   const transactions: PoolTransaction[] = useMemo(() => {
     const v3Transactions =
       dataV3?.v3Transactions?.filter(
-        (tx): tx is PoolTransaction => tx.type && filter.includes(BETypeToTransactionType[tx.type])
+        (tx): tx is PoolTransaction => tx.type && filter.includes(BETypeToTransactionType[tx.type]),
       ) ?? []
     const v2Transactions =
       dataV2?.v2Transactions?.filter(
-        (tx): tx is PoolTransaction => tx !== undefined && tx.type && filter.includes(BETypeToTransactionType[tx.type])
+        (tx): tx is PoolTransaction => tx !== undefined && tx.type && filter.includes(BETypeToTransactionType[tx.type]),
       ) ?? []
     return [...v3Transactions, ...v2Transactions]
       .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))

@@ -45,7 +45,7 @@ export function TokenBalances({
       preload(currencyId)
       navigateWithPop(currencyId)
     },
-    [navigateWithPop, preload]
+    [navigateWithPop, preload],
   )
 
   if (!hasCurrentChainBalances && !hasOtherChainBalances) {
@@ -106,14 +106,10 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
-          {isReadonly
-            ? t('token.balances.viewOnly', { ownerAddress: displayName })
-            : t('token.balances.main')}
+          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName }) : t('token.balances.main')}
         </Text>
         <Flex fill gap="$spacing4">
-          <Text variant="heading3">
-            {convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
-          </Text>
+          <Text variant="heading3">{convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}</Text>
           <Text color="$neutral2" variant="body2">
             {formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })}{' '}
             {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}

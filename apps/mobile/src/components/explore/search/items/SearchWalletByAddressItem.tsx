@@ -2,11 +2,11 @@ import React from 'react'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { WalletByAddressSearchResult } from 'wallet/src/features/search/SearchResult'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type SearchWalletByAddressItemProps = {
   searchResult: WalletByAddressSearchResult
@@ -27,11 +27,7 @@ export function SearchWalletByAddressItem({
       <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
         <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
         <Flex shrink>
-          <Text
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            testID={`address-display/name/${ensName}`}
-            variant="body1">
+          <Text ellipsizeMode="tail" numberOfLines={1} testID={`address-display/name/${ensName}`} variant="body1">
             {ensName || formattedAddress}
           </Text>
           {ensName ? (

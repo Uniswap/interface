@@ -73,11 +73,7 @@ export const mockFiatConverter: LocalizationContextState = {
   formatPercent(_: Maybe<string | number>): string {
     throw new Error('Function not implemented.')
   },
-  addFiatSymbolToNumber(_: {
-    value: Maybe<string | number>
-    currencyCode: string
-    currencySymbol: string
-  }): string {
+  addFiatSymbolToNumber(_: { value: Maybe<string | number>; currencyCode: string; currencySymbol: string }): string {
     throw new Error('Function not implemented.')
   },
 }

@@ -142,8 +142,7 @@ export const DecimalPad = memo(function DecimalPad({
         <Flex key={rowIndex} row alignItems="center">
           {row.map((key, keyIndex) => {
             const isNumberKey =
-              key.label.charCodeAt(0) >= '0'.charCodeAt(0) &&
-              key.label.charCodeAt(0) <= '9'.charCodeAt(0)
+              key.label.charCodeAt(0) >= '0'.charCodeAt(0) && key.label.charCodeAt(0) <= '9'.charCodeAt(0)
 
             const isKeyDisabled = disabled || disabledKeys[key.label]
             const shouldTriggerShake = isKeyDisabled && isNumberKey
@@ -231,7 +230,8 @@ const KeyButton = memo(function KeyButton({
       testID={'decimal-pad-' + label}
       width={keyWidth}
       onLongPress={handleLongPress}
-      onPress={handlePress}>
+      onPress={handlePress}
+    >
       {label === 'backspace' ? (
         I18nManager.isRTL ? (
           <RightArrow color={color} size={24 * sizeMultiplier.icon} />
@@ -245,7 +245,8 @@ const KeyButton = memo(function KeyButton({
             lineHeight: fonts.heading2.lineHeight * sizeMultiplier.lineHeight,
             fontSize: fonts.heading2.fontSize * sizeMultiplier.fontSize,
           }}
-          textAlign="center">
+          textAlign="center"
+        >
           {
             label === '.' ? decimalSeparator : label
             /* respect phone settings to show decimal separator in the numpad,

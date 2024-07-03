@@ -3,10 +3,9 @@ import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { RootParamList } from 'src/app/navigation/types'
 import { logger } from 'utilities/src/logger/logger'
 
-export type RootNavigationArgs<RouteName extends keyof RootParamList> =
-  undefined extends RootParamList[RouteName]
-    ? [RouteName] | [RouteName, RootParamList[RouteName]]
-    : [RouteName, RootParamList[RouteName]]
+export type RootNavigationArgs<RouteName extends keyof RootParamList> = undefined extends RootParamList[RouteName]
+  ? [RouteName] | [RouteName, RootParamList[RouteName]]
+  : [RouteName, RootParamList[RouteName]]
 
 function isNavigationRefReady(): boolean {
   if (!navigationRef.isReady()) {
@@ -18,9 +17,7 @@ function isNavigationRefReady(): boolean {
   return true
 }
 
-export function navigate<RouteName extends keyof RootParamList>(
-  ...args: RootNavigationArgs<RouteName>
-): void {
+export function navigate<RouteName extends keyof RootParamList>(...args: RootNavigationArgs<RouteName>): void {
   const [routeName, params] = args
   if (!isNavigationRefReady()) {
     return
@@ -42,7 +39,7 @@ export function goBack(): void {
 }
 
 export function dispatchNavigationAction(
-  action: NavigationAction | ((state: NavigationState) => NavigationAction)
+  action: NavigationAction | ((state: NavigationState) => NavigationAction),
 ): void {
   if (!isNavigationRefReady()) {
     return

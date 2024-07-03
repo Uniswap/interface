@@ -1,11 +1,12 @@
 import { t } from 'i18n'
 import { ReactNode } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-const Container = styled.div<{ $size: number; $isActive: boolean }>`
+const ContainerBase = css<{ $size: number }>`
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
-  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
   position: relative;
   display: flex;
   flex-direction: column;
@@ -15,10 +16,23 @@ const Container = styled.div<{ $size: number; $isActive: boolean }>`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  border-radius: 16px;
-  transition: 250;
+  transition: all 250ms;
   z-index: 1;
+`
+const LegacyContainer = styled.div<{ $size: number; $isActive: boolean }>`
+  ${ContainerBase}
+  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
+  border-radius: 16px;
   transform: translateY(-1px) translateX(4px);
+`
+const Container = styled.div<{ $size: number; $isActive: boolean }>`
+  ${ContainerBase}
+  background-color: ${({ $isActive, theme }) => ($isActive ? theme.surface1Hovered : 'transparent')};
+  color: ${({ theme }) => theme.neutral2};
+  border-radius: 50%;
+  &:hover {
+    background-color: ${({ theme }) => theme.surface1Hovered};
+  }
 `
 
 interface NavIconProps {
@@ -26,7 +40,7 @@ interface NavIconProps {
   size?: number
   isActive?: boolean
   label?: string
-  onClick: () => void
+  onClick?: () => void
 }
 
 export const NavIcon = ({
@@ -36,9 +50,14 @@ export const NavIcon = ({
   label = t('common.navigationButton'),
   onClick,
 }: NavIconProps) => {
-  return (
+  const isNavRefresh = useFeatureFlag(FeatureFlags.NavRefresh)
+  return isNavRefresh ? (
     <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
       {children}
     </Container>
+  ) : (
+    <LegacyContainer $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
+      {children}
+    </LegacyContainer>
   )
 }

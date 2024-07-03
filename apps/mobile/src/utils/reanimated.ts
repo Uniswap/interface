@@ -8,10 +8,7 @@
  * https://github.com/willsp/polyfill-Number.toLocaleString-with-Locales/blob/master/polyfill.number.toLocaleString.js
  */
 
-function replaceSeparators(
-  sNum: string,
-  separators: { decimal: string; thousands: string }
-): string {
+function replaceSeparators(sNum: string, separators: { decimal: string; thousands: string }): string {
   'worklet'
   const sNumParts = sNum.split('.')
   if (separators && separators.thousands && sNumParts[0]) {
@@ -24,10 +21,7 @@ function replaceSeparators(
   return sNum
 }
 
-function renderFormat(
-  template: string,
-  options: Record<string, string> & { num?: string; code?: string }
-): string {
+function renderFormat(template: string, options: Record<string, string> & { num?: string; code?: string }): string {
   'worklet'
   for (const [option, value] of Object.entries(options)) {
     let updatedValue = value
@@ -60,7 +54,7 @@ const round = (value: number, precision = 0): number => {
 
 function mapMatch(
   map: { [key in Language]: string | ((key: string, options?: OptionsType) => string) },
-  locale: Language
+  locale: Language,
 ): string | ((key: string, options?: OptionsType) => string) {
   'worklet'
   let match = locale
@@ -348,7 +342,7 @@ export function numberToLocaleStringWorklet(
   value: number,
   locale: Language = 'en-US',
   options: OptionsType = {},
-  symbol?: string
+  symbol?: string,
 ): string {
   'worklet'
   if (locale && locale.length < 2) {
@@ -372,10 +366,7 @@ export function numberToLocaleStringWorklet(
     sNum = value.toFixed(2)
   }
 
-  sNum = (<(key: string, options?: OptionsType) => string>mapMatch(transformForLocale, locale))(
-    sNum,
-    options
-  )
+  sNum = (<(key: string, options?: OptionsType) => string>mapMatch(transformForLocale, locale))(sNum, options)
 
   if (options && options.currency && options.style === 'currency') {
     const format = currencyFormats[<string>mapMatch(currencyFormatMap, locale)]
@@ -399,7 +390,7 @@ export function numberToPercentWorklet(
   options: {
     precision: number
     absolute: boolean
-  } = { precision: DEFAULT_PRECISION, absolute: DEFAULT_ABSOLUTE }
+  } = { precision: DEFAULT_PRECISION, absolute: DEFAULT_ABSOLUTE },
 ): string {
   'worklet'
 

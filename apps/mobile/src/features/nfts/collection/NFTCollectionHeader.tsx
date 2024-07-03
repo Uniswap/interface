@@ -77,12 +77,7 @@ export function NFTCollectionHeader({
           />
         ) : (
           // No uri found on collection
-          <Flex
-            style={[
-              bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val },
-            ]}
-          />
+          <Flex style={[bannerImageStyle, { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val }]} />
         )}
 
         {/* Banner buttons */}
@@ -91,7 +86,8 @@ export function NFTCollectionHeader({
           alignItems="center"
           justifyContent="space-between"
           mt={deviceTopPadding + spacing.spacing12}
-          mx="$spacing24">
+          mx="$spacing24"
+        >
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
             <BackButton color="$sporeWhite" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
@@ -111,13 +107,15 @@ export function NFTCollectionHeader({
             borderRadius="$roundedFull"
             height={PROFILE_IMAGE_WRAPPER_SIZE}
             justifyContent="center"
-            width={PROFILE_IMAGE_WRAPPER_SIZE}>
+            width={PROFILE_IMAGE_WRAPPER_SIZE}
+          >
             {data?.image?.url ? (
               <Flex
                 height={PROFILE_IMAGE_SIZE}
                 overflow="hidden"
                 style={{ borderRadius: PROFILE_IMAGE_SIZE }}
-                width={PROFILE_IMAGE_SIZE}>
+                width={PROFILE_IMAGE_SIZE}
+              >
                 <NFTViewer uri={data.image.url} />
               </Flex>
             ) : (
@@ -132,21 +130,13 @@ export function NFTCollectionHeader({
         </Flex>
 
         {/* Collection stats */}
-        <Flex
-          gap="$spacing12"
-          pt="$spacing12"
-          px="$spacing24"
-          style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
+        <Flex gap="$spacing12" pt="$spacing12" px="$spacing24" style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
           <Flex row alignItems="center" gap="$spacing8" mt="$spacing16">
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheading1">
               {data?.name ?? '-'}
             </Text>
             {data?.isVerified ? (
-              <VerifiedIcon
-                color={colors.accent1.get()}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
+              <VerifiedIcon color={colors.accent1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
             ) : null}
           </Flex>
 

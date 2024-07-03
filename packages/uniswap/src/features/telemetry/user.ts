@@ -48,7 +48,7 @@ export enum ExtensionUserPropertyName {
 export function setUserProperty(
   property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties,
   value: UserPropertyValue,
-  insert?: boolean
+  insert?: boolean,
 ): void {
   analytics.setUserProperty(property, value, insert)
 }

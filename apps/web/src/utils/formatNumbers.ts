@@ -721,7 +721,7 @@ const MAX_AMOUNT_STR_LENGTH = 9
 
 function formatReviewSwapCurrencyAmount(
   amount: CurrencyAmount<Currency>,
-  locale: SupportedLocale = DEFAULT_LOCALE
+  locale: SupportedLocale = DEFAULT_LOCALE,
 ): string {
   let formattedAmount = formatCurrencyAmount({ amount, type: NumberType.TokenTx, locale })
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
@@ -733,7 +733,7 @@ function formatReviewSwapCurrencyAmount(
 function convertToFiatAmount(
   amount = 1,
   toCurrency = DEFAULT_LOCAL_CURRENCY,
-  conversionRate = 1
+  conversionRate = 1,
 ): { amount: number; currency: SupportedLocalCurrency } {
   const defaultResult = { amount, currency: DEFAULT_LOCAL_CURRENCY }
 
@@ -762,7 +762,7 @@ type FiatCurrencyComponents = {
  */
 export function getFiatCurrencyComponents(
   locale = DEFAULT_LOCALE,
-  localCurrency = DEFAULT_LOCAL_CURRENCY
+  localCurrency = DEFAULT_LOCAL_CURRENCY,
 ): FiatCurrencyComponents {
   const format = new Intl.NumberFormat(locale, {
     ...TWO_DECIMALS_CURRENCY,
@@ -832,7 +832,7 @@ function handleFallbackCurrency(
   previousSelectedCurrency: SupportedLocalCurrency | undefined,
   previousConversionRate: number | undefined,
   shouldFallbackToUSD: boolean,
-  shouldFallbackToPrevious: boolean
+  shouldFallbackToPrevious: boolean,
 ) {
   if (shouldFallbackToUSD) {
     return DEFAULT_LOCAL_CURRENCY
@@ -861,7 +861,7 @@ export function useFormatter() {
     previousSelectedCurrency,
     previousConversionRate,
     shouldFallbackToUSD,
-    shouldFallbackToPrevious
+    shouldFallbackToPrevious,
   )
   const localCurrencyConversionRateToFormatWith = shouldFallbackToPrevious
     ? previousConversionRate
@@ -876,7 +876,7 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatCurrencyAmountWithLocales = useCallback(
@@ -887,7 +887,7 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatPriceWithLocales = useCallback(
@@ -898,12 +898,12 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatReviewSwapCurrencyAmountWithLocales = useCallback(
     (amount: CurrencyAmount<Currency>) => formatReviewSwapCurrencyAmount(amount, formatterLocale),
-    [formatterLocale]
+    [formatterLocale],
   )
 
   const formatTickPriceWithLocales = useCallback(
@@ -914,7 +914,7 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatNumberOrStringWithLocales = useCallback(
@@ -925,7 +925,7 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatFiatPriceWithLocales = useCallback(
@@ -936,17 +936,17 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: localCurrencyConversionRateToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, formatterLocale, localCurrencyConversionRateToFormatWith],
   )
 
   const formatDeltaWithLocales = useCallback(
     (percent: Nullish<number>) => formatDelta(percent, formatterLocale),
-    [formatterLocale]
+    [formatterLocale],
   )
 
   const formatPercentWithLocales = useCallback(
     (percent: Percent | undefined) => formatPercent(percent, formatterLocale),
-    [formatterLocale]
+    [formatterLocale],
   )
 
   const formatEtherwithLocales = useCallback(
@@ -956,12 +956,12 @@ export function useFormatter() {
         locale: formatterLocale,
         localCurrency: currencyToFormatWith,
       }),
-    [currencyToFormatWith, formatterLocale]
+    [currencyToFormatWith, formatterLocale],
   )
 
   const convertToFiatAmountWithLocales = useCallback(
     (amount?: number) => convertToFiatAmount(amount, currencyToFormatWith, localCurrencyConversionRateToFormatWith),
-    [currencyToFormatWith, localCurrencyConversionRateToFormatWith]
+    [currencyToFormatWith, localCurrencyConversionRateToFormatWith],
   )
 
   const formatConvertedFiatNumberOrString = useCallback(
@@ -972,7 +972,7 @@ export function useFormatter() {
         localCurrency: currencyToFormatWith,
         conversionRate: undefined,
       }),
-    [currencyToFormatWith, formatterLocale]
+    [currencyToFormatWith, formatterLocale],
   )
 
   return useMemo(
@@ -1003,6 +1003,6 @@ export function useFormatter() {
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,
       formatTickPriceWithLocales,
-    ]
+    ],
   )
 }

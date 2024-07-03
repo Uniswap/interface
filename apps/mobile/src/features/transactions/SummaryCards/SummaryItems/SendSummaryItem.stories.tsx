@@ -119,6 +119,7 @@ const baseNFTSendTx: Omit<ClassicTransactionDetails, 'status'> & {
         'https://lh3.googleusercontent.com/9LokgAuB0Xqkio273GE0pY0WSJwOExFtFI1SkJT2jK-USvqFc-5if7ZP5PQ1h8s5YPimyJG5cSOdGGR2UaD3gTYMKAhj6yikYaw=s250',
       name: 'Froggy Friend #1777',
       tokenId: '1777',
+      address: '0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f',
     },
   },
 }

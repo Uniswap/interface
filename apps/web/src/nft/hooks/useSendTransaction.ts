@@ -24,7 +24,7 @@ interface TxState {
     signer: JsonRpcSigner,
     selectedAssets: UpdatedGenieAsset[],
     transactionData: RouteResponse,
-    purchasedWithErc20: boolean
+    purchasedWithErc20: boolean,
   ) => Promise<TxResponse | undefined>
 }
 
@@ -92,15 +92,15 @@ export const useSendTransaction = create<TxState>()(
         }
       },
     }),
-    { name: 'useSendTransactionState' }
-  )
+    { name: 'useSendTransactionState' },
+  ),
 )
 
 const findNFTsPurchased = (
   txReceipt: ContractReceipt,
   signerAddress: string,
   toBuy: GenieAsset[],
-  txRoute: RoutingItem[]
+  txRoute: RoutingItem[],
 ): UpdatedGenieAsset[] => {
   if (!txReceipt.logs) {
     return []
@@ -113,7 +113,7 @@ const findNFTsPurchased = (
   const transferErc721BuyEvents = txReceipt.logs.filter(
     (x) =>
       x.topics[0] === erc721Interface.getEventTopic('Transfer') &&
-      hexStripZeros(x.topics[2]).toLowerCase() === signerAddress.toLowerCase()
+      hexStripZeros(x.topics[2]).toLowerCase() === signerAddress.toLowerCase(),
   )
 
   const transferredErc721 = transferErc721BuyEvents.map((x) => ({
@@ -123,7 +123,7 @@ const findNFTsPurchased = (
   const transferErc1155BuyEvents = txReceipt.logs.filter(
     (x) =>
       x.topics[0] === erc1155Interface.getEventTopic('TransferSingle') &&
-      hexStripZeros(x.topics[3]).toLowerCase() === signerAddress.toLowerCase()
+      hexStripZeros(x.topics[3]).toLowerCase() === signerAddress.toLowerCase(),
   )
 
   const transferredErc1155 = transferErc1155BuyEvents.map((x) => ({
@@ -135,7 +135,7 @@ const findNFTsPurchased = (
   const transferCryptopunkEvents = txReceipt.logs.filter(
     (x) =>
       x.topics[0] === cryptopunksMarketInterface.getEventTopic('PunkTransfer') &&
-      hexStripZeros(x.topics[2]).toLowerCase() === signerAddress.toLowerCase()
+      hexStripZeros(x.topics[2]).toLowerCase() === signerAddress.toLowerCase(),
   )
   const transferredCryptopunks = transferCryptopunkEvents.map((x) => ({
     address: x.address,
@@ -148,7 +148,7 @@ const findNFTsPurchased = (
     return allTransferred.some(
       (purchasedNft) =>
         assetToBuy.address.toLowerCase() === purchasedNft.address.toLowerCase() &&
-        parseInt(assetToBuy.tokenId).toString() === purchasedNft.tokenId
+        parseInt(assetToBuy.tokenId).toString() === purchasedNft.tokenId,
     )
   })
 
@@ -159,7 +159,7 @@ const findNFTsNotPurchased = (toBuy: GenieAsset[], nftsPurchased: UpdatedGenieAs
   const nftsNotPurchased: Array<UpdatedGenieAsset> = []
   toBuy.forEach((selectedAsset) => {
     const purchasedNft = nftsPurchased.find(
-      (x) => x.address.toLowerCase() === selectedAsset.address.toLowerCase() && x.tokenId === selectedAsset.tokenId
+      (x) => x.address.toLowerCase() === selectedAsset.address.toLowerCase() && x.tokenId === selectedAsset.tokenId,
     )
     if (!purchasedNft) {
       nftsNotPurchased.push(selectedAsset)

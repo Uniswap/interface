@@ -26,7 +26,7 @@ jest.mock(
   'components/Logo/CurrencyLogo',
   () =>
     ({ currency }: { currency: Currency }) =>
-      `CurrencyLogo currency=${currency.symbol}`
+      `CurrencyLogo currency=${currency.symbol}`,
 )
 
 jest.mock('../../../state/connection/hooks', () => {
@@ -49,7 +49,7 @@ it('renders loading rows when isLoading is true', () => {
       searchQuery=""
       isAddressSearch=""
       balances={{}}
-    />
+    />,
   )
   expect(component.findByTestId('loading-rows')).toBeTruthy()
   expect(screen.queryByText('Wrapped BTC')).not.toBeInTheDocument()
@@ -69,7 +69,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
       searchQuery=""
       isAddressSearch=""
       balances={{}}
-    />
+    />,
   )
   expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
   expect(screen.getByText('DAI')).toBeInTheDocument()
@@ -93,7 +93,7 @@ it('renders currency rows correctly with balances', () => {
       balances={{
         [`1-${DAI.address.toLowerCase()}`]: { usdValue: 2, balance: 2 },
       }}
-    />
+    />,
   )
   expect(screen.getByText('Wrapped BTC')).toBeInTheDocument()
   expect(screen.getByText('DAI')).toBeInTheDocument()

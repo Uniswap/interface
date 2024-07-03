@@ -4,7 +4,6 @@ import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
-import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tweaksReducer } from 'src/features/tweaks/slice'
 import { walletConnectReducer } from 'src/features/walletConnect/walletConnectSlice'
 import { sharedReducers } from 'wallet/src/state/reducer'
@@ -16,7 +15,6 @@ const reducers = {
   modals: modalsReducer,
   passwordLockout: passwordLockoutReducer,
   saga: monitoredSagaReducers,
-  telemetry: telemetryReducer,
   tweaks: tweaksReducer,
   walletConnect: walletConnectReducer,
 } as const

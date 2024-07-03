@@ -1,9 +1,13 @@
+import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useFiatOnRampAggregatorSupportedFiatCurrenciesQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORCountry, FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
+  useFiatOnRampAggregatorSupportedTokensQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
+import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 import { getFiatCurrencyName } from 'utils/fiatCurrency'
 
@@ -36,7 +40,7 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
   const appFiatCurrencySupported =
     supportedFiatCurrencies &&
     supportedFiatCurrencies.fiatCurrencies.some(
-      (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase()
+      (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase(),
     )
   const meldSupportedFiatCurrency: FiatCurrencyInfo = useMemo(() => {
     const activeLocalCurrencyComponents = getFiatCurrencyComponents(activeLocale, activeLocalCurrency)
@@ -54,4 +58,24 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
     meldSupportedFiatCurrency,
     notAvailableInThisRegion: supportedFiatCurrencies?.fiatCurrencies?.length === 0,
   }
+}
+
+export function useFiatOnRampSupportedTokens(
+  fiatCurrency: FiatCurrencyInfo,
+  countryCode?: string,
+): FiatOnRampCurrency[] {
+  const { data: quoteCurrencyOptions } = useFiatOnRampAggregatorSupportedTokensQuery({
+    fiatCurrency: fiatCurrency.code,
+    countryCode: countryCode ?? 'US',
+  })
+
+  return useMemo(() => {
+    return (
+      quoteCurrencyOptions?.supportedTokens?.map((currency) => {
+        const meldCurrencyCode = currency.cryptoCurrencyCode
+        const currencyInfo = meldSupportedCurrencyToCurrencyInfo(currency)
+        return { currencyInfo, meldCurrencyCode }
+      }) ?? []
+    )
+  }, [quoteCurrencyOptions?.supportedTokens])
 }

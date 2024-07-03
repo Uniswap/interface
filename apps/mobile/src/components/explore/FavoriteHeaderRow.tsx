@@ -17,28 +17,13 @@ export function FavoriteHeaderRow({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex
-      row
-      alignItems="center"
-      gap="$spacing16"
-      justifyContent="space-between"
-      mb="$spacing8"
-      mx="$spacing8">
+    <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between" mb="$spacing8" mx="$spacing8">
       <Text color="$neutral2" variant="subheading2">
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea
-          hapticFeedback
-          hitSlop={16}
-          testID="favorite-header-row/favorite-button"
-          onPress={onPress}>
-          <TripleDots
-            color="$neutral2"
-            size={iconSizes.icon20}
-            strokeLinecap="round"
-            strokeWidth={1}
-          />
+        <TouchableArea hapticFeedback hitSlop={16} testID="favorite-header-row/favorite-button" onPress={onPress}>
+          <TripleDots color="$neutral2" size={iconSizes.icon20} strokeLinecap="round" strokeWidth={1} />
         </TouchableArea>
       ) : (
         <TouchableArea hitSlop={16} onPress={onPress}>

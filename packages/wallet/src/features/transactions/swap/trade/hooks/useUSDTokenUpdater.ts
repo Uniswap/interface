@@ -3,10 +3,7 @@ import React, { useEffect, useRef } from 'react'
 import { AnyAction } from 'redux'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import {
-  STABLECOIN_AMOUNT_OUT,
-  useUSDCPrice,
-} from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import {
   updateExactAmountFiat,
   updateExactAmountToken,
@@ -21,12 +18,12 @@ export function useUSDTokenUpdater(
   isFiatInput: boolean,
   exactAmountToken: string,
   exactAmountFiat: string,
-  exactCurrency?: Currency
+  exactCurrency?: Currency,
 ): void {
   const price = useUSDCPrice(exactCurrency)
   const shouldUseUSDRef = useRef(isFiatInput)
   const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
-  const conversionRate = convertFiatAmount().amount
+  const conversionRate = convertFiatAmount(1).amount
 
   useEffect(() => {
     shouldUseUSDRef.current = isFiatInput
@@ -55,7 +52,7 @@ export function useUSDTokenUpdater(
             type: NumberType.SwapTradeAmount,
             placeholder: '',
           }),
-        })
+        }),
       )
     }
 
@@ -67,9 +64,7 @@ export function useUSDTokenUpdater(
     const usdPrice = exactCurrencyAmount ? price?.quote(exactCurrencyAmount) : undefined
     const fiatPrice = parseFloat(usdPrice?.toExact() ?? '0') * conversionRate
 
-    return dispatch(
-      updateExactAmountFiat({ amount: fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '' })
-    )
+    return dispatch(updateExactAmountFiat({ amount: fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '' }))
   }, [
     dispatch,
     shouldUseUSDRef,

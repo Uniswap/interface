@@ -64,7 +64,8 @@ export function SlippageSettingsScreen({
             borderWidth={1}
             gap="$spacing12"
             p="$spacing16"
-            style={inputAnimatedStyle}>
+            style={inputAnimatedStyle}
+          >
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
               <Text color="$accent1" variant="buttonLabel3">
                 {t('swap.settings.slippage.control.auto')}
@@ -82,11 +83,7 @@ export function SlippageSettingsScreen({
                 }),
               }}
               textAlign="center"
-              value={
-                autoSlippageEnabled
-                  ? autoSlippageTolerance.toFixed(2).toString()
-                  : inputSlippageTolerance
-              }
+              value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
               onBlur={onBlurSlippageInput}
               onChangeText={onChangeSlippageInput}
               onFocus={onFocusSlippageInput}

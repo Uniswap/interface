@@ -44,7 +44,7 @@ describe('OrderContent', () => {
             settledOutputCurrencyAmountRaw: '106841079134757921',
           },
         }}
-      />
+      />,
     )
     expect(container).toMatchSnapshot()
     expect(container).toHaveTextContent('Order executed')
@@ -73,7 +73,7 @@ describe('OrderContent', () => {
             settledOutputCurrencyAmountRaw: '106841079134757921',
           },
         }}
-      />
+      />,
     )
     expect(container).toMatchSnapshot()
     expect(container).toHaveTextContent('Order pending')
@@ -104,7 +104,7 @@ describe('OrderContent', () => {
             settledOutputCurrencyAmountRaw: '106841079134757921',
           },
         }}
-      />
+      />,
     )
     expect(container).toMatchSnapshot()
     expect(container).toHaveTextContent('Limit pending')

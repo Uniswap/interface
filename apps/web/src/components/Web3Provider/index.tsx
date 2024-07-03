@@ -93,7 +93,7 @@ function Updater() {
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
 
       const isReconnect = connectedWallets.some(
-        (wallet) => wallet.account === account.address && wallet.walletType === walletType
+        (wallet) => wallet.account === account.address && wallet.walletType === walletType,
       )
 
       provider

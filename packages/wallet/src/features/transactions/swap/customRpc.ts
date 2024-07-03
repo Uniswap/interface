@@ -18,7 +18,5 @@ export function useShouldUseMEVBlocker(chainId: Maybe<WalletChainId>): boolean {
   const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
   const isMevBlockerSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
 
-  return Boolean(
-    isMevBlockerFeatureEnabled && isSwapProtectionSettingEnabled && isMevBlockerSupportedOnChain
-  )
+  return Boolean(isMevBlockerFeatureEnabled && isSwapProtectionSettingEnabled && isMevBlockerSupportedOnChain)
 }

@@ -14,7 +14,7 @@ describe(GenericImportForm, () => {
           value={undefined}
           onChange={noOpFunction}
         />
-      </TamaguiProvider>
+      </TamaguiProvider>,
     )
 
     expect(await screen.findByText('seed phrase')).toBeDefined()
@@ -30,7 +30,7 @@ describe(GenericImportForm, () => {
           value="hello"
           onChange={noOpFunction}
         />
-      </TamaguiProvider>
+      </TamaguiProvider>,
     )
 
     expect(await screen.queryByText('seed phrase')).toBeNull()
@@ -46,7 +46,7 @@ describe(GenericImportForm, () => {
           value="wrong value"
           onChange={noOpFunction}
         />
-      </TamaguiProvider>
+      </TamaguiProvider>,
     )
 
     expect(await screen.findByText('there is an error')).toBeDefined()

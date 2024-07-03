@@ -69,7 +69,7 @@ export function useAllActivities(account: string) {
   const localMap = useLocalActivities(account)
   const remoteMap = useMemo(
     () => parseRemoteActivities(activities, account, formatNumberOrString),
-    [account, activities, formatNumberOrString]
+    [account, activities, formatNumberOrString],
   )
   const updateCancelledTx = useTransactionCanceller()
 
@@ -103,7 +103,7 @@ export function useOpenLimitOrders(account: string) {
     activities?.filter(
       (activity) =>
         activity.offchainOrderDetails?.type === SignatureType.SIGN_LIMIT &&
-        activity.status === TransactionStatus.Pending
+        activity.status === TransactionStatus.Pending,
     ) ?? []
   return {
     openLimitOrders,
@@ -137,7 +137,7 @@ export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): Gas
             chainId: orders[0].chainId,
           }
         : undefined,
-    [orders]
+    [orders],
   )
   const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
   const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)

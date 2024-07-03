@@ -58,7 +58,7 @@ export function createAdaptiveRefetchContext<T>() {
             refetch,
             subscribe,
           }),
-          [refetch, query, subscribe]
+          [refetch, query, subscribe],
         )}
       >
         {children}

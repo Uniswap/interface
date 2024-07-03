@@ -3,6 +3,7 @@
  */
 export enum MobileEventName {
   AppRating = 'App Rating',
+  AutomatedOnDeviceRecoveryTriggered = 'Automated On Device Recovery Triggered',
   BalancesReport = 'Balances Report',
   DeepLinkOpened = 'Deep Link Opened',
   ExploreFilterSelected = 'Explore Filter Selected',

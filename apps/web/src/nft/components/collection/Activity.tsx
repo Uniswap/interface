@@ -75,7 +75,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         .filter((key) => activeFilters[key]),
       address: contractAddress,
     },
-    25
+    25,
   )
 
   const isLoadingMore = hasNextActivity && nftActivity?.length
@@ -97,7 +97,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
         </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters],
   )
 
   return (
@@ -161,7 +161,7 @@ export const Activity = ({ contractAddress, rarityVerified, collectionName, chai
                         ethPriceInUSD={ethPriceInUSD}
                       />
                     </Box>
-                  )
+                  ),
               )}
             </InfiniteScroll>
           </Column>

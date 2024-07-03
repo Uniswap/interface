@@ -21,9 +21,8 @@ type PreloadedSharedStateOptions = {
   account: Account | undefined
 }
 
-export const preloadedSharedState = createFixture<
-  PreloadedState<SharedState>,
-  PreloadedSharedStateOptions
->({ account: undefined })(({ account }) => ({
+export const preloadedSharedState = createFixture<PreloadedState<SharedState>, PreloadedSharedStateOptions>({
+  account: undefined,
+})(({ account }) => ({
   wallet: preloadedWalletState({ account }),
 }))

@@ -27,11 +27,25 @@ const slice = createSlice({
       if (!address) {
         state.notificationQueue.shift()
       } else {
-        const indexToRemove = state.notificationQueue.findIndex(
-          (notif) => notif.address === address
-        )
+        const indexToRemove = state.notificationQueue.findIndex((notif) => notif.address === address)
         if (indexToRemove !== -1) {
           state.notificationQueue.splice(indexToRemove, 1)
+        }
+      }
+    },
+    setNotificationViewed: (state, action: PayloadAction<{ address: Maybe<Address> }>) => {
+      const { address } = action.payload
+      if (!address) {
+        if (state.notificationQueue[0]) {
+          state.notificationQueue[0].shown = true
+        }
+      } else {
+        const indexToChange = state.notificationQueue.findIndex((notif) => notif.address === address)
+        if (indexToChange !== -1) {
+          const itemToChange = state.notificationQueue[indexToChange]
+          if (itemToChange) {
+            itemToChange.shown = true
+          }
         }
       }
     },
@@ -39,17 +53,11 @@ const slice = createSlice({
       state.notificationQueue = []
     },
     resetNotifications: () => initialNotificationsState,
-    setNotificationStatus: (
-      state,
-      action: PayloadAction<{ address: Address; hasNotifications: boolean }>
-    ) => {
+    setNotificationStatus: (state, action: PayloadAction<{ address: Address; hasNotifications: boolean }>) => {
       const { address, hasNotifications } = action.payload
       state.notificationStatus = { ...state.notificationStatus, [address]: hasNotifications }
     },
-    setLastTxNotificationUpdate: (
-      state,
-      { payload }: PayloadAction<{ address: Address; timestamp: number }>
-    ) => {
+    setLastTxNotificationUpdate: (state, { payload }: PayloadAction<{ address: Address; timestamp: number }>) => {
       const { address, timestamp } = payload
       state.lastTxNotificationUpdate[address] = timestamp
     },
@@ -59,6 +67,7 @@ const slice = createSlice({
 export const {
   pushNotification,
   popNotification,
+  setNotificationViewed,
   clearNotificationQueue,
   resetNotifications,
   setNotificationStatus,

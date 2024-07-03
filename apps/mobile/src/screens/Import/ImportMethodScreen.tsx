@@ -66,9 +66,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid
-          ? t('account.cloud.error.unavailable.title.android')
-          : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
         isAndroid
           ? t('account.cloud.error.unavailable.message.android')
           : t('account.cloud.error.unavailable.message.ios'),
@@ -79,7 +77,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             style: 'default',
           },
           { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-        ]
+        ],
       )
       return
     }
@@ -116,7 +114,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         gap="$spacing12"
         mt="$spacing4"
         shadowColor="$surface3"
-        shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
+        shadowRadius={!isDarkMode ? '$spacing8' : undefined}
+      >
         {importOptions.map(({ title, blurb, icon, nav, importType, name }, i) => (
           <OptionCard
             key={'connection-option-' + name + i}
@@ -130,11 +129,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea
-          alignItems="center"
-          hitSlop={16}
-          mb="$spacing12"
-          testID={ElementName.WatchWallet}>
+        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={ElementName.WatchWallet}>
           <Flex row alignItems="center" gap="$spacing8">
             <EyeIcon
               color={colors.accent1.get()}
@@ -145,9 +140,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             <Text
               color="$accent1"
               variant="buttonLabel2"
-              onPress={(): Promise<void> =>
-                handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)
-              }>
+              onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
+            >
               {t('account.wallet.button.watch')}
             </Text>
           </Flex>

@@ -29,7 +29,7 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
   tradeState: TradeState,
-  swapInputError?: ReactNode
+  swapInputError?: ReactNode,
 ): boolean {
   if (swapInputError) {
     return false
@@ -46,15 +46,16 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
-  const { initialInputCurrency, initialOutputCurrency, chainId } = useInitialCurrencyState()
-  const shouldDisableTokenInputs = useSupportedChainId(useAccount().chainId) === undefined
+  const { initialInputCurrency, initialOutputCurrency, initialChainId } = useInitialCurrencyState()
+  const isUnsupportedConnectedChain = useSupportedChainId(useAccount().chainId) === undefined
+  const shouldDisableTokenInputs = multichainUXEnabled ? false : isUnsupportedConnectedChain
 
   return (
     <Trace logImpression page={InterfacePageName.SWAP_PAGE}>
       <PageWrapper>
         <Swap
           className={className}
-          chainId={chainId}
+          chainId={initialChainId}
           multichainUXEnabled={multichainUXEnabled}
           disableTokenInputs={shouldDisableTokenInputs}
           initialInputCurrency={initialInputCurrency}
@@ -102,7 +103,7 @@ export function Swap({
 
   return (
     <SwapAndLimitContextProvider
-      chainId={chainId}
+      initialChainId={chainId}
       initialInputCurrency={initialInputCurrency}
       initialOutputCurrency={initialOutputCurrency}
       multichainUXEnabled={multichainUXEnabled}

@@ -249,11 +249,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       asset.rarity
         ? {
             rarityProvider: asset?.rarity?.providers?.find(
-              ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+              ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider,
             ),
           }
         : {},
-    [asset.rarity]
+    [asset.rarity],
   )
 
   const assetMediaType = useMemo(() => {
@@ -276,7 +276,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       tokenId: token_id,
     },
     1,
-    'no-cache'
+    'no-cache',
   )
 
   const weiPrice = gqlPriceData?.[0]?.price
@@ -300,7 +300,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters],
   )
 
   const {
@@ -317,7 +317,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       address: contractAddress,
       tokenId: token_id,
     },
-    25
+    25,
   )
 
   const rarity = asset?.rarity?.providers?.[0]

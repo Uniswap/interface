@@ -19,7 +19,7 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
       return getTokenList(
         listUrl,
         (ensName: string) => resolveENSContentHash(ensName, RPC_PROVIDERS[UniverseChainId.Mainnet]),
-        skipValidation
+        skipValidation,
       )
         .then((tokenList) => {
           dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
@@ -31,6 +31,6 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
           throw error
         })
     },
-    [dispatch]
+    [dispatch],
   )
 }

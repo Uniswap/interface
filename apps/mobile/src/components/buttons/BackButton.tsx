@@ -10,13 +10,7 @@ type Props = {
   onPressBack?: () => void
 } & TouchableAreaProps
 
-export function BackButton({
-  onPressBack,
-  size,
-  color,
-  showButtonLabel,
-  ...rest
-}: Props): JSX.Element {
+export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest }: Props): JSX.Element {
   const navigation = useNavigation()
 
   const goBack = onPressBack
@@ -31,7 +25,8 @@ export function BackButton({
       hitSlop={24}
       testID="buttons/back-button"
       onPress={goBack}
-      {...rest}>
+      {...rest}
+    >
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )

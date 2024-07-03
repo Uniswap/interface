@@ -1,20 +1,21 @@
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getAddressFromAsset } from 'wallet/src/features/transactions/history/utils'
 import {
   OnRampPurchaseInfo,
   OnRampTransactionInfo,
   OnRampTransferInfo,
+  TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 
 export default function parseOnRampTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): OnRampPurchaseInfo | OnRampTransferInfo | undefined {
   let change
-  if (transaction.details.__typename === 'TransactionDetails') {
+  if (transaction.details.__typename === TransactionDetailsType.Transaction) {
     change = transaction.details.assetChanges?.[0]
-  } else if (transaction.details.__typename === 'OnRampTransactionDetails') {
+  } else if (transaction.details.__typename === TransactionDetailsType.OnRamp) {
     change = transaction.details.onRampTransfer
   } else {
     return undefined

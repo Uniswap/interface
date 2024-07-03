@@ -9,17 +9,17 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export function SwapAndLimitContextProvider({
   children,
-  chainId,
+  initialChainId,
   initialInputCurrency,
   initialOutputCurrency,
   multichainUXEnabled,
 }: PropsWithChildren<{
-  chainId?: InterfaceChainId
+  initialChainId?: InterfaceChainId
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   multichainUXEnabled?: boolean
 }>) {
-  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(chainId)
+  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(initialChainId)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -32,7 +32,7 @@ export function SwapAndLimitContextProvider({
       inputCurrency: initialInputCurrency,
       outputCurrency: initialOutputCurrency,
     }),
-    [initialInputCurrency, initialOutputCurrency]
+    [initialInputCurrency, initialOutputCurrency],
   )
 
   const account = useAccount()
@@ -67,12 +67,12 @@ export function SwapAndLimitContextProvider({
     const prefilledInputChanged = Boolean(
       previousPrefilledState?.inputCurrency
         ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-        : prefilledState.inputCurrency
+        : prefilledState.inputCurrency,
     )
     const prefilledOutputChanged = Boolean(
       previousPrefilledState?.outputCurrency
         ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
-        : prefilledState.outputCurrency
+        : prefilledState.outputCurrency,
     )
 
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
@@ -91,10 +91,10 @@ export function SwapAndLimitContextProvider({
   ])
 
   useEffect(() => {
-    if (chainId) {
-      setSelectedChainId(chainId)
+    if (initialChainId) {
+      setSelectedChainId(initialChainId)
     }
-  }, [chainId, setSelectedChainId])
+  }, [initialChainId, setSelectedChainId])
 
   const value = useMemo(() => {
     return {
@@ -104,10 +104,12 @@ export function SwapAndLimitContextProvider({
       currentTab,
       setCurrentTab,
       prefilledState,
-      chainId: (multichainUXEnabled ? selectedChainId : chainId) ?? undefined,
+      initialChainId,
+      chainId: (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined,
       multichainUXEnabled,
+      isSwapAndLimitContext: true,
     }
-  }, [chainId, currencyState, currentTab, multichainUXEnabled, prefilledState, selectedChainId])
+  }, [initialChainId, account.chainId, selectedChainId, currencyState, currentTab, prefilledState, multichainUXEnabled])
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }

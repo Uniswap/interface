@@ -12,7 +12,7 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
  */
 export function createSaga<SagaParams = void>(
   saga: (params: SagaParams) => unknown,
-  name: string
+  name: string,
 ): {
   wrappedSaga: () => Generator<unknown, void, unknown>
   actions: {
@@ -24,9 +24,7 @@ export function createSaga<SagaParams = void>(
   const wrappedSaga = function* () {
     while (true) {
       try {
-        const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(
-          triggerAction.type
-        )
+        const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(triggerAction.type)
         logger.debug('saga', 'wrappedSaga', `${name} triggered`)
         yield* call(saga, trigger.payload)
       } catch (error) {
@@ -75,7 +73,7 @@ interface MonitoredSagaOptions {
 export function createMonitoredSaga<SagaParams = void>(
   saga: (params: SagaParams) => unknown,
   name: string,
-  options?: MonitoredSagaOptions
+  options?: MonitoredSagaOptions,
 ): {
   name: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,16 +102,14 @@ export function createMonitoredSaga<SagaParams = void>(
       .addCase(resetAction, (state) => {
         state.status = null
         state.error = null
-      })
+      }),
   )
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wrappedSaga = function* (): any {
     while (true) {
       try {
-        const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(
-          triggerAction.type
-        )
+        const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(triggerAction.type)
         logger.debug('saga', 'monitoredSaga', `${name} triggered`)
         yield* put(statusAction(SagaStatus.Started))
         const { result, cancel, timeout } = yield* race({
@@ -154,7 +150,7 @@ export function createMonitoredSaga<SagaParams = void>(
             pushNotification({
               type: AppNotificationType.Error,
               errorMessage,
-            })
+            }),
           )
         }
       }

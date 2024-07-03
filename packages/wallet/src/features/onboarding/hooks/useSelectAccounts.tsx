@@ -10,10 +10,7 @@ export function useSelectAccounts(accounts: ImportableAccount[] = []): {
   selectedAddresses: string[]
   toggleAddressSelection: (address: string) => void
 } {
-  const initialSelectedAddresses = useMemo(
-    () => accounts.map((account) => account.ownerAddress),
-    [accounts]
-  )
+  const initialSelectedAddresses = useMemo(() => accounts.map((account) => account.ownerAddress), [accounts])
   const [selectedAddresses, setSelectedAddresses] = useState(initialSelectedAddresses)
 
   const toggleAddressSelection = (address: string): void => {
@@ -22,9 +19,7 @@ export function useSelectAccounts(accounts: ImportableAccount[] = []): {
       return
     }
     if (selectedAddresses.includes(address)) {
-      setSelectedAddresses(
-        selectedAddresses.filter((selectedAddress) => selectedAddress !== address)
-      )
+      setSelectedAddresses(selectedAddresses.filter((selectedAddress) => selectedAddress !== address))
     } else {
       setSelectedAddresses([...selectedAddresses, address])
     }

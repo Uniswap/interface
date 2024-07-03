@@ -17,7 +17,8 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
           <Flex
             borderRadius="$rounded12"
             p="$spacing12"
-            style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
+            style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}
+          >
             <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
           </Flex>
         </Flex>

@@ -24,10 +24,7 @@ import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOn
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
-import {
-  selectAllAccountsSorted,
-  selectSortedSignerMnemonicAccounts,
-} from 'wallet/src/features/wallet/selectors'
+import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -39,7 +36,8 @@ export function AccountSwitcherModal(): JSX.Element {
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
       name={ModalName.AccountSwitcher}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}
+    >
       <Flex backgroundColor="$surface1">
         <AccountSwitcher
           onClose={(): void => {
@@ -77,7 +75,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         dispatch(setAccountAsActive(address))
       })
     },
-    [dispatch, onClose]
+    [dispatch, onClose],
   )
 
   const onPressAddWallet = (): void => {
@@ -109,7 +107,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       dispatch(
         createAccountsActions.trigger({
           accounts: [newAccount],
-        })
+        }),
       )
 
       // Log analytics event
@@ -182,7 +180,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
               style: 'default',
             },
             { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-          ]
+          ],
         )
         return
       }
@@ -200,11 +198,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
         render: () => (
-          <Flex
-            alignItems="center"
-            borderBottomColor="$surface3"
-            borderBottomWidth={1}
-            p="$spacing16">
+          <Flex alignItems="center" borderBottomColor="$surface3" borderBottomWidth={1} p="$spacing16">
             <Text variant="body1">{t('account.wallet.button.create')}</Text>
           </Flex>
         ),
@@ -236,9 +230,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="body1">
-              {isAndroid
-                ? t('account.cloud.button.restore.android')
-                : t('account.cloud.button.restore.ios')}
+              {isAndroid ? t('account.cloud.button.restore.android') : t('account.cloud.button.restore.ios')}
             </Text>
           </Flex>
         ),
@@ -250,15 +242,13 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
-  const isViewOnly =
-    accounts.find((a) => a.address === activeAccountAddress)?.type === AccountType.Readonly
+  const isViewOnly = accounts.find((a) => a.address === activeAccountAddress)?.type === AccountType.Readonly
 
   if (!activeAccountAddress) {
     return null
   }
 
-  const fullScreenContentHeight =
-    dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36 // approximate bottom sheet handle height + padding bottom
+  const fullScreenContentHeight = dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36 // approximate bottom sheet handle height + padding bottom
 
   return (
     <Flex $short={{ pb: '$none' }} maxHeight={fullScreenContentHeight} pb="$spacing12">
@@ -273,20 +263,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           variant="subheading1"
         />
         <Flex px="$spacing24">
-          <Button
-            size="small"
-            testID={ElementName.WalletSettings}
-            theme="secondary"
-            onPress={onManageWallet}>
+          <Button size="small" testID={ElementName.WalletSettings} theme="secondary" onPress={onManageWallet}>
             {t('account.wallet.button.manage')}
           </Button>
         </Flex>
       </Flex>
-      <AccountList
-        accounts={accountsWithoutActive}
-        isVisible={modalState.isOpen}
-        onPress={onPressAccount}
-      />
+      <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
       <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />

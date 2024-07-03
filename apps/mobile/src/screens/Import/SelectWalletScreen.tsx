@@ -64,9 +64,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       }))
       .filter(isImportableAccount)
 
-    const accountsWithBalance = filteredAccounts?.filter(
-      (address) => address.balance && address.balance > 0
-    )
+    const accountsWithBalance = filteredAccounts?.filter((address) => address.balance && address.balance > 0)
 
     if (accountsWithBalance?.length) {
       return accountsWithBalance
@@ -95,10 +93,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     await selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
-      name:
-        params?.importType === ImportType.Restore
-          ? OnboardingScreens.Notifications
-          : OnboardingScreens.Backup,
+      name: params?.importType === ImportType.Restore ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
       params,
       merge: true,
     })
@@ -118,9 +113,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   return (
     <>
-      <OnboardingScreen
-        subtitle={!showError ? subtitle : undefined}
-        title={!showError ? title : ''}>
+      <OnboardingScreen subtitle={!showError ? subtitle : undefined} title={!showError ? title : ''}>
         {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('common.button.retry')}
@@ -154,11 +147,10 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         )}
         <Flex opacity={showError ? 0 : 1}>
           <Button
-            disabled={
-              isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0
-            }
+            disabled={isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0}
             testID={ElementName.Next}
-            onPress={onSubmit}>
+            onPress={onSubmit}
+          >
             {t('common.button.continue')}
           </Button>
         </Flex>

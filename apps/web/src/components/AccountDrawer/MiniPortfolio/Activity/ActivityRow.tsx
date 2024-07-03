@@ -26,7 +26,10 @@ const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
 const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   font-variant: small;
-  font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
+  font-feature-settings:
+    'tnum' on,
+    'lnum' on,
+    'ss02' on;
 `
 
 function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails } }: { activity: Activity }) {

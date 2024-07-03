@@ -32,8 +32,7 @@ export function InsufficientNativeTokenWarning({
   const { modalOrTooltipMainMessage, nativeCurrency, nativeCurrencyInfo, networkName } =
     parsedInsufficentNativeTokenWarning
 
-  const shouldShowNetworkName =
-    nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
+  const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
   return (
     <>
@@ -58,7 +57,8 @@ export function InsufficientNativeTokenWarning({
                   tokenSymbol: nativeCurrency.symbol,
                 })
           }
-          onClose={(): void => setShowModal(false)}>
+          onClose={(): void => setShowModal(false)}
+        >
           <Flex centered gap="$spacing16">
             <Text color="$neutral2" textAlign="center" variant="body3">
               {modalOrTooltipMainMessage}

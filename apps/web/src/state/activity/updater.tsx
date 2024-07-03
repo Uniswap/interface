@@ -85,6 +85,6 @@ function useOnActivityUpdate(): OnActivityUpdate {
         }
       }
     },
-    [addPopup, analyticsContext, dispatch]
+    [addPopup, analyticsContext, dispatch],
   )
 }

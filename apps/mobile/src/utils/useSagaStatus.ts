@@ -4,11 +4,7 @@ import { monitoredSagas } from 'src/app/saga'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 
 // Convenience hook to get the status + error of an active saga
-export function useSagaStatus(
-  sagaName: string,
-  onSuccess?: () => void,
-  resetSagaOnSuccess = true
-): SagaState {
+export function useSagaStatus(sagaName: string, onSuccess?: () => void, resetSagaOnSuccess = true): SagaState {
   const dispatch = useAppDispatch()
   const sagaState = useAppSelector((s): SagaState | undefined => s.saga[sagaName])
   if (!sagaState) {

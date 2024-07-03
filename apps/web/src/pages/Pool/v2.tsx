@@ -97,7 +97,7 @@ export default function Pool() {
   }
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
+    [trackedTokenPairs],
   )
   const [balanceMap, fetchingV2PairBalances] = useRpcTokenBalancesWithLoadingIndicator(
     account.address,
@@ -111,7 +111,7 @@ export default function Pool() {
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
         return balanceMap[liquidityToken.address]?.greaterThan(0)
       }),
-    [tokenPairsWithLiquidityTokens, balanceMap]
+    [tokenPairsWithLiquidityTokens, balanceMap],
   )
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
@@ -123,7 +123,7 @@ export default function Pool() {
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter((pool) =>
-    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO)
+    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO),
   )
   const stakingPairs = useV2Pairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
@@ -236,7 +236,7 @@ export default function Pool() {
                             pair={stakingPair[1]}
                             stakedBalance={stakingInfosWithBalance[i].stakedAmount}
                           />
-                        )
+                        ),
                     )}
                     <RowFixed justify="center" style={{ width: '100%' }}>
                       <ButtonOutlined

@@ -63,7 +63,7 @@ export function ActivityTab({ account }: { account: string }) {
               <Column data-testid="activity-content">
                 {activityGroup.transactions.map(
                   (activity) =>
-                    !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />
+                    !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />,
                 )}
               </Column>
             </ActivityGroupWrapper>

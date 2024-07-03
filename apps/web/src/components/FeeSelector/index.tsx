@@ -92,9 +92,9 @@ export default function FeeSelector({
           [FeeAmount.LOW]: PoolState.NOT_EXISTS,
           [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
           [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
-        }
+        },
       ),
-    [pools]
+    [pools],
   )
 
   const [showOptions, setShowOptions] = useState(false)
@@ -112,7 +112,7 @@ export default function FeeSelector({
       })
       handleFeePoolSelect(fee)
     },
-    [handleFeePoolSelect, trace]
+    [handleFeePoolSelect, trace],
   )
 
   useEffect(() => {

@@ -17,7 +17,7 @@ import {
 
 function mapDataByTimestamp(
   v2Data?: readonly TimestampedAmount[],
-  v3Data?: readonly TimestampedAmount[]
+  v3Data?: readonly TimestampedAmount[],
 ): Record<number, Record<ProtocolVersion, number>> {
   const dataByTime: Record<number, Record<ProtocolVersion, number>> = {}
   v2Data?.forEach((v2Point) => {
@@ -37,7 +37,7 @@ function mapDataByTimestamp(
 
 export function useHistoricalProtocolVolume(
   chain: Chain,
-  duration: HistoryDuration
+  duration: HistoryDuration,
 ): ChartQueryResult<StackedHistogramData, ChartType.VOLUME> {
   const isWindowVisible = useIsWindowVisible()
   const { data: queryData, loading } = useHistoricalProtocolVolumeQuery({

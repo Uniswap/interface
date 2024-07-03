@@ -11,7 +11,7 @@ describe(LazyModalRenderer, () => {
       <LazyModalRenderer name={ModalName.Experiments}>
         <Text>Rendered</Text>
       </LazyModalRenderer>,
-      { preloadedState: preloadedMobileState() }
+      { preloadedState: preloadedMobileState() },
     )
 
     expect(tree.toJSON()).toBeNull()
@@ -28,7 +28,7 @@ describe(LazyModalRenderer, () => {
             [ModalName.Experiments]: { isOpen: true },
           }),
         }),
-      }
+      },
     )
 
     expect(tree.toJSON()).toMatchInlineSnapshot(`

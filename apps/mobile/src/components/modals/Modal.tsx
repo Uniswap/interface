@@ -43,17 +43,20 @@ Props): JSX.Element {
       animationType={animationType}
       presentationStyle={presentationStyle}
       transparent={transparent} /* {...rest} */
-      visible={visible}>
+      visible={visible}
+    >
       <TouchableArea
         alignItems="center"
         flexGrow={1}
         justifyContent={justifyContent}
         style={dimBackground && style.bgDimmed}
-        onPress={dismissable ? hide : undefined}>
+        onPress={dismissable ? hide : undefined}
+      >
         <Flex
           backgroundColor="$surface1"
           style={width === '100%' ? style.modalBoxFullWidth : style.modalBox}
-          width={width}>
+          width={width}
+        >
           {title && (
             <Text mb="$spacing12" px="$spacing16" variant="heading3">
               {title}

@@ -119,7 +119,8 @@ const FadeWrapper = styled.div<{
   $animationDelay?: string
   $zIndex?: number
 }>`
-  transition: display
+  transition:
+    display
       ${({ theme, $transitionDuration }) =>
         `${$transitionDuration ?? theme.transition.duration.medium} ${theme.transition.timing.inOut}`},
     transform

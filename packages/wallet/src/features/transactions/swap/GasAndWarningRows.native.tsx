@@ -60,10 +60,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
   return (
     <>
       {showWarningModal && formScreenWarning && (
-        <SwapWarningModal
-          parsedWarning={formScreenWarning}
-          onClose={(): void => setShowWarningModal(false)}
-        />
+        <SwapWarningModal parsedWarning={formScreenWarning} onClose={(): void => setShowWarningModal(false)} />
       )}
 
       {/*
@@ -88,9 +85,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
         <Flex centered row>
           {showGasFee && (
-            <NetworkFeeWarning
-              gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
-              tooltipTrigger={<></>}>
+            <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue} tooltipTrigger={<></>}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                 <Gas color={gasColor} size="$icon.16" />
                 <Text color={gasColor} variant="body3">
@@ -103,13 +98,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
         {showFormWarning && (
           <TouchableArea onPress={onSwapWarningClick}>
-            <AnimatedFlex
-              centered
-              row
-              entering={FadeIn}
-              exiting={FadeOut}
-              gap="$spacing8"
-              px="$spacing24">
+            <AnimatedFlex centered row entering={FadeIn} exiting={FadeOut} gap="$spacing8" px="$spacing24">
               {formScreenWarning.Icon && (
                 <formScreenWarning.Icon
                   color={formScreenWarning.color.text}

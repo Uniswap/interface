@@ -26,7 +26,7 @@ export function usePDPPriceChartData(
   poolData: PoolData | undefined,
   tokenA: Token | undefined,
   tokenB: Token | undefined,
-  isReversed: boolean
+  isReversed: boolean,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
   const { data, loading } = usePoolPriceHistoryQuery({ variables })
 
@@ -60,7 +60,7 @@ export function usePDPPriceChartData(
 }
 
 export function usePDPVolumeChartData(
-  variables: PDPChartQueryVars
+  variables: PDPChartQueryVars,
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
   const { data, loading } = usePoolVolumeHistoryQuery({ variables })
 

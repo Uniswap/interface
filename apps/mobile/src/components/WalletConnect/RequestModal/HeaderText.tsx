@@ -54,10 +54,7 @@ export function HeaderText({
     )
   }
 
-  const getReadableMethodName = (
-    ethMethod: EthMethod | UwULinkMethod,
-    dappNameOrUrl: string
-  ): JSX.Element => {
+  const getReadableMethodName = (ethMethod: EthMethod | UwULinkMethod, dappNameOrUrl: string): JSX.Element => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:

@@ -50,8 +50,7 @@ export function WalletConnectModal({
   const isDarkMode = useIsDarkMode()
   const activeAccount = useActiveAccount()
   const { sessions, hasPendingSessionError } = useWalletConnect(activeAccount?.address)
-  const [currentScreenState, setCurrentScreenState] =
-    useState<ScannerModalState>(initialScreenState)
+  const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(initialScreenState)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
   const dispatch = useAppDispatch()
@@ -85,18 +84,14 @@ export function WalletConnectModal({
       })
       if (!supportedURI) {
         setShouldFreezeCamera(true)
-        Alert.alert(
-          t('walletConnect.error.unsupported.title'),
-          t('walletConnect.error.unsupported.message'),
-          [
-            {
-              text: t('common.button.tryAgain'),
-              onPress: (): void => {
-                setShouldFreezeCamera(false)
-              },
+        Alert.alert(t('walletConnect.error.unsupported.title'), t('walletConnect.error.unsupported.message'), [
+          {
+            text: t('common.button.tryAgain'),
+            onPress: (): void => {
+              setShouldFreezeCamera(false)
             },
-          ]
-        )
+          },
+        ])
 
         return
       }
@@ -109,18 +104,14 @@ export function WalletConnectModal({
 
       if (supportedURI.type === URIType.WalletConnectURL) {
         setShouldFreezeCamera(true)
-        Alert.alert(
-          t('walletConnect.error.unsupportedV1.title'),
-          t('walletConnect.error.unsupportedV1.message'),
-          [
-            {
-              text: t('common.button.ok'),
-              onPress: (): void => {
-                setShouldFreezeCamera(false)
-              },
+        Alert.alert(t('walletConnect.error.unsupportedV1.title'), t('walletConnect.error.unsupportedV1.message'), [
+          {
+            text: t('common.button.ok'),
+            onPress: (): void => {
+              setShouldFreezeCamera(false)
             },
-          ]
-        )
+          },
+        ])
         return
       }
 
@@ -132,18 +123,14 @@ export function WalletConnectModal({
           logger.error(error, {
             tags: { file: 'WalletConnectModal', function: 'onScanCode' },
           })
-          Alert.alert(
-            t('walletConnect.error.general.title'),
-            t('walletConnect.error.general.message'),
-            [
-              {
-                text: t('common.button.ok'),
-                onPress: (): void => {
-                  setShouldFreezeCamera(false)
-                },
+          Alert.alert(t('walletConnect.error.general.title'), t('walletConnect.error.general.message'), [
+            {
+              text: t('common.button.ok'),
+              onPress: (): void => {
+                setShouldFreezeCamera(false)
               },
-            ]
-          )
+            },
+          ])
         }
       }
 
@@ -160,18 +147,14 @@ export function WalletConnectModal({
           const parsedUwulinkRequest: UwULinkRequest = JSON.parse(supportedURI.value)
           const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkContractAllowlist)
           if (!isAllowed) {
-            Alert.alert(
-              t('walletConnect.error.uwu.title'),
-              t('walletConnect.error.uwu.unsupported'),
-              [
-                {
-                  text: t('common.button.ok'),
-                  onPress: (): void => {
-                    setShouldFreezeCamera(false)
-                  },
+            Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.unsupported'), [
+              {
+                text: t('common.button.ok'),
+                onPress: (): void => {
+                  setShouldFreezeCamera(false)
                 },
-              ]
-            )
+              },
+            ])
             return
           }
 
@@ -202,19 +185,16 @@ export function WalletConnectModal({
                   // `message` if it exists. so this is mostly to appease Typescript
                   rawMessage: parsedUwulinkRequest.message,
                 },
-              })
+              }),
             )
           } else if (parsedUwulinkRequest.method === UwULinkMethod.Erc20Send) {
             const preparedTransaction = await toTokenTransferRequest(
               parsedUwulinkRequest,
               activeAccount,
               providerManager,
-              contractManager
+              contractManager,
             )
-            const tokenRecipient = findAllowedTokenRecipient(
-              parsedUwulinkRequest,
-              uwuLinkContractAllowlist
-            )
+            const tokenRecipient = findAllowedTokenRecipient(parsedUwulinkRequest, uwuLinkContractAllowlist)
 
             dispatch(
               addRequest({
@@ -235,7 +215,7 @@ export function WalletConnectModal({
                     ...preparedTransaction,
                   },
                 },
-              })
+              }),
             )
           } else {
             dispatch(
@@ -249,7 +229,7 @@ export function WalletConnectModal({
                     ...parsedUwulinkRequest.value,
                   },
                 },
-              })
+              }),
             )
           }
           onClose()
@@ -292,7 +272,7 @@ export function WalletConnectModal({
       uwuLinkContractAllowlist,
       providerManager,
       contractManager,
-    ]
+    ],
   )
 
   const onPressBottomToggle = (): void => {
@@ -320,7 +300,8 @@ export function WalletConnectModal({
       fullScreen
       backgroundColor={colors.surface1.get()}
       name={ModalName.WalletConnectScan}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <>
         {currentScreenState === ScannerModalState.ConnectedDapps && (
           <ConnectedDappsList
@@ -357,20 +338,13 @@ export function WalletConnectModal({
             paddingEnd="$spacing24"
             style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
             testID={ElementName.QRCodeModalToggle}
-            onPress={onPressBottomToggle}>
+            onPress={onPressBottomToggle}
+          >
             <Flex row alignItems="center" gap="$spacing12">
               {currentScreenState === ScannerModalState.ScanQr ? (
-                <Scan
-                  color={colors.neutral1.get()}
-                  height={iconSizes.icon24}
-                  width={iconSizes.icon24}
-                />
+                <Scan color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
               ) : (
-                <ScanQRIcon
-                  color={colors.neutral1.get()}
-                  height={iconSizes.icon24}
-                  width={iconSizes.icon24}
-                />
+                <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
               )}
               <Text color="$neutral1" variant="buttonLabel2">
                 {currentScreenState === ScannerModalState.ScanQr

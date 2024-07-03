@@ -3,7 +3,7 @@ import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 export function filterSections(
   sections: SectionListData<SearchableRecipient>[],
-  filteredAddresses: string[]
+  filteredAddresses: string[],
 ): { title: string; data: SearchableRecipient[] }[] {
   return sections
     .map((section) => {

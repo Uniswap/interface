@@ -5,11 +5,7 @@ import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  isFinalizedTx,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus, isFinalizedTx } from 'wallet/src/features/transactions/types'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 type TransactionStatusProps = {
@@ -60,10 +56,7 @@ export function TransactionPending({
       </Flex>
       <Flex gap="$spacing8">
         {transaction && isFinalizedTx(transaction) ? (
-          <Button
-            testID="transaction-pending-view"
-            theme="tertiary"
-            onPress={onPressViewTransaction}>
+          <Button testID="transaction-pending-view" theme="tertiary" onPress={onPressViewTransaction}>
             {t('swap.button.view')}
           </Button>
         ) : null}

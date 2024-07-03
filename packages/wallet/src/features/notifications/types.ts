@@ -3,11 +3,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
-import {
-  FinalizedTransactionStatus,
-  TransactionType,
-  WrapType,
-} from 'wallet/src/features/transactions/types'
+import { FinalizedTransactionStatus, TransactionType, WrapType } from 'wallet/src/features/transactions/types'
 
 export enum AppNotificationType {
   Default,
@@ -35,6 +31,7 @@ export interface AppNotificationBase {
   type: AppNotificationType
   address?: Address
   hideDelay?: number
+  shown?: boolean
 }
 
 export interface AppNotificationDefault extends AppNotificationBase {
@@ -123,9 +120,7 @@ export interface UnknownTxNotification extends TransactionNotificationBase {
   txType: TransactionType.Unknown
 }
 
-export type TransferCurrencyTxNotification =
-  | SendCurrencyTxNotification
-  | ReceiveCurrencyTxNotification
+export type TransferCurrencyTxNotification = SendCurrencyTxNotification | ReceiveCurrencyTxNotification
 
 export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotification
 
