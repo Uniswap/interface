@@ -16,6 +16,10 @@ RCT_EXTERN_METHOD(importMnemonic: (NSString *)mnemonic
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(removeMnemonic: (NSString *)mnemonicId
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(generateAndStoreMnemonic: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
@@ -29,6 +33,10 @@ RCT_EXTERN_METHOD(generateAddressForMnemonic: (NSString *)mnemonic
 
 RCT_EXTERN_METHOD(generateAndStorePrivateKey: (NSString *)mnemonicId
                   derivationIndex: (NSInteger)index
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(removePrivateKey: (NSString *)address
                   resolve: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 

@@ -1,13 +1,13 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useContract } from './useContract'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
@@ -35,20 +35,20 @@ function getFeeOnTransferAddress(chainId?: ChainId) {
 }
 
 function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
-  const { account, chainId } = useWeb3React()
-  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(chainId), FOT_DETECTOR_ABI)
+  const account = useAccount()
+  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(account.chainId), FOT_DETECTOR_ABI)
 
   useEffect(() => {
-    if (contract && account) {
+    if (contract && account.address) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useFeeOnTransferDetectorContract',
         contract: {
           name: 'FeeOnTransferDetector',
-          address: getFeeOnTransferAddress(chainId),
+          address: getFeeOnTransferAddress(account.chainId),
         },
       })
     }
-  }, [account, chainId, contract])
+  }, [account.address, account.chainId, contract])
   return contract
 }
 
@@ -84,7 +84,7 @@ async function getSwapTaxes(
       })
     }
   } catch (e) {
-    console.warn('Failed to get swap taxes for token(s):', addresses, e)
+    logger.debug('useSwapTaxes', 'getSwapTaxes', 'Failed to get swap taxes for token(s):', addresses, e)
   }
 
   const inputTax = (inputTokenAddress ? FEE_CACHE[inputTokenAddress]?.sellTax : ZERO_PERCENT) ?? ZERO_PERCENT

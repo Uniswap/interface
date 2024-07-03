@@ -3,14 +3,17 @@ import { useMemo } from 'react'
 import { ChainId } from 'uniswap/src/types/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
+  CUSD,
   USDB,
   USDBC_BASE,
   USDC,
   USDC_ARBITRUM,
+  USDC_AVALANCHE,
   USDC_GOERLI,
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDT_BNB,
+  USDzC,
 } from 'wallet/src/constants/tokens'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
@@ -26,16 +29,16 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
   [ChainId.Blast]: CurrencyAmount.fromRawAmount(USDB, 10_000e18),
+  [ChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  [ChainId.Celo]: CurrencyAmount.fromRawAmount(CUSD, 10_000e18),
+  [ChainId.Zora]: CurrencyAmount.fromRawAmount(USDzC, 10_000e6),
 }
 
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export function useUSDCPrice(
-  currency?: Currency,
-  pollInterval?: PollingInterval
-): Price<Currency, Currency> | undefined {
+export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | undefined {
   const chainId = currency?.chainId
 
   const quoteAmount = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
@@ -51,7 +54,7 @@ export function useUSDCPrice(
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,
-    pollInterval,
+    pollInterval: PollingInterval.Fast,
     isUSDQuote: true,
   })
 

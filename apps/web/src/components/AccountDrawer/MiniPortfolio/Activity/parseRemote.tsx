@@ -4,7 +4,7 @@ import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
@@ -25,6 +25,7 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { LimitOrderTextTable, MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
 import { Activity } from './types'
@@ -115,9 +116,12 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
   const supportedSentChain = supportedChainIdFromGQLChain(sent.asset.chain)
   const supportedReceivedChain = supportedChainIdFromGQLChain(received.asset.chain)
   if (!supportedSentChain || !supportedReceivedChain) {
-    logSentryErrorForUnsupportedChain({
-      extras: { sentAsset: sent.asset, receivedAsset: received.asset },
-      errorMessage: 'Invalid activity from unsupported chain received from GQL',
+    logger.error(new Error('Invalid activity from unsupported chain received from GQL'), {
+      tags: {
+        file: 'parseRemote',
+        function: 'getSwapTitle',
+      },
+      extra: { sentAsset: sent.asset, receivedAsset: received.asset },
     })
     return undefined
   }
@@ -506,6 +510,10 @@ function parseRemoteActivity(
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
+    if (assetActivity.details.__typename === 'OnRampTransactionDetails') {
+      return undefined // TODO(WEB-4187): support onramp transactions
+    }
+
     const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
         if (assetChange?.__typename === 'NftApproval') {
@@ -527,9 +535,12 @@ function parseRemoteActivity(
 
     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
     if (!supportedChain) {
-      logSentryErrorForUnsupportedChain({
-        extras: { assetActivity },
-        errorMessage: 'Invalid activity from unsupported chain received from GQL',
+      logger.error(new Error('Invalid activity from unsupported chain received from GQL'), {
+        tags: {
+          file: 'parseRemote',
+          function: 'parseRemoteActivity',
+        },
+        extra: { assetActivity },
       })
       return undefined
     }
@@ -554,7 +565,13 @@ function parseRemoteActivity(
     )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
-    console.error('Failed to parse activity', e, assetActivity)
+    logger.error(e, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseRemoteActivity',
+      },
+      extra: { assetActivity },
+    })
     return undefined
   }
 }

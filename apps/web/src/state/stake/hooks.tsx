@@ -4,9 +4,9 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { POP_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -23,8 +23,8 @@ import { usePoolExtendedContract } from 'state/pool/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import POP_ABI from 'uniswap/src/abis/pop.json'
+import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-
 import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)
@@ -87,15 +87,15 @@ interface StakingInfo {
 
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
 
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
 
   const info = useMemo(
     () =>
-      chainId
-        ? STAKING_REWARDS_INFO[chainId]?.filter((stakingRewardInfo) =>
+      account.chainId
+        ? STAKING_REWARDS_INFO[account.chainId]?.filter((stakingRewardInfo) =>
             pairToFilterBy === undefined
               ? true
               : pairToFilterBy === null
@@ -104,14 +104,14 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
                 pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
           ) ?? []
         : [],
-    [chainId, pairToFilterBy]
+    [account.chainId, pairToFilterBy]
   )
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = account.chainId ? UNI[account.chainId] : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
+  const accountArg = useMemo(() => [account.address], [account.address])
 
   // get all the info from the staking rewards contracts
   const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
@@ -135,7 +135,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   )
 
   return useMemo(() => {
-    if (!chainId || !uni) {
+    if (!account.chainId || !uni) {
       return []
     }
 
@@ -168,7 +168,12 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           rewardRateState.error ||
           periodFinishState.error
         ) {
-          console.error('Failed to load staking rewards info')
+          logger.error(new Error('Failed to load staking rewards info'), {
+            tags: {
+              file: 'stake/hooks',
+              function: 'useStakingInfo',
+            },
+          })
           return memo
         }
 
@@ -230,7 +235,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     }, [])
   }, [
     balances,
-    chainId,
+    account.chainId,
     currentBlockTimestamp,
     earnedAmounts,
     info,

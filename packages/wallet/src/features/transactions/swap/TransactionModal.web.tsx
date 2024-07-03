@@ -30,7 +30,11 @@ export function TransactionModalInnerContainer({
   fullscreen,
   children,
 }: TransactionModalInnerContainerProps): JSX.Element {
-  return <Flex fill={fullscreen}>{children}</Flex>
+  return (
+    <Flex fill={fullscreen} height="100%">
+      {children}
+    </Flex>
+  )
 }
 
 export function TransactionModalFooterContainer({

@@ -131,6 +131,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
       </Flex>
       <Trace logPress element={ElementName.Next}>
         <Button
+          disabled={!onboardingAccountAddress}
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing8">

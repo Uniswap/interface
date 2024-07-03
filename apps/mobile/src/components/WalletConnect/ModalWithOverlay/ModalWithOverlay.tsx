@@ -11,9 +11,11 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  StyleProp,
   View,
+  ViewStyle,
 } from 'react-native'
-import { useDerivedValue } from 'react-native-reanimated'
+import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ScrollDownOverlay'
 import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -30,6 +32,7 @@ type ModalWithOverlayProps = PropsWithChildren<
     onReject: () => void
     onConfirm: () => void
     disableConfirm?: boolean
+    contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
   }
 >
 
@@ -48,6 +51,7 @@ export function ModalWithOverlay({
   onReject,
   onConfirm,
   disableConfirm,
+  contentContainerStyle,
   ...bottomSheetModalProps
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
@@ -114,10 +118,12 @@ export function ModalWithOverlay({
     <BottomSheetModal overrideInnerContainer {...bottomSheetModalProps}>
       <BottomSheetScrollView
         ref={scrollViewRef}
-        contentContainerStyle={{
-          paddingHorizontal: spacing.spacing24,
-          paddingTop: spacing.spacing36,
-        }}
+        contentContainerStyle={
+          contentContainerStyle ?? {
+            paddingHorizontal: spacing.spacing24,
+            paddingTop: spacing.spacing36,
+          }
+        }
         showsVerticalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
         onScroll={handleScroll}>

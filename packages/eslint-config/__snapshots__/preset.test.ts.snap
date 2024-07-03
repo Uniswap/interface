@@ -345,6 +345,9 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-confusing-arrow": [
       0,
     ],
+    "no-console": [
+      "error",
+    ],
     "no-const-assign": [
       "off",
     ],
@@ -1942,6 +1945,10 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "@uniswap/analytics",
           },
           {
+            "message": "Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead",
+            "name": "expo-localization",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
@@ -2190,6 +2197,9 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "no-confusing-arrow": [
       0,
+    ],
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",
@@ -3142,6 +3152,9 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "no-confusing-arrow": [
       0,
+    ],
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",

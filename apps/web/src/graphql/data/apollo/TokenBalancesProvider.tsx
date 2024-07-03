@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
@@ -57,8 +56,8 @@ function useHasAccountUpdate() {
   const { data } = useAssetActivitySubscription()
   const prevData = usePrevious(data)
 
-  const { account } = useWeb3React()
-  const prevAccount = usePrevious(account)
+  const account = useAccount()
+  const prevAccount = usePrevious(account.address)
 
   const { address: smartPool } = useActiveSmartPool()
   const prevSmartPool = usePrevious(smartPool)
@@ -69,17 +68,17 @@ function useHasAccountUpdate() {
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
-    const accountChanged = Boolean(prevAccount !== account && account)
+    const accountChanged = Boolean(prevAccount !== account.address && account.address)
     const smartPoolChanged = Boolean(prevSmartPool !== smartPool && smartPool)
     const sendPageChanged = page !== prevPage && !!smartPool && (page === '/send' || prevPage === '/send')
 
     return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || smartPoolChanged || sendPageChanged
-  }, [account, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool, page, prevPage])
+  }, [account.address, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool, page, prevPage])
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
   // TODO: query default pool with hook and either conditionally set, or just use pool
   const { address: smartPoolAddress } = useActiveSmartPool()
@@ -91,16 +90,16 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const shouldQueryPoolBalances = smartPoolAddress && !isSendPage
 
   const fetch = useCallback(() => {
-    if (!account) {
+    if (!account.address) {
       return
     }
     lazyFetch({
       variables: {
-        ownerAddress: shouldQueryPoolBalances ? smartPoolAddress : account,
+        ownerAddress: shouldQueryPoolBalances ? smartPoolAddress : account.address,
         chains: GQL_MAINNET_CHAINS_MUTABLE,
       },
     })
-  }, [account, lazyFetch, smartPoolAddress, shouldQueryPoolBalances])
+  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances])
 
   return (
     <AdaptiveTokenBalancesProvider query={query} fetch={fetch} stale={hasAccountUpdate}>

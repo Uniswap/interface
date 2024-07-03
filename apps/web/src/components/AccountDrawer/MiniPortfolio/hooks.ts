@@ -1,35 +1,24 @@
 import { atom, useAtom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 const accountDrawerOpenAtom = atom(false)
 const showMoonpayTextAtom = atom(false)
 
-export function useToggleAccountDrawer() {
-  const [open, updateAccountDrawerOpen] = useAtom(accountDrawerOpenAtom)
+export function useAccountDrawer() {
+  const [isOpen, updateAccountDrawerOpen] = useAtom(accountDrawerOpenAtom)
   const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
 
-  return useCallback(() => {
-    updateAccountDrawerOpen(!open)
-    if (open) {
-      setShowMoonpayTextInDrawer(false)
-    }
-  }, [open, setShowMoonpayTextInDrawer, updateAccountDrawerOpen])
-}
+  const open = useCallback(() => {
+    updateAccountDrawerOpen(true)
+  }, [updateAccountDrawerOpen])
 
-export function useCloseAccountDrawer() {
-  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
-  return useCallback(() => updateAccountDrawerOpen(false), [updateAccountDrawerOpen])
-}
+  const close = useCallback(() => {
+    setShowMoonpayTextInDrawer(false)
+    updateAccountDrawerOpen(false)
+  }, [setShowMoonpayTextInDrawer, updateAccountDrawerOpen])
 
-export function useOpenAccountDrawer() {
-  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
-  return useCallback(() => updateAccountDrawerOpen(true), [updateAccountDrawerOpen])
-}
-
-export function useAccountDrawer(): [boolean, () => void] {
-  const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
-  return [accountDrawerOpen, useToggleAccountDrawer()]
+  return useMemo(() => ({ isOpen, open, close }), [isOpen, open, close])
 }
 
 // Only show Moonpay text if the user opens the Account Drawer by clicking 'Buy'

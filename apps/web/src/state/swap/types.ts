@@ -75,12 +75,14 @@ type SwapAndLimitContextType = {
     inputCurrency?: Currency
     outputCurrency?: Currency
   }
+  setSelectedChainId: Dispatch<SetStateAction<ChainId | undefined>>
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
   // The chainId of the page/context - can be different from the connected Chain ID if the
-  // page is displaying content for a different chain
+  // page is displaying content for a different chain or if multichain UX is enabled
   chainId?: ChainId
+  multichainUXEnabled?: boolean
 }
 
 export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
@@ -89,6 +91,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   setCurrencyState: () => undefined,
+  setSelectedChainId: () => undefined,
   prefilledState: {
     inputCurrency: undefined,
     outputCurrency: undefined,
@@ -96,6 +99,7 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
   chainId: ChainId.MAINNET,
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
+  multichainUXEnabled: false,
 })
 
 export interface SerializedCurrencyState {

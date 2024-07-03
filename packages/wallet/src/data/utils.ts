@@ -1,5 +1,6 @@
 import { ApolloClient, NetworkStatus, NormalizedCacheObject, useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
+import { objectToQueryString } from 'uniswap/src/data/utils'
 import { AuthData } from 'wallet/src/data/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -40,13 +41,6 @@ export function useRefetchQueries(): (
     },
     [client]
   )
-}
-
-export const objectToQueryString = (obj: Record<string, string | number | boolean>): string => {
-  return Object.entries(obj)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&')
 }
 
 export async function createSignedRequestBody<T>(

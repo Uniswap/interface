@@ -13,6 +13,11 @@ exports.shared = {
       name: '@uniswap/analytics',
       message: 'This is for internal use only. Please use `packages/uniswap/src/features/telemetry`',
     },
+    {
+      name: 'expo-localization',
+      message:
+        'Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead',
+    },
   ],
   patterns: [],
 }

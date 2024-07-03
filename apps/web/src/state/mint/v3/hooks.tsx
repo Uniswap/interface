@@ -10,7 +10,6 @@ import {
   priceToClosestTick,
   tickToPrice,
 } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
@@ -21,6 +20,7 @@ import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
+import { useAccount } from 'hooks/useAccount'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { PoolState } from '../../../hooks/usePools'
@@ -140,7 +140,7 @@ export function useV3DerivedMintInfo(
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   isTaxed: boolean
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
     useV3MintState()
@@ -454,7 +454,7 @@ export function useV3DerivedMintInfo(
   ])
 
   let errorMessage: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     errorMessage = <Trans i18nKey="common.connectWallet.button" />
   }
 

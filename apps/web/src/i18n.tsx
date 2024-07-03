@@ -1,12 +1,10 @@
-import enUsLocale from './i18n/locales/source/en-US.json'
-
-import { initialLocale } from 'i18n/initialLocale'
-
-import i18n from 'i18next'
-import { initReactI18next } from 'react-i18next'
-
 import { dynamicActivate } from 'i18n/dynamicActivate'
+import { initialLocale } from 'i18n/initialLocale'
+import i18n from 'i18next'
 import resourcesToBackend from 'i18next-resources-to-backend'
+import { initReactI18next } from 'react-i18next'
+import { logger } from 'utilities/src/logger/logger'
+import enUsLocale from './i18n/locales/source/en-US.json'
 
 export { t } from 'i18next'
 export { Plural } from './i18n/Plural'
@@ -27,7 +25,12 @@ i18n
     })
   )
   .on('failedLoading', (language, namespace, msg) => {
-    console.error(`Error loading language ${language} ${namespace}: ${msg}`)
+    logger.error(new Error(`Error loading language ${language} ${namespace}: ${msg}`), {
+      tags: {
+        file: 'i18n',
+        function: 'onFailedLoading',
+      },
+    })
   })
 
 i18n

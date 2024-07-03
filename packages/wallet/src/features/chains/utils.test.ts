@@ -49,7 +49,7 @@ describe(fromGraphQLChain, () => {
   })
 
   it('handles unsupported chain', () => {
-    expect(fromGraphQLChain(Chain.Celo)).toEqual(null)
+    expect(fromGraphQLChain(Chain.UnknownChain)).toEqual(null)
   })
 })
 

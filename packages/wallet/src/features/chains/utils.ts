@@ -55,6 +55,10 @@ export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
       return ChainId.Bnb
     case Chain.Blast:
       return ChainId.Blast
+    case Chain.Avalanche:
+      return ChainId.Avalanche
+    case Chain.Celo:
+      return ChainId.Celo
     case Chain.Zora:
       return ChainId.Zora
   }
@@ -81,6 +85,10 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId 
       return ChainId.Bnb
     case Chain.Base.toLowerCase():
       return ChainId.Base
+    case Chain.Avalanche.toLowerCase():
+      return ChainId.Avalanche
+    case Chain.Celo.toLowerCase():
+      return ChainId.Celo
     case undefined:
       return ChainId.Mainnet
     default:
@@ -104,6 +112,12 @@ export function fromUniswapWebAppLink(network: string | null): ChainId | null {
       return ChainId.Bnb
     case Chain.Blast.toLowerCase():
       return ChainId.Blast
+    case Chain.Avalanche.toLowerCase():
+      return ChainId.Avalanche
+    case Chain.Celo.toLowerCase():
+      return ChainId.Celo
+    case Chain.Zora.toLowerCase():
+      return ChainId.Zora
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
@@ -125,6 +139,12 @@ export function toUniswapWebAppLink(chainId: ChainId): string | null {
       return Chain.Bnb.toLowerCase()
     case ChainId.Blast:
       return Chain.Blast.toLowerCase()
+    case ChainId.Avalanche:
+      return Chain.Avalanche.toLowerCase()
+    case ChainId.Celo:
+      return Chain.Celo.toLowerCase()
+    case ChainId.Zora:
+      return Chain.Zora.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }

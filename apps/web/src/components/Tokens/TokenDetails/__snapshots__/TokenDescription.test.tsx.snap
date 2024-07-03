@@ -33,6 +33,20 @@ exports[`TokenDescription no description or social buttons shown when not availa
   letter-spacing: -0.01em;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -50,20 +64,6 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 .c10:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c8 {
@@ -271,6 +271,20 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   letter-spacing: -0.01em;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -288,20 +302,6 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 .c10:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c8 {
@@ -587,6 +587,20 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   letter-spacing: -0.01em;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -604,20 +618,6 @@ exports[`TokenDescription truncates description and shows more 1`] = `
 
 .c10:active {
   opacity: 0.4;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c8 {

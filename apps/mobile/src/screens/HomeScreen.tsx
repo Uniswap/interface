@@ -20,7 +20,6 @@ import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { ExtensionPromoModal } from 'src/app/modals/ExtensionPromoModal'
-import { UniconsV2Modal } from 'src/app/modals/UniconsV2Modal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import TraceTabView from 'src/components/Trace/TraceTabView'
@@ -38,7 +37,7 @@ import {
   TAB_STYLES,
   TAB_VIEW_SCROLL_THROTTLE,
   TabContentProps,
-  renderTabLabel,
+  TabLabel,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
@@ -79,10 +78,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import {
-  selectHasSkippedUnitagPrompt,
-  selectHasViewedUniconV2IntroModal,
-} from 'wallet/src/features/behaviorHistory/selectors'
+import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
@@ -99,7 +95,6 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   useActiveAccountWithThrow,
-  useAvatar,
   useNonPendingSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -123,8 +118,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isFocused = useIsFocused()
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
-  const { avatar, loading: avatarLoading } = useAvatar(activeAccount.address)
-  const hasAvatar = !!avatar && !avatarLoading
 
   // Ensure if a user is here and has completed onboarding, they have at least one non-pending signer account
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
@@ -136,8 +129,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [activeAccount, dispatch, finishedOnboarding, nonPendingSignerAccounts.length])
 
   const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
-
-  const hasViewedUniconV2IntroModal = useAppSelector(selectHasViewedUniconV2IntroModal)
 
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
@@ -425,10 +416,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
 
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-  const shouldShowUniconV2Modal =
-    isUniconsV2Enabled && !hasViewedUniconV2IntroModal && !hasAvatar && !avatarLoading
-
   const { showExtensionPromoBanner } = useShowExtensionPromoBanner()
   const [showExtensionPromoModal, setShowExtensionPromoModal] = useState(false)
 
@@ -566,7 +553,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
                 pressColor={colors.surface3.val} // Android only
-                renderLabel={renderTabLabel}
+                renderLabel={TabLabel}
                 style={[
                   TAB_STYLES.tabBar,
                   {
@@ -736,22 +723,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         width="100%"
         zIndex="$sticky"
       />
-      {shouldShowUniconV2Modal ? (
-        <>
-          <UniconsV2Modal address={activeAccount?.address} />
-          {/* manual scrim so we can highlight unicon above it */}
-          <Flex
-            backgroundColor="$sporeBlack"
-            inset={0}
-            opacity={0.4}
-            position="absolute"
-            zIndex="$modalBackdrop"
-          />
-        </>
-      ) : (
-        showExtensionPromoModal && (
-          <ExtensionPromoModal onClose={() => setShowExtensionPromoModal(false)} />
-        )
+      {showExtensionPromoModal && (
+        <ExtensionPromoModal onClose={() => setShowExtensionPromoModal(false)} />
       )}
     </Screen>
   )

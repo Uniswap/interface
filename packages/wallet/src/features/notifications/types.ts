@@ -14,6 +14,7 @@ export enum AppNotificationType {
   Error,
   WalletConnect,
   Transaction,
+  TransactionPending,
   Favorites,
   Copied,
   CopyFailed,
@@ -163,7 +164,7 @@ export interface SuccessNotification extends AppNotificationBase {
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
   chainId: ChainId
-  flow: 'swap' | 'send'
+  flow?: 'swap' | 'send'
 }
 
 export interface ChooseCountryNotification extends AppNotificationBase {
@@ -204,6 +205,11 @@ export interface NotSupportedNetworkNotification extends AppNotificationBase {
   type: AppNotificationType.NotSupportedNetwork
 }
 
+export interface TransactionPendingNotification extends AppNotificationBase {
+  type: AppNotificationType.TransactionPending
+  chainId: ChainId
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
@@ -221,3 +227,4 @@ export type AppNotification =
   | DappConnectedNotification
   | DappDisconnectedNotification
   | NotSupportedNetworkNotification
+  | TransactionPendingNotification

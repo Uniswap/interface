@@ -1,8 +1,8 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { OpacityHoverState } from 'components/Common'
 import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
+import { useAccount } from 'hooks/useAccount'
 import { CancelListingIcon, VerifiedIcon } from 'nft/components/icons'
 import { useBag, useNativeUsdPrice, useProfilePageState, useSellAsset, useUsdPriceofNftAsset } from 'nft/hooks'
 import { CollectionInfoForAsset, GenieAsset, ProfilePageStateType, WalletAsset } from 'nft/types'
@@ -312,7 +312,7 @@ const NotForSale = ({ collectionName, collectionUrl }: { collectionName: string;
 }
 
 export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { formatEther, formatNumberOrString } = useFormatter()
 
   const cheapestOrder = asset.sellorders && asset.sellorders.length > 0 ? asset.sellorders[0] : undefined
@@ -327,7 +327,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPriceofNftAsset(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalance(account ?? '', [], assetsFilter, 1)
+  const { walletAssets: ownerAssets } = useNftBalance(account.address ?? '', [], assetsFilter, 1)
   const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
@@ -348,7 +348,8 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
     )
   }
 
-  const isOwner = asset.ownerAddress && !!walletAsset && account?.toLowerCase() === asset.ownerAddress?.toLowerCase()
+  const isOwner =
+    asset.ownerAddress && !!walletAsset && account.address?.toLowerCase() === asset.ownerAddress?.toLowerCase()
   const isForSale = cheapestOrder && asset.priceInfo
 
   return (

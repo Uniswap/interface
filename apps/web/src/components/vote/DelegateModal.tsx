@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
@@ -11,7 +11,9 @@ import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
+import { logger } from 'utilities/src/logger/logger'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
 import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -63,7 +65,7 @@ interface VoteModalProps {
 }
 
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const theme = useTheme()
 
   // state for delegate input
@@ -80,13 +82,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
-  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account
+  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account.address
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // TODO: in the context of pool grg balance is balance of pool
   // get the number of votes available to delegate
-  const grgUserBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
-  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, chainId ? GRG[chainId] : undefined)
+  const grgUserBalance = useTokenBalance(account.address ?? undefined, account.chainId ? GRG[account.chainId] : undefined)
+  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, account.chainId ? GRG[account.chainId] : undefined)
   const { poolId, stakingPoolExists } = usePoolIdByAddress(parsedAddress ?? undefined)
   // we only pass the pool extended instance if we have to call the pool directly
   const poolContract = usePoolExtendedContract(parsedAddress ?? undefined)
@@ -172,7 +174,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     // try delegation and store hash
     const hash = await delegateCallback(stakeData)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('DelegateModal', 'onDelegate', error)
     })
 
     if (hash) {

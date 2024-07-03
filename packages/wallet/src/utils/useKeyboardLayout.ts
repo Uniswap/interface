@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 
 export function useKeyboardLayout(): { isVisible: boolean; containerHeight: number } {
   const window = useWindowDimensions()

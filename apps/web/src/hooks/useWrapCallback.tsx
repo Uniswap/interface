@@ -1,6 +1,5 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -11,6 +10,7 @@ import { useActiveSmartPool } from 'state/application/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/types/wrap'
+import { logger } from 'utilities/src/logger/logger'
 import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { useCurrencyBalance } from '../state/connection/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -58,12 +58,10 @@ export default function useWrapCallback(
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
   const wethContract = useWETHContract()
-
   const { address: smartPoolAddress } = useActiveSmartPool()
   const poolContract = usePoolContract(smartPoolAddress ?? undefined)
-
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
@@ -80,10 +78,10 @@ export default function useWrapCallback(
   }
 
   return useMemo(() => {
-    if (!poolContract || !wethContract || !chainId || !inputCurrency || !outputCurrency) {
+    if (!poolContract || !wethContract || !account.chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE
     }
-    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+    const weth = WRAPPED_NATIVE_CURRENCY[account.chainId]
     if (!weth) {
       return NOT_APPLICABLE
     }
@@ -109,7 +107,7 @@ export default function useWrapCallback(
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   const network = await wethContract.provider.getNetwork()
                   if (
-                    network.chainId !== chainId ||
+                    network.chainId !== account.chainId ||
                     wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
                   ) {
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
@@ -131,7 +129,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     type: TransactionType.WRAP,
                     unwrapped: false,
                     currencyAmountRaw: inputAmount?.quotient.toString(),
-                    chainId,
+                    chainId: account.chainId,
                   })
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
@@ -161,7 +159,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                       type: TransactionType.WRAP,
                       unwrapped: true,
                       currencyAmountRaw: inputAmount?.quotient.toString(),
-                      chainId,
+                      chainId: account.chainId,
                     })
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                       ...eventProperties,
@@ -169,7 +167,12 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     return txReceipt.hash
                   } catch (error) {
-                    console.error('Could not withdraw', error)
+                    logger.error(error, {
+                      tags: {
+                        file: 'useWrapCallback',
+                        function: 'useWrapCallback',
+                      },
+                    })
                     throw error
                   }
                 })
@@ -183,5 +186,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [poolContract, wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [poolContract, wethContract, account.chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

@@ -34,6 +34,12 @@ import {
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
+export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
+  GQLQueries.PortfolioBalances,
+  GQLQueries.TransactionList,
+  GQLQueries.NftsTab,
+]
+
 /**
  * For all imported accounts, checks for new transactions and updates
  * the notification status in redux.
@@ -167,7 +173,7 @@ function AddressTransactionHistoryUpdater({
         }
 
         await apolloClient.refetchQueries({
-          include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+          include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
         })
       }
     }).catch(() => undefined)

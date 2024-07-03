@@ -28,6 +28,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { SupportedInterfaceChainId } from 'constants/chains'
+import { logger } from 'utilities/src/logger/logger'
 import { CancelledTransactionTitleTable, LimitOrderTextTable, OrderTextTable, getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
@@ -252,7 +253,7 @@ export async function transactionToActivity(
 
     return activity
   } catch (error) {
-    console.debug(`Failed to parse transaction ${details.hash}`, error)
+    logger.warn('parseLocal', 'transactionToActivity', `Failed to parse transaction ${details.hash}`, error)
     return undefined
   }
 }

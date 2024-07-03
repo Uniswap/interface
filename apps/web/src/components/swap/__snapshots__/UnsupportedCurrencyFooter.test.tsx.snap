@@ -156,6 +156,9 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
       <div
         class="c0"
       >
+        <div
+          tabindex="0"
+        />
         <button
           class="c1 c2 c3 c4"
           data-testid="read-more-button"

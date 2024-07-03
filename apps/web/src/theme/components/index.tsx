@@ -143,8 +143,17 @@ export function ExternalLink({
   href,
   rel = 'noopener noreferrer',
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
-  return <StyledLink target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest} />
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref'> & { href: string }) {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      handleClickExternalLink(event)
+      if (rest.onClick) {
+        rest.onClick(event)
+      }
+    },
+    [rest]
+  )
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
 
 const TOOLTIP_WIDTH = 60

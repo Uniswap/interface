@@ -16,7 +16,7 @@ const recentAccountIdentifierMapAtom = atomWithStorage<{
 export function useAccountIdentifier() {
   const [recentAccountIdentifierMap, updateRecentAccountIdentifierMap] = useAtom(recentAccountIdentifierMapAtom)
   // TODO: check if we can dynamically return correct target (smart pool or user wallet) in useAccount hook
-  const { address: signerAddress } = useAccount()
+  const account = useAccount()
   const activeSmartPool = useActiveSmartPool()
   const { pathname: page } = useLocation()
 
@@ -24,7 +24,7 @@ export function useAccountIdentifier() {
   const address =
     activeSmartPool.address && activeSmartPool.address !== '' && page !== '/send'
       ? activeSmartPool.address
-      : signerAddress
+      : account.address
 
   const { unitag: unitagResponse } = useUnitagByAddress(address)
   const { data: ensNameResponse } = useEnsName({ address: address as `0x${string}` })
@@ -38,11 +38,11 @@ export function useAccountIdentifier() {
 
   // Keep the stored account identifiers synced with the latest unitag and ENS name
   useEffect(() => {
-    if (!address) {
+    if (!account.address) {
       return
     }
     updateRecentAccountIdentifierMap((prev) => {
-      const updatedIdentifiers = prev[address] ?? {}
+      const updatedIdentifiers = prev[account.address as string] ?? {}
       if (unitagResponse) {
         updatedIdentifiers.unitag = unitagResponse.username
       }
@@ -50,15 +50,15 @@ export function useAccountIdentifier() {
         updatedIdentifiers.ensName = ensNameResponse
       }
 
-      return { ...prev, [address]: updatedIdentifiers, recent: updatedIdentifiers }
+      return { ...prev, [account.address as string]: updatedIdentifiers, recent: updatedIdentifiers }
     })
-  }, [address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
+  }, [account.address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
 
   // If there is no account yet, optimistically use the stored `recent` account identifier
   const { unitag, ensName } =
-    (address ? recentAccountIdentifierMap[address] : recentAccountIdentifierMap['recent']) ?? {}
+    (account.address ? recentAccountIdentifierMap[account.address] : recentAccountIdentifierMap['recent']) ?? {}
 
-  const accountIdentifier = unitag ?? ensName ?? shortenAddress(address)
+  const accountIdentifier = unitag ?? ensName ?? shortenAddress(account.address)
   return {
     accountIdentifier,
     hasUnitag: Boolean(unitag),

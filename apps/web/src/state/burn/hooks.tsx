@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -8,9 +7,10 @@ import { ReactNode, useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 
+import { useAccount } from 'hooks/useAccount'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
-import { useTokenBalances } from '../connection/hooks'
 import { Field, typeInput } from './actions'
 
 export function useBurnState(): AppState['burn'] {
@@ -30,7 +30,7 @@ export function useDerivedBurnInfo(
   }
   error?: ReactNode
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const { independentField, typedValue } = useBurnState()
 
@@ -38,8 +38,7 @@ export function useDerivedBurnInfo(
   const [, pair] = useV2Pair(currencyA, currencyB)
 
   // balances
-  const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
-  const userLiquidity: undefined | CurrencyAmount<Token> = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
+  const userLiquidity = useCurrencyBalance(account.address, pair?.liquidityToken) as CurrencyAmount<Token>
 
   const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
   const tokens = {
@@ -123,7 +122,7 @@ export function useDerivedBurnInfo(
   }
 
   let error: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     error = <Trans i18nKey="common.connectWallet.button" />
   }
 

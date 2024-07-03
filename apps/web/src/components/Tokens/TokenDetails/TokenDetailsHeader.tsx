@@ -24,6 +24,8 @@ import { Z_INDEX } from 'theme/zIndex'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
+import { useSearchParams } from 'react-router-dom'
+import { isMobile } from 'utilities/src/platform'
 import { TokenNameCell } from './Skeleton'
 
 const HeaderActionsContainer = styled.div`
@@ -142,7 +144,9 @@ export const TokenDetailsHeader = () => {
   const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
   const twitterUrl = twitterName && `https://x.com/${twitterName}`
 
-  const currentLocation = window.location.href
+  const [searchParams] = useSearchParams()
+  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=share-tdp&utm_medium=${isMobile ? 'mobile' : 'web'}`
+  const currentLocation = window.location.href + utmTag
 
   const twitterShareName =
     currency.name && currency.symbol
@@ -250,7 +254,7 @@ export const TokenDetailsHeader = () => {
                 </ActionButton>
               </>
             ) : (
-              <ShareButton name={twitterShareName} />
+              <ShareButton name={twitterShareName} utmSource="share-tdp" />
             )}
           </HeaderActionsContainer>
         ) : null}

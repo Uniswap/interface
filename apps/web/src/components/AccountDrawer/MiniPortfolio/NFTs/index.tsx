@@ -10,7 +10,7 @@ import { useAccountDrawer } from '../hooks'
 import { NFT } from './NFTItem'
 
 export default function NFTs({ account }: { account: string }) {
-  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const { walletAssets, loading, hasNext, loadMore } = useNftBalance(
     account,
     [],
@@ -19,7 +19,7 @@ export default function NFTs({ account }: { account: string }) {
     undefined,
     undefined,
     undefined,
-    !walletDrawerOpen
+    !accountDrawer.isOpen
   )
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -33,7 +33,7 @@ export default function NFTs({ account }: { account: string }) {
   }
 
   if (!walletAssets || walletAssets?.length === 0) {
-    return <EmptyWalletModule onNavigateClick={toggleWalletDrawer} />
+    return <EmptyWalletModule onNavigateClick={accountDrawer.close} />
   }
 
   return (

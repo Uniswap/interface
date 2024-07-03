@@ -6,6 +6,7 @@ import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
+import { logger } from 'utilities/src/logger/logger'
 import { fetchTokenList } from '../state/lists/actions'
 
 export function useFetchListCallback(): (listUrl: string, skipValidation?: boolean) => Promise<TokenList> {
@@ -25,7 +26,15 @@ export function useFetchListCallback(): (listUrl: string, skipValidation?: boole
           return tokenList
         })
         .catch((error) => {
-          console.debug(`Failed to get list at url ${listUrl}`, error)
+          logger.error(error, {
+            tags: {
+              file: 'useFetchListCallback',
+              function: 'useFetchListCallback',
+            },
+            extra: {
+              listUrl,
+            },
+          })
           dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
           throw error
         })

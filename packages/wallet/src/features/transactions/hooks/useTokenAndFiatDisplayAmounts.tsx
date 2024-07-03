@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface FormattedDisplayAmountsProps {
   value: Maybe<string>

@@ -51,6 +51,10 @@ export interface UwuLinkErc20Request extends BaseRequest {
   recipient: {
     address: string
     name: string
+    logo?: {
+      dark?: string
+      light?: string
+    }
   }
   tokenAddress: string
   amount: string

@@ -4,7 +4,7 @@ import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@u
 import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
@@ -19,7 +19,7 @@ import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
-import { BodyWrapper } from 'pages/AppBody'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -37,6 +37,7 @@ import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
@@ -123,7 +124,7 @@ function AddLiquidity() {
 
   // we query pool address from application state
   const { address: smartPoolAddress } = useActiveSmartPool()
-  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
+  const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
 
@@ -348,11 +349,15 @@ function AddLiquidity() {
           })
         })
         .catch((error) => {
-          console.error('Failed to send transaction', error)
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {
-            console.error(error)
+            logger.error(error, {
+              tags: {
+                file: 'addLiquidity',
+                function: 'AddLiquidity',
+              },
+            })
           }
         })
     } else {
@@ -529,7 +534,7 @@ function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={accountDrawer.open} $borderRadius="12px" padding="12px">
           <Trans i18nKey="common.connectWallet.button" />
         </ButtonLight>
       </Trace>

@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -10,6 +10,7 @@ import Toggle from 'components/Toggle'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
@@ -102,6 +103,8 @@ const Header = styled(ThemedText.H1Small)`
 
 export default function Landing() {
   const theme = useTheme()
+  const account = useAccount()
+
   const [hideCancelled, setHideCancelled] = useState(true)
 
   const { account } = useWeb3React()

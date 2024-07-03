@@ -67,25 +67,6 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c21 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c21:hover {
-  opacity: 0.6;
-}
-
-.c21:active {
-  opacity: 0.4;
-}
-
 .c33 {
   height: 16px;
   width: 16px;
@@ -114,6 +95,25 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c21 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c21:hover {
+  opacity: 0.6;
+}
+
+.c21:active {
+  opacity: 0.4;
 }
 
 .c25 {

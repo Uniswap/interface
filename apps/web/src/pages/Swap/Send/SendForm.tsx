@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
@@ -16,6 +16,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { useIsSmartContractAddress } from 'utils/transfer'
+
 import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 import { SendRecipientForm } from './SendRecipientForm'
@@ -74,17 +75,17 @@ enum SendSpeedBump {
 }
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
-  const { address: account, isDisconnected, chainId: connectedChainId } = useAccount()
+  const account = useAccount()
   const switchChain = useSwitchChain()
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const [sendFormModalState, setSendFormModalState] = useState(SendFormModalState.None)
   const [sendFormSpeedBumpState, setSendFormSpeedBumpState] = useState({
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId, multichainUXEnabled } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { setSendState, derivedSendInfo } = useSendContext()
   const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
@@ -92,7 +93,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address
   )
-  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account)
+  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account.address)
   const isRecentAddress = useMemo(() => {
     if (!recipientData?.address) {
       return undefined
@@ -190,17 +191,17 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       <Column gap="xs">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
-        {isDisconnected ? (
+        {account.isDisconnected ? (
           <Trace
             logPress
             eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
-            <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+            <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
               <Trans i18nKey="common.connectWallet.button" />
             </ButtonLight>
           </Trace>
-        ) : chainId && chainId !== connectedChainId ? (
+        ) : !multichainUXEnabled && chainId && chainId !== account.chainId ? (
           <ButtonPrimary
             $borderRadius="16px"
             onClick={async () => {

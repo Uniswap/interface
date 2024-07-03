@@ -15,6 +15,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -195,15 +196,28 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const { paddingBottom, paddingTop, paddingHorizontal } = outerPadding
   const { paddingBottom: innerPaddingBottom, paddingTop: innerPaddingTop } = innerPadding
 
+  const inputColor = !value ? '$neutral3' : '$neutral1'
+  const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
+
   return (
     <Flex gap="$spacing8" pb={paddingBottom} pt={paddingTop} px={paddingHorizontal} {...rest}>
       <Flex
         row
         alignItems="center"
-        gap="$spacing8"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         pb={innerPaddingBottom}
         pt={innerPaddingTop}>
+        {isFiatInput && (
+          <Text
+            allowFontScaling
+            color={inputColor}
+            fontSize={fontSize}
+            height={fontSize}
+            lineHeight={fontSize}
+            mr="$spacing2">
+            {fiatCurrencySymbol}
+          </Text>
+        )}
         {currencyInfo && (
           <Flex
             fill
@@ -234,7 +248,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               px="$none"
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showCurrencySign={isFiatInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
               testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
               value={value}
@@ -244,7 +257,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             />
           </Flex>
         )}
-        <Flex row alignItems="center">
+        <Flex row alignItems="center" pl="$spacing8">
           <SelectTokenButton selectedCurrencyInfo={currencyInfo} onPress={onShowTokenSelector} />
         </Flex>
       </Flex>

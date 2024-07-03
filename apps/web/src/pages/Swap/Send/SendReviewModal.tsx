@@ -7,11 +7,11 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { useAccount } from 'hooks/useAccount'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
 import { Unitag } from 'ui/src/components/icons'
@@ -64,7 +64,7 @@ const SendModalHeader = ({
 }
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },

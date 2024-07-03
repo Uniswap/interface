@@ -17,6 +17,8 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+// eslint-disable-next-line no-restricted-imports
+import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
@@ -28,16 +30,14 @@ import {
 } from 'wallet/src/features/transactions/swap/DecimalPadInput'
 import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
-import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHeader'
-import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
-import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-// eslint-disable-next-line no-restricted-imports
-import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
+import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHeader'
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
+import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
+import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {
@@ -205,17 +205,10 @@ function SwapFormContent(): JSX.Element {
           ? exactAmountFiatRef
           : exactAmountTokenRef
 
-      if (_isFiatMode) {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      } else {
-        resetSelection({
-          start: amountRef.current.length,
-          end: amountRef.current.length,
-        })
-      }
+      resetSelection({
+        start: amountRef.current.length,
+        end: amountRef.current.length,
+      })
     },
     [
       decimalPadControlledField,
@@ -459,11 +452,7 @@ function SwapFormContent(): JSX.Element {
   }
 
   return (
-    <Flex
-      gap="$spacing8"
-      grow={!isWeb}
-      height={isWeb ? '100%' : undefined}
-      justifyContent="space-between">
+    <Flex grow gap="$spacing8" justifyContent="space-between">
       <Flex
         animation="quick"
         enterStyle={{ opacity: 0 }}
@@ -703,16 +692,18 @@ type FoTWarningRowProps = {
 
 function FoTWarningRow({ currencies, outputTokenHasBuyTax }: FoTWarningRowProps): JSX.Element {
   const { t } = useTranslation()
+  const fotCurrencySymbol = outputTokenHasBuyTax
+    ? currencies[CurrencyField.OUTPUT]?.currency.symbol
+    : currencies[CurrencyField.INPUT]?.currency.symbol
+
   return (
     <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }}>
       <Text color="$statusCritical" textAlign="center" variant="body3">
-        {t('swap.form.warning.output.fotFees', {
-          fotCurrencySymbol:
-            (outputTokenHasBuyTax
-              ? currencies[CurrencyField.OUTPUT]?.currency.symbol
-              : currencies[CurrencyField.INPUT]?.currency.symbol) ?? 'Token',
-          inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol ?? 'input',
-        })}
+        {fotCurrencySymbol
+          ? t('swap.form.warning.output.fotFees', {
+              fotCurrencySymbol,
+            })
+          : t('swap.form.warning.output.fotFees.fallback')}
       </Text>
     </Flex>
   )

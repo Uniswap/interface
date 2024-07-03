@@ -2,13 +2,13 @@ import { MaxUint256 } from '@ethersproject/constants'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { useCallback, useMemo } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 export enum ApprovalState {
@@ -25,10 +25,10 @@ function useApprovalStateForSpender(
   isRbPool: boolean | undefined
 ): ApprovalState {
   // TODO: check how we can skip RPC call if Rigoblock pool
-  const { account } = useWeb3React()
+  const account = useAccount()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
 
-  const { tokenAllowance } = useTokenAllowance(token, account ?? undefined, spender)
+  const { tokenAllowance } = useTokenAllowance(token, account.address, spender)
   const pendingApproval = useIsPendingApproval(token, spender)
 
   return useMemo(() => {
@@ -78,7 +78,23 @@ export function useApproval(
 
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
-      console.warn(`${token?.symbol || 'Token'} approval failed:`, error)
+      if (typeof error === 'string') {
+        logger.warn('useApproval', 'approve', error)
+      } else {
+        logger.error(error, {
+          tags: {
+            file: 'useApproval',
+            function: 'approve',
+          },
+          extra: {
+            tokenChain: token?.chainId,
+            token: token?.address,
+            chainId,
+            amountToApprove: amountToApprove?.toFixed(),
+          },
+        })
+      }
+
       return
     }
 

@@ -1,6 +1,6 @@
 import { Switch as TamaguiSwitch, SwitchProps as TamaguiSwitchProps, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 
 type SwitchProps = {
   value?: boolean

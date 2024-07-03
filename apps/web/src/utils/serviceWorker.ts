@@ -1,3 +1,5 @@
+import { logger } from 'utilities/src/logger/logger'
+
 export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready
@@ -5,7 +7,12 @@ export function unregister() {
         registration.unregister()
       })
       .catch((error) => {
-        console.error(error.message)
+        logger.error(error, {
+          tags: {
+            file: 'serviceWorker',
+            function: 'unregister',
+          },
+        })
       })
   }
 }

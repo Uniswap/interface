@@ -26,7 +26,7 @@ import {
 } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
 import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
 import { BottomSheetContextProvider } from './BottomSheetContext'

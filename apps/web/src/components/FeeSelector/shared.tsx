@@ -14,7 +14,7 @@ export const FEE_AMOUNT_DETAIL: Record<
   },
   [FeeAmount.LOW]: {
     label: '0.05',
-    description: <Trans i18nKey="fee.bestForStable" />,
+    description: <Trans i18nKey="fee.bestForStablePairs" />,
     supportedChains: SUPPORTED_CHAINS,
   },
   [FeeAmount.MEDIUM]: {

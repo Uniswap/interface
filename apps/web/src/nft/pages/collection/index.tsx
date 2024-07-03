@@ -209,6 +209,7 @@ const Collection = () => {
         {metaTags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
+        <meta name="robots" content="max-image-preview:large" />
       </Helmet>
       <Trace
         logImpression

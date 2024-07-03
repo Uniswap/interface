@@ -7,8 +7,8 @@ import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/ga
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
+import { isAndroid } from 'utilities/src/platform'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
@@ -81,19 +81,19 @@ function* maybeRequestAppRating() {
     const shouldPrompt = consecutiveSwapsCondition && (hasNeverPrompted || reminderCondition)
 
     if (!shouldPrompt) {
-      logger.debug(
-        'appRating',
-        'maybeRequestAppRating',
-        `Skipping app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, consecutiveSwapsCondition: ${consecutiveSwapsCondition})`
-      )
+      logger.debug('appRating', 'maybeRequestAppRating', 'Skipping app rating', {
+        lastPrompt: appRatingPromptedMs,
+        lastProvided: appRatingProvidedMs,
+        consecutiveSwapsCondition,
+      })
       return
     }
 
-    logger.info(
-      'appRating',
-      'maybeRequestAppRating',
-      `Requesting app rating (lastPrompt: ${appRatingPromptedMs}, lastProvided: ${appRatingProvidedMs}, consecutiveSwapsCondition: ${consecutiveSwapsCondition})`
-    )
+    logger.info('appRating', 'maybeRequestAppRating', 'Requesting app rating', {
+      lastPrompt: appRatingPromptedMs,
+      lastProvided: appRatingProvidedMs,
+      consecutiveSwapsCondition,
+    })
 
     // Alerts
     const shouldShowNativeReviewModal = yield* call(openRatingOptionsAlert)

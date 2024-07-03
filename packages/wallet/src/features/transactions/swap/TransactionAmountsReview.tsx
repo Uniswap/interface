@@ -2,13 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,

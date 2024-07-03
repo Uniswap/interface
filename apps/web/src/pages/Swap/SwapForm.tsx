@@ -6,13 +6,13 @@ import {
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 //import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Error from 'components/Icons/Error'
+import ErrorIcon from 'components/Icons/Error'
 import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -56,6 +56,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/types/wrap'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -138,7 +139,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const trace = useTrace()
 
-  const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
+  const { chainId, prefilledState, currencyState, multichainUXEnabled } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
   const { typedValue, independentField } = swapState
@@ -174,7 +175,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const theme = useTheme()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const operatedPools = useOperatedPools()
 
@@ -310,10 +311,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     swapError: undefined,
     swapResult: undefined,
   })
-
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
   useEffect(() => {
+    if (multichainUXEnabled) {
+      return
+    }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
     const prefilledInputChanged =
       previousPrefilledState?.inputCurrency &&
@@ -333,6 +336,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     }
   }, [
     connectedChainId,
+    multichainUXEnabled,
     prefilledState.inputCurrency,
     prefilledState?.outputCurrency,
     previousConnectedChainId,
@@ -450,8 +454,9 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           input: currencies[Field.INPUT],
           output: currencies[Field.OUTPUT],
         })
+      } else {
+        logger.debug('SwapForm', 'handleOnWrap', 'rejected wrap/unwrap')
       }
-      console.error('Could not wrap/unwrap', error)
       setSwapFormState((currentState) => ({
         ...currentState,
         swapError: error,
@@ -535,6 +540,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const selectChain = useSelectChain()
+
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)
@@ -714,7 +720,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 <Trans i18nKey="common.unsupportedAsset_one" />
               </ThemedText.DeprecatedMain>
             </ButtonPrimary>
-          ) : switchingChain ? (
+          ) : !multichainUXEnabled && switchingChain ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <Trans
                 i18nKey="common.connectingToChain"
@@ -730,11 +736,11 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+              <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
                 <Trans i18nKey="common.connectWallet.button" />
               </ButtonLight>
             </Trace>
-          ) : chainId && chainId !== connectedChainId ? (
+          ) : !multichainUXEnabled && chainId && chainId !== connectedChainId ? (
             <ButtonPrimary
               $borderRadius="16px"
               onClick={async () => {
@@ -777,7 +783,11 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           ) : (
             <Trace logPress element={InterfaceElementName.SWAP_BUTTON}>
               <ButtonError
-                onClick={() => {
+                onClick={async () => {
+                  const inputChainId = trade?.inputAmount?.currency?.chainId
+                  if (inputChainId && inputChainId !== connectedChainId) {
+                    await selectChain(inputChainId)
+                  }
                   showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
                 }}
                 id="swap-button"
@@ -827,7 +837,7 @@ function SwapNotice() {
       padding="16px"
     >
       <Row width="auto" borderRadius="16px" backgroundColor={theme.critical2} padding="8px">
-        <Error />
+        <ErrorIcon />
       </Row>
 
       <Column flex="10" gap="sm">

@@ -153,8 +153,11 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
 }
 
 export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
-  const { chainId: walletChainId, address } = useAccount()
-  const { positions: userOwnedPositions } = useMultiChainPositions(address ?? '', chainId ? [chainId] : undefined)
+  const account = useAccount()
+  const { positions: userOwnedPositions } = useMultiChainPositions(
+    account.address ?? '',
+    chainId ? [chainId] : undefined
+  )
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
@@ -195,7 +198,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
 
   const handleAddLiquidity = async () => {
     if (currency0 && currency1) {
-      if (walletChainId !== chainId && chainId) {
+      if (account.chainId !== chainId && chainId) {
         await switchChain(chainId)
       }
       navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
@@ -226,7 +229,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   return (
     <Column gap="lg">
       <PoolDetailsStatsButtonsRow>
-        {address && (
+        {account.address && (
           <MobileBalance>
             <ThemedText.SubHeaderSmall>
               <Trans i18nKey="pool.yourBalances" />
@@ -246,7 +249,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         <PoolButton
           onClick={toggleSwapModalOpen}
           $open={swapModalOpen}
-          $fixedWidth={Boolean(address)}
+          $fixedWidth={Boolean(account.address)}
           data-testid={`pool-details-${swapModalOpen ? 'close' : 'swap'}-button`}
         >
           {swapModalOpen ? (
@@ -268,7 +271,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         <PoolButton
           onClick={handleAddLiquidity}
           data-testid="pool-details-add-liquidity-button"
-          $fixedWidth={Boolean(address)}
+          $fixedWidth={Boolean(account.address)}
           $hideOnMobile
         >
           {screenSizeLargerThanTablet && <Plus size={20} />}
@@ -284,7 +287,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
           initialInputCurrency={currency0}
           initialOutputCurrency={currency1}
           compact
-          disableTokenInputs={chainId !== walletChainId}
+          disableTokenInputs={chainId !== account.chainId}
         />
         {Boolean(priorityWarning) && (
           <TokenSafetyMessage

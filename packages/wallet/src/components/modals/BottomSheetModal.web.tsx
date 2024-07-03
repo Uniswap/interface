@@ -18,6 +18,7 @@ export type WebBottomSheetProps = Pick<
   | 'isModalOpen'
   | 'alignment'
   | 'maxWidth'
+  | 'padding'
 >
 
 export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
@@ -31,6 +32,7 @@ export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
     'isModalOpen',
     'alignment',
     'maxWidth',
+    'padding',
   ])
 
   if (props.alignment === 'top') {
@@ -53,6 +55,7 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
     'isDismissible',
     'alignment',
     'maxWidth',
+    'padding',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -65,6 +68,7 @@ function WebTopSheetModal({
   isDismissible = true,
   isModalOpen = true,
   maxWidth,
+  padding = '$spacing12',
 }: WebBottomSheetProps): JSX.Element {
   const [isMounted, setIsMounted] = useState(false)
 
@@ -77,7 +81,7 @@ function WebTopSheetModal({
       <Flex
         inset={0}
         maxWidth={maxWidth}
-        p="$spacing12"
+        p={padding}
         pointerEvents="none"
         position="absolute"
         {...(isModalOpen && {
@@ -135,6 +139,7 @@ function WebBottomSheetModal({
   isModalOpen = true,
   alignment = 'center',
   maxWidth,
+  padding = '$spacing12',
 }: WebBottomSheetProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -191,7 +196,7 @@ function WebBottomSheetModal({
               alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'
             }
             maxWidth={maxWidth}
-            p="$spacing12"
+            p={padding}
             pointerEvents="none">
             <Flex
               backgroundColor={backgroundColor ? validColor(backgroundColor) : '$surface1'}

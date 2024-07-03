@@ -44,6 +44,7 @@ import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLi
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -598,7 +599,12 @@ function PositionPageContent() {
       })
       .catch((error) => {
         setCollecting(false)
-        console.error(error)
+        logger.error(error, {
+          tags: {
+            file: 'PositionPage',
+            function: 'collectCallback',
+          },
+        })
       })
   }, [
     currency0ForFeeCollectionPurposes,

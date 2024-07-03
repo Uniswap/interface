@@ -8,4 +8,9 @@
       "path": "../utilities"
     },
   ],
+  "compilerOptions": {
+    "types": [
+      "jest"
+    ]
+  }
 }

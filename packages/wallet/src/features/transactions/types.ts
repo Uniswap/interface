@@ -4,10 +4,11 @@ import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
 import { ChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
-import { FORLogo, MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
@@ -131,7 +132,9 @@ export enum TransactionType {
   Receive = 'receive',
 
   // Fiat onramp
-  FiatPurchase = 'fiat-purchase',
+  FiatPurchase = 'fiat-purchase', // deprecated. TODO(MOB-2963): remove
+  OnRampPurchase = 'onramp-purchase',
+  OnRampTransfer = 'onramp-transfer',
 
   // General
   WCConfirm = 'wc-confirm',
@@ -232,6 +235,39 @@ export interface FiatPurchaseTransactionInfo extends BaseTransactionInfo {
   institution?: string
 }
 
+export interface OnRampTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType
+  id: string
+  destinationTokenSymbol: string
+  destinationTokenAddress: string
+  destinationTokenAmount: number
+  serviceProvider: ServiceProviderInfo
+  // Fees are in units of the sourceCurrency for purchases,
+  // and in units of the destinationToken for transfers
+  networkFee?: number
+  transactionFee?: number
+  totalFee?: number
+}
+
+export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
+  type: TransactionType.OnRampPurchase
+  sourceCurrency: string
+  sourceAmount: number
+}
+
+export interface OnRampTransferInfo extends OnRampTransactionInfo {
+  type: TransactionType.OnRampTransfer
+}
+
+export interface ServiceProviderInfo {
+  id: string
+  name: string
+  url: string
+  logoLightUrl: string
+  logoDarkUrl: string
+  supportUrl?: string
+}
+
 export interface NFTMintTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTMint
   nftSummaryInfo: NFTSummaryInfo
@@ -277,6 +313,8 @@ export type TransactionTypeInfo =
   | NFTMintTransactionInfo
   | WCConfirmInfo
   | UnknownTransactionInfo
+  | OnRampPurchaseInfo
+  | OnRampTransferInfo
 
 export function isConfirmedSwapTypeInfo(
   typeInfo: TransactionTypeInfo

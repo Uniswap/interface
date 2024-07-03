@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Trans } from 'i18n'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import styled from 'styled-components'
@@ -40,9 +40,13 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   } = useSwapContext()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const [triggerBuyFlow, setTriggerBuyFlow] = useState(false)
 
   useEffect(() => {
     setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
+    if (pathname === '/buy') {
+      setTriggerBuyFlow(true)
+    }
   }, [pathname, setCurrentTab])
 
   const onTabClick = useCallback(
@@ -91,7 +95,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             <Trans i18nKey="common.send.button" />
           </SwapHeaderTabButton>
         )}
-        <SwapBuyFiatButton />
+        <SwapBuyFiatButton triggerBuyFlow={triggerBuyFlow} setTriggerBuyFlow={setTriggerBuyFlow} />
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>

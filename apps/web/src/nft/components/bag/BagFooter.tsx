@@ -1,9 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther, parseEther } from '@ethersproject/units'
+import { formatEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -15,11 +14,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans, t } from 'i18n'
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
@@ -29,7 +29,6 @@ import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
 import { PriceImpact, usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useSubscribeTransactionState } from 'nft/hooks/useSubscribeTransactionState'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
-import { useWalletBalance } from 'nft/hooks/useWalletBalance'
 import { BagStatus } from 'nft/types'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
@@ -39,6 +38,9 @@ import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import JSBI from 'jsbi'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
@@ -275,17 +277,17 @@ interface BagFooterProps {
 }
 
 export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) => {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const theme = useTheme()
-  const { account, chainId } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
-  const connected = Boolean(account && chainId)
+  const account = useAccount()
+  const isSupportedChain = useIsSupportedChainId(account.chainId)
+  const connected = account.isConnected && account.chainId
   const totalEthPrice = useBagTotalEthPrice()
   const { inputCurrency } = useTokenInput(({ inputCurrency }) => ({ inputCurrency }))
   const setInputCurrency = useTokenInput((state) => state.setInputCurrency)
   const defaultCurrency = useCurrency('ETH')
   const inputCurrencyBalance = useTokenBalance(
-    account ?? undefined,
+    account.address,
     !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
   )
   const {
@@ -302,7 +304,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && account.chainId === ChainId.MAINNET
   const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
@@ -319,7 +321,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
   const allowance = usePermit2Allowance(
     maximumAmountIn,
-    getURAddress(isSupportedChain ? chainId : undefined, universalRouterAddress),
+    getURAddress(isSupportedChain ? account.chainId : undefined, universalRouterAddress),
     TradeFillType.Classic
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
@@ -330,9 +332,11 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
   const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
 
-  const { balance: balanceInEth } = useWalletBalance()
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID)
+  const nativeCurencyBalance = useCurrencyBalance(account.address ?? undefined, nativeCurrency)
+
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== ChainId.MAINNET) {
+    if (!connected || account.chainId !== ChainId.MAINNET) {
       return undefined
     }
 
@@ -346,8 +350,22 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
       return !inputCurrencyBalance.lessThan(inputAmount)
     }
 
-    return parseEther(balanceInEth).gte(totalEthPrice)
-  }, [connected, chainId, inputCurrency, balanceInEth, totalEthPrice, trade?.inputAmount, inputCurrencyBalance])
+    if (!nativeCurrency) {
+      return undefined
+    }
+
+    const totalEthPriceCurrencyAmount = CurrencyAmount.fromRawAmount(nativeCurrency, JSBI.BigInt(totalEthPrice))
+    return nativeCurencyBalance?.greaterThan(totalEthPriceCurrencyAmount)
+  }, [
+    connected,
+    account.chainId,
+    inputCurrency,
+    nativeCurrency,
+    totalEthPrice,
+    nativeCurencyBalance,
+    trade?.inputAmount,
+    inputCurrencyBalance,
+  ])
 
   useEffect(() => {
     setBagStatus(BagStatus.ADDING_TO_BAG)
@@ -365,7 +383,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     handleClick,
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
-    if (connected && chainId !== ChainId.MAINNET) {
+    if (connected && account.chainId !== ChainId.MAINNET) {
       const handleClick = () => switchChain(ChainId.MAINNET)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
@@ -380,7 +398,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
     if (!connected) {
       const handleClick = () => {
-        toggleWalletDrawer()
+        accountDrawer.open()
         setBagExpanded({ bagExpanded: false })
       }
       return getBuyButtonStateData(BuyButtonStates.WALLET_NOT_CONNECTED, theme, handleClick)
@@ -440,7 +458,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     return getBuyButtonStateData(BuyButtonStates.PAY, theme, fetchAssets, usingPayWithAnyToken)
   }, [
     connected,
-    chainId,
+    account.chainId,
     sufficientBalance,
     bagStatus,
     usingPayWithAnyToken,
@@ -451,7 +469,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     theme,
     fetchAssets,
     switchChain,
-    toggleWalletDrawer,
+    accountDrawer,
     setBagExpanded,
   ])
 

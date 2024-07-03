@@ -1,5 +1,5 @@
-import { isInterface } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 /**
  * Feature flag names
  * These must match the Gate Key on Statsig
@@ -7,7 +7,6 @@ import { logger } from 'utilities/src/logger/logger'
 export enum FeatureFlags {
   // Shared
   CurrencyConversion,
-  UniconsV2,
 
   // Wallet
   ExtensionOnboarding,
@@ -17,16 +16,19 @@ export enum FeatureFlags {
   LanguageSelection,
   MevBlocker,
   OptionalRouting,
+  OnboardingKeyring,
   PlaystoreAppRating,
   PortionFields,
   RestoreWallet,
   Scantastic,
   SeedPhraseRefactorNative,
   SendRewrite,
+  TransactionDetailsSheet,
   UnitagsDeviceAttestation,
   UwULink,
 
   // Web
+  NavRefresh,
   Eip6936Enabled,
   ExitAnimation,
   ExtensionBetaLaunch,
@@ -43,6 +45,7 @@ export enum FeatureFlags {
   UniswapXv2,
   V2Everywhere,
   V2Explore,
+  Zora,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -52,8 +55,8 @@ export enum FeatureFlags {
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
-  [FeatureFlags.UniconsV2, 'unicon_v2'],
   // Web Specific
+  [FeatureFlags.NavRefresh, 'navigation_refresh'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
   [FeatureFlags.ExtensionBetaLaunch, 'extension_beta_launch'],
@@ -70,6 +73,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.V2Everywhere, 'v2_everywhere'],
   [FeatureFlags.V2Explore, 'v2_explore'],
+  [FeatureFlags.Zora, 'zora'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
@@ -79,7 +83,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
-  [FeatureFlags.UniconsV2, 'unicons-v2'],
   // Wallet Specific
   [FeatureFlags.ExtensionOnboarding, 'extension-onboarding'],
   [FeatureFlags.FeedTab, 'feed-tab'],
@@ -88,12 +91,14 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LanguageSelection, 'language-selection'],
   [FeatureFlags.MevBlocker, 'mev-blocker'],
   [FeatureFlags.OptionalRouting, 'optional-routing'],
+  [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.PlaystoreAppRating, 'playstore-app-rating'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.RestoreWallet, 'restore-wallet'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SeedPhraseRefactorNative, 'refactor-seed-phrase-native'],
   [FeatureFlags.SendRewrite, 'send-rewrite'],
+  [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])

@@ -4,7 +4,7 @@ import { Carousel } from 'src/components/carousel/Carousel'
 import { educationContent } from 'src/components/education'
 import { Screen } from 'src/components/layout/Screen'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'uniswap/src/utils/platform'
+import { isIOS } from 'utilities/src/platform'
 
 export function EducationScreen({
   route: {

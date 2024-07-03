@@ -1,14 +1,14 @@
 import { memo } from 'react'
 import { ImpactFeedbackStyle, isWeb, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { Pill } from 'wallet/src/components/text/Pill'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { Pill } from 'uniswap/src/components/pill/Pill'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import {
   OnSelectCurrency,
   SuggestedTokenSection,
   TokenOption,
 } from 'wallet/src/components/TokenSelector/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 function _SuggestedToken({
   onSelectCurrency,

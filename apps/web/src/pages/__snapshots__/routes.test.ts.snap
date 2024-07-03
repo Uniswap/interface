@@ -84,6 +84,14 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
+    "path": "/buy",
+  },
+  Object {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
     "path": "/send",
   },
   Object {

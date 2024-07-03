@@ -1,15 +1,11 @@
 import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
-import { useMemo } from 'react'
 import { config } from 'uniswap/src/config'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { GqlResult } from 'uniswap/src/data/types'
-import { logger } from 'utilities/src/logger/logger'
-import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { SvgData, fetchSVG } from 'wallet/src/features/images/utils'
 
 const restLink = new RestLink({
   uri: `${config.simpleHashApiUrl}/api/v0`,
@@ -55,25 +51,4 @@ export function useNftPreviewUri(
     'GET',
     apolloClient
   )
-}
-
-export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
-  const { fetchSvgData, abortRequest } = useMemo(() => {
-    const controller = new AbortController()
-
-    const fetchData = async (): Promise<SvgData | undefined> => {
-      try {
-        return await fetchSVG(uri, autoplay, controller.signal)
-      } catch (error) {
-        logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
-      }
-    }
-
-    return {
-      fetchSvgData: fetchData,
-      abortRequest: () => controller.abort(),
-    }
-  }, [autoplay, uri])
-
-  return useAsyncData(fetchSvgData, abortRequest).data
 }

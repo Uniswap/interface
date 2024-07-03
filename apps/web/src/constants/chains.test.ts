@@ -40,6 +40,7 @@ const chainPriorityTestCases: [ChainId, number][] = [
   //[ChainId.CELO, 7],
   [ChainId.CELO_ALFAJORES, 7],
   //[ChainId.BLAST, 8],
+  //[ChainId.ZORA, 9],
 ]
 
 test.each(chainPriorityTestCases)(
@@ -66,6 +67,7 @@ const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
   //[ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
   //[ChainId.BLAST]: 'blast',
+  //[ChainId.ZORA]: 'zora',
 } as const
 
 test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -86,6 +88,7 @@ const supportedGasEstimateChains = [
   //ChainId.AVALANCHE,
   ChainId.BASE,
   //ChainId.BLAST,
+  //ChainId.ZORA,
 ] as const
 
 test.each(supportedGasEstimateChains)(
@@ -134,6 +137,7 @@ const l2ChainIds = [
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
   //ChainId.BLAST,
+  //ChainId.ZORA,
 ] as const
 
 test.each(l2ChainIds)('L2_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
@@ -151,28 +155,19 @@ const GQLMainnetChains = [
   //Chain.Avalanche,
   Chain.Base,
   //Chain.Blast,
+  //Chain.Zora,
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 const uxSupportedGQLChains = [...GQLMainnetChains, ...GQL_TESTNET_CHAINS] as const
 
 test.each(GQLMainnetChains)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
-  if (chain === Chain.Zora) {
-    // TODO: Remove when Zora chain is supported
-    return
-  }
-  // TODO: fix type and include this assertion
-  //expect(GQL_MAINNET_CHAINS.includes(chain)).toBe(true)
+  expect(GQL_MAINNET_CHAINS.includes(chain)).toBe(true)
   expect(GQL_MAINNET_CHAINS.length).toEqual(GQLMainnetChains.length)
 })
 
 test.each(uxSupportedGQLChains)('UX_SUPPORTED_GQL_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
-  if (chain === Chain.Zora) {
-    // TODO: Remove when Zora chain is supported
-    return
-  }
-  // TODO: fix type and include this assertion
-  //expect(UX_SUPPORTED_GQL_CHAINS.includes(chain)).toBe(true)
+  expect(UX_SUPPORTED_GQL_CHAINS.includes(chain)).toBe(true)
   expect(UX_SUPPORTED_GQL_CHAINS.length).toEqual(uxSupportedGQLChains.length)
 })
 
@@ -192,6 +187,7 @@ const chainIdToBackendName: { [key: number]: InterfaceGqlChain } = {
   //[ChainId.AVALANCHE]: Chain.Avalanche,
   [ChainId.BASE]: Chain.Base,
   //[ChainId.BLAST]: Chain.Blast,
+  //[ChainId.ZORA]: Chain.Zora,
 }
 
 test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as SupportedInterfaceChainId))(
@@ -214,15 +210,12 @@ const chainToChainId = {
   //[Chain.Avalanche]: ChainId.AVALANCHE,
   [Chain.Base]: ChainId.BASE,
   //[Chain.Blast]: ChainId.BLAST,
+  //[Chain.Zora]: ChainId.ZORA,
 } as const
 
 test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(
   'CHAIN_NAME_TO_CHAIN_ID generates the correct chains',
   (chain) => {
-    if (chain === Chain.Zora) {
-      // TODO: Remove when Zora chain is supported
-      return
-    }
     const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
     // TODO: fix type and include this assertion
     //expect(chainId).toBe(chainToChainId[chain])
@@ -238,6 +231,7 @@ const backendSupportedChains = [
   Chain.Bnb,
   //Chain.Celo,
   //Chain.Blast,
+  //Chain.Zora,
 ] as const
 
 test.each(backendSupportedChains)(

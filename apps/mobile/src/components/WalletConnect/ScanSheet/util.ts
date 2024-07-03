@@ -8,6 +8,7 @@ import {
 } from 'src/features/deepLinking/constants'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { RPCType } from 'uniswap/src/types/chains'
 import {
   EthMethod,
   EthTransaction,
@@ -16,7 +17,6 @@ import {
   UwULinkRequest,
 } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { RPCType } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers'
@@ -51,7 +51,10 @@ type UwULinkAllowlistItem = {
   chainId: number
   address: string
   name: string
-  icon?: string
+  logo?: {
+    dark?: string
+    light?: string
+  }
 }
 
 type UwULinkAllowlist = {
@@ -272,8 +275,7 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
       browser: browser ? decodeURIComponent(browser) : undefined,
     })
   } catch (e) {
-    const wrappedError = new Error('Invalid scantastic params')
-    wrappedError.cause = e
+    const wrappedError = new Error('Invalid scantastic params', { cause: e })
     logger.error(wrappedError, {
       tags: {
         file: 'util.ts',

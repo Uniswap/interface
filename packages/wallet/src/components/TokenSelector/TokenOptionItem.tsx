@@ -2,9 +2,10 @@ import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
@@ -12,7 +13,6 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface OptionProps {
   option: TokenOption

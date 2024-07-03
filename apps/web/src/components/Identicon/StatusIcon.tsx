@@ -74,11 +74,11 @@ function MiniWalletIcon() {
 }
 
 export default function StatusIcon({ size = 16, showMiniIcons = true }: { size?: number; showMiniIcons?: boolean }) {
-  const { address } = useAccount()
+  const account = useAccount()
   const hasSocks = useHasSocks()
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <Identicon account={address} size={size} />
+      <Identicon account={account.address} size={size} />
       {showMiniIcons && <MiniWalletIcon />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

@@ -1,10 +1,10 @@
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-
-import { useAccount } from 'hooks/useAccount'
+import { logger } from 'utilities/src/logger/logger'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -68,7 +68,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
     // try delegation and store hash
     const hash = await queueCallback(proposalId)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('QueueModal', 'onQueue', error)
     })
 
     if (hash) {

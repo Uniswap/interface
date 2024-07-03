@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import useENSAddress from 'hooks/useENSAddress'
 import useENSName from 'hooks/useENSName'
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
@@ -11,6 +12,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
@@ -38,7 +40,9 @@ export type SendInfo = {
 }
 
 export function useDerivedSendInfo(state: SendState): SendInfo {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
+  const { chainId } = useSwapAndLimitContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
   const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)
@@ -76,9 +80,9 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     unitag?.username,
   ])
 
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID)
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
   const [inputCurrencyBalance, nativeCurencyBalance] = useCurrencyBalances(
-    account,
+    account.address,
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency])
   )
 
@@ -90,12 +94,12 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const transferInfo = useMemo(() => {
     return {
       provider,
-      account,
+      account: account.address,
       chainId,
       currencyAmount: parsedTokenAmount,
       toAddress: recipientData?.address,
     }
-  }, [account, chainId, parsedTokenAmount, provider, recipientData?.address])
+  }, [account.address, chainId, parsedTokenAmount, provider, recipientData?.address])
   const transferTransaction = useCreateTransferTransaction(transferInfo)
   const gasFee = useTransactionGasFee(transferTransaction, GasSpeed.Normal, !transferTransaction)
   const gasFeeCurrencyAmount = useMemo(() => {

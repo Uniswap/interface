@@ -1,8 +1,6 @@
 import React from 'react'
-import { Flex, Separator, Text, Unicon, UniconV2, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, Unicon, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -17,18 +15,13 @@ const ICON_SIZE = 24
 
 export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Element => {
   const colors = useSporeColors()
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-
   const displayName = useDisplayName(account.address)
+
   return (
     <>
       <Separator />
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing8">
-        {isUniconsV2Enabled ? (
-          <UniconV2 address={account.address} size={ICON_SIZE} />
-        ) : (
-          <Unicon address={account.address} size={ICON_SIZE} />
-        )}
+        <Unicon address={account.address} size={ICON_SIZE} />
         <Flex shrink alignItems="center" p="$none">
           <DisplayNameText
             displayName={displayName}

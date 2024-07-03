@@ -56,7 +56,6 @@ module.exports = {
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
-    'no-console': 'warn',
     curly: 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
     'no-relative-import-paths/no-relative-import-paths': [
@@ -181,11 +180,6 @@ module.exports = {
             importNames: ['BottomSheetTextInput'],
             message:
               'Use our internal `BottomSheetTextInput` wrapper from `/wallet/src/components/modals/BottomSheetModal`.',
-          },
-          {
-            name: 'expo-localization',
-            message:
-              'Avoid using due to issue with unsupported locales. Use utilties/src/device/locales.ts getDeviceLocales instead',
           },
           {
             name: 'expo-haptics',
@@ -342,6 +336,7 @@ module.exports = {
       rules: {
         '@jambit/typed-redux-saga/use-typed-effects': 'error',
         '@jambit/typed-redux-saga/delegate-effects': 'error',
+        'no-console': 'error',
       },
     },
     // Allow more depth for testing files

@@ -194,7 +194,7 @@ function isSignTypedDataRequest(request: WalletConnectRequest): request is SignR
   return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
 }
 
-function RequestDetailsContent({ request }: Props): JSX.Element {
+export function RequestDetailsContent({ request }: Props): JSX.Element {
   const { t } = useTranslation()
 
   if (isSignTypedDataRequest(request)) {

@@ -1,4 +1,4 @@
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 
 export const ROUTING_API_PATH = '/v2/quote'
 

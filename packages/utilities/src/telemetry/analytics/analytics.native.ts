@@ -1,14 +1,14 @@
+/* eslint-disable no-restricted-imports */
 import {
-  flush,
   Identify,
+  flush,
+  getUserId,
   identify,
   init,
   setDeviceId,
   track,
 } from '@amplitude/analytics-react-native'
-// eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-import { getUniqueId } from 'react-native-device-info'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
 import {
@@ -22,6 +22,7 @@ import { generateAnalyticsLoggers } from './logging'
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
 let allowAnalytics: Maybe<boolean>
+let userId: Maybe<string>
 
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
   return allowAnalytics ?? true
@@ -31,7 +32,8 @@ export const analytics: Analytics = {
   async init(
     transportProvider: ApplicationTransport,
     allowed: boolean,
-    _initHash?: string
+    _initHash?: string,
+    userIdGetter?: () => Promise<string>
   ): Promise<void> {
     try {
       allowAnalytics = allowed
@@ -47,8 +49,16 @@ export const analytics: Analytics = {
           },
         }
       )
-      // Ensure we're using the same deviceId across Amplitude and Statsig
-      setDeviceId(allowed ? await getUniqueId() : ANONYMOUS_DEVICE_ID)
+
+      userId = userIdGetter ? await userIdGetter() : getUserId()
+
+      if (allowed && userId) {
+        setDeviceId(userId)
+      }
+
+      if (!allowed) {
+        setDeviceId(ANONYMOUS_DEVICE_ID)
+      }
     } catch (error) {
       loggers.init(error)
     }
@@ -56,7 +66,9 @@ export const analytics: Analytics = {
   async setAllowAnalytics(allowed: boolean): Promise<void> {
     allowAnalytics = allowed
     if (allowed) {
-      setDeviceId(await getUniqueId())
+      if (userId) {
+        setDeviceId(userId)
+      }
     } else {
       loggers.setAllowAnalytics(allowed)
       identify(new Identify().clearAll()) // Clear all custom user properties

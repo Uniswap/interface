@@ -1,4 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
+import { getChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
 //import { useHref } from 'react-router-dom'
@@ -7,7 +9,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
+import { logger } from 'utilities/src/logger/logger'
 import Circle from '../../assets/images/blue-loader.svg'
 import Modal from '../Modal'
 //import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
@@ -70,13 +72,17 @@ const MoonpayTextWrapper = styled.div`
 `
 
 export default function FiatOnrampModal() {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
   //const { chain, tokenAddress } = parsePathParts(location.pathname)
+  //const parsedChainName = useParsedQueryString().chain
+  //const queryChain =
+  //  typeof parsedChainName === 'string' ? getChainFromChainUrlParam(getChainUrlParam(parsedChainName)) : undefined
+  //const accountChainInfo = getChain({ chainId: account.chainId })
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -85,7 +91,7 @@ export default function FiatOnrampModal() {
   //const swapUrl = useHref('/swap')
 
   const fetchSignedIframeUrl = useCallback(async () => {
-    if (!account) {
+    if (!account.isConnected) {
       setError('Please connect an account before making a purchase.')
       return
     }
@@ -127,7 +133,7 @@ export default function FiatOnrampModal() {
       const fiatOnrampUrl = `${process.env.REACT_APP_MOONPAY_LINK}/?specificSettings=${specificSettingsParams}`
       setSignedIframeUrl(fiatOnrampUrl)
     } catch (e) {
-      console.log('there was an error fetching the link', e)
+      logger.info('FiatOnrampModal', 'fetchSingedIframeUrl', 'there was an error fetching the link', e)
       setError(e.toString())
     } finally {
       setLoading(false)

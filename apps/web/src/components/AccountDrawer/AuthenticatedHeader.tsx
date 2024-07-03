@@ -110,23 +110,23 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const isUnclaimed = useUserHasAvailableClaim(account)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
-  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const navigateToProfile = useCallback(() => {
-    toggleAccountDrawer()
+    accountDrawer.close()
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleAccountDrawer])
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, accountDrawer])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
-    toggleAccountDrawer()
+    accountDrawer.close()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal, toggleAccountDrawer])
+  }, [openFiatOnrampModal, accountDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -147,7 +147,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
 
-  const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawerOpen })
+  const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value

@@ -50,25 +50,6 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c14:hover {
-  opacity: 0.6;
-}
-
-.c14:active {
-  opacity: 0.4;
-}
-
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -111,6 +92,25 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 .c11 {
   display: inline-block;
   height: inherit;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
 }
 
 .c8 {
@@ -401,25 +401,6 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c16:hover {
-  opacity: 0.6;
-}
-
-.c16:active {
-  opacity: 0.4;
-}
-
 .c6 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -468,6 +449,25 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
 .c13 {
   display: inline-block;
   height: inherit;
+}
+
+.c16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c16:hover {
+  opacity: 0.6;
+}
+
+.c16:active {
+  opacity: 0.4;
 }
 
 .c9 {

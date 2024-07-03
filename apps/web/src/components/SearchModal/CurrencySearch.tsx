@@ -2,7 +2,6 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -19,6 +18,9 @@ import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
+
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { currencyKey } from 'utils/currencyKey'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
@@ -78,7 +80,7 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const theme = useTheme()
 
   // refs for fixed size lists
@@ -230,12 +232,8 @@ export function CurrencySearch({
                 isAddressSearch
               )}
               balance={
-                tryParseCurrencyAmount(
-                  String(
-                    balanceMap[searchCurrency.isNative ? 'ETH' : searchCurrency.address?.toLowerCase()]?.balance ?? 0
-                  ),
-                  searchCurrency
-                ) ?? CurrencyAmount.fromRawAmount(searchCurrency, 0)
+                tryParseCurrencyAmount(String(balanceMap[currencyKey(searchCurrency)]?.balance ?? 0), searchCurrency) ??
+                CurrencyAmount.fromRawAmount(searchCurrency, 0)
               }
             />
           </Column>

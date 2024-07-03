@@ -82,7 +82,7 @@ function getDeviceLanguage(): Language {
 function restartAppIfRTL(currentLocale: Locale) {
   const isRtl = i18n.dir(currentLocale) === 'rtl'
   if (isRtl !== I18nManager.isRTL) {
-    logger.info(
+    logger.debug(
       'saga.ts',
       'restartAppIfRTL',
       `Changing RTL to ${isRtl} for locale ${currentLocale}`

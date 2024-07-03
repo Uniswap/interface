@@ -5,9 +5,10 @@ import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 
-import { Wiggle } from '../components/animations'
+import Row from 'components/Row'
 import { Body1, Box, H3 } from '../components/Generics'
 import { Discord, Github, Twitter } from '../components/Icons'
+import { Wiggle } from '../components/animations'
 
 const SocialIcon = styled(Wiggle)`
   flex: 0;
@@ -70,7 +71,7 @@ const ModalItem = styled.div`
 `
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
-    <Box gap="24px">
+    <Row gap="24px" maxHeight={iconSize} align="flex-start">
       <SocialIcon $hoverColor="#00C32B">
         <StyledExternalLink href="https://github.com/RigoBlock">
           <Github size={iconSize} fill="inherit" />
@@ -86,7 +87,7 @@ export function Socials({ iconSize }: { iconSize?: string }) {
           <Discord size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
-    </Box>
+    </Row>
   )
 }
 

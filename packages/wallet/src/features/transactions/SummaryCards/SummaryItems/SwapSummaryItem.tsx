@@ -1,5 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -16,7 +17,7 @@ import {
   isConfirmedSwapTypeInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
-import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 

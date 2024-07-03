@@ -1,10 +1,10 @@
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import {
   ARBITRUM_DAI_CURRENCY_INFO,
   UNI_CURRENCY_INFO,
   arbitrumDaiCurrencyInfo,
 } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
-import { CurrencyLogo } from './CurrencyLogo'
 
 describe(CurrencyLogo, () => {
   it('renders without error', () => {

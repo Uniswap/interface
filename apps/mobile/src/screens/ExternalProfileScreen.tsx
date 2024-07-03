@@ -9,7 +9,7 @@ import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
-import { TAB_STYLES, TabContentProps, renderTabLabel } from 'src/components/layout/TabHelpers'
+import { TAB_STYLES, TabContentProps, TabLabel } from 'src/components/layout/TabHelpers'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
@@ -123,9 +123,9 @@ export function ExternalProfileScreen({
           indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes: tabs }}
           pressColor={colors.surface3.val} // Android only
-          renderLabel={({ route, focused }): JSX.Element =>
-            renderTabLabel({ route, focused, isExternalProfile: true })
-          }
+          renderLabel={({ route, focused }): JSX.Element => (
+            <TabLabel isExternalProfile focused={focused} route={route} />
+          )}
           style={[
             TAB_STYLES.tabBar,
             {

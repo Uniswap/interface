@@ -55,6 +55,16 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     let signature = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
       signature = yield* call(signMessage, params.message, account, signerManager)
+
+      // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
+      if (params.dapp.source === 'uwulink' && params.dapp.name === 'Uniswap Cafe') {
+        yield* put(
+          pushNotification({
+            type: AppNotificationType.Success,
+            title: 'Checked in',
+          })
+        )
+      }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
     } else if (
@@ -91,6 +101,14 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
+
+      // Trigger a pending transaction notification after we send the transaction to chain
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: txParams.chainId,
+        })
+      )
     }
 
     if (params.dapp.source === 'walletconnect') {

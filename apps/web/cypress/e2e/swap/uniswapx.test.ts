@@ -292,7 +292,7 @@ describe('UniswapX v1', () => {
         submitUniswapXOrder()
         cy.get(getTestSelector('confirmation-close-icon')).click()
 
-        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json')
+        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
 
         // Expect balances to refetch after filling
         cy.wait('@orderStatusOpen')

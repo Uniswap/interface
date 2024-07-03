@@ -1,16 +1,16 @@
 import { ChainId, CurrencyAmount, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { Pool, Position, computePoolAddress } from '@uniswap/v3-sdk'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
+import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyKey } from 'utils/currencyKey'
-
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
 import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'
 import { useInterfaceMulticallContracts, usePoolPriceMap, useV3ManagerContracts } from './hooks'
@@ -144,7 +144,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
           const slot0 = poolInterface.decodeFunctionResult('slot0', result.returnData)
           acc.push(createPositionInfo(account, chainId, positionDetails[i], slot0, ...poolPairs[i]))
         } else {
-          console.debug('slot0 fetch errored', result)
+          logger.warn('useMultiChainPositions', 'fetchPositionInfo', 'slot0 fetch errored', result)
         }
         return acc
       }, [])
@@ -172,7 +172,14 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         const postionDetails = await fetchPositionDetails(pm, positionIds)
         return fetchPositionInfo(postionDetails, chainId, multicall)
       } catch (error) {
-        console.error(`Failed to fetch positions for chain ${chainId}`, error)
+        const wrappedError = new Error('Failed to fetch positions for chain', { cause: error })
+        logger.error(wrappedError, {
+          tags: {
+            file: 'useMultiChainPositions',
+            function: 'fetchPositionsForChain',
+          },
+          extra: { chainId },
+        })
         return []
       }
     },

@@ -1,4 +1,4 @@
-import { isExtension } from 'uniswap/src/utils/platform'
+import { isExtension } from 'utilities/src/platform'
 
 export const getVersionHeader = (): string => {
   if (isExtension) {

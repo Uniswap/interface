@@ -10,7 +10,7 @@ import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'

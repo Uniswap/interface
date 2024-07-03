@@ -1,8 +1,8 @@
 import { providers } from 'ethers'
 import { default as React, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableWithoutFeedback } from 'react-native'
-import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { Screen } from 'src/components/layout/Screen'
@@ -10,7 +10,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { TransferHeader } from 'src/features/transactions/transfer/TransferHeader'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -52,7 +52,6 @@ import {
   TokenSelectorFlow,
 } from 'wallet/src/features/transactions/transfer/types'
 import { TransactionStep, TransferFlowProps } from 'wallet/src/features/transactions/types'
-import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 interface TransferFormProps {
@@ -119,73 +118,98 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     setRenderInnerContentRouter(renderInnerContentRouter || !showRecipientSelector)
   }, [renderInnerContentRouter, showRecipientSelector])
 
-  const screenXOffset = useSharedValue(showRecipientSelector ? -fullWidth : 0)
-  useEffect(() => {
-    const screenOffset = showRecipientSelector ? 1 : 0
-    screenXOffset.value = withSpring(-(fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showRecipientSelector, fullWidth])
-
-  const wrapperStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: screenXOffset.value }],
-  }))
-
   const onFormNext = useCallback(() => setStep(TransactionStep.REVIEW), [setStep])
   const onReviewNext = useCallback(() => setStep(TransactionStep.SUBMITTED), [setStep])
   const onReviewPrev = useCallback(() => setStep(TransactionStep.FORM), [setStep])
   const onRetrySubmit = useCallback(() => setStep(TransactionStep.FORM), [setStep])
 
   const exactValue = isFiatInput ? exactAmountFiat : exactAmountToken
+  const recipient = state.recipient
+
+  const isRecipientScreenOnLeft = useSharedValue(true)
+  const inputScreenOffsetX = useSharedValue(0)
+
+  useEffect(() => {
+    if (!recipient) {
+      // If starting from the recipient selector screen, move the input to the right
+      inputScreenOffsetX.value = fullWidth
+      return
+    }
+
+    if (!showRecipientSelector) {
+      // Transition input screen to the center if recipient selector is not shown
+      inputScreenOffsetX.value = withTiming(0, undefined, () => {
+        isRecipientScreenOnLeft.value = false
+      })
+    } else {
+      // Transition input screen to the left if recipient selector is shown
+      // and recipient is already selected
+      inputScreenOffsetX.value = withTiming(-fullWidth)
+    }
+  }, [showRecipientSelector, recipient, fullWidth, inputScreenOffsetX, isRecipientScreenOnLeft])
+
+  const recipientScreenStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateX: inputScreenOffsetX.value + (isRecipientScreenOnLeft.value ? -1 : 1) * fullWidth,
+      },
+    ],
+  }))
+
+  const inputScreenStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: inputScreenOffsetX.value }],
+  }))
 
   return (
     <>
       <TouchableWithoutFeedback>
         <Screen edges={['top']}>
           <HandleBar backgroundColor="none" />
-          <AnimatedFlex grow row height="100%" style={wrapperStyle}>
-            {/* Padding bottom must have a similar size to the handlebar
-          height as 100% height doesn't include the handlebar height */}
-            <Flex gap="$spacing16" mb={insets.bottom} pb="$spacing12" px="$spacing16" width="100%">
-              {step !== TransactionStep.SUBMITTED && (
-                <TransferHeader
-                  dispatch={dispatch}
-                  flowName={t('send.title')}
-                  isFiatInput={isFiatInput}
-                  setShowViewOnlyModal={setShowViewOnlyModal}
-                  showFiatToggle={true}
-                  step={step}
-                />
-              )}
-              {renderInnerContentRouter && isSheetReady && (
-                <TransferInnerContent
-                  derivedInfo={derivedTransferInfo}
-                  derivedTransferInfo={derivedTransferInfo}
-                  dispatch={dispatch}
-                  exactValue={exactValue}
-                  gasFee={gasFee}
-                  setShowViewOnlyModal={setShowViewOnlyModal}
-                  setStep={setStep}
-                  showingSelectorScreen={!!showRecipientSelector}
-                  step={step}
-                  txRequest={transferTxWithGasSettings}
-                  warnings={parsedSendWarnings}
-                  onClose={onClose}
-                  onFormNext={onFormNext}
-                  onRetrySubmit={onRetrySubmit}
-                  onReviewNext={onReviewNext}
-                  onReviewPrev={onReviewPrev}
-                />
-              )}
-            </Flex>
+          <Flex fill>
+            <Animated.View style={[styles.screen, recipientScreenStyle]}>
+              <RecipientSelect
+                recipient={recipient}
+                onSelectRecipient={onSelectRecipient}
+                onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+              />
+            </Animated.View>
 
-            <Flex width="100%">
-              {showRecipientSelector ? (
-                <RecipientSelect
-                  recipient={state.recipient}
-                  onSelectRecipient={onSelectRecipient}
-                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                />
-              ) : null}
-            </Flex>
+            <Animated.View style={[styles.screen, inputScreenStyle]}>
+              {/* Padding bottom must have a similar size to the handlebar
+              height as 100% height doesn't include the handlebar height */}
+              <Flex fill gap="$spacing16" mb={insets.bottom} pb="$spacing12" px="$spacing16">
+                {step !== TransactionStep.SUBMITTED && (
+                  <TransferHeader
+                    dispatch={dispatch}
+                    flowName={t('send.title')}
+                    isFiatInput={isFiatInput}
+                    setShowViewOnlyModal={setShowViewOnlyModal}
+                    showFiatToggle={true}
+                    step={step}
+                  />
+                )}
+                {renderInnerContentRouter && isSheetReady && (
+                  <TransferInnerContent
+                    derivedInfo={derivedTransferInfo}
+                    derivedTransferInfo={derivedTransferInfo}
+                    dispatch={dispatch}
+                    exactValue={exactValue}
+                    gasFee={gasFee}
+                    setShowViewOnlyModal={setShowViewOnlyModal}
+                    setStep={setStep}
+                    showingSelectorScreen={!!showRecipientSelector}
+                    step={step}
+                    txRequest={transferTxWithGasSettings}
+                    warnings={parsedSendWarnings}
+                    onClose={onClose}
+                    onFormNext={onFormNext}
+                    onRetrySubmit={onRetrySubmit}
+                    onReviewNext={onReviewNext}
+                    onReviewPrev={onReviewPrev}
+                  />
+                )}
+              </Flex>
+            </Animated.View>
 
             {showViewOnlyModal && (
               <WarningModal
@@ -205,7 +229,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
                 onConfirm={(): void => setShowViewOnlyModal(false)}
               />
             )}
-          </AnimatedFlex>
+          </Flex>
         </Screen>
       </TouchableWithoutFeedback>
       {!!state.selectingCurrencyField && (
@@ -340,3 +364,11 @@ function TransferInnerContent({
       return null
   }
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    height: '100%',
+    position: 'absolute',
+    width: '100%',
+  },
+})

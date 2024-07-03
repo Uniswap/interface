@@ -72,7 +72,7 @@ module.exports = {
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
               {
-                name: 'uniswap/src/utils/platform',
+                name: 'utilities/src/platform',
                 importNames: ['isIOS', 'isAndroid'],
                 message:
                   'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
@@ -81,6 +81,11 @@ module.exports = {
                 name: 'wagmi',
                 importNames: ['useChainId', 'useAccount'],
                 message: 'Import properly typed account data from `hooks/useAccount` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useConnect'],
+                message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
               },
             ],
           },
@@ -106,6 +111,22 @@ module.exports = {
             selector: `:matches(Literal[value='NATIVE'])`,
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
+          },
+          // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']`,
+            message:
+              "Do not use account directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='chainId']`,
+            message:
+              "Do not use chainId directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.chainId instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']`,
+            message:
+              "Do not use address directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.address instead.",
           },
         ],
       },

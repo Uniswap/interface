@@ -4,8 +4,8 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { Ellipsis } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ChainId } from 'uniswap/src/types/chains'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24

@@ -1,9 +1,8 @@
 import { StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
-import { Flex, Loader } from 'ui/src'
-import { isIOS } from 'uniswap/src/utils/platform'
+import { Flex, Loader, useSvgData } from 'ui/src'
+import { isIOS } from 'utilities/src/platform'
 import { SvgUriProps } from 'wallet/src/features/images/WebSvgUri'
-import { useSvgData } from 'wallet/src/features/images/hooks'
 
 const heightUnits = isIOS ? 'vh' : '%'
 

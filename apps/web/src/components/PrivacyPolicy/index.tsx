@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isMobile } from 'uniswap/src/utils/platform'
+import { isMobile } from 'utilities/src/platform'
 import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { AutoColumn } from '../Column'
@@ -70,10 +70,6 @@ const EXTERNAL_APIS = [
   {
     name: 'Google Analytics & Amplitude',
     description: <Trans i18nKey="privacy.anonymizedLogs" />,
-  },
-  {
-    name: 'The Graph',
-    description: <Trans i18nKey="privacy.theGraph" />,
   },
 ]
 

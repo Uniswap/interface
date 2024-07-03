@@ -9,11 +9,12 @@ import './i18n' // ensure translations load before things
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
+import { PortalProvider } from '@tamagui/portal'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useWeb3React } from '@web3-react/core'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
+import { useAccount } from 'hooks/useAccount'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
@@ -76,13 +77,13 @@ function GraphqlProviders({ children }: { children: React.ReactNode }) {
   )
 }
 function StatsigProvider({ children }: PropsWithChildren) {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const statsigUser: StatsigUser = useMemo(
     () => ({
       userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
+      customIDs: { address: account.address ?? '' },
     }),
-    [account]
+    [account.address]
   )
   return (
     <BaseStatsigProvider
@@ -128,8 +129,10 @@ createRoot(container).render(
                         <Updaters />
                         <ThemeProvider>
                           <TamaguiProvider>
-                            <ThemedGlobalStyle />
-                            <App />
+                            <PortalProvider>
+                              <ThemedGlobalStyle />
+                              <App />
+                            </PortalProvider>
                           </TamaguiProvider>
                         </ThemeProvider>
                       </UnitagUpdaterContextProvider>

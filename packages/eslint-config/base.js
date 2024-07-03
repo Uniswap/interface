@@ -48,6 +48,13 @@ module.exports = {
       },
     },
     {
+      files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.test.ts', '*.test.tsx'],
+      rules: {
+        'no-console': 'error',
+      },
+    },
+    {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
       excludedFiles: '**/cypress/**',
       env: {

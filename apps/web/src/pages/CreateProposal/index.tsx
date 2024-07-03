@@ -2,7 +2,6 @@ import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -12,9 +11,11 @@ import {
   RB_FACTORY_ADDRESSES,
   STAKING_PROXY_ADDRESSES,
 } from 'constants/addresses'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import AppBody from 'pages/App/AppBody'
 import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -33,9 +34,7 @@ import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
 import { GRG } from '../../constants/tokens'
-import AppBody from '../AppBody'
 import { ProposalActionDetail } from './ProposalActionDetail'
 import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
 import { ProposalEditor } from './ProposalEditor'
@@ -130,7 +129,7 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
@@ -141,7 +140,7 @@ export default function CreateProposal() {
   const [proposalAction, setProposalAction] = useState(ProposalAction.UPGRADE_IMPLEMENTATION)
   const [toAddressValue, setToAddressValue] = useState('')
   // TODO: check we are covering all chains
-  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')

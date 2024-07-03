@@ -8,7 +8,7 @@ import {
   LiquiditySource,
 } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useIsSupportedChainId } from 'constants/chains'
@@ -17,6 +17,7 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { Trans } from 'i18n'
+import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -26,6 +27,7 @@ import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -52,7 +54,6 @@ import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
@@ -81,7 +82,7 @@ function RemoveLiquidity() {
   const trace = useTrace()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -284,7 +285,11 @@ function RemoveLiquidity() {
         router.estimateGas[methodName](...args)
           .then((estimateGas) => calculateGasMargin(estimateGas))
           .catch((error) => {
-            console.error(`estimateGas failed`, methodName, args, error)
+            logger.info('RemoveLiquidity', 'onRemove', 'estimateGas failed', {
+              message: error.message,
+              methodName,
+              args,
+            })
             return undefined
           })
       )
@@ -296,7 +301,7 @@ function RemoveLiquidity() {
 
     // all estimations failed...
     if (indexOfSuccessfulEstimation === -1) {
-      console.error('This transaction would fail. Please contact support.')
+      logger.warn('RemoveLiquidity', 'onRemove', 'This transaction would fail. Please contact support.')
     } else {
       const methodName = methodNames[indexOfSuccessfulEstimation]
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
@@ -327,7 +332,12 @@ function RemoveLiquidity() {
         .catch((error: Error) => {
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
-          console.error(error)
+          logger.error(error, {
+            tags: {
+              file: 'RemoveLiquidity',
+              function: 'onRemove',
+            },
+          })
         })
     }
   }
@@ -691,7 +701,7 @@ function RemoveLiquidity() {
                   properties={{ received_swap_quote: false }}
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
-                  <ButtonLight onClick={toggleWalletDrawer}>
+                  <ButtonLight onClick={accountDrawer.open}>
                     <Trans i18nKey="common.connectWallet.button" />
                   </ButtonLight>
                 </Trace>

@@ -2,10 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Trans } from 'i18n'
@@ -171,7 +171,7 @@ export default function VotePage() {
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
 
   const quorumAmount = useQuorum(parsedGovernorIndex)
 
@@ -203,15 +203,15 @@ export default function VotePage() {
   const startDate = getDateFromBlockOrTime(
     proposalData?.startBlock,
     currentBlock,
-    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    currentTimestamp
     true
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
-    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp,
+    (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    currentTimestamp
     true
   )
   const now = new Date()
@@ -243,16 +243,16 @@ export default function VotePage() {
     proposalData.status === ProposalState.ACTIVE
 
   // we only show the button if there's an account connected and the proposal state is correct
-  //const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
+  //const showQueueButton = account.isConnected && proposalData?.status === ProposalState.SUCCEEDED
 
   // we only show the button if there's an account connected and the proposal state is correct
   const showExecuteButton =
-    (account && proposalData?.status === ProposalState.SUCCEEDED) ||
-    (account && proposalData?.status === ProposalState.QUALIFIED)
+    (account.isConnected && proposalData?.status === ProposalState.SUCCEEDED) ||
+    (account.isConnected && proposalData?.status === ProposalState.QUALIFIED)
 
   const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    chainId ? GRG[chainId] : undefined
+    account.address,
+    account.chainId ? GRG[account.chainId] : undefined
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
@@ -264,10 +264,12 @@ export default function VotePage() {
   // show links in propsoal details if content is an address
   // if content is contract with common name, replace address with common name
   const linkIfAddress = (content: string) => {
-    if (isAddress(content) && chainId) {
-      const commonName = COMMON_CONTRACT_NAMES[chainId]?.[content] ?? content
+    if (isAddress(content) && account.chainId) {
+      const commonName = COMMON_CONTRACT_NAMES[account.chainId]?.[content] ?? content
       return (
-        <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
+        <ExternalLink href={getExplorerLink(account.chainId, content, ExplorerDataType.ADDRESS)}>
+          {commonName}
+        </ExternalLink>
       )
     }
     return <span>{content}</span>
@@ -534,8 +536,8 @@ export default function VotePage() {
               </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink
                 href={
-                  proposalData?.proposer && chainId
-                    ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
+                  proposalData?.proposer && account.chainId
+                    ? getExplorerLink(account.chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
                     : ''
                 }
               >

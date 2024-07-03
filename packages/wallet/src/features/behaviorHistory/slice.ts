@@ -15,7 +15,6 @@ export interface BehaviorHistoryState {
   hasSubmittedHoldToSwap: boolean
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
-  hasViewedUniconV2IntroModal: boolean
   extensionOnboardingState: ExtensionOnboardingState
 }
 
@@ -24,7 +23,6 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasSubmittedHoldToSwap: false,
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
-  hasViewedUniconV2IntroModal: false,
   extensionOnboardingState: ExtensionOnboardingState.Undefined,
 }
 
@@ -44,9 +42,6 @@ const slice = createSlice({
     setHasCompletedUnitagsIntroModal: (state, action: PayloadAction<boolean>) => {
       state.hasCompletedUnitagsIntroModal = action.payload
     },
-    setHasViewedUniconV2IntroModal: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedUniconV2IntroModal = action.payload
-    },
     setExtensionOnboardingState: (state, action: PayloadAction<ExtensionOnboardingState>) => {
       state.extensionOnboardingState = action.payload
     },
@@ -58,7 +53,6 @@ export const {
   setHasSubmittedHoldToSwap,
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
-  setHasViewedUniconV2IntroModal,
   setExtensionOnboardingState,
 } = slice.actions
 

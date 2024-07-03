@@ -1,6 +1,7 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
+import { logger } from 'utilities/src/logger/logger'
 
 /**
  * A controller which marks itself disabled on an error, and re-enables itself using exponential backoff.
@@ -84,7 +85,7 @@ export default class AppJsonRpcProvider extends ConfiguredJsonRpcProvider {
         controller.onSuccess()
         return result
       } catch (error) {
-        console.warn('rpc action failed', error)
+        logger.warn('AppJsonRpcProvider', 'perform', 'rpc action failed', error)
         controller.onError()
       }
     }

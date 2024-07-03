@@ -4,7 +4,7 @@ import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { PortfolioToken } from 'graphql/data/portfolios'
-import { /*getTokenDetailsURL,*/ gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
+import { /*getTokenDetailsURL,*/ gqlToCurrency } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { /*useCallback,*/ useMemo, useState } from 'react'
@@ -13,21 +13,22 @@ import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer /*, useToggleAccountDrawer*/ } from '../hooks'
+import { useAccountDrawer } from '../hooks'
 
 export default function Tokens() {
-  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const hideSpam = useAtomValue(hideSpamAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawerOpen })
+  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
@@ -42,7 +43,7 @@ export default function Tokens() {
 
   if (tokenBalances?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
-    return <EmptyWalletModule type="token" onNavigateClick={toggleAccountDrawer} />
+    return <EmptyWalletModule type="token" onNavigateClick={accountDrawer.close} />
   }
 
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
@@ -80,19 +81,22 @@ function TokenRow({
   const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
 
   //const navigate = useNavigate()
-  //const toggleWalletDrawer = useToggleAccountDrawer()
+  //const accountDrawer = useAccountDrawer()
 
   //const navigateToTokenDetails = useCallback(async () => {
   //  navigate(getTokenDetailsURL({ ...token }))
-  //  toggleWalletDrawer()
-  //}, [navigate, token, toggleWalletDrawer])
+  //  accountDrawer.close()
+  //}, [navigate, token, accountDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
   if (!currency) {
-    logSentryErrorForUnsupportedChain({
-      extras: { token },
-      errorMessage: 'Token from unsupported chain received from Mini Portfolio Token Balance Query',
+    logger.error(new Error('Token from unsupported chain received from Mini Portfolio Token Balance Query'), {
+      tags: {
+        file: 'RecentlySearchedAssets',
+        function: 'useRecentlySearchedAssets',
+      },
+      extra: { token },
     })
     return null
   }

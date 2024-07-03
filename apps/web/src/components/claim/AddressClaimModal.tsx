@@ -1,13 +1,13 @@
 import { isAddress } from '@ethersproject/address'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
-
-import { useAccount } from 'hooks/useAccount'
+import { logger } from 'utilities/src/logger/logger'
 import Circle from '../../assets/images/blue-loader.svg'
 import tokenLogo from '../../assets/images/token-logo.png'
 import useENS from '../../hooks/useENS'
@@ -82,7 +82,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
       // reset modal and log error
       .catch((error) => {
         setAttempting(false)
-        console.log(error)
+        logger.warn('AddressClaimModal', 'onClaim', 'error', error)
       })
   }
 

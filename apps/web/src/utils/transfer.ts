@@ -6,6 +6,7 @@ import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 interface TransferInfo {
@@ -76,8 +77,14 @@ async function getTokenTransferRequest(
     })
 
     return { ...populatedTransaction, chainId }
-  } catch (_) {
-    console.error('could not populate transaction')
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'transfer',
+        function: 'getTokenTransferRequest',
+      },
+      extra: { transferParams },
+    })
   }
 
   return undefined

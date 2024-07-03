@@ -1,6 +1,6 @@
 import { isDevEnv } from 'uniswap/src/utils/env'
-import { isAndroid, isExtension, isInterface, isMobileApp } from 'uniswap/src/utils/platform'
 import { isJestRun } from 'utilities/src/environment'
+import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
   GraphQL = 'graphql',
@@ -31,7 +31,8 @@ export const uniswapUrls = {
     feeOnTransferHelp: `${helpUrl}/hc/en-us/articles/18673568523789-What-is-a-token-fee-`,
     moonpayHelp: `${helpUrl}/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
     networkFeeInfo: `${helpUrl}/hc/en-us/articles/8370337377805-What-is-a-network-fee-`,
-    recoveryPhraseHelp: `${helpUrl}/hc/en-us/articles/11380692567949-How-to-import-my-recovery-phrase-`,
+    recoveryPhraseHowToImport: `${helpUrl}/hc/en-us/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
+    recoveryPhraseHowToFind: `${helpUrl}/hc/en-us/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/hc/en-us/articles/11306367118349`,
     supportedNetworks: `${helpUrl}/hc/en-us/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/hc/en-us/articles/20131678274957`,
@@ -46,6 +47,7 @@ export const uniswapUrls = {
   // TODO(EXT-668): Remove this after beta launch
   extensionFeedbackFormUrl:
     'https://docs.google.com/forms/d/e/1FAIpQLSeL1l34nsuTfymPn5LVpovY7W57oc0oj53GNnpt0QG1qRAzqw/viewform',
+  chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',

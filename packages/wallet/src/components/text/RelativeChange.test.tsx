@@ -15,6 +15,7 @@ jest.mock('wallet/src/features/language/hooks', () => {
 
 const mockFiatCurrencyInfo: FiatCurrencyInfo = {
   name: 'United States Dollar',
+  shortName: 'USD ($)',
   code: 'USD',
   symbol: '$',
   groupingSeparator: ',',

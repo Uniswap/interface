@@ -3,6 +3,11 @@ import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query/react'
 import { useTranslation } from 'react-i18next'
 import { Delay } from 'src/components/layout/Delayed'
 import { ColorTokens } from 'ui/src'
+import {
+  useFiatOnRampAggregatorCryptoQuoteQuery,
+  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
+import { FORQuote, FORSupportedFiatCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
@@ -11,11 +16,6 @@ import {
   useAppFiatCurrencyInfo,
   useFiatCurrencyInfo,
 } from 'wallet/src/features/fiatCurrency/hooks'
-import {
-  useFiatOnRampAggregatorCryptoQuoteQuery,
-  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
-} from 'wallet/src/features/fiatOnRamp/api'
-import { FORQuote, FORSupportedFiatCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import {
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,

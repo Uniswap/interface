@@ -7,7 +7,7 @@ import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 import { isAddress } from 'utilities/src/addresses'
-
+import { logger } from 'utilities/src/logger/logger'
 import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -40,7 +40,12 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
     )
       .then((res) => res.json())
       .catch((error) => {
-        console.error('Failed to get claims mapping', error)
+        logger.error(error, {
+          tags: {
+            file: 'claim/hooks',
+            function: 'fetchClaimMapping',
+          },
+        })
         FETCH_CLAIM_MAPPING_PROMISE = null
       }))
   )
@@ -55,7 +60,13 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
     )
       .then((res) => res.json())
       .catch((error) => {
-        console.error(`Failed to get claim file mapping for starting address ${key}`, error)
+        logger.error(error, {
+          tags: {
+            file: 'claim/hooks',
+            function: 'fetchClaimFile',
+          },
+          extra: { address: key },
+        })
         delete FETCH_CLAIM_FILE_PROMISES[key]
       }))
   )
@@ -95,7 +106,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
         throw new Error(`Claim for ${formatted} was not found in claim file!`)
       })
       .catch((error) => {
-        console.debug('Claim fetch failed', error)
+        logger.debug('claim/hooks', 'fetchClaim', 'Claim fetch failed', error)
         throw error
       }))
   )
@@ -159,24 +170,25 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
-export function useClaimCallback(account: string | null | undefined): {
+export function useClaimCallback(address: string | null | undefined): {
   claimCallback: () => Promise<string>
 } {
   // get claim data for this account
-  const { provider, chainId } = useWeb3React()
-  const claimData = useUserClaimData(account)
+  const account = useAccount()
+  const { provider } = useWeb3React()
+  const claimData = useUserClaimData(address)
 
   // used for popup summary
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(address)
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
   const claimCallback = async function () {
-    if (!claimData || !account || !provider || !chainId || !distributorContract) {
+    if (!claimData || !address || !provider || !account.chainId || !distributorContract) {
       return
     }
 
-    const args = [claimData.index, account, claimData.amount, claimData.proof]
+    const args = [claimData.index, address, claimData.amount, claimData.proof]
 
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
@@ -184,7 +196,7 @@ export function useClaimCallback(account: string | null | undefined): {
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,
-            recipient: account,
+            recipient: address,
             uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })
           return response.hash

@@ -29,7 +29,7 @@ export const createOnboardingAccount = async (
   }
 }
 
-async function getNewAccountParams(
+export async function getNewAccountParams(
   sortedAccounts: SignerMnemonicAccount[],
   password?: string
 ): Promise<{
@@ -48,7 +48,7 @@ async function getNewAccountParams(
   }
 }
 
-function getNextDerivationIndex(sortedAccounts: SignerMnemonicAccount[]): number {
+export function getNextDerivationIndex(sortedAccounts: SignerMnemonicAccount[]): number {
   // if there is a missing index in the series (0, 1, _, 3), return this missing index
   let nextIndex = 0
   for (const account of sortedAccounts) {

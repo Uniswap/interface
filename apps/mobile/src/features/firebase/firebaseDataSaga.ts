@@ -8,7 +8,7 @@ import {
   getFirestoreUidRef,
 } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
-import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { Language } from 'wallet/src/features/language/constants'
@@ -113,9 +113,15 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
   const { type, address } = payload
 
   switch (type) {
-    case EditAccountAction.Remove:
-      yield* call(removeAccountFromFirebase, address, payload.notificationsEnabled)
-      break
+    case EditAccountAction.Remove: {
+      const accountsToRemove = payload.accounts
+      yield* all(
+        accountsToRemove.map((account: { address: Address; pushNotificationsEnabled: boolean }) =>
+          call(removeAccountFromFirebase, account.address, account.pushNotificationsEnabled)
+        )
+      )
+      return
+    }
     case EditAccountAction.Rename:
       yield* call(renameAccountInFirebase, address, payload.newName)
       break
@@ -169,6 +175,10 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
 const selectAccountNotificationSetting = makeSelectAccountNotificationSetting()
 
 export function* renameAccountInFirebase(address: Address, newName: string) {
+  if (!address) {
+    throw new Error('Address is required for renameAccountInFirebase')
+  }
+
   try {
     yield* call(maybeUpdateFirebaseMetadata, address, { name: newName })
   } catch (error) {
@@ -180,6 +190,10 @@ export function* toggleFirebaseNotificationSettings({
   address,
   enabled,
 }: TogglePushNotificationParams) {
+  if (!address) {
+    throw new Error('Address is required for toggleFirebaseNotificationSettings')
+  }
+
   try {
     const accounts = yield* appSelect(selectAccounts)
     const account = accounts[address]

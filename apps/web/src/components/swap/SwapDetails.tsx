@@ -2,7 +2,6 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
-import SpinningLoader from 'components/Loader/SpinningLoader'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -17,6 +16,7 @@ import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
+import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
@@ -210,7 +210,7 @@ export function SwapDetails({
               {isLoading ? (
                 <ThemedText.HeadlineSmall color="neutral2">
                   <Row>
-                    <SpinningLoader />
+                    <SpinningLoader size={14} />
                     <Trans i18nKey="swap.finalizingQuote" />
                   </Row>
                 </ThemedText.HeadlineSmall>

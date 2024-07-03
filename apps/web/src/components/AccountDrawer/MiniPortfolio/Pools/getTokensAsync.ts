@@ -5,6 +5,7 @@ import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
 import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { isAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { arrayToSlices } from 'utils/arrays'
 import { CurrencyKey, buildCurrencyKey, currencyKey } from 'utils/currencyKey'
@@ -32,7 +33,9 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
         ]).then(([c0, c1]) => [...c0, ...c1])
       }
     }
-    console.error('Failed to fetch chunk', error)
+    logger.error(error, {
+      tags: { file: 'getTokensAsync', function: 'fetchChunk' },
+    })
     throw error
   }
 }
@@ -55,7 +58,13 @@ function tryParseToken(address: string, chainId: ChainId, data: CallResult[]) {
 
     return new Token(chainId, address, decimals, symbol, name)
   } catch (error) {
-    console.error(`Failed to fetch token at address ${address} on chain ${chainId}`)
+    logger.error(error, {
+      tags: {
+        file: 'getTokensAsync',
+        function: 'tryParseToken',
+      },
+      extra: { address, chainId },
+    })
     return undefined
   }
 }

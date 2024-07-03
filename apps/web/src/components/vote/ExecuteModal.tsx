@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-
+import { logger } from 'utilities/src/logger/logger'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useExecuteCallback } from '../../state/governance/hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -68,7 +68,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
     // try delegation and store hash
     const hash = await executeCallback(proposalId)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('ExecuteModal', 'onExecute', error)
     })
 
     if (hash) {

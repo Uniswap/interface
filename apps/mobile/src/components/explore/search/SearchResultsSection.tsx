@@ -59,6 +59,8 @@ const EtherscanHeaderItem: SearchResultOrHeader = {
   }),
 }
 
+const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
+
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
 
@@ -172,15 +174,19 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   if (error) {
-    return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel="common.button.retry"
-          title={t('explore.search.error')}
-          onRetry={onRetry}
-        />
-      </AnimatedFlex>
-    )
+    if (IGNORED_ERRORS.includes(error?.message)) {
+      logger.info('SearchResultSection', 'useExploreSearchQuery', error?.message)
+    } else {
+      return (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
+          <BaseCard.ErrorState
+            retryButtonLabel={t('common.button.retry')}
+            title={t('explore.search.error')}
+            onRetry={onRetry}
+          />
+        </AnimatedFlex>
+      )
+    }
   }
 
   return (

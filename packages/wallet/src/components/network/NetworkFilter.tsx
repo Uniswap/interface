@@ -4,11 +4,11 @@ import { Flex, HapticFeedback } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { colors, iconSizes } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
 import {
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
   NetworkLogo,
-} from 'wallet/src/components/CurrencyLogo/NetworkLogo'
+} from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { ChainId } from 'uniswap/src/types/chains'
 import { ActionSheetDropdown } from 'wallet/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'wallet/src/components/network/hooks'
 
