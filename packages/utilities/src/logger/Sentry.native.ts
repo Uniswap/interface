@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import * as SentryRN from '@sentry/react-native'
 import { CaptureContext, SeverityLevel } from '@sentry/types'
-import { BreadCrumb, ISentry } from './Sentry'
+import { BreadCrumb, ISentry } from 'utilities/src/logger/Sentry'
 
 /**
  * Logs an exception to our Sentry Dashboard

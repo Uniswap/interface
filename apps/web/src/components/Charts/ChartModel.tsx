@@ -1,3 +1,5 @@
+import { refitChartContentAtom } from 'components/Charts/TimeSelector'
+import { SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
@@ -24,8 +26,6 @@ import { textFadeIn } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
-import { refitChartContentAtom } from './TimeSelector'
-import { SeriesDataItemType } from './types'
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string

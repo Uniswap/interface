@@ -101,7 +101,7 @@ function getReviewScreenWarning(
     return undefined
   }
 
-  return getWarningWithStyle(reviewWarning, true)
+  return getWarningWithStyle({ warning: reviewWarning, displayedInline: true })
 }
 
 // This function decides which warning to show when there is more than one.
@@ -130,11 +130,12 @@ function getFormScreenWarning(
     return undefined
   }
 
-  return getWarningWithStyle(
-    formWarning,
-    !isWeb ||
-      !(formWarning.type === WarningLabel.InsufficientGasFunds || isPriceImpactWarning(formWarning))
-  )
+  return getWarningWithStyle({
+    warning: formWarning,
+    displayedInline:
+      formWarning.type !== WarningLabel.InsufficientGasFunds &&
+      (!isWeb || !isPriceImpactWarning(formWarning)),
+  })
 }
 
 function getAlertColor(severity?: WarningSeverity): WarningColor {
@@ -172,7 +173,13 @@ function getAlertColor(severity?: WarningSeverity): WarningColor {
   }
 }
 
-function getWarningWithStyle(warning: Warning, displayedInline: boolean): WarningWithStyle {
+function getWarningWithStyle({
+  warning,
+  displayedInline,
+}: {
+  warning: Warning
+  displayedInline: boolean
+}): WarningWithStyle {
   return {
     warning,
     displayedInline,

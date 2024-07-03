@@ -1,22 +1,22 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
+import { SupportedInterfaceChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { TradeFillType } from 'state/routing/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
-import { useAccount } from 'hooks/useAccount'
-import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
+import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
 import {
   ConfirmedTransactionDetails,
   PendingTransactionDetails,
   TransactionDetails,
   TransactionInfo,
   TransactionType,
-} from './types'
+} from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -72,7 +72,7 @@ export function useTransactionCanceller() {
 
 export function useMultichainTransactions(): [TransactionDetails, SupportedInterfaceChainId][] {
   const state = useAppSelector((state) => state.transactions)
-  return SUPPORTED_INTERFACE_CHAIN_IDS.flatMap((chainId) =>
+  return WEB_SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
     state[chainId]
       ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedInterfaceChainId] => [tx, chainId])
       : []

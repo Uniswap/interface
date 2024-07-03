@@ -2,12 +2,11 @@ import { ReactComponent as CandlestickChartIcon } from 'assets/svg/candlestick-c
 import { ReactComponent as LineChartIcon } from 'assets/svg/line-chart-icon.svg'
 import { CHART_TYPE_LABELS, PriceChartType } from 'components/Charts/utils'
 import Row from 'components/Row'
+import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
 import styled from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
-
-import { ChartTypeDropdown } from './ChartTypeSelector'
 
 const ChartTypeRow = styled(Row)`
   ${EllipsisStyle}

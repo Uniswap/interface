@@ -1,5 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -8,9 +8,10 @@ import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboa
 import {
   InputValidatedEvent,
   MnemonicStoredEvent,
+  NativeSeedPhraseInputRef,
   SeedPhraseInput,
   StringKey,
-  useSeedPhraseInputRef,
+  handleSubmit,
 } from 'src/screens/Import/SeedPhraseInput'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -22,7 +23,7 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
@@ -42,12 +43,12 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
   useLockScreenOnBlur(pastePermissionModalOpen)
 
   const [submitEnabled, setSubmitEnabled] = useState(false)
-  const seedPhraseInputRef = useSeedPhraseInputRef()
+  const seedPhraseInputRef = useRef<NativeSeedPhraseInputRef>(null)
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
   useAddBackButton(navigation)
 
-  const signerAccounts = useNonPendingSignerAccounts()
+  const signerAccounts = useSignerAccounts()
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const handleNext = useCallback(
@@ -80,7 +81,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
             my="$spacing12"
             testID="seed-input-submit"
             onPress={(): void => {
-              seedPhraseInputRef.current?.handleSubmit()
+              handleSubmit(seedPhraseInputRef)
             }}>
             {t('common.button.continue')}
           </Button>
@@ -98,6 +99,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
       }>
       <SeedPhraseInput
         ref={seedPhraseInputRef}
+        navigation={navigation}
         strings={{
           [StringKey.InputPlaceholder]: t('account.recoveryPhrase.input'),
           [StringKey.PasteButton]: t('common.button.paste'),

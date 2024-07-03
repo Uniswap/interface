@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, CheckBox, Flex, Text } from 'ui/src'
-import { SpinningLoader } from 'ui/src/loading/SpinningLoader'
+import { Button, CheckBox, Flex, SpinningLoader, Text } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export function RemoveLastMnemonicWalletFooter({

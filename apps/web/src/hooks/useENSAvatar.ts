@@ -1,16 +1,21 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { useAccount } from 'hooks/useAccount'
+import {
+  useENSRegistrarContract,
+  useENSResolverContract,
+  useERC1155Contract,
+  useERC721Contract,
+} from 'hooks/useContract'
+import useDebounce from 'hooks/useDebounce'
+import useENSName from 'hooks/useENSName'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useState } from 'react'
 import { isAddress } from 'utilities/src/addresses'
 import { uriToHttpUrls } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
+import isZero from 'utils/isZero'
 import { safeNamehash } from 'utils/safeNamehash'
-import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract, useERC1155Contract, useERC721Contract } from './useContract'
-import useDebounce from './useDebounce'
-import useENSName from './useENSName'
 
 /**
  * Returns the ENS avatar URI, if available.

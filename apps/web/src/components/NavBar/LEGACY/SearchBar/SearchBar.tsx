@@ -3,8 +3,9 @@ import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '
 import { Token } from '@uniswap/sdk-core'
 import clsx from 'clsx'
 import { Search } from 'components/Icons/Search'
-import { chainIdToBackendChain } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
+import * as styles from 'components/NavBar/LEGACY/SearchBar/SearchBar.css'
+import { SearchBarDropdown } from 'components/NavBar/LEGACY/SearchBar/SearchBarDropdown'
+import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useIsMobile, useIsTablet } from 'hooks/screenSize'
@@ -18,6 +19,7 @@ import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { ChevronLeftIcon, NavMagnifyingGlassIcon } from 'nft/components/icons'
 import { magicalGradientOnHover } from 'nft/css/common.css'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -28,12 +30,8 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../../../nft/components/icons'
-import { NavIcon } from '../../NavIcon'
-import * as styles from './SearchBar.css'
-import { SearchBarDropdown } from './SearchBarDropdown'
 
-const KeyShortCut = styled.div`
+const KeyShortcut = styled.div`
   background-color: ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
@@ -49,7 +47,7 @@ const KeyShortCut = styled.div`
   backdrop-filter: blur(60px);
 `
 
-export const SearchBar = () => {
+export function SearchBar() {
   const [isOpen, toggleOpen] = useReducer((state: boolean) => !state, false)
   const [searchValue, setSearchValue] = useState<string>('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
@@ -67,8 +65,8 @@ export const SearchBar = () => {
 
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const { chainId } = useAccount()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, chainId ?? 1)
+  const account = useAccount()
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, account.chainId ?? 1)
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
@@ -269,7 +267,7 @@ export const SearchBar = () => {
               width="full"
             />
           </Trace>
-          {!isOpen && <KeyShortCut>/</KeyShortCut>}
+          {!isOpen && <KeyShortcut>/</KeyShortcut>}
         </Row>
         <Column overflow="hidden" className={clsx(isOpen ? styles.visible : styles.hidden)}>
           {isOpen && (

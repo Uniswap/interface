@@ -1,14 +1,13 @@
+import Row from 'components/Row'
 import { useScreenSize } from 'hooks/screenSize'
 import { Trans } from 'i18n'
+import { Body1, Box, H3 } from 'pages/Landing/components/Generics'
+import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Wiggle } from 'pages/Landing/components/animations'
 import { Link } from 'react-router-dom'
 import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
-
-import Row from 'components/Row'
-import { Body1, Box, H3 } from '../components/Generics'
-import { Discord, Github, Twitter } from '../components/Icons'
-import { Wiggle } from '../components/animations'
 
 const SocialIcon = styled(Wiggle)`
   flex: 0;

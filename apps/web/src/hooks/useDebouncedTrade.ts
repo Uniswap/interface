@@ -2,6 +2,8 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
+import useDebounce from 'hooks/useDebounce'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
@@ -10,8 +12,6 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import useAutoRouterSupported from './useAutoRouterSupported'
-import useDebounce from './useDebounce'
 
 // Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350

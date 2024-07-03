@@ -1,8 +1,15 @@
-import { ChainId } from '@uniswap/sdk-core'
+import {
+  AnimatedEntranceConfirmationIcon,
+  AnimatedEntranceSubmittedIcon,
+  LoadingIndicatorOverlay,
+  LogoContainer,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column, { ColumnCenter } from 'components/Column'
+import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
+import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
 import Row from 'components/Row'
-import { SupportArticleURL } from 'constants/supportArticles'
+import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { Trans, t } from 'i18n'
@@ -16,18 +23,10 @@ import { ExternalLink } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useAccount } from 'hooks/useAccount'
-import {
-  AnimatedEntranceConfirmationIcon,
-  AnimatedEntranceSubmittedIcon,
-  LoadingIndicatorOverlay,
-  LogoContainer,
-} from '../AccountDrawer/MiniPortfolio/Activity/Logos'
-import { TradeSummary } from './TradeSummary'
-import { slideInAnimation, slideOutAnimation } from './animations'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -125,8 +124,8 @@ export function Pending({
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
-  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
-  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
+  const showSubmitted = swapPending && !swapConfirmed && chainId === UniverseChainId.Mainnet
+  const showSuccess = swapConfirmed || (chainId !== UniverseChainId.Mainnet && swapPending)
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
@@ -140,7 +139,7 @@ export function Pending({
     } else {
       return
     }
-    return getExplorerLink(chainId || ChainId.MAINNET, txHash, ExplorerDataType.TRANSACTION)
+    return getExplorerLink(chainId || UniverseChainId.Mainnet, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])
 
   // Handle special statuses for UniswapX orders
@@ -189,8 +188,8 @@ export function Pending({
               <ExternalLink
                 href={
                   isLimitTrade(initialTrade)
-                    ? SupportArticleURL.LEARN_ABOUT_LIMITS
-                    : SupportArticleURL.WHAT_IS_UNISWAP_X
+                    ? uniswapUrls.helpArticleUrls.limitsInfo
+                    : uniswapUrls.helpArticleUrls.uniswapXInfo
                 }
               >
                 {isLimitTrade(initialTrade) ? (

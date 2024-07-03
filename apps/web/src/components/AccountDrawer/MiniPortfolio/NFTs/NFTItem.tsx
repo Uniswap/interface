@@ -1,4 +1,5 @@
 import { InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Box } from 'nft/components/Box'
@@ -12,7 +13,6 @@ import { ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useAccountDrawer } from '../hooks'
 
 const FloorPrice = styled(Row)`
   opacity: 0;

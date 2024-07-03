@@ -1,7 +1,6 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-
-import { PermitInfo, PermitType, useERC20Permit } from './useERC20Permit'
-import useTransactionDeadline from './useTransactionDeadline'
+import { PermitInfo, PermitType, useERC20Permit } from 'hooks/useERC20Permit'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
 
 const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
   version: '1',

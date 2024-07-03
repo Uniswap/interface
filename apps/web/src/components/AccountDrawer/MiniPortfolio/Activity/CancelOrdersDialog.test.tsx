@@ -1,4 +1,4 @@
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { WETH9 } from '@uniswap/sdk-core'
 import {
   CancelOrdersDialog,
   CancellationState,
@@ -7,6 +7,7 @@ import { DAI } from 'constants/tokens'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_UNISWAPX_ORDER,
@@ -17,7 +18,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
     type: 1,
     tradeType: 0,
     inputCurrencyId: DAI.address,
-    outputCurrencyId: WETH9[ChainId.MAINNET].address,
+    outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
     inputCurrencyAmountRaw: '252074033564766400000',
     expectedOutputCurrencyAmountRaw: '106841079134757921',
     minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -26,7 +27,7 @@ const mockOrderDetails: UniswapXOrderDetails = {
   encodedOrder: '0xencodedOrder',
   id: '0x1234',
   addedTime: 3,
-  chainId: ChainId.MAINNET,
+  chainId: UniverseChainId.Mainnet,
   expiry: 4,
   offerer: '0x1234',
 }

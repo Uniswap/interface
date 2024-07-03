@@ -2,6 +2,9 @@ import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
+import { Chart } from 'components/LiquidityChartRangeInput/Chart'
+import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
+import { ZoomLevels } from 'components/LiquidityChartRangeInput/types'
 import { useColor } from 'hooks/useColor'
 import { Trans } from 'i18n'
 import { saturate } from 'polished'
@@ -12,10 +15,6 @@ import { Bound } from 'state/mint/v3/actions'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { Chart } from './Chart'
-import { useDensityChartData } from './hooks'
-import { ZoomLevels } from './types'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.LOWEST]: {

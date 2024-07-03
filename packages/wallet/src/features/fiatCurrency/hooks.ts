@@ -1,18 +1,15 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 import { useAppSelector } from 'wallet/src/state'
-
-export type FiatCurrencyInfo = {
-  name: string
-  shortName: string
-  code: string
-} & FiatCurrencyComponents
 
 /**
  * Helper function for getting the ISO currency code from our internal enum
@@ -133,4 +130,19 @@ export function useAppFiatCurrencyInfo(): FiatCurrencyInfo {
   const currency = useAppFiatCurrency()
 
   return useFiatCurrencyInfo(currency)
+}
+
+/**
+ * Hook to convert local fiat currency amount to USD amount
+ * @returns USD amount
+ */
+export const useLocalFiatToUSDConverter = (): ((fiatAmount: number) => number | undefined) => {
+  const { convertFiatAmount } = useLocalizationContext()
+  return useCallback(
+    (fiatAmount: number): number | undefined => {
+      const { amount: USDInLocalCurrency } = convertFiatAmount(1)
+      return USDInLocalCurrency ? fiatAmount / USDInLocalCurrency : undefined
+    },
+    [convertFiatAmount]
+  )
 }

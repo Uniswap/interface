@@ -1,8 +1,7 @@
 import { Price, WETH9 } from '@uniswap/sdk-core'
+import TradePrice from 'components/swap/TradePrice'
 import { USDC_MAINNET } from 'constants/tokens'
 import { fireEvent, render, screen } from 'test-utils/render'
-
-import TradePrice from './TradePrice'
 
 const price = new Price(WETH9[1], USDC_MAINNET, 100000000000, 5)
 const zeroedNumeratorPrice = new Price(WETH9[1], USDC_MAINNET, 100000000000, 0)

@@ -1,6 +1,5 @@
 import { style } from '@vanilla-extract/css'
-
-import { sprinkles } from './sprinkles.css'
+import { sprinkles } from 'nft/css/sprinkles.css'
 
 export const center = sprinkles({
   display: 'flex',

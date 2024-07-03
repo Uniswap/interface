@@ -1,9 +1,9 @@
 import { LayoutChangeEvent, MeasureLayoutOnSuccessCallback, StyleSheet } from 'react-native'
 import Animated, { LayoutAnimationConfig, useAnimatedStyle } from 'react-native-reanimated'
-import { SortableGridProvider } from './SortableGirdProvider'
-import SortableGridItem from './SortableGridItem'
-import { useAutoScrollContext, useLayoutContext } from './contexts'
-import { useItemOrderUpdater, useStableCallback } from './hooks'
+import { SortableGridProvider } from 'src/components/sortableGrid/SortableGirdProvider'
+import SortableGridItem from 'src/components/sortableGrid/SortableGridItem'
+import { useAutoScrollContext, useLayoutContext } from 'src/components/sortableGrid/contexts'
+import { useItemOrderUpdater, useStableCallback } from 'src/components/sortableGrid/hooks'
 import {
   ActiveItemDecorationSettings,
   AutoScrollProps,
@@ -11,8 +11,8 @@ import {
   SortableGridDragStartEvent,
   SortableGridDropEvent,
   SortableGridRenderItem,
-} from './types'
-import { defaultKeyExtractor } from './utils'
+} from 'src/components/sortableGrid/types'
+import { defaultKeyExtractor } from 'src/components/sortableGrid/utils'
 
 type SortableGridProps<I> = AutoScrollProps &
   Partial<ActiveItemDecorationSettings> & {

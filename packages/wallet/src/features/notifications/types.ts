@@ -1,6 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -28,6 +28,7 @@ export enum AppNotificationType {
   DappConnected,
   DappDisconnected,
   NotSupportedNetwork,
+  PasswordChanged,
 }
 
 export interface AppNotificationBase {
@@ -59,7 +60,7 @@ export interface TransactionNotificationBase extends AppNotificationBase {
   txStatus: FinalizedTransactionStatus
   txHash: string
   txId: string
-  chainId: ChainId
+  chainId: WalletChainId
   tokenAddress?: string
 }
 
@@ -163,7 +164,7 @@ export interface SuccessNotification extends AppNotificationBase {
 
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
-  chainId: ChainId
+  chainId: WalletChainId
   flow?: 'swap' | 'send'
 }
 
@@ -207,7 +208,11 @@ export interface NotSupportedNetworkNotification extends AppNotificationBase {
 
 export interface TransactionPendingNotification extends AppNotificationBase {
   type: AppNotificationType.TransactionPending
-  chainId: ChainId
+  chainId: WalletChainId
+}
+
+export interface PasswordChangedNotification extends AppNotificationBase {
+  type: AppNotificationType.PasswordChanged
 }
 
 export type AppNotification =
@@ -228,3 +233,4 @@ export type AppNotification =
   | DappDisconnectedNotification
   | NotSupportedNetworkNotification
   | TransactionPendingNotification
+  | PasswordChangedNotification

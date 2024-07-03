@@ -1,7 +1,7 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { FlashList, FlashListProps } from '@shopify/flash-list'
 import { forwardRef } from 'react'
-import { FlatListProps } from 'react-native'
+import type { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 // difficult to properly type

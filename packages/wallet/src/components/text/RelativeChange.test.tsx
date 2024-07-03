@@ -1,9 +1,11 @@
 import renderer from 'react-test-renderer'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { Locale } from 'wallet/src/features/language/constants'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { mockLocalizationContext } from 'wallet/src/test/mocks'
-import { RelativeChange } from './RelativeChange'
+
+// Needs to be imported after the mock localization context
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 
 const mockLocale = Locale.EnglishUnitedStates
 

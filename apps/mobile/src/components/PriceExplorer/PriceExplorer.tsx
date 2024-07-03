@@ -9,6 +9,11 @@ import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
+import {
+  PriceNumberOfDigits,
+  TokenSpotData,
+  useTokenPriceHistory,
+} from 'src/components/PriceExplorer/usePriceHistory'
 import { Loader } from 'src/components/loading'
 import { Flex, HapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -16,7 +21,6 @@ import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
 
 type PriceTextProps = {
   loading: boolean
@@ -171,10 +175,7 @@ function PriceExplorerChart({
             <LineChart.Dot
               key={lastPricePoint}
               hasPulse
-              // Sometimes, the pulse dot doesn't appear on the end of
-              // the chart’s path, but on top of the container instead.
-              // A little shift backwards seems to solve this problem.
-              at={lastPricePoint - 0.1}
+              at={lastPricePoint}
               color={tokenColor}
               inactiveColor="transparent"
               pulseBehaviour="while-inactive"

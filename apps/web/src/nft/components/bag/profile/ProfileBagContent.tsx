@@ -1,7 +1,6 @@
 import { Column } from 'nft/components/Flex'
+import ProfileAssetRow from 'nft/components/bag/profile/ProfileAssetRow'
 import { useSellAsset } from 'nft/hooks'
-
-import ProfileAssetRow from './ProfileAssetRow'
 
 export const ProfileBagContent = () => {
   const sellAssets = useSellAsset((state) => state.sellAssets)

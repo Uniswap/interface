@@ -1,0 +1,985 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 20;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c9 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c14 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 180px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c15 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c16 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 120px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c17 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  padding: 8px 16px;
+  -webkit-transition: background 250ms ease;
+  transition: background 250ms ease;
+}
+
+.c8:hover {
+  background: #22222212;
+}
+
+.c10 {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #22222212;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c12 {
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  overflow-y: scroll;
+  -webkit-transition: 125;
+  transition: 125;
+  opacity: 1;
+}
+
+.c6 {
+  color: #7D7D7D;
+  line-height: 20px;
+  padding: 4px 16px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3"
+            data-testid="searchbar-dropdown"
+          >
+            <div
+              class="c4 c5 c6"
+            >
+              <svg
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="23 6 13.5 15.5 8.5 10.5 1 18"
+                />
+                <polyline
+                  points="17 6 23 6 23 12"
+                />
+              </svg>
+              Popular tokens
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 20;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c9 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c14 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 180px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c15 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c16 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 120px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c17 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  padding: 8px 16px;
+  -webkit-transition: background 250ms ease;
+  transition: background 250ms ease;
+}
+
+.c8:hover {
+  background: #22222212;
+}
+
+.c10 {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #22222212;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c12 {
+  width: 100%;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+  overflow-y: scroll;
+  -webkit-transition: 125;
+  transition: 125;
+  opacity: 1;
+}
+
+.c6 {
+  color: #7D7D7D;
+  line-height: 20px;
+  padding: 4px 16px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3"
+            data-testid="searchbar-dropdown"
+          >
+            <div
+              class="c4 c5 c6"
+            >
+              <svg
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="23 6 13.5 15.5 8.5 10.5 1 18"
+                />
+                <polyline
+                  points="17 6 23 6 23 12"
+                />
+              </svg>
+              Popular tokens
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c3"
+            data-testid="searchbar-dropdown"
+          >
+            <div
+              class="c4 c5 c6"
+            >
+              <svg
+                fill="none"
+                height="20"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="23 6 13.5 15.5 8.5 10.5 1 18"
+                />
+                <polyline
+                  points="17 6 23 6 23 12"
+                />
+              </svg>
+              Popular NFT collections
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c8"
+              >
+                <div
+                  class="c4 c9"
+                >
+                  <div
+                    class="c10"
+                  />
+                  <div
+                    class="c11 c12"
+                  >
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c14"
+                        height="20px"
+                        width="180px"
+                      />
+                      <div
+                        class="c15"
+                        height="20px"
+                        width="48px"
+                      />
+                    </div>
+                    <div
+                      class="c4 c13"
+                    >
+                      <div
+                        class="c16"
+                        height="16px"
+                        width="120px"
+                      />
+                      <div
+                        class="c17"
+                        height="16px"
+                        width="48px"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;

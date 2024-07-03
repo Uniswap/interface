@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -16,7 +16,7 @@ export function NetworkFee({
   gasFee,
   transactionUSDValue,
 }: {
-  chainId: ChainId
+  chainId: WalletChainId
   gasFee: GasFeeResult
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }): JSX.Element {

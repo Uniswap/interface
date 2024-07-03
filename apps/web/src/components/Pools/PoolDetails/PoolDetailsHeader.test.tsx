@@ -1,12 +1,11 @@
 import userEvent from '@testing-library/user-event'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import { PoolsDetailsChartType } from 'components/Pools/PoolDetails/ChartSection'
+import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
-import { act, render, screen } from 'test-utils/render'
-
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
-import { PoolsDetailsChartType } from './ChartSection'
-import { PoolDetailsBreadcrumb, PoolDetailsHeader } from './PoolDetailsHeader'
+import { act, render, screen } from 'test-utils/render'
 
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {

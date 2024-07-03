@@ -1,5 +1,5 @@
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 
 export type SearchResult =
   | TokenSearchResult
@@ -57,7 +57,7 @@ export interface UnitagSearchResult extends SearchResultBase {
 
 export interface TokenSearchResult extends SearchResultBase {
   type: SearchResultType.Token
-  chainId: ChainId
+  chainId: WalletChainId
   symbol: string
   address: Address | null
   name: string | null
@@ -67,7 +67,7 @@ export interface TokenSearchResult extends SearchResultBase {
 
 export interface NFTCollectionSearchResult extends SearchResultBase {
   type: SearchResultType.NFTCollection
-  chainId: ChainId
+  chainId: WalletChainId
   address: Address
   name: string
   imageUrl: string | null

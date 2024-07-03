@@ -1,11 +1,11 @@
+import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import { navigatorLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import { useUserLocaleManager } from 'state/user/hooks'
 import { StyledInternalLink } from 'theme/components'
 import { Text } from 'ui/src'
-import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
-import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
 
 const useTargetLocale = (activeLocale: SupportedLocale) => {
   const browserLocale = useMemo(() => navigatorLocale(), [])

@@ -1,8 +1,8 @@
 import ContextMenu from 'react-native-context-menu-view'
+import { SortButton } from 'src/components/explore/SortButton'
 import { render } from 'src/test/test-utils'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ClientTokensOrderBy } from 'wallet/src/features/wallet/types'
-import { SortButton } from './SortButton'
 
 jest.mock('react-native-context-menu-view', () => {
   // Use the actual implementation of `react-native-context-menu-view` as the mock implementation

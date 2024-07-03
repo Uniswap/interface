@@ -1,9 +1,8 @@
 import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
+import { Ticks } from 'graphql/data/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
-
-import { Ticks } from '../graphql/data/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 

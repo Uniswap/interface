@@ -5,22 +5,15 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import {
-  Flex,
-  FlexProps,
-  Logos,
-  Text,
-  useDeviceInsets,
-  useExtractedColors,
-  useSporeColors,
-} from 'ui/src'
+import { NFTCollectionData } from 'src/features/nfts/collection/types'
+import { Flex, FlexProps, Text, useDeviceInsets, useExtractedColors, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { Ethereum } from 'ui/src/components/logos'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { NFTCollectionData } from './types'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + spacing.spacing4
@@ -192,7 +185,7 @@ export function NFTCollectionHeader({
                   })} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color="$neutral1" size="$icon.16" />
+                  <Ethereum color="$neutral1" size="$icon.16" />
                 ) : null}
               </Flex>
             </Flex>
@@ -208,7 +201,7 @@ export function NFTCollectionHeader({
                   })}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color="$neutral1" size="$icon.16" />
+                  <Ethereum color="$neutral1" size="$icon.16" />
                 ) : null}
               </Flex>
             </Flex>

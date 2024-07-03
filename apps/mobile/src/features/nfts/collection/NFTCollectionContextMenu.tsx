@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { TripleDot } from 'src/components/icons/TripleDot'
+import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -11,7 +12,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'wallet/src/utils/linking'
-import { NFTCollectionData } from './types'
 
 type MenuOption = {
   title: string

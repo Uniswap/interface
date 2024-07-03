@@ -45,6 +45,7 @@ exports[`SplitLogo renders without error 1`] = `
       >
         <img
           height={10}
+          onError={[Function]}
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
           style={
             {
@@ -94,6 +95,7 @@ exports[`SplitLogo renders without error 1`] = `
       >
         <img
           height={10}
+          onError={[Function]}
           src="https://token-icons.s3.amazonaws.com/eth.png"
           style={
             {

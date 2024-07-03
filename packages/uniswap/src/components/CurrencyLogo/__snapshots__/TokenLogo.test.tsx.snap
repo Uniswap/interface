@@ -23,6 +23,7 @@ exports[`TokenLogo renders without error 1`] = `
   >
     <img
       height={40}
+      onError={[Function]}
       src="https://example.com"
       style={
         {

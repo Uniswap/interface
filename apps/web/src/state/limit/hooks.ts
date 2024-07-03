@@ -7,6 +7,7 @@ import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import { LimitState } from 'state/limit/types'
 import { getWrapInfo } from 'state/routing/gas'
 import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
@@ -15,7 +16,6 @@ import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { expiryToDeadlineSeconds } from './expiryToDeadlineSeconds'
 
 export type LimitInfo = {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }

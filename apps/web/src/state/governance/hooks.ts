@@ -12,8 +12,16 @@ import { useWeb3React } from '@web3-react/core'
 import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
+import {
+  BRAVO_START_BLOCK,
+  MOONBEAN_START_BLOCK,
+  ONE_BIP_START_BLOCK,
+  POLYGON_START_BLOCK,
+  UNISWAP_GRANTS_START_BLOCK,
+} from 'constants/proposals'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { GRG, UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
@@ -21,26 +29,18 @@ import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
+import { VoteOption } from 'state/governance/types'
+import { useLogs } from 'state/logs/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 //import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-
-import {
-  BRAVO_START_BLOCK,
-  MOONBEAN_START_BLOCK,
-  ONE_BIP_START_BLOCK,
-  POLYGON_START_BLOCK,
-  UNISWAP_GRANTS_START_BLOCK,
-} from '../../constants/proposals'
-import { GRG, UNI } from '../../constants/tokens'
-import { useLogs } from '../logs/hooks'
-import { useTransactionAdder } from '../transactions/hooks'
-import { TransactionType } from '../transactions/types'
-import { VoteOption } from './types'
 
 function useGovernanceProxyContract(): Contract | null {
   return useContract(GOVERNANCE_PROXY_ADDRESSES, GOVERNANCE_RB_ABI, true)
@@ -416,7 +416,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    //chainId !== ChainId.MAINNET ||
+    //chainId !== UniverseChainId.Mainnet ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   ) {

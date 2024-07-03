@@ -5,7 +5,7 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../packages/ui/src/env.d.ts" />
 
-import { config } from './tamagui.config'
+import { config } from 'tamagui.config'
 
 type Conf = typeof config
 

@@ -2,13 +2,13 @@ import { Flex } from 'ui/src'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
 }
 
 /*
@@ -24,7 +24,7 @@ export function SplitLogo({
   const iconSize = size / 2
 
   const icon =
-    chainId && chainId !== ChainId.Mainnet ? (
+    chainId && chainId !== UniverseChainId.Mainnet ? (
       <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
     ) : undefined
 

@@ -4,15 +4,15 @@ import { hexStripZeros } from '@ethersproject/bytes'
 import { ContractReceipt } from '@ethersproject/contracts'
 import type { JsonRpcSigner } from '@ethersproject/providers'
 import { NFTEventName } from '@uniswap/analytics-events'
+import CryptoPunksMarket from 'nft/abis/CryptoPunksMarket.json'
+import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from 'nft/types'
+import { compareAssetsWithTransactionRoute } from 'nft/utils/txRoute/combineItemsWithTxRoute'
 import ERC1155 from 'uniswap/src/abis/erc1155.json'
 import ERC721 from 'uniswap/src/abis/erc721.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
-import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
-import { compareAssetsWithTransactionRoute } from '../utils/txRoute/combineItemsWithTxRoute'
 
 interface TxState {
   state: TxStateType

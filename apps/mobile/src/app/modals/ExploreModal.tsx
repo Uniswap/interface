@@ -3,8 +3,8 @@ import { useAppDispatch } from 'src/app/hooks'
 import { ExploreStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 export function ExploreModal(): JSX.Element {
   const colors = useSporeColors()

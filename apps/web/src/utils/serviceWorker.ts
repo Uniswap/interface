@@ -7,12 +7,7 @@ export function unregister() {
         registration.unregister()
       })
       .catch((error) => {
-        logger.error(error, {
-          tags: {
-            file: 'serviceWorker',
-            function: 'unregister',
-          },
-        })
+        logger.warn('serviceWorker', 'unregister', 'Service worker unregister failed', error)
       })
   }
 }

@@ -12,29 +12,12 @@ import type { RootState } from 'wallet/src/state'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
-function isPending(account: Account): boolean {
-  return account.pending ?? false
-}
-
 export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
-
-export const selectNonPendingAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.fromEntries(Object.entries(accounts).filter((a) => !isPending(a[1])))
-)
-
-export const selectPendingAccounts = createSelector(selectAccounts, (accounts) =>
-  Object.fromEntries(Object.entries(accounts).filter((a) => isPending(a[1])))
-)
 
 export const selectSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter(
     (a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic
   )
-)
-
-export const selectNonPendingSignerMnemonicAccounts = createSelector(
-  selectSignerMnemonicAccounts,
-  (accounts) => Object.values(accounts).filter((a) => !isPending(a))
 )
 
 export const selectSortedSignerMnemonicAccounts = createSelector(
@@ -47,17 +30,13 @@ export const selectSortedSignerMnemonicAccounts = createSelector(
 )
 
 export const selectSignerMnemonicAccountExists = createSelector(
-  selectNonPendingAccounts,
+  selectAccounts,
   (accounts) =>
     Object.values(accounts).findIndex((value) => value.type === AccountType.SignerMnemonic) >= 0
 )
 
 export const selectViewOnlyAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a): a is ReadOnlyAccount => a.type === AccountType.Readonly)
-)
-
-export const selectNonPendingViewOnlyAccounts = createSelector(selectViewOnlyAccounts, (accounts) =>
-  accounts.filter((a) => !isPending(a))
 )
 
 export const selectSortedViewOnlyAccounts = createSelector(selectViewOnlyAccounts, (accounts) =>

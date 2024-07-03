@@ -1,9 +1,8 @@
 import Row from 'components/Row'
+import { BoxProps } from 'nft/components/Box'
 import { useRef } from 'react'
 import styled from 'styled-components'
 import { v4 as uuid } from 'uuid'
-
-import { BoxProps } from '../../nft/components/Box'
 
 // Gradient with a fallback to solid color.
 const Gradient = styled.div`

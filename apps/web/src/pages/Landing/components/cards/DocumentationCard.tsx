@@ -1,11 +1,10 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
+import { CodeBrackets } from 'pages/Landing/components/Icons'
+import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import styled from 'styled-components'
-
-import { CodeBrackets } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
 
 const Contents = styled.div`
   width: 100%;

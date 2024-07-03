@@ -1,14 +1,13 @@
 import { formatEther } from '@ethersproject/units'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useIsMobile } from 'hooks/screenSize'
+import * as styles from 'nft/components/explore/Cells/Cells.css'
 import { VerifiedIcon } from 'nft/components/icons'
 import { Denomination } from 'nft/types'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import * as styles from './Cells.css'
 
 const TruncatedText = styled.div`
   overflow: hidden;

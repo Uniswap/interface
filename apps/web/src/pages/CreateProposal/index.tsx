@@ -16,6 +16,14 @@ import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import AppBody from 'pages/App/AppBody'
+import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
+import {
+  ProposalAction,
+  ProposalActionSelector,
+  ProposalActionSelectorModal,
+} from 'pages/CreateProposal/ProposalActionSelector'
+import { ProposalEditor } from 'pages/CreateProposal/ProposalEditor'
+import { ProposalSubmissionModal } from 'pages/CreateProposal/ProposalSubmissionModal'
 import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'

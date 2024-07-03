@@ -1,18 +1,18 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import Card, { DarkGrayCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
 import Row, { AutoRow, RowBetween } from 'components/Row'
 import { Trans } from 'i18n'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
+import { useModalIsOpen, useTogglePrivacyPolicy } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobile } from 'utilities/src/platform'
-import { useModalIsOpen, useTogglePrivacyPolicy } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
 
 const Wrapper = styled.div`
   max-height: 70vh;

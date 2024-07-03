@@ -1,7 +1,8 @@
 import { memo, useMemo } from 'react'
 import { I18nManager, TextInputProps } from 'react-native'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { LeftArrow, RightArrow } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 enum KeyAction {

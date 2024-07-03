@@ -1,5 +1,5 @@
 import { t } from 'i18n'
-import { createRef, useEffect, useMemo, useState } from 'react'
+import { createRef, useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -80,16 +80,26 @@ export default function PillMultiToggle({
 }: PillMultiToggleProps) {
   const buttonRefs = useMemo(() => options.map(() => createRef<HTMLButtonElement>()), [options])
   const [style, setStyle] = useState({})
-  const [activeIndex, setActiveIndex] = useState(
-    options.map((o) => getPillMultiToggleOption(o).value).indexOf(currentSelected)
-  )
+
+  const findActiveIndex = useCallback(() => {
+    return options.map((o) => getPillMultiToggleOption(o).value).indexOf(currentSelected)
+  }, [options, currentSelected])
+  const [activeIndex, setActiveIndex] = useState(findActiveIndex())
+  // set activeIndex if options or selectedOption changes
+  useEffect(() => {
+    setActiveIndex(findActiveIndex())
+  }, [findActiveIndex, setActiveIndex])
 
   useEffect(() => {
-    const current = buttonRefs[activeIndex].current
-    setStyle({
-      left: current?.offsetLeft,
-      width: current?.offsetWidth,
-    })
+    const current = buttonRefs[activeIndex] ? buttonRefs[activeIndex].current : undefined
+    setStyle(
+      current
+        ? {
+            left: current?.offsetLeft,
+            width: current?.offsetWidth,
+          }
+        : { display: 'none' }
+    )
   }, [buttonRefs, activeIndex])
 
   return (

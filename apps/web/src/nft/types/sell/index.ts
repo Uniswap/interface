@@ -1,11 +1,10 @@
+import { GenieCollection, PriceInfo } from 'nft/types/common'
 import {
   NftMarketplace,
   NftStandard,
   OrderStatus,
   OrderType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { GenieCollection, PriceInfo } from '../common'
 
 export interface ListingMarket {
   name: string

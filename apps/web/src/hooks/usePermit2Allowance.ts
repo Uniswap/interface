@@ -1,4 +1,4 @@
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
@@ -52,10 +52,14 @@ export default function usePermit2Allowance(
 ): Allowance {
   const account = useAccount()
   const token = amount?.currency
-
-  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account.address, PERMIT2_ADDRESS)
-  const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
-  const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
+  const permit2AddressForChain = permit2Address(token?.chainId)
+  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(
+    token,
+    account.address,
+    permit2AddressForChain
+  )
+  const updateTokenAllowance = useUpdateTokenAllowance(amount, permit2AddressForChain)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, permit2AddressForChain)
   const isApproved = useMemo(() => {
     // early return for smart pools
     if (isPool) {
@@ -72,8 +76,8 @@ export default function usePermit2Allowance(
   // until it has been re-observed. It wll sync immediately, because confirmation fast-forwards the block number.
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
   const isApprovalLoading = approvalState !== ApprovalState.SYNCED
-  const isApprovalPending = useHasPendingApproval(token, PERMIT2_ADDRESS)
-  const isRevocationPending = useHasPendingRevocation(token, PERMIT2_ADDRESS)
+  const isApprovalPending = useHasPendingApproval(token, permit2AddressForChain)
+  const isRevocationPending = useHasPendingRevocation(token, permit2AddressForChain)
 
   useEffect(() => {
     if (isApprovalPending) {

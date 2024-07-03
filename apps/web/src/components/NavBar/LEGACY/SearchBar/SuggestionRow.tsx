@@ -1,7 +1,7 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
+import { useAddRecentlySearchedAsset } from 'components/NavBar/LEGACY/SearchBar/RecentlySearchedAssets'
 import Row from 'components/Row'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
@@ -20,8 +20,8 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -110,7 +110,7 @@ export const SuggestionRow = ({
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
   const warning = useTokenWarning(
     isPool ? undefined : isToken ? suggestion.address : undefined,
-    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : ChainId.MAINNET
+    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet
   )
 
   const handleClick = useCallback(() => {

@@ -37,6 +37,8 @@ import useWrapCallback, { WrapErrorText } from 'hooks/useWrapCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
+import { getIsReviewableQuote } from 'pages/Swap'
+import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -51,6 +53,7 @@ import { CurrencyState } from 'state/swap/types'
 import { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -725,7 +728,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               <Trans
                 i18nKey="common.connectingToChain"
                 values={{
-                  chainName: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '',
+                  chainName: switchingChainIsSupported ? UNIVERSE_CHAIN_INFO[targetChain]?.label : '',
                 }}
               />
             </ButtonPrimary>
@@ -756,7 +759,10 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }
               }}
             >
-              Connect to {isSupportedChain ? CHAIN_INFO[chainId].label : ''}
+              <Trans
+                i18nKey="common.connectToChain.button"
+                values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : '' }}
+              />
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary

@@ -1,6 +1,5 @@
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { render } from 'test-utils/render'
-
-import { EmptyWalletModule } from './EmptyWalletContent'
 
 describe('EmptyWalletContent.tsx', () => {
   it('matches base snapshot', () => {

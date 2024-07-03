@@ -1,11 +1,10 @@
 import Column from 'components/Column'
+import Modal from 'components/Modal'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import { Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
-
 import { Text } from 'ui/src'
-import Modal from '../Modal'
 
 const ContentWrapper = styled(Column)`
   align-items: center;

@@ -1,9 +1,8 @@
+import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import { renderHook } from 'test-utils/render'
 import { lightTheme } from 'theme/colors'
 import { lightDeprecatedTheme } from 'theme/deprecatedColors'
-
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenWarningColor, useTokenWarningTextColor } from './useTokenWarningColor'
 
 describe('Token Warning Colors', () => {
   describe('useTokenWarningColor', () => {

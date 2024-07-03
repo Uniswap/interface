@@ -1,10 +1,9 @@
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
+import Row, { RowBetween } from 'components/Row'
 import { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
-
-import Row, { RowBetween } from '../Row'
 
 const ButtonContainer = styled(Row)`
   cursor: pointer;

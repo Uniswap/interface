@@ -35,6 +35,8 @@ export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
       return Chain.Blast
     case ChainId.ZORA:
       return Chain.Zora
+    case ChainId.ZKSYNC:
+      return Chain.Zksync
   }
   return undefined
 }

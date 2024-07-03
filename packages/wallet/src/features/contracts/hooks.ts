@@ -1,12 +1,12 @@
 import { Contract } from '@ethersproject/contracts'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
-export function useIsErc20Contract(address: string | undefined, chainId: ChainId): boolean {
+export function useIsErc20Contract(address: string | undefined, chainId: WalletChainId): boolean {
   const provider = useProvider(chainId)
   const { isSmartContractAddress } = useIsSmartContractAddress(address, chainId)
 

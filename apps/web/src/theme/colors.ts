@@ -104,6 +104,7 @@ export const colors = {
   neutral2_dark: '#9B9B9B',
   neutral3_dark: '#5E5E5E',
   surface1_dark: '#131313',
+  surface1_hovered_dark: '#181818',
   surface2_dark: '#1B1B1B',
   surface3_dark: '#FFFFFF12',
   surface4_dark: '#FFFFFF20',
@@ -115,6 +116,7 @@ export const colors = {
   neutral2_light: '#7D7D7D',
   neutral3_light: '#CECECE',
   surface1_light: '#FFFFFF',
+  surface1_hovered_light: '#F5F5F5',
   surface2_light: '#F9F9F9',
   surface3_light: '#22222212',
   surface4_light: '#FFFFFF64',
@@ -174,6 +176,7 @@ export const darkTheme = {
   neutralContrast: colors.white,
 
   surface1: colors.surface1_dark,
+  surface1Hovered: colors.surface1_hovered_dark,
   surface2: colors.surface2_dark,
   surface3: colors.surface3_dark,
   surface4: colors.surface4_dark,
@@ -205,6 +208,7 @@ export const lightTheme: ThemeColors = {
   neutralContrast: colors.white,
 
   surface1: colors.surface1_light,
+  surface1Hovered: colors.surface1_hovered_light,
   surface2: colors.surface2_light,
   surface3: colors.surface3_light,
   surface4: colors.surface4_light,

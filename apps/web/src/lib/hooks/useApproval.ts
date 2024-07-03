@@ -79,19 +79,14 @@ export function useApproval(
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
       if (typeof error === 'string') {
-        logger.warn('useApproval', 'approve', error)
+        logger.debug('useApproval', 'approve', error)
       } else {
-        logger.error(error, {
-          tags: {
-            file: 'useApproval',
-            function: 'approve',
-          },
-          extra: {
-            tokenChain: token?.chainId,
-            token: token?.address,
-            chainId,
-            amountToApprove: amountToApprove?.toFixed(),
-          },
+        logger.debug('useApproval', 'approve', 'Failed to approve amount', {
+          error,
+          tokenChain: token?.chainId,
+          token: token?.address,
+          chainId,
+          amountToApprove: amountToApprove?.toFixed(),
         })
       }
 

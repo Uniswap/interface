@@ -1,9 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
-
-import { useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
   loading: boolean

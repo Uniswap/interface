@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SearchResult, SearchResultType } from './SearchResult'
+import { SearchResult, SearchResultType } from 'wallet/src/features/search/SearchResult'
 
 const SEARCH_HISTORY_LENGTH = 5
 

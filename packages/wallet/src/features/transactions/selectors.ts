@@ -1,6 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { unique } from 'utilities/src/primitives/array'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
@@ -8,6 +8,7 @@ import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
@@ -63,6 +64,8 @@ export const makeSelectAddressTransactions = (): Selector<
         const duplicate = self.find(
           (tx2) =>
             tx2.id !== tx.id &&
+            isClassic(tx) &&
+            isClassic(tx2) &&
             tx2.options.request.chainId &&
             tx2.options.request.chainId === tx.options.request.chainId &&
             tx.options.request.nonce &&
@@ -135,7 +138,7 @@ const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
 
 interface MakeSelectParams {
   address: Address | undefined
-  chainId: ChainId | undefined
+  chainId: WalletChainId | undefined
   txId: string | undefined
 }
 

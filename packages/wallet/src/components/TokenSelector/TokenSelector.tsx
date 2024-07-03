@@ -2,13 +2,16 @@ import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
+import { Keyboard, LayoutAnimation } from 'react-native'
 import { Flex, isWeb, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { useDebounce } from 'utilities/src/time/timing'
 import { TokenSelectorEmptySearchList } from 'wallet/src/components/TokenSelector/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'wallet/src/components/TokenSelector/TokenSelectorSearchResultsList'
@@ -18,9 +21,6 @@ import { TokenSelectorSwapOutputList } from 'wallet/src/components/TokenSelector
 import { useFilterCallbacks } from 'wallet/src/components/TokenSelector/hooks'
 import { SuggestedTokenSection, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { NetworkFilter } from 'wallet/src/components/network/NetworkFilter'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
@@ -42,7 +42,7 @@ export enum TokenSelectorVariation {
 export interface TokenSelectorProps {
   currencyField: CurrencyField
   flow: TokenSelectorFlow
-  chainId?: ChainId
+  chainId?: WalletChainId
   isSurfaceReady?: boolean
   onClose: () => void
   onSelectCurrency: (
@@ -214,6 +214,10 @@ function TokenSelectorContent({
                 <NetworkFilter
                   includeAllNetworks
                   selectedChain={chainFilter}
+                  onDismiss={() => Keyboard.dismiss()}
+                  onPressAnimation={() =>
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                  }
                   onPressChain={onChangeChainFilter}
                 />
               </Flex>

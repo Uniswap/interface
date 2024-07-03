@@ -1,7 +1,6 @@
 import { style } from '@vanilla-extract/css'
 import { subheadSmall } from 'nft/css/common.css'
-
-import { sprinkles, themeVars, vars } from '../../../css/sprinkles.css'
+import { sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const section = style([
   sprinkles({

@@ -35,7 +35,6 @@ export function DevScreen(): JSX.Element {
     dispatch(
       createAccountsActions.trigger({
         accounts: [await createOnboardingAccount(sortedMnemonicAccounts)],
-        activateFirst: true,
       })
     )
   }

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
+import { ModalsState } from 'src/features/modals/ModalsState'
 import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
@@ -10,7 +11,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
-import { ModalsState } from './ModalsState'
 
 type AccountSwitcherModalParams = {
   name: typeof ModalName.AccountSwitcher

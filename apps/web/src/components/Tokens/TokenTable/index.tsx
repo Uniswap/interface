@@ -1,22 +1,15 @@
+import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ParentSize } from '@visx/responsive'
+import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
-import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
-import { Trans } from 'i18n'
-import { ReactElement, ReactNode, useMemo } from 'react'
-import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme/components'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { ApolloError } from '@apollo/client'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import SparklineChart from 'components/Charts/SparklineChart'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
+import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import {
   TokenSortMethod,
   exploreSearchStringAtom,
@@ -28,8 +21,14 @@ import {
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
+import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
-import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
+import { ReactElement, ReactNode, useMemo } from 'react'
+import styled from 'styled-components'
+import { EllipsisStyle, ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled.div`
   margin: 0 auto;

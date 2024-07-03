@@ -1,5 +1,5 @@
 import React from 'react'
-import { ViewProps } from 'react-native'
+import type { ViewProps } from 'react-native'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 
 export type FlexLoaderProps = { repeat?: number } & FlexProps & ViewProps

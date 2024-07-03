@@ -1,11 +1,10 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
-
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
-const UNI_MAINNET = UNI[ChainId.MAINNET]
+const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
 
 describe('Swap', () => {
   // Turn off automine so that intermediate screens are available to assert on.

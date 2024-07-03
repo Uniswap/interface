@@ -1,6 +1,12 @@
-import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import {
+  LimitOrderTextTable,
+  MOONPAY_SENDER_ADDRESSES,
+  OrderTextTable,
+} from 'components/AccountDrawer/MiniPortfolio/constants'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -24,11 +30,10 @@ import {
   TransactionDetailsPartsFragment,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { LimitOrderTextTable, MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
-import { Activity } from './types'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -48,7 +53,7 @@ const ENS_IMG =
   'https://464911102-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/collections%2F2TjMAeHSzwlQgcOdL48E%2Ficon%2FKWP0gk2C6bdRPliWIA6o%2Fens%20transparent%20background.png?alt=media&token=bd28b063-5a75-4971-890c-97becea09076'
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
-  [UNI_ADDRESSES[ChainId.MAINNET].toLowerCase()]: {
+  [UNI_ADDRESSES[UniverseChainId.Mainnet].toLowerCase()]: {
     title: t('common.uniGovernance'),
     descriptor: t('common.contractInteraction'),
     logos: [UNI_IMG],
@@ -565,11 +570,8 @@ function parseRemoteActivity(
     )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
-    logger.error(e, {
-      tags: {
-        file: 'parseRemote',
-        function: 'parseRemoteActivity',
-      },
+    logger.debug('parseRemote', 'parseRemoteActivity', 'Failed to parse remote activity', {
+      error: e,
       extra: { assetActivity },
     })
     return undefined

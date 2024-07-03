@@ -1,11 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react'
+import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'
 import { useOnAssetActivitySubscription } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { PrefetchBalancesWrapper, useTokenBalancesQuery } from './TokenBalancesProvider'
 
 const mockLazyFetch = jest.fn()
 const mockBalanceQueryResponse = [

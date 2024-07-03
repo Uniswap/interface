@@ -405,8 +405,8 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   width: 50vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-width: 420px;
   max-height: 90vh;
+  max-width: 420px;
   display: inline-table;
   border-radius: 20px;
 }
@@ -1137,8 +1137,8 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   width: 50vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-width: 420px;
   max-height: 90vh;
+  max-width: 420px;
   display: inline-table;
   border-radius: 20px;
 }

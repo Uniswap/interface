@@ -1,11 +1,20 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { RowBetween } from 'components/Row'
+import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import useENS from 'hooks/useENS'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
+import { useDelegateCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -14,6 +23,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
 import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -202,7 +212,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

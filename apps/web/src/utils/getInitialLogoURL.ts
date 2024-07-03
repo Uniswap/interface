@@ -1,11 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
+import celoLogo from 'assets/svg/celo_logo.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
-import { isCelo, nativeOnChain } from 'constants/tokens'
+import { GRG, isCelo, nativeOnChain } from 'constants/tokens'
 
 import { isAddress } from 'utilities/src/addresses'
-import celoLogo from '../assets/svg/celo_logo.svg'
-import logo from '../assets/svg/logo.svg'
-import { GRG } from '../constants/tokens'
 
 export function getInitialLogoUrl(
   address?: string | null,

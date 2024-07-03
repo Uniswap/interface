@@ -1,14 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
 import { shallowEqual } from 'react-redux'
-
-import { Wallet } from './types'
+import { Wallet } from 'state/wallets/types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export interface WalletState {
   // Used to track wallets that have been connected by the user in current session, and remove them when deliberately disconnected.
   // Used to compute is_reconnect event property for analytics
   connectedWallets: Wallet[]
-  switchingChain: ChainId | false
+  switchingChain: InterfaceChainId | false
 }
 
 const initialState: WalletState = {

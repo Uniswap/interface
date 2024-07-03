@@ -1,11 +1,10 @@
 import { PropsWithChildren } from 'react'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
-import { withAnimated } from 'ui/src/components/factories/animated'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
+import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
-import { useEnableFontScaling } from './useEnableFontScaling'
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
@@ -134,8 +133,6 @@ export type TextProps = TextFrameProps & {
 // Use this text component throughout the app instead of
 // Default RN Text for theme support
 
-// const ThemedAnimatedText = createText<Theme>(Animated.Text)
-
 export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
     <Flex row alignItems="center" testID="text-placeholder">
@@ -198,6 +195,3 @@ export const Text = TextFrame.styleable<TextProps>(
     return <TextFrame allowFontScaling={enableFontScaling} color="$neutral1" {...rest} />
   }
 )
-
-// TODO(MOB-1529): make Text able to take animated styles
-export const AnimatedText = withAnimated(TextFrame)

@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-
-import { getCanonicalUrl, getCurrentPageFromLocation } from './urlRoutes'
+import { getCanonicalUrl, getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 describe('getCurrentPageFromLocation', () => {
   it('should return SWAP_PAGE when location pathname starts with "/swap"', () => {

@@ -1,4 +1,4 @@
-import { CanceledError, retry, RetryableError } from './retry'
+import { CanceledError, retry, RetryableError } from 'state/activity/polling/retry'
 
 describe('retry', () => {
   function makeFn<T>(fails: number, result: T, retryable = true): () => Promise<T> {

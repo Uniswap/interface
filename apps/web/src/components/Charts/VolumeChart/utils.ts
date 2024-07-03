@@ -1,7 +1,6 @@
 import { ChartHeaderProtocolInfo } from 'components/Charts/ChartHeader'
+import { CustomHistogramData, StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { CustomHistogramData, StackedHistogramData } from './renderer'
 
 export function isStackedHistogramData(data: CustomHistogramData): data is StackedHistogramData {
   return (data as StackedHistogramData).values !== undefined

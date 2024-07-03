@@ -32,8 +32,8 @@ const entryGzipSize = report.reduce(
   0
 )
 
-// somewhat arbitrary, just a bit above where we are currently (4/19/2024)
-const currentSize = 1620714
+// somewhat arbitrary, just a bit above where we are currently (6/12/2024)
+const currentSize = 1789656
 const limit = Math.round(currentSize * 1.1)
 
 if (entryGzipSize > limit) {

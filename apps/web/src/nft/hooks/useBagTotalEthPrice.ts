@@ -3,10 +3,9 @@ import { formatEther } from '@ethersproject/units'
 import { useCurrency } from 'hooks/Tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { useBag } from 'nft/hooks/useBag'
 import { BagItemStatus } from 'nft/types'
 import { useMemo } from 'react'
-
-import { useBag } from './useBag'
 
 export function useBagTotalEthPrice(): BigNumber {
   const itemsInBag = useBag((state) => state.itemsInBag)

@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
-import { useRecoveryWalletNames } from 'src/screens/Onboarding/useRecoveryWalletNames'
+import {
+  RecoveryWalletInfo,
+  useOnDeviceRecoveryData,
+} from 'src/screens/Import/useOnDeviceRecoveryData'
 import { Button, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-
-export type RecoveryAddressInfo = {
-  address: string
-  derivationIndex: number
-}
 
 const cardProps: FlexProps & ViewProps = {
   borderRadius: '$rounded20',
@@ -27,55 +23,23 @@ export function OnDeviceRecoveryWalletCard({
   mnemonicId,
   screenLoading,
   onLoadComplete,
-  onPressWallet,
+  onPressCard,
   onPressViewRecoveryPhrase,
 }: {
   mnemonicId: string
   screenLoading: boolean
   onLoadComplete: () => void
-  onPressWallet: (addressInfos: RecoveryAddressInfo[]) => void
+  onPressCard: (walletInfos: RecoveryWalletInfo[]) => void
   onPressViewRecoveryPhrase: () => void
 }): JSX.Element | null {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const [recoveryAddressInfos, setRecoveryAddressInfos] = useState<RecoveryAddressInfo[]>([])
-
-  const { data: balancesData, loading } = useMultiplePortfolioBalancesQuery({
-    variables: {
-      ownerAddresses: recoveryAddressInfos.map((walletAddress) => walletAddress.address),
-    },
-    skip: !recoveryAddressInfos.length,
-  })
-  const balances = balancesData?.portfolios?.map(
-    (portfolio) => portfolio?.tokensTotalDenominatedValue?.value ?? 0
-  )
-  const totalBalance = balances?.reduce((acc, balance) => acc + balance, 0)
-
-  // Need to fetch ENS names and unitags for each deriviation index
-  const { ensNames, unitags } = useRecoveryWalletNames(
-    recoveryAddressInfos.map((walletAddress) => walletAddress.address)
-  )
-
-  useEffect(() => {
-    async function getAddresses(): Promise<void> {
-      const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
-
-      const derivationIndices = Array.from(Array(10).keys())
-      const possibleAddresses = await Promise.all(
-        derivationIndices.map((index) => Keyring.generateAndStorePrivateKey(mnemonicId, index))
-      )
-
-      const filteredAddressInfos = possibleAddresses
-        .map((address, index): RecoveryAddressInfo | undefined =>
-          storedAddresses.includes(address) ? { address, derivationIndex: index } : undefined
-        )
-        .filter((address): address is RecoveryAddressInfo => !!address)
-      setRecoveryAddressInfos(filteredAddressInfos)
-    }
-
-    getAddresses().catch(() => {})
-  }, [mnemonicId])
+  const {
+    significantRecoveryWalletInfos: significantRecoveryWalletInfos,
+    totalBalance,
+    loading,
+  } = useOnDeviceRecoveryData(mnemonicId)
 
   useEffect(() => {
     if (!loading && screenLoading) {
@@ -84,18 +48,15 @@ export function OnDeviceRecoveryWalletCard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, screenLoading])
 
-  const significantWalletAddressInfos = recoveryAddressInfos.filter(
-    (_address, index) => (balances && balances[index]) || ensNames[index] || unitags[index]
-  )
-  const firstWalletAddressInfo = significantWalletAddressInfos[0]
-  const remainingAddressCount = significantWalletAddressInfos.length - 1
+  const firstWalletInfo = significantRecoveryWalletInfos[0]
+  const remainingWalletCount = significantRecoveryWalletInfos.length - 1
 
-  if (screenLoading || !firstWalletAddressInfo) {
+  if (screenLoading || !firstWalletInfo) {
     return null
   }
 
   return (
-    <TouchableArea onPress={() => onPressWallet(significantWalletAddressInfos)}>
+    <TouchableArea onPress={() => onPressCard(significantRecoveryWalletInfos)}>
       <Flex
         {...cardProps}
         centered
@@ -105,19 +66,19 @@ export function OnDeviceRecoveryWalletCard({
         gap="$spacing16"
         p="$spacing12">
         <Flex centered row gap="$spacing12">
-          <AccountIcon address={firstWalletAddressInfo.address} size={iconSizes.icon36} />
-          <Flex fill py={!remainingAddressCount ? fonts.body3.lineHeight / 2 : undefined}>
+          <AccountIcon address={firstWalletInfo.address} size={iconSizes.icon36} />
+          <Flex fill py={!remainingWalletCount ? fonts.body3.lineHeight / 2 : undefined}>
             <AddressDisplay
-              address={firstWalletAddressInfo.address}
+              address={firstWalletInfo.address}
               hideAddressInSubtitle={true}
               showAccountIcon={false}
               size={iconSizes.icon36}
               variant="subheading1"
             />
-            {remainingAddressCount ? (
+            {remainingWalletCount ? (
               <Text color="$neutral3" variant="body3">
                 {t('onboarding.import.onDeviceRecovery.wallet.count', {
-                  count: remainingAddressCount,
+                  count: remainingWalletCount,
                 })}
               </Text>
             ) : undefined}

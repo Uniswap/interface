@@ -190,6 +190,13 @@ class RNEthersRS: NSObject {
     reject: RCTPromiseRejectBlock
   ) {
     let mnemonic = retrieveMnemonic(mnemonicId: mnemonicId)
+    
+    if (mnemonic == nil) {
+      let err = NSError.init()
+      reject("Mnemonic not found", "Could not find mnemonic for given mnemonicId", err)
+      return
+    }
+    
     let private_key = private_key_from_mnemonic(
       mnemonic, UInt32(exactly: derivationIndex)!)
     let xprv = String(cString: private_key.private_key!)

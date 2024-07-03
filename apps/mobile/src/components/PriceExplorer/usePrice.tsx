@@ -57,7 +57,7 @@ export function useLineChartPrice(
 
     shouldAnimate.value = true
     // show spot price when chart not scrubbing, or if not available, show the last price in the chart
-    return currentSpot?.value ?? data[data.length - 1]?.value ?? 0
+    return currentSpot?.value ?? data?.[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
     const { symbol, code } = currencyInfo
@@ -90,6 +90,10 @@ export function useLineChartRelativeChange(): ValueAndFormatted {
   const { currentIndex, data, isActive } = useLineChart()
 
   const relativeChange = useDerivedValue(() => {
+    if (!data) {
+      return 0
+    }
+
     // when scrubbing, compute relative change from open price
     const openPrice = data[0]?.value
 

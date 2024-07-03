@@ -43,7 +43,6 @@ import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
-  selectNonPendingAccounts,
   selectSignerMnemonicAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
@@ -174,7 +173,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     if (!accountAddress) {
       return
     }
-    const accounts = yield* appSelect(selectNonPendingAccounts)
+    const accounts = yield* appSelect(selectAccounts)
     const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
     if (accountAddress === activeAccountAddress) {
       return

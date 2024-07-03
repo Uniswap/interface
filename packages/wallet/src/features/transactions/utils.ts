@@ -1,17 +1,21 @@
 import { NetInfoState } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { v4 as uuid } from 'uuid'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   FinalizedTransactionStatus,
+  TransactionDetails,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
+export const MAX_FIAT_INPUT_DECIMALS = 2
+
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
-  chainId?: ChainId
+  chainId?: WalletChainId
 ): providers.TransactionRequest {
   // prettier-ignore
   const { to, from, nonce, gasLimit, gasPrice, data, value, maxPriorityFeePerGas, maxFeePerGas, type } = request
@@ -93,4 +97,14 @@ export function getFinalizedTransactionStatus(
     return TransactionStatus.Canceled
   }
   return TransactionStatus.Success
+}
+
+export function getIsCancelable(tx: TransactionDetails): boolean {
+  if (
+    tx.status === TransactionStatus.Pending &&
+    (isUniswapX(tx) || Object.keys(tx.options?.request).length > 0)
+  ) {
+    return true
+  }
+  return false
 }

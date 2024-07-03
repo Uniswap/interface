@@ -12,6 +12,7 @@ import {
   SettingsStackParamList,
   UnitagStackParamList,
 } from 'src/app/navigation/types'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
@@ -79,7 +80,7 @@ import { OnboardingContextProvider } from 'wallet/src/features/onboarding/Onboar
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
-const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
+const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
 const FiatOnRampStack = createNativeStackNavigator<FiatOnRampStackParamList>()
@@ -226,13 +227,10 @@ export function FiatOnRampStackNavigator(): JSX.Element {
   )
 }
 
-const renderHeaderBackImage = (): JSX.Element => (
-  <RotatableChevron color="$neutral2" height={28} width={28} />
-)
+const renderHeaderBackButton = (): JSX.Element => <BackButton color="$neutral2" size={28} />
 
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
   const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
   const SeedPhraseInputComponent = seedPhraseRefactorEnabled
     ? SeedPhraseInputScreenV2
@@ -245,16 +243,12 @@ export function OnboardingStackNavigator(): JSX.Element {
       <OnboardingStack.Navigator>
         <OnboardingStack.Group
           screenOptions={{
-            headerMode: 'float',
             headerTitle: '',
             headerBackTitleVisible: false,
-            headerBackImage: renderHeaderBackImage,
-            headerStatusBarHeight: insets.top + spacing.spacing8,
+            headerLeft: renderHeaderBackButton,
             headerTransparent: true,
             headerTintColor: colors.neutral2.val,
-            headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
-            headerRightContainerStyle: { paddingRight: spacing.spacing16 },
-            ...TransitionPresets.SlideFromRightIOS,
+            animation: 'slide_from_right',
           }}>
           {isOnboardingKeyringEnabled && (
             <OnboardingStack.Screen
@@ -272,7 +266,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen
             component={ChooseProfilePictureScreen}
             name={UnitagScreens.ChooseProfilePicture}
-            options={{ ...TransitionPresets.ModalFadeTransition }}
+            options={{ animation: 'fade' }}
           />
           <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
           <OnboardingStack.Screen
@@ -346,6 +340,10 @@ export function OnboardingStackNavigator(): JSX.Element {
     </OnboardingContextProvider>
   )
 }
+
+const renderHeaderBackImage = (): JSX.Element => (
+  <RotatableChevron color="$neutral2" height={28} width={28} />
+)
 
 export function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()

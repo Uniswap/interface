@@ -2,23 +2,23 @@ import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
 import localForage from 'localforage'
 import { PersistConfig, persistReducer } from 'redux-persist'
+import application from 'state/application/reducer'
+import burn from 'state/burn/reducer'
+import burnV3 from 'state/burn/v3/reducer'
+import poolsList from 'state/poolsList/reducer'
+import lists from 'state/lists/reducer'
+import logs from 'state/logs/slice'
+import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from 'state/migrations'
+import mint from 'state/mint/reducer'
+import mintV3 from 'state/mint/v3/reducer'
+import { quickRouteApi } from 'state/routing/quickRouteSlice'
+import { routingApi } from 'state/routing/slice'
+import signatures from 'state/signatures/reducer'
+import transactions from 'state/transactions/reducer'
+import user from 'state/user/reducer'
+import wallets from 'state/wallets/reducer'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv } from 'uniswap/src/utils/env'
-
-import application from './application/reducer'
-import burn from './burn/reducer'
-import burnV3 from './burn/v3/reducer'
-import poolsList from './lists/poolsList/reducer'
-import lists from './lists/reducer'
-import logs from './logs/slice'
-import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from './migrations'
-import mint from './mint/reducer'
-import mintV3 from './mint/v3/reducer'
-import { quickRouteApi } from './routing/quickRouteSlice'
-import { routingApi } from './routing/slice'
-import signatures from './signatures/reducer'
-import transactions from './transactions/reducer'
-import user from './user/reducer'
-import wallets from './wallets/reducer'
 
 const persistedReducers = {
   user,
@@ -39,6 +39,7 @@ const appReducer = combineReducers({
   logs,
   [routingApi.reducerPath]: routingApi.reducer,
   [quickRouteApi.reducerPath]: quickRouteApi.reducer,
+  [fiatOnRampAggregatorApi.reducerPath]: fiatOnRampAggregatorApi.reducer,
   ...persistedReducers,
 })
 
@@ -46,7 +47,7 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 9, // see migrations.ts for more details about this version
+  version: 12, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: INDEXED_DB_REDUX_TABLE_NAME,
     driver: localForage.LOCALSTORAGE,

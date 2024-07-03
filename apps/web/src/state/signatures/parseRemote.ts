@@ -2,13 +2,13 @@ import { TradeType } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import store from 'state'
+import { addSignature } from 'state/signatures/reducer'
+import { OrderActivity, SignatureDetails, SignatureType } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { currencyId } from 'utils/currencyId'
-import { addSignature } from './reducer'
-import { OrderActivity, SignatureDetails, SignatureType } from './types'
 
 const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Limit]: SignatureType.SIGN_LIMIT,

@@ -1,5 +1,4 @@
 import {
-  ChainId,
   MULTICALL_ADDRESSES,
   Token,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
@@ -8,6 +7,7 @@ import type { AddressMap } from '@uniswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
@@ -20,9 +20,9 @@ import {
   ContractInput,
   useUniswapPricesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
-import { PositionInfo } from './cache'
 
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
@@ -30,7 +30,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
-  chainIds?: ChainId[]
+  chainIds?: InterfaceChainId[]
 ): ContractMap<T> {
   const account = useAccount()
   const { provider: walletProvider } = useWeb3React()
@@ -58,11 +58,11 @@ export function useContractMultichain<T extends BaseContract>(
   }, [ABI, addressMap, chainIds, isSupportedChain, account.chainId, walletProvider])
 }
 
-export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {
+export function useV3ManagerContracts(chainIds: InterfaceChainId[]): ContractMap<NonfungiblePositionManager> {
   return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerJSON.abi, chainIds)
 }
 
-export function useInterfaceMulticallContracts(chainIds: ChainId[]): ContractMap<UniswapInterfaceMulticall> {
+export function useInterfaceMulticallContracts(chainIds: InterfaceChainId[]): ContractMap<UniswapInterfaceMulticall> {
   return useContractMultichain<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallJSON.abi, chainIds)
 }
 

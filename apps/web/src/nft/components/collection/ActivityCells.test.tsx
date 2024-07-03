@@ -1,7 +1,6 @@
+import { BuyCell } from 'nft/components/collection/ActivityCells'
 import { TEST_NFT_ACTIVITY_EVENT } from 'test-utils/nft/fixtures'
 import { render, screen } from 'test-utils/render'
-
-import { BuyCell } from './ActivityCells'
 
 // TODO: add snapshot matching test when VE works with snapshot testing
 describe('BuyCell', () => {

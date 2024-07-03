@@ -1,10 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import { getChain, useSupportedChainId } from 'constants/chains'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { getChain, useSupportedChainId } from 'constants/chains'
-import useStablecoinPrice from './useStablecoinPrice'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2

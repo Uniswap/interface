@@ -2,6 +2,16 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/CollectionStats.css'
+import {
+  DiscordIcon,
+  EllipsisIcon,
+  ExternalIcon,
+  InstagramIcon,
+  TwitterIcon,
+  VerifiedIcon,
+  XMarkIcon,
+} from 'nft/components/icons'
 import { body, bodySmall, headlineMedium, headlineSmall } from 'nft/css/common.css'
 import { loadingAsset } from 'nft/css/loading.css'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -14,9 +24,6 @@ import ReactMarkdown from 'react-markdown'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { DiscordIcon, EllipsisIcon, ExternalIcon, InstagramIcon, TwitterIcon, VerifiedIcon, XMarkIcon } from '../icons'
-import * as styles from './CollectionStats.css'
 
 const PercentChange = styled.div<{ isNegative: boolean }>`
   color: ${({ theme, isNegative }) => (isNegative ? theme.critical : theme.success)};

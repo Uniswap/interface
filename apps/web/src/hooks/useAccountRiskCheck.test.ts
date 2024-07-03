@@ -1,7 +1,6 @@
+import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
 import { renderHook, waitFor } from 'test-utils/render'
-
-import useAccountRiskCheck from './useAccountRiskCheck'
 
 // Mock the useAppDispatch hook
 const dispatchMock = jest.fn()

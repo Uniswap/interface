@@ -2,10 +2,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import clsx from 'clsx'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import { TimedLoader } from 'nft/components/bag/TimedLoader'
 import { Box } from 'nft/components/Box'
-import { Suspicious } from 'nft/components/card/icons'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/bag/BagRow.css'
+import { TimedLoader } from 'nft/components/bag/TimedLoader'
+import { Suspicious } from 'nft/components/card/icons'
 import {
   ChevronDownBagIcon,
   ChevronUpBagIcon,
@@ -23,8 +24,6 @@ import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import * as styles from './BagRow.css'
 
 export const RemoveButton = styled(ThemeButton)`
   border-radius: 12px;

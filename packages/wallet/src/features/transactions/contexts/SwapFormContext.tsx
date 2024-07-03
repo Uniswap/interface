@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
@@ -48,8 +48,8 @@ type SwapFormContextState = {
   DerivedSwapFormState
 
 const ETH_TRADEABLE_ASSET: Readonly<TradeableAsset> = {
-  address: getNativeAddress(ChainId.Mainnet),
-  chainId: ChainId.Mainnet,
+  address: getNativeAddress(UniverseChainId.Mainnet),
+  chainId: UniverseChainId.Mainnet,
   type: AssetType.Currency,
 }
 

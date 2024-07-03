@@ -1,14 +1,14 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ReactComponent as EyeIcon } from 'assets/svg/eye.svg'
 import { ButtonPrimary } from 'components/Button'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { Trans } from 'i18n'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-
-import { useAccount } from 'hooks/useAccount'
-import { ReactComponent as EyeIcon } from '../../../assets/svg/eye.svg'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 const InvalidDetailsContainer = styled.div`
   padding-top: 128px;
@@ -43,7 +43,7 @@ export default function InvalidTokenDetails({
   pageChainId,
   isInvalidAddress,
 }: {
-  pageChainId: ChainId
+  pageChainId: InterfaceChainId
   isInvalidAddress?: boolean
 }) {
   const { chainId } = useAccount()
@@ -55,7 +55,7 @@ export default function InvalidTokenDetails({
   // if the token's address is valid and the chains match, it's a non-existant token
   const isNonExistentToken = !isInvalidAddress && pageChainId === chainId
 
-  const connectedChainLabel = isSupportedChain ? CHAIN_INFO[chainId].label : undefined
+  const connectedChainLabel = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : undefined
 
   return (
     <InvalidDetailsContainer>
@@ -82,7 +82,7 @@ export default function InvalidTokenDetails({
             <ThemedText.SubHeader>
               <Trans
                 i18nKey="tdp.invalidTokenPage.switchChainPrompt"
-                values={{ network: pageChainIsSupported ? CHAIN_INFO[pageChainId].label : '' }}
+                values={{ network: pageChainIsSupported ? UNIVERSE_CHAIN_INFO[pageChainId].label : '' }}
               />
             </ThemedText.SubHeader>
           </TokenExploreButton>

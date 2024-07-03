@@ -2,17 +2,16 @@ import { Pool } from '@uniswap/v3-sdk'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import Column from 'components/Column'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
+import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import Row from 'components/Row'
+import { useChainFromUrlParam } from 'constants/chains'
 import { getSupportedGraphQlChain } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { useChainFromUrlParam } from 'constants/chains'
-import { useAccount } from 'hooks/useAccount'
-import { PoolDetailsTransactionsTable } from './PoolDetailsTransactionsTable'
 
 enum PoolDetailsTableTabs {
   TRANSACTIONS = 'transactions',

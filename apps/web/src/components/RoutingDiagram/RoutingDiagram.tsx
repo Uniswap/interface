@@ -1,9 +1,12 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { ReactComponent as DotLine } from 'assets/svg/dot_line.svg'
 import Badge from 'components/Badge'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
 import { Trans } from 'i18n'
 import { Box } from 'rebass'
@@ -11,10 +14,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
-import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
-import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 
 const Wrapper = styled(Box)`
   align-items: center;

@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { CheckMark } from 'components/Icons/CheckMark'
@@ -9,24 +8,24 @@ import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import Row from 'components/Row'
 import ShareButton, { openShareTweetWindow } from 'components/Tokens/TokenDetails/ShareButton'
+import { TokenNameCell } from 'components/Tokens/TokenDetails/Skeleton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans, t } from 'i18n'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useReducer, useRef } from 'react'
 import { Link } from 'react-feather'
+import { useSearchParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { useSearchParams } from 'react-router-dom'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobile } from 'utilities/src/platform'
-import { TokenNameCell } from './Skeleton'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const HeaderActionsContainer = styled.div`
   display: flex;
@@ -177,7 +176,7 @@ export const TokenDetailsHeader = () => {
               >
                 <StyledExternalLink href={explorerUrl}>
                   <ActionButton>
-                    {currency.chainId === ChainId.MAINNET ? (
+                    {currency.chainId === UniverseChainId.Mainnet ? (
                       <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
                     ) : (
                       <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />

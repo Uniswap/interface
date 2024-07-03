@@ -1,6 +1,9 @@
 import { styled as tamaguiStyled } from '@tamagui/core'
+import { ChainConnectivityWarning } from 'components/Polling/ChainConnectivityWarning'
 import { RowFixed } from 'components/Row'
-import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { AVERAGE_L1_BLOCK_TIME, useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -11,12 +14,8 @@ import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
-import { DEFAULT_MS_BEFORE_WARNING } from 'uniswap/src/constants/chains'
+import { DEFAULT_MS_BEFORE_WARNING, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { useAccount } from 'hooks/useAccount'
-import { MouseoverTooltip } from '../Tooltip'
-import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
 const StyledPolling = styled.div`
   align-items: center;
@@ -123,7 +122,9 @@ export default function Polling() {
   const isLandingPage = useIsLandingPage()
 
   const waitMsBeforeWarning = useMemo(
-    () => (isSupportedChain ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
+    () =>
+      (isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ??
+      DEFAULT_MS_BEFORE_WARNING,
     [chainId, isSupportedChain]
   )
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
@@ -131,7 +132,7 @@ export default function Polling() {
     useMemo(
       () => ({
         blocksPerFetch:
-          /* 5m / 12s = */ 25 * (isSupportedChain ? CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
+          /* 5m / 12s = */ 25 * (isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
       }),
       [chainId, isSupportedChain]
     )

@@ -1,6 +1,12 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import {
+  LimitCustomMarketPriceButton,
+  LimitPresetPriceButton,
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
+import { LimitPriceInputLabel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputLabel'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import Row from 'components/Row'
@@ -23,9 +29,6 @@ import {
   formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
   useFormatter,
 } from 'utils/formatNumbers'
-import { formatCurrencySymbol } from '../utils'
-import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
-import { LimitPriceInputLabel } from './LimitPriceInputLabel'
 
 const Container = styled(InputPanel)`
   gap: 4px;

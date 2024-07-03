@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {
@@ -109,22 +109,4 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
 
   // Finally, if equal then return the previous value if it's set
   return isEqual && previous ? previous : nextValue
-}
-
-// This hook is a hacky way to forward the entire ref from the child to the parent
-// component. This is useful when the parent component needs to access the child's
-// ref and the ref is used in the child component.
-export function useForwardRef<T extends object>(
-  forwardedRef: React.ForwardedRef<T>,
-  localRef: React.RefObject<T>
-): void {
-  useImperativeHandle<T, T>(
-    forwardedRef,
-    () =>
-      new Proxy({} as T, {
-        get: (_, prop): T[keyof T] | undefined => {
-          return localRef.current?.[prop as keyof T]
-        },
-      })
-  )
 }

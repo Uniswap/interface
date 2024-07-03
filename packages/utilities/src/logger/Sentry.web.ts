@@ -1,6 +1,6 @@
 import * as SentryReact from '@sentry/react'
 import { CaptureContext, SeverityLevel } from '@sentry/types'
-import { BreadCrumb, ISentry } from './Sentry'
+import { BreadCrumb, ISentry } from 'utilities/src/logger/Sentry'
 
 /**
  * Logs an exception to our Sentry Dashboard

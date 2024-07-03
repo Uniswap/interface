@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { ModalWithOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ModalWithOverlay'
 import { KidSuperCheckinModal } from 'src/components/WalletConnect/RequestModal/KidSuperCheckinModal'
+import { UwULinkErc20SendModal } from 'src/components/WalletConnect/RequestModal/UwULinkErc20SendModal'
 import {
   WalletConnectRequestModalContent,
   methodCostsGas,
@@ -33,7 +34,6 @@ import { GasSpeed } from 'wallet/src/features/gas/types'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { UwULinkErc20SendModal } from './UwULinkErc20SendModal'
 
 interface Props {
   onClose: () => void

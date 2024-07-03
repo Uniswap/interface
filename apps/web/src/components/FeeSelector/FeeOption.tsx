@@ -1,14 +1,13 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonRadioChecked } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
+import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
-import { FEE_AMOUNT_DETAIL } from './shared'
 
 const ResponsiveText = styled(ThemedText.DeprecatedLabel)`
   line-height: 16px;

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Contract, ContractInterface, providers } from 'ethers'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 
 export class ContractManager {
-  private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}
+  private _contracts: Partial<Record<WalletChainId, Record<string, Contract>>> = {}
 
   createContract(
-    chainId: ChainId,
+    chainId: WalletChainId,
     address: Address,
     provider: providers.Provider,
     ABI: ContractInterface
@@ -32,7 +32,7 @@ export class ContractManager {
     }
   }
 
-  removeContract(chainId: ChainId, address: Address): void {
+  removeContract(chainId: WalletChainId, address: Address): void {
     if (!this._contracts[chainId]?.[address]) {
       logger.warn(
         'ContractManager',
@@ -49,12 +49,12 @@ export class ContractManager {
   }
 
   // Returns contract or null
-  getContract<T extends Contract>(chainId: ChainId, address: Address): Nullable<T> {
+  getContract<T extends Contract>(chainId: WalletChainId, address: Address): Nullable<T> {
     return (this._contracts[chainId]?.[address] as T | undefined) ?? null
   }
 
   getOrCreateContract<T extends Contract = Contract>(
-    chainId: ChainId,
+    chainId: WalletChainId,
     address: Address,
     provider: providers.Provider,
     ABI: ContractInterface

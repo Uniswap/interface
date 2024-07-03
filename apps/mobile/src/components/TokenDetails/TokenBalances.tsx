@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SendButton } from 'src/components/TokenDetails/SendButton'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -14,7 +15,6 @@ import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { SendButton } from './SendButton'
 
 /**
  * Renders token balances for current chain (if any) and other chains (if any).

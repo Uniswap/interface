@@ -5,7 +5,7 @@
 
 import dayjs from 'dayjs'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
@@ -20,6 +20,8 @@ import {
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
+  activatePendingAccounts,
+  addRoutingFieldToTransactions,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
 } from 'wallet/src/state/sharedMigrations'
@@ -49,7 +51,7 @@ export const migrations = {
     const addresses = Object.keys(oldTransactionState?.lastTxHistoryUpdate || [])
     for (const address of addresses) {
       newNotificationState.lastTxNotificationUpdate[address] = {
-        [ChainId.Mainnet]: oldTransactionState.lastTxHistoryUpdate[address],
+        [UniverseChainId.Mainnet]: oldTransactionState.lastTxHistoryUpdate[address],
       }
     }
 
@@ -251,11 +253,11 @@ export const migrations = {
 
     const chainState:
       | {
-          byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+          byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
         }
       | undefined = newState?.chains
     const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<{
-      byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+      byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
     }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
@@ -883,6 +885,10 @@ export const migrations = {
   63: removeWalletIsUnlockedState,
 
   64: removeUniconV2BehaviorState,
+
+  65: addRoutingFieldToTransactions,
+
+  66: activatePendingAccounts,
 }
 
-export const MOBILE_STATE_VERSION = 64
+export const MOBILE_STATE_VERSION = 66

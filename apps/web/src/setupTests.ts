@@ -127,6 +127,7 @@ jest.mock('state/routing/quickRouteSlice', () => {
  *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
  * })
  */
+
 failOnConsole({
   shouldFailOnAssert: true,
   shouldFailOnDebug: true,
@@ -134,6 +135,15 @@ failOnConsole({
   shouldFailOnInfo: true,
   shouldFailOnLog: true,
   shouldFailOnWarn: true,
+  allowMessage: (message, type) => {
+    if (type === 'error') {
+      // TODO(TAM-47): remove this allowed warning once Tamagui is upgraded >= 1.100
+      if (message.startsWith('[moti]: Invalid transform value.')) {
+        return true
+      }
+    }
+    return false
+  },
 })
 
 jest.mock('uniswap/src/features/gating/hooks')

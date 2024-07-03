@@ -1,8 +1,7 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { AlertTriangle, Slash } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
-
-import { MouseoverTooltip } from '../../components/Tooltip'
 
 const BadgeWrapper = styled.div`
   font-size: 14px;

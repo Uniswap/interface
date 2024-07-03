@@ -1,20 +1,20 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { Pool, Position } from '@uniswap/v3-sdk'
+import { getTokensAsync } from 'components/AccountDrawer/MiniPortfolio/Pools/getTokensAsync'
+import { useInterfaceMulticallContracts } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback } from 'react'
 import { SerializedToken } from 'state/user/types'
-import { PositionDetails } from 'types/position'
-import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
-
 import { deserializeToken, serializeToken } from 'state/user/utils'
-import { getTokensAsync } from './getTokensAsync'
-import { useInterfaceMulticallContracts } from './hooks'
+import { PositionDetails } from 'types/position'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
 
 export type PositionInfo = {
   owner: string
-  chainId: ChainId
+  chainId: InterfaceChainId
   position: Position
   pool: Pool
   details: PositionDetails
@@ -57,7 +57,7 @@ export function useCachedPositions(account: string): UseCachedPositionsReturnTyp
   return [cachedPositions[account], setPositionsAndStaleTimeout]
 }
 
-const poolAddressKey = (details: PositionDetails, chainId: ChainId) =>
+const poolAddressKey = (details: PositionDetails, chainId: InterfaceChainId) =>
   `${chainId}-${details.token0}-${details.token1}-${details.fee}`
 
 type PoolAddressMap = { [key: string]: string | undefined }
@@ -69,11 +69,11 @@ const poolAddressCacheAtom = atomWithStorage<PoolAddressMap>('poolCache', {})
 export function usePoolAddressCache() {
   const [cache, updateCache] = useAtom(poolAddressCacheAtom)
   const get = useCallback(
-    (details: PositionDetails, chainId: ChainId) => cache[poolAddressKey(details, chainId)],
+    (details: PositionDetails, chainId: InterfaceChainId) => cache[poolAddressKey(details, chainId)],
     [cache]
   )
   const set = useCallback(
-    (details: PositionDetails, chainId: ChainId, address: string) =>
+    (details: PositionDetails, chainId: InterfaceChainId, address: string) =>
       updateCache((c) => ({ ...c, [poolAddressKey(details, chainId)]: address })),
     [updateCache]
   )
@@ -102,8 +102,8 @@ function useTokenCache() {
   return { get, set }
 }
 
-type TokenGetterFn = (addresses: string[], chainId: ChainId) => Promise<{ [key: string]: Token | undefined }>
-export function useGetCachedTokens(chains: ChainId[]): TokenGetterFn {
+type TokenGetterFn = (addresses: string[], chainId: InterfaceChainId) => Promise<{ [key: string]: Token | undefined }>
+export function useGetCachedTokens(chains: InterfaceChainId[]): TokenGetterFn {
   const multicallContracts = useInterfaceMulticallContracts(chains)
   const tokenCache = useTokenCache()
 

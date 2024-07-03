@@ -5,7 +5,7 @@ import {
   UwuLinkErc20Request,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import {
   DappInfo,
   EthMethod,
@@ -34,7 +34,7 @@ type SignMessageParams = {
   account: Account
   method: EthSignMethod
   dapp: DappInfo
-  chainId: ChainId
+  chainId: WalletChainId
 }
 
 type SignTransactionParams = {
@@ -44,7 +44,7 @@ type SignTransactionParams = {
   account: Account
   method: EthMethod.EthSendTransaction
   dapp: DappInfo
-  chainId: ChainId
+  chainId: WalletChainId
   request: TransactionRequest | UwuLinkErc20Request
 }
 
@@ -72,7 +72,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       params.request.type === UwULinkMethod.Erc20Send
     ) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || ChainId.Mainnet,
+        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
         account,
         options: {
           request: params.transaction,
@@ -89,7 +89,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || ChainId.Mainnet,
+        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
         account,
         options: {
           request: params.transaction,

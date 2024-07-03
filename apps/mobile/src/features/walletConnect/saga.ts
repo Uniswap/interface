@@ -24,11 +24,11 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { EthEvent, EthMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export let wcWeb3Wallet: IWeb3Wallet
@@ -145,7 +145,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   } = proposal
 
   try {
-    const supportedEip155Chains = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
+    const supportedEip155Chains = WALLET_SUPPORTED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
     const accounts = supportedEip155Chains.map((chain) => `${chain}:${activeAccountAddress}`)
 
     const namespaces = buildApprovedNamespaces({
@@ -167,7 +167,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
     })
 
     // Extract chains from approved namespaces to show in UI for pending session
-    const proposalChainIds: ChainId[] = []
+    const proposalChainIds: WalletChainId[] = []
     Object.entries(namespaces).forEach(([key, namespace]) => {
       const { chains } = namespace
       // EVM chain(s) are specified in either `eip155:CHAIN` or chains array
@@ -197,9 +197,9 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       reason: getSdkError('UNSUPPORTED_CHAINS'),
     })
 
-    const chainLabels = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => CHAIN_INFO[chainId].label).join(
-      ', '
-    )
+    const chainLabels = WALLET_SUPPORTED_CHAIN_IDS.map(
+      (chainId) => UNIVERSE_CHAIN_INFO[chainId].label
+    ).join(', ')
 
     const confirmed = yield* call(
       showAlert,
@@ -324,7 +324,7 @@ function* populateActiveSessions() {
     }
 
     // Get all chains for session namespaces, supporting `eip155:CHAIN_ID` and `eip155` namespace formats
-    const chains: ChainId[] = []
+    const chains: WalletChainId[] = []
     Object.entries(session.namespaces).forEach(([key, namespace]) => {
       const eip155Chains = key.includes(':') ? [key] : namespace.chains
       chains.push(...(getSupportedWalletConnectChains(eip155Chains) ?? []))

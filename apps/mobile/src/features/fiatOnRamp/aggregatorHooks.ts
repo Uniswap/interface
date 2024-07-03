@@ -7,15 +7,15 @@ import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORQuote, FORSupportedFiatCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORQuote,
+  FORSupportedFiatCurrency,
+  FiatCurrencyInfo,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import {
-  FiatCurrencyInfo,
-  useAppFiatCurrencyInfo,
-  useFiatCurrencyInfo,
-} from 'wallet/src/features/fiatCurrency/hooks'
+import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import {
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,

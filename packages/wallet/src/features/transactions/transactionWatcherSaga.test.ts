@@ -3,7 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
@@ -52,16 +52,19 @@ describe(transactionWatcher, () => {
 
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
       .withState({
+        behaviorHistory: {
+          extensionBetaFeedbackState: undefined,
+        },
         transactions: {
           byChainId: {
-            [ChainId.Mainnet]: {
+            [UniverseChainId.Mainnet]: {
               '0': approveTxDetailsPending,
             },
           },
         },
       })
       .provide([
-        [call(getProvider, ChainId.Mainnet), mockProvider],
+        [call(getProvider, UniverseChainId.Mainnet), mockProvider],
         [call(getProviderManager), mockProviderManager],
       ])
       .fork(watchTransaction, {

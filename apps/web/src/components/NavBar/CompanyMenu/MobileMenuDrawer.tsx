@@ -6,7 +6,7 @@ import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
-import { Views } from 'components/NavBar/PreferencesMenu/shared'
+import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -46,7 +46,7 @@ function MenuSection({
                 {title}
               </Text>
               {collapsible && (
-                <Square animation="quick" rotate={open ? '-180deg' : '0deg'}>
+                <Square animation="200ms" rotate={open ? '-180deg' : '0deg'}>
                   <ChevronDown size="20px" color={theme.neutral2} />
                 </Square>
               )}
@@ -63,10 +63,10 @@ function MenuSection({
 
 export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; closeMenu: () => void }) {
   const [openSections, setOpenSections] = useState<string[]>()
-  const [settingsView, setSettingsView] = useState<Views>(Views.SETTINGS)
+  const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const changeView = useCallback(
-    (view: Views) => {
+    (view: PreferencesView) => {
       setSettingsView(view)
       if (dropdownRef?.current) {
         dropdownRef.current.scroll({
@@ -76,7 +76,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
     },
     [setSettingsView, dropdownRef]
   )
-  const onExitPreferencesMenu = useCallback(() => changeView(Views.SETTINGS), [changeView])
+  const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
   const tabsContent = useTabsContent()
   const menuContent = useMenuContent()
@@ -91,7 +91,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   return (
     <NavDropdown dropdownRef={dropdownRef}>
       <MobileDrawer>
-        {settingsView === Views.SETTINGS && (
+        {settingsView === PreferencesView.SETTINGS && (
           <Accordion
             overflow="hidden"
             width="100%"
@@ -135,8 +135,8 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
             </Column>
           </Accordion>
         )}
-        {settingsView === Views.LANGUAGE && <LanguageSettings onExitMenu={onExitPreferencesMenu} />}
-        {settingsView === Views.CURRENCY && <CurrencySettings onExitMenu={onExitPreferencesMenu} />}
+        {settingsView === PreferencesView.LANGUAGE && <LanguageSettings onExitMenu={onExitPreferencesMenu} />}
+        {settingsView === PreferencesView.CURRENCY && <CurrencySettings onExitMenu={onExitPreferencesMenu} />}
       </MobileDrawer>
     </NavDropdown>
   )

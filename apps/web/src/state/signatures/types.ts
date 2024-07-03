@@ -1,12 +1,12 @@
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { OffchainOrderType } from 'state/routing/types'
+import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Prettify } from 'viem/chains'
-import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 

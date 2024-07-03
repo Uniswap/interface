@@ -5,14 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
-import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import {
   EditAccountAction,
@@ -45,7 +45,6 @@ export function CloudBackupProcessingAnimation({
   const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
   const onboardingAccount = getOnboardingAccount()
   const importedAccounts = getImportedAccounts()
-  const colors = useSporeColors()
   const activeAccount = useAccountIfExists(accountAddress)
 
   const account = activeAccount || onboardingAccount || importedAccounts?.[0]
@@ -143,13 +142,7 @@ export function CloudBackupProcessingAnimation({
     </Flex>
   ) : (
     <Flex centered grow gap="$spacing24">
-      <CheckmarkCircle
-        borderColor="$statusSuccess"
-        borderWidth={3}
-        checkmarkStrokeWidth={2}
-        color={colors.statusSuccess.val}
-        size={iconSize}
-      />
+      <CheckmarkCircle size={iconSize} />
       <Text variant="heading3">
         {t('settings.setting.backup.status.complete', {
           cloudProviderName: getCloudProviderName(),

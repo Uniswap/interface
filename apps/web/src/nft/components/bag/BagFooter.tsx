@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -12,6 +12,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -19,8 +20,10 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans, t } from 'i18n'
+import JSBI from 'jsbi'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from 'nft/components/bag/ButtonStates'
 import { useBag } from 'nft/hooks/useBag'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
@@ -37,11 +40,8 @@ import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import JSBI from 'jsbi'
-import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
   padding: 0px 12px;
@@ -304,7 +304,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && account.chainId === ChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && account.chainId === UniverseChainId.Mainnet
   const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
@@ -336,7 +336,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const nativeCurencyBalance = useCurrencyBalance(account.address ?? undefined, nativeCurrency)
 
   const sufficientBalance = useMemo(() => {
-    if (!connected || account.chainId !== ChainId.MAINNET) {
+    if (!connected || account.chainId !== UniverseChainId.Mainnet) {
       return undefined
     }
 
@@ -383,8 +383,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     handleClick,
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
-    if (connected && account.chainId !== ChainId.MAINNET) {
-      const handleClick = () => switchChain(ChainId.MAINNET)
+    if (connected && account.chainId !== UniverseChainId.Mainnet) {
+      const handleClick = () => switchChain(UniverseChainId.Mainnet)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 

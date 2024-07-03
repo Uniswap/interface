@@ -1,14 +1,14 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { useNftUniversalRouterAddressQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function getURAddress(chainId?: SupportedInterfaceChainId, nftURAddress?: string): string | undefined {
   if (!chainId) {
     return undefined
   }
   // if mainnet and on NFT flow, use the contract address returned by GQL
-  if (chainId === ChainId.MAINNET) {
+  if (chainId === UniverseChainId.Mainnet) {
     return nftURAddress ?? UNIVERSAL_ROUTER_ADDRESS(chainId)
   }
   return UNIVERSAL_ROUTER_ADDRESS(chainId)

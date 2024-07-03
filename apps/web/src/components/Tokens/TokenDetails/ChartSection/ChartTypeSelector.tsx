@@ -5,7 +5,6 @@ import { Trans } from 'i18n'
 import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-
 import { isMobile } from 'utilities/src/platform'
 
 const StyledDropdownButton = css`

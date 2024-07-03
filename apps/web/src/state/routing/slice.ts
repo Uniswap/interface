@@ -2,11 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
-import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
-import { trace } from 'tracing/trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -21,8 +16,13 @@ import {
   URAQuoteType,
   UniswapXConfig,
   UniswapXv2Config,
-} from './types'
-import { isExactInput, transformQuoteToTrade } from './utils'
+} from 'state/routing/types'
+import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
+import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
+import { trace } from 'tracing/trace'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {

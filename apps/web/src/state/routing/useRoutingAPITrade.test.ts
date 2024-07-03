@@ -5,14 +5,14 @@ import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { USDC_MAINNET } from 'constants/tokens'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
+import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
+import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
+import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { useRouterPreference } from 'state/user/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
-import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
-import { useRoutingAPITrade } from './useRoutingAPITrade'
-import { currencyAddressForSwapQuote } from './utils'
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 

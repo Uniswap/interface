@@ -1,8 +1,7 @@
+import useENSAddress from 'hooks/useENSAddress'
+import useENSName from 'hooks/useENSName'
 import { useMemo } from 'react'
-
 import { isAddress } from 'utilities/src/addresses'
-import useENSAddress from './useENSAddress'
-import useENSName from './useENSName'
 
 /**
  * Given a name or address, does a lookup to resolve to an address and name
