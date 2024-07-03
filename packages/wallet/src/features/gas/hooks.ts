@@ -1,8 +1,8 @@
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { useGasFeeQuery } from 'wallet/src/features/gas/api'
@@ -22,7 +22,7 @@ export function useTransactionGasFee(
   tx: Maybe<providers.TransactionRequest>,
   speed: GasSpeed = GasSpeed.Urgent,
   skip?: boolean,
-  pollingInterval?: PollingInterval
+  pollingInterval?: PollingInterval,
 ): GasFeeResult {
   const { data, error, loading } = useGasFeeQuery(tx, skip, pollingInterval)
 
@@ -65,9 +65,7 @@ export function useUSDValue(chainId?: WalletChainId, ethValueInWei?: string): st
  * Construct cancelation transaction with increased gas (based on current network conditions),
  * then use it to compute new gas info.
  */
-export function useCancelationGasFeeInfo(
-  transaction: TransactionDetails
-): CancelationGasFeeDetails | undefined {
+export function useCancelationGasFeeInfo(transaction: TransactionDetails): CancelationGasFeeDetails | undefined {
   const cancelationRequest = useMemo(() => {
     return {
       chainId: transaction.chainId,
@@ -93,7 +91,7 @@ export function useCancelationGasFeeInfo(
       adjustedFeeDetails = getAdjustedGasFeeDetails(
         transaction.options.request,
         baseTxGasFee.params,
-        TRANSACTION_CANCELLATION_GAS_FACTOR
+        TRANSACTION_CANCELLATION_GAS_FACTOR,
       )
     } catch (error) {
       logger.error(error, {

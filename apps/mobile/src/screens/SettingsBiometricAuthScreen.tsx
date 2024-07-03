@@ -41,31 +41,27 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   const dispatch = useAppDispatch()
 
   const [showUnsafeWarningModal, setShowUnsafeWarningModal] = useState(false)
-  const [unsafeWarningModalType, setUnsafeWarningModalType] = useState<BiometricSettingType | null>(
-    null
-  )
+  const [unsafeWarningModalType, setUnsafeWarningModalType] = useState<BiometricSettingType | null>(null)
   const onCloseModal = useCallback(() => setShowUnsafeWarningModal(false), [])
 
   const { touchId } = useDeviceSupportsBiometricAuth()
   const biometricsMethod = useBiometricName(touchId)
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
-  const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
-    (args?: BiometricPromptTriggerArgs) => {
-      if (!args) {
-        return
-      }
-      const { biometricAppSettingType, newValue } = args
-      switch (biometricAppSettingType) {
-        case BiometricSettingType.RequiredForAppAccess:
-          dispatch(setRequiredForAppAccess(newValue))
-          break
-        case BiometricSettingType.RequiredForTransactions:
-          dispatch(setRequiredForTransactions(newValue))
-          break
-      }
+  const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>((args?: BiometricPromptTriggerArgs) => {
+    if (!args) {
+      return
     }
-  )
+    const { biometricAppSettingType, newValue } = args
+    switch (biometricAppSettingType) {
+      case BiometricSettingType.RequiredForAppAccess:
+        dispatch(setRequiredForAppAccess(newValue))
+        break
+      case BiometricSettingType.RequiredForTransactions:
+        dispatch(setRequiredForTransactions(newValue))
+        break
+    }
+  })
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
     const handleOSBiometricAuthTurnedOff = (): void => {
@@ -80,7 +76,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             [
               { text: t('common.navigation.systemSettings'), onPress: openSettings },
               { text: t('common.button.cancel') },
-            ]
+            ],
           )
         : Alert.alert(
             isAndroid
@@ -89,10 +85,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             isAndroid
               ? t('settings.setting.biometrics.unavailable.message.android')
               : t('settings.setting.biometrics.unavailable.message.ios', { biometricsMethod }),
-            [
-              { text: t('common.button.setup'), onPress: enroll },
-              { text: t('common.button.cancel') },
-            ]
+            [{ text: t('common.button.setup'), onPress: enroll }, { text: t('common.button.cancel') }],
           )
     }
 
@@ -182,7 +175,8 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             activeOpacity={1}
             onPress={(): void => {
               onValueChange(!value)
-            }}>
+            }}
+          >
             <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
           </TouchableArea>
         </Flex>
@@ -213,9 +207,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       )}
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">
-            {isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod}
-          </Text>
+          <Text variant="body1">{isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod}</Text>
         </BackHeader>
         <Flex p="$spacing24">
           <FlatList

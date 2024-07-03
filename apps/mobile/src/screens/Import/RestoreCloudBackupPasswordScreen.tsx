@@ -26,10 +26,7 @@ import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.RestoreCloudBackupPassword
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupPassword>
 
 /**
  * If the attempt count does not correspond to a lockout then returns undefined. Otherwise returns the lockout time based on attempts. The lockout time logic is as follows:
@@ -69,10 +66,7 @@ function useLockoutTimeMessage(remainingLockoutTime: number): string {
   return t('account.cloud.lockout.time.minutes', { count: Math.floor(minutes) })
 }
 
-export function RestoreCloudBackupPasswordScreen({
-  navigation,
-  route: { params },
-}: Props): JSX.Element {
+export function RestoreCloudBackupPasswordScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
   const dispatch = useAppDispatch()
@@ -103,7 +97,7 @@ export function RestoreCloudBackupPasswordScreen({
 
         return () => clearTimeout(timer)
       }
-    }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch])
+    }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch]),
   )
 
   useAddBackButton(navigation)
@@ -148,7 +142,8 @@ export function RestoreCloudBackupPasswordScreen({
   return (
     <OnboardingScreen
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
-      title={t('account.cloud.password.title')}>
+      title={t('account.cloud.password.title')}
+    >
       <Flex>
         <PasswordInput
           ref={inputRef}
@@ -174,10 +169,7 @@ export function RestoreCloudBackupPasswordScreen({
             </Text>
           </TouchableArea>
         )}
-        <Button
-          disabled={!enteredPassword || isLockedOut}
-          testID={ElementName.Submit}
-          onPress={onPasswordSubmit}>
+        <Button disabled={!enteredPassword || isLockedOut} testID={ElementName.Submit} onPress={onPasswordSubmit}>
           {t('common.button.continue')}
         </Button>
       </Flex>

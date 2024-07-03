@@ -42,7 +42,7 @@ export function LinkButton({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      })
+      }),
     )
   }
 
@@ -63,18 +63,15 @@ export function LinkButton({
         px="$spacing12"
         py="$spacing8"
         testID={element}
-        onPress={onPress}>
+        onPress={onPress}
+      >
         <Flex centered row shrink gap="$spacing8" width="auto">
           {Icon && <Icon color={colors.neutral1.get()} size="$icon.16" />}
           <Text $short={{ variant: 'buttonLabel4' }} color="$neutral1" variant="buttonLabel3">
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (
-            <CopyIcon
-              color={colors.neutral2.get()}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            <CopyIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
           )}
         </Flex>
       </TouchableArea>

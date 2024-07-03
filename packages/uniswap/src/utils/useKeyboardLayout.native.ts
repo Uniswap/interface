@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-/* eslint-disable-next-line no-restricted-imports */
 import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
 import { KeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 import { isAndroid } from 'utilities/src/platform'
@@ -20,13 +19,13 @@ export function useKeyboardLayout(): KeyboardLayout {
         }),
         Keyboard.addListener('keyboardDidHide', (e: KeyboardEvent) => {
           setKeyboardPosition(e.endCoordinates.screenY)
-        })
+        }),
       )
     } else {
       keyboardListeners.push(
         Keyboard.addListener('keyboardWillChangeFrame', (e: KeyboardEvent) => {
           setKeyboardPosition(e.endCoordinates.screenY)
-        })
+        }),
       )
     }
 

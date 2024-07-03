@@ -90,7 +90,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
       return (
         <OnboardingScreen
           subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
-          title={t('onboarding.recoveryPhrase.view.title')}>
+          title={t('onboarding.recoveryPhrase.view.title')}
+        >
           {showScreenShotWarningModal && (
             <WarningModal
               caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
@@ -102,11 +103,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           )}
           <Flex grow justifyContent="space-between">
             <Flex grow>
-              {seedWarningAcknowledged ? (
-                <MnemonicDisplay mnemonicId={mnemonicId} />
-              ) : (
-                <HiddenMnemonicWordView />
-              )}
+              {seedWarningAcknowledged ? <MnemonicDisplay mnemonicId={mnemonicId} /> : <HiddenMnemonicWordView />}
             </Flex>
             <Flex justifyContent="flex-end">
               <Button testID={ElementName.Next} onPress={nextView}>
@@ -114,9 +111,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               </Button>
             </Flex>
           </Flex>
-          {!seedWarningAcknowledged && (
-            <SeedWarningModal onPress={(): void => setSeedWarningAcknowledged(true)} />
-          )}
+          {!seedWarningAcknowledged && <SeedWarningModal onPress={(): void => setSeedWarningAcknowledged(true)} />}
         </OnboardingScreen>
       )
     case View.SeedPhraseConfirm:
@@ -127,7 +122,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               ? t('onboarding.recoveryPhrase.confirm.subtitle.combined')
               : t('onboarding.recoveryPhrase.confirm.subtitle.default')
           }
-          title={media.short ? undefined : t('onboarding.recoveryPhrase.confirm.title')}>
+          title={media.short ? undefined : t('onboarding.recoveryPhrase.confirm.title')}
+        >
           <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
             <MnemonicConfirmation
               mnemonicId={mnemonicId}
@@ -135,10 +131,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           </Flex>
           <Flex justifyContent="flex-end">
-            <Button
-              disabled={!continueButtonEnabled}
-              testID={ElementName.Continue}
-              onPress={onValidationSuccessful}>
+            <Button disabled={!continueButtonEnabled} testID={ElementName.Continue} onPress={onValidationSuccessful}>
               {t('common.button.continue')}
             </Button>
           </Flex>
@@ -157,14 +150,11 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       backgroundColor={colors.surface1.get()}
       hideHandlebar={true}
       isDismissible={false}
-      name={ModalName.SeedPhraseWarningModal}>
+      name={ModalName.SeedPhraseWarningModal}
+    >
       <Flex centered gap="$spacing16" pb="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <LockIcon
-            color={colors.neutral1.val}
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
+          <LockIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Text color="$neutral1" variant="body1">
           {t('onboarding.recoveryPhrase.warning.final.title')}
@@ -178,7 +168,8 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
           testID={ElementName.Confirm}
           theme="primary"
           width="100%"
-          onPress={onPress}>
+          onPress={onPress}
+        >
           {t('onboarding.recoveryPhrase.warning.final.button')}
         </Button>
       </Flex>

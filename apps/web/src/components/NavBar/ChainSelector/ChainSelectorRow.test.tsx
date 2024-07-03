@@ -6,7 +6,7 @@ describe('ChainSelectorRow', () => {
   WEB_SUPPORTED_CHAIN_IDS.forEach((chainId) => {
     it(`should match snapshot for chainId ${chainId}`, () => {
       const { container } = render(
-        <ChainSelectorRow targetChain={chainId} onSelectChain={jest.fn()} isPending={false} disabled={false} />
+        <ChainSelectorRow targetChain={chainId} onSelectChain={jest.fn()} isPending={false} disabled={false} />,
       )
       expect(container).toMatchSnapshot()
     })
@@ -20,7 +20,7 @@ describe('ChainSelectorRow', () => {
         onSelectChain={onSelectChain}
         isPending={false}
         disabled={false}
-      />
+      />,
     )
     const button = getByTestId('Optimism-selector')
     button.click()
@@ -35,7 +35,7 @@ describe('ChainSelectorRow', () => {
         onSelectChain={onSelectChain}
         isPending={false}
         disabled={true}
-      />
+      />,
     )
     const button = getByTestId('Optimism-selector')
     button.click()

@@ -77,9 +77,7 @@ function useWalletSupportedChains(): InterfaceChainId[] {
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const account = useAccount()
-  const { chainId: swapChainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
   const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
@@ -109,7 +107,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
           }
           return acc
         },
-        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>
+        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>,
       )
     return [supported, unsupported]
   }, [isSupportedChain, showTestnets, walletSupportsChain])
@@ -128,7 +126,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
       setIsOpen(false)
       popoverRef.current?.close()
     },
-    [popoverRef, selectChain, setIsOpen, setSelectedChainId, multichainUXEnabled]
+    [popoverRef, selectChain, setIsOpen, setSelectedChainId, multichainUXEnabled],
   )
 
   const styledMenuCss = css`
@@ -152,11 +150,11 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
 
   if (navRefreshEnabled) {
     return (
-      <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip>
+      <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
         <Popover.Trigger padding={8} cursor="pointer">
           {menuLabel}
         </Popover.Trigger>
-        <NavDropdown width={240}>
+        <NavDropdown width={240} isOpen={isOpen}>
           <ChainsDropdownWrapper>
             {supportedChains.map((selectorChain) => (
               <ChainSelectorRow

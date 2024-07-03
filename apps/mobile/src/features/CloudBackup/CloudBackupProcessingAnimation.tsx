@@ -14,12 +14,9 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 
 type Props = {
@@ -45,7 +42,7 @@ export function CloudBackupProcessingAnimation({
   const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
   const onboardingAccount = getOnboardingAccount()
   const importedAccounts = getImportedAccounts()
-  const activeAccount = useAccountIfExists(accountAddress)
+  const activeAccount = useSignerAccountIfExists(accountAddress)
 
   const account = activeAccount || onboardingAccount || importedAccounts?.[0]
 
@@ -54,7 +51,7 @@ export function CloudBackupProcessingAnimation({
   }
 
   if (account.type !== AccountType.SignerMnemonic) {
-    throw new Error('Account is not mnemonic account')
+    throw new Error(`Backed up account with address: ${account.address} is not a mnemonic account`)
   }
   const mnemonicId = account?.mnemonicId
 
@@ -81,7 +78,7 @@ export function CloudBackupProcessingAnimation({
             type: EditAccountAction.AddBackupMethod,
             address: accountAddress,
             backupMethod: BackupType.Cloud,
-          })
+          }),
         )
       } else {
         addBackupMethod(BackupType.Cloud)
@@ -102,19 +99,10 @@ export function CloudBackupProcessingAnimation({
             style: 'default',
             onPress: onErrorPress,
           },
-        ]
+        ],
       )
     }
-  }, [
-    accountAddress,
-    activeAccount,
-    addBackupMethod,
-    dispatch,
-    mnemonicId,
-    onErrorPress,
-    password,
-    t,
-  ])
+  }, [accountAddress, activeAccount, addBackupMethod, dispatch, mnemonicId, onErrorPress, password, t])
 
   /**
    * Delays cloud backup to avoid android oauth consent screen blocking navigation transition
@@ -124,7 +112,7 @@ export function CloudBackupProcessingAnimation({
       return navigation.addListener('transitionEnd', async () => {
         await backup()
       })
-    }, [backup, navigation])
+    }, [backup, navigation]),
   )
 
   const iconSize = iconSizes.icon40

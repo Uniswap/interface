@@ -39,16 +39,13 @@ type PreviewsResponse = {
   } | null
 }
 
-export function useNftPreviewUri(
-  contractAddress: string,
-  tokenId: string
-): GqlResult<PreviewsResponse> {
+export function useNftPreviewUri(contractAddress: string, tokenId: string): GqlResult<PreviewsResponse> {
   return useRestQuery<PreviewsResponse>(
     `/nfts/ethereum/${contractAddress}/${tokenId}`,
     { contractAddress, tokenId },
     ['previews'],
     { ttlMs: 5 * ONE_MINUTE_MS },
     'GET',
-    apolloClient
+    apolloClient,
   )
 }

@@ -16,9 +16,7 @@ export function ImageUri({
   imageDimensions,
   ...rest
 }: ImageUriProps): JSX.Element | null {
-  const inputImageAspectRatio = imageDimensions
-    ? imageDimensions?.width / imageDimensions?.height
-    : 1
+  const inputImageAspectRatio = imageDimensions ? imageDimensions?.width / imageDimensions?.height : 1
   const [isError, setIsError] = useState(false)
 
   const isLoaded = useSharedValue(false)
@@ -64,11 +62,7 @@ export function ImageUri({
           uri,
           cache: FastImage.cacheControl.immutable,
         }}
-        style={[
-          styles.image,
-          imageStyle ?? [styles.fullWidth, { maxHeight: maxHeight ?? '100%' }],
-          { aspectRatio },
-        ]}
+        style={[styles.image, imageStyle ?? [styles.fullWidth, { maxHeight: maxHeight ?? '100%' }], { aspectRatio }]}
         onError={(): void => setIsError(true)}
         onLoad={({ nativeEvent: { width, height } }: OnLoadEvent): void => {
           isLoaded.value = true

@@ -1,11 +1,7 @@
 import { TFunction } from 'i18next'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 
-export function parseUnitagErrorCode(
-  t: TFunction,
-  unitag: string,
-  errorCode: UnitagErrorCodes
-): string {
+export function parseUnitagErrorCode(t: TFunction, unitag: string, errorCode: UnitagErrorCodes): string {
   switch (errorCode) {
     case UnitagErrorCodes.UnitagNotAvailable:
       return t('unitags.claim.error.unavailable')

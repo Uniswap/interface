@@ -12,12 +12,12 @@ describe('PredefinedAmount', () => {
     async (amount, currentAmount, disabled) => {
       const clickHandler = jest.fn()
       const { container } = render(
-        <PredefinedAmount amount={amount} currentAmount={currentAmount} disabled={disabled} onClick={clickHandler} />
+        <PredefinedAmount amount={amount} currentAmount={currentAmount} disabled={disabled} onClick={clickHandler} />,
       )
       screen.getByText('$' + amount).click()
       expect(clickHandler).toHaveBeenCalledTimes(disabled ? 0 : 1)
 
       expect(container.firstChild).toMatchSnapshot()
-    }
+    },
   )
 })

@@ -83,7 +83,7 @@ jest.mock('@web3-react/core', () => {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
-        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions),
       ),
     useWeb3React: jest.fn(),
   }

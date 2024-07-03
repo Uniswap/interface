@@ -3,6 +3,7 @@ import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
@@ -15,12 +16,11 @@ import {
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function getTransferWarnings(
   t: TFunction,
   derivedTransferInfo: DerivedTransferInfo,
-  offline: boolean
+  offline: boolean,
 ): Warning[] {
   const warnings: Warning[] = []
 
@@ -28,8 +28,7 @@ export function getTransferWarnings(
     warnings.push(getNetworkWarning(t))
   }
 
-  const { currencyBalances, currencyAmounts, recipient, currencyInInfo, nftIn, chainId } =
-    derivedTransferInfo
+  const { currencyBalances, currencyAmounts, recipient, currencyInInfo, nftIn, chainId } = derivedTransferInfo
 
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
@@ -39,7 +38,7 @@ export function getTransferWarnings(
     chainId,
     recipient,
     !!currencyAmountIn,
-    !!currencyBalanceIn
+    !!currencyBalanceIn,
   )
 
   // insufficient balance
@@ -69,10 +68,7 @@ export function getTransferWarnings(
   return warnings
 }
 
-export function useTransferWarnings(
-  t: TFunction,
-  derivedTransferInfo: DerivedTransferInfo
-): Warning[] {
+export function useTransferWarnings(t: TFunction, derivedTransferInfo: DerivedTransferInfo): Warning[] {
   const networkStatus = useNetInfo()
   // First `useNetInfo` call always results with unknown state,
   // which we want to ignore here until state is determined,
@@ -90,11 +86,9 @@ const checkIsMissingRequiredParams = (
   chainId: WalletChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
-  hasCurrencyBalance: boolean
+  hasCurrencyBalance: boolean,
 ): boolean => {
-  const tokenAddress = currencyInInfo
-    ? currencyAddress(currencyInInfo.currency)
-    : nftIn?.nftContract?.address
+  const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
 
   if (!tokenAddress || !chainId || !recipient) {
     return true

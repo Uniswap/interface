@@ -10,6 +10,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -19,7 +20,6 @@ import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 type Props = {
   onClose: () => void
@@ -27,6 +27,7 @@ type Props = {
   onReject: () => void
   request: UwuLinkErc20Request
   hasSufficientGasFunds: boolean
+  confirmEnabled: boolean
   gasFee: GasFeeResult
 }
 
@@ -36,6 +37,7 @@ export function UwULinkErc20SendModal({
   onConfirm,
   onReject,
   request,
+  confirmEnabled,
   hasSufficientGasFunds,
 }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -54,12 +56,13 @@ export function UwULinkErc20SendModal({
         paddingHorizontal: spacing.spacing24,
         paddingTop: spacing.spacing8,
       }}
-      disableConfirm={!hasSufficientTokenFunds || !hasSufficientGasFunds}
+      disableConfirm={!confirmEnabled || !hasSufficientTokenFunds || !hasSufficientGasFunds}
       name={ModalName.UwULinkErc20SendModal}
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
       onClose={onClose}
       onConfirm={onConfirm}
-      onReject={onReject}>
+      onReject={onReject}
+    >
       <UwULinkErc20SendModalContent
         currencyInfo={currencyInfo}
         gasFee={gasFee}
@@ -112,9 +115,7 @@ function UwULinkErc20SendModalContent({
     currency: { name, symbol, decimals },
   } = currencyInfo
 
-  const recipientLogoUrl = isDarkMode
-    ? request?.recipient?.logo?.dark
-    : request?.recipient?.logo?.light
+  const recipientLogoUrl = isDarkMode ? request?.recipient?.logo?.dark : request?.recipient?.logo?.light
 
   const formattedTokenAmount = isStablecoin
     ? convertFiatAmountFormatted(formatUnits(request.amount, decimals), NumberType.FiatStandard)
@@ -140,13 +141,7 @@ function UwULinkErc20SendModalContent({
           {formattedTokenAmount}
         </Text>
         <Flex row gap="$spacing8">
-          <TokenLogo
-            chainId={chainId}
-            name={name}
-            size={iconSizes.icon24}
-            symbol={symbol}
-            url={logoUrl}
-          />
+          <TokenLogo chainId={chainId} name={name} size={iconSizes.icon24} symbol={symbol} url={logoUrl} />
           <Text color="$neutral2">
             {formatUnits(request.amount, decimals)} {symbol}
           </Text>

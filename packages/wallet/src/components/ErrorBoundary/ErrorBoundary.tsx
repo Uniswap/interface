@@ -64,13 +64,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
   }
 
   return (
-    <Flex
-      centered
-      fill
-      backgroundColor="$surface1"
-      gap="$spacing16"
-      px="$spacing16"
-      py="$spacing48">
+    <Flex centered fill backgroundColor="$surface1" gap="$spacing16" px="$spacing16" py="$spacing48">
       <Flex centered grow gap="$spacing36">
         <Image resizeMode="contain" source={DEAD_LUNI} style={styles.errorImage} />
         <Flex centered gap="$spacing8">

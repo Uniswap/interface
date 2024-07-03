@@ -5,10 +5,10 @@ import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from '
 import { iconSizes } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { shortenAddress } from 'wallet/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
 
 type SearchEtherscanItemProps = {
@@ -27,7 +27,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     dispatch(
       addToSearchHistory({
         searchResult: etherscanResult,
-      })
+      }),
     )
   }
 
@@ -38,14 +38,9 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
       testID={ElementName.SearchEtherscanItem}
-      onPress={onPressViewEtherscan}>
-      <Flex
-        row
-        alignItems="center"
-        gap="$spacing12"
-        justifyContent="space-between"
-        px="$spacing8"
-        py="$spacing12">
+      onPress={onPressViewEtherscan}
+    >
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>

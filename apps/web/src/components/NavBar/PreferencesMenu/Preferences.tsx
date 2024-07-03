@@ -82,7 +82,7 @@ export function PreferenceSettings({
     <>
       {showHeader && (
         <PreferencesHeader>
-          <Trans i18nKey="common.preferences" />
+          <Trans i18nKey="globalPreferences.title" />
         </PreferencesHeader>
       )}
 

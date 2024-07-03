@@ -7,7 +7,6 @@ import CommonBases from 'components/SearchModal/CommonBases'
 import CurrencyList, { CurrencyRow, formatAnalyticsEventProperties } from 'components/SearchModal/CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from 'components/SearchModal/styled'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -76,9 +75,7 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const account = useAccount()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  const { chainId } = useSwapAndLimitContext()
 
   const theme = useTheme()
 
@@ -119,7 +116,7 @@ export function CurrencySearch({
         onDismiss()
       }
     },
-    [chainId, onCurrencySelect, onDismiss, selectChain]
+    [chainId, onCurrencySelect, onDismiss, selectChain],
   )
 
   // clear the input on open
@@ -157,7 +154,7 @@ export function CurrencySearch({
         }
       }
     },
-    [allCurrencyRows, debouncedQuery, native, handleCurrencySelect]
+    [allCurrencyRows, debouncedQuery, native, handleCurrencySelect],
   )
 
   // menu ui
@@ -213,7 +210,7 @@ export function CurrencySearch({
               isSelected={Boolean(searchCurrency && selectedCurrency && selectedCurrency.equals(searchCurrency))}
               onSelect={(hasWarning: boolean) => searchCurrency && handleCurrencySelect(searchCurrency, hasWarning)}
               otherSelected={Boolean(
-                searchCurrency && otherSelectedCurrency && otherSelectedCurrency.equals(searchCurrency)
+                searchCurrency && otherSelectedCurrency && otherSelectedCurrency.equals(searchCurrency),
               )}
               showCurrencyAmount={showCurrencyAmount}
               eventProperties={formatAnalyticsEventProperties(
@@ -221,7 +218,7 @@ export function CurrencySearch({
                 0,
                 [searchCurrency],
                 searchQuery,
-                isAddressSearch
+                isAddressSearch,
               )}
               balance={
                 tryParseCurrencyAmount(String(balanceMap[currencyKey(searchCurrency)]?.balance ?? 0), searchCurrency) ??

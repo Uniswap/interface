@@ -19,8 +19,8 @@ const config: CodegenConfig = {
         withHooks: true,
         maybeValue: 'T | undefined',
       },
-    }
-  }
+    },
+  },
 }
 
 export default config

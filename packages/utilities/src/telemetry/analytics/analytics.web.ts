@@ -1,12 +1,4 @@
-import {
-  flush,
-  getUserId,
-  Identify,
-  identify,
-  init,
-  setDeviceId,
-  track,
-} from '@amplitude/analytics-browser'
+import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 // eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 // eslint-disable-next-line no-restricted-imports
@@ -66,7 +58,7 @@ export const analytics: Analytics = {
     transportProvider: ApplicationTransport,
     allowed: boolean,
     initHash?: string,
-    userIdGetter?: () => Promise<string>
+    userIdGetter?: () => Promise<string>,
   ): Promise<void> {
     // Set properties
     commitHash = initHash
@@ -80,7 +72,7 @@ export const analytics: Analytics = {
           transportProvider, // Used to support custom reverse proxy header
           // Disable tracking of private user information by Amplitude
           trackingOptions: AMPLITUDE_SHARED_TRACKING_OPTIONS,
-        }
+        },
       )
 
       userId = userIdGetter ? await userIdGetter() : getUserId()
@@ -123,11 +115,7 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
-  async setUserProperty(
-    property: string,
-    value: UserPropertyValue,
-    insert?: boolean
-  ): Promise<void> {
+  async setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): Promise<void> {
     if (!(await getAnalyticsAtomDirect())) {
       return
     }

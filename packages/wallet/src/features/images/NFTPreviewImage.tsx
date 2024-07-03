@@ -8,22 +8,14 @@ type NFTPreviewProps = {
   imageProps: ImageUriProps
 }
 
-export function NFTPreviewImage({
-  contractAddress,
-  tokenId,
-  imageProps,
-}: NFTPreviewProps): JSX.Element | null {
+export function NFTPreviewImage({ contractAddress, tokenId, imageProps }: NFTPreviewProps): JSX.Element | null {
   const { data, loading } = useNftPreviewUri(contractAddress, tokenId)
 
   const imageUrl = data?.previews?.image_medium_url
 
   if (imageUrl || loading) {
     return (
-      <ImageUri
-        {...imageProps}
-        loadedImageContainerStyle={styles.loadedImageContainer}
-        uri={imageUrl ?? undefined}
-      />
+      <ImageUri {...imageProps} loadedImageContainerStyle={styles.loadedImageContainer} uri={imageUrl ?? undefined} />
     )
   }
 

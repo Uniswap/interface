@@ -8,10 +8,7 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 
 const setOptionsSpy = jest.fn()
-const routeProp = { params: {} } as RouteProp<
-  OnboardingStackParamList,
-  OnboardingScreens.RestoreCloudBackupPassword
->
+const routeProp = { params: {} } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupPassword>
 
 describe(RestoreCloudBackupPasswordScreen, () => {
   it('renders correctly', () => {
@@ -32,7 +29,7 @@ describe(RestoreCloudBackupPasswordScreen, () => {
           }
           route={routeProp}
         />
-      </TamaguiProvider>
+      </TamaguiProvider>,
     ).toJSON()
 
     expect(tree).toMatchSnapshot()

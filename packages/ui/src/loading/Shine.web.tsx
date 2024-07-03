@@ -12,7 +12,8 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
               WebkitMaskSize: '200%',
               animation: 'shine 1s linear infinite',
             }
-      }>
+      }
+    >
       {children}
     </Flex>
   )

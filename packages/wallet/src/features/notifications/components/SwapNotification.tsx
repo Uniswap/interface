@@ -39,7 +39,7 @@ export function SwapNotification({
     outputCurrencyId,
     inputCurrencyAmountRaw,
     outputCurrencyAmountRaw,
-    tradeType
+    tradeType,
   )
 
   const { t } = useTranslation()

@@ -1,11 +1,6 @@
 import React, { useState } from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
-import {
-  SharedValue,
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+import { SharedValue, interpolateColor, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { Flex, TouchableArea, useSporeColors } from 'ui/src'
@@ -31,11 +26,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
       return { color: colors.neutral2.val }
     }
 
-    const color = interpolateColor(
-      transition.value,
-      [0, 1],
-      [colors.neutral2.val, colors.neutral1.val]
-    )
+    const color = interpolateColor(transition.value, [0, 1], [colors.neutral2.val, colors.neutral1.val])
 
     return { color }
   })
@@ -47,11 +38,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
   )
 }
 
-export function TimeRangeGroup({
-  setDuration,
-}: {
-  setDuration: (newDuration: HistoryDuration) => void
-}): JSX.Element {
+export function TimeRangeGroup({ setDuration }: { setDuration: (newDuration: HistoryDuration) => void }): JSX.Element {
   const { chartWidth, buttonWidth, labelWidth } = useChartDimensions()
   const transition = useSharedValue(1)
   const previousIndex = useSharedValue(1)
@@ -72,7 +59,7 @@ export function TimeRangeGroup({
         },
       ],
     }),
-    [adjustedLabelWidth, buttonWidth, currentIndex, isRTL]
+    [adjustedLabelWidth, buttonWidth, currentIndex, isRTL],
   )
 
   return (
@@ -98,7 +85,8 @@ export function TimeRangeGroup({
                 transition.value = 0
                 currentIndex.value = index
                 transition.value = 1
-              }}>
+              }}
+            >
               <Flex
                 alignSelf="center"
                 minWidth={adjustedLabelWidth}
@@ -111,13 +99,9 @@ export function TimeRangeGroup({
                   if (width > adjustedLabelWidth) {
                     setAdjustedLabelWidth(width)
                   }
-                }}>
-                <TimeRangeLabel
-                  index={index}
-                  label={label}
-                  selectedIndex={currentIndex}
-                  transition={transition}
-                />
+                }}
+              >
+                <TimeRangeLabel index={index} label={label} selectedIndex={currentIndex} transition={transition} />
               </Flex>
             </TouchableArea>
           </Trace>

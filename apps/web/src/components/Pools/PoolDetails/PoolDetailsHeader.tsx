@@ -184,7 +184,7 @@ const ContractsDropdownRow = ({
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   if (!chainId || !explorerUrl) {
@@ -304,7 +304,7 @@ export function PoolDetailsHeader({
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
   const currencies = useMemo(
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
-    [token0, token1]
+    [token0, token1],
   )
 
   if (loading) {

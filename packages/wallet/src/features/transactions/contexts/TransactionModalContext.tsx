@@ -11,9 +11,7 @@ export type TransactionModalContextState = {
   authTrigger?: AuthTrigger
 }
 
-export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(
-  undefined
-)
+export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(undefined)
 
 export function TransactionModalContextProvider({
   children,
@@ -41,28 +39,17 @@ export function TransactionModalContextProvider({
       openWalletRestoreModal,
       walletNeedsRestore,
     }),
-    [
-      BiometricsIcon,
-      authTrigger,
-      bottomSheetViewStyles,
-      onClose,
-      openWalletRestoreModal,
-      walletNeedsRestore,
-    ]
+    [BiometricsIcon, authTrigger, bottomSheetViewStyles, onClose, openWalletRestoreModal, walletNeedsRestore],
   )
 
-  return (
-    <TransactionModalContext.Provider value={state}>{children}</TransactionModalContext.Provider>
-  )
+  return <TransactionModalContext.Provider value={state}>{children}</TransactionModalContext.Provider>
 }
 
 export const useTransactionModalContext = (): TransactionModalContextState => {
   const context = useContext(TransactionModalContext)
 
   if (context === undefined) {
-    throw new Error(
-      '`useTransactionModalContext` must be used inside of `TransactionModalContextProvider`'
-    )
+    throw new Error('`useTransactionModalContext` must be used inside of `TransactionModalContextProvider`')
   }
 
   return context

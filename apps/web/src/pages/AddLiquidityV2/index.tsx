@@ -82,7 +82,8 @@ export default function AddLiquidity() {
   const oneCurrencyIsWETH = Boolean(
     account.chainId &&
       wrappedNativeCurrency &&
-      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) ||
+        (currencyB && currencyB.equals(wrappedNativeCurrency))),
   )
 
   const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
@@ -130,7 +131,7 @@ export default function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -140,7 +141,7 @@ export default function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const router = useV2RouterContract()
@@ -235,7 +236,7 @@ export default function AddLiquidity() {
               tokenB: currencyB.wrapped,
             }),
           })
-        })
+        }),
       )
       .catch((error) => {
         setAttemptingTxn(false)
@@ -319,7 +320,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, navigate, currencyIdA]
+    [currencyIdB, navigate, currencyIdA],
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -334,7 +335,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, navigate, currencyIdB]
+    [currencyIdA, navigate, currencyIdB],
   )
 
   const handleDismissConfirmation = useCallback(() => {

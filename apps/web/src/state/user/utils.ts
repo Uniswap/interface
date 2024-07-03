@@ -17,6 +17,6 @@ export function deserializeToken(serializedToken: SerializedToken, Class: typeof
     serializedToken.address,
     serializedToken.decimals,
     serializedToken.symbol,
-    serializedToken.name
+    serializedToken.name,
   )
 }

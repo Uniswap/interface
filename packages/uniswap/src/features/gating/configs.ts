@@ -8,6 +8,7 @@ import { isInterface } from 'utilities/src/platform'
 export enum DynamicConfigs {
   // Wallet
   MobileForceUpgrade,
+  OnDeviceRecovery,
   Slippage,
   UwuLink,
 
@@ -21,6 +22,7 @@ export const WEB_CONFIG_NAMES = new Map<DynamicConfigs, string>([
 
 export const WALLET_CONFIG_NAMES = new Map<DynamicConfigs, string>([
   [DynamicConfigs.MobileForceUpgrade, 'force_upgrade'],
+  [DynamicConfigs.OnDeviceRecovery, 'on_device_recovery'],
   [DynamicConfigs.UwuLink, 'uwulink_config'],
   [DynamicConfigs.Slippage, 'slippage_configs'],
 ])
@@ -29,9 +31,7 @@ export function getConfigName(config: DynamicConfigs): string {
   const names = isInterface ? WEB_CONFIG_NAMES : WALLET_CONFIG_NAMES
   const name = names.get(config)
   if (!name) {
-    const err = new Error(
-      `Dynamic config ${DynamicConfigs[config]} does not have a name mapped for this application`
-    )
+    const err = new Error(`Dynamic config ${DynamicConfigs[config]} does not have a name mapped for this application`)
     logger.error(err, {
       tags: {
         file: 'configs.ts',

@@ -19,36 +19,29 @@ import { Loader } from 'src/components/loading'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
-import {
-  Flex,
-  Separator,
-  Text,
-  TouchableArea,
-  useDeviceInsets,
-  useIsDarkMode,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Separator, Text, TouchableArea, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
@@ -57,7 +50,6 @@ import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenConte
 import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 function HeaderTitleElement({
   data,
@@ -79,10 +71,7 @@ function HeaderTitleElement({
   const chain = onChainData?.chain
 
   return (
-    <Flex
-      alignItems="center"
-      justifyContent="space-between"
-      ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
+    <Flex alignItems="center" justifyContent="space-between" ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
       <Text color="$neutral1" variant="body1">
         {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
       </Text>
@@ -102,9 +91,7 @@ function HeaderTitleElement({
   )
 }
 
-export function TokenDetailsScreen({
-  route,
-}: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
+export function TokenDetailsScreen({ route }: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
   // Potentially delays loading of perf-heavy content to speed up navigation
   const showSkeleton = useSkeletonLoading()
@@ -144,16 +131,12 @@ export function TokenDetailsScreen({
       chain: currencyIdToChain(_currencyId),
       currencyName: data?.token?.project?.name,
     }),
-    [_currencyId, data?.token?.project?.name]
+    [_currencyId, data?.token?.project?.name],
   )
 
   return (
     <ReactNavigationPerformanceView interactive screenName={MobileScreens.TokenDetails}>
-      <Trace
-        directFromPage
-        logImpression
-        properties={traceProperties}
-        screen={MobileScreens.TokenDetails}>
+      <Trace directFromPage logImpression properties={traceProperties} screen={MobileScreens.TokenDetails}>
         <TokenDetails
           _currencyId={_currencyId}
           data={data}
@@ -194,16 +177,13 @@ function TokenDetails({
   const tokenSymbol = token?.project?.name
 
   const crossChainTokens = token?.project?.tokens
-  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(
-    _currencyId,
-    crossChainTokens
-  )
+  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(_currencyId, crossChainTokens)
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
     tokenSymbol,
     /*background=*/ colors.surface1.val,
-    /*default=*/ colors.neutral3.val
+    /*default=*/ colors.neutral3.val,
   )
 
   const onPriceChartRetry = useCallback((): void => {
@@ -216,9 +196,7 @@ function TokenDetails({
   const { navigateToSwapFlow, navigateToSend } = useWalletNavigation()
 
   // set if attempting buy or sell, use for warning modal
-  const [activeTransactionType, setActiveTransactionType] = useState<CurrencyField | undefined>(
-    undefined
-  )
+  const [activeTransactionType, setActiveTransactionType] = useState<CurrencyField | undefined>(undefined)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
@@ -238,7 +216,7 @@ function TokenDetails({
         navigateToSwapFlow({ currencyField, currencyAddress, currencyChainId })
       }
     },
-    [currencyAddress, currencyChainId, navigateToSwapFlow, safetyLevel, tokenWarningDismissed]
+    [currencyAddress, currencyChainId, navigateToSwapFlow, safetyLevel, tokenWarningDismissed],
   )
 
   const onPressSend = useCallback(() => {
@@ -252,13 +230,7 @@ function TokenDetails({
     if (activeTransactionType !== undefined) {
       navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress, currencyChainId })
     }
-  }, [
-    activeTransactionType,
-    currencyAddress,
-    currencyChainId,
-    dismissWarningCallback,
-    navigateToSwapFlow,
-  ])
+  }, [activeTransactionType, currencyAddress, currencyChainId, dismissWarningCallback, navigateToSwapFlow])
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
@@ -281,7 +253,8 @@ function TokenDetails({
             />
           )
         }
-        showHandleBar={inModal}>
+        showHandleBar={inModal}
+      >
         <Flex gap="$spacing16" pb="$spacing16">
           <Flex gap="$spacing4">
             <TokenDetailsHeader
@@ -323,10 +296,7 @@ function TokenDetails({
       </HeaderScrollScreen>
 
       {!loading && !tokenColorLoading ? (
-        <AnimatedFlex
-          backgroundColor="$surface1"
-          entering={FadeInDown}
-          style={{ marginBottom: insets.bottom }}>
+        <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
           <TokenDetailsActionButtons
             tokenColor={tokenColor}
             userHasBalance={Boolean(currentChainBalance)}
@@ -408,12 +378,9 @@ function HeaderRightElement({
             hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
             style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
             onLongPress={disableOnPress}
-            onPress={disableOnPress}>
-            <EllipsisIcon
-              color={ellipsisColor}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+            onPress={disableOnPress}
+          >
+            <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />
           </TouchableArea>
         </ContextMenu>
       )}

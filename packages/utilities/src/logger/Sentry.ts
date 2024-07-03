@@ -1,6 +1,6 @@
 import { SeverityLevel } from '@sentry/types'
 import { NotImplementedError } from 'utilities/src/errors'
-import { LoggerErrorContext } from 'utilities/src/logger/logger'
+import { LoggerErrorContext } from 'utilities/src/logger/types'
 
 export type BreadCrumb = {
   message: string
@@ -14,12 +14,7 @@ export type BreadCrumb = {
 /** Dummy Sentry logging class. Overridden by mobile or extension related code. */
 export interface ISentry {
   captureException(error: unknown, captureContext: LoggerErrorContext): void
-  captureMessage(
-    level: SeverityLevel,
-    context: string,
-    message: string,
-    ...extraArgs: unknown[]
-  ): void
+  captureMessage(level: SeverityLevel, context: string, message: string, ...extraArgs: unknown[]): void
   addBreadCrumb(breadCrumb: BreadCrumb): void
 }
 

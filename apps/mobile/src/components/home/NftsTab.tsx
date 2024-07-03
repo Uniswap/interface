@@ -26,14 +26,14 @@ export const NftsTab = memo(
       headerHeight = 0,
       renderedInModal = false,
     },
-    ref
+    ref,
   ) {
     const colors = useSporeColors()
     const insets = useDeviceInsets()
     const navigation = useAppStackNavigation()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
-      containerProps?.contentContainerStyle
+      containerProps?.contentContainerStyle,
     )
 
     const renderNFTItem = useCallback(
@@ -50,15 +50,13 @@ export const NftsTab = memo(
 
         return <NftView item={item} owner={owner} onPress={onPressNft} />
       },
-      [owner, navigation]
+      [owner, navigation],
     )
 
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-          }
+          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
@@ -87,5 +85,5 @@ export const NftsTab = memo(
         />
       </Flex>
     )
-  })
+  }),
 )

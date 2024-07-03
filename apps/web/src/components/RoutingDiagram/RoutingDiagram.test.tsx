@@ -30,7 +30,7 @@ jest.mock(
   'components/Logo/CurrencyLogo',
   () =>
     ({ currency }: { currency: Currency }) =>
-      `CurrencyLogo currency=${currency.symbol}`
+      `CurrencyLogo currency=${currency.symbol}`,
 )
 
 jest.mock('../Popover', () => () => 'Popover')

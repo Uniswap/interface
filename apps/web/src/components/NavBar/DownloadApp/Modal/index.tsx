@@ -1,3 +1,4 @@
+import { AnimatedSlider } from 'components/AnimatedSlider'
 import Modal from 'components/Modal'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
@@ -81,10 +82,14 @@ export function GetTheAppModal() {
         </Row>
         {isLegacyNav ? (
           <GetTheApp />
-        ) : page === Page.GetStarted ? (
-          <GetStarted toAppDownload={() => setPage(Page.GetApp)} />
         ) : (
-          <GetTheApp />
+          <AnimatedSlider
+            currentIndex={page === Page.GetStarted ? 0 : 1}
+            slideDirection={page === Page.GetStarted ? 'forward' : 'backward'}
+          >
+            <GetStarted toAppDownload={() => setPage(Page.GetApp)} />
+            <GetTheApp />
+          </AnimatedSlider>
         )}
       </Wrapper>
     </StyledModal>

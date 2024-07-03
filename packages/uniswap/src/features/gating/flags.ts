@@ -9,7 +9,8 @@ export enum FeatureFlags {
   CurrencyConversion,
 
   // Wallet
-  ExtensionOnboarding,
+  ExtensionOnboarding, // this is beta onboarding, cant change name for version compatibility
+  ExtensionPromotionGA,
   FeedTab,
   ForAggregator,
   CexTransfers,
@@ -31,17 +32,19 @@ export enum FeatureFlags {
 
   // Extension
   ExtensionBuyButton,
+  ExtensionBetaFeedbackPrompt,
+  ExtensionAutoConnect,
 
   // Web
   NavRefresh,
   NavigationHotkeys,
   Eip6936Enabled,
   ExitAnimation,
-  ExtensionBetaLaunch,
-  ExtensionGeneralLaunch,
+  ExtensionLaunch,
   ForAggregatorWeb,
   GqlTokenLists,
   LimitsFees,
+  L2NFTs,
   MultichainUX,
   MultichainExplore,
   MultipleRoutingOptions,
@@ -66,10 +69,10 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
-  [FeatureFlags.ExtensionBetaLaunch, 'extension_beta_launch'],
-  [FeatureFlags.ExtensionGeneralLaunch, 'extension_general_launch'],
+  [FeatureFlags.ExtensionLaunch, 'extension_launch'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
+  [FeatureFlags.L2NFTs, 'l2_nfts'],
   [FeatureFlags.MultichainUX, 'multichain_ux'],
   [FeatureFlags.MultichainExplore, 'multichain_explore'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
@@ -92,6 +95,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
   // Wallet Specific
   [FeatureFlags.ExtensionOnboarding, 'extension-onboarding'],
+  [FeatureFlags.ExtensionPromotionGA, 'extension-promotion-ga'],
   [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.CexTransfers, 'cex-transfers'],
@@ -112,6 +116,8 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapX, 'uniswapx'],
   // Extension Specific
   [FeatureFlags.ExtensionBuyButton, 'extension-buy-button'],
+  [FeatureFlags.ExtensionBetaFeedbackPrompt, 'extension-beta-feedback-prompt'],
+  [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
 ])
 
 export enum FeatureFlagClient {
@@ -126,16 +132,10 @@ const FEATURE_FLAG_NAMES = {
 
 export function getFeatureFlagName(flag: FeatureFlags, client?: FeatureFlagClient): string {
   const names =
-    client !== undefined
-      ? FEATURE_FLAG_NAMES[client]
-      : isInterface
-      ? WEB_FEATURE_FLAG_NAMES
-      : WALLET_FEATURE_FLAG_NAMES
+    client !== undefined ? FEATURE_FLAG_NAMES[client] : isInterface ? WEB_FEATURE_FLAG_NAMES : WALLET_FEATURE_FLAG_NAMES
   const name = names.get(flag)
   if (!name) {
-    const err = new Error(
-      `Feature ${FeatureFlags[flag]} does not have a name mapped for this application`
-    )
+    const err = new Error(`Feature ${FeatureFlags[flag]} does not have a name mapped for this application`)
 
     logger.error(err, {
       tags: {

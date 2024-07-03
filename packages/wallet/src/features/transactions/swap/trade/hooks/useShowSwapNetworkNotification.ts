@@ -20,7 +20,7 @@ export function useShowSwapNetworkNotification(chainId?: WalletChainId): void {
         chainId,
         flow: 'swap',
         hideDelay: 2000,
-      })
+      }),
     )
   }, [chainId, prevChainId, appDispatch])
 }

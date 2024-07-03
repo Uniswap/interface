@@ -15,11 +15,7 @@ type Props = {
   onClose: () => void
 }
 
-export const PendingConnectionSwitchNetworkModal = ({
-  selectedChainId,
-  onPressChain,
-  onClose,
-}: Props): JSX.Element => {
+export const PendingConnectionSwitchNetworkModal = ({ selectedChainId, onPressChain, onClose }: Props): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -33,23 +29,14 @@ export const PendingConnectionSwitchNetworkModal = ({
           render: () => (
             <>
               <Separator />
-              <Flex
-                row
-                alignItems="center"
-                justifyContent="space-between"
-                px="$spacing24"
-                py="$spacing16">
+              <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing16">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="$neutral1" variant="body1">
                   {info.label}
                 </Text>
                 <Flex height={iconSizes.icon24} width={iconSizes.icon24}>
                   {chainId === selectedChainId && (
-                    <Check
-                      color={colors.accent1.get()}
-                      height={iconSizes.icon24}
-                      width={iconSizes.icon24}
-                    />
+                    <Check color={colors.accent1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
                   )}
                 </Flex>
               </Flex>
@@ -57,7 +44,7 @@ export const PendingConnectionSwitchNetworkModal = ({
           ),
         }
       }),
-    [selectedChainId, onPressChain, colors.accent1]
+    [selectedChainId, onPressChain, colors.accent1],
   )
 
   return (

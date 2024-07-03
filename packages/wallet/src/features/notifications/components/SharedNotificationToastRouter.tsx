@@ -19,11 +19,7 @@ import { WrapNotification } from 'wallet/src/features/notifications/components/W
 import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 
-export function SharedNotificationToastRouter({
-  notification,
-}: {
-  notification: AppNotification
-}): JSX.Element | null {
+export function SharedNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />

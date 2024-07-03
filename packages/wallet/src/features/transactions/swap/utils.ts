@@ -12,6 +12,13 @@ import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/con
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import {
+  areCurrencyIdsEqual,
+  buildWrappedNativeCurrencyId,
+  currencyId,
+  currencyIdToAddress,
+  currencyIdToChain,
+} from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
@@ -19,27 +26,15 @@ import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/sw
 import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import {
-  areCurrencyIdsEqual,
-  buildWrappedNativeCurrencyId,
-  currencyId,
-  currencyIdToAddress,
-  currencyIdToChain,
-} from 'wallet/src/utils/currencyId'
 
-export function serializeQueryParams(
-  params: Record<string, Parameters<typeof encodeURIComponent>[0]>
-): string {
+export function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>): string {
   const queryString = []
   for (const [param, value] of Object.entries(params)) {
     queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
@@ -49,7 +44,7 @@ export function serializeQueryParams(
 
 export function getWrapType(
   inputCurrency: Currency | null | undefined,
-  outputCurrency: Currency | null | undefined
+  outputCurrency: Currency | null | undefined,
 ): WrapType {
   if (!inputCurrency || !outputCurrency || inputCurrency.chainId !== outputCurrency.chainId) {
     return WrapType.NotApplicable
@@ -58,15 +53,9 @@ export function getWrapType(
   const inputChainId = inputCurrency.chainId as WalletChainId
   const wrappedCurrencyId = buildWrappedNativeCurrencyId(inputChainId)
 
-  if (
-    inputCurrency.isNative &&
-    areCurrencyIdsEqual(currencyId(outputCurrency), wrappedCurrencyId)
-  ) {
+  if (inputCurrency.isNative && areCurrencyIdsEqual(currencyId(outputCurrency), wrappedCurrencyId)) {
     return WrapType.Wrap
-  } else if (
-    outputCurrency.isNative &&
-    areCurrencyIdsEqual(currencyId(inputCurrency), wrappedCurrencyId)
-  ) {
+  } else if (outputCurrency.isNative && areCurrencyIdsEqual(currencyId(inputCurrency), wrappedCurrencyId)) {
     return WrapType.Unwrap
   }
 
@@ -77,9 +66,7 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
   return wrapType === WrapType.Unwrap || wrapType === WrapType.Wrap
 }
 
-export function tradeToTransactionInfo(
-  trade: Trade
-): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
 
   const { quote, slippageTolerance } = trade
@@ -102,9 +89,7 @@ export function tradeToTransactionInfo(
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-        minimumOutputCurrencyAmountRaw: trade
-          .minimumAmountOut(slippageTolerancePercent)
-          .quotient.toString(),
+        minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerancePercent).quotient.toString(),
       }
     : {
         ...baseTransactionInfo,
@@ -112,9 +97,7 @@ export function tradeToTransactionInfo(
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        maximumInputCurrencyAmountRaw: trade
-          .maximumAmountIn(slippageTolerancePercent)
-          .quotient.toString(),
+        maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerancePercent).quotient.toString(),
       }
 }
 
@@ -136,7 +119,7 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
 export const getRateToDisplay = (
   formatter: LocalizationContextState,
   trade: Trade,
-  showInverseRate: boolean
+  showInverseRate: boolean,
 ): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
 

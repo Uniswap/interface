@@ -42,10 +42,7 @@ export const fiatOnRampAggregatorApi = createApi({
       }),
       keepUnusedDataFor: 0,
     }),
-    fiatOnRampAggregatorServiceProviders: builder.query<
-      FORServiceProvidersResponse,
-      FORServiceProvidersRequest
-    >({
+    fiatOnRampAggregatorServiceProviders: builder.query<FORServiceProvidersResponse, FORServiceProvidersRequest>({
       query: (request) => `/service-providers?${new URLSearchParams(request).toString()}`,
       transformResponse: (response: FORServiceProvidersResponse) => ({
         serviceProviders: response.serviceProviders.map((sp) => ({
@@ -58,10 +55,7 @@ export const fiatOnRampAggregatorApi = createApi({
       query: () => '/transfer-service-providers',
       keepUnusedDataFor: 60 * 60, // 1 hour
     }),
-    fiatOnRampAggregatorSupportedTokens: builder.query<
-      FORSupportedTokensResponse,
-      FORSupportedTokensRequest
-    >({
+    fiatOnRampAggregatorSupportedTokens: builder.query<FORSupportedTokensResponse, FORSupportedTokensRequest>({
       query: (request) => `/supported-tokens?${new URLSearchParams(request).toString()}`,
     }),
     fiatOnRampAggregatorSupportedFiatCurrencies: builder.query<
@@ -77,10 +71,7 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
     }),
-    fiatOnRampAggregatorTransferWidget: builder.query<
-      FORWidgetUrlResponse,
-      FORTransferWidgetUrlRequest
-    >({
+    fiatOnRampAggregatorTransferWidget: builder.query<FORWidgetUrlResponse, FORTransferWidgetUrlRequest>({
       query: (request) => ({
         url: '/transfer-widget-url',
         body: request,

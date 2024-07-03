@@ -1,28 +1,18 @@
-import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
 import { PaddedColumn, SearchInput } from 'components/SearchModal/styled'
 import { t } from 'i18next'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
+import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
-import styled from 'styled-components'
 import { CloseIcon } from 'theme/components'
 import { Text } from 'ui/src/components/text/Text'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { bubbleToTop } from 'utilities/src/primitives/array'
-
-const ContentWrapper = styled(Column)`
-  background-color: ${({ theme }) => theme.surface1};
-  width: 100%;
-  overflow: hidden;
-  flex: 1 1;
-  position: relative;
-  border-radius: 20px;
-`
 
 const ROW_ITEM_SIZE = 56
 

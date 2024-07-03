@@ -61,7 +61,7 @@ export function useOpenOffchainActivityModal() {
       })
       setSelectedOrder({ order, logos, modalOpen: true })
     },
-    [setSelectedOrder]
+    [setSelectedOrder],
   )
 }
 
@@ -136,7 +136,7 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
       outputAmount: CurrencyAmount.fromRawAmount(
         outputCurrency,
-        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
+        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw,
       ),
     }
   } else {
@@ -214,7 +214,7 @@ export function OrderContent({
 
   const currencies = useMemo(
     () => [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
-    [amounts?.inputAmount.currency, amounts?.outputAmount.currency]
+    [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
   if (!amounts?.inputAmount || !amounts?.outputAmount) {
@@ -343,7 +343,7 @@ export function OffchainActivityModal() {
   }, [setSelectedOrder])
 
   const cancelOrder = useCancelMultipleOrdersCallback(
-    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder])
+    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder]),
   )
 
   return (

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { default as React, useCallback, useEffect, useState } from 'react'
@@ -23,6 +22,7 @@ import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/te
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -31,13 +31,8 @@ import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  UNITAG_SUFFIX,
-  UNITAG_SUFFIX_NO_LEADING_DOT,
-  UNITAG_VALID_REGEX,
-} from 'wallet/src/features/unitags/constants'
+import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
-import { shortenAddress } from 'wallet/src/utils/addresses'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_UNITAG_CHAR_LENGTH = 20
@@ -96,7 +91,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE
+    MIN_INPUT_FONT_SIZE,
   )
 
   useEffect(() => {
@@ -113,7 +108,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         unitagInputContainerTranslateY.value - UNITAG_NAME_ANIMATE_DISTANCE_Y,
         {
           duration: ONE_SECOND_MS / 2,
-        }
+        },
       )
       setTimeout(() => {
         setShowTextInputView(true)
@@ -122,13 +117,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
     })
 
     return unsubscribe
-  }, [
-    navigation,
-    showTextInputView,
-    setShowTextInputView,
-    addressViewOpacity,
-    unitagInputContainerTranslateY,
-  ])
+  }, [navigation, showTextInputView, setShowTextInputView, addressViewOpacity, unitagInputContainerTranslateY])
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
@@ -146,7 +135,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
 
       setUnitagInputValue(text?.trim())
     },
-    [inputPlaceholder, onSetFontSize]
+    [inputPlaceholder, onSetFontSize],
   )
 
   const onPressAddressTooltip = (): void => {
@@ -194,22 +183,17 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         initialDelay,
         withTiming(unitagInputContainerTranslateY.value + UNITAG_NAME_ANIMATE_DISTANCE_Y, {
           duration: translateYDuration,
-        })
+        }),
       )
       // Navigate to ChooseProfilePicture screen after initial delay + translation to allow animations to finish
       setTimeout(() => {
-        navigate(
-          entryPoint === OnboardingScreens.Landing
-            ? MobileScreens.OnboardingStack
-            : MobileScreens.UnitagStack,
-          {
-            screen: UnitagScreens.ChooseProfilePicture,
-            params: { unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize },
-          }
-        )
+        navigate(entryPoint === OnboardingScreens.Landing ? MobileScreens.OnboardingStack : MobileScreens.UnitagStack, {
+          screen: UnitagScreens.ChooseProfilePicture,
+          params: { unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize },
+        })
       }, initialDelay + translateYDuration)
     },
-    [addressViewOpacity, entryPoint, unitagAddress, unitagInputContainerTranslateY, fontSize]
+    [addressViewOpacity, entryPoint, unitagAddress, unitagInputContainerTranslateY, fontSize],
   )
 
   // Handle when useUnitagError completes loading and returns a result after onPressContinue is called
@@ -261,20 +245,17 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         onLayout={(event): void => {
           onLayout(event)
           onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
-        }}>
+        }}
+      >
         {/* Fixed text that animates in when TextInput is animated out */}
         <AnimatedFlex
           centered
           height={fonts.heading2.lineHeight}
-          style={{ transform: [{ translateY: unitagInputContainerTranslateY }] }}>
+          style={{ transform: [{ translateY: unitagInputContainerTranslateY }] }}
+        >
           {!showTextInputView && (
             <Flex position="absolute">
-              <UnitagName
-                animateIcon
-                fontSize={fontSize}
-                name={unitagInputValue}
-                opacity={showTextInputView ? 0 : 1}
-              />
+              <UnitagName animateIcon fontSize={fontSize} name={unitagInputValue} opacity={showTextInputView ? 0 : 1} />
             </Flex>
           )}
           <AnimatePresence>
@@ -285,7 +266,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                 animation="quick"
                 enterStyle={{ opacity: 0, x: 40 }}
                 exitStyle={{ opacity: 0, x: 40 }}
-                gap="$none">
+                gap="$none"
+              >
                 <TextInput
                   autoFocus
                   blurOnSubmit
@@ -314,7 +296,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   fontFamily="$heading"
                   fontSize={fontSize}
                   fontWeight={fonts.heading2.fontWeight}
-                  lineHeight={fonts.heading2.lineHeight}>
+                  lineHeight={fonts.heading2.lineHeight}
+                >
                   {UNITAG_SUFFIX}
                 </Text>
               </Flex>
@@ -326,7 +309,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           alignItems="center"
           gap="$spacing8"
           style={addressViewAnimatedStyle}
-          onPress={onPressAddressTooltip}>
+          onPress={onPressAddressTooltip}
+        >
           <Text color="$neutral2" variant="subheading2">
             {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
           </Text>
@@ -334,27 +318,19 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
             onPress={(): void => {
               Keyboard.dismiss()
               setShowInfoModal(true)
-            }}>
+            }}
+          >
             <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
           </TouchableArea>
         </AnimatedFlex>
         {canClaimUnitagNameError && unitagToCheck === unitagInputValue && (
           <Flex row gap="$spacing8">
-            <Text
-              color={requiresENSMatch ? '$neutral2' : '$statusCritical'}
-              textAlign="center"
-              variant="body2">
+            <Text color={requiresENSMatch ? '$neutral2' : '$statusCritical'} textAlign="center" variant="body2">
               {canClaimUnitagNameError}{' '}
               {requiresENSMatch && (
                 <Trans
                   components={{
-                    highlight: (
-                      <Text
-                        color="$DEP_blue300"
-                        variant="body2"
-                        onPress={onPressClaimPeriodLearnMore}
-                      />
-                    ),
+                    highlight: <Text color="$DEP_blue300" variant="body2" onPress={onPressClaimPeriodLearnMore} />,
                   }}
                   i18nKey="unitags.onboarding.claimPeriod.link"
                 />
@@ -383,7 +359,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           size="medium"
           testID={ElementName.Continue}
           theme="primary"
-          onPress={onPressContinue}>
+          onPress={onPressContinue}
+        >
           {isCheckingUnitag ? (
             <Flex height={fonts.buttonLabel1.lineHeight}>
               <ActivityIndicator color={colors.sporeWhite.val} />
@@ -393,14 +370,9 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           )}
         </Button>
       </Flex>
-      {showInfoModal && (
-        <InfoModal unitagAddress={unitagAddress} onClose={(): void => setShowInfoModal(false)} />
-      )}
+      {showInfoModal && <InfoModal unitagAddress={unitagAddress} onClose={(): void => setShowInfoModal(false)} />}
       {showClaimPeriodInfoModal && (
-        <ClaimPeriodInfoModal
-          username={unitagToCheck ?? ''}
-          onClose={(): void => setShowClaimPeriodInfoModal(false)}
-        />
+        <ClaimPeriodInfoModal username={unitagToCheck ?? ''} onClose={(): void => setShowClaimPeriodInfoModal(false)} />
       )}
     </SafeKeyboardOnboardingScreen>
   )
@@ -446,7 +418,8 @@ const InfoModal = ({
             px="$spacing12"
             shadowColor="$neutral3"
             shadowOpacity={0.4}
-            shadowRadius="$spacing4">
+            shadowRadius="$spacing4"
+          >
             <Text color="$accent1" variant="buttonLabel4">
               {usernamePlaceholder}
               <Text color="$neutral2" variant="buttonLabel4">
@@ -463,13 +436,7 @@ const InfoModal = ({
   )
 }
 
-const ClaimPeriodInfoModal = ({
-  onClose,
-  username,
-}: {
-  onClose: () => void
-  username: string
-}): JSX.Element => {
+const ClaimPeriodInfoModal = ({ onClose, username }: { onClose: () => void; username: string }): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -478,17 +445,11 @@ const ClaimPeriodInfoModal = ({
       backgroundIconColor={colors.surface1.get()}
       caption={t('unitags.onboarding.claimPeriod.description', { username })}
       closeText={t('common.button.close')}
-      icon={
-        <Image
-          height={imageSizes.image48}
-          resizeMode="contain"
-          source={ENS_LOGO}
-          width={imageSizes.image48}
-        />
-      }
+      icon={<Image height={imageSizes.image48} resizeMode="contain" source={ENS_LOGO} width={imageSizes.image48} />}
       modalName={ModalName.ENSClaimPeriod}
       title={t('unitags.onboarding.claimPeriod.title')}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.unitagClaimPeriod} />
     </WarningModal>
   )

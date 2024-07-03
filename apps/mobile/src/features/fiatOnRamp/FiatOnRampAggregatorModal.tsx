@@ -21,11 +21,9 @@ export function FiatOnRampAggregatorModal(): JSX.Element {
       hideKeyboardOnDismiss
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
-      // Don't dismiss on back press, as this modal is used for the FiatOnRampStack navigation.
-      // (the modal should be dismissed only when the user navigates to the initial FiatOnRamp screen)
-      dismissOnBackPress={false}
       name={ModalName.FiatOnRampAggregator}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <FiatOnRampStackNavigator />
     </BottomSheetModal>
   )

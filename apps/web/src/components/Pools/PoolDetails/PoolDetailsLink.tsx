@@ -103,7 +103,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   const navigate = useNavigate()
@@ -127,7 +127,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     // This callback must run after it sets truncateAddress to 'start' to see if it needs to 'both'.
     // It checks if the textRef has overflow, and sets truncateAddress accordingly to avoid it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [truncateAddress]
+    [truncateAddress],
   )
 
   if (loading || !address || !chainId) {

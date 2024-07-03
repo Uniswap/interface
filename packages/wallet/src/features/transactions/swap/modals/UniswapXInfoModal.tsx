@@ -17,10 +17,9 @@ export function UniswapXInfoModal({ onClose }: { onClose: () => void }): JSX.Ele
       closeText={t('common.button.close')}
       icon={<UniswapX size="$icon.24" />}
       modalName={ModalName.UniswapXInfo}
-      title={
-        <UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>
-      }
-      onClose={onClose}>
+      title={<UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>}
+      onClose={onClose}
+    >
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.uniswapXInfo} />
     </WarningModal>
   )

@@ -162,9 +162,9 @@ export function Token(props: {
               address,
               chain,
             })
-          : `/nfts/collection/${address}`
+          : `/nfts/collection/${address}`,
       ),
-    [address, chain, navigate, standard]
+    [address, chain, navigate, standard],
   )
 
   const borderRadius = size / 8

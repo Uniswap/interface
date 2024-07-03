@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export type RecoveryWalletInfo = AddressWithIndex & {
   balance?: number
@@ -45,15 +45,14 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
             })
             return undefined
           }
-        })
+        }),
       )
 
       const filteredAddresses = possibleAddresses
         .map((address, index): AddressWithIndex | undefined =>
-          address &&
-          storedAddresses.find((storedAddress) => areAddressesEqual(storedAddress, address))
+          address && storedAddresses.find((storedAddress) => areAddressesEqual(storedAddress, address))
             ? { address, derivationIndex: index }
-            : undefined
+            : undefined,
         )
         .filter((address): address is AddressWithIndex => !!address)
 
@@ -79,8 +78,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   totalBalance: number | undefined
   loading: boolean
 } {
-  const { addressesWithIndex, loading: addressesLoading } =
-    useStoredAddressesForMnemonic(mnemonicId)
+  const { addressesWithIndex, loading: addressesLoading } = useStoredAddressesForMnemonic(mnemonicId)
   const addresses = addressesWithIndex.map((address) => address.address)
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
@@ -91,9 +89,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     },
     skip: !addresses.length,
   })
-  const balances = balancesData?.portfolios?.map(
-    (portfolio) => portfolio?.tokensTotalDenominatedValue?.value ?? 0
-  )
+  const balances = balancesData?.portfolios?.map((portfolio) => portfolio?.tokensTotalDenominatedValue?.value ?? 0)
   const totalBalance = balances?.reduce((acc, balance) => acc + balance, 0)
 
   // Need to fetch ENS names and unitags for each deriviation index
@@ -146,9 +142,9 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     () =>
       recoveryWalletInfos?.filter(
         (recoveryAddressInfo) =>
-          recoveryAddressInfo.balance || recoveryAddressInfo.ensName || recoveryAddressInfo.unitag
+          recoveryAddressInfo.balance || recoveryAddressInfo.ensName || recoveryAddressInfo.unitag,
       ) ?? [],
-    [recoveryWalletInfos]
+    [recoveryWalletInfos],
   )
 
   const loading = addressesLoading || ensLoading || unitagLoading || balancesLoading

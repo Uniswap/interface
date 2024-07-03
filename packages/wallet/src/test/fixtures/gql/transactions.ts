@@ -23,10 +23,7 @@ type TransactionDetailsBaseOptions = {
   transactionStatus: TransactionStatus
 }
 
-export const gqlTransactionDetails = createFixture<
-  TransactionDetails,
-  TransactionDetailsBaseOptions
->({
+export const gqlTransactionDetails = createFixture<TransactionDetails, TransactionDetailsBaseOptions>({
   transactionStatus: randomEnumValue(TransactionStatus),
 })(({ transactionStatus }) => ({
   __typename: 'TransactionDetails',

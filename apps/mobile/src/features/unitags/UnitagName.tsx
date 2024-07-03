@@ -21,13 +21,15 @@ export function UnitagName({
       enterStyle={{ opacity: 0 }}
       exitStyle={{ opacity: 0 }}
       gap="$spacing20"
-      opacity={opacity}>
+      opacity={opacity}
+    >
       <Text
         color="$neutral1"
         fontFamily="$heading"
         fontSize={fontSize}
         fontWeight={fonts.heading2.fontWeight}
-        lineHeight={fonts.heading2.lineHeight}>
+        lineHeight={fonts.heading2.lineHeight}
+      >
         {name}
       </Text>
       <Flex
@@ -37,7 +39,8 @@ export function UnitagName({
         exitStyle={animateIcon ? { opacity: 0, scale: 0.8, x: -20 } : undefined}
         position="absolute"
         right={-spacing.spacing24}
-        top={-spacing.spacing4}>
+        top={-spacing.spacing4}
+      >
         <Unitag size="$icon.24" />
       </Flex>
     </Flex>

@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react-hooks'
-/* eslint-disable-next-line no-restricted-imports */
 import { DeviceEventEmitter, Dimensions } from 'react-native'
 import { act } from 'react-test-renderer'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'

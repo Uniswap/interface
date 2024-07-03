@@ -38,9 +38,7 @@ export function LinkButton({
   }, [color])
 
   return (
-    <TouchableArea
-      onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
-      {...rest}>
+    <TouchableArea onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent}>
         <Text {...colorStyles} flexShrink={1} variant={textVariant}>
           {label}

@@ -38,7 +38,7 @@ export default function InputWithSuffix({
         setShouldWrapLine(contentWidth + EPS >= maxContentWidth)
       }
     },
-    [multiline]
+    [multiline],
   )
 
   const isInputEmpty = !value?.length

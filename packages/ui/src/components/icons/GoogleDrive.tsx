@@ -6,7 +6,7 @@ import { createIcon } from '../factories/createIcon'
 export const [GoogleDrive, AnimatedGoogleDrive] = createIcon({
   name: 'GoogleDrive',
   getIcon: (props) => (
-    <Svg fill="none" viewBox="0 0 24 21" {...props}>
+    <Svg viewBox="0 0 24 21" fill="none" {...props}>
       <Path
         d="M8.21098 0.0318203C8.22035 0.0552664 9.94603 3.03762 12.0422 6.66709L15.8546 13.2695H19.6717H23.4888L23.3809 13.0867C23.32 12.9882 21.5943 10.0011 19.5451 6.45138L15.8171 -0.00100422H12.0046C9.90851 -0.00100422 8.2016 0.0130634 8.21098 0.0318203Z"
         fill={'currentColor' ?? '#7D7D7D'}

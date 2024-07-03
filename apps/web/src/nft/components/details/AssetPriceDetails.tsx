@@ -217,7 +217,7 @@ const OwnerContainer = ({ asset }: { asset: WalletAsset }) => {
 
   const USDPrice = useMemo(
     () => (ethUsdPrice && asset.floor_sell_order_price ? ethUsdPrice * asset.floor_sell_order_price : undefined),
-    [ethUsdPrice, asset.floor_sell_order_price]
+    [ethUsdPrice, asset.floor_sell_order_price],
   )
   const trace = useTrace()
 
@@ -327,13 +327,13 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
   const USDPrice = useUsdPriceofNftAsset(asset)
 
   const assetsFilter = [{ address: asset.address, tokenId: asset.tokenId }]
-  const { walletAssets: ownerAssets } = useNftBalance(account.address ?? '', [], assetsFilter, 1)
+  const { walletAssets: ownerAssets } = useNftBalance({ ownerAddress: account.address ?? '', assetsFilter, first: 1 })
   const walletAsset: WalletAsset | undefined = useMemo(() => ownerAssets?.[0], [ownerAssets])
 
   const { assetInBag } = useMemo(() => {
     return {
       assetInBag: itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address,
       ),
     }
   }, [asset, itemsInBag])
@@ -344,7 +344,7 @@ export const AssetPriceDetails = ({ asset, collection }: AssetPriceDetailsProps)
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2
-      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`,
     )
   }
 

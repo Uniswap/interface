@@ -15,7 +15,7 @@ it('renders text with few matches', () => {
         { value: 'xt wit', indices: [[4, 8]] },
       ]}
       text="A text without matches"
-    />
+    />,
   )
   expect(tree).toMatchSnapshot()
 })

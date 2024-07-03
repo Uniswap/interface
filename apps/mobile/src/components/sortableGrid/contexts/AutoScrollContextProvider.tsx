@@ -1,12 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useMemo, useRef } from 'react'
 import { View } from 'react-native'
-import {
-  SharedValue,
-  runOnJS,
-  useAnimatedReaction,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated'
+import { SharedValue, runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import { AUTO_SCROLL_THRESHOLD } from 'src/components/sortableGrid/constants'
 import { useDragContext } from 'src/components/sortableGrid/contexts/DragContextProvider'
 import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
@@ -54,7 +48,7 @@ export function AutoScrollProvider({
   const scrollTarget = useSharedValue(0)
   const scrollDirection = useSharedValue(0) // 1 = down, -1 = up
   const activeItemHeight = useDerivedValue(
-    () => (activeItemKey.value ? itemDimensions.value[activeItemKey.value]?.height : -1) ?? -1
+    () => (activeItemKey.value ? itemDimensions.value[activeItemKey.value]?.height : -1) ?? -1,
   )
 
   // REFS
@@ -64,13 +58,11 @@ export function AutoScrollProvider({
   // Values used to scroll the container to the proper offset
   // (updated from the SortableGridInner component)
   const containerStartOffset = useSharedValue(0)
-  const containerEndOffset = useDerivedValue(
-    () => containerStartOffset.value + targetContainerHeight.value
-  )
+  const containerEndOffset = useDerivedValue(() => containerStartOffset.value + targetContainerHeight.value)
 
   const startScrollOffset = useSharedValue(0)
   const scrollOffsetDiff = useDerivedValue(() =>
-    activeItemKey.value === null ? 0 : scrollYValue.value - startScrollOffset.value
+    activeItemKey.value === null ? 0 : scrollYValue.value - startScrollOffset.value,
   )
 
   /**
@@ -98,7 +90,7 @@ export function AutoScrollProvider({
     () => {
       // Reset when the active index changes
       scrollDirection.value = 0
-    }
+    },
   )
 
   // AUTO SCROLL HANDLER
@@ -110,8 +102,7 @@ export function AutoScrollProvider({
       }
 
       return {
-        itemAbsoluteY:
-          activeItemPosition.value.y + containerStartOffset.value + scrollOffsetDiff.value,
+        itemAbsoluteY: activeItemPosition.value.y + containerStartOffset.value + scrollOffsetDiff.value,
         activeHeight: activeItemHeight.value,
         minOffset: containerStartOffset.value,
         maxOffset: containerEndOffset.value - visibleHeightValue.value,
@@ -146,10 +137,7 @@ export function AutoScrollProvider({
       // If the active item is above the current scroll position (with small threshold
       // to start scrolling earlier) and the scroll position is not at the top of the
       // grid, scroll up
-      if (
-        itemAbsoluteY < scrollY + AUTO_SCROLL_THRESHOLD &&
-        scrollY > minOffset - AUTO_SCROLL_THRESHOLD
-      ) {
+      if (itemAbsoluteY < scrollY + AUTO_SCROLL_THRESHOLD && scrollY > minOffset - AUTO_SCROLL_THRESHOLD) {
         currentScrollTarget = Math.max(minOffset - AUTO_SCROLL_THRESHOLD, scrollY - activeHeight)
         currentScrollDirection = -1
       }
@@ -184,7 +172,7 @@ export function AutoScrollProvider({
       scrollDirection.value = currentScrollDirection
       scrollTarget.value = currentScrollTarget
       runOnJS(scrollToOffset)(currentScrollTarget)
-    }
+    },
   )
 
   /**
@@ -199,14 +187,7 @@ export function AutoScrollProvider({
       startScrollOffset,
       scrollY: scrollYValue,
     }),
-    [
-      gridContainerRef,
-      containerStartOffset,
-      containerEndOffset,
-      scrollOffsetDiff,
-      startScrollOffset,
-      scrollYValue,
-    ]
+    [gridContainerRef, containerStartOffset, containerEndOffset, scrollOffsetDiff, startScrollOffset, scrollYValue],
   )
 
   return <AutoScrollContext.Provider value={contextValue}>{children}</AutoScrollContext.Provider>

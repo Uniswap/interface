@@ -1,11 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
-import {
-  Chain,
-  TokenDocument,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { Chain, TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'

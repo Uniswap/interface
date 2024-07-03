@@ -17,11 +17,7 @@ import {
   OFFSET_EPS,
   TIME_TO_ACTIVATE_PAN,
 } from 'src/components/sortableGrid/constants'
-import {
-  useAutoScrollContext,
-  useDragContext,
-  useLayoutContext,
-} from 'src/components/sortableGrid/contexts'
+import { useAutoScrollContext, useDragContext, useLayoutContext } from 'src/components/sortableGrid/contexts'
 import { useItemPosition } from 'src/components/sortableGrid/hooks'
 import { GridItemExiting } from 'src/components/sortableGrid/layoutAnimations'
 import { SortableGridRenderItem } from 'src/components/sortableGrid/types'
@@ -34,12 +30,7 @@ type SortableGridItemProps<I> = {
   numColumns: number
 }
 
-function SortableGridItem<I>({
-  item,
-  itemKey,
-  renderItem,
-  numColumns,
-}: SortableGridItemProps<I>): JSX.Element {
+function SortableGridItem<I>({ item, itemKey, renderItem, numColumns }: SortableGridItemProps<I>): JSX.Element {
   const {
     measuredItemsCount,
     targetContainerHeight,
@@ -98,7 +89,7 @@ function SortableGridItem<I>({
         itemDimensions.value[key] = { width, height }
       })(itemKey)
     },
-    [itemKey, itemDimensions, measuredItemsCount]
+    [itemKey, itemDimensions, measuredItemsCount],
   )
 
   const handleDragEnd = useCallback(() => {
@@ -119,7 +110,7 @@ function SortableGridItem<I>({
           isTouched.value = true
           const progress = withDelay(
             ACTIVATE_PAN_ANIMATION_DELAY,
-            withTiming(1, { duration: TIME_TO_ACTIVATE_PAN - ACTIVATE_PAN_ANIMATION_DELAY })
+            withTiming(1, { duration: TIME_TO_ACTIVATE_PAN - ACTIVATE_PAN_ANIMATION_DELAY }),
           )
           pressProgress.value = progress
           activationProgress.value = progress
@@ -162,7 +153,7 @@ function SortableGridItem<I>({
       pressProgress,
       scrollY,
       startScrollOffset,
-    ]
+    ],
   )
 
   // ITEM POSITIONING AND ANIMATION
@@ -170,11 +161,7 @@ function SortableGridItem<I>({
     // INITIAL RENDER
     // (relative placements - no absolute positioning yet)
     // This ensures there is no blank space when grid items are being measured
-    if (
-      !initialRenderCompleted.value ||
-      appliedContainerHeight.value === -1 ||
-      columnWidth.value === -1
-    ) {
+    if (!initialRenderCompleted.value || appliedContainerHeight.value === -1 || columnWidth.value === -1) {
       return {
         width: `${100 / numColumns}%`,
       }
@@ -217,12 +204,7 @@ function SortableGridItem<I>({
       top: y,
       left: x,
       width: columnWidth.value,
-      zIndex: getItemZIndex(
-        isActive.value,
-        pressProgress.value,
-        { x, y },
-        targetItemPosition.value
-      ),
+      zIndex: getItemZIndex(isActive.value, pressProgress.value, { x, y }, targetItemPosition.value),
     }
   })
 
@@ -234,7 +216,7 @@ function SortableGridItem<I>({
     shadowColor: interpolateColor(
       pressProgress.value,
       [0, 1],
-      ['transparent', `rgba(0, 0, 0, ${activeItemShadowOpacity.value})`]
+      ['transparent', `rgba(0, 0, 0, ${activeItemShadowOpacity.value})`],
     ),
   }))
 
@@ -245,15 +227,11 @@ function SortableGridItem<I>({
         pressProgress,
         dragActivationProgress: activationProgress,
       }),
-    [item, renderItem, activationProgress, pressProgress]
+    [item, renderItem, activationProgress, pressProgress],
   )
 
   return (
-    <Animated.View
-      exiting={GridItemExiting}
-      pointerEvents="box-none"
-      style={animatedItemStyle}
-      onLayout={measureItem}>
+    <Animated.View exiting={GridItemExiting} pointerEvents="box-none" style={animatedItemStyle} onLayout={measureItem}>
       <GestureDetector gesture={panGesture}>
         <Animated.View style={animatedItemDecorationStyle}>{content}</Animated.View>
       </GestureDetector>

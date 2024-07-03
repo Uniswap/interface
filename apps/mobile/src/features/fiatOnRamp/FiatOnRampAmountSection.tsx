@@ -130,23 +130,16 @@ export function FiatOnRampAmountSection({
   // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
   const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
-  const formattedAmount = useFormatExactCurrencyAmount(
-    quoteAmount.toString(),
-    currency.currencyInfo?.currency
-  )
+  const formattedAmount = useFormatExactCurrencyAmount(quoteAmount.toString(), currency.currencyInfo?.currency)
 
   return (
     <Flex onLayout={onInputPanelLayout}>
-      <Flex
-        grow
-        alignItems="center"
-        gap="$spacing8"
-        justifyContent="center"
-        onLayout={onInputLayout}>
+      <Flex grow alignItems="center" gap="$spacing8" justifyContent="center" onLayout={onInputLayout}>
         <AnimatedFlex
           height={spacing.spacing24}
           /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}>
+          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}
+        >
           {debouncedErrorText && errorColor && (
             <Text color={errorColor} textAlign="center" variant="buttonLabel4">
               {debouncedErrorText}
@@ -160,7 +153,8 @@ export function FiatOnRampAmountSection({
               color={!value ? '$neutral3' : '$neutral1'}
               fontSize={fontSize}
               height={fontSize}
-              lineHeight={fontSize}>
+              lineHeight={fontSize}
+            >
               {fiatCurrencyInfo.symbol}
             </Text>
             <AmountInput
@@ -254,7 +248,8 @@ function PredefinedAmount({
       onPress={async (): Promise<void> => {
         await HapticFeedback.impact()
         onPress(amount.toString())
-      }}>
+      }}
+    >
       <Pill
         backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
         customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}

@@ -24,7 +24,8 @@ export const BlurredImageBackground = ({
           entering={FadeIn}
           justifyContent="center"
           overflow="hidden"
-          style={StyleSheet.absoluteFill}>
+          style={StyleSheet.absoluteFill}
+        >
           <NFTViewer squareGridView uri={imageUri} />
         </AnimatedFlex>
       ) : null}

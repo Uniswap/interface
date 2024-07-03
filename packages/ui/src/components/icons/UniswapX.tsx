@@ -6,15 +6,16 @@ import { createIcon } from '../factories/createIcon'
 export const [UniswapX, AnimatedUniswapX] = createIcon({
   name: 'UniswapX',
   getIcon: (props) => (
-    <Svg fill="none" viewBox="0 0 10 14" {...props}>
+    <Svg viewBox="0 0 10 14" fill="none" {...props}>
       <Defs>
         <LinearGradient
-          gradientUnits="userSpaceOnUse"
           id="uniswap_x_gradient"
           x1="-10.1807"
-          x2="10.6573"
           y1="-12.0006"
-          y2="-11.6017">
+          x2="10.6573"
+          y2="-11.6017"
+          gradientUnits="userSpaceOnUse"
+        >
           <Stop stopColor="#4673FA" />
           <Stop offset="1" stopColor="#9646FA" />
         </LinearGradient>

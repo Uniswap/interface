@@ -31,7 +31,7 @@ function TokenOptionItemWrapper({
     // we need to convert to TokenOption without quantity and balanceUSD
     // to use in Token Selector
     () => (currencyInfo ? { currencyInfo, quantity: 0, balanceUSD: 0 } : null),
-    [currencyInfo]
+    [currencyInfo],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
 
@@ -49,13 +49,7 @@ function TokenOptionItemWrapper({
   )
 }
 
-function _TokenFiatOnRampList({
-  onSelectCurrency,
-  error,
-  onRetry,
-  list,
-  loading,
-}: Props): JSX.Element {
+function _TokenFiatOnRampList({ onSelectCurrency, error, onRetry, list, loading }: Props): JSX.Element {
   const { t } = useTranslation()
 
   const flatListRef = useRef(null)
@@ -64,7 +58,7 @@ function _TokenFiatOnRampList({
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {
       return <TokenOptionItemWrapper currency={currency} onSelectCurrency={onSelectCurrency} />
     },
-    [onSelectCurrency]
+    [onSelectCurrency],
   )
 
   if (error) {

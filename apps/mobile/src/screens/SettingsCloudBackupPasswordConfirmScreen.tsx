@@ -9,15 +9,9 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { Flex, Text } from 'ui/src'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<
-  SettingsStackParamList,
-  MobileScreens.SettingsCloudBackupPasswordConfirm
->
+type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupPasswordConfirm>
 
-export function SettingsCloudBackupPasswordConfirmScreen({
-  navigation,
-  route: { params },
-}: Props): JSX.Element {
+export function SettingsCloudBackupPasswordConfirmScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const { password } = params
 

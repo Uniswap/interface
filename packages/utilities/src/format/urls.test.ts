@@ -1,6 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/utils/uriToHttp.test.ts
 
-import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
+import { formatDappURL, isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 
 describe(uriToHttpUrls, () => {
   it('returns .eth.link for ens names', () => {
@@ -146,5 +146,21 @@ describe(isGifUri, () => {
 
   it('returns false for a non-URI string that ends with ".gif"', () => {
     expect(isGifUri('This is not a URI.gif')).toEqual(false)
+  })
+})
+
+describe(formatDappURL, () => {
+  it('removes prefix from url', () => {
+    expect(formatDappURL('https://example.com')).toEqual('example.com')
+    expect(formatDappURL('https://www.example.com')).toEqual('example.com')
+    expect(formatDappURL('www.example.com')).toEqual('example.com')
+  })
+
+  it('removes trailing slash from url', () => {
+    expect(formatDappURL('example.com/')).toEqual('example.com')
+  })
+
+  it('does not remove http from url', () => {
+    expect(formatDappURL('http://example.com')).toEqual('http://example.com')
   })
 })

@@ -28,13 +28,12 @@ export function MaxAmountButton({
 
   // Disable max button if max already set or when balance is not sufficient
   const disableMaxButton =
-    !maxInputAmount ||
-    !maxInputAmount.greaterThan(0) ||
-    currencyAmount?.toExact() === maxInputAmount.toExact()
+    !maxInputAmount || !maxInputAmount.greaterThan(0) || currencyAmount?.toExact() === maxInputAmount.toExact()
 
   const onPress = (event: GestureResponderEvent): void => {
+    event.stopPropagation()
+
     if (!disableMaxButton) {
-      event.stopPropagation()
       onSetMax(maxInputAmount.toExact())
     }
   }
@@ -42,23 +41,20 @@ export function MaxAmountButton({
   return (
     <Trace
       logPress
-      element={
-        currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput
-      }>
+      element={currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput}
+    >
       <TouchableArea
         hapticFeedback
-        backgroundColor="$accentSoft"
+        backgroundColor={disableMaxButton ? '$surface3' : '$accentSoft'}
         borderRadius="$rounded8"
-        disabled={disableMaxButton}
         opacity={disableMaxButton ? 0.5 : 1}
         px="$spacing4"
         py="$spacing2"
         style={style}
-        testID={
-          currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput
-        }
-        onPress={onPress}>
-        <Text color="$accent1" variant="buttonLabel4">
+        testID={currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput}
+        onPress={onPress}
+      >
+        <Text color={disableMaxButton ? '$neutral2' : '$accent1'} variant="buttonLabel4">
           {t('swap.button.max')}
         </Text>
       </TouchableArea>

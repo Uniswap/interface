@@ -37,7 +37,7 @@ function useETHPrice(currency?: Currency): {
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE
+    INTERNAL_ROUTER_PREFERENCE_PRICE,
   )
 
   return useMemo(() => {
@@ -69,7 +69,7 @@ function useETHPrice(currency?: Currency): {
 
 export function useUSDPrice(
   currencyAmount?: CurrencyAmount<Currency>,
-  prefetchCurrency?: Currency
+  prefetchCurrency?: Currency,
 ): {
   data?: number
   isLoading: boolean

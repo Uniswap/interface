@@ -32,7 +32,7 @@ export function NetworkLogos({
           <Flex width={size} />
         </Flex>
       ) : (
-        <NetworksInSeries networks={chains} />
+        <NetworksInSeries networkIconSize={iconSizes.icon16} networks={chains} />
       )}
     </Flex>
   )

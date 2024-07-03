@@ -22,7 +22,8 @@ export function SelectionCircle({
       borderRadius="$roundedFull"
       borderWidth={1}
       height={iconSizes[size]}
-      width={iconSizes[size]}>
+      width={iconSizes[size]}
+    >
       <Flex
         backgroundColor={selected ? selectedColor : unselectedColor}
         borderRadius="$roundedFull"

@@ -18,10 +18,7 @@ import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features
 import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapTransactionRequest'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import {
-  ApprovalAction,
-  TokenApprovalInfo,
-} from 'wallet/src/features/transactions/swap/trade/types'
+import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -60,7 +57,7 @@ export function useTransactionRequestInfo({
   const signatureInfo = usePermit2SignatureWithData(
     currencyAmounts[CurrencyField.INPUT],
     permitData,
-    /**skip=*/ !requiresPermit2Sig || skip
+    /**skip=*/ !requiresPermit2Sig || skip,
   )
 
   /**
@@ -113,10 +110,7 @@ export function useTransactionRequestInfo({
 
   const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip
 
-  const { data, error, loading } = useRestQuery<
-    CreateSwapResponse,
-    CreateSwapRequest | Record<string, never>
-  >(
+  const { data, error, loading } = useRestQuery<CreateSwapResponse, CreateSwapRequest | Record<string, never>>(
     uniswapUrls.tradingApiPaths.swap,
     swapRequestArgs ?? {},
     ['swap', 'gasFee', 'requestId', 'txFailureReasons'],
@@ -127,7 +121,7 @@ export function useTransactionRequestInfo({
       skip: skipTransactionRequest,
     },
     'POST',
-    TradingApiApolloClient
+    TradingApiApolloClient,
   )
 
   // We use the gasFee estimate from quote, as its more accurate
@@ -135,12 +129,10 @@ export function useTransactionRequestInfo({
   const swapGasFee = swapQuote?.gasFee
 
   // This is a case where simulation fails on backend, meaning txn is expected to fail
-  const simulationError = swapQuote?.txFailureReasons?.includes(
-    TransactionFailureReason.SIMULATION_ERROR
-  )
+  const simulationError = swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),
-    [simulationError, error]
+    [simulationError, error],
   )
 
   const gasFeeResult = {

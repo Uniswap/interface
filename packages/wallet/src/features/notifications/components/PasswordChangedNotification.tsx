@@ -8,7 +8,5 @@ export function PasswordChangedNotification({
   notification: PasswordChangedNotificationType
 }): JSX.Element {
   const { t } = useTranslation()
-  return (
-    <SuccessNotification notification={{ title: t('notification.passwordChanged'), hideDelay }} />
-  )
+  return <SuccessNotification notification={{ title: t('notification.passwordChanged'), hideDelay }} />
 }

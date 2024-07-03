@@ -190,6 +190,15 @@ Resolve this issue by navigating to the `ios/` directory and running `pod update
 - `Build target hermes-engine: Command PhaseScriptExecution failed with a nonzero exit code`
 Node isn't being located correctly during the build phase.  Run `which node` and copy the resulting path into `.xcode.env.local`.  More context [here](https://github.com/facebook/react-native/issues/42221).
 
+- `CocoaPods could not find compatible versions for pod "hermes-engine"`
+The following commands can help you fix these types of errors:
+
+`cd ios && pod install --repo-update`
+`cd ios && pod repo update`
+`cd ios && pod update hermes-engine --no-repo-update`
+
+Context: https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12
+
 ### Common fixes
 
 If something isn’t working the way it should or you’re getting a weird error when trying to run the app, try the following:

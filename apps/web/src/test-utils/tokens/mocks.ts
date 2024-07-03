@@ -66,7 +66,7 @@ beforeEach(() => {
       return TEST_TOKEN_3_INFO?.currency
     }
     return COMMON_BASES[chainId ?? UniverseChainId.Mainnet]?.find((base) =>
-      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === currencyId
+      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === currencyId,
     )?.currency
   })
   mocked(useCurrency).mockImplementation((address?: string, chainId?: InterfaceChainId) => {
@@ -104,7 +104,7 @@ beforeEach(() => {
       return TEST_TOKEN_3_INFO?.currency
     }
     return COMMON_BASES[chainId ?? UniverseChainId.Mainnet]?.find((base) =>
-      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === address
+      base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === address,
     )?.currency
   })
   mocked(useCurrencyInfo).mockImplementation((currency?: Currency | string) => {

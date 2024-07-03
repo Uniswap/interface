@@ -21,7 +21,7 @@ export function useIsBlocked(address?: string, isViewOnly = false): IsBlockedRes
     {
       ttlMs: ONE_MINUTE_MS * 5,
       skip: !address || isViewOnly,
-    }
+    },
   )
 
   return {

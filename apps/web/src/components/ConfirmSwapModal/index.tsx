@@ -179,7 +179,7 @@ export function ConfirmSwapModal({
       // If the user dismissed the modal while showing the price update, log the event as rejected.
       sendAnalyticsEvent(
         SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
-        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED)
+        formatSwapPriceUpdatedEventProperties(trade, priceUpdate, SwapPriceUpdateUserResponse.REJECTED),
       )
     }
     onDismiss()

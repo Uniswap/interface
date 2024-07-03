@@ -15,10 +15,7 @@ import { useEffect, useMemo } from 'react'
 import { GqlResult } from 'uniswap/src/data/types'
 
 /** Wrapper around Apollo client `useQuery` that calls REST APIs */
-export function useRestQuery<
-  TData = unknown,
-  TVariables extends OperationVariables = OperationVariables
->(
+export function useRestQuery<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
   // Relative URL path of the endpoint
   path: string,
   // Variables required by the endpoint
@@ -45,7 +42,7 @@ export function useRestQuery<
         clearIfStale?: undefined
       }),
   method: 'GET' | 'POST' = 'POST',
-  client?: ApolloClient<unknown>
+  client?: ApolloClient<unknown>,
 ): GqlResult<TData> {
   const document = gql`
     query Query($input: REST!) {
@@ -68,8 +65,7 @@ export function useRestQuery<
   const queryResult = useQuery<{ data: TData }, { input: TVariables }>(document, queryOptions)
 
   // timestamp is injected by our `InMemoryCache` config (cache.ts)
-  const lastFetchedTimestamp = (queryResult.data?.data as undefined | { timestamp: number })
-    ?.timestamp
+  const lastFetchedTimestamp = (queryResult.data?.data as undefined | { timestamp: number })?.timestamp
   const cacheExpired = getCacheExpired(lastFetchedTimestamp, options.ttlMs)
 
   // re-export query result with easier data access
@@ -78,7 +74,7 @@ export function useRestQuery<
       ...queryResult,
       data: cacheExpired && options.clearIfStale ? undefined : queryResult.data?.data,
     }),
-    [queryResult, cacheExpired, options.clearIfStale]
+    [queryResult, cacheExpired, options.clearIfStale],
   )
 
   useEffect(() => {
@@ -95,10 +91,7 @@ export function useRestQuery<
   return result
 }
 
-const getCacheExpired = (
-  lastFetchedTimestamp: number | undefined,
-  ttl: number | undefined
-): boolean => {
+const getCacheExpired = (lastFetchedTimestamp: number | undefined, ttl: number | undefined): boolean => {
   // if there is no timestamp, then it's the first ever query and there is no cache to expire
   if (!lastFetchedTimestamp) {
     return false
@@ -128,15 +121,12 @@ const getCacheExpired = (
  *
  * Example usage: `wallet/src/unitags/api.ts` and `mobile/src/feature/unitags/ChooseProfilePictureScreen.tsx`
  */
-export function useRestMutation<
-  TData = unknown,
-  TVariables extends OperationVariables = OperationVariables
->(
+export function useRestMutation<TData = unknown, TVariables extends OperationVariables = OperationVariables>(
   path: string,
   fields: string[],
   options: Omit<MutationHookOptions<{ data: TData }, { input: TVariables }>, 'variables'>,
   method: 'POST' | 'PUT' | 'DELETE',
-  client?: ApolloClient<object>
+  client?: ApolloClient<object>,
 ): [(variables: TVariables) => Promise<FetchResult<{ data: TData }>>, MutationResult<TData>] {
   const document = gql`
     mutation Mutation($input: REST!) {
@@ -156,7 +146,7 @@ export function useRestMutation<
   }
   const [mutateFunction, mutationResult] = useMutation<{ data: TData }, { input: TVariables }>(
     document,
-    mutationOptions
+    mutationOptions,
   )
 
   // Wrapper for the mutate function to simplify its usage

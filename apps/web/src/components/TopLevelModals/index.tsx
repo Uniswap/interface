@@ -15,7 +15,7 @@ import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)

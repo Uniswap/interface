@@ -13,7 +13,7 @@ export function useWrapCallback(
   wrapType: WrapType,
   onSuccess: () => void,
   txRequest?: providers.TransactionRequest,
-  txId?: string
+  txId?: string,
 ): {
   wrapCallback: () => void
 } {

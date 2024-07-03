@@ -16,7 +16,7 @@ describe('BuyCell', () => {
         toggleCart={() => undefined}
         isMobile={false}
         ethPriceInUSD={0}
-      />
+      />,
     )
     expect(await screen.findByText(/Add to Bag/i)).toBeInTheDocument()
   })

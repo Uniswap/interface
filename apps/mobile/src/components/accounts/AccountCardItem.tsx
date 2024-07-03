@@ -80,7 +80,7 @@ export function AccountCardItem({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      })
+      }),
     )
   }
 
@@ -122,14 +122,16 @@ export function AccountCardItem({
         if (e.nativeEvent.index === 2) {
           onPressRemoveWallet()
         }
-      }}>
+      }}
+    >
       <TouchableArea
         hapticFeedback
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
         onLongPress={disableOnPress}
-        onPress={(): void => onPress(address)}>
+        onPress={(): void => onPress(address)}
+      >
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
           <Flex fill>
             <AddressDisplay

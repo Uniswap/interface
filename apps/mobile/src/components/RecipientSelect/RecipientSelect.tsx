@@ -24,11 +24,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
 
   return (
     <TouchableArea hapticFeedback testID={ElementName.SelectRecipient} onPress={onPress}>
-      <ScanQRIcon
-        color={colors.neutral2.get()}
-        height={iconSizes.icon20}
-        width={iconSizes.icon20}
-      />
+      <ScanQRIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
     </TouchableArea>
   )
 }
@@ -56,13 +52,7 @@ export function _RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        flex={1}
-        gap="$spacing12"
-        mt="$spacing16"
-        px="$spacing24">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} flex={1} gap="$spacing12" mt="$spacing16" px="$spacing24">
         <Flex row>
           <Text variant="subheading1">{t('qrScanner.recipient.label.send')}</Text>
         </Flex>
@@ -84,14 +74,10 @@ export function _RecipientSelect({
           </Flex>
         ) : (
           // Show either suggested recipients or filtered sections based on query
-          isSheetReady && (
-            <RecipientList renderedInModal sections={sections} onPress={onSelectRecipient} />
-          )
+          isSheetReady && <RecipientList renderedInModal sections={sections} onPress={onSelectRecipient} />
         )}
       </AnimatedFlex>
-      {showQRScanner && (
-        <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />
-      )}
+      {showQRScanner && <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />}
     </>
   )
 }

@@ -492,12 +492,10 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
   }
 
   const Schema8PendingAccountsActiveAddressInTheMiddleMigrated = migration(
-    Schema8PendingAccountsActiveAddressInTheMiddle
+    Schema8PendingAccountsActiveAddressInTheMiddle,
   )
 
-  expect(
-    Object.keys(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.accounts)
-  ).toIncludeSameMembers([
+  expect(Object.keys(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.accounts)).toIncludeSameMembers([
     '0xTest0',
     '0xTest1',
     '0xTest2',
@@ -507,12 +505,8 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
     '0xTest7',
     '0xTest8',
   ])
-  Object.values(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.accounts).forEach(
-    (acc: any) => {
-      expect(acc.pending).toBeUndefined()
-    }
-  )
-  expect(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.activeAccountAddress).toBe(
-    '0xTest5'
-  )
+  Object.values(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.accounts).forEach((acc: any) => {
+    expect(acc.pending).toBeUndefined()
+  })
+  expect(Schema8PendingAccountsActiveAddressInTheMiddleMigrated.wallet.activeAccountAddress).toBe('0xTest5')
 }

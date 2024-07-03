@@ -1,7 +1,4 @@
-import {
-  NetworkLogo,
-  TransactionSummaryNetworkLogo,
-} from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkLogo, TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { render } from 'uniswap/src/test/test-utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

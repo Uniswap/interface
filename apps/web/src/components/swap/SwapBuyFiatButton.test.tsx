@@ -112,7 +112,7 @@ describe('SwapBuyFiatButton.tsx', () => {
     expect(error).toHaveBeenCalledTimes(2)
     expect(error).toHaveBeenCalledWith(
       'Warning: flushSync was called from inside a lifecycle method. React cannot flush when React is already rendering. Consider moving this call to a scheduler task or micro task.%s',
-      expect.anything()
+      expect.anything(),
     )
   })
 })

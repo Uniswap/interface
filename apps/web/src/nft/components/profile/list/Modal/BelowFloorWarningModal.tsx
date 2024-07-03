@@ -107,7 +107,7 @@ export const BelowFloorWarningModal = ({
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
             one={t('nft.oneListedDelta', {
               delta: formatDelta(
-                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
+                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100,
               ),
             })}
             other={t('nft.listedSignificantly', {

@@ -116,7 +116,7 @@ export const BuyCell = ({
 }: BuyCellProps) => {
   const asset = useMemo(
     () => buildActivityAsset(event, collectionName, ethPriceInUSD),
-    [event, collectionName, ethPriceInUSD]
+    [event, collectionName, ethPriceInUSD],
   )
   const isSelected = useMemo(() => {
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
@@ -193,7 +193,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
   const { formatNumberOrString } = useFormatter()
   const formattedPrice = useMemo(
     () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
-    [formatNumberOrString, price]
+    [formatNumberOrString, price],
   )
 
   return (
@@ -269,7 +269,7 @@ export const EventCell = ({
   const { formatNumberOrString } = useFormatter()
   const formattedPrice = useMemo(
     () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
-    [formatNumberOrString, price]
+    [formatNumberOrString, price],
   )
   return (
     <Column height="full" justifyContent="center" gap="4">

@@ -11,7 +11,6 @@ import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySec
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -28,8 +27,6 @@ export function ExploreScreen(): JSX.Element {
   const navigation = useExploreStackNavigation()
 
   const { isSheetReady } = useBottomSheetContext()
-
-  useReduxModalBackHandler(ModalName.Explore)
 
   // The ExploreStack is not directly accessible from outside
   // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.

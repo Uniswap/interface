@@ -1,20 +1,18 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { isL2Chain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  QuoteRequest,
-  TradeType as TradingApiTradeType,
-} from 'wallet/src/data/tradingApi/__generated__/index'
-import { isL2Chain } from 'wallet/src/features/chains/utils'
+import { QuoteRequest, TradeType as TradingApiTradeType } from 'wallet/src/data/tradingApi/__generated__/index'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
@@ -31,7 +29,6 @@ import {
 } from 'wallet/src/features/transactions/swap/trade/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -65,36 +62,24 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   /***** Format request arguments ******/
 
-  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(
-    amountSpecified,
-    SWAP_FORM_DEBOUNCE_TIME_MS
-  )
-  const shouldDebounce =
-    amountSpecified && debouncedAmountSpecified?.currency.chainId === otherCurrency?.chainId
+  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified, SWAP_FORM_DEBOUNCE_TIME_MS)
+  const shouldDebounce = amountSpecified && debouncedAmountSpecified?.currency.chainId === otherCurrency?.chainId
   const amount = shouldDebounce ? debouncedAmountSpecified : amountSpecified
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amount?.currency : otherCurrency
   const currencyOut = tradeType === TradeType.EXACT_OUTPUT ? amount?.currency : otherCurrency
   const currencyInEqualsCurrencyOut =
-    currencyIn &&
-    currencyOut &&
-    areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
+    currencyIn && currencyOut && areCurrencyIdsEqual(currencyId(currencyIn), currencyId(currencyOut))
 
   const tokenInChainId = toTradingApiSupportedChainId(currencyIn?.chainId)
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
 
-  const routingPreference = getRoutingPreferenceForSwapRequest(
-    tradeProtocolPreference,
-    uniswapXEnabled,
-    isUSDQuote
-  )
+  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference, uniswapXEnabled, isUSDQuote)
 
   const requestTradeType =
-    tradeType === TradeType.EXACT_INPUT
-      ? TradingApiTradeType.EXACT_INPUT
-      : TradingApiTradeType.EXACT_OUTPUT
+    tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
 
   const skipQuery =
     skip ||
@@ -166,7 +151,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       notifyOnNetworkStatusChange: true,
     },
     'POST',
-    TradingApiApolloClient
+    TradingApiApolloClient,
   )
 
   const { error, data, loading, networkStatus } = response
@@ -214,8 +199,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       data,
     })
 
-    const exactCurrencyField =
-      tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
+    const exactCurrencyField = tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
 
     const trade = validateTrade({
       trade: formattedTrade,
@@ -264,7 +248,5 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 }
 
 function getPollIntervalByChain(chainId?: WalletChainId): number {
-  return isL2Chain(chainId)
-    ? PollingInterval.AverageL2BlockTime
-    : PollingInterval.AverageL1BlockTime
+  return isL2Chain(chainId) ? PollingInterval.AverageL2BlockTime : PollingInterval.AverageL1BlockTime
 }

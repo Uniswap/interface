@@ -50,7 +50,7 @@ export const approveAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20ApproveAssetChange()],
     }),
-  })
+  }),
 )
 
 export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
@@ -63,7 +63,7 @@ export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn(), erc20TokenTransferOut()],
     }),
-  })
+  }),
 )
 
 export const erc20ReceiveAssetActivity = createFixture<AssetActivity>()(() =>
@@ -76,5 +76,5 @@ export const erc20ReceiveAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn()],
     }),
-  })
+  }),
 )

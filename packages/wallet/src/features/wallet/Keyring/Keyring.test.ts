@@ -152,4 +152,17 @@ describe(WebKeyring, () => {
       await expect(action()).rejects.toThrow()
     })
   })
+
+  describe('removeAllMnemonicsAndPrivateKeys', () => {
+    it('removes all mnemonics', async () => {
+      const keyring = new WebKeyring()
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+
+      await keyring.removeAllMnemonicsAndPrivateKeys()
+
+      const allMnemonics = await keyring.getMnemonicIds()
+      expect(allMnemonics).toEqual([])
+    })
+  })
 })

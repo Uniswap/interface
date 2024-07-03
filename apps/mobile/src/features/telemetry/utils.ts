@@ -11,7 +11,7 @@ export enum AuthMethod {
 export function getAuthMethod(
   isSettingEnabled: boolean,
   isTouchIdSupported: boolean,
-  isFaceIdSupported: boolean
+  isFaceIdSupported: boolean,
 ): AuthMethod {
   if (isSettingEnabled) {
     // both cannot be true since no iOS device supports both
@@ -28,7 +28,7 @@ export function getAuthMethod(
 
 export function getEventParams(
   screen: MobileAppScreen,
-  params: RootParamList[MobileAppScreen]
+  params: RootParamList[MobileAppScreen],
 ): Record<string, unknown> | undefined {
   switch (screen) {
     case MobileScreens.SettingsWallet:

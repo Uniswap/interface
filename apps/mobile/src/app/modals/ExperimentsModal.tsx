@@ -34,7 +34,7 @@ export function ExperimentsModal(): JSX.Element {
       dispatch(
         setCustomEndpoint({
           customEndpoint: { url, key },
-        })
+        }),
       )
     } else {
       clearEndpoint()
@@ -46,13 +46,15 @@ export function ExperimentsModal(): JSX.Element {
       fullScreen
       renderBehindBottomInset
       name={ModalName.Experiments}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}
+    >
       <ScrollView
         contentContainerStyle={{
           paddingBottom: insets.bottom,
           paddingRight: spacing.spacing24,
           paddingLeft: spacing.spacing24,
-        }}>
+        }}
+      >
         <Text variant="heading3">Server</Text>
         <Accordion collapsible type="single">
           <Accordion.Item value="graphql-endpoint">
@@ -60,8 +62,8 @@ export function ExperimentsModal(): JSX.Element {
 
             <Accordion.Content>
               <Text variant="body2">
-                You will need to restart the application to pick up any changes in this section.
-                Beware of client side caching!
+                You will need to restart the application to pick up any changes in this section. Beware of client side
+                caching!
               </Text>
 
               <Flex row alignItems="center" gap="$spacing16">
@@ -90,10 +92,7 @@ export function ExperimentsModal(): JSX.Element {
             <AccordionHeader title="🚀 Apollo Cache" />
 
             <Accordion.Content>
-              <Button
-                flex={1}
-                size="small"
-                onPress={async (): Promise<unknown> => await apollo.resetStore()}>
+              <Button flex={1} size="small" onPress={async (): Promise<unknown> => await apollo.resetStore()}>
                 Reset Cache
               </Button>
             </Accordion.Content>

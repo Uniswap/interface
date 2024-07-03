@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import * as SentryRN from '@sentry/react-native'
 import { CaptureContext, SeverityLevel } from '@sentry/types'
 import { BreadCrumb, ISentry } from 'utilities/src/logger/Sentry'
@@ -22,12 +21,7 @@ export function captureException(error: unknown, captureContext?: CaptureContext
  * @param extraArgs Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
  */
-export function captureMessage(
-  level: SeverityLevel,
-  context: string,
-  message: string,
-  ...extraArgs: unknown[]
-): void {
+export function captureMessage(level: SeverityLevel, context: string, message: string, ...extraArgs: unknown[]): void {
   SentryRN.captureMessage(message, {
     level,
     tags: { mobileContext: context },

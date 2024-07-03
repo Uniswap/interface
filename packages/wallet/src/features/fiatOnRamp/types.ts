@@ -1,7 +1,4 @@
-import {
-  FiatPurchaseTransactionInfo,
-  TransactionDetails,
-} from 'wallet/src/features/transactions/types'
+import { FiatPurchaseTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export type FiatOnRampTransactionDetails = TransactionDetails & {
   typeInfo: FiatPurchaseTransactionInfo
@@ -144,11 +141,7 @@ export type MoonpayTransactionResponseItem = MoonpayQuote & {
   state: string
   // An array of four objects, each representing one of the four stages of the purchase process. The attributes of each stage are described below.
   stages: Array<{
-    stage:
-      | 'stage_one_ordering'
-      | 'stage_two_verification'
-      | 'stage_three_processing'
-      | 'stage_four_delivery'
+    stage: 'stage_one_ordering' | 'stage_two_verification' | 'stage_three_processing' | 'stage_four_delivery'
     status: 'not_started' | 'in_progress' | 'success' | 'failed'
     failureReason:
       | 'card_not_supported'

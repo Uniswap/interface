@@ -51,14 +51,14 @@ export function TransferAmountInput({
         selection: { start, end },
       },
     }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-    [selectionChange]
+    [selectionChange],
   )
 
   const onChangeText = useCallback(
     (newValue: string) => {
       onSetExactAmount(CurrencyField.INPUT, newValue, isFiatInput)
     },
-    [onSetExactAmount, isFiatInput]
+    [onSetExactAmount, isFiatInput],
   )
 
   // Display the fiat equivalent amount if the input is in fiat mode, otherwise display the token amount if fiat mode
@@ -77,7 +77,7 @@ export function TransferAmountInput({
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE
+    MIN_INPUT_FONT_SIZE,
   )
   const [containerWidth, setContainerWidth] = useState(0)
 
@@ -102,11 +102,11 @@ export function TransferAmountInput({
   const subTextValue = warning
     ? warning.warning.title
     : !tokenOrFiatEquivalentAmount
-    ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
-      isFiatInput
-      ? '0'
-      : '$0'
-    : tokenOrFiatEquivalentAmount
+      ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
+        isFiatInput
+        ? '0'
+        : '$0'
+      : tokenOrFiatEquivalentAmount
 
   const subTextValueColor = warning ? '$statusCritical' : '$neutral2'
   const inputColor = !value ? '$neutral3' : '$neutral1'
@@ -121,20 +121,11 @@ export function TransferAmountInput({
         // Avoid case where onSetFontSize is called before onLayout, resulting in incorrect sizing if view is re-mounted
         onSetFontSize(value || '0')
       }}
-      {...rest}>
-      <Flex
-        row
-        alignItems="center"
-        height={MAX_INPUT_FONT_SIZE}
-        justifyContent="center"
-        overflow="hidden">
+      {...rest}
+    >
+      <Flex row alignItems="center" height={MAX_INPUT_FONT_SIZE} justifyContent="center" overflow="hidden">
         {isFiatInput && (
-          <Text
-            allowFontScaling
-            color={inputColor}
-            fontSize={fontSize}
-            height={fontSize}
-            lineHeight={fontSize}>
+          <Text allowFontScaling color={inputColor} fontSize={fontSize} height={fontSize} lineHeight={fontSize}>
             {symbol}
           </Text>
         )}

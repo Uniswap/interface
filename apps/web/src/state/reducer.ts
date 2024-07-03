@@ -17,7 +17,7 @@ import transactions from 'state/transactions/reducer'
 import user from 'state/user/reducer'
 import wallets from 'state/wallets/reducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isDevEnv } from 'uniswap/src/utils/env'
+import { isDevEnv } from 'utilities/src/environment'
 
 const persistedReducers = {
   user,

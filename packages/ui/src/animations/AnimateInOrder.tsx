@@ -21,12 +21,7 @@ export const AnimateInOrder = ({
 >): JSX.Element => {
   return (
     <Delay by={index * delayMs} hapticOnEnter={hapticOnEnter}>
-      <Flex
-        key={`animate-${index}`}
-        animation={animation}
-        enterStyle={enterStyle}
-        exitStyle={exitStyle}
-        {...rest}>
+      <Flex key={`animate-${index}`} animation={animation} enterStyle={enterStyle} exitStyle={exitStyle} {...rest}>
         {children}
       </Flex>
     </Delay>

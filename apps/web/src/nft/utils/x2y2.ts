@@ -111,7 +111,7 @@ export const createSellOrder = (
   user: string,
   deadline: number,
   items: OfferItem[],
-  nftStandard: NftStandard = NftStandard.Erc721
+  nftStandard: NftStandard = NftStandard.Erc721,
 ): Order => {
   const salt = randomSalt()
   const network = 1 // mainnet

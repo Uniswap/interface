@@ -16,6 +16,7 @@ import {
   UwULinkMethod,
   UwULinkRequest,
 } from 'uniswap/src/types/walletConnect'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
@@ -24,7 +25,6 @@ import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/sc
 import { getTokenTransferRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { TransferCurrencyParams } from 'wallet/src/features/transactions/transfer/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
   WalletConnectURL = 'walletconnect',
@@ -76,7 +76,7 @@ export const truncateQueryParams = (url: string): string => {
 
 export async function getSupportedURI(
   uri: string,
-  enabledFeatureFlags?: EnabledFeatureFlags
+  enabledFeatureFlags?: EnabledFeatureFlags,
 ): Promise<URIFormat | undefined> {
   if (!uri) {
     return undefined
@@ -128,10 +128,7 @@ export async function getSupportedURI(
   }
 }
 
-async function getWcUriWithCustomPrefix(
-  uri: string,
-  prefix: string
-): Promise<{ uri: string; type: URIType } | null> {
+async function getWcUriWithCustomPrefix(uri: string, prefix: string): Promise<{ uri: string; type: URIType } | null> {
   if (uri.indexOf(prefix) !== 0) {
     return null
   }
@@ -160,7 +157,7 @@ export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
 
 export function findAllowedTokenRecipient(
   request: UwULinkRequest,
-  allowlist: UwULinkAllowlist
+  allowlist: UwULinkAllowlist,
 ): UwULinkAllowlistItem | undefined {
   if (request.method !== UwULinkMethod.Erc20Send) {
     return
@@ -168,7 +165,7 @@ export function findAllowedTokenRecipient(
 
   const { chainId, recipient } = request
   return allowlist.tokenRecipients.find(
-    (item) => item.chainId === chainId && areAddressesEqual(item.address, recipient)
+    (item) => item.chainId === chainId && areAddressesEqual(item.address, recipient),
   )
 }
 /**
@@ -183,10 +180,7 @@ export function findAllowedTokenRecipient(
  * @param request parsed UwULinkRequest
  * @returns boolean for whether the UwULinkRequest is allowed
  */
-export function isAllowedUwuLinkRequest(
-  request: UwULinkRequest,
-  allowlist: UwULinkAllowlist
-): boolean {
+export function isAllowedUwuLinkRequest(request: UwULinkRequest, allowlist: UwULinkAllowlist): boolean {
   // token sends
   if (request.method === UwULinkMethod.Erc20Send) {
     return Boolean(findAllowedTokenRecipient(request, allowlist))
@@ -198,10 +192,8 @@ export function isAllowedUwuLinkRequest(
 
   // generic transactions
   const { to, value } = request.value
-  const belowMaximumValue =
-    !value || parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress =
-    to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
+  const belowMaximumValue = !value || parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
+  const isAllowedContractAddress = to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false
@@ -289,7 +281,7 @@ export async function toTokenTransferRequest(
   request: UwULinkErc20SendRequest,
   account: Account,
   providerManager: ProviderManager,
-  contractManager: ContractManager
+  contractManager: ContractManager,
 ): Promise<EthTransaction> {
   const provider = providerManager.getProvider(request.chainId, RPCType.Public)
   const params: TransferCurrencyParams = {

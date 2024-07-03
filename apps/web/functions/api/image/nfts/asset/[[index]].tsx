@@ -22,7 +22,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const data = await getRequest(
       cacheUrl,
       () => getAsset(collectionAddress, tokenId, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getAsset>>> => Boolean(data.ogImage)
+      (data): data is NonNullable<Awaited<ReturnType<typeof getAsset>>> => Boolean(data.ogImage),
     )
 
     if (!data) {
@@ -67,7 +67,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
             style: 'normal',
           },
         ],
-      }
+      },
     ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })

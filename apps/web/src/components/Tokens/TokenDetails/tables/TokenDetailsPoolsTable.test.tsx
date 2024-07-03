@@ -34,7 +34,7 @@ describe('TDPPoolTable', () => {
     })
 
     const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />
+      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
     )
     expect(screen.getAllByTestId('cell-loading-bubble')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
@@ -50,7 +50,7 @@ describe('TDPPoolTable', () => {
     })
 
     const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />
+      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
     )
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
@@ -80,7 +80,7 @@ describe('TDPPoolTable', () => {
     })
 
     const { asFragment } = render(
-      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />
+      <TokenDetailsPoolsTable chainId={UniverseChainId.Mainnet} referenceToken={mockToken} />,
     )
     expect(screen.getByTestId(`tdp-pools-table-${validBEPoolToken0.id}`)).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()

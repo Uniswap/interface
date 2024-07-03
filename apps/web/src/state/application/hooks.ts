@@ -110,7 +110,7 @@ export function useCloseModal() {
         dispatch(setOpenModal(null))
       }
     },
-    [currentlyOpenModal, dispatch]
+    [currentlyOpenModal, dispatch],
   )
 }
 
@@ -162,7 +162,7 @@ export function useAddPopup(): (content: PopupContent, key?: string, removeAfter
     (content: PopupContent, key?: string, removeAfterMs?: number) => {
       dispatch(addPopup({ content, key, removeAfterMs: removeAfterMs ?? DEFAULT_TXN_DISMISS_MS }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -173,7 +173,7 @@ export function useRemovePopup(): (key: string) => void {
     (key: string) => {
       dispatch(removePopup({ key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 

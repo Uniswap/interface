@@ -3,10 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometrics/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'utilities/src/platform'
-import {
-  WarningModal,
-  WarningModalProps,
-} from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { WarningModal, WarningModalProps } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 type Props = {
@@ -15,11 +12,7 @@ type Props = {
   onClose: WarningModalProps['onClose']
 }
 
-export function BiometricAuthWarningModal({
-  isTouchIdDevice,
-  onConfirm,
-  onClose,
-}: Props): JSX.Element {
+export function BiometricAuthWarningModal({ isTouchIdDevice, onConfirm, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const biometricsMethod = useBiometricName(isTouchIdDevice)
   return (

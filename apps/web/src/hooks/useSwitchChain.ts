@@ -62,9 +62,9 @@ export function useSwitchChain() {
                     resolve()
                   }
                 },
-              }
+              },
             )
-          })
+          }),
       )
     },
     [
@@ -76,6 +76,6 @@ export function useSwitchChain() {
       page,
       searchParams,
       setSearchParams,
-    ]
+    ],
   )
 }

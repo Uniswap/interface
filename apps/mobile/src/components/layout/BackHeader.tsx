@@ -23,7 +23,8 @@ export function BackHeader({
       alignItems="center"
       justifyContent={alignment === 'left' ? 'flex-start' : 'space-between'}
       sentry-label="BackHeader"
-      {...spacingProps}>
+      {...spacingProps}
+    >
       <BackButton size={BACK_BUTTON_SIZE} onPressBack={onPressBack} />
       {children}
       {endAdornment}

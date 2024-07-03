@@ -15,8 +15,8 @@ export default function FormattedCurrencyAmount({
       {currencyAmount.equalTo(JSBI.BigInt(0))
         ? '0'
         : currencyAmount.greaterThan(CURRENCY_AMOUNT_MIN)
-        ? currencyAmount.toSignificant(significantDigits)
-        : `<${CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
+          ? currencyAmount.toSignificant(significantDigits)
+          : `<${CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
     </>
   )
 }

@@ -1,7 +1,5 @@
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { DAI } from 'wallet/src/constants/tokens'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   NATIVE_ANALYTICS_ADDRESS_VALUE,
   areCurrencyIdsEqual,
@@ -14,7 +12,9 @@ import {
   currencyIdToGraphQLAddress,
   getCurrencyAddressForAnalytics,
   isNativeCurrencyAddress,
-} from 'wallet/src/utils/currencyId'
+} from 'uniswap/src/utils/currencyId'
+import { DAI } from 'wallet/src/constants/tokens'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 const DAI_ADDRESS = '0x6B175474E89094C44Da98b954EedeAC495271d0F'

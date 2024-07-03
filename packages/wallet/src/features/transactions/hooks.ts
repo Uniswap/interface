@@ -2,11 +2,10 @@ import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { ensureLeading0x } from 'uniswap/src/utils/addresses'
+import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  makeSelectTransaction,
-  useSelectAddressTransactions,
-} from 'wallet/src/features/transactions/selectors'
+import { makeSelectTransaction, useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   createSwapFormFromTxDetails,
@@ -22,12 +21,10 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { ensureLeading0x } from 'wallet/src/utils/addresses'
-import { areCurrencyIdsEqual, buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
   address: Address | null,
-  ignoreTransactionTypes: TransactionType[] = []
+  ignoreTransactionTypes: TransactionType[] = [],
 ): TransactionDetails[] | undefined {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
@@ -36,31 +33,26 @@ export function usePendingTransactions(
     }
     return transactions.filter(
       (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
-        tx.status === TransactionStatus.Pending &&
-        !ignoreTransactionTypes.includes(tx.typeInfo.type)
+        tx.status === TransactionStatus.Pending && !ignoreTransactionTypes.includes(tx.typeInfo.type),
     )
   }, [ignoreTransactionTypes, transactions])
 }
 
 // sorted oldest to newest
-export function useSortedPendingTransactions(
-  address: Address | null
-): TransactionDetails[] | undefined {
+export function useSortedPendingTransactions(address: Address | null): TransactionDetails[] | undefined {
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) {
       return
     }
-    return transactions.sort(
-      (a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime
-    )
+    return transactions.sort((a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime)
   }, [transactions])
 }
 
 export function useSelectTransaction(
   address: Address | undefined,
   chainId: WalletChainId | undefined,
-  txId: string | undefined
+  txId: string | undefined,
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
   return useAppSelector((state) => selectTransaction(state, { address, chainId, txId }))
@@ -69,19 +61,15 @@ export function useSelectTransaction(
 export function useCreateSwapFormState(
   address: Address | undefined,
   chainId: WalletChainId | undefined,
-  txId: string | undefined
+  txId: string | undefined,
 ): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 
   const inputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap
-      ? transaction.typeInfo.inputCurrencyId
-      : undefined
+    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.inputCurrencyId : undefined
 
   const outputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap
-      ? transaction.typeInfo.outputCurrencyId
-      : undefined
+    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.outputCurrencyId : undefined
 
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
@@ -104,7 +92,7 @@ export function useCreateWrapFormState(
   chainId: WalletChainId | undefined,
   txId: string | undefined,
   inputCurrency: Maybe<Currency>,
-  outputCurrency: Maybe<Currency>
+  outputCurrency: Maybe<Currency>,
 ): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 
@@ -126,7 +114,7 @@ export function useCreateWrapFormState(
  */
 export function useMergeLocalAndRemoteTransactions(
   address: Address,
-  remoteTransactions: TransactionDetails[] | undefined
+  remoteTransactions: TransactionDetails[] | undefined,
 ): TransactionDetails[] | undefined {
   const dispatch = useAppDispatch()
   const localTransactions = useSelectAddressTransactions(address)
@@ -220,10 +208,7 @@ export function useMergeLocalAndRemoteTransactions(
     return deDupedTxs.sort((a, b) => {
       // If inclusion times are equal, then sequence approve txs before swap txs
       if (a.addedTime === b.addedTime) {
-        if (
-          a.typeInfo.type === TransactionType.Approve &&
-          b.typeInfo.type === TransactionType.Swap
-        ) {
+        if (a.typeInfo.type === TransactionType.Approve && b.typeInfo.type === TransactionType.Swap) {
           const aCurrencyId = buildCurrencyId(a.chainId, a.typeInfo.tokenAddress)
           const bCurrencyId = b.typeInfo.inputCurrencyId
           if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) {
@@ -231,10 +216,7 @@ export function useMergeLocalAndRemoteTransactions(
           }
         }
 
-        if (
-          a.typeInfo.type === TransactionType.Swap &&
-          b.typeInfo.type === TransactionType.Approve
-        ) {
+        if (a.typeInfo.type === TransactionType.Swap && b.typeInfo.type === TransactionType.Approve) {
           const aCurrencyId = a.typeInfo.inputCurrencyId
           const bCurrencyId = buildCurrencyId(b.chainId, b.typeInfo.tokenAddress)
           if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) {

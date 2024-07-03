@@ -5,6 +5,17 @@ const preset = require('../../config/jest-presets/jest/jest-preset')
 
 module.exports = {
   ...preset,
+  transform: {
+    '\\.svg$': 'jest-transformer-svg',
+    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        // this avoids type checking other modules
+        isolatedModules: true
+      },
+    ],
+  },
   displayName: 'UI Package',
   collectCoverageFrom: [
     'src/**/*.{js,ts,tsx}',

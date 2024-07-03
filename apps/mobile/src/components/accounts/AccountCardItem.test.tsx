@@ -48,24 +48,14 @@ describe(AccountCardItem, () => {
   describe('portfolio value', () => {
     it('displays loading shimmmer when portfolio value is loading', () => {
       const { rerender } = render(
-        <AccountCardItem
-          {...defaultProps}
-          isPortfolioValueLoading={true}
-          portfolioValue={undefined}
-        />
+        <AccountCardItem {...defaultProps} isPortfolioValueLoading={true} portfolioValue={undefined} />,
       )
 
       // Select shimmer placeholder because the actual shimmer is rendered after onLayout
       // is fired and this logic is not a part of this test
       expect(screen.queryByTestId('shimmer-placeholder')).toBeTruthy()
 
-      rerender(
-        <AccountCardItem
-          {...defaultProps}
-          isPortfolioValueLoading={false}
-          portfolioValue={undefined}
-        />
-      )
+      rerender(<AccountCardItem {...defaultProps} isPortfolioValueLoading={false} portfolioValue={undefined} />)
 
       expect(screen.queryByTestId('shimmer-placeholder')).toBeFalsy()
     })

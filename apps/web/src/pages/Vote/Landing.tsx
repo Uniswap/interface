@@ -140,13 +140,13 @@ export default function Landing() {
   const { loading: loadingAvailableVotes, votes: availableVotes } = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account.address,
-    account.chainId ? UNI[account.chainId] : undefined
+    account.chainId ? UNI[account.chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
   return (
     <>

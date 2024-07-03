@@ -37,9 +37,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     }
     await HapticFeedback.impact()
     await setClipboard(address)
-    dispatch(
-      pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })
-    )
+    dispatch(pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address }))
   }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {
@@ -52,7 +50,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     params.append('tf_7005922218125', 'report_unitag') // Report Type Dropdown
     const prefilledRequestUrl = uniswapUrls.helpRequestUrl + '?' + params.toString()
     openUri(prefilledRequestUrl).catch((e) =>
-      logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } })
+      logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } }),
     )
   }, [address])
 
@@ -110,13 +108,15 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       dropdownMenuMode={true}
       onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
         await menuActions[e.nativeEvent.index]?.action()
-      }}>
+      }}
+    >
       <TouchableArea
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         opacity={0.8}
         p="$spacing8"
-        onLongPress={disableOnPress}>
+        onLongPress={disableOnPress}
+      >
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
           <TripleDot color="$sporeWhite" size={3.5} />
         </Flex>

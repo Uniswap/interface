@@ -69,7 +69,7 @@ const pool = new Pool(
   FeeAmount.MEDIUM,
   '1851127709498178402383049949138810',
   '7076437181775065414',
-  201189
+  201189,
 )
 
 const position = new Position({

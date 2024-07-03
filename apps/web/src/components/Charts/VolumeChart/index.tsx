@@ -140,7 +140,7 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale }: Volume
 
   const params = useMemo(
     () => ({ data, colors: [theme.accent1], headerHeight: 75, stale }),
-    [data, stale, theme.accent1]
+    [data, stale, theme.accent1],
   )
 
   return (

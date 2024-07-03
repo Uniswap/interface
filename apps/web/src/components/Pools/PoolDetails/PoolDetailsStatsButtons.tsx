@@ -148,7 +148,7 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
       (position?.details.token1.toLowerCase() === token0?.address ||
         position?.details.token1.toLowerCase() === token1?.address) &&
       position?.details.fee == feeTier &&
-      !position.closed
+      !position.closed,
   )
 }
 
@@ -156,7 +156,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const account = useAccount()
   const { positions: userOwnedPositions } = useMultiChainPositions(
     account.address ?? '',
-    chainId ? [chainId] : undefined
+    chainId ? [chainId] : undefined,
   )
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
@@ -170,7 +170,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const { data: balanceQuery } = useTokenBalancesQuery()
   const { balance0, balance1, balance0Fiat, balance1Fiat } = useMemo(() => {
     const filteredBalances = balanceQuery?.portfolios?.[0]?.tokenBalances?.filter(
-      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendChain({ chainId, withFallback: true })
+      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendChain({ chainId, withFallback: true }),
     )
     const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token0?.address)
     const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token1?.address)

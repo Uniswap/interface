@@ -24,10 +24,8 @@ const slice = createSlice({
 export const { setCurrentLanguage, resetSettings } = slice.actions
 
 export const updateLanguage = createAction<Language | null>('language/updateLanguage')
-export const syncAppWithDeviceLanguage = (): ReturnType<typeof updateLanguage> =>
-  updateLanguage(null)
+export const syncAppWithDeviceLanguage = (): ReturnType<typeof updateLanguage> => updateLanguage(null)
 
-export const selectCurrentLanguage = (state: RootState): Language =>
-  state.languageSettings.currentLanguage
+export const selectCurrentLanguage = (state: RootState): Language => state.languageSettings.currentLanguage
 
 export const languageSettingsReducer = slice.reducer

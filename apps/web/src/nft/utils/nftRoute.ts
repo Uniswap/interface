@@ -38,7 +38,7 @@ function buildRoutingItems(routingItems: readonly NftTrade[]): RoutingItem[] {
 
 export function buildRouteResponse(
   routeResponse: NftRouteResponse,
-  useErc20Token: boolean
+  useErc20Token: boolean,
 ): { route: RoutingItem[]; routeResponse: RouteResponse } {
   const route = routeResponse.route ? buildRoutingItems(routeResponse.route) : []
   return {

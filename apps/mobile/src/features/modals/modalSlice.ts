@@ -3,7 +3,6 @@ import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
-import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -27,11 +26,6 @@ type ExperimentsModalParams = { name: typeof ModalName.Experiments; initialState
 type ExploreModalParams = {
   name: typeof ModalName.Explore
   initialState?: ExploreModalState
-}
-
-type ExtensionWaitlistModalParams = {
-  name: typeof ModalName.ExtensionWaitlistModal
-  initialState: ExtensionWaitlistModalState
 }
 
 type FiatCurrencySelectorParams = {
@@ -92,7 +86,6 @@ export type OpenModalParams =
   | ExchangeTransferModalParams
   | ExperimentsModalParams
   | ExploreModalParams
-  | ExtensionWaitlistModalParams
   | FiatCurrencySelectorParams
   | FiatOnRampModalParams
   | FiatOnRampAggregatorModalParams
@@ -131,10 +124,6 @@ export const initialModalsState: ModalsState = {
     initialState: ScannerModalState.ScanQr,
   },
   [ModalName.Scantastic]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.ExtensionWaitlistModal]: {
     isOpen: false,
     initialState: undefined,
   },

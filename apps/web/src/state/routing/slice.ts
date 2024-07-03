@@ -171,7 +171,7 @@ export const routingApi = createApi({
               'queryFn',
               `GetQuote failed on Unified Routing API, falling back to client: ${
                 error?.message ?? error?.detail ?? error
-              }`
+              }`,
             )
           }
 

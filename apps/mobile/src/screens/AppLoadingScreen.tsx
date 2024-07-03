@@ -1,31 +1,147 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
+import { isEnrolledAsync } from 'expo-local-authentication'
 import { t } from 'i18next'
-import { useEffect, useState } from 'react'
+import { isNumber } from 'lodash'
+import { useCallback, useEffect, useState } from 'react'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
-import { useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
+import { useBiometricContext } from 'src/features/biometrics/context'
+import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
+import {
+  NotificationPermission,
+  useNotificationOSPermissionsEnabled,
+} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
+import { hideSplashScreen } from 'src/utils/splashScreen'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { selectAnyAddressHasNotificationsEnabled } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { useAppDispatch } from 'wallet/src/state'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.AppLoading>
 
+function useFinishAutomatedRecovery(navigation: Props['navigation']): {
+  finishRecovery: (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => void
+} {
+  const dispatch = useAppDispatch()
+  const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
+
+  const notificationOSPermission = useNotificationOSPermissionsEnabled()
+  const hasAnyNotificationsEnabled = useAppSelector(selectAnyAddressHasNotificationsEnabled)
+  const { deviceSupportsBiometrics } = useBiometricContext()
+  const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
+
+  const importAccounts = useCallback(
+    async (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => {
+      const accountsToImport = recoveryWalletInfos.map((addressInfo, index): SignerMnemonicAccount => {
+        return {
+          type: AccountType.SignerMnemonic,
+          mnemonicId,
+          name: t('onboarding.wallet.defaultName', { number: index + 1 }),
+          address: addressInfo.address,
+          derivationIndex: addressInfo.derivationIndex,
+          timeImportedMs: dayjs().valueOf(),
+        }
+      })
+      setRecoveredImportedAccounts(accountsToImport)
+    },
+    [setRecoveredImportedAccounts],
+  )
+
+  const finishRecovery = useCallback(
+    async (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => {
+      await importAccounts(mnemonicId, recoveryWalletInfos)
+
+      const isBiometricsEnrolled = await isEnrolledAsync()
+
+      const showNotificationScreen = notificationOSPermission !== NotificationPermission.Enabled
+      const showBiometricsScreen =
+        (deviceSupportsBiometrics && (!isBiometricAuthEnabled || !isBiometricsEnrolled)) ?? false
+
+      sendAnalyticsEvent(MobileEventName.AutomatedOnDeviceRecoveryTriggered, {
+        showNotificationScreen,
+        showBiometricsScreen,
+        notificationOSPermission,
+        hasAnyNotificationsEnabled,
+        deviceSupportsBiometrics,
+        isBiometricsEnrolled,
+        isBiometricAuthEnabled,
+      })
+
+      hideSplashScreen()
+
+      // Notification screen should always navigate to biometrics screen if supported
+      // This is acceptable because we're already triggering a setup screen
+      // and biometrics is the more important one to include
+      if (showNotificationScreen) {
+        navigation.replace(OnboardingScreens.Notifications, {
+          importType: ImportType.OnDeviceRecovery,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        })
+      } else if (showBiometricsScreen) {
+        navigation.replace(OnboardingScreens.Security, {
+          importType: ImportType.OnDeviceRecovery,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        })
+      } else {
+        await finishOnboarding(ImportType.OnDeviceRecovery)
+        dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+      }
+    },
+    [
+      deviceSupportsBiometrics,
+      dispatch,
+      finishOnboarding,
+      hasAnyNotificationsEnabled,
+      importAccounts,
+      isBiometricAuthEnabled,
+      navigation,
+      notificationOSPermission,
+    ],
+  )
+
+  return {
+    finishRecovery,
+  }
+}
+
+const FALLBACK_APP_LOADING_TIMEOUT_MS = 15000
+
 export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
   const dispatch = useAppDispatch()
 
-  const { finishOnboarding } = useOnboardingContext()
+  const onDeviceRecoveryConfig = useDynamicConfig(DynamicConfigs.OnDeviceRecovery)
+  const appLoadingTimeoutMs = onDeviceRecoveryConfig.get(
+    'appLoadingTimeoutMs',
+    FALLBACK_APP_LOADING_TIMEOUT_MS,
+    isNumber,
+  )
+  const maxMnemonicsToLoad = onDeviceRecoveryConfig.getValue('maxMnemonicsToLoad', 20) as number
+
   const [finished, setFinished] = useState(false)
 
   const [mnemonicIds, setMnemonicIds] = useState<string[]>()
   const { significantRecoveryWalletInfos, loading } = useOnDeviceRecoveryData(mnemonicIds?.[0])
+  const { finishRecovery } = useFinishAutomatedRecovery(navigation)
+
+  const navigateToLanding = useCallback((): void => {
+    navigation.replace(OnboardingScreens.Landing, {
+      importType: ImportType.NotYetSelected,
+      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+    })
+  }, [navigation])
 
   useEffect(() => {
     Keyring.getMnemonicIds()
@@ -38,15 +154,19 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
       })
   }, [])
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!finished) {
+        setFinished(true)
+        navigateToLanding()
+        logger.warn('AppLoadingScreen', 'useTimeout', `Loading timeout triggered after ${appLoadingTimeoutMs}ms`)
+      }
+    }, appLoadingTimeoutMs)
+    return () => clearTimeout(timeout)
+  }, [appLoadingTimeoutMs, finished, navigateToLanding])
+
   // Logic to determine what screen to show on app load
   useEffect(() => {
-    const navigateToLanding = (): void => {
-      navigation.replace(OnboardingScreens.Landing, {
-        importType: ImportType.NotYetSelected,
-        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-      })
-    }
-
     async function checkOnDeviceRecovery(): Promise<void> {
       if (!mnemonicIds || loading || finished) {
         return
@@ -60,28 +180,15 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
 
       if (mnemonicIdsCount === 1 && firstMnemonicId) {
         if (significantRecoveryWalletInfos.length) {
-          await finishOnboarding(
-            ImportType.OnDeviceRecovery,
-            significantRecoveryWalletInfos.map((addressInfo, index) => {
-              return {
-                type: AccountType.SignerMnemonic,
-                mnemonicId: firstMnemonicId,
-                name: t('onboarding.wallet.defaultName', { number: index + 1 }),
-                address: addressInfo.address,
-                derivationIndex: addressInfo.derivationIndex,
-                timeImportedMs: dayjs().valueOf(),
-              }
-            })
-          )
-          dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+          finishRecovery(firstMnemonicId, significantRecoveryWalletInfos)
         } else {
           navigateToLanding()
         }
       } else if (mnemonicIdsCount > 1) {
         navigation.replace(OnboardingScreens.OnDeviceRecovery, {
-          importType: ImportType.RestoreMnemonic,
+          importType: ImportType.OnDeviceRecovery,
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-          mnemonicIds,
+          mnemonicIds: mnemonicIds.slice(0, maxMnemonicsToLoad),
         })
       } else {
         navigateToLanding()
@@ -92,10 +199,12 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
     })
   }, [
     dispatch,
-    finishOnboarding,
+    finishRecovery,
     finished,
     loading,
+    maxMnemonicsToLoad,
     mnemonicIds,
+    navigateToLanding,
     navigation,
     significantRecoveryWalletInfos,
   ])

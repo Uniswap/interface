@@ -51,7 +51,7 @@ export const TEST_POOL_12 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 
 export const TEST_POOL_13 = new Pool(
@@ -60,7 +60,7 @@ export const TEST_POOL_13 = new Pool(
   FeeAmount.MEDIUM,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 
 export const toCurrencyAmount = (token: Token, amount: number) =>
@@ -193,7 +193,7 @@ const SELL_FEE_TOKEN = new Token(
   'Abc',
   false,
   undefined,
-  BigNumber.from(300)
+  BigNumber.from(300),
 )
 const TEST_POOL_FOT_1 = new Pool(
   SELL_FEE_TOKEN,
@@ -201,7 +201,7 @@ const TEST_POOL_FOT_1 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
   v3Routes: [
@@ -226,7 +226,7 @@ const BUY_FEE_TOKEN = new Token(
   'Def',
   false,
   BigNumber.from(300),
-  undefined
+  undefined,
 )
 const TEST_POOL_FOT_2 = new Pool(
   TEST_TOKEN_1,
@@ -234,7 +234,7 @@ const TEST_POOL_FOT_2 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
   v3Routes: [

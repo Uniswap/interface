@@ -22,6 +22,8 @@ const TDPActionPill = styled.button<{ $color?: string }>`
   background-color: ${({ $color, theme }) => $color || theme.neutral2};
   color: ${({ theme }) => theme.neutralContrast};
   padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 535;
   ${ClickableStyle}
   > svg {
     stroke: transparent;
@@ -49,7 +51,7 @@ export function TDPActionTabs() {
       }
       navigate(href)
     },
-    [account, currencyChainId, switchChain, navigate]
+    [account, currencyChainId, switchChain, navigate],
   )
 
   const tabs: TabItem[] = [
@@ -70,7 +72,7 @@ export function TDPActionTabs() {
     },
   ]
   return (
-    <Row justify="space-around">
+    <Row justify="space-between">
       {tabs.map((tab) => (
         <TDPActionPill key={tab.label} onClick={() => toActionLink(tab.href)} $color={tokenColor}>
           {tab.icon}

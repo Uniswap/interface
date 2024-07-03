@@ -6,17 +6,13 @@ import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SlippageSettingsRowProps } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRowProps'
 
-export function SlippageSettingsRow({
-  derivedSwapInfo,
-  onPress,
-}: SlippageSettingsRowProps): JSX.Element {
+export function SlippageSettingsRow({ derivedSwapInfo, onPress }: SlippageSettingsRowProps): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
 
   const { customSlippageTolerance, autoSlippageTolerance } = derivedSwapInfo
   const isCustomSlippage = !!customSlippageTolerance
-  const currentSlippage =
-    customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+  const currentSlippage = customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
 
   return (
     <Flex row justifyContent="space-between">
@@ -35,12 +31,7 @@ export function SlippageSettingsRow({
           <Text color="$neutral2" variant="subheading2">
             {formatPercent(currentSlippage)}
           </Text>
-          <RotatableChevron
-            color="$neutral3"
-            direction="end"
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
+          <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
       </TouchableArea>
     </Flex>

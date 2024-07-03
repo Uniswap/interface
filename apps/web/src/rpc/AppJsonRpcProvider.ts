@@ -66,7 +66,7 @@ export default class AppJsonRpcProvider extends ConfiguredJsonRpcProvider {
 
   constructor(
     providers: JsonRpcProvider[],
-    { minimumBackoffTime = AVERAGE_L1_BLOCK_TIME }: AppJsonRpcProviderOptions = {}
+    { minimumBackoffTime = AVERAGE_L1_BLOCK_TIME }: AppJsonRpcProviderOptions = {},
   ) {
     if (providers.length === 0) {
       throw new Error('Missing providers for AppJsonRpcProvider')

@@ -43,7 +43,8 @@ export function FeeOnTransferWarning({ children }: PropsWithChildren): JSX.Eleme
         text: caption,
         title,
         placement: 'top',
-      }}>
+      }}
+    >
       {children}
     </WarningInfo>
   )

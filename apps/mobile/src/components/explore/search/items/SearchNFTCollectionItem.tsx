@@ -9,10 +9,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import {
-  NFTCollectionSearchResult,
-  SearchResultType,
-} from 'wallet/src/features/search/SearchResult'
+import { NFTCollectionSearchResult, SearchResultType } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type NFTCollectionItemProps = {
@@ -20,10 +17,7 @@ type NFTCollectionItemProps = {
   searchContext?: SearchContext
 }
 
-export function SearchNFTCollectionItem({
-  collection,
-  searchContext,
-}: NFTCollectionItemProps): JSX.Element {
+export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollectionItemProps): JSX.Element {
   const { name, address, chainId, isVerified, imageUrl } = collection
   const dispatch = useAppDispatch()
   const navigation = useAppStackNavigation()
@@ -56,7 +50,7 @@ export function SearchNFTCollectionItem({
           imageUrl,
           isVerified,
         },
-      })
+      }),
     )
   }
 
@@ -65,21 +59,17 @@ export function SearchNFTCollectionItem({
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
       testID={ElementName.SearchNFTCollectionItem}
-      onPress={onPress}>
-      <Flex
-        row
-        alignItems="center"
-        gap="$spacing8"
-        justifyContent="flex-start"
-        px="$spacing8"
-        py="$spacing12">
+      onPress={onPress}
+    >
+      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing8" py="$spacing12">
         <Flex
           centered
           borderRadius="$roundedFull"
           height={iconSizes.icon40}
           mr="$spacing4"
           overflow="hidden"
-          width={iconSizes.icon40}>
+          width={iconSizes.icon40}
+        >
           {imageUrl ? (
             <NFTViewer uri={imageUrl} />
           ) : (

@@ -13,10 +13,7 @@ type LongTextProps = {
   codeBackgroundColor?: string
   readMoreOrLessColor?: string
   variant?: keyof typeof fonts
-} & Omit<
-  ComponentProps<typeof Text>,
-  'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'
->
+} & Omit<ComponentProps<typeof Text>, 'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'>
 
 export function LongText(props: LongTextProps): JSX.Element {
   const colors = useSporeColors()
@@ -45,7 +42,7 @@ export function LongText(props: LongTextProps): JSX.Element {
       setExpanded(false)
       isInitializedRef.current = true
     },
-    [initialDisplayedLines]
+    [initialDisplayedLines],
   )
 
   return (
@@ -55,7 +52,8 @@ export function LongText(props: LongTextProps): JSX.Element {
         style={{ color }}
         variant={variant}
         onTextLayout={onTextLayout}
-        {...rest}>
+        {...rest}
+      >
         {text}
       </Text>
 
@@ -68,7 +66,8 @@ export function LongText(props: LongTextProps): JSX.Element {
           style={{ color: readMoreOrLessColor }}
           testID="read-more-button"
           variant="buttonLabel3"
-          onPress={(): void => setExpanded(!expanded)}>
+          onPress={(): void => setExpanded(!expanded)}
+        >
           {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}
         </Text>
       ) : null}

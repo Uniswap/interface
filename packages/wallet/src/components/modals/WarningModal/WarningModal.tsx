@@ -57,14 +57,16 @@ export function WarningModal({
       isDismissible={isDismissible}
       maxWidth={maxWidth}
       name={modalName}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <Flex
         centered
         gap="$spacing12"
         maxWidth={maxWidth}
         pb={isWeb ? '$none' : '$spacing12'}
         pt={hideHandlebar ? '$spacing24' : '$spacing12'}
-        px={isWeb ? '$none' : '$spacing24'}>
+        px={isWeb ? '$none' : '$spacing24'}
+      >
         {!hideIcon && (
           <Flex
             centered
@@ -75,10 +77,10 @@ export function WarningModal({
               backgroundIconColor === false
                 ? undefined
                 : {
-                    backgroundColor:
-                      backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
+                    backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
                   }
-            }>
+            }
+          >
             {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
@@ -91,12 +93,7 @@ export function WarningModal({
           </Text>
         )}
         {children}
-        <Flex
-          centered
-          row
-          gap="$spacing12"
-          pt={children ? '$spacing12' : '$spacing24'}
-          width="100%">
+        <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
           {closeText && (
             <Button flex={1} flexBasis={1} theme="secondary" onPress={onCancel ?? onClose}>
               {closeText}
@@ -108,7 +105,8 @@ export function WarningModal({
               flexBasis={1}
               testID={ElementName.Confirm}
               theme={alertColor.buttonTheme}
-              onPress={onConfirm}>
+              onPress={onConfirm}
+            >
               {confirmText}
             </Button>
           )}

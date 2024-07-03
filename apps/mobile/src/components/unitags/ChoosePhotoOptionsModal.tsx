@@ -80,7 +80,8 @@ export const ChoosePhotoOptionsModal = ({
         backgroundColor={colors.surface1.get()}
         hideHandlebar={false}
         name={ModalName.ChooseProfilePhoto}
-        onClose={onClose}>
+        onClose={onClose}
+      >
         <Flex centered gap="$spacing24" pt="$spacing8" px="$spacing24">
           <Flex gap="$spacing12" width="100%">
             {options.map((option) => (
@@ -114,19 +115,17 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
       borderRadius="$rounded20"
       gap="$spacing16"
       justifyContent="flex-start"
-      p="$spacing24">
-      {type === PhotoAction.BrowseCameraRoll && (
-        <Camera color="$neutral1" size={iconSizes.icon24} />
-      )}
+      p="$spacing24"
+    >
+      {type === PhotoAction.BrowseCameraRoll && <Camera color="$neutral1" size={iconSizes.icon24} />}
       {type === PhotoAction.BrowseNftsList && <Photo color="$neutral1" size={iconSizes.icon24} />}
-      {type === PhotoAction.RemovePhoto && (
-        <Trash color="$statusCritical" size={iconSizes.icon24} />
-      )}
+      {type === PhotoAction.RemovePhoto && <Trash color="$statusCritical" size={iconSizes.icon24} />}
       <Flex shrink alignItems="flex-start">
         <Text
           color={type === PhotoAction.RemovePhoto ? '$statusCritical' : '$neutral1'}
           numberOfLines={1}
-          variant="buttonLabel2">
+          variant="buttonLabel2"
+        >
           {type === PhotoAction.BrowseCameraRoll && t('unitags.choosePhoto.option.cameraRoll')}
           {type === PhotoAction.BrowseNftsList && t('unitags.choosePhoto.option.nft')}
           {type === PhotoAction.RemovePhoto && t('unitags.choosePhoto.option.remove')}

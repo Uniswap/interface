@@ -9,10 +9,7 @@ interface TransactionSummaryTitleProps {
 
 const ICON_SIZE = 14
 
-export const TransactionSummaryTitle: React.FC<TransactionSummaryTitleProps> = ({
-  transaction,
-  title,
-}) => {
+export const TransactionSummaryTitle: React.FC<TransactionSummaryTitleProps> = ({ transaction, title }) => {
   const isDarkMode = useIsDarkMode()
   const onRampLogo =
     transaction.typeInfo.type === TransactionType.OnRampPurchase ||

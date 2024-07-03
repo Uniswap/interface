@@ -44,12 +44,7 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import {
-  EthMethod,
-  UwULinkMethod,
-  WCEventType,
-  WCRequestOutcome,
-} from 'uniswap/src/types/walletConnect'
+import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
@@ -190,6 +185,11 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ProviderDirectMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.ExtensionEthMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.DeprecatedMethodRequest]: WindowEthereumRequestProperties
+  [ExtensionEventName.SidebarSwitchChain]: {
+    previousChainId?: number
+    newChainId: number
+  }
+  [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
   [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & {
     source: 'chip' | 'textInput'
@@ -353,6 +353,15 @@ export type UniverseEventProperties = {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number
     appRatingProvidedMs?: number
+  }
+  [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
+    showNotificationScreen: boolean
+    showBiometricsScreen: boolean
+    notificationOSPermission: string
+    hasAnyNotificationsEnabled: boolean
+    deviceSupportsBiometrics: boolean | undefined
+    isBiometricsEnrolled: boolean | undefined
+    isBiometricAuthEnabled: boolean
   }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
