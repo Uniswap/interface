@@ -130,9 +130,9 @@ export function useCurrencySearchResults({
                   !pool.isNative && pool.address?.toLowerCase() !== userAddedToken.address.toLowerCase()
                 },
                 [operatedPools, userAddedToken]
-              ) && !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address)),
-            ),
-          }),
+              ) && !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address))
+            )
+          })
         ]
       } else {
         return [

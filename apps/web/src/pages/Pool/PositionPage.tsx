@@ -743,7 +743,6 @@ function PositionPageContent() {
                       poolAddress
                         ? getPoolDetailsURL(
                             poolAddress,
-                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true }),
                           )
                         : ''
                     }

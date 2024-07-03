@@ -147,18 +147,14 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
-  const nativeCurrency = useNativeCurrency(chainId)
-  const { address: smartPoolAddress } = useActiveSmartPool()
-  // this is used to check the user has enough base currency to cover gas fees
-  const userBalance = useCurrencyBalance(account.address, nativeCurrency, chainId)
-
   const {
     chainId,
     currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
-  const balance = useCurrencyBalance(account.address, nativeCurrency)
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  // this is used to check the user has enough base currency to cover gas fees
+  const userBalance = useCurrencyBalance(account.address, nativeCurrency)
 
   const { independentField, typedValue } = state
 

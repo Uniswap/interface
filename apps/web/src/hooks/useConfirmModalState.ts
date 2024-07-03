@@ -197,7 +197,7 @@ export function useConfirmModalState({
   }, [generateRequiredSteps, performStep])
 
   const previousSetupApprovalNeeded = usePrevious(
-    allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined,
+    allowance?.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined,
   )
 
   useEffect(() => {
@@ -221,7 +221,7 @@ export function useConfirmModalState({
   }, [allowance, performStep, previousSetupApprovalNeeded])
 
   const previousRevocationPending = usePrevious(
-    allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending,
+    allowance?.state === AllowanceState.REQUIRED && allowance?.isRevocationPending,
   )
   useEffect(() => {
     if (allowance?.state === AllowanceState.REQUIRED && previousRevocationPending && !allowance?.isRevocationPending) {

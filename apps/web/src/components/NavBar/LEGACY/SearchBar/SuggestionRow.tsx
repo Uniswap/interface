@@ -6,6 +6,7 @@ import Row from 'components/Row'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
@@ -126,8 +127,9 @@ export const SuggestionRow = ({
   }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
 
   const path = isPool
-    ? getPoolDetailsURL({ address: suggestion.address })
-    : isToken
+    ? getPoolDetailsURL(
+      suggestion.address ?? '',
+    ) : isToken
     ? getTokenDetailsURL({ ...suggestion })
     : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape

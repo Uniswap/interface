@@ -181,8 +181,9 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-// TODO: add chain name to url, update PoolPositionListItem, PoolPositionPage, RouteDefinitions
-export function getPoolDetailsURL({ address }: { address?: string }) {
+// TODO: add chainId, update PoolPositionListItem, PoolPositionPage, RouteDefinitions
+// TODO: should check we are correctly defining url for liquidity pools, no redirect to smart-pool
+export function getPoolDetailsURL(address: string) {
   return `/smart-pool/${address}`
 }
 

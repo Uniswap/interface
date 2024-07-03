@@ -62,6 +62,8 @@ export default function useWrapCallback(
   const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
   const wethContract = useWETHContract(true, chainId)
+
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const poolContract = usePoolContract(smartPoolAddress ?? undefined)
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
@@ -79,7 +81,7 @@ export default function useWrapCallback(
   }
 
   return useMemo(() => {
-    if (!poolContract || !wethContract || !inputCurrency || !outputCurrency) {
+    if (!poolContract || !wethContract || !chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE
     }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]

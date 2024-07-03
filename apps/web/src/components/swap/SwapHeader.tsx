@@ -84,7 +84,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         >
           <Trans i18nKey="common.swap" />
         </SwapHeaderTabButton>
-        {chainId === UniverseChainId.Sepolia && (
+        {initialChainId === UniverseChainId.Sepolia && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Limit}
             onClick={() => {
