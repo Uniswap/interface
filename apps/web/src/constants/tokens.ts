@@ -325,13 +325,13 @@ export const ARB = new Token(
 )
 
 export const GRG: { [chainId: number]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, GRG_ADDRESS[1], 18, 'GRG', 'Rigo'),
-  [ChainId.GOERLI]: new Token(ChainId.GOERLI, GRG_ADDRESS[5], 18, 'GRG', 'Rigo'),
-  [ChainId.OPTIMISM]: new Token(ChainId.OPTIMISM, GRG_ADDRESS[10], 18, 'GRG', 'Rigo'),
-  [ChainId.BNB]: new Token(ChainId.BNB, GRG_ADDRESS[56], 18, 'GRG', 'Rigo'),
-  [ChainId.POLYGON]: new Token(ChainId.POLYGON, GRG_ADDRESS[137], 18, 'GRG', 'Rigo'),
-  [ChainId.BASE]: new Token(ChainId.BASE, GRG_ADDRESS[8453], 18, 'GRG', 'Rigo'),
-  [ChainId.ARBITRUM_ONE]: new Token(ChainId.ARBITRUM_ONE, GRG_ADDRESS[42161], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Mainnet]: new Token(UniverseChainId.Mainnet, GRG_ADDRESS[1], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Goerli]: new Token(UniverseChainId.Goerli, GRG_ADDRESS[5], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Optimism]: new Token(UniverseChainId.Optimism, GRG_ADDRESS[10], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Bnb]: new Token(UniverseChainId.Bnb, GRG_ADDRESS[56], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Polygon]: new Token(UniverseChainId.Polygon, GRG_ADDRESS[137], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.Base]: new Token(UniverseChainId.Base, GRG_ADDRESS[8453], 18, 'GRG', 'Rigo'),
+  [UniverseChainId.ArbitrumOne]: new Token(UniverseChainId.ArbitrumOne, GRG_ADDRESS[42161], 18, 'GRG', 'Rigo'),
 }
 
 export const OP = new Token(

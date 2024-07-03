@@ -25,6 +25,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import POP_ABI from 'uniswap/src/abis/pop.json'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { logger } from 'utilities/src/logger/logger'
 
 const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)

@@ -79,9 +79,9 @@ export function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  [ChainId.MAINNET]: [
+  [UniverseChainId.Mainnet]: [
     nativeOnChain(UniverseChainId.Mainnet),
-    GRG[ChainId.MAINNET],
+    GRG[UniverseChainId.Mainnet],
     USDC_MAINNET,
     USDT,
     WBTC,
@@ -98,7 +98,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.ArbitrumOne]: [
     nativeOnChain(UniverseChainId.ArbitrumOne),
     ARB,
-    GRG[ChainId.ARBITRUM_ONE],
+    GRG[UniverseChainId.ArbitrumOne],
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
@@ -113,7 +113,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.Optimism]: [
     nativeOnChain(UniverseChainId.Optimism),
     OP,
-    GRG[ChainId.OPTIMISM],
+    GRG[UniverseChainId.Optimism],
     USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
@@ -137,7 +137,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(UniverseChainId.Polygon),
     WETH_POLYGON,
     USDC_POLYGON,
-    GRG[ChainId.POLYGON],
+    GRG[UniverseChainId.Polygon],
     USDT_POLYGON,
     WBTC_POLYGON,
   ].map(buildCurrencyInfo),
@@ -166,7 +166,7 @@ export const COMMON_BASES: ChainCurrencyList = {
 
   [UniverseChainId.Bnb]: [
     nativeOnChain(UniverseChainId.Bnb),
-    GRG[ChainId.BNB],
+    GRG[UniverseChainId.Bnb],
     DAI_BSC,
     USDC_BSC,
     USDT_BSC,
@@ -201,14 +201,14 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
   [UniverseChainId.Mainnet]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[UniverseChainId.Mainnet],
-    GRG[ChainId.MAINNET],
+    GRG[UniverseChainId.Mainnet],
     USDC_MAINNET,
     USDT,
     WBTC,
   ],
   [UniverseChainId.Bnb]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[UniverseChainId.Bnb],
-    GRG[ChainId.BNB],
+    GRG[UniverseChainId.Bnb],
     USDC_BSC,
     USDT_BSC,
     BTC_BSC,

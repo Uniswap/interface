@@ -30,8 +30,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 //import { shortenAddress } from 'utilities/src/addresses'
 //import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { ProposalStatus } from './styled'
-
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;
 

@@ -4,7 +4,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { POOLS_LIST } from 'constants/lists'
@@ -25,6 +25,7 @@ import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 import { CallStateResult, useSingleContractMultipleData } from '../../lib/hooks/multicall'
@@ -62,19 +63,19 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   let registryStartBlock
   const blockNumber = useBlockNumber()
 
-  if (chainId === ChainId.MAINNET) {
+  if (chainId === UniverseChainId.Mainnet) {
     registryStartBlock = 15834693
-  } else if (chainId === ChainId.GOERLI) {
+  } else if (chainId === UniverseChainId.Goerli) {
     registryStartBlock = 7807806
-  } else if (chainId === ChainId.ARBITRUM_ONE) {
+  } else if (chainId === UniverseChainId.ArbitrumOne) {
     registryStartBlock = 35439804
-  } else if (chainId === ChainId.OPTIMISM) {
+  } else if (chainId === UniverseChainId.Optimism) {
     registryStartBlock = 34629059
-  } else if (chainId === ChainId.POLYGON) {
+  } else if (chainId === UniverseChainId.Polygon) {
     registryStartBlock = 35228892
-  } else if (chainId === ChainId.BASE) {
+  } else if (chainId === UniverseChainId.Base) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-  } else if (chainId === ChainId.BNB) {
+  } else if (chainId === UniverseChainId.Bnb) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
     registryStartBlock = undefined
@@ -128,19 +129,19 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
   // get metadata from past events
   let registryStartBlock
 
-  if (account.chainId === ChainId.MAINNET) {
+  if (account.chainId === UniverseChainId.Mainnet) {
     registryStartBlock = 15834693
-  } else if (account.chainId === ChainId.GOERLI) {
+  } else if (account.chainId === UniverseChainId.Goerli) {
     registryStartBlock = 7807806
-  } else if (account.chainId === ChainId.ARBITRUM_ONE) {
+  } else if (account.chainId === UniverseChainId.ArbitrumOne) {
     registryStartBlock = 35439804
-  } else if (account.chainId === ChainId.OPTIMISM) {
+  } else if (account.chainId === UniverseChainId.Optimism) {
     registryStartBlock = 34629059
-  } else if (account.chainId === ChainId.POLYGON) {
+  } else if (account.chainId === UniverseChainId.Polygon) {
     registryStartBlock = 35228892
-  } else if (account.chainId === ChainId.BASE && blockNumber) {
+  } else if (account.chainId === UniverseChainId.Base && blockNumber) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-  } else if (account.chainId === ChainId.BNB && blockNumber) {
+  } else if (account.chainId === UniverseChainId.Bnb && blockNumber) {
     registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
     registryStartBlock = blockNumber as number
@@ -553,7 +554,7 @@ export function useOperatedPools() {
         if (!isPoolOperator) {
           return mockToken
         }
-        return new Token(account.chainId ?? ChainId.MAINNET, poolAddress, decimals, symbol, name)
+        return new Token(account.chainId ?? UniverseChainId.Mainnet, poolAddress, decimals, symbol, name)
       })
       .filter((p) => p !== mockToken)
     //.filter((p) => account.address === owner)

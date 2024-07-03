@@ -1,7 +1,8 @@
 import celoLogo from 'assets/svg/celo_logo.svg'
+import logo from 'assets/svg/logo.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
 import { GRG, isCelo, nativeOnChain } from 'constants/tokens'
-
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 
 export function getInitialLogoUrl(
@@ -16,11 +17,11 @@ export function getInitialLogoUrl(
   const checksummedAddress = isAddress(address)
 
   if (
-    (address === GRG[ChainId.ARBITRUM_ONE].address ||
-      address === GRG[ChainId.BASE].address ||
-      address === GRG[ChainId.BNB].address ||
-      address === GRG[ChainId.OPTIMISM].address ||
-      address === GRG[ChainId.POLYGON].address) &&
+    (address === GRG[UniverseChainId.ArbitrumOne].address ||
+      address === GRG[UniverseChainId.Base].address ||
+      address === GRG[UniverseChainId.Bnb].address ||
+      address === GRG[UniverseChainId.Optimism].address ||
+      address === GRG[UniverseChainId.Polygon].address) &&
     checksummedAddress
   ) {
     return logo

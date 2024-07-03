@@ -5,8 +5,8 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   InterfaceChainId,
   NetworkLayer,
@@ -25,15 +25,15 @@ export function isSupportedChainId(chainId?: number | InterfaceChainId | null): 
 // This is the reason why useSupportedChainId and useIsSupportedChainId is a hook instead of a function.
 function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, boolean>> {
   // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
-  // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
+  // Example: [UniverseChainId.Blast]: useFeatureFlag(FeatureFlags.BLAST)
 
   const zoraEnabled = false //useFeatureFlag(FeatureFlags.Zora)
   return useMemo(
     () => ({
-      [ChainId.ZORA]: zoraEnabled,
-      [ChainId.AVALANCHE]: false,
-      [ChainId.BLAST]: false,
-      [ChainId.CELO]: false,
+      [UniverseChainId.Zora]: zoraEnabled,
+      [UniverseChainId.Avalanche]: false,
+      [UniverseChainId.Blast]: false,
+      [UniverseChainId.Celo]: false,
     }),
     [zoraEnabled]
   )

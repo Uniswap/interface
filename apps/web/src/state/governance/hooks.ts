@@ -7,7 +7,7 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 // eslint-disable-next-line no-restricted-imports
 //import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
-import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
@@ -307,20 +307,20 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   // get metadata from past events
   let govStartBlock
 
-  if (chainId === ChainId.MAINNET) {
+  if (chainId === UniverseChainId.Mainnet) {
     govStartBlock = 16620590
-  } else if (chainId === ChainId.GOERLI) {
+  } else if (chainId === UniverseChainId.Goerli) {
     govStartBlock = 8485377
-  } else if (chainId === ChainId.ARBITRUM_ONE) {
+  } else if (chainId === UniverseChainId.ArbitrumOne) {
     govStartBlock = 60590354
-  } else if (chainId === ChainId.OPTIMISM) {
+  } else if (chainId === UniverseChainId.Optimism) {
     govStartBlock = 74115128
-  } else if (chainId === ChainId.POLYGON) {
+  } else if (chainId === UniverseChainId.Polygon) {
     govStartBlock = 39249858
-  } else if (chainId === ChainId.BASE) {
+  } else if (chainId === UniverseChainId.Base) {
     // quicknode returns only a very limited number of logs, therefore we won't see proposal details
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570523
-  } else if (chainId === ChainId.BNB) {
+  } else if (chainId === UniverseChainId.Bnb) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //29095808
   }

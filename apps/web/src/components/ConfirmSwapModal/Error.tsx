@@ -2,6 +2,7 @@ import { ColumnCenter } from 'components/Column'
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { RigoblockUrls } from 'constants/rigoblockUrls'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
@@ -81,7 +82,7 @@ function getErrorContent({ errorType, trade }: { errorType: PendingModalError; t
             addition of a new token.
           </Trans>
         ),
-        supportArticleURL: SupportArticleURL.TOKEN_ADDITION_FORM,
+        supportArticleURL: RigoblockUrls.TOKEN_ADDITION_FORM,
       }
     default:
       return {

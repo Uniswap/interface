@@ -17,7 +17,7 @@ export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }
     [GOVERNANCE_ALPHA_V0_ADDRESSES[UniverseChainId.Mainnet]]: 'Governance (V0)',
     [GOVERNANCE_ALPHA_V1_ADDRESSES[UniverseChainId.Mainnet]]: 'Governance (V1)',
     [GOVERNANCE_BRAVO_ADDRESSES[UniverseChainId.Mainnet]]: 'Governance',
-    [GOVERNANCE_PROXY_ADDRESSES[ChainId.MAINNET]]: 'Governance Proxy',
+    [GOVERNANCE_PROXY_ADDRESSES[UniverseChainId.Mainnet]]: 'Governance Proxy',
     '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e': 'ENS Registry',
     '0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41': 'ENS Public Resolver',
     '0xf754A7E347F81cFdc70AF9FbCCe9Df3D826360FA': 'Franchiser Factory',

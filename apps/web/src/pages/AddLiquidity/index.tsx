@@ -7,7 +7,13 @@ import {
   LiquiditySource,
 } from '@uniswap/analytics-events'
 import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
+import {
+  Currency,
+  CurrencyAmount,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  Percent,
+  V3_CORE_FACTORY_ADDRESSES,
+} from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from 'components/Button'

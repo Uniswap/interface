@@ -39,13 +39,13 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 export default function ProposalEmptyState() {
   const { chainId } = useAccount()
   if (
-    (chainId === UniverseChainId.MAINNET ||
-      chainId === UniverseChainId.GOERLI ||
-      chainId === UniverseChainId.ARBITRUM_ONE ||
-      chainId === UniverseChainId.OPTIMISM ||
-      chainId === UniverseChainId.POLYGON ||
-      chainId === UniverseChainId.BASE ||
-      chainId === UniverseChainId.BNB) &&
+    (chainId === UniverseChainId.Mainnet ||
+      chainId === UniverseChainId.Goerli ||
+      chainId === UniverseChainId.ArbitrumOne ||
+      chainId === UniverseChainId.Optimism ||
+      chainId === UniverseChainId.Polygon ||
+      chainId === UniverseChainId.Base ||
+      chainId === UniverseChainId.Bnb) &&
     chainId
   ) {
     return (

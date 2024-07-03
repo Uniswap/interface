@@ -23,7 +23,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
@@ -71,8 +71,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { RowFixed } from '../../components/Row'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
 import styled from 'styled-components'
-import { getIsReviewableQuote } from '.'
-import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,

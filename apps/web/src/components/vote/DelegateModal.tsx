@@ -1,11 +1,12 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { RowBetween } from 'components/Row'
+import { AutoRow, RowBetween } from 'components/Row'
+import { GRG_TRANSFER_PROXY_ADDRESSES } from 'constants/addresses'
 import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import useENS from 'hooks/useENS'
@@ -14,7 +15,12 @@ import JSBI from 'jsbi'
 import { ReactNode, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
-import { useDelegateCallback } from 'state/governance/hooks'
+import {
+  useDelegateCallback,
+  useDelegatePoolCallback,
+  usePoolExtendedContract,
+  usePoolIdByAddress,
+} from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -23,30 +29,13 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
-import { GRG } from '../../constants/tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useENS from '../../hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import {
-  useDelegateCallback,
-  useDelegatePoolCallback,
-  usePoolExtendedContract,
-  usePoolIdByAddress,
-} from '../../state/governance/hooks'
 import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import AddressInputPanel from '../AddressInputPanel'
-import { ButtonConfirmed, ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
 import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { AutoRow, RowBetween } from '../Row'
 import Slider from '../Slider'
 
 const ContentWrapper = styled(AutoColumn)`

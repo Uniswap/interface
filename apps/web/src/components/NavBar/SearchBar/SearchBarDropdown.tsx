@@ -123,6 +123,7 @@ const ChainComingSoonBadge = styled(Badge)`
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
+  pools: SearchToken[]
   tokens: SearchToken[]
   collections: GenieCollection[]
   queryText: string
@@ -157,13 +158,15 @@ export function SearchBarDropdown(props: SearchBarDropdownProps) {
 
 function SearchBarDropdownContents({
   toggleOpen,
+  pools,
   tokens,
   collections,
   queryText,
   hasInput,
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
-  const { data: searchHistory } = useRecentlySearchedAssets()
+  //const { data: searchHistory } = useRecentlySearchedAssets()
+  const searchHistory: SearchToken[] = pools
   const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
@@ -246,6 +249,26 @@ function SearchBarDropdownContents({
     ...trace,
   }
 
+  const poolSearchResults =
+    pools.length > 0 ? (
+      <SearchBarDropdownSection
+        hoveredIndex={hoveredIndex}
+        startingIndex={showCollectionsFirst ? collections.length : 0}
+        setHoveredIndex={setHoveredIndex}
+        toggleOpen={toggleOpen}
+        suggestions={pools}
+        eventProperties={{
+          suggestion_type: NavBarSearchTypes.TOKEN_SUGGESTION,
+          ...eventProperties,
+        }}
+        header={<Trans i18nKey="common.smartPools" />}
+      />
+    ) : (
+      <NotFoundContainer>
+        <Trans i18nKey="smartPools.noneFound" />
+      </NotFoundContainer>
+    )
+
   const tokenSearchResults =
     tokens.length > 0 ? (
       <SearchBarDropdownSection
@@ -292,10 +315,12 @@ function SearchBarDropdownContents({
       {showCollectionsFirst ? (
         <>
           {collectionSearchResults}
+          {poolSearchResults}
           {tokenSearchResults}
         </>
       ) : (
         <>
+          {poolSearchResults}
           {tokenSearchResults}
           {collectionSearchResults}
         </>

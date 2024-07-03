@@ -2,6 +2,7 @@ import EthereumLogo from 'assets/images/ethereum-logo.png'
 import AvaxLogo from 'assets/svg/avax_logo.svg'
 import BnbLogo from 'assets/svg/bnb-logo.svg'
 import CeloLogo from 'assets/svg/celo_logo.svg'
+import logo from 'assets/svg/logo.svg'
 import MaticLogo from 'assets/svg/matic-token-icon.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
 import { GRG, PORTAL_ETH_CELO, isCelo, nativeOnChain } from 'constants/tokens'
@@ -36,11 +37,11 @@ export function getTokenLogoURI(address: string, chainId: InterfaceChainId = Uni
   }
 
   if (
-    address === GRG[ChainId.ARBITRUM_ONE].address ||
-    address === GRG[ChainId.BASE].address ||
-    address === GRG[ChainId.BNB].address ||
-    address === GRG[ChainId.OPTIMISM].address ||
-    address === GRG[ChainId.POLYGON].address
+    address === GRG[UniverseChainId.ArbitrumOne].address ||
+    address === GRG[UniverseChainId.Base].address ||
+    address === GRG[UniverseChainId.Bnb].address ||
+    address === GRG[UniverseChainId.Optimism].address ||
+    address === GRG[UniverseChainId.Polygon].address
   ) {
     return logo
   }

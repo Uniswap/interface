@@ -46,7 +46,7 @@ import {
   useProposalData,
   useQuorum,
   useUserDelegatee,
-  useUserVotesAsOfBlock,
+  useUserVotes,
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
 import styled from 'styled-components'

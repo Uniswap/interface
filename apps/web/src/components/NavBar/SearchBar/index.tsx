@@ -1,11 +1,14 @@
 // eslint-disable-next-line no-restricted-imports
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
+import { Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/Row'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { chainIdToBackendChain } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
@@ -15,16 +18,19 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useTranslation } from 'i18n/useTranslation'
+import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
+import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { Input } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const NAV_SEARCH_MAX_WIDTH = '400px'
@@ -201,8 +207,72 @@ export const SearchBar = ({
 
   const account = useAccount()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, account.chainId ?? 1)
+
+  // TODO: check if we already store all pools' data in state, so can return a richer pool struct
+  const smartPoolsLogs = useRegisteredPools()
+  const registry = useRegistryContract()
+  const poolsFromList = usePoolsFromList(registry, account.chainId)
+
+  // we append pools from url as fallback in case endpoint is down or slow.
+  const allPools: PoolRegisteredLog[] = useMemo(() => {
+    return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
+  }, [smartPoolsLogs, poolsFromList])
+
+  const uniquePools = allPools.filter((obj, index) => {
+    return index === allPools.findIndex((o) => obj.pool === o.pool)
+  })
+
+  const smartPools: Token[] = useMemo(() => {
+    const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
+    if (!uniquePools || !account.chainId) {
+      return [mockToken]
+    }
+    return uniquePools.map((p) => {
+      const { name, symbol, pool: address } = p
+      //if (!name || !symbol || !address) return
+      return new Token(account.chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+    })
+  }, [account.chainId, uniquePools])
+  const filteredPools: Token[] = useMemo(() => {
+    return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
+  }, [smartPools, debouncedSearchValue])
+  const chain = chainIdToBackendChain({ chainId: account.chainId })
+  // TODO: check using a different struct for pools
+  const searchPools: SearchToken[] | undefined = useMemo(() => {
+    if (!chain) {
+      return
+    }
+    return filteredPools.map((p) => {
+      const { name, symbol, address } = p
+      return {
+        id: '',
+        name: name ?? '',
+        address,
+        symbol: symbol ?? '',
+        decimals: 0,
+        chain: chain ?? UniverseChainId.Mainnet,
+        project: {
+          logoUrl: '',
+          id: '',
+          safetyLevel: undefined,
+        },
+        market: {
+          id: '',
+          price: { id: '', value: 0, currency: undefined },
+          pricePercentChange: { id: '', value: 0 },
+          volume24H: { id: '', value: 0, currency: undefined },
+        },
+      }
+    })
+  }, [chain, filteredPools])
+
   const isNFTPage = useIsNftPage()
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const [reducedPools, reducedTokens, reducedCollections] = organizeSearchResults(
+    isNFTPage,
+    searchPools ?? [],
+    tokens ?? [],
+    collections ?? []
+  )
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -277,6 +347,7 @@ export const SearchBar = ({
             <SearchBarDropdownContainer isOpen={isOpen} fullScreen={fullScreen}>
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
+                pools={reducedPools}
                 tokens={reducedTokens}
                 collections={reducedCollections}
                 queryText={debouncedSearchValue}

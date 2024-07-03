@@ -2,7 +2,7 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useWETHContract } from 'hooks/useContract'
+import { usePoolContract, useWETHContract } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
@@ -16,7 +16,6 @@ import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
-import { usePoolContract, useWETHContract } from './useContract'
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
 

@@ -2,7 +2,7 @@ import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-even
 import clsx from 'clsx'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { useRecentlySearchedAssets } from 'components/NavBar/LEGACY/SearchBar/RecentlySearchedAssets'
+//import { useRecentlySearchedAssets } from 'components/NavBar/LEGACY/SearchBar/RecentlySearchedAssets'
 import * as styles from 'components/NavBar/LEGACY/SearchBar/SearchBar.css'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/LEGACY/SearchBar/SuggestionRow'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
@@ -28,12 +28,6 @@ import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-d
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ClockIcon, TrendingArrow } from '../../../../nft/components/icons'
-import { SuspendConditionally } from '../../../Suspense/SuspendConditionally'
-import { SuspenseWithPreviousRenderAsFallback } from '../../../Suspense/SuspenseWithPreviousRenderAsFallback'
-//import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
-import * as styles from './SearchBar.css'
-import { SkeletonRow, SuggestionRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void

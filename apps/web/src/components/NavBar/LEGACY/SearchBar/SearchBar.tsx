@@ -6,6 +6,8 @@ import { Search } from 'components/Icons/Search'
 import * as styles from 'components/NavBar/LEGACY/SearchBar/SearchBar.css'
 import { SearchBarDropdown } from 'components/NavBar/LEGACY/SearchBar/SearchBarDropdown'
 import { NavIcon } from 'components/NavBar/NavIcon'
+import { chainIdToBackendChain } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useIsMobile, useIsTablet } from 'hooks/screenSize'
@@ -29,6 +31,7 @@ import styled from 'styled-components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const KeyShortcut = styled.div`
@@ -71,7 +74,7 @@ export function SearchBar() {
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
   const registry = useRegistryContract()
-  const poolsFromList = usePoolsFromList(registry, chainId)
+  const poolsFromList = usePoolsFromList(registry, account.chainId)
 
   // we append pools from url as fallback in case endpoint is down or slow.
   const allPools: PoolRegisteredLog[] = useMemo(() => {
@@ -84,19 +87,19 @@ export function SearchBar() {
 
   const smartPools: Token[] = useMemo(() => {
     const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!uniquePools || !chainId) {
+    if (!uniquePools || !account.chainId) {
       return [mockToken]
     }
     return uniquePools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
-      return new Token(chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+      return new Token(account.chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
-  }, [chainId, uniquePools])
+  }, [account.chainId, uniquePools])
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
-  const chain = chainIdToBackendChain({ chainId })
+  const chain = chainIdToBackendChain({ chainId: account.chainId })
   // TODO: check using a different struct for pools
   const searchPools: SearchToken[] | undefined = useMemo(() => {
     if (!chain) {

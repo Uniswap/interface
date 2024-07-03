@@ -43,10 +43,6 @@ import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { GRG } from '../../constants/tokens'
-import { ProposalActionDetail } from './ProposalActionDetail'
-import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
-import { ProposalEditor } from './ProposalEditor'
-import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
