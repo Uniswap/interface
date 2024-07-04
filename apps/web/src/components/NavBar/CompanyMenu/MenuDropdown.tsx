@@ -82,6 +82,8 @@ export function MenuDropdown({ close }: { close?: () => void }) {
     })
   }, [tabs])
 
+  const shouldDisplayAppTab = false
+
   return (
     <NavDropdown isOpen={false}>
       <Container data-testid="nav-more-menu">
@@ -96,7 +98,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             />
           ))}
           <Separator />
-          <DownloadApp onClick={close} />
+          {shouldDisplayAppTab && <DownloadApp onClick={close} />}
           <Socials iconSize="25px" />
         </Column>
       </Container>

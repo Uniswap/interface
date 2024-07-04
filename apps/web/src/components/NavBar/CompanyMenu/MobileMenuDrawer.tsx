@@ -90,6 +90,8 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
     }
   }, [isOpen])
 
+  const shouldDisplayAppTab = false
+
   return (
     <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen}>
       <MobileDrawer>
@@ -135,7 +137,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                 <PreferenceSettings showHeader={false} setSettingsView={changeView} />
               </MenuSection>
 
-              <DownloadApp onClick={closeMenu} />
+              {shouldDisplayAppTab && <DownloadApp onClick={closeMenu} />}
               <Socials iconSize="25px" />
             </Column>
           </Accordion>

@@ -297,7 +297,7 @@ export const SearchBar = ({
     ...trace,
   }
 
-  const placeholderText = shouldDisableNFTRoutes ? t('common.searchTokens') : t('common.searchTokensNFT')
+  const placeholderText = shouldDisableNFTRoutes ? t('common.searchSmartPools') : t('common.searchTokensNFT')
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>

@@ -25,33 +25,32 @@ export const useMenuContent = (): MenuSection[] => {
     key: 'App',
     items: [
       { label: t('common.pool'), href: '/pool', internal: true, overflow: true },
-      { label: t('common.vote'), href: 'https://vote.uniswapfoundation.org/' },
-      { label: t('common.analytics'), href: '/explore', internal: true },
+      { label: t('common.vote'), href: '/vote', internal: true },
+      { label: t('common.analytics'), href: 'https://defillama.com/protocol/rigoblock' },
     ],
   }
   const companyLinks = {
     title: t('common.company'),
     key: 'Company',
     items: [
-      { label: t('common.careers'), href: 'https://boards.greenhouse.io/uniswaplabs' },
-      { label: t('common.blog'), href: 'https://blog.uniswap.org/' },
+      { label: t('common.website'), href: 'https://rigoblock.com/' },
+      { label: t('common.blog'), href: 'https://medium.com/rigoblock' },
     ],
   }
   const protocolLinks = {
     title: t('common.protocol'),
     key: 'Protocol',
     items: [
-      ...(!isLegacyNav ? [{ label: t('common.vote'), href: 'https://vote.uniswapfoundation.org/' }] : []),
-      { label: t('common.governance'), href: 'https://uniswap.org/governance' },
-      { label: t('common.developers'), href: 'https://uniswap.org/developers' },
+      { label: t('common.governance'), href: 'https://docs.rigoblock.com/governance' },
+      { label: t('common.developers'), href: 'https://docs.rigoblock.com/introduction-to-rigoblock' },
+      { label: t('common.analytics'), href: 'https://defillama.com/protocol/rigoblock' },
     ],
   }
   const helpLinks = {
     title: t('common.needHelp'),
     key: 'Help',
     items: [
-      { label: t('common.helpCenter'), href: 'https://support.uniswap.org/hc/en-us' },
-      { label: t('common.contactUs.button'), href: 'https://support.uniswap.org/hc/en-us/requests/new' },
+      { label: t('common.helpCenter'), href: 'https://discord.gg/FXd8EU8' },
     ],
   }
 

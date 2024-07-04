@@ -1,4 +1,4 @@
-import { Limit } from 'components/Icons/Limit'
+//import { Limit } from 'components/Icons/Limit'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
@@ -46,22 +46,25 @@ export const useTabsContent = (): TabsSection[] => {
       ]
     : [
         {
+          title: t('common.explore'),
+          href: '/mint',
+          isActive: pathname.startsWith('/mint') || pathname.startsWith('/stake') || pathname.startsWith('/vote'),
+          items: [
+            { label: t('common.mint'), quickKey: t`T`, href: '/mint', internal: true },
+            { label: t('common.stake'), quickKey: t`P`, href: '/stake', internal: true },
+            { label: t('common.vote'), quickKey: t`P`, href: '/vote', internal: true },
+          ],
+        },
+        {
           title: t('common.trade'),
           href: '/swap',
-          isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
+          isActive: pathname.startsWith('/swap') || pathname.startsWith('/send'),
           items: [
             {
               label: t('common.swap'),
               icon: <SwapV2 fill={theme.neutral2} />,
               quickKey: t`U`,
               href: '/swap',
-              internal: true,
-            },
-            {
-              label: t('swap.limit'),
-              icon: <Limit fill={theme.neutral2} />,
-              quickKey: t`L`,
-              href: '/limit',
               internal: true,
             },
             {
@@ -74,17 +77,6 @@ export const useTabsContent = (): TabsSection[] => {
           ],
         },
         {
-          title: t('common.explore'),
-          href: '/explore',
-          isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
-          items: [
-            { label: t('common.tokens'), quickKey: t`T`, href: '/explore/tokens', internal: true },
-            { label: t('common.pools'), quickKey: t`P`, href: '/explore/pools', internal: true },
-            { label: t('common.transactions'), quickKey: t`X`, href: '/explore/transactions', internal: true },
-            { label: t('common.nfts'), quickKey: t`N`, href: '/nfts', internal: true },
-          ],
-        },
-        {
           title: t('common.pool'),
           href: '/pool',
           isActive: pathname.startsWith('/pool'),
@@ -92,8 +84,12 @@ export const useTabsContent = (): TabsSection[] => {
         ...(!areTabsVisible
           ? [
               {
-                title: t('common.nfts'),
-                href: '/nfts',
+                title: t('common.stake'),
+                href: '/stake',
+              },
+              {
+                title: t('common.vote'),
+                href: '/vote',
               },
             ]
           : []),
