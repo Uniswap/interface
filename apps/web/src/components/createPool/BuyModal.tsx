@@ -149,7 +149,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           {userBaseTokenBalance && poolInfo && (

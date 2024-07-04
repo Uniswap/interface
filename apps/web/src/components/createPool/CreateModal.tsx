@@ -176,7 +176,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const chainAllowed = useIsSupportedChainId(account.chainId)
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
