@@ -344,7 +344,7 @@ function SearchBarDropdownContents({
           isLoading={!searchHistory}
         />
       )}
-      {!isNFTPage && (
+      {Boolean(!isNFTPage && !shouldDisableNFTRoutes) && (
         <SearchBarDropdownSection
           hoveredIndex={hoveredIndex}
           startingIndex={shortenedHistory.length}

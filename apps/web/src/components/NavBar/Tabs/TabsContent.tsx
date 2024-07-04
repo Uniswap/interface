@@ -46,7 +46,7 @@ export const useTabsContent = (): TabsSection[] => {
       ]
     : [
         {
-          title: t('common.explore'),
+          title: areTabsVisible ? t('common.explore') : t('common.mint'),
           href: '/mint',
           isActive: pathname.startsWith('/mint') || pathname.startsWith('/stake') || pathname.startsWith('/vote'),
           items: [

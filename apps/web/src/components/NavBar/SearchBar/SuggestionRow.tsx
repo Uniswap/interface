@@ -9,7 +9,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { getPoolDetailsURL, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
@@ -91,6 +91,10 @@ function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestio
   return (suggestion as SearchToken).decimals !== undefined
 }
 
+// Rigoblock pools do not generate volume
+function suggestionIsSmartPool(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
+  return (suggestion as SearchToken).market?.volume24H?.value === 0
+}
 export function SuggestionRow({
   suggestion,
   isHovered,
@@ -100,12 +104,13 @@ export function SuggestionRow({
   eventProperties,
 }: SuggestionRowProps) {
   const isToken = suggestionIsToken(suggestion)
+  const isPool = suggestionIsSmartPool(suggestion)
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
   const warning = useTokenWarning(
-    isToken ? suggestion.address : undefined,
+    isPool ? undefined : isToken ? suggestion.address : undefined,
     isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet,
   )
 
@@ -121,7 +126,12 @@ export function SuggestionRow({
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
 
-  const path = isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
+  const path = isPool
+    ? getPoolDetailsURL(
+      suggestion.address ?? '',
+    ) : isToken
+    ? getTokenDetailsURL({ ...suggestion })
+    : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
