@@ -142,7 +142,7 @@ export default function MigrateV2() {
             <Trans i18nKey="migrate.v2Instruction" />
           </ThemedText.DeprecatedBody>
 
-          {!account ? (
+          {!account.isConnected ? (
             <LightCard padding="40px">
               <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Trans i18nKey="migrate.connectWallet" />

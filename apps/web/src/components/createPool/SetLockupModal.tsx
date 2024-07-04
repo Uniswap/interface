@@ -1,5 +1,4 @@
 import { parseUnits } from '@ethersproject/units'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
@@ -7,6 +6,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
 import { useSetLockupCallback } from 'state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
@@ -16,6 +16,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import NameInputPanel from 'components/NameInputPanel'
 import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -36,7 +37,7 @@ interface SetLockupModalProps {
 }
 
 export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title }: SetLockupModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   const [typed, setTyped] = useState('')
 
@@ -69,14 +70,15 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
   try {
     parsedLockup = (Number(parseUnits(typed, 0)) * 86400).toString()
   } catch (error) {
-    console.debug(`Failed to parse input amount: "${typed}"`, error)
+    const message = `failed to parse input amount: "${typed}"`
+    logger.debug('SetLockupModal', 'wrappedOnDismiss', message, error)
   }
 
   async function onSetLockup() {
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setLockupCallback || !parsedLockup) {
+    if (!account.address || !account.chainId || !setLockupCallback || !parsedLockup) {
       return
     }
 
@@ -88,7 +90,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
     // try set lockup and store hash
     const hash = await setLockupCallback(parsedLockup)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('SetLockupModal', 'onSetLockup', error)
     })
 
     if (hash) {

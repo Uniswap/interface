@@ -401,7 +401,7 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
         })
       }
     },
-    [account, account.chainId, provider, poolContract, stakingContract, addTransaction]
+    [account.address, account.chainId, provider, poolContract, stakingContract, addTransaction]
   )
 }
 
@@ -471,7 +471,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
         })
       }
     },
-    [account, account.chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
+    [account.address, account.chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
   )
 }
 

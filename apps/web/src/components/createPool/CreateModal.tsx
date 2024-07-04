@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useIsSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
@@ -8,6 +7,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
@@ -23,6 +23,7 @@ import { LoadingView, SubmittedView } from 'components/ModalViews'
 import NameInputPanel from 'components/NameInputPanel'
 import { RowBetween, RowFixed } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { useAccount } from 'hooks/useAccount'
 
 const Aligner = styled.span`
   display: flex;
@@ -95,7 +96,7 @@ interface CreateModalProps {
 }
 
 export default function CreateModal({ isOpen, onDismiss, title }: CreateModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for create input
   const [typedName, setTypedName] = useState('')
@@ -105,11 +106,11 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
 
   // update currency at initialization or on chain switch
   useEffect(() => {
-    if (chainId && currencyValue?.chainId !== chainId) {
-      const native = nativeOnChain(chainId)
+    if (account.chainId && currencyValue?.chainId !== account.chainId) {
+      const native = nativeOnChain(account.chainId)
       setCurrencyValue(native)
     }
-  }, [chainId, currencyValue, setCurrencyValue])
+  }, [account.chainId, currencyValue, setCurrencyValue])
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -157,14 +158,14 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !createCallback) {
+    if (!account.address || !account.chainId || !createCallback) {
       return
     }
 
     // try deploy pool and store hash
     const hash = await createCallback(typedName, typedSymbol, currencyValue)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('CreateModal', 'onCreate', error)
     })
 
     if (hash) {
@@ -172,7 +173,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
     }
   }
 
-  const chainAllowed = useIsSupportedChainId(chainId)
+  const chainAllowed = useIsSupportedChainId(account.chainId)
 
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>

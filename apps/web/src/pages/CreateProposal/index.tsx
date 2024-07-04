@@ -213,7 +213,7 @@ export default function CreateProposal() {
           titleValue === '' ||
           bodyValue === '',
       ),
-    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue],
+    [proposalAction, toAddressValue, currencyValue, titleValue, bodyValue],
   )
 
   const hasEnoughVote = Boolean(

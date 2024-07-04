@@ -121,7 +121,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
         includeSmallBalances: valueModifiers.includeSmallBalances,
       },
     })
-  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances])
+  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances, valueModifiers])
 
   return (
     <AdaptiveTokenBalancesProvider

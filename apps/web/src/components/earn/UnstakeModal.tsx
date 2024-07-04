@@ -1,5 +1,4 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useState } from 'react'
@@ -24,6 +23,8 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { AutoRow, RowBetween } from 'components/Row'
 import Slider from 'components/Slider'
+import { useAccount } from 'hooks/useAccount'
+import { logger } from 'utilities/src/logger/logger'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -46,10 +47,10 @@ interface UnstakeModalProps {
 
 // TODO: add balance input to display amount when withdrawing
 export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: UnstakeModalProps) {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for unstake input
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token>(GRG[account.chainId ?? 1])
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
@@ -98,7 +99,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     // try delegation and store hash
     const hash = await unstakeCallback(parsedAmount, isPool)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('UnstakeModal', 'onUnstake', error)
     })
 
     if (hash) {

@@ -34,6 +34,7 @@ function useFeatureFlaggedChainIds(): Partial<Record<SupportedInterfaceChainId, 
       [UniverseChainId.Avalanche]: false,
       [UniverseChainId.Blast]: false,
       [UniverseChainId.Celo]: false,
+      [UniverseChainId.Zksync]: false,
     }),
     [zoraEnabled],
   )

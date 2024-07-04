@@ -133,7 +133,9 @@ export function useRecentlySearchedAssets() {
         const result = pools[i]
         // TODO: check why we do not store result for pool and console log instead
         //data.push(result)
-        console.log(result, asset.address)
+        if (result.name) {
+          logger.info('RecentlySearchedAssets', 'useRecentlySearchedAssets', result.name, asset.address)
+        }
       }
     })
     return data

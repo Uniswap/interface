@@ -1,6 +1,5 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
 import { OutlineCard } from 'components/Card'
@@ -12,6 +11,7 @@ import Loader from 'components/Icons/LoadingSpinner'
 import PoolPositionList from 'components/PoolPositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { GRG } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { Center } from 'nft/components/Flex'
@@ -90,14 +90,14 @@ export default function Stake() {
   // we retrieve logs again as we want to be able to load pools when switching chain from stake page.
   const { data: allPools, loading } = useAllPoolsData()
 
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const accountDrawer = useAccountDrawer()
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
   const poolAddresses = allPools?.map((p) => p.pool)
   const poolIds = allPools?.map((p) => p.id)
   const { stakingPools, loading: loadingPools } = useStakingPools(poolAddresses, poolIds)
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const unclaimedRewards = useUnclaimedRewards(poolIds ?? [])
   // TODO: check if want to return null, but returning undefined will simplify displaying only if positive reward
   const yieldAmount: CurrencyAmount<Token> | undefined = useMemo(() => {
@@ -250,7 +250,7 @@ export default function Stake() {
                     <Trans>Unstake</Trans>
                   </ButtonPrimary>
                 )}
-                {!account && (
+                {!account.isConnected && (
                   <Trace
                     logPress
                     eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
@@ -286,9 +286,9 @@ export default function Stake() {
               >
                 <PoolPositionList positions={items} filterByOperator={false} />
               </InfiniteScroll>
-            ) : (loading || loadingPools) && account ? (
+            ) : (loading || loadingPools) && account.isConnected ? (
               <Loader style={{ margin: 'auto' }} />
-            ) : !account || (!account && orderedPools?.length === 0) ? (
+            ) : !account.isConnected || (!account.isConnected && orderedPools?.length === 0) ? (
               <OutlineCard>
                 <Trans>Please connect your wallet to view smart pools</Trans>
               </OutlineCard>

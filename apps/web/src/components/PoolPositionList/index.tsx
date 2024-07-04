@@ -1,8 +1,8 @@
 import { Interface } from '@ethersproject/abi'
-import { useWeb3React } from '@web3-react/core'
 import PoolPositionListItem from 'components/PoolPositionListItem'
 import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import React, { useMemo } from 'react'
@@ -68,7 +68,7 @@ type PoolPositionListProps = React.PropsWithChildren<{
 }>
 
 export default function PoolPositionList({ positions, filterByOperator }: PoolPositionListProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   // TODO: we should merge this part with same part in swap page and move to a custom hook
   const poolAddresses: string[] = useMemo(() => positions.map((p) => p.pool), [positions])
   const poolIds: string[] = useMemo(() => positions.map((p) => p.id), [positions])
@@ -82,7 +82,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
     poolAddresses,
     PoolInterface,
     'balanceOf',
-    useMemo(() => [account], [account])
+    useMemo(() => [account.address], [account.address])
   )
   // notice: this call will not return pools if account is not connected and the endpoint is not responsive, which
   //   is fine as we don't want to display empty pools when endpoint is not responsive.
@@ -94,7 +94,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
       ?.map((result, i) => {
         const { result: pool, loading } = result
         // if pool is not correctly returned by endpoint it means endpoint is down, and we don't want to display pools
-        if (!chainId || loading || !pool) {
+        if (!account.chainId || loading || !pool) {
           return
         }
 
@@ -103,7 +103,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           return
         }
         const shouldDisplay = filterByOperator
-          ? Boolean(owner === account || Number(userBalances?.[i]?.result) > 0)
+          ? Boolean(owner === account.address || Number(userBalances?.[i]?.result) > 0)
           : true
         return {
           ...result,
@@ -116,16 +116,16 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
           decimals,
           symbol: positions?.[i]?.symbol,
           name: positions?.[i]?.name,
-          chainId,
+          chainId: account.chainId,
           shouldDisplay,
-          userIsOwner: account ? owner === account : false,
+          userIsOwner: account.address ? owner === account.address : false,
           userBalance: userBalances?.[i]?.result,
           id: poolIds[i],
           currentEpochReward: poolsRewards[i],
         }
       })
       .filter((p) => p && p.shouldDisplay)
-  }, [account, chainId, filterByOperator, poolAddresses, positions, results, userBalances, poolIds, poolsRewards])
+  }, [account.address, account.chainId, filterByOperator, poolAddresses, positions, results, userBalances, poolIds, poolsRewards])
 
   return (
     <>
@@ -220,7 +220,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             />
           )
         })
-      ) : !filterByOperator && !account ? (
+      ) : !filterByOperator && !account.isConnected ? (
         <>
           <DesktopHeader>
             <div>
@@ -231,7 +231,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
           </MobileHeader>
         </>
-      ) : account ? (
+      ) : account.isConnected ? (
         <>
           <DesktopHeader>
             <div>

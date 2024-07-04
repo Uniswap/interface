@@ -1,8 +1,8 @@
-import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -22,7 +22,7 @@ export const ProposalSubmissionModal = ({
   onDismiss: () => void
 }) => {
   const theme = useTheme()
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
@@ -58,8 +58,8 @@ export const ProposalSubmissionModal = ({
                 <Trans i18nKey="common.transactionFailed" />
               </Text>
             )}
-            {hash && chainId && (
-              <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+            {hash && account.chainId && (
+              <ExternalLink href={getExplorerLink(account.chainId, hash, ExplorerDataType.TRANSACTION)}>
                 <Text fontWeight={535} fontSize={14} color={theme.accent1}>
                   <Trans i18nKey="common.etherscan.link" />
                 </Text>

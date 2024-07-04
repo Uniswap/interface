@@ -1,7 +1,6 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useAccount } from 'hooks/useAccount'
 import { usePoolContract, useWETHContract } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -59,7 +58,6 @@ export default function useWrapCallback(
   outputCurrency: Currency | undefined | null,
   typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
-  const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
   const wethContract = useWETHContract(true, chainId)
 
@@ -184,5 +182,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [poolContract, wethContract, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [poolContract, wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

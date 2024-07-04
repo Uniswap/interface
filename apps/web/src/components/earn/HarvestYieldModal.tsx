@@ -1,5 +1,4 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 //import JSBI from 'jsbi'
 import { ReactNode, useState } from 'react'
@@ -8,6 +7,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { logger } from 'utilities/src/logger/logger'
 
 import { GRG } from 'constants/tokens'
 import { useHarvestCallback } from 'state/stake/hooks'
@@ -18,6 +18,7 @@ import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -47,7 +48,7 @@ export default function HarvestYieldModal({
   onDismiss,
   title,
 }: HarvestYieldModalProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useAccount()
 
   const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
   const harvestCallback = useHarvestCallback()
@@ -80,7 +81,7 @@ export default function HarvestYieldModal({
     // try delegation and store hash
     const hash = await harvestCallback(poolIds, isPool)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('HarvestModal', 'onHarvest', error)
     })
 
     if (hash) {

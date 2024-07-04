@@ -536,7 +536,7 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
           })
       })
     },
-    [account, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 

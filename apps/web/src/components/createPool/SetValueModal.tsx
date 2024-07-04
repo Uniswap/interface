@@ -1,5 +1,4 @@
 import { parseUnits } from '@ethersproject/units'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
@@ -7,6 +6,7 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
 import { PoolInfo } from 'state/buy/hooks'
 import { useSetValueCallback } from 'state/pool/hooks'
@@ -17,6 +17,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import NameInputPanel from 'components/NameInputPanel'
 import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -38,7 +39,7 @@ interface SetValueModalProps {
 }
 
 export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSymbol, title }: SetValueModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for create input
   const [typed, setTyped] = useState('')
@@ -73,7 +74,8 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
   try {
     parsedValue = parseUnits(typed, poolInfo.pool.decimals).toString()
   } catch (error) {
-    console.debug(`Failed to parse input amount: "${typed}"`, error)
+    const message = `failed to parse input amount: "${typed}"`
+    logger.debug('SetValueModal', 'wrappedOnDismiss', message, error)
   }
   //const parsedValue = typed
   const isSameAsCurrent: boolean = JSBI.equal(
@@ -93,14 +95,14 @@ export default function SetValueModal({ isOpen, onDismiss, poolInfo, baseTokenSy
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setValueCallback || !parsedValue) {
+    if (!account.address || !account.chainId || !setValueCallback || !parsedValue) {
       return
     }
 
     // try delegation and store hash
     const hash = await setValueCallback(parsedValue)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('SetValueModal', 'onSetValue', error)
     })
 
     if (hash) {
