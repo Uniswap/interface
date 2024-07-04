@@ -1,21 +1,22 @@
 import { Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
-import { MODAL_TRANSITION_DURATION } from '../../components/Modal'
-import { GRG } from '../../constants/tokens'
-import { useRaceCallback } from '../../state/stake/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { RowBetween } from '../Row'
+import { MODAL_TRANSITION_DURATION } from 'components/Modal'
+import { GRG } from 'constants/tokens'
+import { useRaceCallback } from 'state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -50,7 +51,7 @@ interface RaceModalProps {
 }
 
 export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, title }: RaceModalProps) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useAccount()
 
   const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
   const raceCallback = useRaceCallback()
@@ -86,7 +87,7 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
     const hash = await raceCallback(poolAddress)?.catch((error) => {
       setErrorReason(error.reason)
       setAttempting(false)
-      console.log(error)
+      logger.info('RaceModal', 'onRace', error)
     })
 
     if (hash) {
@@ -95,7 +96,7 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

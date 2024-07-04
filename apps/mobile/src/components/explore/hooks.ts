@@ -8,21 +8,18 @@ import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/featu
 import { openModal } from 'src/features/modals/modalSlice'
 import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AssetType } from 'wallet/src/entities/assets'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
-import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
-  chainId: ChainId
+  chainId: WalletChainId
   analyticsSection: SectionNameType
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void
@@ -49,11 +46,8 @@ export function useExploreTokenContextMenu({
   const currencyAddress = currencyIdToAddress(currencyId)
 
   const onPressReceive = useCallback(
-    () =>
-      dispatch(
-        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      ),
-    [dispatch]
+    () => dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })),
+    [dispatch],
   )
 
   const onPressShare = useCallback(async () => {
@@ -87,9 +81,7 @@ export function useExploreTokenContextMenu({
   const menuActions = useMemo(
     () => [
       {
-        title: isFavorited
-          ? t('explore.tokens.favorite.action.remove')
-          : t('explore.tokens.favorite.action.add'),
+        title: isFavorited ? t('explore.tokens.favorite.action.remove') : t('explore.tokens.favorite.action.add'),
         systemIcon: isFavorited ? 'heart.fill' : 'heart',
         onPress: onPressToggleFavorite,
       },
@@ -118,22 +110,14 @@ export function useExploreTokenContextMenu({
           ]
         : []),
     ],
-    [
-      isFavorited,
-      t,
-      onPressToggleFavorite,
-      onEditFavorites,
-      onPressSwap,
-      onPressReceive,
-      onPressShare,
-    ]
+    [isFavorited, t, onPressToggleFavorite, onEditFavorites, onPressSwap, onPressReceive, onPressShare],
   )
 
   const onContextMenuPress = useCallback(
     async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
       await menuActions[e.nativeEvent.index]?.onPress?.()
     },
-    [menuActions]
+    [menuActions],
   )
 
   return { menuActions, onContextMenuPress }
@@ -141,7 +125,7 @@ export function useExploreTokenContextMenu({
 
 export function useAnimatedCardDragStyle(
   pressProgress: SharedValue<number>,
-  dragActivationProgress: SharedValue<number>
+  dragActivationProgress: SharedValue<number>,
 ): StyleProps {
   return useAnimatedStyle(() => ({
     opacity:

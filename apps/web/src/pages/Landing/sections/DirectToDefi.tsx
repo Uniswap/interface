@@ -1,11 +1,10 @@
-import styled from 'styled-components'
-
 import { Trans } from 'i18n'
-import { Box, H2 } from '../components/Generics'
-import { DocumentationCard } from '../components/cards/DocumentationCard'
-import { DownloadWalletCard } from '../components/cards/DownloadWalletCard'
-import { LiquidityCard } from '../components/cards/LiquidityCard'
-import { WebappCard } from '../components/cards/WebappCard'
+import { Box, H2 } from 'pages/Landing/components/Generics'
+import { DocumentationCard } from 'pages/Landing/components/cards/DocumentationCard'
+import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
+import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
+import { WebappCard } from 'pages/Landing/components/cards/WebappCard'
+import styled from 'styled-components'
 
 const SectionLayout = styled.div`
   display: flex;

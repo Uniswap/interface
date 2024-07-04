@@ -16,4 +16,8 @@ module.exports = {
       lines: 0,
     },
   },
+  setupFilesAfterEnv: [
+    '../../config/jest-presets/jest/setup.js',
+    './jest-setup.js',
+  ],
 }

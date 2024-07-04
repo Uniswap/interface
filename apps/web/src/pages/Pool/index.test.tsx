@@ -1,10 +1,9 @@
+import { useIsSupportedChainId } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useV3Positions } from 'hooks/useV3Positions'
+import Pool from 'pages/Pool'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-
-import { useIsSupportedChainId } from 'constants/chains'
-import Pool from '.'
 
 jest.mock('constants/chains')
 jest.mock('hooks/useV3Positions')

@@ -1,17 +1,17 @@
+import Circle from 'assets/images/blue-loader.svg'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import Modal from 'components/Modal'
+import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
+import { useQueueCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-
-import { useAccount } from 'hooks/useAccount'
-import Circle from '../../assets/images/blue-loader.svg'
-import { useQueueCallback } from '../../state/governance/hooks'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn, ColumnCenter } from '../Column'
-import Modal from '../Modal'
-import { RowBetween } from '../Row'
+import { logger } from 'utilities/src/logger/logger'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -68,7 +68,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
     // try delegation and store hash
     const hash = await queueCallback(proposalId)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('QueueModal', 'onQueue', error)
     })
 
     if (hash) {
@@ -77,7 +77,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

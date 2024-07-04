@@ -11,7 +11,6 @@ ignores: [
     "tsconfig",
     ## GraphQL
     "@graphql-codegen/*",
-    "get-graphql-schema",
     # i18n
     "i18next-resources-for-ts",
   ]

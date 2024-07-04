@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid'
 export function getRarityStatus(
   rarityStatusCache: Map<string, boolean>,
   id: string,
-  assets?: (GenieAsset | undefined)[]
+  assets?: (GenieAsset | undefined)[],
 ) {
   if (rarityStatusCache.has(id)) {
     return rarityStatusCache.get(id)

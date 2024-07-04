@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
@@ -14,7 +14,10 @@ import {
 } from 'state/routing/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
+import { UseAccountReturnType } from 'wagmi'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_1_INFO: CurrencyInfo = {
@@ -40,7 +43,7 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
   currencyId: 'GHI',
   safetyLevel: SafetyLevel.Verified,
 }
-export const ETH_MAINNET = nativeOnChain(ChainId.MAINNET)
+export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
 
 export const TEST_POOL_12 = new Pool(
   TEST_TOKEN_1,
@@ -48,7 +51,7 @@ export const TEST_POOL_12 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 
 export const TEST_POOL_13 = new Pool(
@@ -57,7 +60,7 @@ export const TEST_POOL_13 = new Pool(
   FeeAmount.MEDIUM,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 
 export const toCurrencyAmount = (token: Token, amount: number) =>
@@ -190,7 +193,7 @@ const SELL_FEE_TOKEN = new Token(
   'Abc',
   false,
   undefined,
-  BigNumber.from(300)
+  BigNumber.from(300),
 )
 const TEST_POOL_FOT_1 = new Pool(
   SELL_FEE_TOKEN,
@@ -198,7 +201,7 @@ const TEST_POOL_FOT_1 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 export const TEST_TRADE_FEE_ON_SELL = new ClassicTrade({
   v3Routes: [
@@ -223,7 +226,7 @@ const BUY_FEE_TOKEN = new Token(
   'Def',
   false,
   BigNumber.from(300),
-  undefined
+  undefined,
 )
 const TEST_POOL_FOT_2 = new Pool(
   TEST_TOKEN_1,
@@ -231,7 +234,7 @@ const TEST_POOL_FOT_2 = new Pool(
   FeeAmount.HIGH,
   '2437312313659959819381354528',
   '10272714736694327408',
-  -69633
+  -69633,
 )
 export const TEST_TRADE_FEE_ON_BUY = new ClassicTrade({
   v3Routes: [
@@ -272,10 +275,10 @@ export const NATIVE_INFO: CurrencyInfo = {
 }
 
 export const WETH_INFO: CurrencyInfo = {
-  currency: WETH9[ChainId.MAINNET],
+  currency: WETH9[UniverseChainId.Mainnet],
   logoUrl:
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
-  currencyId: WETH9[ChainId.MAINNET].address,
+  currencyId: WETH9[UniverseChainId.Mainnet].address,
   safetyLevel: SafetyLevel.Verified,
 }
 
@@ -325,4 +328,23 @@ export const USDC_ARBITRUM_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png',
   currencyId: USDC_ARBITRUM.address,
   safetyLevel: SafetyLevel.Verified,
+}
+
+export const USE_DISCONNECTED_ACCOUNT = {
+  address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
+  chainId: 1,
+} as unknown as UseAccountReturnType
+
+export const USE_CONNECTED_ACCOUNT = {
+  address: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
+  chainId: 1,
+  isConnected: true,
+} as unknown as UseAccountReturnType
+
+// Fiat On Ramp countries
+
+export const US: FORCountry = {
+  countryCode: 'US',
+  displayName: 'United States',
+  state: 'US-NY',
 }

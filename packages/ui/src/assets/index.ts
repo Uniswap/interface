@@ -5,7 +5,10 @@ export const BASE_LOGO = require('./logos/png/base-logo.png')
 export const BNB_LOGO = require('./logos/png/bnb-logo.png')
 export const POLYGON_LOGO = require('./logos/png/polygon-logo.png')
 export const BLAST_LOGO = require('./logos/png/blast-logo.png')
-export const ZORA_LOGO = require('./logos/png/zora-logo.png') // TODO
+export const AVALANCHE_LOGO = require('./logos/png/avalanche-logo.png')
+export const CELO_LOGO = require('./logos/png/celo-logo.png')
+export const ZORA_LOGO = require('./logos/png/zora-logo.png')
+export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
 export const GOERLI_LOGO = require('./logos/png/goerli-logo.png')
 export const MUMBAI_LOGO = require('./logos/png/mumbai-logo.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')
@@ -26,6 +29,9 @@ export const EXTENSION_PROMO_BANNER_LIGHT = require('./graphics/extension-promo-
 export const EXTENSION_PROMO_BANNER_DARK = require('./graphics/extension-promo-banner-dark.png')
 export const EXTENSION_PROMO_MODAL_LIGHT = require('./graphics/extension-promo-modal-light.png')
 export const EXTENSION_PROMO_MODAL_DARK = require('./graphics/extension-promo-modal-dark.png')
+
+export const EXTENSION_PROMO_BANNER_LIGHT_GA = require('./graphics/extension-promo-modal-light-ga.png')
+export const EXTENSION_PROMO_BANNER_DARK_GA = require('./graphics/extension-promo-modal-dark-ga.png')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')

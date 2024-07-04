@@ -4,10 +4,15 @@ import { LoadingRow } from 'components/Loader/styled'
 import RouterLabel from 'components/RouterLabel'
 import Row from 'components/Row'
 import { TooltipSize } from 'components/Tooltip'
+import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
+import { GasBreakdownTooltip, UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
+import GasEstimateTooltip from 'components/swap/GasEstimateTooltip'
+import { RoutingTooltip, SwapRoute } from 'components/swap/SwapRoute'
+import TradePrice from 'components/swap/TradePrice'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans, t } from 'i18n'
-import React, { useEffect, useState } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { SpringValue, animated } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } from 'state/routing/utils'
@@ -17,12 +22,6 @@ import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
-import { DetailLineItem, LineItemData } from './DetailLineItem'
-import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
-import GasEstimateTooltip from './GasEstimateTooltip'
-import { MaxSlippageTooltip } from './MaxSlippageTooltip'
-import { RoutingTooltip, SwapRoute } from './SwapRoute'
-import TradePrice from './TradePrice'
 
 export enum SwapLineItemType {
   EXCHANGE_RATE,
@@ -52,30 +51,55 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   align-items: center;
 
   ::after {
-    content: '${t('commmon.automatic')}';
+    content: '${t('common.automatic')}';
   }
 `
 
-export function FOTTooltipContent() {
+function BaseTooltipContent({ children, url }: { children: ReactNode; url: string }) {
   return (
     <>
-      <Trans i18nKey="swap.tokenOwnFees" />{' '}
-      <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+      {children}
+      <br />
+      <ExternalLink href={url}>
         <Trans i18nKey="common.learnMore.link" />
       </ExternalLink>
     </>
   )
 }
 
+export function FOTTooltipContent() {
+  return (
+    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/18673568523789-What-is-a-token-fee-">
+      <Trans i18nKey="swap.tokenOwnFees" />
+    </BaseTooltipContent>
+  )
+}
+
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? <Trans i18nKey="swap.fees.experience" /> : <Trans i18nKey="swap.fees.noFee" />
   return (
-    <>
-      {message}{' '}
-      <ExternalLink href="https://docs.rigoblock.com/introduction-to-rigoblock">
-        <Trans i18nKey="common.learnMore.link" />
-      </ExternalLink>
-    </>
+    <BaseTooltipContent url="https://docs.rigoblock.com/introduction-to-rigoblock">
+      {message}
+    </BaseTooltipContent>
+  )
+}
+
+export function SlippageTooltipContent() {
+  return (
+    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/20131678274957">
+      <Trans i18nKey="swap.slippage.tooltip" />
+    </BaseTooltipContent>
+  )
+}
+
+function MinimumOutputTooltipContent({ amount }: { amount: CurrencyAmount<Currency> }) {
+  const { formatCurrencyAmount } = useFormatter()
+  const formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapDetailsAmount })
+
+  return (
+    <BaseTooltipContent url="https://support.uniswap.org/hc/en-us/articles/8643794102669-Price-Impact-vs-Price-Slippage">
+      <Trans i18nKey="swap.minPriceSlip.revert" values={{ amount: `${formattedAmount} ${amount.currency.symbol}` }} />
+    </BaseTooltipContent>
   )
 }
 
@@ -161,7 +185,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     case SwapLineItemType.MAX_SLIPPAGE:
       return {
         Label: () => <Trans i18nKey="settings.maxSlippage" />,
-        TooltipBody: () => <MaxSlippageTooltip trade={trade} allowedSlippage={allowedSlippage ?? new Percent(0)} />,
+        TooltipBody: () => <SlippageTooltipContent />,
         Value: () => (
           <Row gap="8px">
             {isAutoSlippage && <AutoBadge />} {formatPercent(allowedSlippage)}
@@ -193,12 +217,11 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         loaderWidth: 70,
       }
     case SwapLineItemType.MINIMUM_OUTPUT:
-      if (trade.tradeType === TradeType.EXACT_OUTPUT) {
-        return
-      }
       return {
         Label: () => <Trans i18nKey="swap.receive.atLeast" />,
-        TooltipBody: () => <Trans i18nKey="swap.minPriceSlip.revert" />,
+        TooltipBody: () => (
+          <MinimumOutputTooltipContent amount={trade.minimumAmountOut(allowedSlippage ?? new Percent(0))} />
+        ),
         Value: () => <CurrencyAmountRow amount={trade.minimumAmountOut(allowedSlippage ?? new Percent(0))} />,
         loaderWidth: 70,
       }

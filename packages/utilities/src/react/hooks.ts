@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {
@@ -19,7 +19,7 @@ export function usePrevious<T>(value: T): T | undefined {
 // above link contains example on how to add delayed execution if ever needed
 export function useAsyncData<T>(
   asyncCallback: () => Promise<T> | undefined,
-  onCancel?: () => void
+  onCancel?: () => void,
 ): {
   isLoading: boolean
   data: T | undefined
@@ -111,20 +111,38 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
   return isEqual && previous ? previous : nextValue
 }
 
-// This hook is a hacky way to forward the entire ref from the child to the parent
-// component. This is useful when the parent component needs to access the child's
-// ref and the ref is used in the child component.
-export function useForwardRef<T extends object>(
-  forwardedRef: React.ForwardedRef<T>,
-  localRef: React.RefObject<T>
+export function useOnClickOutside<T extends HTMLElement>(
+  node: RefObject<T | undefined>,
+  handler: undefined | (() => void),
+  ignoredNodes: Array<RefObject<T | undefined>> = [],
 ): void {
-  useImperativeHandle<T, T>(
-    forwardedRef,
-    () =>
-      new Proxy({} as T, {
-        get: (_, prop): T[keyof T] | undefined => {
-          return localRef.current?.[prop as keyof T]
-        },
-      })
-  )
+  const handlerRef = useRef<undefined | (() => void)>(handler)
+
+  useEffect(() => {
+    handlerRef.current = handler
+  }, [handler])
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent): void => {
+      const nodeClicked = node.current?.contains(e.target as Node)
+      const ignoredNodeClicked = ignoredNodes.reduce(
+        (reducer, val) => reducer || !!val.current?.contains(e.target as Node),
+        false,
+      )
+
+      if ((nodeClicked || ignoredNodeClicked) ?? false) {
+        return
+      }
+
+      if (handlerRef.current) {
+        handlerRef.current()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [node, ignoredNodes])
 }

@@ -1,17 +1,17 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
+import { useTotalSupply } from 'hooks/useTotalSupply'
+import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useCurrencyBalances } from '../connection/hooks'
-import { AppState } from '../reducer'
-import { Field, typeInput } from './actions'
+import { Field, typeInput } from 'state/mint/actions'
+import { AppState } from 'state/reducer'
+import { logger } from 'utilities/src/logger/logger'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -29,14 +29,14 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
     (typedValue: string) => {
       dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
     },
-    [dispatch, noLiquidity]
+    [dispatch, noLiquidity],
   )
 
   const onFieldBInput = useCallback(
     (typedValue: string) => {
       dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
     },
-    [dispatch, noLiquidity]
+    [dispatch, noLiquidity],
   )
 
   return {
@@ -47,7 +47,7 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -61,7 +61,7 @@ export function useDerivedMintInfo(
   poolTokenPercentage?: Percent
   error?: ReactNode
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
@@ -73,7 +73,7 @@ export function useDerivedMintInfo(
       [Field.CURRENCY_A]: currencyA ?? undefined,
       [Field.CURRENCY_B]: currencyB ?? undefined,
     }),
-    [currencyA, currencyB]
+    [currencyA, currencyB],
   )
 
   // pair
@@ -87,13 +87,13 @@ export function useDerivedMintInfo(
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.quotient, ZERO) &&
-        JSBI.equal(pair.reserve1.quotient, ZERO)
+        JSBI.equal(pair.reserve1.quotient, ZERO),
     )
 
   // balances
   const balances = useCurrencyBalances(
-    account ?? undefined,
-    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
+    account.address,
+    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies]),
   )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
@@ -103,7 +103,7 @@ export function useDerivedMintInfo(
   // amounts
   const independentAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(
     typedValue,
-    currencies[independentField]
+    currencies[independentField],
   )
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     if (noLiquidity) {
@@ -160,7 +160,12 @@ export function useDerivedMintInfo(
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
       } catch (error) {
-        console.error(error)
+        logger.warn(
+          'mint/hooks',
+          'useDerivedMintInfo',
+          `Error getLiquidityMinted: ${error}. Total supply: ${totalSupply}, tokenAmountA: ${tokenAmountA}, tokenAmountB: ${tokenAmountB}`,
+          { error },
+        )
         return undefined
       }
     } else {
@@ -177,7 +182,7 @@ export function useDerivedMintInfo(
   }, [liquidityMinted, totalSupply])
 
   let error: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     error = <Trans i18nKey="common.connectWallet.button" />
   }
 

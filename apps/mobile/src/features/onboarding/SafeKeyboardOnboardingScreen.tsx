@@ -1,26 +1,32 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { PropsWithChildren } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Screen } from 'src/components/layout/Screen'
-import { AnimatedFlex, Flex, SpaceTokens, Text, flexStyles, useMedia, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, flexStyles, useMedia, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { opacify, spacing } from 'ui/src/theme'
-import { isIOS } from 'uniswap/src/utils/platform'
-import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
+import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
+import { isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = {
   subtitle?: string
   title: string
   paddingTop?: SpaceTokens
+  screenFooter?: JSX.Element
+  minHeightWhenKeyboardExpanded?: boolean
 }
 
 export function SafeKeyboardOnboardingScreen({
   title,
   subtitle,
   children,
+  screenFooter,
   paddingTop = '$none',
+  minHeightWhenKeyboardExpanded = true,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
+  const [footerHeight, setFooterHeight] = useState(0)
   const headerHeight = useHeaderHeight()
   const colors = useSporeColors()
   const media = useMedia()
@@ -52,10 +58,7 @@ export function SafeKeyboardOnboardingScreen({
     <LinearGradient
       colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
       locations={[0.6, 0.8]}
-      style={[
-        styles.gradient,
-        { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) },
-      ]}
+      style={[styles.gradient, { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) }]}
     />
   )
 
@@ -64,18 +67,16 @@ export function SafeKeyboardOnboardingScreen({
 
   // This makes sure this component behaves just like `behavior="padding"` when
   // there's enough space on the screen to show all components.
-  const minHeight = compact ? keyboard.containerHeight : 0
+  const minHeight = minHeightWhenKeyboardExpanded && compact ? keyboard.containerHeight - footerHeight : 0
 
   return (
     <Screen edges={['right', 'left', 'bottom']}>
       <KeyboardAvoidingView
-        behavior={isIOS ? 'padding' : undefined}
+        behavior={isIOS ? 'padding' : 'height'}
         contentContainerStyle={containerStyle}
-        style={styles.base}>
-        <ScrollView
-          bounces={false}
-          contentContainerStyle={flexStyles.grow}
-          keyboardShouldPersistTaps="handled">
+        style={styles.base}
+      >
+        <ScrollView bounces={false} contentContainerStyle={flexStyles.grow} keyboardShouldPersistTaps="handled">
           <AnimatedFlex
             $short={{ gap: '$none' }}
             entering={FadeIn}
@@ -83,11 +84,23 @@ export function SafeKeyboardOnboardingScreen({
             gap="$spacing16"
             minHeight={minHeight}
             px="$spacing16"
-            style={[containerStyle, styles.container, { paddingTop: headerHeight }]}>
+            style={[containerStyle, styles.container, { paddingTop: headerHeight }]}
+          >
             {header}
             {page}
           </AnimatedFlex>
         </ScrollView>
+        <Flex
+          onLayout={({
+            nativeEvent: {
+              layout: { height },
+            },
+          }) => {
+            setFooterHeight(height)
+          }}
+        >
+          {screenFooter}
+        </Flex>
       </KeyboardAvoidingView>
       {topGradient}
     </Screen>

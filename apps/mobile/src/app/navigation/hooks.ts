@@ -25,12 +25,12 @@ export function useEagerActivityNavigation(): {
         },
       })
     },
-    [load]
+    [load],
   )
 
   const navigate = useCallback(
     () => navigation.navigate(MobileScreens.Home, { tab: HomeScreenTabIndex.Activity }),
-    [navigation]
+    [navigation],
   )
 
   return { preload, navigate }
@@ -52,14 +52,14 @@ export function useEagerExternalProfileNavigation(): {
     async (address: string) => {
       await load({ variables: { address } })
     },
-    [load]
+    [load],
   )
 
   const navigate = useCallback(
     (address: string) => {
       navigation.navigate(MobileScreens.ExternalProfile, { address })
     },
-    [navigation]
+    [navigation],
   )
 
   return { preload, navigate }
@@ -79,7 +79,7 @@ export function useEagerExternalProfileRootNavigation(): {
         },
       })
     },
-    [load]
+    [load],
   )
 
   const navigate = useCallback(async (address: string, callback?: () => void) => {

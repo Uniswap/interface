@@ -16,7 +16,7 @@ import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { openUri } from 'wallet/src/utils/linking'
 import {
   MnemonicValidationError,
@@ -30,7 +30,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { generateImportedAccounts } = useOnboardingContext()
+  const { generateImportedAccountsByMnemonic } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -49,7 +49,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   useAddBackButton(navigation)
 
-  const signerAccounts = useNonPendingSignerAccounts()
+  const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   // Add all accounts from mnemonic.
@@ -74,14 +74,13 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       }
     }
 
-    const importedMnemonicId = await Keyring.importMnemonic(validMnemonic)
-    await generateImportedAccounts(importedMnemonicId, BackupType.Manual)
+    await generateImportedAccountsByMnemonic(validMnemonic, undefined, BackupType.Manual)
 
     // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
     if (!isRestoringMnemonic) {
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [value, mnemonicId, generateImportedAccounts, isRestoringMnemonic, t, navigation, params])
+  }, [value, mnemonicId, generateImportedAccountsByMnemonic, isRestoringMnemonic, t, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
@@ -107,8 +106,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     setValue(text)
   }
 
-  const onPressRecoveryHelpButton = (): Promise<void> =>
-    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHelp)
+  const onPressRecoveryHelpButton = (): Promise<void> => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
@@ -122,10 +120,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           : t('account.recoveryPhrase.subtitle.import')
       }
       title={
-        isRestoringMnemonic
-          ? t('account.recoveryPhrase.title.restoring')
-          : t('account.recoveryPhrase.title.import')
-      }>
+        isRestoringMnemonic ? t('account.recoveryPhrase.title.restoring') : t('account.recoveryPhrase.title.import')
+      }
+    >
       <Flex $short={{ gap: '$spacing12' }} gap="$spacing16">
         <Flex px="$spacing8">
           <GenericImportForm
@@ -147,8 +144,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
             <TouchableArea
               flexDirection="row"
               gap="$spacing8"
-              onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
-              <QuestionInCircleFilled color="$surface1" size="$icon.20" />
+              onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
+            >
+              <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
               <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
                 {isRestoringMnemonic
                   ? t('account.recoveryPhrase.helpText.restoring')
@@ -159,10 +157,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <Button
-          disabled={!!errorMessage || !value}
-          testID={ElementName.Continue}
-          onPress={onSubmit}>
+        <Button disabled={!!errorMessage || !value} testID={ElementName.Continue} onPress={onSubmit}>
           {t('common.button.continue')}
         </Button>
       </Trace>

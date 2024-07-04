@@ -1,6 +1,6 @@
 import { Image, ImageResizeMode } from 'react-native'
 import { ColorTokens, Flex } from 'ui/src'
-import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
+import { isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
 
@@ -29,7 +29,7 @@ export function RemoteImage({
   fallback,
   testID,
 }: Props): JSX.Element | null {
-  const imageHttpUrl = uriToHttp(uri)[0]
+  const imageHttpUrl = uriToHttpUrls(uri)[0]
 
   if (!imageHttpUrl) {
     logger.warn('RemoteImage', '', `Could not retrieve and format remote image for uri: ${uri}`)
@@ -45,7 +45,8 @@ export function RemoteImage({
         height={height}
         overflow="hidden"
         testID={testID}
-        width={width}>
+        width={width}
+      >
         <WebSvgUri autoplay={true} maxHeight={height} uri={imageHttpUrl} />
       </Flex>
     )

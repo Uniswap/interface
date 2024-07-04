@@ -2,7 +2,6 @@ import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -12,9 +11,19 @@ import {
   RB_FACTORY_ADDRESSES,
   STAKING_PROXY_ADDRESSES,
 } from 'constants/addresses'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import AppBody from 'pages/App/AppBody'
+import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
+import {
+  ProposalAction,
+  ProposalActionSelector,
+  ProposalActionSelectorModal,
+} from 'pages/CreateProposal/ProposalActionSelector'
+import { ProposalEditor } from 'pages/CreateProposal/ProposalEditor'
+import { ProposalSubmissionModal } from 'pages/CreateProposal/ProposalSubmissionModal'
 import { Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -33,13 +42,7 @@ import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
-import { GRG } from '../../constants/tokens'
-import AppBody from '../AppBody'
-import { ProposalActionDetail } from './ProposalActionDetail'
-import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
-import { ProposalEditor } from './ProposalEditor'
-import { ProposalSubmissionModal } from './ProposalSubmissionModal'
+import { GRG } from 'constants/tokens'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -86,7 +89,7 @@ const CreateProposalButton = ({
   const formattedProposalThreshold = proposalThreshold
     ? JSBI.divide(
         proposalThreshold.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals)),
       ).toLocaleString()
     : undefined
 
@@ -130,7 +133,7 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   const { votes: availableVotes } = useUserVotes()
   const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
@@ -141,7 +144,7 @@ export default function CreateProposal() {
   const [proposalAction, setProposalAction] = useState(ProposalAction.UPGRADE_IMPLEMENTATION)
   const [toAddressValue, setToAddressValue] = useState('')
   // TODO: check we are covering all chains
-  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
@@ -154,7 +157,7 @@ export default function CreateProposal() {
     (proposalAction: ProposalAction) => {
       setProposalAction(proposalAction)
     },
-    [setProposalAction]
+    [setProposalAction],
   )
 
   const handleDismissActionSelector = useCallback(() => {
@@ -170,35 +173,35 @@ export default function CreateProposal() {
     (toAddress: string) => {
       setToAddressValue(toAddress)
     },
-    [setToAddressValue]
+    [setToAddressValue],
   )
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       setCurrencyValue(currency)
     },
-    [setCurrencyValue]
+    [setCurrencyValue],
   )
 
   const handleAmountInput = useCallback(
     (amount: string) => {
       setAmountValue(amount)
     },
-    [setAmountValue]
+    [setAmountValue],
   )
 
   const handleTitleInput = useCallback(
     (title: string) => {
       setTitleValue(title)
     },
-    [setTitleValue]
+    [setTitleValue],
   )
 
   const handleBodyInput = useCallback(
     (body: string) => {
       setBodyValue(body)
     },
-    [setBodyValue]
+    [setBodyValue],
   )
 
   const isFormInvalid = useMemo(
@@ -208,13 +211,13 @@ export default function CreateProposal() {
           !isAddress(toAddressValue) ||
           !currencyValue?.isToken ||
           titleValue === '' ||
-          bodyValue === ''
+          bodyValue === '',
       ),
-    [proposalAction, toAddressValue, currencyValue, titleValue, bodyValue]
+    [proposalAction, toAddressValue, currencyValue, titleValue, bodyValue],
   )
 
   const hasEnoughVote = Boolean(
-    availableVotes && proposalThreshold && JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient)
+    availableVotes && proposalThreshold && JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient),
   )
 
   const createProposalCallback = useCreateProposalCallback()
@@ -269,7 +272,7 @@ ${bodyValue}
       case ProposalAction.UPGRADE_IMPLEMENTATION: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(RB_POOL_FACTORY_ABI)]
-        targets = [RB_FACTORY_ADDRESSES[chainId ?? 1]]
+        targets = [RB_FACTORY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setImplementation']
         break
       }
@@ -277,20 +280,20 @@ ${bodyValue}
       case ProposalAction.UPGRADE_GOVERNANCE: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(GOVERNANCE_RB_ABI)]
-        targets = [GOVERNANCE_PROXY_ADDRESSES[chainId ?? 1]]
+        targets = [GOVERNANCE_PROXY_ADDRESSES[account.chainId ?? 1]]
         methods = ['upgradeImplementation']
         break
       }
 
       case ProposalAction.UPGRADE_STAKING: {
         values = [
-          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
           [],
           [getAddress(toAddressValue)],
-          [STAKING_PROXY_ADDRESSES[chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
         ]
         interfaces = [new Interface(STAKING_PROXY_ABI)]
-        targets = [STAKING_PROXY_ADDRESSES[chainId ?? 1]]
+        targets = [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]]
         methods = ['addAuthorizedAddress', 'detachStakingContract', 'attachStakingContract', 'removeAuthorizedAddress']
         break
       }
@@ -299,7 +302,7 @@ ${bodyValue}
       case ProposalAction.ADD_ADAPTER: {
         values = [[getAddress(toAddressValue), true]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setAdapter']
         break
       }
@@ -308,7 +311,7 @@ ${bodyValue}
       case ProposalAction.REMOVE_ADAPTER: {
         values = [[getAddress(toAddressValue), false]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
         methods = ['setAdapter']
         break
       }

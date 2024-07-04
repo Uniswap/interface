@@ -32,7 +32,7 @@ export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_META
     if (metaTags.description) {
       attributes.push(
         { property: 'og:description', content: metaTags.description },
-        { name: 'description', content: metaTags.description }
+        { name: 'description', content: metaTags.description },
       )
     }
     if (metaTags.image) {
@@ -40,7 +40,7 @@ export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_META
         { property: 'og:image', content: metaTags.image },
         { property: 'og:image:alt', content: metaTags.title },
         { property: 'twitter:image', content: metaTags.image },
-        { property: 'twitter:image:alt', content: metaTags.title }
+        { property: 'twitter:image:alt', content: metaTags.title },
       )
     }
     setMetaTagAttributes(attributes)

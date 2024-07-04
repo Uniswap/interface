@@ -1,7 +1,8 @@
 import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
-import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
-import { Connector, useConnect } from 'wagmi'
+import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { Connector } from 'wagmi'
 
 type ConnectorID = (typeof CONNECTION)[keyof typeof CONNECTION]
 
@@ -10,13 +11,13 @@ const SHOULD_THROW = { shouldThrow: true } as const
 function getConnectorWithId(
   connectors: readonly Connector[],
   id: ConnectorID,
-  options: { shouldThrow: true }
+  options: { shouldThrow: true },
 ): Connector
 function getConnectorWithId(connectors: readonly Connector[], id: ConnectorID): Connector | undefined
 function getConnectorWithId(
   connectors: readonly Connector[],
   id: ConnectorID,
-  options?: { shouldThrow: true }
+  options?: { shouldThrow: true },
 ): Connector | undefined {
   const connector = connectors.find((c) => c.id === id)
   if (!connector && options?.shouldThrow) {
@@ -32,7 +33,7 @@ export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: tru
   const { connectors } = useConnect()
   return useMemo(
     () => (options?.shouldThrow ? getConnectorWithId(connectors, id, options) : getConnectorWithId(connectors, id)),
-    [connectors, id, options]
+    [connectors, id, options],
   )
 }
 
@@ -78,7 +79,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
         return 0
       }
     },
-    [recentConnectorId]
+    [recentConnectorId],
   )
 
   return useMemo(() => {
@@ -89,7 +90,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
     const uniswapWalletConnectConnector = getConnectorWithId(
       connectors,
       CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-      SHOULD_THROW
+      SHOULD_THROW,
     )
     if (!coinbaseSdkConnector || !walletConnectConnector || !uniswapWalletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')

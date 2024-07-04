@@ -1,6 +1,17 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { CardNoise } from 'components/earn/styled'
+import { Dots } from 'components/swap/styled'
+import { BIG_INT_ZERO } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
+import { useColor } from 'hooks/useColor'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
@@ -8,23 +19,11 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useTokenBalance } from 'state/connection/hooks'
 import styled from 'styled-components'
-
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { currencyId } from 'utils/currencyId'
+import { unwrappedToken } from 'utils/unwrappedToken'
 import { FixedHeightRow } from '.'
-import { BIG_INT_ZERO } from '../../constants/misc'
-import { useColor } from '../../hooks/useColor'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useTokenBalance } from '../../state/connection/hooks'
-import { currencyId } from '../../utils/currencyId'
-import { unwrappedToken } from '../../utils/unwrappedToken'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
-import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import CurrencyLogo from '../Logo/CurrencyLogo'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { CardNoise } from '../earn/styled'
-import { Dots } from '../swap/styled'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
@@ -42,14 +41,14 @@ interface PositionCardProps {
 }
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
   const [showMore, setShowMore] = useState(false)
 
-  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const userDefaultPoolBalance = useTokenBalance(account.address, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
   // if staked balance balance provided, add to standard liquidity amount

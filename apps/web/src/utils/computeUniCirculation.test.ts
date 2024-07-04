@@ -1,9 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
-
-import { ZERO_ADDRESS } from '../constants/misc'
-import { computeUniCirculation } from './computeUniCirculation'
+import { computeUniCirculation } from 'utils/computeUniCirculation'
 
 describe('computeUniCirculation', () => {
   const token = new Token(4, ZERO_ADDRESS, 18)

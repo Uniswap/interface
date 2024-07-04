@@ -1,14 +1,16 @@
-import { forwardRef, useCallback, useEffect, useMemo } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput } from 'react-native'
 import { getNumberFormatSettings } from 'react-native-localize'
-import { TextInput, TextInputProps } from 'wallet/src/components/input/TextInput'
-import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { Text } from 'ui/src'
+import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
 
 type Props = {
-  showCurrencySign: boolean
+  adjustWidthToContent?: boolean
   fiatCurrencyInfo?: FiatCurrencyInfo
   dimTextColor?: boolean
   maxDecimals?: number
@@ -31,7 +33,7 @@ export function replaceSeparators({
   if (groupingSeparator && groupingOverride != null) {
     outputParts = outputParts.map((part) =>
       // eslint-disable-next-line security/detect-non-literal-regexp
-      part.replace(new RegExp(`\\${groupingSeparator}`, 'g'), groupingOverride)
+      part.replace(new RegExp(`\\${groupingSeparator}`, 'g'), groupingOverride),
     )
   }
   return outputParts.join(decimalOverride)
@@ -41,7 +43,6 @@ export function parseValue({
   value,
   decimalSeparator,
   groupingSeparator,
-  showCurrencySign,
   showSoftInputOnFocus,
   nativeKeyboardDecimalSeparator,
   maxDecimals,
@@ -49,13 +50,11 @@ export function parseValue({
   value?: string
   decimalSeparator: string
   groupingSeparator: string
-  showCurrencySign: boolean
   showSoftInputOnFocus?: boolean
   nativeKeyboardDecimalSeparator: string
   maxDecimals?: number
 }): string {
   let parsedValue = value?.trim() ?? ''
-  parsedValue = showCurrencySign ? parsedValue.substring(1) : parsedValue
 
   // Replace all non-numeric characters, leaving the decimal and thousand separators.
   parsedValue = parsedValue.replace(/[^0-9.,]/g, '')
@@ -77,27 +76,28 @@ export function parseValue({
     decimalOverride: '.',
   })
 
-  const [beforeDecimalSeparator, afterDecimalSeparator] = parsedValue.split('.')
-
-  if (maxDecimals === undefined || afterDecimalSeparator === undefined) {
+  if (maxDecimals === undefined) {
     return parsedValue
   }
 
-  return `${beforeDecimalSeparator}.${afterDecimalSeparator.substring(0, maxDecimals)}`
+  return truncateToMaxDecimals({
+    value: parsedValue,
+    maxDecimals,
+  })
 }
 
 export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountInput(
   {
     onChangeText,
     value,
-    showCurrencySign,
+    adjustWidthToContent,
     dimTextColor,
     showSoftInputOnFocus,
     maxDecimals,
     fiatCurrencyInfo,
     ...rest
   },
-  ref
+  ref,
 ) {
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const targetFiatCurrencyInfo = fiatCurrencyInfo || appFiatCurrencyInfo
@@ -120,11 +120,10 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
           value: val,
           decimalSeparator,
           groupingSeparator,
-          showCurrencySign,
           showSoftInputOnFocus,
           nativeKeyboardDecimalSeparator,
           maxDecimals,
-        })
+        }),
       )
     },
     [
@@ -133,29 +132,19 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
       maxDecimals,
       nativeKeyboardDecimalSeparator,
       onChangeText,
-      showCurrencySign,
       showSoftInputOnFocus,
-    ]
+    ],
   )
 
-  const { addFiatSymbolToNumber } = useLocalizationContext()
-
-  let formattedValue = replaceSeparators({
+  const formattedValue = replaceSeparators({
     value: value ?? '',
     groupingSeparator: ',',
     decimalSeparator: '.',
     groupingOverride: '',
     decimalOverride: decimalSeparator,
   })
-  formattedValue =
-    showCurrencySign && targetFiatCurrencyInfo
-      ? addFiatSymbolToNumber({
-          value: formattedValue,
-          currencyCode: targetFiatCurrencyInfo.code,
-          currencySymbol: targetFiatCurrencyInfo.symbol,
-        })
-      : formattedValue
 
+  const [width, setWidth] = useState(0)
   const textInputProps: TextInputProps = useMemo(
     () => ({
       ref,
@@ -164,10 +153,10 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
       value: formattedValue,
       onChangeText: handleChange,
       ...rest,
+      ...(adjustWidthToContent ? { width } : {}),
     }),
-    [ref, value, dimTextColor, formattedValue, handleChange, rest]
+    [ref, value, dimTextColor, formattedValue, handleChange, rest, width, adjustWidthToContent],
   )
-
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
       if (showSoftInputOnFocus || nextAppState !== 'active') {
@@ -187,15 +176,47 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   // when showSoftInputOnFocus value changes from false to true, React does not remount the component
   // and therefore the keyboard does not pop up on TextInput focus.
   // returning a separately named component guarantees the remount
-  if (showSoftInputOnFocus) {
-    return <TextInputWithNativeKeyboard {...textInputProps} />
+  const textInputElement = showSoftInputOnFocus ? (
+    <TextInputWithNativeKeyboard {...textInputProps} />
+  ) : (
+    <TextInput {...textInputProps} showSoftInputOnFocus={false} />
+  )
+
+  if (adjustWidthToContent) {
+    return (
+      <>
+        <Text
+          // Hidden element measures text width to keep input width consistent when a currency symbol is present,
+          // preventing it from using all horizontal space.
+          fontFamily="$heading"
+          fontSize={textInputProps.fontSize}
+          fontWeight="500"
+          height={0}
+          numberOfLines={1}
+          overflow="hidden"
+          position="absolute"
+          onLayout={(e) =>
+            setWidth(
+              Math.min(
+                e.nativeEvent.layout.width,
+                typeof textInputProps.maxWidth === 'number' ? textInputProps.maxWidth : +Infinity,
+              ),
+            )
+          }
+        >
+          {value || textInputProps.placeholder}
+        </Text>
+        {textInputElement}
+      </>
+    )
   }
 
-  return <TextInput {...textInputProps} showSoftInputOnFocus={false} />
+  return textInputElement
 })
 
-const TextInputWithNativeKeyboard = forwardRef<NativeTextInput, TextInputProps>(
-  function _TextInputWithNativeKeyboard(props: TextInputProps, ref) {
-    return <TextInput ref={ref} {...props} />
-  }
-)
+const TextInputWithNativeKeyboard = forwardRef<NativeTextInput, TextInputProps>(function _TextInputWithNativeKeyboard(
+  props: TextInputProps,
+  ref,
+) {
+  return <TextInput ref={ref} {...props} />
+})

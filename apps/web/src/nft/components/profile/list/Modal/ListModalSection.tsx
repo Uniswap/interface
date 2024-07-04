@@ -4,6 +4,7 @@ import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Plural, Trans, t } from 'i18n'
 import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
+import { ContentRow } from 'nft/components/profile/list/Modal/ContentRow'
 import { useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
 import { useMemo } from 'react'
@@ -12,8 +13,6 @@ import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
-
-import { ContentRow } from './ContentRow'
 
 const SectionHeader = styled(Row)`
   justify-content: space-between;

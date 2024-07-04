@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/react'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
+import { Column } from 'components/Column'
+import { useIsMobile } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { ChevronUpIcon } from 'nft/components/icons'
@@ -7,10 +9,7 @@ import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import styled from 'styled-components'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
-import { isSentryEnabled } from 'utils/env'
-
-import { useIsMobile } from 'hooks/screenSize'
-import { Column } from '../Column'
+import { isRemoteReportingEnabled } from 'utils/env'
 
 const FallbackWrapper = styled.div`
   display: flex;
@@ -61,7 +60,10 @@ const CodeBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.surface2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.01),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
   padding: 24px;
@@ -100,7 +102,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
     ? [ThemedText.HeadlineSmall, ThemedText.BodySmall]
     : [ThemedText.HeadlineLarge, ThemedText.BodySecondary]
 
-  const showErrorId = isSentryEnabled() && eventId
+  const showErrorId = isRemoteReportingEnabled() && eventId
 
   const showMoreButton = (
     <ShowMoreButton onClick={() => setExpanded((s) => !s)}>

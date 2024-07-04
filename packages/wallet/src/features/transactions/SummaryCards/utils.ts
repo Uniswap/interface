@@ -1,39 +1,39 @@
 /* eslint-disable complexity */
 import { createElement, useMemo, useState } from 'react'
+import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import {
-  LoadingItem,
-  SectionHeader,
-  isLoadingItem,
-  isSectionHeader,
-} from 'wallet/src/features/activity/utils'
+import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import {
   FORMAT_DATE_MONTH_DAY,
   FORMAT_TIME_SHORT,
   useLocalizedDayjs,
 } from 'wallet/src/features/language/localizedDayjs'
+import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
+import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
+import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
+import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
+import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
+import { OnRampTransferSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/OnRampTransferSummaryItem'
+import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
+import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
+import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
+import { UnknownSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
+import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
+import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
+import {
+  SummaryItemProps,
+  SwapSummaryCallbacks,
+  TransactionSummaryLayoutProps,
+} from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   NFTTradeType,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { ApproveSummaryItem } from './SummaryItems/ApproveSummaryItem'
-import { FiatPurchaseSummaryItem } from './SummaryItems/FiatPurchaseSummaryItem'
-import { NFTApproveSummaryItem } from './SummaryItems/NFTApproveSummaryItem'
-import { NFTMintSummaryItem } from './SummaryItems/NFTMintSummaryItem'
-import { NFTTradeSummaryItem } from './SummaryItems/NFTTradeSummaryItem'
-import { ReceiveSummaryItem } from './SummaryItems/ReceiveSummaryItem'
-import { SendSummaryItem } from './SummaryItems/SendSummaryItem'
-import { SwapSummaryItem } from './SummaryItems/SwapSummaryItem'
-import { UnknownSummaryItem } from './SummaryItems/UnknownSummaryItem'
-import { WCSummaryItem } from './SummaryItems/WCSummaryItem'
-import { WrapSummaryItem } from './SummaryItems/WrapSummaryItem'
-import { SummaryItemProps, SwapSummaryCallbacks, TransactionSummaryLayoutProps } from './types'
 
 export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
@@ -46,9 +46,7 @@ export function generateActivityItemRenderer(
   loadingItem: JSX.Element,
   sectionHeaderElement: React.FunctionComponent<{ title: string }>,
   swapCallbacks: SwapSummaryCallbacks | undefined,
-  authTrigger:
-    | ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>)
-    | undefined
+  authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined,
 ): ActivityItemRenderer {
   return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
     // if it's a loading item, render the loading placeholder
@@ -67,6 +65,10 @@ export function generateActivityItemRenderer(
         break
       case TransactionType.FiatPurchase:
         SummaryItem = FiatPurchaseSummaryItem
+        break
+      case TransactionType.OnRampPurchase:
+      case TransactionType.OnRampTransfer:
+        SummaryItem = OnRampTransferSummaryItem
         break
       case TransactionType.NFTApprove:
         SummaryItem = NFTApproveSummaryItem
@@ -115,7 +117,7 @@ export function generateActivityItemRenderer(
  */
 function getTransactionTypeVerbs(
   typeInfo: TransactionDetails['typeInfo'],
-  t: AppTFunction
+  t: AppTFunction,
 ): {
   success: string
   pending?: string
@@ -260,6 +262,26 @@ function getTransactionTypeVerbs(
           canceled: t('transaction.status.purchase.canceled'),
         }
       }
+    case TransactionType.OnRampPurchase: {
+      const serviceProvider = typeInfo.serviceProvider.name
+      return {
+        success: t('transaction.status.purchase.successOn', { serviceProvider }),
+        pending: t('transaction.status.purchase.pendingOn', { serviceProvider }),
+        failed: t('transaction.status.purchase.failedOn', { serviceProvider }),
+        canceling: t('transaction.status.purchase.canceling'), // On ramp transactions are not cancellable
+        canceled: t('transaction.status.purchase.canceled'), // On ramp transactions are not cancellable
+      }
+    }
+    case TransactionType.OnRampTransfer: {
+      const serviceProvider = typeInfo.serviceProvider.name
+      return {
+        success: t('transaction.status.receive.successFrom', { serviceProvider }),
+        pending: t('transaction.status.receive.pendingFrom', { serviceProvider }),
+        failed: t('transaction.status.receive.failedFrom', { serviceProvider }),
+        canceling: t('transaction.status.receive.canceling'), // On ramp transactions are not cancellable
+        canceled: t('transaction.status.receive.canceled'), // On ramp transactions are not cancellable
+      }
+    }
     case TransactionType.Unknown:
     case TransactionType.WCConfirm:
     default:
@@ -275,10 +297,7 @@ function getTransactionTypeVerbs(
   }
 }
 
-export function getTransactionSummaryTitle(
-  tx: TransactionDetails,
-  t: AppTFunction
-): string | undefined {
+export function getTransactionSummaryTitle(tx: TransactionDetails, t: AppTFunction): string | undefined {
   const { success, pending, failed, canceling, canceled } = getTransactionTypeVerbs(tx.typeInfo, t)
 
   switch (tx.status) {
@@ -317,8 +336,8 @@ export function useFormattedTime(time: number): string {
         // so for the first 30s it would show 0 minutes
         `${Math.ceil(localizedDayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
       : localizedDayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
-      ? wrappedAddedTime.format(FORMAT_TIME_SHORT) // within last 24 hours
-      : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
+        ? wrappedAddedTime.format(FORMAT_TIME_SHORT) // within last 24 hours
+        : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, unixTime, localizedDayjs])
 }

@@ -1,14 +1,12 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import {
-  SummaryItemProps,
-  TransactionSummaryLayoutProps,
-} from 'wallet/src/features/transactions/SummaryCards/types'
+import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   ExactInputSwapTransactionInfo,
@@ -16,7 +14,7 @@ import {
   isConfirmedSwapTypeInfo,
   TransactionDetails,
 } from 'wallet/src/features/transactions/types'
-import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
+import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 
@@ -47,17 +45,17 @@ export function SwapSummaryItem({
       inputCurrencyAmountRaw,
       formatter,
       //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
-      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_OUTPUT,
     )
     const otherCurrencyAmount = getFormattedCurrencyAmount(
       outputCurrency,
       outputCurrencyAmountRaw,
       formatter,
       //** isApproximateAmount - input value and confirmed amount are both exact so this should be false **//
-      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT
+      isConfirmedSwapTypeInfo(typeInfo) ? false : typeInfo.tradeType === TradeType.EXACT_INPUT,
     )
     return `${currencyAmount}${getSymbolDisplayText(
-      inputCurrency.symbol
+      inputCurrency.symbol,
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
   }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
@@ -65,15 +63,14 @@ export function SwapSummaryItem({
   const swapFormState = swapCallbacks?.useSwapFormTransactionState(
     transaction.from,
     transaction.chainId,
-    transaction.id
+    transaction.id,
   )
 
   const latestSwapTx = swapCallbacks?.useLatestSwapTransaction(transaction.from)
   const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id
   // if this is the latest tx or it was added within the last 15 minutes, show the retry button
   const shouldShowRetry =
-    isTheLatestSwap ||
-    (Date.now() - transaction.addedTime < MAX_SHOW_RETRY_TIME && swapCallbacks?.onRetryGenerator)
+    isTheLatestSwap || (Date.now() - transaction.addedTime < MAX_SHOW_RETRY_TIME && swapCallbacks?.onRetryGenerator)
 
   const onRetry = swapCallbacks?.onRetryGenerator?.(swapFormState)
 

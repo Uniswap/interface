@@ -1,20 +1,25 @@
-import { useWeb3React } from '@web3-react/core'
 import { SupportedInterfaceChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 import { OffchainOrderType } from 'state/routing/types'
+import { addSignature } from 'state/signatures/reducer'
+import {
+  OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE,
+  SignatureDetails,
+  SignatureType,
+  UniswapXOrderDetails,
+} from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { addSignature } from './reducer'
-import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const signatures = useAppSelector((state) => state.signatures) ?? {}
-  if (!account || !signatures[account]) {
+  if (!account.address || !signatures[account.address]) {
     return {}
   }
-  return signatures[account]
+  return signatures[account.address]
 }
 
 export function usePendingOrders(): UniswapXOrderDetails[] {
@@ -31,7 +36,7 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
     if (
       !order ||
       ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_UNISWAPX_V2_ORDER, SignatureType.SIGN_LIMIT].includes(
-        order.type as SignatureType
+        order.type as SignatureType,
       )
     ) {
       return undefined
@@ -51,7 +56,7 @@ export function useAddOrder() {
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,
-      offchainOrderType: OffchainOrderType
+      offchainOrderType: OffchainOrderType,
     ) => {
       dispatch(
         addSignature({
@@ -65,10 +70,10 @@ export function useAddOrder() {
           status: UniswapXOrderStatus.OPEN,
           addedTime: Date.now(),
           encodedOrder,
-        })
+        }),
       )
     },
-    [dispatch]
+    [dispatch],
   )
 }
 

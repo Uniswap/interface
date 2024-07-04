@@ -1,17 +1,15 @@
 import Column from 'components/Column'
+import RouterLabel from 'components/RouterLabel'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
+import { UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import { Trans } from 'i18n'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
-
-import RouterLabel from '../RouterLabel'
-import { UniswapXDescription } from './GasBreakdownTooltip'
 
 // TODO(WEB-2022)
 // Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
@@ -67,7 +65,7 @@ export function SwapRoute({ trade }: { trade: ClassicTrade }) {
   const routes = getRoutingDiagramEntries(trade)
   const gasPrice = useGasPrice(trade)
 
-  return useAutoRouterSupported() ? (
+  return (
     <Column gap="md">
       <RoutingDiagram routes={routes} currencyIn={inputAmount.currency} currencyOut={outputAmount.currency} />
       <ThemedText.Caption color="neutral2">
@@ -76,7 +74,5 @@ export function SwapRoute({ trade }: { trade: ClassicTrade }) {
         <Trans i18nKey="swap.route.optimizedGasCost" />
       </ThemedText.Caption>
     </Column>
-  ) : (
-    <RoutingDiagram routes={routes} currencyIn={inputAmount.currency} currencyOut={outputAmount.currency} />
   )
 }

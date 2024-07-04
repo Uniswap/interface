@@ -1,29 +1,27 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonConfirmed, ButtonError } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import ProgressCircles from 'components/ProgressSteps'
+import { RowBetween } from 'components/Row'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
+import { PoolInfo, useDerivedPoolInfo } from 'state/buy/hooks'
+import { usePoolExtendedContract } from 'state/pool/hooks'
+import { useIsTransactionConfirmed, useTransaction, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-//import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { PoolInfo, useDerivedPoolInfo } from '../../state/buy/hooks'
-import { usePoolExtendedContract } from '../../state/pool/hooks'
-import { useIsTransactionConfirmed, useTransaction, useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { ButtonConfirmed, ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import CurrencyInputPanel from '../CurrencyInputPanel'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import ProgressCircles from '../ProgressSteps'
-import { RowBetween } from '../Row'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -151,7 +149,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           {userBaseTokenBalance && poolInfo && (

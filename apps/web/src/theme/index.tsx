@@ -2,13 +2,13 @@ import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import { rootCssString } from 'nft/css/cssStringFromTheme'
+import { navDimensions } from 'nft/css/sprinkles.css'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
+import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
-import { navDimensions } from '../nft/css/sprinkles.css'
-import { ThemeColors, darkTheme, lightTheme } from './colors'
-import { darkDeprecatedTheme, lightDeprecatedTheme } from './deprecatedColors'
 
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
@@ -17,10 +17,10 @@ export const MEDIA_WIDTHS = {
   deprecated_upToLarge: 1280,
 }
 
-const MAX_CONTENT_WIDTH = '1200px'
+const MAX_CONTENT_WIDTH_PX = 1200
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
-  MEDIA_WIDTHS
+  MEDIA_WIDTHS,
 ).reduce((acc, size) => {
   acc[size] = (a: any, b: any, c: any) => css`
     @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
@@ -92,10 +92,9 @@ function getSettings(darkMode: boolean) {
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
     navHeight: navDimensions.height,
-    promoBannerHeight: 56,
     navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 48,
-    maxWidth: MAX_CONTENT_WIDTH,
+    maxWidth: MAX_CONTENT_WIDTH_PX,
 
     // deprecated - please use hardcoded exported values instead of
     // adding to the theme object

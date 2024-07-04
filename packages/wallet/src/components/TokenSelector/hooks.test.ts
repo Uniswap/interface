@@ -2,11 +2,23 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
+import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
+import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
-import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
-import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import {
+  useAllCommonBaseCurrencies,
+  useCommonTokensOptions,
+  useCurrencyInfosToTokenOptions,
+  useFavoriteCurrencies,
+  useFavoriteTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioBalancesForAddressById,
+  usePortfolioTokenOptions,
+} from 'wallet/src/components/TokenSelector/hooks'
 import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { SharedState } from 'wallet/src/state/reducer'
@@ -29,18 +41,6 @@ import {
 } from 'wallet/src/test/fixtures'
 import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import { portfolioBalancesById, queryResolvers } from 'wallet/src/test/utils'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import {
-  useAllCommonBaseCurrencies,
-  useCommonTokensOptions,
-  useCurrencyInfosToTokenOptions,
-  useFavoriteCurrencies,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioBalancesForAddressById,
-  usePortfolioTokenOptions,
-} from './hooks'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -56,7 +56,7 @@ const favoriteTokens = [eth, dai, usdc]
 const favoriteTokenBalances = [ethBalance, daiBalance, usdcBalance]
 
 const favoriteCurrencyIds = favoriteTokens.map((t) =>
-  buildCurrencyId(fromGraphQLChain(t.chain) ?? ChainId.Mainnet, t.address)
+  buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address)
 )
 
 const preloadedState: PreloadedState<SharedState> = {
@@ -244,24 +244,24 @@ describe(useFilterCallbacks, () => {
   describe('chain filter', () => {
     it('returns initial chain filter corresponding to the chainId', () => {
       const { result } = renderHook(useFilterCallbacks, {
-        initialProps: [ChainId.ArbitrumOne, TokenSelectorFlow.Swap],
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
       })
 
-      expect(result.current.chainFilter).toEqual(ChainId.ArbitrumOne)
+      expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
     })
 
     it('updates chain filter when chainId property changes', async () => {
       const { result, rerender } = renderHook(useFilterCallbacks, {
-        initialProps: [ChainId.ArbitrumOne, TokenSelectorFlow.Swap],
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
       })
 
-      expect(result.current.chainFilter).toEqual(ChainId.ArbitrumOne)
+      expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
 
       await act(() => {
-        rerender([ChainId.Base, TokenSelectorFlow.Swap])
+        rerender([UniverseChainId.Base, TokenSelectorFlow.Swap])
       })
 
-      expect(result.current.chainFilter).toEqual(ChainId.Base)
+      expect(result.current.chainFilter).toEqual(UniverseChainId.Base)
     })
 
     it('updates chain filter when onChangeChainFilter is called', async () => {
@@ -270,16 +270,16 @@ describe(useFilterCallbacks, () => {
       expect(result.current.chainFilter).toEqual(null)
 
       await act(() => {
-        result.current.onChangeChainFilter(ChainId.ArbitrumOne)
+        result.current.onChangeChainFilter(UniverseChainId.ArbitrumOne)
       })
 
-      expect(result.current.chainFilter).toEqual(ChainId.ArbitrumOne)
+      expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
 
       await act(() => {
-        result.current.onChangeChainFilter(ChainId.Base)
+        result.current.onChangeChainFilter(UniverseChainId.Base)
       })
 
-      expect(result.current.chainFilter).toEqual(ChainId.Base)
+      expect(result.current.chainFilter).toEqual(UniverseChainId.Base)
     })
   })
 })
@@ -483,7 +483,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, ChainId.Base, 'et'],
+        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, 'et'],
         output: {
           data: [],
           loading: false,
@@ -547,7 +547,7 @@ describe(usePopularTokensOptions, () => {
       )
     )
     const { result } = renderHook(
-      () => usePopularTokensOptions(SAMPLE_SEED_ADDRESS_1, ChainId.ArbitrumOne),
+      () => usePopularTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne),
       { resolvers }
     )
 
@@ -601,7 +601,7 @@ describe(useCommonTokensOptions, () => {
       input: {
         portfolios: [portfolio({ tokenBalances })],
         tokenProjects: [tokenProject({ tokens })],
-        chainFilter: ChainId.Mainnet,
+        chainFilter: UniverseChainId.Mainnet as WalletChainId,
       },
       output: {
         data: expect.toIncludeSameMembers([
@@ -674,7 +674,7 @@ describe(useFavoriteTokensOptions, () => {
       input: {
         portfolios: [portfolio({ tokenBalances })],
         tokenProjects: [tokenProject({ tokens: favoriteTokens })],
-        chainFilter: ChainId.Mainnet,
+        chainFilter: UniverseChainId.Mainnet as WalletChainId,
       },
       output: {
         data: expect.toIncludeSameMembers([

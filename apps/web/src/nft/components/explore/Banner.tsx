@@ -1,12 +1,11 @@
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
+import { Carousel, LoadingCarousel } from 'nft/components/explore/Carousel'
+import { CarouselCard, LoadingCarouselCard } from 'nft/components/explore/CarouselCard'
 import { calculateCardIndex } from 'nft/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { Carousel, LoadingCarousel } from './Carousel'
-import { CarouselCard, LoadingCarouselCard } from './CarouselCard'
 
 const BannerContainer = styled.div`
   display: flex;
@@ -26,7 +25,7 @@ const BannerMainArea = styled.div`
   width: 100%;
   height: 100%;
   gap: 36px;
-  max-width: ${({ theme }) => theme.maxWidth};
+  max-width: ${({ theme }) => `${theme.maxWidth}px`};
   justify-content: space-between;
   z-index: 2;
 
@@ -92,7 +91,7 @@ const Banner = () => {
 
   const { data: trendingCollections } = useTrendingCollections(
     TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
-    HistoryDuration.Day
+    HistoryDuration.Day,
   )
 
   const collections = useMemo(() => {
@@ -109,7 +108,7 @@ const Banner = () => {
       }
       setActiveCollectionIdx((idx) => calculateCardIndex(idx + direction, collections.length))
     },
-    [collections]
+    [collections],
   )
 
   return (

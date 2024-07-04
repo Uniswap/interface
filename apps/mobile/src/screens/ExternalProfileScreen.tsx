@@ -9,7 +9,7 @@ import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
-import { TAB_STYLES, TabContentProps, renderTabLabel } from 'src/components/layout/TabHelpers'
+import { TAB_STYLES, TabContentProps, TabLabel } from 'src/components/layout/TabHelpers'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
@@ -43,7 +43,7 @@ export function ExternalProfileScreen({
       { key: SectionName.ProfileNftsTab, title: t('home.nfts.title') },
       { key: SectionName.ProfileActivityTab, title: t('home.activity.title') },
     ],
-    [t]
+    [t],
   )
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -51,25 +51,25 @@ export function ExternalProfileScreen({
       ...TAB_STYLES.tabListInner,
       paddingBottom: insets.bottom + TAB_STYLES.tabListInner.paddingBottom,
     }),
-    [insets.bottom]
+    [insets.bottom],
   )
 
-  const emptyContainerStyle = useMemo<StyleProp<ViewStyle>>(
+  const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
-      paddingTop: spacing.spacing60,
+      paddingTop: spacing.spacing48,
       paddingHorizontal: spacing.spacing36,
       paddingBottom: insets.bottom,
     }),
-    [insets.bottom]
+    [insets.bottom],
   )
 
   const sharedProps = useMemo<TabContentProps>(
     () => ({
       contentContainerStyle: containerStyle,
       loadingContainerStyle: containerStyle,
-      emptyContainerStyle,
+      emptyComponentStyle,
     }),
-    [containerStyle, emptyContainerStyle]
+    [containerStyle, emptyComponentStyle],
   )
 
   const renderTab = useCallback(
@@ -93,12 +93,7 @@ export function ExternalProfileScreen({
           )
         case SectionName.ProfileNftsTab:
           return (
-            <NftsTab
-              isExternalProfile
-              containerProps={sharedProps}
-              owner={address}
-              renderedInModal={renderedInModal}
-            />
+            <NftsTab isExternalProfile containerProps={sharedProps} owner={address} renderedInModal={renderedInModal} />
           )
         case SectionName.ProfileTokensTab:
           return (
@@ -112,7 +107,7 @@ export function ExternalProfileScreen({
       }
       return null
     },
-    [address, sharedProps, renderedInModal]
+    [address, sharedProps, renderedInModal],
   )
 
   const renderTabBar = useCallback(
@@ -123,9 +118,9 @@ export function ExternalProfileScreen({
           indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes: tabs }}
           pressColor={colors.surface3.val} // Android only
-          renderLabel={({ route, focused }): JSX.Element =>
-            renderTabLabel({ route, focused, isExternalProfile: true })
-          }
+          renderLabel={({ route, focused }): JSX.Element => (
+            <TabLabel isExternalProfile focused={focused} route={route} />
+          )}
           style={[
             TAB_STYLES.tabBar,
             {
@@ -138,7 +133,7 @@ export function ExternalProfileScreen({
         />
       )
     },
-    [colors.surface1, colors.surface3, tabIndex, tabs]
+    [colors.surface1, colors.surface3, tabIndex, tabs],
   )
 
   const traceProperties = useMemo(
@@ -147,17 +142,13 @@ export function ExternalProfileScreen({
       walletName: displayName?.name,
       displayNameType: displayName?.type ? DisplayNameType[displayName.type] : undefined,
     }),
-    [address, displayName?.name, displayName?.type]
+    [address, displayName?.name, displayName?.type],
   )
 
   return (
     <ExploreModalAwareView>
       <Screen noInsets>
-        <Trace
-          directFromPage
-          logImpression
-          properties={traceProperties}
-          screen={MobileScreens.ExternalProfile}>
+        <Trace directFromPage logImpression properties={traceProperties} screen={MobileScreens.ExternalProfile}>
           <Flex grow gap="$spacing16">
             <ProfileHeader address={address} />
             <TraceTabView

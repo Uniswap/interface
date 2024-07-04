@@ -1,14 +1,15 @@
+import Column from 'components/Column'
 import { getChainUI } from 'components/Logo/ChainLogo'
 import { RowBetween } from 'components/Row'
-import { NetworkLayer, getChain, useIsSupportedChainId } from 'constants/chains'
+import { getChain, useIsSupportedChainId } from 'constants/chains'
+import { useIsSendPage } from 'hooks/useIsSendPage'
+import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { Trans } from 'i18n'
 import { ArrowUpRight } from 'react-feather'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
-import { useAccount } from 'hooks/useAccount'
-import Column from '../Column'
 
 const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   color: ${({ color }) => color};
@@ -43,22 +44,27 @@ const SubtitleText = styled(ThemedText.BodySmall)<{ $color: string }>`
   line-height: 20px;
   color: ${({ $color }) => $color};
 `
+const ChainSymbolImage = styled.img`
+  border-radius: 12px;
+`
 
 export function NetworkAlert() {
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const darkMode = useIsDarkMode()
 
-  if (!isSupportedChain) {
+  const isSwapPage = useIsSwapPage()
+  const isSendPage = useIsSendPage()
+  if (!isSupportedChain || !(isSwapPage || isSendPage)) {
     return null
   }
 
-  const { Symbol: ChainSymbol, bgColor, textColor } = getChainUI(chainId, darkMode)
+  const { symbol, bgColor, textColor } = getChainUI(chainId, darkMode)
   const chainInfo = getChain({ chainId })
 
-  return chainInfo.networkLayer == NetworkLayer.L2 ? (
+  return chainInfo.bridge ? (
     <BridgeLink href={chainInfo.bridge} bgColor={bgColor}>
-      <ChainSymbol width={40} height={40} stroke="none" />
+      {symbol && <ChainSymbolImage width="40px" height="40px" src={symbol} />}
       <RowBetween>
         <Column>
           <TitleText $color={textColor}>

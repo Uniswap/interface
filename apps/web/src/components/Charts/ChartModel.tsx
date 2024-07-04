@@ -1,3 +1,5 @@
+import { refitChartContentAtom } from 'components/Charts/TimeSelector'
+import { SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
@@ -24,8 +26,6 @@ import { textFadeIn } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
-import { refitChartContentAtom } from './TimeSelector'
-import { SeriesDataItemType } from './types'
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
@@ -146,7 +146,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   /** Updates the chart without re-creating it or resetting pan/zoom. */
   public updateOptions(
     { locale, theme, format, isLargeScreen, onCrosshairMove }: ChartModelParams<TDataType>,
-    nonDefaultChartOptions?: DeepPartial<TimeChartOptions>
+    nonDefaultChartOptions?: DeepPartial<TimeChartOptions>,
   ) {
     this.onCrosshairMove = onCrosshairMove
 
@@ -253,7 +253,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const { md: isLargeScreen } = useScreenSize()
   const modelParams = useMemo(
     () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: setCrosshairData }),
-    [format, isLargeScreen, locale, params, theme]
+    [format, isLargeScreen, locale, params, theme],
   )
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref

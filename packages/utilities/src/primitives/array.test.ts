@@ -1,4 +1,4 @@
-import { arraysAreEqual, bubbleToTop, differenceWith, next } from './array'
+import { arraysAreEqual, bubbleToTop, differenceWith, next } from 'utilities/src/primitives/array'
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)

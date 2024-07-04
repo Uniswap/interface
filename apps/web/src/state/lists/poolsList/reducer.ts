@@ -1,9 +1,8 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lists'
-
-import { POOLS_LIST } from '../../../constants/lists'
-import { updateVersion } from '../../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
+import { POOLS_LIST } from 'constants/lists'
+import { updateVersion } from 'state/global/actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/poolsList/actions'
 
 // TODO: check unique state
 export interface PoolsListsState {

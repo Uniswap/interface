@@ -2,17 +2,17 @@ import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { TokenOption } from 'wallet/src/components/TokenSelector/types'
-import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
-import { shortenAddress } from 'wallet/src/utils/addresses'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface OptionProps {
   option: TokenOption
@@ -67,13 +67,9 @@ function _TokenOptionItem({
         opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
         width="100%"
-        onPress={onPressTokenOption}>
-        <Flex
-          row
-          alignItems="center"
-          gap="$spacing8"
-          justifyContent="space-between"
-          py="$spacing12">
+        onPress={onPressTokenOption}
+      >
+        <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" py="$spacing12">
           <Flex row shrink alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'}>
             <TokenLogo
               chainId={currency.chainId}
@@ -89,13 +85,8 @@ function _TokenOptionItem({
                     {currency.name}
                   </Text>
                 </Flex>
-                {(safetyLevel === SafetyLevel.Blocked ||
-                  safetyLevel === SafetyLevel.StrongWarning) && (
-                  <WarningIcon
-                    safetyLevel={safetyLevel}
-                    size="$icon.16"
-                    strokeColorOverride="neutral3"
-                  />
+                {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+                  <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
                 )}
               </Flex>
               <Flex centered row gap="$spacing8">

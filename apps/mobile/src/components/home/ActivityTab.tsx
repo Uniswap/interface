@@ -3,10 +3,7 @@ import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import {
-  AnimatedBottomSheetFlatList,
-  AnimatedFlatList,
-} from 'src/components/layout/AnimatedFlatList'
+import { AnimatedBottomSheetFlatList, AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -14,7 +11,7 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
 
@@ -34,7 +31,7 @@ export const ActivityTab = memo(
       refreshing,
       onRefresh,
     },
-    ref
+    ref,
   ) {
     const dispatch = useAppDispatch()
     const colors = useSporeColors()
@@ -43,38 +40,27 @@ export const ActivityTab = memo(
     const { trigger: biometricsTrigger } = useBiometricPrompt()
     const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
 
-    const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
-      containerProps?.contentContainerStyle
-    )
+    const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
     const onPressReceive = (): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
-      dispatch(
-        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      )
+      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
     }
 
-    const {
-      maybeLoaderComponent,
-      maybeEmptyComponent,
-      renderActivityItem,
-      sectionData,
-      keyExtractor,
-    } = useActivityData({
-      owner,
-      authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
-      isExternalProfile,
-      emptyContainerStyle: containerProps?.emptyContainerStyle,
-      onPressEmptyState: onPressReceive,
-    })
+    const { maybeLoaderComponent, maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } =
+      useActivityData({
+        owner,
+        authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
+        isExternalProfile,
+        emptyComponentStyle: containerProps?.emptyComponentStyle,
+        onPressEmptyState: onPressReceive,
+      })
 
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-          }
+          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
@@ -114,5 +100,5 @@ export const ActivityTab = memo(
         />
       </Flex>
     )
-  })
+  }),
 )

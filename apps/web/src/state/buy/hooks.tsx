@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
@@ -36,7 +36,7 @@ export function useDerivedPoolInfo(
   parsedAmount?: CurrencyAmount<Currency>
   error?: ReactNode
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const currentTimestamp = useCurrentBlockTimestamp()
 
   const parsedAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(typedValue, token)
@@ -48,7 +48,7 @@ export function useDerivedPoolInfo(
   )
 
   let error: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     error = <Trans>Connect Wallet</Trans>
   }
   if (!parsedAmount) {

@@ -1,7 +1,6 @@
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import React from 'react'
 import styled, { useTheme } from 'styled-components'
-
-import { themeVars, vars } from '../css/sprinkles.css'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
 type SVGProps = React.SVGProps<SVGSVGElement> & {
@@ -414,18 +413,6 @@ export const TwitterIcon = (props: SVGProps) => (
       clipRule="evenodd"
       d="M21.7923 16.074C20.5417 9.18217 28.4609 5.08251 33.1294 10.0503C33.1294 10.0503 35.2141 9.43965 37.0472 8.21838C36.5107 9.80217 35.4837 11.1529 34.1294 12.0558C34.1294 12.0558 36.6307 11.7074 37.7143 11.0093C37.7143 11.0093 36.6307 13.3645 34.6306 14.2374C35.713 30.0313 19.4592 39.6302 6.28571 31.7758C6.28571 31.7758 12.7884 32.1242 15.5414 28.81C15.5414 28.81 11.5389 29.1643 9.53874 24.0997C9.53874 24.0997 11.0388 24.7103 12.54 23.9249C12.54 23.9249 7.87157 23.1394 7.45393 17.2953C7.45393 17.2953 8.95516 18.5165 10.6223 18.0795C10.6223 18.0795 5.45382 14.8527 8.37161 9.00736C8.37161 9.00736 13.8731 16.3303 21.7934 16.074H21.7923Z"
       fill="currentColor"
-    />
-  </svg>
-)
-
-export const CheckMarkIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M16.6693 5.33789L7.5026 14.3175L3.33594 10.2358"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
     />
   </svg>
 )

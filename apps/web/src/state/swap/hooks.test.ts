@@ -1,15 +1,15 @@
+import { UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
-import { parse } from 'qs'
-
-import { ChainId, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import { MATIC_POLYGON, UNI } from 'constants/tokens'
+import { parse } from 'qs'
+import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
 import { queryParametersToSwapState } from 'state/swap/types'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { queryParametersToCurrencyState, useInitialCurrencyState } from './hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
@@ -103,21 +103,21 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: undefined,
-            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
+            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
             chainId: 10,
           }),
         }))
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -125,21 +125,21 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: 'ETH',
-            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
+            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
             chainId: 10,
           }),
         }))
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -154,14 +154,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
     })
@@ -186,7 +186,7 @@ describe('hooks', () => {
                     },
                   },
                   {
-                    token: UNI[ChainId.OPTIMISM],
+                    token: UNI[UniverseChainId.Optimism],
                     denominatedValue: {
                       value: 500,
                     },
@@ -202,21 +202,21 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: undefined,
-            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
+            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
             chainId: 10,
           }),
         }))
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -231,14 +231,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
 
@@ -246,21 +246,21 @@ describe('hooks', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
           useParsedQueryString: () => ({
             inputCurrency: 'ETH',
-            outputCurrency: UNI_ADDRESSES[ChainId.OPTIMISM],
+            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
             chainId: 10,
           }),
         }))
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -275,14 +275,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(137)
+          expect(initialChainId).toEqual(137)
         })
       })
     })

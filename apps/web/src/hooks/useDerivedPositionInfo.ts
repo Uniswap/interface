@@ -1,8 +1,7 @@
 import { Pool, Position } from '@uniswap/v3-sdk'
+import { useCurrency } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
-
-import { useCurrency } from './Tokens'
 
 export function useDerivedPositionInfo(positionDetails: PositionDetails | undefined): {
   position?: Position

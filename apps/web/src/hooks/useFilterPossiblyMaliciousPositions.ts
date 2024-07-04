@@ -3,6 +3,8 @@ import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chai
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { apolloQueryOptions } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
+import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import {
@@ -13,12 +15,9 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { hasURL } from 'utils/urlChecks'
 
-import { useAccount } from 'hooks/useAccount'
-import { useTokenContractsConstant } from './useTokenContractsConstant'
-
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
   return Array.from(
-    new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
+    new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), [])),
   )
 }
 

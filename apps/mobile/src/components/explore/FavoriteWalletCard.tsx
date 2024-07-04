@@ -8,9 +8,10 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { removeWatchedAddress } from 'wallet/src/features/favorites/slice'
@@ -75,7 +76,8 @@ function FavoriteWalletCard({
             setIsEditing(true)
           }
         }}
-        {...rest}>
+        {...rest}
+      >
         <TouchableArea
           hapticFeedback
           activeOpacity={isEditing ? 1 : undefined}
@@ -91,7 +93,8 @@ function FavoriteWalletCard({
           }}
           onPressIn={async (): Promise<void> => {
             await preload(address)
-          }}>
+          }}
+        >
           <BaseCard.Shadow>
             <Flex row gap="$spacing4" justifyContent="space-between">
               <Flex row shrink alignItems="center" gap="$spacing8">

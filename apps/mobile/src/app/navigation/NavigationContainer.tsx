@@ -27,10 +27,7 @@ interface Props {
 export const navigationRef = createNavigationContainerRef()
 
 /** Wrapped `NavigationContainer` with telemetry tracing. */
-export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
-  children,
-  onReady,
-}: PropsWithChildren<Props>) => {
+export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, onReady }: PropsWithChildren<Props>) => {
   const colors = useSporeColors()
   const [routeName, setRouteName] = useState<MobileAppScreen>()
   const [routeParams, setRouteParams] = useState<Record<string, unknown> | undefined>()
@@ -58,8 +55,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName
-        const currentRouteName: MobileAppScreen = navigationRef.getCurrentRoute()
-          ?.name as MobileAppScreen
+        const currentRouteName: MobileAppScreen = navigationRef.getCurrentRoute()?.name as MobileAppScreen
 
         if (
           currentRouteName &&
@@ -68,7 +64,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
         ) {
           const currentRouteParams = getEventParams(
             currentRouteName,
-            navigationRef.getCurrentRoute()?.params as RootParamList[MobileAppScreen]
+            navigationRef.getCurrentRoute()?.params as RootParamList[MobileAppScreen],
           )
           setLogImpression(true)
           setRouteName(currentRouteName)
@@ -76,7 +72,8 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({
         } else {
           setLogImpression(false)
         }
-      }}>
+      }}
+    >
       <Trace logImpression={logImpression} properties={routeParams} screen={routeName}>
         {children}
       </Trace>
@@ -95,7 +92,7 @@ export const useManageDeepLinks = (): void => {
     // as then there is a change we dispatch `openDeepLink` action twice if app was lauched by a deep link
     await sleep(2000) // 2000 was chosen imperically
     const urlListener = Linking.addEventListener('url', (event: { url: string }) =>
-      dispatch(openDeepLink({ url: event.url, coldStart: false }))
+      dispatch(openDeepLink({ url: event.url, coldStart: false })),
     )
 
     return urlListener.remove

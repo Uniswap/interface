@@ -4,15 +4,15 @@ import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
 import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
-import { isNonJestDev } from 'utilities/src/environment'
+import { MobileState, ReducerNames, mobileReducer } from 'src/app/reducer'
+import { mobileSaga } from 'src/app/saga'
+import { fiatOnRampAggregatorApi as sharedFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { isNonJestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
-import { importAccountSagaName } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
-import { MobileState, ReducerNames, mobileReducer } from './reducer'
-import { mobileSaga } from './saga'
 
 const storage = new MMKV()
 
@@ -57,7 +57,6 @@ const whitelist: Array<ReducerNames | RootReducerNames> = [
   ...sharedPersistedStateWhitelist,
   'biometricSettings',
   'passwordLockout',
-  'telemetry',
   'tweaks',
   'cloudBackup',
 ]
@@ -73,15 +72,6 @@ export const persistConfig = {
 export const persistedReducer = persistReducer(persistConfig, mobileReducer)
 
 const sentryReduxEnhancer = Sentry.createReduxEnhancer({
-  // Add any restrictions here for when the enhancer should not be used
-  actionTransformer: (action) => {
-    if (action.type === `${importAccountSagaName}/trigger`) {
-      // Return null in the case of importing an account, as the payload could contain the mnemonic
-      return null
-    }
-
-    return action
-  },
   stateTransformer: (state: MobileState): Maybe<MobileState> => {
     // Do not log the state if a user has opted out of analytics.
     if (state.telemetry.allowAnalytics) {
@@ -92,14 +82,18 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   },
 })
 
-const middlewares: Middleware[] = [fiatOnRampApi.middleware, fiatOnRampAggregatorApi.middleware]
+const middlewares: Middleware[] = [
+  fiatOnRampApi.middleware,
+  fiatOnRampAggregatorApi.middleware,
+  sharedFiatOnRampAggregatorApi.middleware,
+]
 if (isNonJestDev) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
 }
 
 export const setupStore = (
-  preloadedState?: PreloadedState<MobileState>
+  preloadedState?: PreloadedState<MobileState>,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   return createStore({

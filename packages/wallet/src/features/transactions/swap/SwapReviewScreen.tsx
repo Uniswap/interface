@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import {
-  AnimatedFlex,
-  Button,
-  Flex,
-  HapticFeedback,
-  Separator,
-  isWeb,
-  useIsShortMobileDevice,
-} from 'ui/src'
+import { Button, Flex, HapticFeedback, Separator, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/slice'
@@ -21,10 +13,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import {
-  SwapScreen,
-  useSwapScreenContext,
-} from 'wallet/src/features/transactions/contexts/SwapScreenContext'
+import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
@@ -58,8 +47,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
-  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } =
-    useTransactionModalContext()
+  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
 
@@ -123,7 +111,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       pushNotification({
         type: AppNotificationType.SwapPending,
         wrapType,
-      })
+      }),
     )
   }, [dispatch, wrapType])
 
@@ -137,7 +125,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     wrapType,
     navigateToNextScreen,
     txRequest,
-    txId
+    txId,
   )
 
   const onSwap = useSwapCallback(
@@ -151,7 +139,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     navigateToNextScreen,
     txId,
     screen === SwapScreen.SwapReviewHoldingToSwap,
-    isFiatMode
+    isFiatMode,
   )
 
   const submitTransaction = useCallback(() => {
@@ -319,9 +307,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   return (
     <>
-      <TransactionModalInnerContainer
-        bottomSheetViewStyles={bottomSheetViewStyles}
-        fullscreen={false}>
+      <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
         {showWarningModal && reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
@@ -413,9 +399,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               fill
               disabled={submitButtonDisabled}
               icon={BiometricsIcon}
-              size={isShortMobileDevice ? 'small' : 'large'}
+              size={isWeb ? 'medium' : isShortMobileDevice ? 'small' : 'large'}
               testID={ElementName.Swap}
-              onPress={onSubmitTransaction}>
+              onPress={onSubmitTransaction}
+            >
               {actionText}
             </Button>
           </Flex>

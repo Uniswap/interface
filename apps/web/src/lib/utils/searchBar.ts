@@ -14,7 +14,7 @@ export function organizeSearchResults(
   isNFTPage: boolean,
   poolResults: SearchToken[],
   tokenResults: SearchToken[],
-  collectionResults: GenieCollection[]
+  collectionResults: GenieCollection[],
 ): [SearchToken[], SearchToken[], GenieCollection[]] {
   const reducedPools =
     poolResults?.slice(0, isNFTPage ? 3 : collectionResults.length < 3 ? 8 - collectionResults.length : 5) ?? []

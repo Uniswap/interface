@@ -7,53 +7,55 @@ import {
   LiquidityEventName,
   LiquiditySource,
 } from '@uniswap/analytics-events'
-import { Currency, Percent } from '@uniswap/sdk-core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { Currency, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { computePairAddress } from '@uniswap/v2-sdk'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { BlueCard, LightCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import { MinimalPositionCard } from 'components/PositionCard'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import Slider from 'components/Slider'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { Dots } from 'components/swap/styled'
 import { useIsSupportedChainId } from 'constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { usePairContract, useV2RouterContract } from 'hooks/useContract'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { Trans } from 'i18n'
+import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
+import { ClickableText, MaxButton, Wrapper } from 'pages/Pool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Field } from 'state/burn/actions'
+import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/burn/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/Logo/CurrencyLogo'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-import Slider from '../../components/Slider'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { Dots } from '../../components/swap/styled'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
-import { Field } from '../../state/burn/actions'
-import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionType } from '../../state/transactions/types'
-import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
-import { currencyId } from '../../utils/currencyId'
-import AppBody from '../AppBody'
-import { ClickableText, MaxButton, Wrapper } from '../Pool/styled'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
+import { currencyId } from 'utils/currencyId'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -81,7 +83,7 @@ function RemoveLiquidity() {
   const trace = useTrace()
 
   // toggle wallet when disconnected
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -103,8 +105,8 @@ function RemoveLiquidity() {
     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
       ? '0'
       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-      ? '<1'
-      : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
+        ? '<1'
+        : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
     [Field.LIQUIDITY]:
       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
     [Field.CURRENCY_A]:
@@ -123,7 +125,7 @@ function RemoveLiquidity() {
   // allowance handling
   const { gatherPermitSignature, signatureData } = useV2LiquidityTokenPermit(
     parsedAmounts[Field.LIQUIDITY],
-    router?.address
+    router?.address,
   )
   const isRbPool = true
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address, isRbPool)
@@ -156,20 +158,20 @@ function RemoveLiquidity() {
     (field: Field, typedValue: string) => {
       return _onUserInput(field, typedValue)
     },
-    [_onUserInput]
+    [_onUserInput],
   )
 
   const onLiquidityInput = useCallback(
     (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
   const onCurrencyAInput = useCallback(
     (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
   const onCurrencyBInput = useCallback(
     (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
-    [onUserInput]
+    [onUserInput],
   )
 
   // tx sending
@@ -284,19 +286,23 @@ function RemoveLiquidity() {
         router.estimateGas[methodName](...args)
           .then((estimateGas) => calculateGasMargin(estimateGas))
           .catch((error) => {
-            console.error(`estimateGas failed`, methodName, args, error)
+            logger.info('RemoveLiquidity', 'onRemove', 'estimateGas failed', {
+              message: error.message,
+              methodName,
+              args,
+            })
             return undefined
-          })
-      )
+          }),
+      ),
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex((safeGasEstimate) =>
-      BigNumber.isBigNumber(safeGasEstimate)
+      BigNumber.isBigNumber(safeGasEstimate),
     )
 
     // all estimations failed...
     if (indexOfSuccessfulEstimation === -1) {
-      console.error('This transaction would fail. Please contact support.')
+      logger.warn('RemoveLiquidity', 'onRemove', 'This transaction would fail. Please contact support.')
     } else {
       const methodName = methodNames[indexOfSuccessfulEstimation]
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
@@ -320,14 +326,26 @@ function RemoveLiquidity() {
 
           sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
             label: [currencyA.symbol, currencyB.symbol].join('/'),
-            source: LiquiditySource.V3,
+            source: LiquiditySource.V2,
             ...trace,
+            type: LiquiditySource.V2,
+            transaction_hash: response.hash,
+            pool_address: computePairAddress({
+              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+              tokenA: currencyA.wrapped,
+              tokenB: currencyB.wrapped,
+            }),
           })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
-          console.error(error)
+          logger.error(error, {
+            tags: {
+              file: 'RemoveLiquidity',
+              function: 'onRemove',
+            },
+          })
         })
     }
   }
@@ -436,7 +454,7 @@ function RemoveLiquidity() {
     (value: number) => {
       onUserInput(Field.LIQUIDITY_PERCENT, value.toString())
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
@@ -446,7 +464,7 @@ function RemoveLiquidity() {
       account.chainId &&
       WRAPPED_NATIVE_CURRENCY[account.chainId] &&
       ((currencyA && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyA)) ||
-        (currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB)))
+        (currencyB && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(currencyB))),
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -457,7 +475,7 @@ function RemoveLiquidity() {
         navigate(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, navigate]
+    [currencyIdA, currencyIdB, navigate],
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
@@ -467,7 +485,7 @@ function RemoveLiquidity() {
         navigate(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
       }
     },
-    [currencyIdA, currencyIdB, navigate]
+    [currencyIdA, currencyIdB, navigate],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -481,7 +499,7 @@ function RemoveLiquidity() {
 
   const [innerLiquidityPercentage, setInnerLiquidityPercentage] = useDebouncedChangeHandler(
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
-    liquidityPercentChangeCallback
+    liquidityPercentChangeCallback,
   )
 
   if (!networkSupportsV2) {
@@ -691,7 +709,7 @@ function RemoveLiquidity() {
                   properties={{ received_swap_quote: false }}
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
-                  <ButtonLight onClick={toggleWalletDrawer}>
+                  <ButtonLight onClick={accountDrawer.open}>
                     <Trans i18nKey="common.connectWallet.button" />
                   </ButtonLight>
                 </Trace>

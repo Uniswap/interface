@@ -14,44 +14,27 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
-import {
-  ExtensionOnboardingState,
-  setExtensionOnboardingState,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { ExtensionOnboardingState, setExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  claimUnitag,
-  getUnitagAvatarUploadUrl,
-  useUnitagClaimEligibilityQuery,
-} from 'wallet/src/features/unitags/api'
-import {
-  isLocalFileUri,
-  uploadAndUpdateAvatarAfterClaim,
-} from 'wallet/src/features/unitags/avatars'
-import {
-  AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS,
-  UNITAG_VALID_REGEX,
-} from 'wallet/src/features/unitags/constants'
+import { claimUnitag, getUnitagAvatarUploadUrl, useUnitagClaimEligibilityQuery } from 'wallet/src/features/unitags/api'
+import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
+import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
-import {
-  useAccounts,
-  useActiveAccount,
-  useActiveAccountAddressWithThrow,
-} from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
@@ -87,7 +70,7 @@ export const useCanActiveAddressClaimUnitag = (): {
 
 export const useCanAddressClaimUnitag = (
   address?: Address,
-  isUsernameChange?: boolean
+  isUsernameChange?: boolean,
 ): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
@@ -136,7 +119,7 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
 
 export const useCanClaimUnitagName = (
   unitagAddress: Address | undefined,
-  unitag: string | undefined
+  unitag: string | undefined,
 ): { error: string | undefined; loading: boolean; requiresENSMatch: boolean } => {
   const { t } = useTranslation()
 
@@ -146,7 +129,7 @@ export const useCanClaimUnitagName = (
   // Skip the backend calls if we found an error
   const unitagToSearch = error ? undefined : unitag
   const { loading: unitagLoading, data } = useUnitagQuery(unitagToSearch)
-  const { loading: ensLoading, address: ensAddress } = useENS(ChainId.Mainnet, unitagToSearch, true)
+  const { loading: ensLoading, address: ensAddress } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
   const loading = unitagLoading || ensLoading
 
   // Check for availability and ENS match
@@ -167,7 +150,8 @@ export const useCanClaimUnitagName = (
  */
 export const useClaimUnitag = (): ((
   claim: UnitagClaim,
-  context: UnitagClaimContext
+  context: UnitagClaimContext,
+  account?: Account,
 ) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -181,8 +165,9 @@ export const useClaimUnitag = (): ((
   // If used outside of the context, this will return undefined and be ignored
   const onboardingAccount = getOnboardingAccount()
 
-  return async (claim: UnitagClaim, context: UnitagClaimContext) => {
-    const claimAccount = onboardingAccount || accounts[claim.address]
+  return async (claim: UnitagClaim, context: UnitagClaimContext, account?: Account) => {
+    const claimAccount = account || onboardingAccount || accounts[claim.address]
+
     if (!claimAccount || !deviceId) {
       return { claimError: t('unitags.claim.error.default') }
     }
@@ -230,7 +215,7 @@ export const useClaimUnitag = (): ((
               pushNotification({
                 type: AppNotificationType.Error,
                 errorMessage: t('unitags.claim.error.avatar'),
-              })
+              }),
             )
           }
         }
@@ -260,8 +245,7 @@ export const useAvatarUploadCredsWithRefresh = ({
   avatarUploadUrlResponse?: UnitagGetAvatarUploadUrlResponse
 } => {
   const [avatarUploadUrlLoading, setAvatarUploadUrlLoading] = useState(false)
-  const [avatarUploadUrlResponse, setAvatarUploadUrlResponse] =
-    useState<UnitagGetAvatarUploadUrlResponse>()
+  const [avatarUploadUrlResponse, setAvatarUploadUrlResponse] = useState<UnitagGetAvatarUploadUrlResponse>()
 
   // Re-fetch the avatar upload pre-signed URL every 110 seconds to ensure it's always fresh
   useEffect(() => {
@@ -291,10 +275,7 @@ export const useAvatarUploadCredsWithRefresh = ({
     })
 
     // Set up the interval to refetch creds 10 seconds before expiry
-    const intervalId = setInterval(
-      fetchAvatarUploadUrl,
-      (AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS - 10) * ONE_SECOND_MS
-    )
+    const intervalId = setInterval(fetchAvatarUploadUrl, (AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS - 10) * ONE_SECOND_MS)
 
     // Clear the interval on component unmount
     return () => clearInterval(intervalId)
@@ -309,19 +290,22 @@ export const useShowExtensionPromoBanner = (): {
   showExtensionPromoBanner: boolean
 } => {
   const dispatch = useAppDispatch()
-  const extensionOnboardingEnabled = useFeatureFlag(FeatureFlags.ExtensionOnboarding)
+  const extensionOnboardingEnabledBeta = useFeatureFlag(FeatureFlags.ExtensionOnboarding)
+  const extensionPromotionGAEnabled = useFeatureFlag(FeatureFlags.ExtensionPromotionGA)
   const extensionOnboardingState = useAppSelector(selectExtensionOnboardingState)
   const activeAccount = useActiveAccount()
 
-  const skip =
-    !extensionOnboardingEnabled ||
+  const skipBetaWaitlistQuery =
+    extensionPromotionGAEnabled || // ignore waitlist if GA enabled
+    !extensionOnboardingEnabledBeta ||
     extensionOnboardingState === ExtensionOnboardingState.Completed ||
     !activeAccount ||
     activeAccount.type !== AccountType.SignerMnemonic
 
-  const { data, error, loading } = useWaitlistPositionQuery([activeAccount?.address || ''], skip)
+  const { data, error, loading } = useWaitlistPositionQuery([activeAccount?.address || ''], skipBetaWaitlistQuery)
 
-  if (skip) {
+  /** Onboarding completed, skip all checks **/
+  if (extensionOnboardingState === ExtensionOnboardingState.Completed) {
     return {
       error: undefined,
       loading: false,
@@ -329,12 +313,38 @@ export const useShowExtensionPromoBanner = (): {
     }
   }
 
-  const canOnboardToExtension = data?.isAccepted ?? false
+  /*** GA checks first ***/
+  if (extensionPromotionGAEnabled) {
+    if (extensionOnboardingState === ExtensionOnboardingState.Undefined) {
+      dispatch(setExtensionOnboardingState(ExtensionOnboardingState.ReadyToOnboard))
+    }
 
-  if (canOnboardToExtension && extensionOnboardingState === ExtensionOnboardingState.Undefined) {
+    return {
+      error: undefined,
+      loading: false,
+      showExtensionPromoBanner: true,
+    }
+  }
+
+  /*** Skip beta checks if we didn't query for the data ***/
+  if (skipBetaWaitlistQuery) {
+    return {
+      error: undefined,
+      loading: false,
+      showExtensionPromoBanner: false,
+    }
+  }
+
+  const canOnboardToExtensionBeta = data?.isAccepted ?? false
+
+  if (canOnboardToExtensionBeta && extensionOnboardingState === ExtensionOnboardingState.Undefined) {
     // Store the information locally so that we don't need to check again during onboarding
     dispatch(setExtensionOnboardingState(ExtensionOnboardingState.ReadyToOnboard))
   }
 
-  return { error: error?.message, loading, showExtensionPromoBanner: canOnboardToExtension }
+  return {
+    error: error?.message,
+    loading,
+    showExtensionPromoBanner: canOnboardToExtensionBeta,
+  }
 }

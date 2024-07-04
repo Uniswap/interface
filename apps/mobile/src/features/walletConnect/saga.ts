@@ -24,11 +24,11 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { EthEvent, EthMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export let wcWeb3Wallet: IWeb3Wallet
@@ -74,15 +74,13 @@ function createWalletConnectChannel(): EventChannel<AnyAction> {
      * and the proposal namespaces (chains, methods, events)
      */
     const sessionProposalHandler = async (
-      proposalEvent: Omit<Web3WalletTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>
+      proposalEvent: Omit<Web3WalletTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>,
     ): Promise<void> => {
       const { params: proposal } = proposalEvent
       emit({ type: 'session_proposal', proposal })
     }
 
-    const sessionRequestHandler = async (
-      request: Web3WalletTypes.SessionRequest
-    ): Promise<void> => {
+    const sessionRequestHandler = async (request: Web3WalletTypes.SessionRequest): Promise<void> => {
       emit({ type: 'session_request', request })
     }
 
@@ -145,7 +143,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   } = proposal
 
   try {
-    const supportedEip155Chains = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
+    const supportedEip155Chains = WALLET_SUPPORTED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
     const accounts = supportedEip155Chains.map((chain) => `${chain}:${activeAccountAddress}`)
 
     const namespaces = buildApprovedNamespaces({
@@ -167,7 +165,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
     })
 
     // Extract chains from approved namespaces to show in UI for pending session
-    const proposalChainIds: ChainId[] = []
+    const proposalChainIds: WalletChainId[] = []
     Object.entries(namespaces).forEach(([key, namespace]) => {
       const { chains } = namespace
       // EVM chain(s) are specified in either `eip155:CHAIN` or chains array
@@ -188,7 +186,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
             source: 'walletconnect',
           },
         },
-      })
+      }),
     )
   } catch (e) {
     // Reject pending session if required namespaces includes non-EVM chains or unsupported EVM chains
@@ -197,9 +195,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       reason: getSdkError('UNSUPPORTED_CHAINS'),
     })
 
-    const chainLabels = ALL_SUPPORTED_CHAIN_IDS.map((chainId) => CHAIN_INFO[chainId].label).join(
-      ', '
-    )
+    const chainLabels = WALLET_SUPPORTED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId].label).join(', ')
 
     const confirmed = yield* call(
       showAlert,
@@ -207,7 +203,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       i18n.t('walletConnect.error.connection.message', {
         chainNames: chainLabels,
         dappName: dapp.name,
-      })
+      }),
     )
     if (confirmed) {
       yield* put(setHasPendingSessionError(false))
@@ -220,7 +216,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       'WalletConnectSaga',
       'sessionProposalHandler',
       'Rejected session proposal due to invalid proposal namespaces: ',
-      e
+      e,
     )
   }
 }
@@ -248,36 +244,25 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
         addRequest({
           account,
           request,
-        })
+        }),
       )
 
       break
     }
     case EthMethod.EthSendTransaction: {
-      const { account, request } = parseTransactionRequest(
-        method,
-        topic,
-        id,
-        chainId,
-        dapp,
-        requestParams
-      )
+      const { account, request } = parseTransactionRequest(method, topic, id, chainId, dapp, requestParams)
       yield* put(
         addRequest({
           account,
           request,
-        })
+        }),
       )
 
       break
     }
     default:
       // Reject request for an invalid method
-      logger.warn(
-        'WalletConnectSaga',
-        'sessionRequestHandler',
-        `Session request method is unsupported: ${method}`
-      )
+      logger.warn('WalletConnectSaga', 'sessionRequestHandler', `Session request method is unsupported: ${method}`)
       yield* call([wcWeb3Wallet, wcWeb3Wallet.respondSessionRequest], {
         topic,
         response: {
@@ -317,14 +302,14 @@ function* populateActiveSessions() {
 
     // Verify account address for session exists in wallet's accounts
     const matchingAccount = Object.values(accounts).find(
-      (account) => account.address.toLowerCase() === accountAddress.toLowerCase()
+      (account) => account.address.toLowerCase() === accountAddress.toLowerCase(),
     )
     if (!matchingAccount) {
       continue
     }
 
     // Get all chains for session namespaces, supporting `eip155:CHAIN_ID` and `eip155` namespace formats
-    const chains: ChainId[] = []
+    const chains: WalletChainId[] = []
     Object.entries(session.namespaces).forEach(([key, namespace]) => {
       const eip155Chains = key.includes(':') ? [key] : namespace.chains
       chains.push(...(getSupportedWalletConnectChains(eip155Chains) ?? []))
@@ -344,7 +329,7 @@ function* populateActiveSessions() {
           namespaces: session.namespaces,
         },
         account: accountAddress,
-      })
+      }),
     )
   }
 }

@@ -1,10 +1,9 @@
+import { useENSRegistrarContract, useENSResolverContract } from 'hooks/useContract'
+import useDebounce from 'hooks/useDebounce'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import isZero from 'utils/isZero'
 import { safeNamehash } from 'utils/safeNamehash'
-
-import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract } from './useContract'
-import useDebounce from './useDebounce'
 
 /**
  * Does a lookup for an ENS name to find its address.
@@ -16,7 +15,7 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
   const resolverAddressCall = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddress = resolverAddressCall.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddress && !isZero(resolverAddress) ? resolverAddress : undefined
+    resolverAddress && !isZero(resolverAddress) ? resolverAddress : undefined,
   )
   const addressCall = useMainnetSingleCallResult(resolverContract, 'addr', ensNodeArgument, NEVER_RELOAD)
   const address = addressCall.result?.[0]
@@ -27,6 +26,6 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
       address: changed ? null : address ?? null,
       loading: changed || resolverAddressCall.loading || addressCall.loading,
     }),
-    [addressCall.loading, address, changed, resolverAddressCall.loading]
+    [addressCall.loading, address, changed, resolverAddressCall.loading],
   )
 }

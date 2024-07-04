@@ -3,7 +3,11 @@ import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
+import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
+import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
+import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
+import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
 import { isUniswapXSupportedChain, L2_CHAIN_IDS, useIsSupportedChainId } from 'constants/chains'
 import { useIsMobile } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
@@ -21,12 +25,6 @@ import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-
-import { useAccount } from 'hooks/useAccount'
-import MaxSlippageSettings from './MaxSlippageSettings'
-import MenuButton from './MenuButton'
-import RouterPreferenceSettings from './RouterPreferenceSettings'
-import TransactionDeadlineSettings from './TransactionDeadlineSettings'
 
 const CloseButton = styled.button`
   background: transparent;
@@ -46,7 +44,10 @@ const MenuFlyout = styled(AutoColumn)`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.01),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: absolute;
@@ -117,9 +118,9 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const { chainId: connectedChainId } = useAccount()
   const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
-  const node = useRef<HTMLDivElement | null>(null)
+  const toggleButtonNode = useRef<HTMLDivElement | null>(null)
+  const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
   const closeModal = useCloseModal()
@@ -130,7 +131,7 @@ export default function SettingsTab({
   const isOpenMobile = isOpen && isMobile
   const isOpenDesktop = isOpen && !isMobile
 
-  useOnClickOutside(node, isOpenDesktop ? closeMenu : undefined)
+  useOnClickOutside(menuNode, isOpenDesktop ? closeMenu : undefined, [toggleButtonNode])
   useDisableScrolling(isOpen)
 
   const multipleRoutingOptionsEnabled = useFeatureFlag(FeatureFlags.MultipleRoutingOptions)
@@ -156,27 +157,21 @@ export default function SettingsTab({
         {multipleRoutingOptionsEnabled && (
           <>
             {!isUniswapXTrade(trade) && <StyledDivider />}
-            <MultipleRoutingOptions />
+            <MultipleRoutingOptions chainId={chainId} />
           </>
         )}
       </>
     ),
-    [autoSlippage, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade]
+    [autoSlippage, chainId, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade],
   )
 
   return (
-    <Menu ref={node}>
-      <MenuButton
-        disabled={!isChainSupported || chainId !== connectedChainId}
-        isActive={isOpen}
-        compact={compact}
-        onClick={toggleMenu}
-        trade={trade}
-      />
-      {isOpenDesktop && <MenuFlyout>{Settings}</MenuFlyout>}
+    <Menu ref={toggleButtonNode}>
+      <MenuButton disabled={!isChainSupported} isActive={isOpen} compact={compact} onClick={toggleMenu} trade={trade} />
+      {isOpenDesktop && <MenuFlyout ref={menuNode}>{Settings}</MenuFlyout>}
       {isOpenMobile && (
         <Portal>
-          <MobileMenuContainer data-testid="mobile-settings-menu">
+          <MobileMenuContainer data-testid="mobile-settings-menu" ref={menuNode}>
             <Scrim onClick={closeMenu} $open />
             <MobileMenuWrapper $open>
               <MobileMenuHeader padding="8px 0px 4px">

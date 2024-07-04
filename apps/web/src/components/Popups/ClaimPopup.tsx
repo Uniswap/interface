@@ -1,23 +1,22 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import tokenLogo from 'assets/images/token-logo.png'
+import { ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { CardBGImage, CardNoise } from 'components/earn/styled'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
-import styled, { keyframes } from 'styled-components'
-import { ThemedText } from 'theme/components'
-
-import tokenLogo from '../../assets/images/token-logo.png'
 import {
   useModalIsOpen,
   useShowClaimPopup,
   useToggleSelfClaimModal,
   useToggleShowClaimPopup,
-} from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonPrimary } from '../Button'
-import { AutoColumn } from '../Column'
-import { CardBGImage, CardNoise } from '../earn/styled'
+} from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
+import styled, { keyframes } from 'styled-components'
+import { ThemedText } from 'theme/components'
 
 const StyledClaimPopup = styled(AutoColumn)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ffae00 0%, #021d43 100%);
@@ -54,7 +53,7 @@ const UniToken = styled.img`
 `
 
 export default function ClaimPopup() {
-  const { account } = useWeb3React()
+  const account = useAccount()
 
   // dont store these in persisted state yet
   const showClaimPopup: boolean = useShowClaimPopup()
@@ -68,8 +67,8 @@ export default function ClaimPopup() {
   }, [toggleSelfClaimModal])
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
-  const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account)
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+  const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account.address)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account.address)
 
   // listen for available claim and show popup if needed
   useEffect(() => {

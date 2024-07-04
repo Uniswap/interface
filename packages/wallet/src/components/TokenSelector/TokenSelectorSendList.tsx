@@ -1,23 +1,19 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, isWeb } from 'ui/src'
+import { Flex, SpinningLoader, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { ChainId } from 'uniswap/src/types/chains'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import {
-  SectionHeader,
-  TokenSelectorList,
-} from 'wallet/src/components/TokenSelector/TokenSelectorList'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { SectionHeader, TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import { usePortfolioTokenOptions } from 'wallet/src/components/TokenSelector/hooks'
-import { OnSelectCurrency, TokenSection } from 'wallet/src/components/TokenSelector/types'
-import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
-function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSection[]> {
+function useTokenSectionsForSend(chainFilter: UniverseChainId | null): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -33,7 +29,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
 
   const sections = useMemo(
     () => getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions),
-    [portfolioTokenOptions, t]
+    [portfolioTokenOptions, t],
   )
 
   return useMemo(
@@ -43,7 +39,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
       error: error || undefined,
       refetch: refetchPortfolioTokenOptions,
     }),
-    [error, loading, refetchPortfolioTokenOptions, sections]
+    [error, loading, refetchPortfolioTokenOptions, sections],
   )
 }
 
@@ -52,7 +48,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 
   const { data: ipAddressData, isLoading } = useFiatOnRampIpAddressQuery(
     // TODO(EXT-669): re-enable this once we have an onramp for the Extension.
-    isWeb ? skipToken : undefined
+    isWeb ? skipToken : undefined,
   )
 
   const fiatOnRampEligible = Boolean(ipAddressData?.isBuyAllowed)
@@ -73,9 +69,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
                 : t('tokens.selector.empty.receive.title')
             }
             description={
-              fiatOnRampEligible
-                ? t('tokens.selector.empty.buy.message')
-                : t('tokens.selector.empty.receive.message')
+              fiatOnRampEligible ? t('tokens.selector.empty.buy.message') : t('tokens.selector.empty.receive.message')
             }
             title={t('tokens.selector.empty.title')}
             onPress={onEmptyActionPress}
@@ -92,14 +86,11 @@ function _TokenSelectorSendList({
   onEmptyActionPress,
 }: {
   onSelectCurrency: OnSelectCurrency
-  chainFilter: ChainId | null
+  chainFilter: UniverseChainId | null
   onEmptyActionPress: () => void
 }): JSX.Element {
   const { data: sections, loading, error, refetch } = useTokenSectionsForSend(chainFilter)
-  const emptyElement = useMemo(
-    () => <EmptyList onEmptyActionPress={onEmptyActionPress} />,
-    [onEmptyActionPress]
-  )
+  const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])
 
   return (
     <TokenSelectorList

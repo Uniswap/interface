@@ -18,6 +18,7 @@ import {
   UnitagUpdateMetadataResponse,
   UnitagWaitlistPositionResponse,
 } from 'uniswap/src/features/unitags/types'
+import { isMobileApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -26,17 +27,19 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 const BASE_HEADERS = {
   'x-request-source': REQUEST_SOURCE,
   'x-app-version': getVersionHeader(),
-  Origin: uniswapUrls.apiOrigin,
+  ...(isMobileApp ? { Origin: uniswapUrls.apiOrigin } : {}),
 }
 
 const generateAxiosHeaders = async (
   signature: string,
-  firebaseAppCheckToken?: string
+  firebaseAppCheckToken?: string,
 ): Promise<Record<string, string>> => {
   return {
     ...BASE_HEADERS,
     'x-uni-sig': signature,
-    ...(firebaseAppCheckToken && { 'x-firebase-app-check': firebaseAppCheckToken }),
+    ...(firebaseAppCheckToken && {
+      'x-firebase-app-check': firebaseAppCheckToken,
+    }),
   }
 }
 
@@ -45,16 +48,18 @@ export function useUnitagClaimEligibilityQuery({
   deviceId,
   isUsernameChange,
   skip,
-}: UnitagClaimEligibilityParams & { skip?: boolean }): ReturnType<
-  typeof useRestQuery<UnitagClaimEligibilityResponse>
-> {
+}: UnitagClaimEligibilityParams & { skip?: boolean }): ReturnType<typeof useRestQuery<UnitagClaimEligibilityResponse>> {
   return useRestQuery<UnitagClaimEligibilityResponse, Record<string, unknown>>(
-    addQueryParamsToEndpoint('/claim/eligibility', { address, deviceId, isUsernameChange }),
+    addQueryParamsToEndpoint('/claim/eligibility', {
+      address,
+      deviceId,
+      isUsernameChange,
+    }),
     { address, deviceId, isUsernameChange }, // dummy body so that cache key is unique per query params
     ['canClaim', 'errorCode', 'message'], // return all fields
     { skip, ttlMs: ONE_MINUTE_MS * 2 },
     'GET',
-    unitagsApolloClient
+    unitagsApolloClient,
   )
 }
 
@@ -70,11 +75,9 @@ export async function getUnitagAvatarUploadUrl({
   signerManager: SignerManager
 }): ReturnType<typeof axios.get<UnitagGetAvatarUploadUrlResponse>> {
   const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username/avatar-upload-url`
-  const { requestParams, signature } = await createSignedRequestParams<{ username: string }>(
-    { username },
-    account,
-    signerManager
-  )
+  const { requestParams, signature } = await createSignedRequestParams<{
+    username: string
+  }>({ username }, account, signerManager)
   const headers = await generateAxiosHeaders(signature)
   return await axios.get<UnitagGetAvatarUploadUrlResponse>(avatarUploadUrl, {
     params: requestParams,
@@ -95,7 +98,7 @@ export async function deleteUnitag({
   const { requestBody, signature } = await createSignedRequestBody<UnitagDeleteUsernameRequestBody>(
     { username },
     account,
-    signerManager
+    signerManager,
   )
   const headers = await generateAxiosHeaders(signature)
   return await axios.delete<UnitagResponse>(avatarUploadUrl, {
@@ -124,7 +127,7 @@ export async function updateUnitagMetadata({
       clearAvatar,
     },
     account,
-    signerManager
+    signerManager,
   )
   const headers = await generateAxiosHeaders(signature)
   return await axios.put<UnitagUpdateMetadataResponse>(updateMetadataUrl, requestBody, {
@@ -155,7 +158,7 @@ export async function claimUnitag({
       metadata,
     },
     account,
-    signerManager
+    signerManager,
   )
   const headers = await generateAxiosHeaders(signature, firebaseAppCheckToken)
   return await axios.post<UnitagResponse>(claimUnitagUrl, requestBody, {
@@ -181,7 +184,7 @@ export async function changeUnitag({
       deviceId,
     },
     account,
-    signerManager
+    signerManager,
   )
   const headers = await generateAxiosHeaders(signature)
   return await axios.post<UnitagResponse>(changeUnitagUrl, requestBody, {
@@ -196,7 +199,7 @@ export async function fetchUnitagByAddresses(addresses: Address[]): Promise<{
   error?: unknown
 }> {
   const unitagAddressesUrl = `${uniswapUrls.unitagsApiUrl}/addresses?addresses=${encodeURIComponent(
-    addresses.join(',')
+    addresses.join(','),
   )}`
 
   try {
@@ -215,29 +218,9 @@ export async function fetchExtensionWaitlistEligibity(username: string): Promise
   data?: UnitagWaitlistPositionResponse
   error?: unknown
 }> {
-  const unitagWaitlistPositionUrl = `${
-    uniswapUrls.unitagsApiUrl
-  }/waitlist/position?username=${encodeURIComponent(username)}`
-
-  try {
-    const response = await axios.get<UnitagWaitlistPositionResponse>(unitagWaitlistPositionUrl, {
-      headers: BASE_HEADERS,
-    })
-    return {
-      data: response.data,
-    }
-  } catch (error) {
-    return { error }
-  }
-}
-
-export async function fetchExtensionEligibityByAddresses(addresses: Address[]): Promise<{
-  data?: UnitagWaitlistPositionResponse
-  error?: unknown
-}> {
-  const unitagWaitlistPositionUrl = `${
-    uniswapUrls.unitagsApiUrl
-  }/waitlist/position?addresses=${encodeURIComponent(addresses.join(','))}`
+  const unitagWaitlistPositionUrl = `${uniswapUrls.unitagsApiUrl}/waitlist/position?username=${encodeURIComponent(
+    username,
+  )}`
 
   try {
     const response = await axios.get<UnitagWaitlistPositionResponse>(unitagWaitlistPositionUrl, {

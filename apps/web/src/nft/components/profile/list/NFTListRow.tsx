@@ -1,6 +1,8 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { VerifiedIcon } from 'nft/components/icons'
+import { MarketplaceRow } from 'nft/components/profile/list/MarketplaceRow'
+import { SetPriceMethod } from 'nft/components/profile/list/shared'
 import { useSellAsset } from 'nft/hooks'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { Dispatch, useEffect, useReducer, useState } from 'react'
@@ -8,9 +10,6 @@ import { Trash2 } from 'react-feather'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-
-import { MarketplaceRow } from './MarketplaceRow'
-import { SetPriceMethod } from './shared'
 
 const IMAGE_THUMBNAIL_SIZE = 60
 

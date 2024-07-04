@@ -5,22 +5,15 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { Loader } from 'src/components/loading'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import {
-  Flex,
-  FlexProps,
-  Logos,
-  Text,
-  useDeviceInsets,
-  useExtractedColors,
-  useSporeColors,
-} from 'ui/src'
+import { NFTCollectionData } from 'src/features/nfts/collection/types'
+import { Flex, FlexProps, Text, useDeviceInsets, useExtractedColors, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { Ethereum } from 'ui/src/components/logos'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { NFTCollectionData } from './types'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + spacing.spacing4
@@ -84,12 +77,7 @@ export function NFTCollectionHeader({
           />
         ) : (
           // No uri found on collection
-          <Flex
-            style={[
-              bannerImageStyle,
-              { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val },
-            ]}
-          />
+          <Flex style={[bannerImageStyle, { backgroundColor: bannerColorsFallback?.base ?? colors.surface2.val }]} />
         )}
 
         {/* Banner buttons */}
@@ -98,7 +86,8 @@ export function NFTCollectionHeader({
           alignItems="center"
           justifyContent="space-between"
           mt={deviceTopPadding + spacing.spacing12}
-          mx="$spacing24">
+          mx="$spacing24"
+        >
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
             <BackButton color="$sporeWhite" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
@@ -118,13 +107,15 @@ export function NFTCollectionHeader({
             borderRadius="$roundedFull"
             height={PROFILE_IMAGE_WRAPPER_SIZE}
             justifyContent="center"
-            width={PROFILE_IMAGE_WRAPPER_SIZE}>
+            width={PROFILE_IMAGE_WRAPPER_SIZE}
+          >
             {data?.image?.url ? (
               <Flex
                 height={PROFILE_IMAGE_SIZE}
                 overflow="hidden"
                 style={{ borderRadius: PROFILE_IMAGE_SIZE }}
-                width={PROFILE_IMAGE_SIZE}>
+                width={PROFILE_IMAGE_SIZE}
+              >
                 <NFTViewer uri={data.image.url} />
               </Flex>
             ) : (
@@ -139,21 +130,13 @@ export function NFTCollectionHeader({
         </Flex>
 
         {/* Collection stats */}
-        <Flex
-          gap="$spacing12"
-          pt="$spacing12"
-          px="$spacing24"
-          style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
+        <Flex gap="$spacing12" pt="$spacing12" px="$spacing24" style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
           <Flex row alignItems="center" gap="$spacing8" mt="$spacing16">
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheading1">
               {data?.name ?? '-'}
             </Text>
             {data?.isVerified ? (
-              <VerifiedIcon
-                color={colors.accent1.get()}
-                height={iconSizes.icon16}
-                width={iconSizes.icon16}
-              />
+              <VerifiedIcon color={colors.accent1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
             ) : null}
           </Flex>
 
@@ -192,7 +175,7 @@ export function NFTCollectionHeader({
                   })} `}
                 </Text>
                 {collectionStats?.floorPrice?.value !== undefined ? (
-                  <Logos.Ethereum color="$neutral1" size="$icon.16" />
+                  <Ethereum color="$neutral1" size="$icon.16" />
                 ) : null}
               </Flex>
             </Flex>
@@ -208,7 +191,7 @@ export function NFTCollectionHeader({
                   })}`}
                 </Text>
                 {collectionStats?.totalVolume?.value !== undefined ? (
-                  <Logos.Ethereum color="$neutral1" size="$icon.16" />
+                  <Ethereum color="$neutral1" size="$icon.16" />
                 ) : null}
               </Flex>
             </Flex>

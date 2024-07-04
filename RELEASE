@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV`
-- CIDv1: `bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna`
+- CIDv0: `QmY1uds14DFpDG7TsuCqiH5965u1GCVZPZ4GQ9AgcMCjcb`
+- CIDv1: `bafybeiepy63dfywcra662v3iuz2ym2aiz7smx6syyiaga6yttjjgf53oca`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,10 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna.ipfs.dweb.link/
-- https://bafybeihm5hjaazzxpktgygpmi4gvtkhdfsozzxhuxmyjnbq5jiwuxskfna.ipfs.cf-ipfs.com/
-- [ipfs://QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV/](ipfs://QmeHTibtaHFy2CsJfYCkWUkz6iRTJPbPQEnAa7syJ8TJuV/)
+- https://bafybeiepy63dfywcra662v3iuz2ym2aiz7smx6syyiaga6yttjjgf53oca.ipfs.dweb.link/
+- https://bafybeiepy63dfywcra662v3iuz2ym2aiz7smx6syyiaga6yttjjgf53oca.ipfs.cf-ipfs.com/
+- [ipfs://QmY1uds14DFpDG7TsuCqiH5965u1GCVZPZ4GQ9AgcMCjcb/](ipfs://QmY1uds14DFpDG7TsuCqiH5965u1GCVZPZ4GQ9AgcMCjcb/)
 
-### 5.30.1 (2024-05-31)
+### 5.38.1 (2024-07-03)
+
+
+### Bug Fixes
+
+* **web:** hotfix for rive not loading (#9859) 9c6a007
 
 

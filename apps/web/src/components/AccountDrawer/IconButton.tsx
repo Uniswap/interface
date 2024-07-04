@@ -1,10 +1,9 @@
+import Row from 'components/Row'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
 import styled, { DefaultTheme, css } from 'styled-components'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import useResizeObserver from 'use-resize-observer'
-
-import { TRANSITION_DURATIONS } from '../../theme/styles'
-import Row from '../Row'
 
 export const IconHoverText = styled.span`
   color: ${({ theme }) => theme.neutral1};
@@ -47,7 +46,9 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   }
   :active {
     background-color: ${({ theme }) => theme.surface1};
-    transition: background-color ${({ theme }) => theme.transition.duration.fast} linear, ${getWidthTransition};
+    transition:
+      background-color ${({ theme }) => theme.transition.duration.fast} linear,
+      ${getWidthTransition};
   }
 `
 
@@ -115,7 +116,8 @@ const TextWrapper = styled.div`
 
 const TextHide = styled.div`
   overflow: hidden;
-  transition: width ${({ theme }) => theme.transition.timing.inOut} ${({ theme }) => theme.transition.duration.fast},
+  transition:
+    width ${({ theme }) => theme.transition.timing.inOut} ${({ theme }) => theme.transition.duration.fast},
     max-width ${({ theme }) => theme.transition.timing.inOut} ${({ theme }) => theme.transition.duration.fast};
 `
 
@@ -144,7 +146,7 @@ export const IconWithConfirmTextButton = ({
       setShowTextWithoutCallback(val)
       onShowConfirm?.(val)
     },
-    [onShowConfirm]
+    [onShowConfirm],
   )
 
   const dimensionsRef = useRef({

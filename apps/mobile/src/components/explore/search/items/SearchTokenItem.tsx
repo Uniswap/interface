@@ -5,16 +5,16 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'wallet/src/components/icons/WarningIcon'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { shortenAddress } from 'wallet/src/utils/addresses'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult
@@ -55,7 +55,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           logoUrl,
           safetyLevel,
         },
-      })
+      }),
     )
   }
 
@@ -72,7 +72,8 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={ElementName.SearchTokenItem}
         onLongPress={disableOnPress}
-        onPress={onPress}>
+        onPress={onPress}
+      >
         <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
           <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl ?? undefined} />
           <Flex shrink alignItems="flex-start">
@@ -82,13 +83,8 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
                   {name}
                 </Text>
               </Flex>
-              {(safetyLevel === SafetyLevel.Blocked ||
-                safetyLevel === SafetyLevel.StrongWarning) && (
-                <WarningIcon
-                  safetyLevel={safetyLevel}
-                  size="$icon.16"
-                  strokeColorOverride="neutral3"
-                />
+              {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+                <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
               )}
             </Flex>
             <Flex centered row gap="$spacing8">
@@ -97,10 +93,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               </Text>
               {address && (
                 <Flex shrink>
-                  <Text
-                    color={isDarkMode ? '$neutral3' : '$neutral2'}
-                    numberOfLines={1}
-                    variant="subheading2">
+                  <Text color={isDarkMode ? '$neutral3' : '$neutral2'} numberOfLines={1} variant="subheading2">
                     {shortenAddress(address)}
                   </Text>
                 </Flex>

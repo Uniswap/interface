@@ -11,10 +11,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isAndroid } from 'uniswap/src/utils/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
@@ -37,7 +37,7 @@ const SectionTitle = ({ title }: { title: string }): JSX.Element => (
 export const FeedTab = memo(
   forwardRef<FlatList<unknown>, TabProps>(function _FeedTab(
     { containerProps, scrollHandler, headerHeight, refreshing, onRefresh },
-    ref
+    ref,
   ) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
@@ -58,23 +58,23 @@ export const FeedTab = memo(
         <Loader.Transaction />,
         SectionTitle,
         undefined,
-        undefined
+        undefined,
       )
     }, [])
 
-    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
-      useFormattedTransactionDataForFeed(watchedWalletsList, hideSpamTokens)
+    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForFeed(
+      watchedWalletsList,
+      hideSpamTokens,
+    )
 
     const onPressReceive = (): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
-      dispatch(
-        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      )
+      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
     }
 
     const errorCard = (
-      <Flex grow style={containerProps?.emptyContainerStyle}>
+      <Flex grow style={containerProps?.emptyComponentStyle}>
         <BaseCard.ErrorState
           retryButtonLabel={t('common.button.retry')}
           title={t('home.feed.error')}
@@ -84,7 +84,7 @@ export const FeedTab = memo(
     )
 
     const emptyListView = (
-      <Flex grow style={containerProps?.emptyContainerStyle}>
+      <Flex grow style={containerProps?.emptyComponentStyle}>
         <BaseCard.EmptyState
           description={t('home.feed.empty.description')}
           icon={<NoTransactions color="$neutral3" size="$icon.70" />}
@@ -104,9 +104,7 @@ export const FeedTab = memo(
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-          }
+          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
@@ -147,5 +145,5 @@ export const FeedTab = memo(
         />
       </Flex>
     )
-  })
+  }),
 )

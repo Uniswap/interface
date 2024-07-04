@@ -4,11 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import {
-  AppStackParamList,
-  OnboardingStackParamList,
-  useOnboardingStackNavigation,
-} from 'src/app/navigation/types'
+import { AppStackParamList, OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -23,11 +19,10 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = CompositeScreenProps<
@@ -43,11 +38,15 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
-  const activeAccount = useActiveSignerAccount()
-  const { getImportedAccountsAddresses, getOnboardingAccountAddress } = useOnboardingContext()
+  const { getImportedAccountsAddresses, getOnboardingAccountAddress, hasBackup } = useOnboardingContext()
   const onboardingAccountAddress = getOnboardingAccountAddress()
   const importedAccountsAddresses = getImportedAccountsAddresses()
-  const activeAccountBackups = activeAccount?.backups
+
+  const address = onboardingAccountAddress || importedAccountsAddresses?.[0]
+
+  if (!address) {
+    throw Error('No account available to backup')
+  }
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -57,7 +56,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         }}
       />
     ),
-    [navigation]
+    [navigation],
   )
 
   useEffect(() => {
@@ -89,9 +88,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const onPressCloudBackup = (): void => {
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid
-          ? t('account.cloud.error.unavailable.title.android')
-          : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
         isAndroid
           ? t('account.cloud.error.unavailable.message.android')
           : t('account.cloud.error.unavailable.message.ios'),
@@ -102,16 +99,9 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             style: 'default',
           },
           { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-        ]
+        ],
       )
       return
-    }
-
-    const address =
-      activeAccount?.address || onboardingAccountAddress || importedAccountsAddresses?.[0]
-
-    if (!address) {
-      throw Error('No account available to backup')
     }
 
     navigate({
@@ -126,16 +116,13 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const showSkipOption =
-    !activeAccountBackups?.length &&
-    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    !hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
-  const hasCloudBackup = activeAccountBackups?.some((backup) => backup === BackupType.Cloud)
-  const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
+  const hasCloudBackup = hasBackup(address, BackupType.Cloud)
+  const hasManualBackup = hasBackup(address, BackupType.Manual)
 
   const isCreatingNew = params?.importType === ImportType.CreateNew
-  const screenTitle = isCreatingNew
-    ? t('onboarding.backup.title.new')
-    : t('onboarding.backup.title.existing')
+  const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const options = []
   options.push(
     <OptionCard
@@ -148,7 +135,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         cloudProviderName: getCloudProviderName(),
       })}
       onPress={onPressCloudBackup}
-    />
+    />,
   )
   if (isCreatingNew) {
     options.push(
@@ -160,7 +147,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
         title={t('onboarding.backup.option.manual.title')}
         onPress={onPressManualBackup}
-      />
+      />,
     )
   }
 
@@ -168,21 +155,14 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     <OnboardingScreen subtitle={t('onboarding.backup.subtitle')} title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing24">
-          <Flex
-            gap="$spacing12"
-            shadowColor="$surface3"
-            shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
+          <Flex gap="$spacing12" shadowColor="$surface3" shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
             {options}
           </Flex>
-          {!isCreatingNew && (
-            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
-          )}
+          {!isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end">
-          {isCreatingNew && (
-            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
-          )}
+          {isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
               <Button testID={ElementName.Next} theme="tertiary" onPress={onPressNext}>
@@ -196,11 +176,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   )
 }
 
-function RecoveryPhraseTooltip({
-  onPressEducationButton,
-}: {
-  onPressEducationButton: () => void
-}): JSX.Element {
+function RecoveryPhraseTooltip({ onPressEducationButton }: { onPressEducationButton: () => void }): JSX.Element {
   const { t } = useTranslation()
   return (
     <TouchableArea
@@ -209,8 +185,9 @@ function RecoveryPhraseTooltip({
       flexDirection="row"
       gap="$spacing8"
       py="$spacing8"
-      onPress={onPressEducationButton}>
-      <QuestionInCircleFilled color="$surface1" size="$icon.20" />
+      onPress={onPressEducationButton}
+    >
+      <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
         {t('onboarding.tooltip.recoveryPhrase.trigger')}
       </Text>

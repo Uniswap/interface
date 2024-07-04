@@ -9,13 +9,10 @@ import { PropsWithChildren } from 'react'
 import { setupWalletCache } from 'uniswap/src/data/cache'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getErrorLink, getRestLink } from 'wallet/src/data/links'
-import { mocks as defaultMocks } from './mocks'
-import { defaultResolvers } from './resolvers'
+import { mocks as defaultMocks } from 'wallet/src/test/mocks/gql/mocks'
+import { defaultResolvers } from 'wallet/src/test/mocks/gql/resolvers'
 
-const GQL_SCHEMA_PATH = path.join(
-  __dirname,
-  '../../../../../uniswap/src/data/graphql/uniswap-data-api/schema.graphql'
-)
+const GQL_SCHEMA_PATH = path.join(__dirname, '../../../../../uniswap/src/data/graphql/uniswap-data-api/schema.graphql')
 
 const baseSchema = loadSchemaSync(GQL_SCHEMA_PATH, { loaders: [new GraphQLFileLoader()] })
 

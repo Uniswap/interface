@@ -1,7 +1,7 @@
 import { AddressZero } from '@ethersproject/constants'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
@@ -14,6 +14,7 @@ import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -49,11 +50,11 @@ export enum QuoteIntent {
 
 export interface GetQuoteArgs {
   tokenInAddress: string
-  tokenInChainId: ChainId
+  tokenInChainId: InterfaceChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: ChainId
+  tokenOutChainId: InterfaceChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
@@ -74,11 +75,11 @@ export interface GetQuoteArgs {
 export type GetQuickQuoteArgs = {
   amount: string
   tokenInAddress: string
-  tokenInChainId: ChainId
+  tokenInChainId: InterfaceChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: ChainId
+  tokenOutChainId: InterfaceChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   tradeType: TradeType
@@ -574,7 +575,7 @@ export class PreviewTrade {
         this.inputAmount.currency,
         this.outputAmount.currency,
         this.inputAmount.quotient,
-        this.outputAmount.quotient
+        this.outputAmount.quotient,
       ))
     )
   }
@@ -584,7 +585,7 @@ export class PreviewTrade {
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.maximumAmountIn(slippageTolerance).quotient,
-      this.minimumAmountOut(slippageTolerance).quotient
+      this.minimumAmountOut(slippageTolerance).quotient,
     )
   }
 }

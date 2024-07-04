@@ -4,21 +4,21 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
-import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
+import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { fromMoonpayNetwork, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { useFiatOnRampAggregatorSupportedTokensQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FORSupportedToken, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
+import { useAllCommonBaseCurrencies, useCurrencies } from 'wallet/src/components/TokenSelector/hooks'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import {
-  useAllCommonBaseCurrencies,
-  useCurrencies,
-} from 'wallet/src/components/TokenSelector/hooks'
-import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
-import { fromMoonpayNetwork, toSupportedChainId } from 'wallet/src/features/chains/utils'
-import {
-  useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampBuyQuoteQuery,
   useFiatOnRampIpAddressQuery,
   useFiatOnRampLimitsQuery,
@@ -26,7 +26,7 @@ import {
   useFiatOnRampWidgetUrlQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
-import { FORSupportedToken, MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {
@@ -37,32 +37,21 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const ETH_POLYGON_MOONPAY_CODE = 'eth_polygon'
 const WETH_POLYGON_MOONPAY_CODE = 'weth_polygon'
 const BNB_MAINNET_MOONPAY_CODE = 'bnb'
 
-export function useFormatExactCurrencyAmount(
-  currencyAmount: string,
-  currency: Maybe<Currency>
-): string | undefined {
+export function useFormatExactCurrencyAmount(currencyAmount: string, currency: Maybe<Currency>): string | undefined {
   const formatter = useLocalizationContext()
 
   if (!currencyAmount || !currency) {
     return
   }
 
-  const formattedAmount = getFormattedCurrencyAmount(
-    currency,
-    currencyAmount,
-    formatter,
-    true,
-    ValueType.Exact
-  )
+  const formattedAmount = getFormattedCurrencyAmount(currency, currencyAmount, formatter, true, ValueType.Exact)
 
   // when formattedAmount is not empty it has an empty space in the end
   return formattedAmount === '' ? '0 ' : formattedAmount
@@ -71,8 +60,8 @@ export function useFormatExactCurrencyAmount(
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
-  chainId: ChainId,
-  initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>
+  chainId: WalletChainId,
+  initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>,
 ): {
   externalTransactionId: string
   dispatchAddTransaction: () => void
@@ -85,6 +74,7 @@ export function useFiatOnRampTransactionCreator(
     // adds a dummy transaction detail for now
     // later, we will attempt to look up information for that id
     const transactionDetail: TransactionDetails = {
+      routing: Routing.CLASSIC,
       chainId,
       id: externalTransactionId.current,
       from: ownerAddress,
@@ -117,7 +107,7 @@ export function useMoonpayFiatOnRamp({
 }: {
   baseCurrencyAmount: string
   quoteCurrencyCode: string | undefined
-  quoteChainId: ChainId
+  quoteChainId: WalletChainId
 }): {
   eligible: boolean
   quoteAmount: number
@@ -141,7 +131,7 @@ export function useMoonpayFiatOnRamp({
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
-    quoteChainId
+    quoteChainId,
   )
 
   const { moonpaySupportedFiatCurrency: baseCurrency } = useMoonpayFiatCurrencySupportInfo()
@@ -159,7 +149,7 @@ export function useMoonpayFiatOnRamp({
           quoteCurrencyCode,
           areFeesIncluded: MOONPAY_FEES_INCLUDED,
         }
-      : skipToken
+      : skipToken,
   )
 
   const { maxBuyAmount } = limitsData?.baseCurrency ?? {
@@ -168,15 +158,12 @@ export function useMoonpayFiatOnRamp({
 
   // we're adding +1 here because MoonPay API is not precise with limits
   // and an actual lower limit is a bit above the number, they provide in limits api
-  const minBuyAmount = limitsData?.baseCurrency?.minBuyAmount
-    ? limitsData.baseCurrency.minBuyAmount + 1
-    : 0
+  const minBuyAmount = limitsData?.baseCurrency?.minBuyAmount ? limitsData.baseCurrency.minBuyAmount + 1 : 0
 
   const parsedBaseCurrencyAmount = parseFloat(baseCurrencyAmount)
   const amountIsTooSmall = parsedBaseCurrencyAmount < minBuyAmount
   const amountIsTooLarge = parsedBaseCurrencyAmount > maxBuyAmount
-  const isBaseCurrencyAmountValid =
-    !!parsedBaseCurrencyAmount && !amountIsTooSmall && !amountIsTooLarge
+  const isBaseCurrencyAmountValid = !!parsedBaseCurrencyAmount && !amountIsTooSmall && !amountIsTooLarge
 
   const {
     data: fiatOnRampHostUrl,
@@ -195,7 +182,7 @@ export function useMoonpayFiatOnRamp({
           baseCurrencyCode,
           redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
         }
-      : skipToken
+      : skipToken,
   )
   const {
     data: buyQuote,
@@ -207,16 +194,14 @@ export function useMoonpayFiatOnRamp({
     // it takes the debouncedBaseCurrencyAmount and immediately calls an API.
     // This only truly matters in the beginning and in cases where the debouncedBaseCurrencyAmount
     // is changed while isBaseCurrencyAmountValid is false."
-    quoteCurrencyCode &&
-      isBaseCurrencyAmountValid &&
-      debouncedBaseCurrencyAmount === baseCurrencyAmount
+    quoteCurrencyCode && isBaseCurrencyAmountValid && debouncedBaseCurrencyAmount === baseCurrencyAmount
       ? {
           baseCurrencyCode,
           baseCurrencyAmount: debouncedBaseCurrencyAmount,
           quoteCurrencyCode,
           areFeesIncluded: MOONPAY_FEES_INCLUDED,
         }
-      : skipToken
+      : skipToken,
   )
 
   const quoteAmount = buyQuote?.quoteCurrencyAmount ?? 0
@@ -231,10 +216,7 @@ export function useMoonpayFiatOnRamp({
 
   const isLoading = isEligibleLoading || isWidgetUrlLoading
   const isError =
-    isFiatBuyAllowedQueryError ||
-    isWidgetUrlQueryError ||
-    buyQuoteLoadingQueryError ||
-    limitsLoadingQueryError
+    isFiatBuyAllowedQueryError || isWidgetUrlQueryError || buyQuoteLoadingQueryError || limitsLoadingQueryError
 
   const quoteCurrencyAmountLoading =
     buyQuoteLoading || limitsLoading || debouncedBaseCurrencyAmount !== baseCurrencyAmount
@@ -258,7 +240,7 @@ export function useMoonpayFiatOnRamp({
     amountIsTooSmall,
     amountIsTooLarge,
     minBuyAmountWithFiatSymbol,
-    maxBuyAmountWithFiatSymbol
+    maxBuyAmountWithFiatSymbol,
   )
 
   return {
@@ -281,7 +263,7 @@ function useMoonpayError(
   amountIsTooSmall: boolean,
   amountIsTooLarge: boolean,
   minBuyAmountWithFiatSymbol: string,
-  maxBuyAmountWithFiatSymbol: string
+  maxBuyAmountWithFiatSymbol: string,
 ): {
   errorText: string | undefined
   errorColor: ColorTokens | undefined
@@ -306,7 +288,7 @@ function useMoonpayError(
 
 function findTokenOptionForFiatOnRampToken(
   currencies: CurrencyInfo[] | undefined = [],
-  fiatOnRampToken: FORSupportedToken
+  fiatOnRampToken: FORSupportedToken,
 ): Maybe<CurrencyInfo> {
   return currencies.find((item) => {
     const symbol = fiatOnRampToken.cryptoCurrencyCode.split('_')?.[0]?.toLowerCase()
@@ -321,14 +303,12 @@ function findTokenOptionForFiatOnRampToken(
 
 function findTokenOptionForMoonpayCurrency(
   commonBaseCurrencies: CurrencyInfo[] | undefined = [],
-  moonpayCurrency: MoonpayCurrency
+  moonpayCurrency: MoonpayCurrency,
 ): Maybe<CurrencyInfo> {
   const currencyInfo = commonBaseCurrencies.find((item) => {
     // Moonpay uses WETH on Polygon to represent ETH on Polygon
     const moonpayCurrencyCode =
-      moonpayCurrency.code === ETH_POLYGON_MOONPAY_CODE
-        ? WETH_POLYGON_MOONPAY_CODE
-        : moonpayCurrency.code
+      moonpayCurrency.code === ETH_POLYGON_MOONPAY_CODE ? WETH_POLYGON_MOONPAY_CODE : moonpayCurrency.code
     const [tokenSymbol, network] = moonpayCurrencyCode.split('_')
     const chainId = fromMoonpayNetwork(network)
     return (
@@ -341,7 +321,7 @@ function findTokenOptionForMoonpayCurrency(
   if (
     !currencyInfo &&
     !BRIDGED_BASE_ADDRESSES.find((bridgedAddress) =>
-      areAddressesEqual(bridgedAddress, moonpayCurrency.metadata?.contractAddress)
+      areAddressesEqual(bridgedAddress, moonpayCurrency.metadata?.contractAddress),
     ) &&
     // We do not support BNB onboarding and Moonpay does not return an address for it so map it manually
     moonpayCurrency.code !== BNB_MAINNET_MOONPAY_CODE
@@ -357,9 +337,7 @@ function findTokenOptionForMoonpayCurrency(
   return currencyInfo
 }
 
-function buildCurrencyIdForFORSupportedToken(
-  supportedToken: FORSupportedToken
-): string | undefined {
+function buildCurrencyIdForFORSupportedToken(supportedToken: FORSupportedToken): string | undefined {
   const chainId = toSupportedChainId(supportedToken.chainId)
   return chainId
     ? supportedToken.address
@@ -392,7 +370,7 @@ export function useFiatOnRampSupportedTokens({
       supportedTokensResponse?.supportedTokens
         .map(buildCurrencyIdForFORSupportedToken)
         .filter((st): st is string => !!st) ?? [],
-    [supportedTokensResponse]
+    [supportedTokensResponse],
   )
 
   const {
@@ -410,7 +388,7 @@ export function useFiatOnRampSupportedTokens({
           meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
-    [currencies, supportedTokensResponse?.supportedTokens]
+    [currencies, supportedTokensResponse?.supportedTokens],
   )
 
   const loading = supportedTokensLoading || currenciesLoading
@@ -451,7 +429,7 @@ export function useMoonpaySupportedTokens(): {
       isUserInUS: ipAddressData?.alpha3 === 'USA' ?? false,
       stateInUS: ipAddressData?.state,
     },
-    { skip: !ipAddressData }
+    { skip: !ipAddressData },
   )
 
   const {

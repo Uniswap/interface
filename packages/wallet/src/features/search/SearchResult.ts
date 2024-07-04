@@ -1,11 +1,7 @@
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 
-export type SearchResult =
-  | TokenSearchResult
-  | WalletSearchResult
-  | EtherscanSearchResult
-  | NFTCollectionSearchResult
+export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSearchResult | NFTCollectionSearchResult
 
 // Retain original ordering as these are saved to storage and loaded back out
 export enum SearchResultType {
@@ -31,10 +27,7 @@ export interface SearchResultBase {
   searchId?: string
 }
 
-export type WalletSearchResult =
-  | ENSAddressSearchResult
-  | UnitagSearchResult
-  | WalletByAddressSearchResult
+export type WalletSearchResult = ENSAddressSearchResult | UnitagSearchResult | WalletByAddressSearchResult
 
 export interface WalletByAddressSearchResult extends SearchResultBase {
   type: SearchResultType.WalletByAddress
@@ -57,7 +50,7 @@ export interface UnitagSearchResult extends SearchResultBase {
 
 export interface TokenSearchResult extends SearchResultBase {
   type: SearchResultType.Token
-  chainId: ChainId
+  chainId: WalletChainId
   symbol: string
   address: Address | null
   name: string | null
@@ -67,7 +60,7 @@ export interface TokenSearchResult extends SearchResultBase {
 
 export interface NFTCollectionSearchResult extends SearchResultBase {
   type: SearchResultType.NFTCollection
-  chainId: ChainId
+  chainId: WalletChainId
   address: Address
   name: string
   imageUrl: string | null

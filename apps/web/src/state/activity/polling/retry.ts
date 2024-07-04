@@ -1,3 +1,5 @@
+import { RetryOptions } from 'uniswap/src/types/chains'
+
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
@@ -17,12 +19,6 @@ export class RetryableError extends Error {
   name = 'RetryableError'
 }
 
-export interface RetryOptions {
-  n: number
-  minWait: number
-  maxWait: number
-}
-
 /**
  * Retries a function until its returned promise successfully resolves, up to n times.
  * @param fn function to retry
@@ -32,7 +28,7 @@ export interface RetryOptions {
  */
 export function retry<T>(
   fn: () => Promise<T>,
-  { n, minWait, maxWait }: RetryOptions
+  { n, minWait, maxWait }: RetryOptions,
 ): { promise: Promise<T>; cancel: () => void } {
   let completed = false
   let rejectCancelled: (error: Error) => void

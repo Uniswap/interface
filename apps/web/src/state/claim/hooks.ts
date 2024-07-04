@@ -2,17 +2,17 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { isAddress } from 'utilities/src/addresses'
-
-import { UNI } from '../../constants/tokens'
-import { useContract } from '../../hooks/useContract'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { useTransactionAdder } from '../transactions/hooks'
-import { TransactionType } from '../transactions/types'
+import { logger } from 'utilities/src/logger/logger'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MerkleDistributorJSON.abi, true)
@@ -36,11 +36,11 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
   return (
     FETCH_CLAIM_MAPPING_PROMISE ??
     (FETCH_CLAIM_MAPPING_PROMISE = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`,
     )
       .then((res) => res.json())
       .catch((error) => {
-        console.error('Failed to get claims mapping', error)
+        logger.warn('claim/hooks', 'fetchClaimMapping', 'Claim mapping fetch failed', error)
         FETCH_CLAIM_MAPPING_PROMISE = null
       }))
   )
@@ -51,11 +51,11 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
   return (
     FETCH_CLAIM_FILE_PROMISES[key] ??
     (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`,
     )
       .then((res) => res.json())
       .catch((error) => {
-        console.error(`Failed to get claim file mapping for starting address ${key}`, error)
+        logger.warn('claim/hooks', 'fetchClaimFile', 'Claim file fetch failed', error)
         delete FETCH_CLAIM_FILE_PROMISES[key]
       }))
   )
@@ -95,7 +95,7 @@ function fetchClaim(account: string): Promise<UserClaimData> {
         throw new Error(`Claim for ${formatted} was not found in claim file!`)
       })
       .catch((error) => {
-        console.debug('Claim fetch failed', error)
+        logger.debug('claim/hooks', 'fetchClaim', 'Claim fetch failed', error)
         throw error
       }))
   )
@@ -120,7 +120,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
             ...claimInfo,
             [account]: accountClaimInfo,
           }
-        })
+        }),
       )
       .catch(() => {
         setClaimInfo((claimInfo) => {
@@ -159,24 +159,25 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
-export function useClaimCallback(account: string | null | undefined): {
+export function useClaimCallback(address: string | null | undefined): {
   claimCallback: () => Promise<string>
 } {
   // get claim data for this account
-  const { provider, chainId } = useWeb3React()
-  const claimData = useUserClaimData(account)
+  const account = useAccount()
+  const { provider } = useWeb3React()
+  const claimData = useUserClaimData(address)
 
   // used for popup summary
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(address)
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
   const claimCallback = async function () {
-    if (!claimData || !account || !provider || !chainId || !distributorContract) {
+    if (!claimData || !address || !provider || !account.chainId || !distributorContract) {
       return
     }
 
-    const args = [claimData.index, account, claimData.amount, claimData.proof]
+    const args = [claimData.index, address, claimData.amount, claimData.proof]
 
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
@@ -184,7 +185,7 @@ export function useClaimCallback(account: string | null | undefined): {
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             type: TransactionType.CLAIM,
-            recipient: account,
+            recipient: address,
             uniAmountRaw: unclaimedAmount?.quotient.toString(),
           })
           return response.hash

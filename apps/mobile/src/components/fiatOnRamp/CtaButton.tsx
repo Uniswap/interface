@@ -1,8 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from 'ui/src'
+import { Button, SpinningLoader } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 
 interface FiatOnRampCtaButtonProps {
   onPress: () => void
@@ -35,7 +34,8 @@ export function FiatOnRampCtaButton({
       }
       size="large"
       theme={buttonAvailable ? 'primary' : 'tertiary'}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       {!isLoading && continueText}
     </Button>
   )

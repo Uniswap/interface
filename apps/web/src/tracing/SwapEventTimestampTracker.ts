@@ -1,4 +1,4 @@
-import { calculateElapsedTimeWithPerformanceMarkMs } from './utils'
+import { calculateElapsedTimeWithPerformanceMarkMs } from 'tracing/utils'
 
 // These events should happen in this order.
 export enum SwapEventType {

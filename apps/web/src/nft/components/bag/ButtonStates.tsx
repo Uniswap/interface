@@ -39,7 +39,7 @@ export function getBuyButtonStateData(
   theme: DefaultTheme,
   handleClickOverride?: (() => void) | (() => Promise<void>),
   usingPayWithAnyToken?: boolean,
-  priceImpact?: PriceImpact
+  priceImpact?: PriceImpact,
 ): BuyButtonStateData {
   const defaultBuyButtonState: BuyButtonStateData = {
     handleClick: () => undefined,
@@ -69,7 +69,7 @@ export function getBuyButtonStateData(
     },
     [BuyButtonStates.INSUFFICIENT_BALANCE]: {
       ...defaultBuyButtonState,
-      buttonText: <Trans i18nKey="common.pay" />,
+      buttonText: <Trans i18nKey="common.pay.button" />,
       warningText: <Trans i18nKey="common.insufficient.funds" />,
     },
     [BuyButtonStates.ERROR]: {

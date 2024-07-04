@@ -1,8 +1,7 @@
+import { ProfilePageStateType } from 'nft/types'
 import { devtools } from 'zustand/middleware'
 import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
-
-import { ProfilePageStateType } from '../types'
 
 interface profilePageState {
   /**
@@ -21,7 +20,7 @@ export const useProfilePageState = createWithEqualityFn<profilePageState>()(
           state: newState,
         })),
     }),
-    { name: 'useProfilePageState' }
+    { name: 'useProfilePageState' },
   ),
-  shallow
+  shallow,
 )

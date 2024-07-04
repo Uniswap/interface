@@ -1,14 +1,7 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react'
-import { TextInputProps } from 'wallet/src/components/input/TextInput'
-import { DecimalPad, KeyAction, KeyLabel } from './DecimalPad'
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
+import { DecimalPad, KeyAction, KeyLabel } from 'wallet/src/features/transactions/swap/DecimalPad'
 
 type DisableKeyCondition = (value: string) => boolean
 
@@ -20,6 +13,8 @@ type DecimalPadInputProps = {
   selectionRef: React.MutableRefObject<TextInputProps['selection']>
   setValue: (newValue: string) => void
   valueRef: React.MutableRefObject<string>
+  maxDecimals: number
+  onTriggerInputShakeAnimation: () => void
 }
 
 export type DecimalPadInputRef = {
@@ -29,8 +24,18 @@ export type DecimalPadInputRef = {
 
 export const DecimalPadInput = memo(
   forwardRef<DecimalPadInputRef, DecimalPadInputProps>(function DecimalPadInput(
-    { disabled, hideDecimal, onReady, resetSelection, selectionRef, setValue, valueRef },
-    ref
+    {
+      disabled,
+      hideDecimal,
+      onReady,
+      resetSelection,
+      selectionRef,
+      setValue,
+      valueRef,
+      maxDecimals,
+      onTriggerInputShakeAnimation,
+    },
+    ref,
   ): JSX.Element {
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
     const [maxHeight, setMaxHeight] = useState<number | null>(null)
@@ -56,6 +61,16 @@ export const DecimalPadInput = memo(
 
     const disableKeysConditions = useMemo<Partial<Record<KeyLabel, DisableKeyCondition>>>(
       () => ({
+        '0': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '1': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '2': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '3': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '4': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '5': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '6': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '7': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '8': (v) => maxDecimalsReached({ value: v, maxDecimals }),
+        '9': (v) => maxDecimalsReached({ value: v, maxDecimals }),
         '.': (v) => v.includes('.'),
         backspace: (v): boolean => {
           const { start, end } = getCurrentSelection()
@@ -63,7 +78,7 @@ export const DecimalPadInput = memo(
           return cursorAtStart || v.length === 0
         },
       }),
-      [getCurrentSelection]
+      [getCurrentSelection, maxDecimals],
     )
 
     const updateDisabledKeys = useCallback(
@@ -77,7 +92,7 @@ export const DecimalPadInput = memo(
                 isUpdated = true
               }
               return [key, isDisabled]
-            })
+            }),
           )
           // Prevent unnecessary re-renders and return the same value
           // if no key was updated (react state won't be updated if value is the
@@ -86,7 +101,7 @@ export const DecimalPadInput = memo(
           return isUpdated ? newDisabledKeys : prevDisabledKeys
         })
       },
-      [disableKeysConditions]
+      [disableKeysConditions],
     )
 
     const updateValue = useCallback(
@@ -94,7 +109,7 @@ export const DecimalPadInput = memo(
         setValue(newValue)
         updateDisabledKeys(newValue)
       },
-      [setValue, updateDisabledKeys]
+      [setValue, updateDisabledKeys],
     )
 
     // TODO(MOB-140): in USD mode, prevent user from typing in more than 2 decimals
@@ -110,7 +125,7 @@ export const DecimalPadInput = memo(
           updateValue(valueRef.current.slice(0, start) + label + valueRef.current.slice(end))
         }
       },
-      [updateValue, resetSelection, valueRef, getCurrentSelection]
+      [updateValue, resetSelection, valueRef, getCurrentSelection],
     )
 
     const handleDelete = useCallback((): void => {
@@ -141,7 +156,7 @@ export const DecimalPadInput = memo(
           handleDelete()
         }
       },
-      [disabled, handleInsert, handleDelete]
+      [disabled, handleInsert, handleDelete],
     )
 
     const onLongPress = useCallback(
@@ -152,7 +167,7 @@ export const DecimalPadInput = memo(
         resetSelection({ start: 0, end: 0 })
         updateValue('')
       },
-      [disabled, updateValue, resetSelection]
+      [disabled, updateValue, resetSelection],
     )
 
     return (
@@ -164,7 +179,8 @@ export const DecimalPadInput = memo(
         onKeyLongPress={onLongPress}
         onKeyPress={onPress}
         onReady={onReady}
+        onTriggerInputShakeAnimation={onTriggerInputShakeAnimation}
       />
     )
-  })
+  }),
 )

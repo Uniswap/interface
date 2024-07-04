@@ -4,6 +4,11 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
+import { AnimatePresence, Button, Flex, Text, useDeviceInsets } from 'ui/src'
+import { AnimateInOrder } from 'ui/src/animations'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { spacing } from 'ui/src/theme'
+import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
   ENSElement,
   EmojiElement,
@@ -14,11 +19,7 @@ import {
   SendElement,
   SwapElement,
   TextElement,
-} from 'src/screens/Onboarding/OnboardingElements'
-import { AnimatePresence, Button, Flex, Text, useDeviceDimensions, useDeviceInsets } from 'ui/src'
-import { AnimateInOrder } from 'ui/src/animations'
-import { spacing } from 'ui/src/theme'
-import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+} from 'wallet/src/components/landing/elements'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export function UnitagConfirmationScreen({
@@ -61,7 +62,7 @@ export function UnitagConfirmationScreen({
       { element: <SendElement />, coordinates: { x: 1, y: 2 } },
       { element: <EmojiElement emoji="👍" />, coordinates: { x: 3.5, y: 2.5 } },
     ],
-    [t]
+    [t],
   )
 
   return (
@@ -74,7 +75,8 @@ export function UnitagConfirmationScreen({
               enterStyle={{ opacity: 0, scale: 0.5 }}
               exitStyle={{ opacity: 0, scale: 0.5 }}
               index={1}
-              position="absolute">
+              position="absolute"
+            >
               <Flex
                 aspectRatio={1}
                 borderColor="$surface3"
@@ -88,7 +90,8 @@ export function UnitagConfirmationScreen({
               enterStyle={{ opacity: 0, scale: 0.5 }}
               exitStyle={{ opacity: 0, scale: 0.5 }}
               index={2}
-              position="absolute">
+              position="absolute"
+            >
               <Flex
                 aspectRatio={1}
                 borderColor="$surface3"
@@ -103,16 +106,13 @@ export function UnitagConfirmationScreen({
                 hapticOnEnter
                 index={index + 3}
                 position="absolute"
-                {...getInsetPropsForCoordinates(boxWidth, coordinates.x, coordinates.y)}>
+                {...getInsetPropsForCoordinates(boxWidth, coordinates.x, coordinates.y)}
+              >
                 {element}
               </AnimateInOrder>
             ))}
             <AnimateInOrder key="unitag" hapticOnEnter index={12}>
-              <UnitagWithProfilePicture
-                address={address}
-                profilePictureUri={profilePictureUri}
-                unitag={unitag}
-              />
+              <UnitagWithProfilePicture address={address} profilePictureUri={profilePictureUri} unitag={unitag} />
             </AnimateInOrder>
           </AnimatePresence>
         </Flex>
@@ -144,7 +144,7 @@ export function UnitagConfirmationScreen({
 const getInsetPropsForCoordinates = (
   boxWidth: number,
   x: number,
-  y: number
+  y: number,
 ): { top?: number; right?: number; bottom?: number; left?: number } => {
   const unitSize = 10
   const unit = boxWidth / unitSize

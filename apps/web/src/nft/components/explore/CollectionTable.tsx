@@ -1,10 +1,16 @@
+import {
+  ChangeCell,
+  CollectionTitleCell,
+  DiscreteNumberCell,
+  EthCell,
+  TextCell,
+  VolumeCell,
+} from 'nft/components/explore/Cells/Cells'
+import { Table } from 'nft/components/explore/Table'
 import { CollectionTableColumn, TimePeriod } from 'nft/types'
 import { useMemo } from 'react'
 import { CellProps, Column, Row } from 'react-table'
 import { MediumOnly } from 'theme/components'
-
-import { ChangeCell, CollectionTitleCell, DiscreteNumberCell, EthCell, TextCell, VolumeCell } from './Cells/Cells'
-import { Table } from './Table'
 
 export enum ColumnHeaders {
   Volume = 'Volume',
@@ -150,7 +156,7 @@ const CollectionTable = ({ data, timePeriod }: { data: CollectionTableColumn[]; 
         },
       },
     ],
-    [floorChangeSort, floorSort, volumeChangeSort, volumeSort, timePeriod]
+    [floorChangeSort, floorSort, volumeChangeSort, volumeSort, timePeriod],
   )
 
   return (

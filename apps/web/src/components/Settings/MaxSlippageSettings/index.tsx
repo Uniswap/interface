@@ -2,6 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
+import { Input, InputContainer } from 'components/Settings/Input'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -9,8 +10,6 @@ import { SlippageTolerance } from 'state/user/types'
 import styled from 'styled-components'
 import { CautionTriangle, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { Input, InputContainer } from '../Input'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -119,7 +118,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       button={
         <ThemedText.BodyPrimary>
           {userSlippageTolerance === SlippageTolerance.Auto ? (
-            <Trans i18nKey="commmon.automatic" />
+            <Trans i18nKey="common.automatic" />
           ) : (
             formatPercent(userSlippageTolerance)
           )}
@@ -137,7 +136,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
             isActive={userSlippageTolerance === SlippageTolerance.Auto}
           >
             <ThemedText.BodyPrimary>
-              <Trans i18nKey="commmon.automatic" />
+              <Trans i18nKey="common.automatic" />
             </ThemedText.BodyPrimary>
           </Option>
           <Option

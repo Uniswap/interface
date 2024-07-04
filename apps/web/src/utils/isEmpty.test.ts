@@ -1,4 +1,4 @@
-import { isEmptyObject } from './isEmpty'
+import { isEmptyObject } from 'utils/isEmpty'
 
 describe('isEmptyObject', () => {
   it.each([

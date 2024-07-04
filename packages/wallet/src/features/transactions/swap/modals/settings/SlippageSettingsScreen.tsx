@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { AnimatedFlex, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { BottomSheetTextInput } from 'uniswap/src/components/modals/BottomSheetModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import PlusMinusButton, { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'
-import { BottomSheetTextInput } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { SwapSettingsMessage } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsMessage'
@@ -63,7 +64,8 @@ export function SlippageSettingsScreen({
             borderWidth={1}
             gap="$spacing12"
             p="$spacing16"
-            style={inputAnimatedStyle}>
+            style={inputAnimatedStyle}
+          >
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
               <Text color="$accent1" variant="buttonLabel3">
                 {t('swap.settings.slippage.control.auto')}
@@ -81,11 +83,7 @@ export function SlippageSettingsScreen({
                 }),
               }}
               textAlign="center"
-              value={
-                autoSlippageEnabled
-                  ? autoSlippageTolerance.toFixed(2).toString()
-                  : inputSlippageTolerance
-              }
+              value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
               onBlur={onBlurSlippageInput}
               onChangeText={onChangeSlippageInput}
               onFocus={onFocusSlippageInput}

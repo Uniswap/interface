@@ -1,7 +1,9 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
-import { useEthersSigner } from 'hooks/useEthersSigner'
+import { useEthersProvider } from 'hooks/useEthersProvider'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -23,8 +25,10 @@ export function useSendCallback({
   gasFee?: GasFeeResult
 }) {
   const account = useAccount()
-  const signer = useEthersSigner({ chainId: account.chainId })
+  const provider = useEthersProvider({ chainId: account.chainId })
   const addTransaction = useTransactionAdder()
+  const switchChain = useSwitchChain()
+  const supportedTransactionChainId = useSupportedChainId(transactionRequest?.chainId)
 
   return useCallback(
     () =>
@@ -32,8 +36,8 @@ export function useSendCallback({
         if (account.status !== 'connected') {
           throw new Error('wallet must be connected to send')
         }
-        if (!signer) {
-          throw new Error('missing signer')
+        if (!provider) {
+          throw new Error('missing provider')
         }
         if (!transactionRequest) {
           throw new Error('missing to transaction to execute')
@@ -44,13 +48,19 @@ export function useSendCallback({
         if (!recipient) {
           throw new Error('missing recipient')
         }
+        if (!supportedTransactionChainId) {
+          throw new Error('missing chainId in transactionRequest')
+        }
 
         try {
           const response = await trace.child(
             { name: 'Send transaction', op: 'wallet.send_transaction' },
             async (walletTrace) => {
               try {
-                return await signer.sendTransaction({
+                if (account.chainId !== supportedTransactionChainId) {
+                  await switchChain(supportedTransactionChainId)
+                }
+                return await provider.getSigner().sendTransaction({
                   ...transactionRequest,
                   ...gasFee?.params,
                 })
@@ -62,7 +72,7 @@ export function useSendCallback({
                   throw error
                 }
               }
-            }
+            },
           )
           const sendInfo: SendTransactionInfo = {
             type: TransactionType.SEND,
@@ -80,6 +90,17 @@ export function useSendCallback({
           }
         }
       }),
-    [account.status, signer, transactionRequest, currencyAmount, recipient, addTransaction, gasFee?.params]
+    [
+      account.status,
+      account.chainId,
+      provider,
+      transactionRequest,
+      currencyAmount,
+      recipient,
+      addTransaction,
+      gasFee?.params,
+      supportedTransactionChainId,
+      switchChain,
+    ],
   )
 }

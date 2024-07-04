@@ -4,7 +4,11 @@ import {
   AssetActivity,
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import {
+  TransactionHistoryUpdater,
+  getReceiveNotificationFromData,
+} from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -17,10 +21,6 @@ import {
 } from 'wallet/src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, faker, render } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'
-import {
-  TransactionHistoryUpdater,
-  getReceiveNotificationFromData,
-} from './TransactionHistoryUpdater'
 
 const mockedRefetchQueries = jest.fn()
 
@@ -222,7 +222,7 @@ describe(getReceiveNotificationFromData, () => {
         // have to check if the calculation is correct in this test.
         // It's better to test the calculation in a separate test.
         currencyAmountRaw: expect.any(String),
-      })
+      }),
     )
   })
 
@@ -233,11 +233,7 @@ describe(getReceiveNotificationFromData, () => {
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(
-      txnDataWithoutReceiveTxns,
-      account1.address,
-      newTimestamp
-    )
+    const notification = getReceiveNotificationFromData(txnDataWithoutReceiveTxns, account1.address, newTimestamp)
 
     expect(notification).toBeUndefined()
   })

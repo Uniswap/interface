@@ -1,18 +1,12 @@
 import { useCallback, useRef } from 'react'
-import {
-  SharedValue,
-  runOnJS,
-  useAnimatedReaction,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useAutoScrollContext, useDragContext, useLayoutContext } from 'src/components/sortableGrid/contexts'
+import { getColumnIndex, getRowIndex } from 'src/components/sortableGrid/utils'
 import { HapticFeedback, ImpactFeedbackStyle } from 'ui/src'
-import { useAutoScrollContext, useDragContext, useLayoutContext } from './contexts'
-import { getColumnIndex, getRowIndex } from './utils'
 
 export function useStableCallback<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  C extends (...args: Array<any>) => any
+  C extends (...args: Array<any>) => any,
 >(callback?: C): C {
   const callbackRef = useRef(callback)
   callbackRef.current = callback
@@ -20,7 +14,7 @@ export function useStableCallback<
   return useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
     (...args: Array<any>) => callbackRef.current?.(...args),
-    []
+    [],
   ) as C
 }
 
@@ -47,7 +41,7 @@ export function useItemPosition(key: string): {
       x.value = x.value === null ? position.x : withTiming(position.x)
       y.value = y.value === null ? position.y : withTiming(position.y)
     },
-    [key]
+    [key],
   )
 
   useAnimatedReaction(
@@ -60,15 +54,14 @@ export function useItemPosition(key: string): {
         x.value = position.x
         y.value = position.y + offsetDiff
       }
-    }
+    },
   )
 
   return { x, y }
 }
 
 export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean): void {
-  const { keyToIndex, indexToKey, rowOffsets, targetContainerHeight, itemDimensions } =
-    useLayoutContext()
+  const { keyToIndex, indexToKey, rowOffsets, targetContainerHeight, itemDimensions } = useLayoutContext()
   const { activeItemKey, activeItemPosition } = useDragContext()
   const { scrollOffsetDiff } = useAutoScrollContext()
 
@@ -116,11 +109,7 @@ export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean)
       let dy = 0
       if (yOffsetAbove > 0 && centerY < yOffsetAbove) {
         dy = -1
-      } else if (
-        yOffsetBelow !== undefined &&
-        yOffsetBelow < targetContainerHeight.value &&
-        centerY > yOffsetBelow
-      ) {
+      } else if (yOffsetBelow !== undefined && yOffsetBelow < targetContainerHeight.value && centerY > yOffsetBelow) {
         dy = 1
       }
 
@@ -128,11 +117,7 @@ export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean)
       let dx = 0
       if (xOffsetLeft > 0 && centerX < xOffsetLeft) {
         dx = -1
-      } else if (
-        columnIndex < numColumns - 1 &&
-        activeIndex < itemsCount &&
-        centerX > xOffsetRight
-      ) {
+      } else if (columnIndex < numColumns - 1 && activeIndex < itemsCount && centerX > xOffsetRight) {
         dx = 1
       }
 
@@ -164,6 +149,6 @@ export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean)
         runOnJS(vibrate)()
       }
     },
-    [hapticFeedback]
+    [hapticFeedback],
   )
 }

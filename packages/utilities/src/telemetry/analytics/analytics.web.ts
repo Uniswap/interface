@@ -1,19 +1,21 @@
-import { flush, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
+import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 // eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
+// eslint-disable-next-line no-restricted-imports
+import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-import { Analytics, UserPropertyValue } from './analytics'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
   ANONYMOUS_EVENT_NAMES,
   DUMMY_KEY,
-} from './constants'
-import { generateAnalyticsLoggers } from './logging'
+} from 'utilities/src/telemetry/analytics/constants'
+import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 let allowAnalytics: boolean = true
-let commitHash: string | undefined
+let commitHash: Maybe<string>
+let userId: Maybe<string>
 
 async function setAnalyticsAtomDirect(allowed: boolean): Promise<void> {
   try {
@@ -55,7 +57,8 @@ export const analytics: Analytics = {
   async init(
     transportProvider: ApplicationTransport,
     allowed: boolean,
-    initHash?: string
+    initHash?: string,
+    userIdGetter?: () => Promise<string>,
   ): Promise<void> {
     // Set properties
     commitHash = initHash
@@ -69,8 +72,18 @@ export const analytics: Analytics = {
           transportProvider, // Used to support custom reverse proxy header
           // Disable tracking of private user information by Amplitude
           trackingOptions: AMPLITUDE_SHARED_TRACKING_OPTIONS,
-        }
+        },
       )
+
+      userId = userIdGetter ? await userIdGetter() : getUserId()
+
+      if (allowed && userId) {
+        setDeviceId(userId)
+      }
+
+      if (!allowed) {
+        setDeviceId(ANONYMOUS_DEVICE_ID)
+      }
     } catch (error) {
       loggers.init(error)
     }
@@ -78,7 +91,9 @@ export const analytics: Analytics = {
   async setAllowAnalytics(allowed: boolean): Promise<void> {
     await setAnalyticsAtomDirect(allowed)
     if (allowed) {
-      // TODO: handle setting device id to a new or existing old id here
+      if (userId) {
+        setDeviceId(userId)
+      }
     } else {
       loggers.setAllowAnalytics(allowed)
       identify(new Identify().clearAll()) // Clear all custom user properties
@@ -100,11 +115,7 @@ export const analytics: Analytics = {
     loggers.flushEvents()
     flush()
   },
-  async setUserProperty(
-    property: string,
-    value: UserPropertyValue,
-    insert?: boolean
-  ): Promise<void> {
+  async setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): Promise<void> {
     if (!(await getAnalyticsAtomDirect())) {
       return
     }

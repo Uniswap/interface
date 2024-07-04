@@ -8,6 +8,7 @@ import { FeeOptions /*, toHex*/ } from '@uniswap/v3-sdk'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { t } from 'i18n'
 import JSBI from 'jsbi'
@@ -18,13 +19,13 @@ import { ClassicTrade, TradeFillType } from 'state/routing/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 //import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
-import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
 class GasEstimationError extends Error {
@@ -54,7 +55,7 @@ interface SwapOptions {
 export function useUniversalRouterSwapCallback(
   trade: ClassicTrade | undefined,
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number },
-  options: SwapOptions
+  options: SwapOptions,
 ) {
   const account = useAccount()
   const provider = useEthersWeb3Provider()
@@ -113,7 +114,8 @@ export function useUniversalRouterSwapCallback(
               txRequest: tx,
               isAutoSlippage,
             })
-            console.warn(gasError)
+            const wrappedError = new Error('gas error', { cause: gasError })
+            logger.warn('useUniversalRouter', 'useUniversalRouterSwapCallback', 'Failed to estimate gas', wrappedError)
             throw new GasEstimationError()
           }
 
@@ -130,7 +132,7 @@ export function useUniversalRouterSwapCallback(
                   throw error
                 }
               }
-            }
+            },
           )
           sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
             ...formatSwapSignedAnalyticsEventProperties({
@@ -190,6 +192,6 @@ export function useUniversalRouterSwapCallback(
       connectorName,
       blockNumber,
       isAutoSlippage,
-    ]
+    ],
   )
 }

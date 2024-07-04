@@ -1,30 +1,30 @@
-import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from 'i18n'
 import type { ReactNode } from 'react'
+import { InterfaceChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const FEE_AMOUNT_DETAIL: Record<
   FeeAmount,
-  { label: string; description: ReactNode; supportedChains: readonly ChainId[] }
+  { label: string; description: ReactNode; supportedChains: readonly InterfaceChainId[] }
 > = {
   [FeeAmount.LOWEST]: {
     label: '0.01',
     description: <Trans i18nKey="fee.bestForVeryStable" />,
-    supportedChains: SUPPORTED_CHAINS,
+    supportedChains: WEB_SUPPORTED_CHAIN_IDS,
   },
   [FeeAmount.LOW]: {
     label: '0.05',
-    description: <Trans i18nKey="fee.bestForStable" />,
-    supportedChains: SUPPORTED_CHAINS,
+    description: <Trans i18nKey="fee.bestForStablePairs" />,
+    supportedChains: WEB_SUPPORTED_CHAIN_IDS,
   },
   [FeeAmount.MEDIUM]: {
     label: '0.3',
     description: <Trans i18nKey="fee.bestForMost" />,
-    supportedChains: SUPPORTED_CHAINS,
+    supportedChains: WEB_SUPPORTED_CHAIN_IDS,
   },
   [FeeAmount.HIGH]: {
     label: '1',
     description: <Trans i18nKey="fee.bestForExotic" />,
-    supportedChains: SUPPORTED_CHAINS,
+    supportedChains: WEB_SUPPORTED_CHAIN_IDS,
   },
 }

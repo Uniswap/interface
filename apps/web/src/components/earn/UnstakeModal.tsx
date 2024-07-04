@@ -1,5 +1,4 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, /*useCallback,*/ useState } from 'react'
@@ -9,21 +8,23 @@ import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { GRG } from '../../constants/tokens'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
+import { GRG } from 'constants/tokens'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { useUnstakeCallback } from '../../state/stake/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
+import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
+import { useUnstakeCallback } from 'state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button'
 //import { ButtonError } from '../Button'
-import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { AutoRow, RowBetween } from '../Row'
-import Slider from '../Slider'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { AutoRow, RowBetween } from 'components/Row'
+import Slider from 'components/Slider'
+import { useAccount } from 'hooks/useAccount'
+import { logger } from 'utilities/src/logger/logger'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -46,10 +47,10 @@ interface UnstakeModalProps {
 
 // TODO: add balance input to display amount when withdrawing
 export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismiss, title }: UnstakeModalProps) {
-  const { chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for unstake input
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token>(GRG[account.chainId ?? 1])
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
@@ -98,7 +99,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     // try delegation and store hash
     const hash = await unstakeCallback(parsedAmount, isPool)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('UnstakeModal', 'onUnstake', error)
     })
 
     if (hash) {
@@ -107,7 +108,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={360}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

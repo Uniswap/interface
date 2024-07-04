@@ -6,8 +6,8 @@ import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -82,17 +82,13 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   }, [accounts, data, isPortfolioValueLoading])
 
   const signerAccounts = useMemo(() => {
-    return accountsWithPortfolioValue.filter(
-      (account) => account.account.type === AccountType.SignerMnemonic
-    )
+    return accountsWithPortfolioValue.filter((account) => account.account.type === AccountType.SignerMnemonic)
   }, [accountsWithPortfolioValue])
 
   const hasSignerAccounts = signerAccounts.length > 0
 
   const viewOnlyAccounts = useMemo(() => {
-    return accountsWithPortfolioValue.filter(
-      (account) => account.account.type === AccountType.Readonly
-    )
+    return accountsWithPortfolioValue.filter((account) => account.account.type === AccountType.Readonly)
   }, [accountsWithPortfolioValue])
 
   const hasViewOnlyAccounts = viewOnlyAccounts.length > 0
@@ -108,7 +104,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         onPress={onPress}
       />
     ),
-    [onPress]
+    [onPress],
   )
 
   return (
@@ -123,7 +119,8 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
       <VirtualizedList
         bounces={false}
         scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+      >
         {hasSignerAccounts && (
           <>
             <SignerHeader />

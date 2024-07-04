@@ -1,3 +1,4 @@
+import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,
@@ -8,7 +9,6 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from '../VolumeChart/utils'
 
 export interface LiquidityBarData extends CustomData {
   time: UTCTimestamp
@@ -79,7 +79,7 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       this._data.barSpacing,
       renderingScope.horizontalPixelRatio,
       this._data.visibleRange.from,
-      this._data.visibleRange.to
+      this._data.visibleRange.to,
     )
     const zeroY = priceToCoordinate(0) ?? 0
     ctx.fillStyle = this._options.tokenAColor
@@ -95,7 +95,7 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       }
       const width = Math.min(
         Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),
-        this._data.barSpacing * renderingScope.horizontalPixelRatio
+        this._data.barSpacing * renderingScope.horizontalPixelRatio,
       )
 
       // Create margin to make visual bars thin

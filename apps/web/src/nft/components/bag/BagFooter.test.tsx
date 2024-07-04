@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { parseEther } from '@ethersproject/units'
-import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { nativeOnChain } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
+import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import { useBag, useWalletBalance } from 'nft/hooks'
+import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import { BagFooter } from 'nft/components/bag/BagFooter'
+import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice } from 'nft/hooks/useBagTotalEthPrice'
 import useDerivedPayWithAnyTokenSwapInfo from 'nft/hooks/useDerivedPayWithAnyTokenSwapInfo'
 import usePayWithAnyTokenSwap from 'nft/hooks/usePayWithAnyTokenSwap'
@@ -14,14 +15,16 @@ import { usePriceImpact } from 'nft/hooks/usePriceImpact'
 import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { BagStatus } from 'nft/types'
 import { TradeState } from 'state/routing/types'
-import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, toCurrencyAmount } from 'test-utils/constants'
+import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, USE_CONNECTED_ACCOUNT, toCurrencyAmount } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
-import { BagFooter } from './BagFooter'
+jest.mock('hooks/useAccount', () => ({
+  useAccount: jest.fn(),
+}))
 
 jest.mock('nft/hooks/useBagTotalEthPrice')
-jest.mock('nft/hooks/useWalletBalance')
 jest.mock('nft/hooks/useBag')
 jest.mock('nft/hooks/useTokenInput')
 jest.mock('lib/hooks/useCurrencyBalance')
@@ -46,10 +49,7 @@ const getBuyButtonWarning = () => screen.queryByTestId('nft-buy-button-warning')
 
 describe('BagFooter.tsx', () => {
   beforeEach(() => {
-    mocked(useWeb3React).mockReturnValue({
-      chainId: 1,
-      account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
-    } as ReturnType<typeof useWeb3React>)
+    mocked(useAccount).mockReturnValue(USE_CONNECTED_ACCOUNT)
 
     mocked(useBag).mockReturnValue({
       bagStatus: BagStatus.ADDING_TO_BAG,
@@ -59,12 +59,9 @@ describe('BagFooter.tsx', () => {
       itemsInBag: [],
     }) as ReturnType<typeof useBag>
     mocked(useBagTotalEthPrice).mockReturnValue(BigNumber.from(12))
-    mocked(useWalletBalance).mockReturnValue({
-      address: '',
-      balance: '100',
-      weiBalance: parseEther('0'),
-      provider: undefined,
-    })
+    mocked(useCurrencyBalance).mockReturnValue(
+      CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 100),
+    )
 
     mocked(usePermit2Allowance).mockReturnValue({
       state: AllowanceState.ALLOWED,
@@ -104,10 +101,10 @@ describe('BagFooter.tsx', () => {
   })
 
   it('wallet not connected', () => {
-    mocked(useWeb3React).mockReturnValue({
+    mocked(useAccount).mockReturnValue({
       chainId: 1,
-      account: undefined,
-    } as ReturnType<typeof useWeb3React>)
+      address: undefined,
+    } as ReturnType<typeof useAccount>)
 
     renderBagFooter()
     const buyButton = getBuyButton()
@@ -118,10 +115,10 @@ describe('BagFooter.tsx', () => {
   })
 
   it('connected to wrong network', () => {
-    mocked(useWeb3React).mockReturnValue({
+    mocked(useAccount).mockReturnValue({
+      ...USE_CONNECTED_ACCOUNT,
       chainId: 2,
-      account: '0x52270d8234b864dcAC9947f510CE9275A8a116Db',
-    } as ReturnType<typeof useWeb3React>)
+    } as unknown as ReturnType<typeof useAccount>)
 
     renderBagFooter()
     const buyButton = getBuyButton()
@@ -131,12 +128,7 @@ describe('BagFooter.tsx', () => {
   })
 
   it('insufficient balance', () => {
-    mocked(useWalletBalance).mockReturnValue({
-      address: '',
-      balance: '0',
-      weiBalance: parseEther('0'),
-      provider: undefined,
-    })
+    mocked(useCurrencyBalance).mockReturnValue(CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 0))
 
     renderBagFooter()
     const buyButton = getBuyButton()
@@ -416,8 +408,8 @@ describe('BagFooter.tsx', () => {
 
   it('should use the correct UR address', () => {
     expect(getURAddress(undefined)).toBe(undefined)
-    expect(getURAddress(ChainId.MAINNET)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET))
-    expect(getURAddress(ChainId.MAINNET, 'test_nft_ur_address')).toBe('test_nft_ur_address')
-    expect(getURAddress(ChainId.OPTIMISM)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.OPTIMISM))
+    expect(getURAddress(UniverseChainId.Mainnet)).toBe(UNIVERSAL_ROUTER_ADDRESS(UniverseChainId.Mainnet))
+    expect(getURAddress(UniverseChainId.Mainnet, 'test_nft_ur_address')).toBe('test_nft_ur_address')
+    expect(getURAddress(UniverseChainId.Optimism)).toBe(UNIVERSAL_ROUTER_ADDRESS(UniverseChainId.Optimism))
   })
 })

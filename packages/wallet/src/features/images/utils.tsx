@@ -2,7 +2,6 @@ import { logger } from 'utilities/src/logger/logger'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
-// TODO: [MOB-205] return a nicer SVG asset with an error message
 const INVALID_SVG = { content: 'Invalid SVG', aspectRatio: FALLBACK_ASPECT_RATIO }
 
 export type SvgData = {
@@ -10,11 +9,7 @@ export type SvgData = {
   aspectRatio: number
 }
 
-export async function fetchSVG(
-  uri: string,
-  autoplay: boolean,
-  signal?: AbortSignal
-): Promise<SvgData> {
+export async function fetchSVG(uri: string, autoplay: boolean, signal?: AbortSignal): Promise<SvgData> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
@@ -31,8 +26,7 @@ export async function fetchSVG(
 
   let aspectRatio = FALLBACK_ASPECT_RATIO
   try {
-    aspectRatio =
-      viewboxHeight && viewboxWidth ? +viewboxWidth / +viewboxHeight : FALLBACK_ASPECT_RATIO
+    aspectRatio = viewboxHeight && viewboxWidth ? +viewboxWidth / +viewboxHeight : FALLBACK_ASPECT_RATIO
   } catch (e) {
     logger.debug('images/utils', 'fetchSVG', 'Could not calculate aspect ratio ' + e)
   }

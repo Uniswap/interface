@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { transferTokenActions } from 'wallet/src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'
@@ -10,12 +10,12 @@ import { useAppDispatch } from 'wallet/src/state'
 /** Helper transfer callback for ERC20s */
 export function useTransferERC20Callback(
   txId?: string,
-  chainId?: ChainId,
+  chainId?: WalletChainId,
   toAddress?: Address,
   tokenAddress?: Address,
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -32,19 +32,19 @@ export function useTransferERC20Callback(
         }
       : undefined,
     transferTxWithGasSettings,
-    onSubmit
+    onSubmit,
   )
 }
 
 /** Helper transfer callback for NFTs */
 export function useTransferNFTCallback(
   txId?: string,
-  chainId?: ChainId,
+  chainId?: WalletChainId,
   toAddress?: Address,
   tokenAddress?: Address,
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -61,7 +61,7 @@ export function useTransferNFTCallback(
         }
       : undefined,
     txRequest,
-    onSubmit
+    onSubmit,
   )
 }
 
@@ -69,7 +69,7 @@ export function useTransferNFTCallback(
 function useTransferCallback(
   transferTokenParams?: TransferTokenParams,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): null | (() => void) {
   const dispatch = useAppDispatch()
 

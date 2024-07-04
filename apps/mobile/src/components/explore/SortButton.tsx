@@ -2,10 +2,7 @@ import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
-import {
-  getTokensOrderByMenuLabel,
-  getTokensOrderBySelectedLabel,
-} from 'src/features/explore/utils'
+import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
@@ -73,7 +70,8 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         sendAnalyticsEvent(MobileEventName.ExploreFilterSelected, {
           filter_type: selectedMenuAction.orderBy,
         })
-      }}>
+      }}
+    >
       <TouchableArea
         alignItems="center"
         backgroundColor={isDarkMode ? '$DEP_backgroundOverlay' : '$surface1'}
@@ -81,18 +79,14 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         flexDirection="row"
         px="$spacing16"
         py="$spacing8"
-        onLongPress={disableOnPress}>
+        onLongPress={disableOnPress}
+      >
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
           <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
-          <RotatableChevron
-            color="$neutral2"
-            direction="down"
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
+          <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
         </Flex>
       </TouchableArea>
     </ContextMenu>

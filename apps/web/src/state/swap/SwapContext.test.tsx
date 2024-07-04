@@ -1,11 +1,13 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
+import { SwapForm } from 'pages/Swap/SwapForm'
+import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
-import { render } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { SwapAndLimitContextProvider, SwapContextProvider } from './SwapContext'
 
 jest.mock('hooks/useContract', () => ({
   ...jest.requireActual('hooks/useContract'),
@@ -23,7 +25,7 @@ describe('Swap Context', () => {
     render(
       <SwapContextProvider>
         <TestComponent />
-      </SwapContextProvider>
+      </SwapContextProvider>,
     )
 
     expect(swapContext).toEqual({
@@ -70,7 +72,7 @@ describe('SwapAndLimitContext', () => {
     render(
       <SwapAndLimitContextProvider>
         <TestComponent />
-      </SwapAndLimitContextProvider>
+      </SwapAndLimitContextProvider>,
     )
 
     expect(swapAndLimitContext).toEqual({
@@ -82,10 +84,34 @@ describe('SwapAndLimitContext', () => {
         inputCurrencyId: undefined,
         outputCurrencyId: undefined,
       },
+      multichainUXEnabled: undefined,
+      setSelectedChainId: expect.any(Function),
       setCurrencyState: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
-      chainId: undefined,
+      chainId: 1,
+      pageChainId: undefined,
+      isSwapAndLimitContext: true,
+    })
+  })
+
+  describe('SwapForm', () => {
+    test('multichain ux disabled', () => {
+      render(
+        <SwapAndLimitContextProvider initialChainId={UniverseChainId.Optimism}>
+          <SwapForm />
+        </SwapAndLimitContextProvider>,
+      )
+      expect(screen.getByText('Connect to Optimism')).toBeInTheDocument()
+    })
+
+    test('multichain ux enabled', () => {
+      render(
+        <SwapAndLimitContextProvider multichainUXEnabled initialChainId={UniverseChainId.Optimism}>
+          <SwapForm />
+        </SwapAndLimitContextProvider>,
+      )
+      expect(screen.getByTestId('swap-button')).toBeInTheDocument()
     })
   })
 })
@@ -103,7 +129,7 @@ describe('Combined contexts', () => {
       <SwapAndLimitContext.Provider
         value={{
           currencyState: {
-            inputCurrency: nativeOnChain(ChainId.MAINNET),
+            inputCurrency: nativeOnChain(UniverseChainId.Mainnet),
             outputCurrency: undefined,
           },
           prefilledState: {
@@ -111,20 +137,22 @@ describe('Combined contexts', () => {
             outputCurrency: undefined,
           },
           setCurrencyState: expect.any(Function),
-          chainId: ChainId.MAINNET,
+          setSelectedChainId: jest.fn(),
+          chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
+          isSwapAndLimitContext: true,
         }}
       >
         <SwapContextProvider>
           <TestComponent />
         </SwapContextProvider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
 
     // @ts-ignore rendering TestComponent sets derivedSwapInfo value
     expect(derivedSwapInfo?.currencies).toEqual({
-      [Field.INPUT]: nativeOnChain(ChainId.MAINNET),
+      [Field.INPUT]: nativeOnChain(UniverseChainId.Mainnet),
       [Field.OUTPUT]: undefined,
     })
   })

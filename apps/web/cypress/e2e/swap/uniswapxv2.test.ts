@@ -1,5 +1,6 @@
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'
@@ -22,7 +23,7 @@ describe('UniswapX v2', () => {
     after(() => cy.hardhat({ automine: true }))
 
     setupHardhat(async (hardhat) => {
-      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 2e18))
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 2e18))
       await hardhat.mine()
     })
 
@@ -287,7 +288,7 @@ describe('UniswapX v2', () => {
         submitUniswapXOrder()
         cy.get(getTestSelector('confirmation-close-icon')).click()
 
-        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json')
+        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
 
         // Expect balances to refetch after filling
         cy.wait('@orderStatusOpen')

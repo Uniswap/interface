@@ -1,24 +1,26 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { SupportedInterfaceChainId, useSupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
+import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
+import useSelectChain from 'hooks/useSelectChain'
+import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
+import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
 import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-
-import { useTransactionAdder } from '../state/transactions/hooks'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
-} from '../state/transactions/types'
-import { currencyId } from '../utils/currencyId'
-import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
-import { useUniversalRouterSwapCallback } from './useUniversalRouter'
+} from 'state/transactions/types'
+import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 
@@ -46,11 +48,13 @@ export function useSwapCallback(
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }, // usd values for amount in and out, and the fee value, logged for analytics
   allowedSlippage: Percent, // in bips
   permitSignature: PermitSignature | undefined,
-  smartPoolAddress?: string
+  smartPoolAddress?: string,
 ) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
+  const supportedConnectedChainId = useSupportedChainId(account.chainId)
+  const { chainId: swapChainId } = useSwapAndLimitContext()
 
   // TODO: use smart router or add universal router protocol support
   const uniswapXSwapCallback = useUniswapXSwapCallback({
@@ -67,19 +71,25 @@ export function useSwapCallback(
       smartPoolAddress,
       permit: permitSignature,
       ...getUniversalRouterFeeFields(trade),
-    }
+    },
   )
 
+  const selectChain = useSelectChain()
   const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
 
   return useCallback(async () => {
     if (!trade) {
       throw new Error('missing trade')
-    }
-    if (!account || !chainId) {
+    } else if (!account.isConnected || !account.address) {
       throw new Error('wallet must be connected to swap')
+    } else if (!swapChainId) {
+      throw new Error('missing swap chainId')
+    } else if (!supportedConnectedChainId || supportedConnectedChainId !== swapChainId) {
+      const correctChain = await selectChain(swapChainId)
+      if (!correctChain) {
+        throw new Error('wallet must be connected to correct chain to swap')
+      }
     }
-
     const result = await swapCallback()
 
     const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {
@@ -106,13 +116,13 @@ export function useSwapCallback(
       case TradeFillType.UniswapX:
       case TradeFillType.UniswapXv2:
         addOrder(
-          account,
+          account.address,
           result.response.orderHash,
-          chainId,
+          supportedConnectedChainId as SupportedInterfaceChainId, // satisfies type-checker; already checked & switched chain above if !supportedConnectedChainId
           result.response.deadline,
           swapInfo as UniswapXOrderDetails['swapInfo'],
           result.response.encodedOrder,
-          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION // satisfying type-checker; isUniswapXTrade should always be true
+          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION, // satisfying type-checker; isUniswapXTrade should always be true
         )
         break
       default:
@@ -120,5 +130,16 @@ export function useSwapCallback(
     }
 
     return result
-  }, [account, addOrder, addTransaction, allowedSlippage, chainId, swapCallback, trade])
+  }, [
+    account.address,
+    account.isConnected,
+    addOrder,
+    addTransaction,
+    allowedSlippage,
+    selectChain,
+    supportedConnectedChainId,
+    swapCallback,
+    swapChainId,
+    trade,
+  ])
 }

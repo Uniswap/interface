@@ -6,10 +6,10 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
 
-export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {
+export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
 
   const { data, loading, error, refetch } = useTopTokensQuery({
@@ -40,6 +40,6 @@ export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]
 
   return useMemo(
     () => ({ data: formattedData, loading, error: persistedError, refetch }),
-    [formattedData, loading, persistedError, refetch]
+    [formattedData, loading, persistedError, refetch],
   )
 }

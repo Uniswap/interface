@@ -1,9 +1,9 @@
 import { AppDownloadPlatform, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 // OneLink will direct to App/Play Store or microsite depending on user agent
-const APP_DOWNLOAD_LINKS: Partial<{ [key in InterfaceElementName]: string }> = {
+export const APP_DOWNLOAD_LINKS: Partial<{ [key in InterfaceElementName]: string }> = {
   [InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/qfwlncf9',
   [InterfaceElementName.UNISWAP_WALLET_NAVBAR_MENU_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/46tvu6pb',
   [InterfaceElementName.UNISWAP_WALLET_LANDING_PAGE_DOWNLOAD_BUTTON]: 'https://uniswapwallet.onelink.me/8q3y/79gveilz',

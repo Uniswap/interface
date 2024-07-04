@@ -34,15 +34,12 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 
@@ -61,16 +58,14 @@ export function SettingsWallet({
   const colors = useSporeColors()
   const addressToAccount = useAccounts()
   const currentAccount = addressToAccount[address]
-  const ensName = useENS(ChainId.Mainnet, address)?.name
+  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
-  const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
-    notificationsEnabledOnFirebase
-  )
+  const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(notificationsEnabledOnFirebase)
 
   const showEditProfile = !readonly
 
@@ -86,11 +81,10 @@ export function SettingsWallet({
     useCallback(
       () =>
         setNotificationSwitchEnabled(
-          notificationsEnabledOnFirebase &&
-            notificationOSPermission === NotificationPermission.Enabled
+          notificationsEnabledOnFirebase && notificationOSPermission === NotificationPermission.Enabled,
         ),
-      [notificationOSPermission, notificationsEnabledOnFirebase]
-    )
+      [notificationOSPermission, notificationsEnabledOnFirebase],
+    ),
   )
 
   const onChangeNotificationSettings = (enabled: boolean): void => {
@@ -101,7 +95,7 @@ export function SettingsWallet({
           type: EditAccountAction.TogglePushNotification,
           enabled,
           address,
-        })
+        }),
       )
       setNotificationSwitchEnabled(enabled)
     } else {
@@ -111,7 +105,7 @@ export function SettingsWallet({
             type: EditAccountAction.TogglePushNotification,
             enabled: true,
             address,
-          })
+          }),
         )
         setNotificationSwitchEnabled(enabled)
       }, showNotificationSettingsAlert)
@@ -164,9 +158,7 @@ export function SettingsWallet({
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<
-    SettingsSectionItem | SettingsSectionItemComponent
-  >): JSX.Element | null => {
+  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
     if ('component' in item) {
       return item.component
     }
@@ -181,7 +173,7 @@ export function SettingsWallet({
       openModal({
         name: ModalName.RemoveWallet,
         initialState: { address },
-      })
+      }),
     )
   }
 
@@ -189,12 +181,7 @@ export function SettingsWallet({
     <Screen>
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
         <Flex shrink>
-          <AddressDisplay
-            hideAddressInSubtitle
-            address={address}
-            showAccountIcon={false}
-            variant="body1"
-          />
+          <AddressDisplay hideAddressInSubtitle address={address} showAccountIcon={false} variant="body1" />
         </Flex>
       </BackHeader>
 
@@ -202,9 +189,7 @@ export function SettingsWallet({
         <Flex fill>
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
-            ListHeaderComponent={
-              showEditProfile ? <AddressDisplayHeader address={address} /> : undefined
-            }
+            ListHeaderComponent={showEditProfile ? <AddressDisplayHeader address={address} /> : undefined}
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
@@ -232,7 +217,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
-  const ensName = useENS(ChainId.Mainnet, address)?.name
+  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
   const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {
@@ -265,12 +250,7 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
         />
       </Flex>
       {(!ensName || !!unitag) && (
-        <Button
-          color="$neutral1"
-          fontSize="$small"
-          size="medium"
-          theme="secondary_Button"
-          onPress={onPressEditProfile}>
+        <Button color="$neutral1" fontSize="$small" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
           {unitag?.username
             ? t('settings.setting.wallet.action.editProfile')
             : t('settings.setting.wallet.action.editLabel')}

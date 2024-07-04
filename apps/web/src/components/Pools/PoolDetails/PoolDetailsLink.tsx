@@ -1,9 +1,12 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
@@ -14,13 +17,9 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
@@ -104,7 +103,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   const navigate = useNavigate()
@@ -128,7 +127,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     // This callback must run after it sets truncateAddress to 'start' to see if it needs to 'both'.
     // It checks if the textRef has overflow, and sets truncateAddress accordingly to avoid it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [truncateAddress]
+    [truncateAddress],
   )
 
   if (loading || !address || !chainId) {
@@ -178,7 +177,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>
-              {chainId === ChainId.MAINNET ? (
+              {chainId === UniverseChainId.Mainnet ? (
                 <EtherscanLogo width="16px" height="16px" fill={theme.neutral1} />
               ) : (
                 <ExplorerIcon width="16px" height="16px" fill={theme.neutral1} />

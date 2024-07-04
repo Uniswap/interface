@@ -12,9 +12,9 @@ import {
 } from 'react-native'
 import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
-import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
+import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
 export const TAB_BAR_HEIGHT = 48
@@ -88,16 +88,15 @@ export type TabProps = {
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
-  loadingContainerStyle: StyleProp<ViewStyle>
-  emptyContainerStyle: StyleProp<ViewStyle>
-  contentContainerStyle?: StyleProp<ViewStyle>
+  contentContainerStyle: StyleProp<ViewStyle>
+  emptyComponentStyle?: StyleProp<ViewStyle>
   estimatedItemSize?: number
   onMomentumScrollEnd?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   onScrollEndDrag?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   scrollEventThrottle?: number
 }
 
-export const renderTabLabel = ({
+export const TabLabel = ({
   route,
   focused,
   isExternalProfile,
@@ -113,9 +112,7 @@ export const renderTabLabel = ({
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused
       and showing it only on the specific pending transactions. */}
-      {route.title === 'Activity' && !isExternalProfile && !focused ? (
-        <PendingNotificationBadge />
-      ) : null}
+      {route.title === 'Activity' && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
     </Flex>
   )
 }
@@ -126,35 +123,34 @@ export const renderTabLabel = ({
 export const useScrollSync = (
   currentTabIndex: SharedValue<number>,
   scrollPairs: ScrollPair[],
-  headerConfig: HeaderConfig
+  headerConfig: HeaderConfig,
 ): { sync: (event: NativeSyntheticEvent<NativeScrollEvent>) => void } => {
-  const sync:
-    | FlatListProps<unknown>['onMomentumScrollEnd']
-    | FlashListProps<unknown>['onMomentumScrollEnd'] = useCallback(
-    (event: { nativeEvent: NativeScrollEvent }) => {
-      const { y } = event.nativeEvent.contentOffset
+  const sync: FlatListProps<unknown>['onMomentumScrollEnd'] | FlashListProps<unknown>['onMomentumScrollEnd'] =
+    useCallback(
+      (event: { nativeEvent: NativeScrollEvent }) => {
+        const { y } = event.nativeEvent.contentOffset
 
-      const { heightCollapsed, heightExpanded } = headerConfig
+        const { heightCollapsed, heightExpanded } = headerConfig
 
-      const headerDiff = heightExpanded - heightCollapsed
+        const headerDiff = heightExpanded - heightCollapsed
 
-      for (const { list, position, index } of scrollPairs) {
-        const scrollPosition = position.value
+        for (const { list, position, index } of scrollPairs) {
+          const scrollPosition = position.value
 
-        if (scrollPosition > headerDiff && y > headerDiff) {
-          continue
+          if (scrollPosition > headerDiff && y > headerDiff) {
+            continue
+          }
+
+          if (index !== currentTabIndex.value) {
+            list.current?.scrollToOffset({
+              offset: Math.min(y, headerDiff),
+              animated: false,
+            })
+          }
         }
-
-        if (index !== currentTabIndex.value) {
-          list.current?.scrollToOffset({
-            offset: Math.min(y, headerDiff),
-            animated: false,
-          })
-        }
-      }
-    },
-    [currentTabIndex, scrollPairs, headerConfig]
-  )
+      },
+      [currentTabIndex, scrollPairs, headerConfig],
+    )
 
   return useMemo(() => ({ sync }), [sync])
 }

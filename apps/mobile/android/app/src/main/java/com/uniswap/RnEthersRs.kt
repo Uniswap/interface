@@ -10,6 +10,11 @@ import com.uniswap.EthersRs.signHashWithWallet
 import com.uniswap.EthersRs.signMessageWithWallet
 import com.uniswap.EthersRs.signTxWithWallet
 import com.uniswap.EthersRs.walletFromPrivateKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RnEthersRs(applicationContext: Context) {
 
@@ -82,6 +87,11 @@ class RnEthersRs(applicationContext: Context) {
     return keychain.getString(keychainKeyForMnemonicId(mnemonicId), null)
   }
 
+  suspend fun removeMnemonic(mnemonicId: String): Boolean {
+    keychain.edit().remove(keychainKeyForMnemonicId(mnemonicId)).apply()
+    return true
+  }
+
   val addressesForStoredPrivateKeys: List<String>
     get() = keychain.all.keys
       .filter { key -> key.contains(PRIVATE_KEY_PREFIX) }
@@ -111,11 +121,18 @@ class RnEthersRs(applicationContext: Context) {
    */
   fun generateAndStorePrivateKey(mnemonicId: String, derivationIndex: Int): String {
     val mnemonic = retrieveMnemonic(mnemonicId)
+      ?: throw IllegalArgumentException("Mnemonic not found")
+
     val privateKey = privateKeyFromMnemonic(mnemonic, derivationIndex)
     val xprv = privateKey.privateKey
     val address = privateKey.address
     storeNewPrivateKey(address, xprv)
     return address
+  }
+
+  suspend fun removePrivateKey(address: String): Boolean {
+    keychain.edit().remove(keychainKeyForPrivateKey(address)).apply()
+    return true
   }
 
   /**

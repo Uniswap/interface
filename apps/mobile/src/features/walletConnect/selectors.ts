@@ -21,11 +21,7 @@ export const selectSessions =
     return Object.values(wcAccount.sessions)
   }
 
-export const makeSelectSessions = (): Selector<
-  MobileState,
-  WalletConnectSession[] | undefined,
-  [Maybe<Address>]
-> =>
+export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession[] | undefined, [Maybe<Address>]> =>
   createSelector(
     (state: MobileState) => state.walletConnect.byAccount,
     (_: MobileState, address: Maybe<Address>) => address,
@@ -40,7 +36,7 @@ export const makeSelectSessions = (): Selector<
       }
 
       return Object.values(wcAccount.sessions)
-    }
+    },
   )
 
 export const selectPendingRequests = (state: MobileState): WalletConnectRequest[] => {

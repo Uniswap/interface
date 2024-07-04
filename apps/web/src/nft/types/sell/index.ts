@@ -1,11 +1,11 @@
+import { GenieCollection, PriceInfo } from 'nft/types/common'
 import {
+  Chain,
   NftMarketplace,
   NftStandard,
   OrderStatus,
   OrderType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { GenieCollection, PriceInfo } from '../common'
 
 export interface ListingMarket {
   name: string
@@ -71,6 +71,7 @@ export interface WalletAsset {
   marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
+  chain?: Chain
 }
 
 export interface WalletCollection {

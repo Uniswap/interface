@@ -7,6 +7,7 @@ import { opacify } from 'ui/src/theme/color/utils'
 export type ThemeNames =
   | 'primary'
   | 'secondary'
+  | 'accentSecondary'
   | 'tertiary'
   | 'outline'
   | 'warning'
@@ -108,6 +109,12 @@ const dark_secondary: BaseTheme = {
   ...dark,
   color: colorsDark.neutral2,
 }
+const light_accentSecondary: BaseTheme = {
+  ...light,
+}
+const dark_accentSecondary: BaseTheme = {
+  ...dark,
+}
 const light_tertiary: BaseTheme = {
   ...light,
 }
@@ -170,6 +177,25 @@ const dark_secondary_Button: BaseTheme = {
   backgroundHover: hoverColor(colorsDark.surface2),
   backgroundPress: pressedColor(colorsDark.surface2),
   color: colorsDark.sporeWhite,
+}
+
+// accentSecondary
+// theme: light
+const light_accentSecondary_Button: BaseTheme = {
+  ...light,
+  background: colorsLight.accent2,
+  backgroundHover: colorsLight.accent2Hovered,
+  backgroundPress: pressedColor(colorsLight.accent2),
+  color: colorsLight.accent1,
+}
+
+//theme:dark
+const dark_accentSecondary_Button: BaseTheme = {
+  ...dark,
+  background: colorsDark.accent2,
+  backgroundHover: colorsDark.accent2Hovered,
+  backgroundPress: pressedColor(colorsDark.accent2),
+  color: colorsDark.accent1,
 }
 
 // tertiary
@@ -264,6 +290,8 @@ const allThemes = {
   dark_primary,
   light_secondary,
   dark_secondary,
+  light_accentSecondary,
+  dark_accentSecondary,
   light_tertiary,
   dark_tertiary,
   light_detrimental,
@@ -274,6 +302,8 @@ const allThemes = {
   dark_primary_Button,
   light_secondary_Button,
   dark_secondary_Button,
+  light_accentSecondary_Button,
+  dark_accentSecondary_Button,
   light_tertiary_Button,
   dark_tertiary_Button,
   light_outline,

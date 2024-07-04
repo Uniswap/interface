@@ -1,6 +1,7 @@
 package com.uniswap.onboarding.backup.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.uniswap.onboarding.backup.ui.model.MnemonicWordBankCellUiState
@@ -21,19 +24,19 @@ import com.uniswap.theme.UniswapTheme
 @Composable
 fun MnemonicWordBank(
   words: List<MnemonicWordBankCellUiState>,
-  showCompact: Boolean = false,
+  shouldShowSmallText: Boolean = false,
   onClick: (word: MnemonicWordBankCellUiState) -> Unit
 ) {
   FlowRow(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight(),
-    mainAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
-    crossAxisSpacing = if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
+    mainAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
+    crossAxisSpacing = if (shouldShowSmallText) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8,
     mainAxisAlignment = MainAxisAlignment.Center,
   ) {
     words.forEach {
-      MnemonicWordBankCell(word = it, showCompact = showCompact) {
+      MnemonicWordBankCell(word = it, shouldShowSmallText = shouldShowSmallText) {
         onClick(it)
       }
     }
@@ -43,29 +46,35 @@ fun MnemonicWordBank(
 @Composable
 private fun MnemonicWordBankCell(
   word: MnemonicWordBankCellUiState,
-  showCompact: Boolean,
+  shouldShowSmallText: Boolean,
   onClick: () -> Unit
 ) {
-
   val textStyle =
-    if (showCompact) UniswapTheme.typography.body2 else UniswapTheme.typography.body1
+    if (shouldShowSmallText) UniswapTheme.typography.body3 else UniswapTheme.typography.body2
   val verticalPadding =
-    if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
+    if (shouldShowSmallText) UniswapTheme.spacing.spacing8 else 10.dp
   val horizontalPadding =
-    if (showCompact) UniswapTheme.spacing.spacing4 else UniswapTheme.spacing.spacing8
+    if (shouldShowSmallText) 10.dp else UniswapTheme.spacing.spacing12
 
   Box(
     modifier = Modifier
-      .clip(UniswapTheme.shapes.xlarge)
-      .background(UniswapTheme.colors.surface2)
-      .padding(vertical = verticalPadding)
-      .padding(horizontal = horizontalPadding)
-      .clickable { onClick() },
+      .shadow(
+        10.dp,
+        spotColor = UniswapTheme.colors.black.copy(alpha = 0.04f),
+        shape = UniswapTheme.shapes.xlarge
+      )
   ) {
-    Text(
-      text = word.text,
-      style = textStyle,
-      color = UniswapTheme.colors.neutral1.copy(if (word.used) 0.6f else 1f),
-    )
+    Box(modifier = Modifier
+      .clip(shape = UniswapTheme.shapes.xlarge)
+      .then(Modifier.border(1.dp, UniswapTheme.colors.surface3, UniswapTheme.shapes.xlarge))
+      .clickable { onClick() }
+      .background(color = UniswapTheme.colors.surface1)
+      .padding(vertical = verticalPadding, horizontal = horizontalPadding)) {
+      Text(
+        text = word.text,
+        style = textStyle,
+        color = UniswapTheme.colors.neutral1.copy(if (word.used) 0.5f else 1f),
+      )
+    }
   }
 }

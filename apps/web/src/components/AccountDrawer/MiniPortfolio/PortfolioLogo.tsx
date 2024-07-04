@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import {
@@ -12,6 +12,7 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import React from 'react'
 import styled from 'styled-components'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -26,7 +27,7 @@ const LogoContainer = styled.div`
 `
 
 interface PortfolioLogoProps {
-  chainId: ChainId
+  chainId: InterfaceChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
@@ -34,8 +35,8 @@ interface PortfolioLogoProps {
   style?: React.CSSProperties
 }
 
-function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
-  if (chainId === ChainId.MAINNET) {
+function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+  if (chainId === UniverseChainId.Mainnet) {
     return null
   }
 

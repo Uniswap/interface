@@ -1,27 +1,24 @@
-import { ChainId } from '@uniswap/sdk-core'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
-import { isUniswapXSupportedChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { Provider } from 'jotai'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
-jest.mock('constants/chains')
 jest.mock('hooks/useAccount')
 
 describe('Multiple routing options', () => {
   beforeEach(() => {
     mocked(useAccount).mockReturnValue({
-      chainId: ChainId.MAINNET,
+      chainId: UniverseChainId.Mainnet,
     } as unknown as ReturnType<typeof useAccount>)
   })
 
   it('optimal routing is enabled by default', () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
-      </Provider>
+        <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
+      </Provider>,
     )
 
     expect(screen.getByTestId('route-preference-toggle-Optimal')).toBeInTheDocument()
@@ -31,11 +28,10 @@ describe('Multiple routing options', () => {
   })
 
   it('when optimal routing is toggled other toggles are enabled', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
-      </Provider>
+        <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
+      </Provider>,
     )
 
     const optimalToggle = screen.getByTestId('route-preference-toggle-Optimal')
@@ -54,11 +50,10 @@ describe('Multiple routing options', () => {
   })
 
   it('can only deselect one pool at a time', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(true)
     render(
       <Provider>
-        <MultipleRoutingOptions />
-      </Provider>
+        <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
+      </Provider>,
     )
 
     const optimalToggle = screen.getByTestId('route-preference-toggle-Optimal')
@@ -90,11 +85,10 @@ describe('Multiple routing options', () => {
   })
 
   it('does not render uniswapx toggle when uniswapx is not enabled', async () => {
-    mocked(isUniswapXSupportedChain).mockReturnValue(false)
     render(
       <Provider>
-        <MultipleRoutingOptions />
-      </Provider>
+        <MultipleRoutingOptions chainId={UniverseChainId.Optimism} />
+      </Provider>,
     )
 
     expect(screen.queryByTestId('route-preference-toggle-UniswapX')).toBeFalsy()

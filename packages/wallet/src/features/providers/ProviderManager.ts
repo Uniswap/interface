@@ -1,11 +1,8 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
-import { ChainId } from 'uniswap/src/types/chains'
+import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { isStale } from 'utilities/src/time/time'
-import { CHAIN_INFO, L1ChainInfo, L2ChainInfo, RPCType } from 'wallet/src/constants/chains'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
-import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 enum ProviderStatus {
   Disconnected,
@@ -23,22 +20,7 @@ type ProviderInfo = Partial<{
   [key in keyof RPCType as RPCType]: ProviderDetails
 }>
 
-type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
-
-const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
-  const chainDetails = CHAIN_INFO[chainId]
-  if (!chainDetails) {
-    logger.error(new Error('Cannot create provider for invalid chain details'), {
-      tags: {
-        file: 'ProviderManager',
-        function: 'getChainDetails',
-      },
-      extra: { chainDetails },
-    })
-    throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
-  }
-  return chainDetails
-}
+type ChainIdToProvider = Partial<Record<WalletChainId, ProviderInfo>>
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
@@ -49,7 +31,7 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  tryGetProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
+  tryGetProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
     try {
       return this.getProvider(chainId, rpcType)
     } catch (error) {
@@ -57,7 +39,7 @@ export class ProviderManager {
     }
   }
 
-  getProvider(chainId: ChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
+  getProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
     const cachedProviderDetails = this._providers[chainId]?.[rpcType]
     if (cachedProviderDetails?.status === ProviderStatus.Connected) {
       return cachedProviderDetails.provider
@@ -73,7 +55,7 @@ export class ProviderManager {
     return providerDetails.provider
   }
 
-  createProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public): undefined {
+  createProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public): undefined {
     const provider = createEthersProvider(chainId, rpcType)
     if (!provider) {
       if (rpcType === RPCType.Public) {
@@ -89,14 +71,10 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  removeProviders(chainId: ChainId): void {
+  removeProviders(chainId: WalletChainId): void {
     const providersInfo = this._providers[chainId]
     if (!providersInfo) {
-      logger.warn(
-        'ProviderManager',
-        'removeProviders',
-        `Attempting to remove non-existent provider: ${chainId}`
-      )
+      logger.warn('ProviderManager', 'removeProviders', `Attempting to remove non-existent provider: ${chainId}`)
       return
     }
 
@@ -106,26 +84,5 @@ export class ProviderManager {
 
     delete this._providers[chainId]
     this.onUpdate?.()
-  }
-
-  private isProviderSynced(
-    chainId: ChainId,
-    block?: ethersProviders.Block,
-    network?: ethersProviders.Network
-  ): boolean {
-    const chainDetails = getChainDetails(chainId)
-    const staleTime = chainDetails.blockWaitMsBeforeWarning ?? 600_000 // 10 minutes
-    if (!(block && block.number && block.timestamp && network && network.chainId === chainId)) {
-      return false
-    }
-    if (isStale(block.timestamp * 1000, staleTime)) {
-      logger.debug(
-        'ProviderManager',
-        'isProviderSynced',
-        `Provider ${getInfuraChainName(chainId)} is stale`
-      )
-      return false
-    }
-    return true
   }
 }

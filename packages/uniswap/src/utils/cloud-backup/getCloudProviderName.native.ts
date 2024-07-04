@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { Platform } from 'react-native'
 
 export function getCloudProviderName(): string {

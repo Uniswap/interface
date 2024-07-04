@@ -3,13 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
-import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import {
-  TokenSelector,
-  TokenSelectorVariation,
-} from 'wallet/src/components/TokenSelector/TokenSelector'
+import { TokenSelector, TokenSelectorVariation } from 'wallet/src/components/TokenSelector/TokenSelector'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -89,12 +86,7 @@ export function TokenSelectorPanel({
               onSetMax={onSetMax}
             />
           )}
-          <RotatableChevron
-            color="$neutral3"
-            direction="down"
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
+          <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
         </Flex>
       </Flex>
     </TouchableArea>

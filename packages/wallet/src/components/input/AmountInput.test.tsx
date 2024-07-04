@@ -1,4 +1,4 @@
-import { parseValue, replaceSeparators } from './AmountInput'
+import { parseValue, replaceSeparators } from 'wallet/src/components/input/AmountInput'
 
 describe(replaceSeparators, () => {
   describe('it can strip grouping separators', () => {
@@ -80,7 +80,7 @@ describe(parseValue, () => {
       parseValue({
         value: ' 1234 ',
         ...defaultParams,
-      })
+      }),
     ).toBe('1234')
   })
 
@@ -89,7 +89,7 @@ describe(parseValue, () => {
       parseValue({
         value: '1,234.56',
         ...defaultParams,
-      })
+      }),
     ).toBe('1234.56')
 
     expect(
@@ -98,7 +98,7 @@ describe(parseValue, () => {
         ...defaultParams,
         decimalSeparator: ',',
         groupingSeparator: '.',
-      })
+      }),
     ).toBe('1234.56')
 
     expect(
@@ -107,7 +107,7 @@ describe(parseValue, () => {
         ...defaultParams,
         decimalSeparator: '.',
         groupingSeparator: ' ',
-      })
+      }),
     ).toBe('1234.56')
   })
 
@@ -116,7 +116,7 @@ describe(parseValue, () => {
       parseValue({
         value: ' example $1,234,567.123456789 example ',
         ...defaultParams,
-      })
+      }),
     ).toBe('1234567.123456789')
   })
 
@@ -126,7 +126,7 @@ describe(parseValue, () => {
         value: '1,234.123456789123456789 WBTC',
         ...defaultParams,
         maxDecimals: 8,
-      })
+      }),
     ).toBe('1234.12345678')
 
     expect(
@@ -134,7 +134,7 @@ describe(parseValue, () => {
         value: '1,234.123456789123456789123456789 ETH',
         ...defaultParams,
         maxDecimals: 18,
-      })
+      }),
     ).toBe('1234.123456789123456789')
   })
 })

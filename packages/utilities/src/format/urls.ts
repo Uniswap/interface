@@ -1,31 +1,31 @@
-// Copied from https://github.com/Uniswap/interface/blob/main/src/utils/uriToHttp.ts
-
 /**
- * Given a URI that may be ipfs, ipns, http, or https protocol, return the fetch-able http(s) URLs for the same content
+ * Given a URI that may be ipfs, ipns, http, https, ar, or data protocol, return the fetch-able http(s) URLs for the same content
  * @param uri to convert to fetch-able http url
  */
-export function uriToHttp(uri: string): string[] {
-  if (!uri) {
-    return []
-  }
-
+export function uriToHttpUrls(uri: string): string[] {
   const protocol = uri.split(':')[0]?.toLowerCase()
-  if (protocol === 'https') {
-    return [uri]
+  switch (protocol) {
+    case 'data':
+      return [uri]
+    case 'https':
+      return [uri]
+    case 'http':
+      return ['https' + uri.slice(4), uri]
+    case 'ipfs': {
+      const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
+      return [`https://cloudflare-ipfs.com/ipfs/${hash}/`, `https://ipfs.io/ipfs/${hash}/`]
+    }
+    case 'ipns': {
+      const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
+      return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.io/ipns/${name}/`]
+    }
+    case 'ar': {
+      const tx = uri.match(/^ar:(\/\/)?(.*)$/i)?.[2]
+      return [`https://arweave.net/${tx}`]
+    }
+    default:
+      return []
   }
-  if (protocol === 'http') {
-    return ['https' + uri.slice(4), uri]
-  }
-  if (protocol === 'ipfs') {
-    const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
-    return [`https://cloudflare-ipfs.com/ipfs/${hash}`, `https://ipfs.io/ipfs/${hash}`]
-  }
-  if (protocol === 'ipns') {
-    const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
-    return [`https://cloudflare-ipfs.com/ipns/${name}`, `https://ipfs.io/ipns/${name}`]
-  }
-
-  return []
 }
 
 export function isSegmentUri(uri: Maybe<string>, extension: string): boolean {
@@ -74,4 +74,13 @@ export function isSVGUri(uri: Maybe<string>): boolean {
  */
 export function isGifUri(uri: Maybe<string>): boolean {
   return isSegmentUri(uri, '.gif')
+}
+
+/**
+ * Removes safe prefixes and trailing slashes from URL to improve human readability.
+ *
+ * @param {string} url The URL to check.
+ */
+export function formatDappURL(url: string): string {
+  return url?.replace('https://', '').replace('www.', '').replace(/\/$/, '')
 }

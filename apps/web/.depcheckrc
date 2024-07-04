@@ -17,7 +17,6 @@ ignores: [
     "esbuild-register",
     ## GraphQL
     "@graphql-codegen/*",
-    "get-graphql-schema",
     ## React Scripts and subpackages used from within it
     "case-sensitive-paths-webpack-plugin",
     "react-dev-utils",
@@ -30,7 +29,6 @@ ignores: [
     ## Linting and Babel
     "@babel/preset-env",
     "eslint-plugin-import",
-    "prettier",
     "terser-webpack-plugin",
     ## Testing
     "@types/testing-library__cypress",
@@ -68,4 +66,6 @@ ignores: [
     "types",
     "utils",
     "i18n",
+    "tamagui.config",
+    "setupRive"
   ]

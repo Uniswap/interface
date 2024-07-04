@@ -1,6 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { queryOptions, useQuery } from '@tanstack/react-query'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
+import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import {
+  CancelledTransactionTitleTable,
+  LimitOrderTextTable,
+  OrderTextTable,
+  getActivityTitle,
+} from 'components/AccountDrawer/MiniPortfolio/constants'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
 import { t } from 'i18n'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
@@ -22,14 +32,10 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { queryOptions, useQuery } from '@tanstack/react-query'
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { SupportedInterfaceChainId } from 'constants/chains'
-import { CancelledTransactionTitleTable, LimitOrderTextTable, OrderTextTable, getActivityTitle } from '../constants'
-import { Activity, ActivityMap } from './types'
 
 type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
 
@@ -39,7 +45,7 @@ function buildCurrencyDescriptor(
   currencyB: Currency | undefined,
   amtB: string,
   formatNumber: FormatNumberFunctionType,
-  delimiter = t('for')
+  delimiter = t('for'),
 ) {
   const formattedA = currencyA
     ? formatNumber({
@@ -61,7 +67,7 @@ function buildCurrencyDescriptor(
 async function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
     getCurrency(swap.inputCurrencyId, chainId),
@@ -81,9 +87,9 @@ async function parseSwap(
 
 function parseWrap(
   wrap: WrapTransactionInfo,
-  chainId: ChainId,
+  chainId: InterfaceChainId,
   status: TransactionStatus,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Partial<Activity> {
   const native = nativeOnChain(chainId)
   const wrapped = native.wrapped
@@ -94,7 +100,7 @@ function parseWrap(
     wrap.currencyAmountRaw,
     output,
     wrap.currencyAmountRaw,
-    formatNumber
+    formatNumber,
   )
   const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
   const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
@@ -105,7 +111,7 @@ function parseWrap(
 async function parseApproval(
   approval: ApproveTransactionInfo,
   chainId: SupportedInterfaceChainId,
-  status: TransactionStatus
+  status: TransactionStatus,
 ): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
   const descriptor = currency?.symbol ?? currency?.name ?? t('common.unknown')
@@ -113,7 +119,7 @@ async function parseApproval(
     title: getActivityTitle(
       TransactionType.APPROVAL,
       status,
-      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */
+      BigNumber.from(approval.amount).eq(0) /* use alternate if it's a revoke */,
     ),
     descriptor,
     currencies: [currency],
@@ -127,7 +133,7 @@ type GenericLPInfo = Omit<
 async function parseLP(
   lp: GenericLPInfo,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
@@ -140,7 +146,7 @@ async function parseLP(
     quoteCurrency,
     quoteRaw,
     formatNumber,
-    t('common.and')
+    t('common.endAdornment'),
   )
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
@@ -149,7 +155,7 @@ async function parseLP(
 async function parseCollectFees(
   collect: CollectFeesTransactionInfo,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
@@ -161,13 +167,13 @@ async function parseCollectFees(
   return parseLP(
     { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
     chainId,
-    formatNumber
+    formatNumber,
   )
 }
 
 async function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: SupportedInterfaceChainId
+  chainId: SupportedInterfaceChainId,
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId ?? 'native', chainId),
@@ -183,7 +189,7 @@ async function parseMigrateCreateV3(
 async function parseSend(
   send: SendTransactionInfo,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const { currencyId, amount, recipient } = send
   const currency = await getCurrency(currencyId, chainId)
@@ -204,7 +210,7 @@ async function parseSend(
 export async function transactionToActivity(
   details: TransactionDetails | undefined,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Activity | undefined> {
   if (!details) {
     return undefined
@@ -252,7 +258,7 @@ export async function transactionToActivity(
 
     return activity
   } catch (error) {
-    console.debug(`Failed to parse transaction ${details.hash}`, error)
+    logger.warn('parseLocal', 'transactionToActivity', `Failed to parse transaction ${details.hash}`, error)
     return undefined
   }
 }
@@ -260,7 +266,7 @@ export async function transactionToActivity(
 export function getTransactionToActivityQueryOptions(
   transaction: TransactionDetails | undefined,
   chainId: SupportedInterfaceChainId,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ) {
   return queryOptions({
     queryKey: ['transactionToActivity', transaction, chainId],
@@ -270,7 +276,7 @@ export function getTransactionToActivityQueryOptions(
 
 export function getSignatureToActivityQueryOptions(
   signature: SignatureDetails | undefined,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ) {
   return queryOptions({
     queryKey: ['signatureToActivity', signature],
@@ -290,7 +296,7 @@ function convertToSecTimestamp(timestamp: number) {
 
 export async function signatureToActivity(
   signature: SignatureDetails | undefined,
-  formatNumber: FormatNumberFunctionType
+  formatNumber: FormatNumberFunctionType,
 ): Promise<Activity | undefined> {
   if (!signature) {
     return undefined

@@ -3,20 +3,14 @@ import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import {
-  currencyIdToContractInput,
-  tokenProjectToCurrencyInfos,
-} from 'wallet/src/features/dataApi/utils'
+import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 
 /**
  * Fetches token information as CurrencyInfo from currencyIds. When used, wrap component
  * with Suspense.
  */
 export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyInfo[]> {
-  const contracts = useMemo(
-    () => currencyIds.map((id) => currencyIdToContractInput(id)),
-    [currencyIds]
-  )
+  const contracts = useMemo(() => currencyIds.map((id) => currencyIdToContractInput(id)), [currencyIds])
 
   const { data, loading, error, refetch } = useTokenProjectsQuery({
     variables: { contracts },

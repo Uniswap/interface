@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
@@ -12,8 +12,6 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -32,8 +30,8 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
             ? 1
             : -1
           : a.oneDayApr.greaterThan(b.oneDayApr)
-          ? 1
-          : -1
+            ? 1
+            : -1
       default:
         return sortState.sortDirection === OrderDirection.Desc ? b.tvl - a.tvl : a.tvl - b.tvl
     }
@@ -51,7 +49,7 @@ export function calculateOneDayApr(volume24h?: number, tvl?: number, feeTier?: n
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) {
     return new Percent(0)
   }
-  return new Percent(Math.round(volume24h * (feeTier / BIPS_BASE)), Math.round(tvl))
+  return new Percent(Math.round(volume24h * (feeTier / (BIPS_BASE * 100))), Math.round(tvl))
 }
 
 export const V2_BIPS = 3000
@@ -106,13 +104,12 @@ function useFilteredPools(pools: TablePool[]) {
           poolNameIncludesFilterString
         )
       }),
-    [lowercaseFilterString, pools]
+    [lowercaseFilterString, pools],
   )
 }
 
 export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedInterfaceChainId) {
   const isWindowVisible = useIsWindowVisible()
-  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -127,7 +124,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedIn
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible || !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
+    skip: !isWindowVisible || !chainId,
   })
   const loading = loadingV3 || loadingV2
 

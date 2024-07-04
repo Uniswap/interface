@@ -1,21 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getCountry } from 'react-native-localize'
 import { useAppDispatch } from 'src/app/hooks'
 import { Screen } from 'src/components/layout/Screen'
-import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
+import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { useFiatOnRampAggregatorTransferWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -37,15 +36,12 @@ export function ExchangeTransferConnecting({
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
 
-  const initialTypeInfo = useMemo(
-    () => ({ serviceProviderLogo: serviceProvider.logos }),
-    [serviceProvider.logos]
-  )
+  const initialTypeInfo = useMemo(() => ({ serviceProviderLogo: serviceProvider.logos }), [serviceProvider.logos])
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
-    ChainId.Mainnet,
-    initialTypeInfo
+    UniverseChainId.Mainnet,
+    initialTypeInfo,
   )
 
   const onError = useCallback((): void => {
@@ -53,7 +49,7 @@ export function ExchangeTransferConnecting({
       pushNotification({
         type: AppNotificationType.Error,
         errorMessage: t('common.error.general'),
-      })
+      }),
     )
     onClose()
   }, [dispatch, onClose, t])
@@ -67,7 +63,6 @@ export function ExchangeTransferConnecting({
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorTransferWidgetQuery({
-    countryCode: getCountry(),
     serviceProvider: serviceProvider.serviceProvider,
     walletAddress: activeAccountAddress,
     externalSessionId: externalTransactionId,
@@ -115,7 +110,8 @@ export function ExchangeTransferConnecting({
             alignItems="center"
             height={ServiceProviderLogoStyles.icon.height}
             justifyContent="center"
-            width={ServiceProviderLogoStyles.icon.width}>
+            width={ServiceProviderLogoStyles.icon.width}
+          >
             <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
           </Flex>
         }

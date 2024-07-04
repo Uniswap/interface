@@ -1,10 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-
 import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
+import { updateVersion } from 'state/global/actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
 import { ListsState } from 'state/lists/types'
-import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
 type ListState = ListsState['byUrl'][string]
 
@@ -108,7 +107,7 @@ export default createReducer(initialState, (builder) =>
       } else if (state.lastInitializedDefaultListOfLists) {
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),
-          new Set()
+          new Set(),
         )
         const newListOfListsSet = DEFAULT_INACTIVE_LIST_URLS.reduce<Set<string>>((s, l) => s.add(l), new Set())
 
@@ -126,5 +125,5 @@ export default createReducer(initialState, (builder) =>
       }
 
       state.lastInitializedDefaultListOfLists = DEFAULT_INACTIVE_LIST_URLS
-    })
+    }),
 )

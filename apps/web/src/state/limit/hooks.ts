@@ -1,12 +1,13 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
 import { isStablecoin } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import { LimitState } from 'state/limit/types'
 import { getWrapInfo } from 'state/routing/gas'
 import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
@@ -15,7 +16,6 @@ import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { expiryToDeadlineSeconds } from './expiryToDeadlineSeconds'
 
 export type LimitInfo = {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -35,15 +35,15 @@ export function getDefaultPriceInverted(inputCurrency?: Currency, outputCurrency
 }
 
 export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetStateAction<LimitState>>): LimitInfo {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { inputAmount, outputAmount, limitPriceInverted } = state
   const {
     currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
 
   const relevantTokenBalances = useCurrencyBalances(
-    account ?? undefined,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
+    account.address,
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
       [Field.INPUT]: relevantTokenBalances[0],
       [Field.OUTPUT]: relevantTokenBalances[1],
     }),
-    [relevantTokenBalances]
+    [relevantTokenBalances],
   )
 
   const parsedLimitPrice = useMemo(() => {
@@ -79,7 +79,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
       baseCurrency,
       quoteCurrency,
       JSBI.BigInt(10 ** baseCurrency.decimals),
-      parsedLimitPriceQuoteAmount.quotient
+      parsedLimitPriceQuoteAmount.quotient,
     )
   }, [inputCurrency, limitPriceInverted, outputCurrency, state.limitPrice])
 
@@ -122,7 +122,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
     TradeType.EXACT_INPUT,
     parsedAmounts?.[Field.INPUT],
     outputCurrency,
-    RouterPreference.API
+    RouterPreference.API,
   )
 
   const limitOrderTrade = useLimitOrderTrade({
@@ -158,7 +158,7 @@ function useLimitOrderTrade({
   outputAmount?: CurrencyAmount<Currency>
   swapFee?: SwapFeeInfo
 }) {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const [wrapInfo, setWrapInfo] = useState<WrapInfo>()
 
   useEffect(() => {
@@ -175,17 +175,17 @@ function useLimitOrderTrade({
       const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
       if (needsWrap) {
-        const wrapInfo = await getWrapInfo(needsWrap, account, currencyIn.chainId, '1', usdCostPerGas)
+        const wrapInfo = await getWrapInfo(needsWrap, account.address, currencyIn.chainId, '1', usdCostPerGas)
         setWrapInfo(wrapInfo)
       } else {
         setWrapInfo({ needsWrap: false })
       }
     }
     calculateWrapInfo()
-  }, [account, inputCurrency, trade])
+  }, [account.address, inputCurrency, trade])
 
   const limitOrderTrade = useMemo(() => {
-    if (!inputCurrency || !parsedAmounts?.[Field.INPUT] || !account || !outputAmount || !wrapInfo) {
+    if (!inputCurrency || !parsedAmounts?.[Field.INPUT] || !account.address || !outputAmount || !wrapInfo) {
       return undefined
     }
     const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts?.[Field.INPUT].quotient)
@@ -195,11 +195,11 @@ function useLimitOrderTrade({
       tradeType: TradeType.EXACT_INPUT,
       wrapInfo,
       approveInfo: { needsApprove: false },
-      swapper: account,
+      swapper: account.address,
       deadlineBufferSecs: expiryToDeadlineSeconds(state.expiry),
       swapFee,
     })
-  }, [account, outputAmount, inputCurrency, parsedAmounts, state.expiry, wrapInfo, swapFee])
+  }, [account.address, outputAmount, inputCurrency, parsedAmounts, state.expiry, wrapInfo, swapFee])
 
   return limitOrderTrade
 }
@@ -210,7 +210,7 @@ function isNativeOrWrappedNative(currency: Currency) {
 
 function useMarketPriceAndFee(
   inputCurrency: Currency | undefined,
-  outputCurrency: Currency | undefined
+  outputCurrency: Currency | undefined,
 ): { marketPrice?: Price<Currency, Currency>; fee?: SwapFeeInfo } {
   const skip = !(inputCurrency && outputCurrency)
   // TODO(limits): update amount for MATIC and CELO once Limits are supported on those chains
@@ -221,7 +221,7 @@ function useMarketPriceAndFee(
     TradeType.EXACT_OUTPUT,
     baseCurrencyAmount,
     inputCurrency,
-    RouterPreference.API
+    RouterPreference.API,
   )
 
   const { trade: tradeB } = useRoutingAPITrade(
@@ -229,7 +229,7 @@ function useMarketPriceAndFee(
     TradeType.EXACT_INPUT,
     baseCurrencyAmount,
     outputCurrency,
-    RouterPreference.API
+    RouterPreference.API,
   )
 
   const marketPrice: Price<Currency, Currency> | undefined = useMemo(() => {

@@ -3,11 +3,16 @@
 
 import 'core-js' // necessary so setImmediate works in tests
 import 'uniswap/src/i18n/i18n' // Uses real translations for tests
+import 'utilities/src/logger/mocks'
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
+import { TextDecoder, TextEncoder } from 'util'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
 
 // Mock Sentry crash reporting
 jest.mock('@sentry/react-native', () => ({

@@ -1,3 +1,18 @@
+fragment QuickTokenBalanceParts on TokenBalance {
+  id
+  quantity
+  denominatedValue {
+    id
+    value
+  }
+  token {
+    id
+    address
+    chain
+    standard
+  }
+}
+
 fragment PortfolioTokenBalanceParts on TokenBalance {
   id
   quantity
@@ -41,8 +56,23 @@ fragment PortfolioTokenBalanceParts on TokenBalance {
   }
 }
 
-query PortfolioBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
-  portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
+query PortfolioBalancesWeb(
+  $ownerAddress: String!
+  $chains: [Chain!]!
+  $includeSmallBalances: Boolean = false
+  $includeSpamTokens: Boolean = false
+) {
+  portfolios(
+    ownerAddresses: [$ownerAddress]
+    chains: $chains
+    valueModifiers: [
+      {
+        ownerAddress: $ownerAddress
+        includeSpamTokens: $includeSpamTokens
+        includeSmallBalances: $includeSmallBalances
+      }
+    ]
+  ) {
     id
     tokensTotalDenominatedValue {
       id
@@ -60,6 +90,16 @@ query PortfolioBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
     }
     tokenBalances {
       ...PortfolioTokenBalanceParts
+    }
+  }
+}
+
+# Query only returns basic token, quantity, and denominated value.
+query QuickTokenBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
+  portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {
+    id
+    tokenBalances {
+      ...QuickTokenBalanceParts
     }
   }
 }

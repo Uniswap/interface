@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
@@ -15,14 +15,21 @@ import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
-import { ExtensionWaitlistModal } from 'src/features/scantastic/ExtensionWaitlistModal'
+import { closeModal } from 'src/features/modals/modalSlice'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
-import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function AppModals(): JSX.Element {
+  const dispatch = useAppDispatch()
+
+  const onCloseLanguageModal = useCallback(() => {
+    dispatch(closeModal({ name: ModalName.LanguageSelector }))
+  }, [dispatch])
+
   return (
     <>
       <LazyModalRenderer name={ModalName.ExchangeTransferModal}>
@@ -47,10 +54,6 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.Explore}>
         <ExploreModal />
-      </LazyModalRenderer>
-
-      <LazyModalRenderer name={ModalName.ExtensionWaitlistModal}>
-        <ExtensionWaitlistModal />
       </LazyModalRenderer>
 
       <ForceUpgradeModal />
@@ -84,7 +87,7 @@ export function AppModals(): JSX.Element {
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.LanguageSelector}>
-        <SettingsLanguageModal />
+        <SettingsLanguageModal onClose={onCloseLanguageModal} />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.FiatCurrencySelector}>

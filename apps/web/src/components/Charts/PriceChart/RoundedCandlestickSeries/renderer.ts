@@ -1,6 +1,7 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/rounded-candle-series/renderer.ts
  */
+import { RoundedCandleSeriesOptions } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { positionsLine } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
 import { positionsBox } from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
@@ -13,7 +14,6 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { RoundedCandleSeriesOptions } from './rounded-candles-series'
 
 interface BarItem {
   openY: number
@@ -75,7 +75,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
   private _drawWicks(
     renderingScope: BitmapCoordinatesRenderingScope,
     bars: readonly BarItem[],
-    visibleRange: Range<number>
+    visibleRange: Range<number>,
   ): void {
     if (this._data === null || this._options === null) {
       return
@@ -99,7 +99,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
     renderingScope: BitmapCoordinatesRenderingScope,
     bars: readonly BarItem[],
     visibleRange: Range<number>,
-    radius: number
+    radius: number,
   ): void {
     if (this._data === null || this._options === null) {
       return
@@ -117,7 +117,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
       const verticalPositions = positionsBox(
         Math.min(bar.openY, bar.closeY),
         Math.max(bar.openY, bar.closeY),
-        verticalPixelRatio
+        verticalPixelRatio,
       )
       const linePositions = positionsLine(bar.x, horizontalPixelRatio, candleBodyWidth)
 
@@ -131,7 +131,7 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
           verticalPositions.position,
           linePositions.length,
           Math.max(verticalPositions.length, 1),
-          radius
+          radius,
         )
         ctx.fill()
       } else {

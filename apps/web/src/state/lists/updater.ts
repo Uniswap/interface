@@ -1,16 +1,16 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
+import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
+import { useFetchListCallback } from 'hooks/useFetchListCallback'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useStateRehydrated } from 'hooks/useStateRehydrated'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
+import { acceptListUpdate } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
-
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { useFetchListCallback } from '../../hooks/useFetchListCallback'
-import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { acceptListUpdate } from './actions'
+import { logger } from 'utilities/src/logger/logger'
 
 // TODO(WEB-3839): delete this when lists are removed from redux
 export default function Updater(): null {
@@ -28,7 +28,9 @@ export default function Updater(): null {
       return
     }
     DEFAULT_INACTIVE_LIST_URLS.forEach((url) => {
-      fetchList(url, false).catch((error) => console.debug('interval list fetching error', error))
+      fetchList(url, false).catch((error) =>
+        logger.debug('lists/updater', 'Updater', 'interval list fetching error', error),
+      )
     })
   }, [fetchList, isWindowVisible])
 
@@ -44,14 +46,16 @@ export default function Updater(): null {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl).catch((error) =>
+          logger.debug('lists/updater', 'Updater', 'list added fetching error', error),
+        )
       }
     })
     DEFAULT_INACTIVE_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
         fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
-          console.debug('list added fetching error', error)
+          logger.debug('lists/updater', 'Updater', 'list added fetching error', error),
         )
       }
     })

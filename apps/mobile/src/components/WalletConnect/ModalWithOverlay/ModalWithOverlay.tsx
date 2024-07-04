@@ -1,8 +1,4 @@
-import {
-  BottomSheetFooter,
-  BottomSheetScrollView,
-  useBottomSheetInternal,
-} from '@gorhom/bottom-sheet'
+import { BottomSheetFooter, BottomSheetScrollView, useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { PropsWithChildren, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -11,15 +7,17 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   ScrollView,
+  StyleProp,
   View,
+  ViewStyle,
 } from 'react-native'
-import { useDerivedValue } from 'react-native-reanimated'
+import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ScrollDownOverlay'
 import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheetModalProps'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 
@@ -30,14 +28,11 @@ type ModalWithOverlayProps = PropsWithChildren<
     onReject: () => void
     onConfirm: () => void
     disableConfirm?: boolean
+    contentContainerStyle?: StyleProp<AnimatedStyle<StyleProp<ViewStyle>>>
   }
 >
 
-const isCloseToBottom = ({
-  layoutMeasurement,
-  contentOffset,
-  contentSize,
-}: NativeScrollEvent): boolean => {
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): boolean => {
   return layoutMeasurement.height + contentOffset.y >= contentSize.height - spacing.spacing24
 }
 
@@ -48,6 +43,7 @@ export function ModalWithOverlay({
   onReject,
   onConfirm,
   disableConfirm,
+  contentContainerStyle,
   ...bottomSheetModalProps
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
@@ -68,7 +64,7 @@ export function ModalWithOverlay({
         setConfirmationEnabled(true)
       }
     },
-    [showOverlay]
+    [showOverlay],
   )
 
   const handleScrollDown = useCallback(() => {
@@ -107,20 +103,23 @@ export function ModalWithOverlay({
         measureContent(parentHeight)
       }, MEASURE_LAYOUT_TIMEOUT)
     },
-    [measureContent]
+    [measureContent],
   )
 
   return (
     <BottomSheetModal overrideInnerContainer {...bottomSheetModalProps}>
       <BottomSheetScrollView
         ref={scrollViewRef}
-        contentContainerStyle={{
-          paddingHorizontal: spacing.spacing24,
-          paddingTop: spacing.spacing36,
-        }}
+        contentContainerStyle={
+          contentContainerStyle ?? {
+            paddingHorizontal: spacing.spacing24,
+            paddingTop: spacing.spacing12,
+          }
+        }
         showsVerticalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
-        onScroll={handleScroll}>
+        onScroll={handleScroll}
+      >
         <Flex ref={contentViewRef}>{children}</Flex>
       </BottomSheetScrollView>
 
@@ -167,16 +166,13 @@ function ModalFooter({
     () =>
       Math.max(0, animatedContainerHeight.value - animatedPosition.value) -
       animatedFooterHeight.value -
-      animatedHandleHeight.value
+      animatedHandleHeight.value,
   )
 
   return (
     <BottomSheetFooter animatedFooterPosition={animatedFooterPosition}>
       {showScrollDownOverlay && (
-        <ScrollDownOverlay
-          scrollDownButonText={scrollDownButtonText}
-          onScrollDownPress={onScrollDownPress}
-        />
+        <ScrollDownOverlay scrollDownButonText={scrollDownButtonText} onScrollDownPress={onScrollDownPress} />
       )}
 
       <Flex
@@ -185,16 +181,12 @@ function ModalFooter({
         gap="$spacing8"
         pb={insets.bottom + spacing.spacing12}
         pt="$spacing12"
-        px="$spacing24">
+        px="$spacing24"
+      >
         <Button fill size="medium" testID={ElementName.Cancel} theme="tertiary" onPress={onReject}>
           {t('common.button.cancel')}
         </Button>
-        <Button
-          fill
-          disabled={!confirmationEnabled}
-          size="medium"
-          testID={ElementName.Confirm}
-          onPress={onConfirm}>
+        <Button fill disabled={!confirmationEnabled} size="medium" testID={ElementName.Confirm} onPress={onConfirm}>
           {confirmationButtonText ?? t('common.button.accept')}
         </Button>
       </Flex>

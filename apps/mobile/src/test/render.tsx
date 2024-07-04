@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
@@ -48,7 +47,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
     ...renderOptions
-  }: ExtendedRenderOptions = {}
+  }: ExtendedRenderOptions = {},
 ): RenderResult & {
   store: EnhancedStore
 } {
@@ -78,24 +77,21 @@ type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
   store?: AppStore
 }
 
-type RenderHookWithProvidersResult<R, P extends any[] | undefined = undefined> = Omit<
-  RenderHookResult<R, P>,
-  'rerender'
-> & {
+type RenderHookWithProvidersResult<R, P = undefined> = Omit<RenderHookResult<R, P>, 'rerender'> & {
   store: EnhancedStore
-  rerender: P extends any[] ? (args: P) => void : () => void
+  rerender: (args?: P) => void
 }
 
 // Don't require hookOptions if hook doesn't take any arguments
 export function renderHookWithProviders<R>(
   hook: () => R,
-  hookOptions?: ExtendedRenderHookOptions<undefined>
+  hookOptions?: ExtendedRenderHookOptions<undefined>,
 ): RenderHookWithProvidersResult<R>
 
 // Require hookOptions if hook takes arguments
-export function renderHookWithProviders<R, P extends any[]>(
-  hook: (...args: P) => R,
-  hookOptions: ExtendedRenderHookOptions<P>
+export function renderHookWithProviders<R, P>(
+  hook: (args: P) => R,
+  hookOptions: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P>
 
 /**
@@ -105,9 +101,9 @@ export function renderHookWithProviders<R, P extends any[]>(
  * @param preloadedState and store
  * @returns `hook` wrapped with providers
  */
-export function renderHookWithProviders<P extends any[], R>(
-  hook: (...args: P) => R,
-  hookOptions?: ExtendedRenderHookOptions<P>
+export function renderHookWithProviders<P, R>(
+  hook: (args: P) => R,
+  hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
     resolvers,
@@ -140,12 +136,12 @@ export function renderHookWithProviders<P extends any[], R>(
     ...(renderOptions as RenderHookOptions<P>),
   }
 
-  const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(...(args ?? [])), options)
+  const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(args), options)
 
   // Return an object with the store and all of RTL's query functions
   return {
     store,
-    rerender: rerender as P extends any[] ? (args: P) => void : () => void,
+    rerender: rerender as (args?: P) => void,
     ...rest,
   }
 }

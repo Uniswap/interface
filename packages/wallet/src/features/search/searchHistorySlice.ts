@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { SearchResult, SearchResultType } from './SearchResult'
+import { SearchResult, SearchResultType } from 'wallet/src/features/search/SearchResult'
 
 const SEARCH_HISTORY_LENGTH = 5
 
@@ -40,10 +40,7 @@ const slice = createSlice({
       state.results.unshift({ ...searchResult, searchId })
       // Filter out to only uniques & keep size under SEARCH_HISTORY_LENGTH
       state.results = state.results
-        .filter(
-          (result, index, self) =>
-            index === self.findIndex((value) => value.searchId === result.searchId)
-        )
+        .filter((result, index, self) => index === self.findIndex((value) => value.searchId === result.searchId))
         .slice(0, SEARCH_HISTORY_LENGTH)
     },
     clearSearchHistory: (state) => {

@@ -5,21 +5,18 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
-import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 
 type Props = {
@@ -45,8 +42,7 @@ export function CloudBackupProcessingAnimation({
   const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
   const onboardingAccount = getOnboardingAccount()
   const importedAccounts = getImportedAccounts()
-  const colors = useSporeColors()
-  const activeAccount = useAccountIfExists(accountAddress)
+  const activeAccount = useSignerAccountIfExists(accountAddress)
 
   const account = activeAccount || onboardingAccount || importedAccounts?.[0]
 
@@ -55,7 +51,7 @@ export function CloudBackupProcessingAnimation({
   }
 
   if (account.type !== AccountType.SignerMnemonic) {
-    throw new Error('Account is not mnemonic account')
+    throw new Error(`Backed up account with address: ${account.address} is not a mnemonic account`)
   }
   const mnemonicId = account?.mnemonicId
 
@@ -82,7 +78,7 @@ export function CloudBackupProcessingAnimation({
             type: EditAccountAction.AddBackupMethod,
             address: accountAddress,
             backupMethod: BackupType.Cloud,
-          })
+          }),
         )
       } else {
         addBackupMethod(BackupType.Cloud)
@@ -103,19 +99,10 @@ export function CloudBackupProcessingAnimation({
             style: 'default',
             onPress: onErrorPress,
           },
-        ]
+        ],
       )
     }
-  }, [
-    accountAddress,
-    activeAccount,
-    addBackupMethod,
-    dispatch,
-    mnemonicId,
-    onErrorPress,
-    password,
-    t,
-  ])
+  }, [accountAddress, activeAccount, addBackupMethod, dispatch, mnemonicId, onErrorPress, password, t])
 
   /**
    * Delays cloud backup to avoid android oauth consent screen blocking navigation transition
@@ -125,7 +112,7 @@ export function CloudBackupProcessingAnimation({
       return navigation.addListener('transitionEnd', async () => {
         await backup()
       })
-    }, [backup, navigation])
+    }, [backup, navigation]),
   )
 
   const iconSize = iconSizes.icon40
@@ -143,13 +130,7 @@ export function CloudBackupProcessingAnimation({
     </Flex>
   ) : (
     <Flex centered grow gap="$spacing24">
-      <CheckmarkCircle
-        borderColor="$statusSuccess"
-        borderWidth={3}
-        checkmarkStrokeWidth={2}
-        color={colors.statusSuccess.val}
-        size={iconSize}
-      />
+      <CheckmarkCircle size={iconSize} />
       <Text variant="heading3">
         {t('settings.setting.backup.status.complete', {
           cloudProviderName: getCloudProviderName(),

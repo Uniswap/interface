@@ -1,7 +1,6 @@
+import { Hero } from 'pages/Landing/sections/Hero'
 import { Suspense, lazy, memo, useRef } from 'react'
 import styled from 'styled-components'
-
-import { Hero } from './sections/Hero'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
@@ -12,9 +11,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -72px;
-  min-width: 100%;
-  max-width: 1280px;
+  margin-top: ${({ theme }) => `-${theme.navHeight}px`};
+  min-width: 100vw;
   z-index: 1;
 `
 
@@ -25,6 +23,7 @@ const Grain = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+  width: 100vw;
   background: url(/images/noise-color.png);
   opacity: 0.018;
   z-index: 0;
@@ -42,15 +41,13 @@ function LandingV2({ transition }: { transition?: boolean }) {
   }
 
   return (
-    <>
+    <Container data-testid="landing-page">
       <Grain />
-      <Container data-testid="landing-page">
-        <Hero scrollToRef={scrollToRef} transition={transition} />
-        <Suspense>
-          <Fold ref={scrollAnchor} />
-        </Suspense>
-      </Container>
-    </>
+      <Hero scrollToRef={scrollToRef} transition={transition} />
+      <Suspense>
+        <Fold ref={scrollAnchor} />
+      </Suspense>
+    </Container>
   )
 }
 

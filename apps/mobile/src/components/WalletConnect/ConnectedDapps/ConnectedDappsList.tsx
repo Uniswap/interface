@@ -7,12 +7,11 @@ import { DappConnectedNetworkModal } from 'src/components/WalletConnect/Connecte
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
-import {
-  WalletConnectSession,
-  removePendingSession,
-} from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
+import { WalletConnectSession, removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { Edit, Scan } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -32,20 +31,13 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
-    )
+    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
   }, [dispatch])
 
   return (
     <>
       <AnimatedFlex fill entering={FadeIn} exiting={FadeOut} pt="$spacing12">
-        <Flex
-          row
-          alignItems="center"
-          justifyContent="space-between"
-          pb="$spacing12"
-          px="$spacing16">
+        <Flex row alignItems="center" justifyContent="space-between" pb="$spacing12" px="$spacing16">
           <Flex alignItems="flex-start" flexBasis="15%">
             {backButton ?? <BackButton />}
           </Flex>
@@ -59,12 +51,9 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               <TouchableArea
                 onPress={(): void => {
                   setIsEditing(!isEditing)
-                }}>
-                {isEditing ? (
-                  <Edit color="$accent1" size="$icon.20" />
-                ) : (
-                  <Edit color="$neutral2" size="$icon.20" />
-                )}
+                }}
+              >
+                {isEditing ? <Edit color="$accent1" size="$icon.20" /> : <Edit color="$neutral2" size="$icon.20" />}
               </TouchableArea>
             ) : (
               <TouchableArea onPress={onPressScan}>
@@ -100,7 +89,8 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             px="$spacing24"
             style={{
               paddingTop: fullHeight / 5,
-            }}>
+            }}
+          >
             <Text color="$neutral1" variant="subheading1">
               {t('walletConnect.dapps.manage.empty.title')}
             </Text>
@@ -111,10 +101,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
         )}
       </AnimatedFlex>
       {selectedSession && (
-        <DappConnectedNetworkModal
-          session={selectedSession}
-          onClose={(): void => setSelectedSession(undefined)}
-        />
+        <DappConnectedNetworkModal session={selectedSession} onClose={(): void => setSelectedSession(undefined)} />
       )}
     </>
   )

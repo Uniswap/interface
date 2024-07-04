@@ -1,6 +1,6 @@
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import { fireEvent, render } from 'src/test/test-utils'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
-import { LinkButton } from './LinkButton'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 
 jest.mock('wallet/src/utils/linking')
 
@@ -32,7 +32,7 @@ describe(LinkButton, () => {
           label="link text"
           openExternalBrowser={openExternalBrowser}
           url="https://example.com"
-        />
+        />,
       )
 
       const button = getByText('link text')
@@ -41,7 +41,7 @@ describe(LinkButton, () => {
       expect(require('wallet/src/utils/linking').openUri).toHaveBeenCalledWith(
         'https://example.com',
         openExternalBrowser,
-        isSafeUri
+        isSafeUri,
       )
     })
   })

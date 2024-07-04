@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { Flex, Text, useDeviceDimensions } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AccountListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
@@ -43,7 +44,8 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
       borderWidth={1}
       maxHeight={accountsScrollViewHeight}
       px="$spacing12"
-      width="100%">
+      width="100%"
+    >
       <ScrollView bounces={false} contentContainerStyle={styles.accounts}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
           <AssociatedAccountRow
@@ -83,7 +85,8 @@ function AssociatedAccountRow({
       row
       alignItems="center"
       justifyContent="space-between"
-      pb={index !== totalCount - 1 ? '$spacing16' : undefined}>
+      pb={index !== totalCount - 1 ? '$spacing16' : undefined}
+    >
       <Flex shrink>
         <AddressDisplay hideAddressInSubtitle address={address} size={24} variant="subheading2" />
       </Flex>

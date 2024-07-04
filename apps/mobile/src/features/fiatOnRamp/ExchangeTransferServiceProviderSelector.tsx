@@ -3,11 +3,12 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 function key(item: FORServiceProvider): string {
@@ -41,7 +42,8 @@ function CEXItemWrapper({
         gap="$spacing12"
         maxWidth="100%"
         mx="$spacing8"
-        p="$spacing16">
+        p="$spacing16"
+      >
         <Flex grow row alignItems="center" flexShrink={1} gap="$spacing12">
           <RemoteImage
             borderRadius={CEX_ICON_BORDER_RADIUS}
@@ -74,21 +76,18 @@ export function ServiceProviderSelector({
         openModal({
           name: ModalName.ExchangeTransferModal,
           initialState: { serviceProvider },
-        })
+        }),
       )
       onClose()
     },
-    [dispatch, onClose]
+    [dispatch, onClose],
   )
 
   const renderItem = useCallback(
     ({ item: serviceProvider }: ListRenderItemInfo<FORServiceProvider>) => (
-      <CEXItemWrapper
-        serviceProvider={serviceProvider}
-        onSelectServiceProvider={onSelectServiceProvider}
-      />
+      <CEXItemWrapper serviceProvider={serviceProvider} onSelectServiceProvider={onSelectServiceProvider} />
     ),
-    [onSelectServiceProvider]
+    [onSelectServiceProvider],
   )
 
   return (

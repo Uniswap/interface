@@ -1,8 +1,7 @@
+import { useBag } from 'nft/hooks/useBag'
+import { useSendTransaction } from 'nft/hooks/useSendTransaction'
 import { BagStatus, TxStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
-
-import { useBag } from './useBag'
-import { useSendTransaction } from './useSendTransaction'
 
 export function useSubscribeTransactionState(setModalIsOpen: (isOpen: boolean) => void) {
   const transactionState = useSendTransaction((state) => state.state)

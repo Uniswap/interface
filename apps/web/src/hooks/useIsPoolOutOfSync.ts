@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Fraction, Price, Token } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { useStablecoinAmountFromFiatValue } from './useStablecoinPrice'
-import { useUSDPrice } from './useUSDPrice'
 
 // Show warning if the price diverges by more than 5%
 const WARNING_THRESHOLD = new Fraction(5, 100)
@@ -14,7 +14,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
     baseCurrency
       ? CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)))
       : undefined,
-    baseCurrency
+    baseCurrency,
   )
   const baseCurrencyStableCoinAmount = useStablecoinAmountFromFiatValue(baseCurrencyUSDPrice.data)
 
@@ -22,7 +22,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
     quoteCurrency
       ? CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))
       : undefined,
-    quoteCurrency
+    quoteCurrency,
   )
   const quoteCurrencyStableCoinAmount = useStablecoinAmountFromFiatValue(quoteCurrencyUSDPrice.data)
 
@@ -32,7 +32,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
 
   const marketPrice = new Fraction(
     baseCurrencyStableCoinAmount.multiply(DECIMAL_SCALAR).toFixed(0),
-    quoteCurrencyStableCoinAmount.multiply(DECIMAL_SCALAR).toFixed(0)
+    quoteCurrencyStableCoinAmount.multiply(DECIMAL_SCALAR).toFixed(0),
   )
 
   return marketPrice
@@ -60,11 +60,11 @@ export function useIsPoolOutOfSync(poolPrice?: Price<Token, Token>) {
       .quote(
         CurrencyAmount.fromRawAmount(
           poolPrice.baseCurrency?.wrapped,
-          JSBI.BigInt(parseUnits('1', poolPrice.baseCurrency?.decimals))
-        )
+          JSBI.BigInt(parseUnits('1', poolPrice.baseCurrency?.decimals)),
+        ),
       )
       .multiply(DECIMAL_SCALAR)
-      .toFixed(0)
+      .toFixed(0),
   )
 
   const difference = JSBI.lessThan(scaledMarketPrice, scaledPoolPrice)

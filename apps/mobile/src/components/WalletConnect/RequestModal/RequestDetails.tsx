@@ -3,22 +3,19 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
-import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import {
-  SignRequest,
-  WalletConnectRequest,
-  isTransactionRequest,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
+import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
+import { SpendingDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
@@ -38,18 +35,14 @@ type AddressButtonProps = {
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
   const colors = useSporeColors()
-  const supportedChainId = toSupportedChainId(chainId) ?? ChainId.Mainnet
+  const supportedChainId = toSupportedChainId(chainId) ?? UniverseChainId.Mainnet
 
   return (
     <LinkButton
-      backgroundColor="$surface3"
-      borderRadius="$rounded12"
-      iconColor={colors.neutral1.val}
+      iconColor={colors.neutral3.val}
       label={name || shortenAddress(address)}
-      px="$spacing8"
-      py="$spacing4"
       size={iconSizes.icon16}
-      textVariant="body2"
+      textVariant="body3"
       url={getExplorerLink(supportedChainId, address, ExplorerDataType.ADDRESS)}
       {...rest}
     />
@@ -83,12 +76,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         if (typeof childValue === 'string') {
           return (
-            <Flex
-              key={objKey}
-              row
-              alignItems="flex-start"
-              gap="$spacing8"
-              style={{ marginLeft: depth * 10 }}>
+            <Flex key={objKey} row alignItems="flex-start" gap="$spacing8" style={{ marginLeft: depth * 10 }}>
               <Text color="$neutral2" py="$spacing4" variant="monospace">
                 {objKey}
               </Text>
@@ -116,7 +104,7 @@ function TransactionDetails({
   chainId,
   transaction,
 }: {
-  chainId: ChainId
+  chainId: WalletChainId
   transaction: EthTransaction
 }): JSX.Element {
   const { t } = useTranslation()
@@ -157,31 +145,25 @@ function TransactionDetails({
 
   return (
     <Flex gap="$spacing12">
-      {value && !BigNumber.from(value).eq(0) ? (
-        <SpendingDetails chainId={chainId} value={value} />
-      ) : null}
+      {value && !BigNumber.from(value).eq(0) ? <SpendingDetails chainId={chainId} value={value} /> : null}
       {to ? (
-        <Flex row alignItems="center" gap="$spacing16">
-          <Text color="$neutral2" variant="body2">
-            {t('walletConnect.request.details.label.recipient')}
-          </Text>
+        <ContentRow label={t('common.text.recipient')} variant="body3">
           <AddressButton address={to} chainId={chainId} />
-        </Flex>
+        </ContentRow>
       ) : null}
-      <Flex row alignItems="center" gap="$spacing16">
-        <Text color="$neutral2" variant="body2">
-          {t('walletConnect.request.details.label.function')}
-        </Text>
+      <ContentRow label={t('walletConnect.request.details.label.function')} variant="body3">
         <Flex
-          backgroundColor={isLoading ? '$transparent' : '$surface3'}
+          borderColor={isLoading ? '$transparent' : '$surface3'}
           borderRadius="$rounded12"
+          borderWidth={1}
           px="$spacing8"
-          py="$spacing4">
-          <Text color="$neutral1" loading={isLoading} variant="monospace">
+          py="$spacing2"
+        >
+          <Text color="$neutral1" loading={isLoading} variant="body3">
             {parsedData ? parsedData.name : t('common.text.unknown')}
           </Text>
         </Flex>
-      </Flex>
+      </ContentRow>
     </Flex>
   )
 }
@@ -194,7 +176,7 @@ function isSignTypedDataRequest(request: WalletConnectRequest): request is SignR
   return request.type === EthMethod.SignTypedData || request.type === EthMethod.SignTypedDataV4
 }
 
-function RequestDetailsContent({ request }: Props): JSX.Element {
+export function RequestDetailsContent({ request }: Props): JSX.Element {
   const { t } = useTranslation()
 
   if (isSignTypedDataRequest(request)) {
@@ -212,11 +194,9 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
   }
 
   const message = getStrMessage(request)
-  return message ? (
-    <Text variant="body2">{message}</Text>
-  ) : (
-    <Text color="$neutral2" variant="body2">
-      {t('qrScanner.request.message.unavailable')}
+  return (
+    <Text color="$neutral2" variant="body3">
+      {message || t('qrScanner.request.message.unavailable')}
     </Text>
   )
 }

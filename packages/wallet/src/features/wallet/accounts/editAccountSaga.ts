@@ -1,15 +1,10 @@
 import { all, call, put } from 'typed-redux-saga'
-import { isWeb } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import {
-  editAccount as editInStore,
-  removeAccounts as removeAccountsInStore,
-  removeAccount as removeInStore,
-} from 'wallet/src/features/wallet/slice'
+import { editAccount as editInStore, removeAccounts as removeAccountsInStore } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -18,7 +13,6 @@ export enum EditAccountAction {
   RemoveBackupMethod = 'RemoveBackupMethod',
   Rename = 'Rename',
   Remove = 'Remove',
-  RemoveBulk = 'RemoveBulk',
   TogglePushNotification = 'TogglePushNotification',
   ToggleTestnetSettings = 'ToggleTestnetSettings',
   UpdateLanguage = 'UpdateLanguage',
@@ -26,20 +20,16 @@ export enum EditAccountAction {
 }
 interface EditParamsBase {
   type: EditAccountAction
-  address: Address
+  address?: Address
 }
 interface RenameParams extends EditParamsBase {
   type: EditAccountAction.Rename
   newName: string
 }
+
 interface RemoveParams extends EditParamsBase {
   type: EditAccountAction.Remove
-  notificationsEnabled: boolean
-}
-
-interface RemoveBulkParams extends EditParamsBase {
-  type: EditAccountAction.RemoveBulk
-  addresses: Address[]
+  accounts: Account[]
 }
 
 interface AddBackupMethodParams extends EditParamsBase {
@@ -72,13 +62,21 @@ export type EditAccountParams =
   | RemoveBackupMethodParams
   | RenameParams
   | RemoveParams
-  | RemoveBulkParams
   | TogglePushNotificationParams
   | ToggleTestnetSettingsParams
   | UpdateLanguageParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
+
+  if (type === EditAccountAction.Remove) {
+    yield* call(removeAccounts, params)
+    return
+  }
+
+  if (!address) {
+    throw new Error('Address is required for editAccount actions other than Remove')
+  }
 
   const accounts = yield* appSelect(selectAccounts)
   const account = accounts[address]
@@ -90,12 +88,6 @@ function* editAccount(params: EditAccountParams) {
   switch (type) {
     case EditAccountAction.Rename:
       yield* call(renameAccount, params, account)
-      break
-    case EditAccountAction.Remove:
-      yield* call(removeAccount, params)
-      break
-    case EditAccountAction.RemoveBulk:
-      yield* call(removeAccounts, params)
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
@@ -111,32 +103,22 @@ function* editAccount(params: EditAccountParams) {
 }
 
 function* renameAccount(params: RenameParams, account: Account) {
-  const { address, newName } = params
-  logger.debug('editAccountSaga', 'renameAccount', 'Renaming account', address, 'to ', newName)
+  const { newName } = params
+  logger.debug('editAccountSaga', 'renameAccount', 'Renaming account', account.address, 'to ', newName)
   yield* put(
     editInStore({
-      address,
+      address: account.address,
       updatedAccount: {
         ...account,
         name: newName,
       },
-    })
+    }),
   )
 }
 
-function* removeAccount(params: RemoveParams) {
-  const { address } = params
-  logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
-  // TODO [MOB-243] cleanup account artifacts in native-land (i.e. keystore)
-  yield* put(removeInStore(address))
-  if (isWeb) {
-    // Adding multiple calls to this one function was causing race condition errors since `removeAccount` is often called in a loop so limiting to web for now
-    yield* call([Keyring, Keyring.removePrivateKey], address)
-  }
-}
-
-function* removeAccounts(params: RemoveBulkParams) {
-  const { addresses } = params
+function* removeAccounts(params: RemoveParams) {
+  const { accounts } = params
+  const addresses = accounts.map((a) => a.address)
   logger.debug('editAccountSaga', 'removeAccounts', 'Removing accounts', addresses)
   yield* put(removeAccountsInStore(addresses))
   yield* all(addresses.map((address) => call([Keyring, Keyring.removePrivateKey], address)))
@@ -152,7 +134,7 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
   )
 
   const updatedBackups: BackupType[] = unique([...(account.backups ?? []), backupMethod])
@@ -165,16 +147,16 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
             ...mnemonicAccount,
             backups: updatedBackups,
           },
-        })
+        }),
       )
-    })
+    }),
   )
 
   logger.debug(
     'editAccountSaga',
     'addBackupMethod',
     'Adding backup method',
-    mnemonicAccounts.map((a) => a.address)
+    mnemonicAccounts.map((a) => a.address),
   )
 }
 
@@ -188,7 +170,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
   )
 
   const updatedBackups = account.backups?.filter((backup) => backup !== backupMethod)
@@ -202,16 +184,16 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
             ...mnemonicAccount,
             backups: updatedBackups,
           },
-        })
+        }),
       )
-    })
+    }),
   )
 
   logger.debug(
     'editAccountSaga',
     'removeBackupMethod',
     'Removing backup method',
-    mnemonicAccounts.map((a) => a.address)
+    mnemonicAccounts.map((a) => a.address),
   )
 }
 

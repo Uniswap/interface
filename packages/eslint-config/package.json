@@ -7,6 +7,7 @@
   "bugs": "https://github.com/Uniswap/eslint-config/issues",
   "license": "MIT",
   "scripts": {
+    "format": "../../scripts/prettier.sh",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -40,9 +41,7 @@
     "eslint-plugin-security": "1.5.0",
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "^0.6.10",
-    "eslint-plugin-unused-imports": "^2.0.0",
-    "prettier": "^2.8.0",
-    "prettier-plugin-organize-imports": "3.2.4"
+    "eslint-plugin-unused-imports": "^2.0.0"
   },
   "peerDependencies": {
     "eslint": "^8.0.0"

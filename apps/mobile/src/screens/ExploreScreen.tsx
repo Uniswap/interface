@@ -11,15 +11,15 @@ import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySec
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { AnimatedFlex, ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
+import { ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDebounce } from 'utilities/src/time/timing'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 export function ExploreScreen(): JSX.Element {
@@ -27,8 +27,6 @@ export function ExploreScreen(): JSX.Element {
   const navigation = useExploreStackNavigation()
 
   const { isSheetReady } = useBottomSheetContext()
-
-  useReduxModalBackHandler(ModalName.Explore)
 
   // The ExploreStack is not directly accessible from outside
   // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.

@@ -67,13 +67,7 @@ export function getCurrencyAmount<T extends Currency>({
   }
 }
 
-const sanitizeTokenAmount = ({
-  value,
-  valueType,
-}: {
-  value: string
-  valueType: ValueType
-}): string => {
+const sanitizeTokenAmount = ({ value, valueType }: { value: string; valueType: ValueType }): string => {
   let sanitizedValue = convertScientificNotationToNumber(value)
 
   if (sanitizedValue === '.') {

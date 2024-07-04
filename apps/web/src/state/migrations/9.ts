@@ -19,7 +19,7 @@ export const migration9 = (state: PersistAppStateV9 | undefined) => {
     updatedListsByUrl = Object.fromEntries(
       Object.entries(state.lists.byUrl).filter(([url]) => {
         return DEFAULT_INACTIVE_LIST_URLS.includes(url)
-      })
+      }),
     )
   }
 

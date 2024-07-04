@@ -1,7 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
+import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
+import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
+import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
+import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
+import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -9,10 +13,6 @@ import { useActiveSmartPool } from 'state/application/hooks'
 import styled from 'styled-components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import AuthenticatedHeader from './AuthenticatedHeader'
-import LanguageMenu from './LanguageMenu'
-import LocalCurrencyMenu from './LocalCurrencyMenu'
-import SettingsMenu from './SettingsMenu'
 
 const DefaultMenuWrap = styled(Column)`
   width: 100%;
@@ -30,8 +30,7 @@ export enum MenuState {
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
-  const { account } = useWeb3React()
-  const isAuthenticated = !!account
+  const account = useAccount()
 
   const [menu, setMenu] = useAtom(miniPortfolioMenuStateAtom)
   const openSettings = useCallback(() => setMenu(MenuState.SETTINGS), [setMenu])
@@ -68,9 +67,9 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:
-        return isAuthenticated ? (
+        return account.address ? (
           <AuthenticatedHeader
-            account={shouldQueryPoolBalances ? smartPoolAddress ?? account : account}
+            account={shouldQueryPoolBalances ? smartPoolAddress ?? account.address : account.address}
             openSettings={openSettings}
           />
         ) : (
@@ -89,13 +88,12 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       case MenuState.LOCAL_CURRENCY_SETTINGS:
         return <LocalCurrencyMenu onClose={openSettings} />
       case MenuState.LIMITS:
-        return isAuthenticated ? <LimitsMenu onClose={closeLimitsMenu} account={account} /> : null
+        return account.address ? <LimitsMenu onClose={closeLimitsMenu} account={account.address} /> : null
     }
   }, [
-    account,
+    account.address,
     closeLimitsMenu,
     closeSettings,
-    isAuthenticated,
     menu,
     openLanguageSettings,
     openLocalCurrencySettings,

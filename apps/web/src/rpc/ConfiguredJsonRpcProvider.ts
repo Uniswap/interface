@@ -1,6 +1,5 @@
 import { Networkish } from '@ethersproject/networks'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
-
 import { AVERAGE_L1_BLOCK_TIME, SupportedInterfaceChainId } from 'constants/chains'
 
 export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
@@ -8,7 +7,7 @@ export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
     url: string | undefined,
     // Including networkish allows ethers to skip the initial detectNetwork call.
     networkish: Networkish & { chainId: SupportedInterfaceChainId },
-    pollingInterval = AVERAGE_L1_BLOCK_TIME
+    pollingInterval = AVERAGE_L1_BLOCK_TIME,
   ) {
     super(url, networkish)
 

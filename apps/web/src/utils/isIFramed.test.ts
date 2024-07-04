@@ -1,4 +1,4 @@
-import { isIFramed } from './isIFramed'
+import { isIFramed } from 'utils/isIFramed'
 
 const dispatchMock = jest.fn()
 jest.mock('state/hooks', () => ({

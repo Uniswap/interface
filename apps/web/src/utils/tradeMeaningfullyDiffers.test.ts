@@ -9,7 +9,7 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
   toCurrencyAmount,
 } from 'test-utils/constants'
-import { tradeMeaningfullyDiffers } from './tradeMeaningFullyDiffer'
+import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
 describe('tradeMeaningfullyDiffers', () => {
   const slippage = new Percent('1', '100') // Assuming 1% slippage for simplicity

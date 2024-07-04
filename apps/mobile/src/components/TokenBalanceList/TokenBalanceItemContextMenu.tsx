@@ -19,11 +19,7 @@ export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
   const style = useMemo(() => ({ borderRadius: borderRadii.rounded16 }), [])
 
   return (
-    <ContextMenu
-      actions={menuActions}
-      disabled={menuActions.length === 0}
-      style={style}
-      onPress={onContextMenuPress}>
+    <ContextMenu actions={menuActions} disabled={menuActions.length === 0} style={style} onPress={onContextMenuPress}>
       {children}
     </ContextMenu>
   )

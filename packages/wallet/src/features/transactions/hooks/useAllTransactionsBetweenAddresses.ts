@@ -9,7 +9,7 @@ import { TransactionDetails, TransactionType } from 'wallet/src/features/transac
  */
 export function useAllTransactionsBetweenAddresses(
   sender: Address,
-  recipient: Maybe<Address>
+  recipient: Maybe<Address>,
 ): TransactionDetails[] | undefined {
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
@@ -17,8 +17,7 @@ export function useAllTransactionsBetweenAddresses(
       return
     }
     return txnsToSearch.filter(
-      (tx: TransactionDetails) =>
-        tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
+      (tx: TransactionDetails) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient,
     )
   }, [recipient, sender, txnsToSearch])
 }

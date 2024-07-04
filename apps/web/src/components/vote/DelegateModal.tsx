@@ -1,42 +1,42 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { AutoRow, RowBetween } from 'components/Row'
+import { GRG_TRANSFER_PROXY_ADDRESSES } from 'constants/addresses'
+import { GRG } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import useENS from 'hooks/useENS'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { ReactNode, /*useCallback,*/ useMemo, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
-import styled, { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-
-import { Text } from 'ui/src'
-import { GRG_TRANSFER_PROXY_ADDRESSES } from '../../constants/addresses'
-import { GRG } from '../../constants/tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useENS from '../../hooks/useENS'
-import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
-// TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { useTokenBalance } from '../../state/connection/hooks'
 import {
   useDelegateCallback,
   useDelegatePoolCallback,
   usePoolExtendedContract,
   usePoolIdByAddress,
-} from '../../state/governance/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import AddressInputPanel from '../AddressInputPanel'
-import { ButtonConfirmed, ButtonPrimary } from '../Button'
-//import { ButtonError } from '../Button'
-import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { AutoRow, RowBetween } from '../Row'
-import Slider from '../Slider'
+} from 'state/governance/hooks'
+import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import { Text } from 'ui/src'
+import { logger } from 'utilities/src/logger/logger'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
+// TODO: check if should write into state stake hooks
+import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { LightCard } from 'components/Card'
+import Slider from 'components/Slider'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -63,11 +63,11 @@ interface VoteModalProps {
 }
 
 export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: VoteModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const theme = useTheme()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
 
@@ -80,13 +80,13 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   // monitor for self delegation or input for third part delegate
   // default is self delegation
-  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account
+  const activeDelegate = poolInfo?.pool?.address ?? typed ?? account.address
   const { address: parsedAddress } = useENS(activeDelegate)
 
   // TODO: in the context of pool grg balance is balance of pool
   // get the number of votes available to delegate
-  const grgUserBalance = useTokenBalance(account ?? undefined, chainId ? GRG[chainId] : undefined)
-  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, chainId ? GRG[chainId] : undefined)
+  const grgUserBalance = useTokenBalance(account.address ?? undefined, account.chainId ? GRG[account.chainId] : undefined)
+  const grgPoolBalance = useTokenBalance(parsedAddress ?? undefined, account.chainId ? GRG[account.chainId] : undefined)
   const { poolId, stakingPoolExists } = usePoolIdByAddress(parsedAddress ?? undefined)
   // we only pass the pool extended instance if we have to call the pool directly
   const poolContract = usePoolExtendedContract(parsedAddress ?? undefined)
@@ -172,7 +172,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
     // try delegation and store hash
     const hash = await delegateCallback(stakeData)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('DelegateModal', 'onDelegate', error)
     })
 
     if (hash) {
@@ -183,7 +183,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
     parsedAmount ?? undefined,
-    GRG_TRANSFER_PROXY_ADDRESSES[chainId ?? 1] ?? undefined,
+    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? 1] ?? undefined,
     usingDelegate
   )
 
@@ -201,7 +201,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
@@ -279,7 +279,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
                 {usingDelegate ? <Trans i18nKey="grg.stakeFromPool" /> : <Trans i18nKey="grg.stakeFromWallet" />}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
-            {poolInfo?.owner === account && (
+            {poolInfo?.owner === account.address && (
               <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
                 <Text color={theme.accent1}>
                   {usingDelegate ? <Trans i18nKey="grg.stakeFromWallet" /> : <Trans i18nKey="grg.stakeFromPool" />}

@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
@@ -10,6 +10,7 @@ import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import { usePDPPriceChartData, usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
@@ -26,8 +27,8 @@ import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { usePDPPriceChartData, usePDPVolumeChartData } from './hooks'
 
 const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY] as const
@@ -97,7 +98,7 @@ function usePDPChartState(
   tokenB: Token | undefined,
   isReversed: boolean,
   chain: Chain,
-  protocolVersion: ProtocolVersion
+  protocolVersion: ProtocolVersion,
 ): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
@@ -146,7 +147,7 @@ export default function ChartSection(props: ChartSectionProps) {
     currencyB?.wrapped,
     props.isReversed,
     props.chain ?? Chain.Ethereum,
-    props.poolData?.protocolVersion ?? ProtocolVersion.V3
+    props.poolData?.protocolVersion ?? ProtocolVersion.V3,
   )
 
   const refitChartContent = useAtomValue(refitChartContentAtom)
@@ -166,7 +167,7 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
-      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.MAINNET,
+      chainId: supportedChainIdFromGQLChain(props.chain) ?? UniverseChainId.Mainnet,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -191,13 +192,20 @@ export default function ChartSection(props: ChartSectionProps) {
   // BE does not support hourly price data for pools
   const filteredTimeOptions = useMemo(() => {
     if (activeQuery.chartType === ChartType.PRICE) {
+      const filtered = DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
       if (timePeriod === TimePeriod.HOUR) {
         setTimePeriod(TimePeriod.DAY)
       }
-      return DEFAULT_PILL_TIME_SELECTOR_OPTIONS.filter((option) => option.value !== TimePeriodDisplay.HOUR)
+      return {
+        options: filtered,
+        selected: DISPLAYS[timePeriod],
+      }
     }
-    return DEFAULT_PILL_TIME_SELECTOR_OPTIONS
-  }, [activeQuery.chartType, setTimePeriod, timePeriod])
+    return {
+      options: DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
+      selected: DISPLAYS[timePeriod],
+    }
+  }, [activeQuery.chartType, timePeriod, setTimePeriod])
 
   const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
@@ -213,8 +221,8 @@ export default function ChartSection(props: ChartSectionProps) {
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <PillMultiToggle
-              options={filteredTimeOptions}
-              currentSelected={DISPLAYS[timePeriod]}
+              options={filteredTimeOptions.options}
+              currentSelected={filteredTimeOptions.selected}
               onSelectOption={(option) => {
                 const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
                 if (time === timePeriod) {
@@ -271,7 +279,7 @@ function PriceChart({
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const currencyBAmountRaw = Math.floor(
-          (displayValue.value ?? displayValue.close) * 10 ** referenceToken.decimals
+          (displayValue.value ?? displayValue.close) * 10 ** referenceToken.decimals,
         )
         const priceDisplay = (
           <PriceDisplayContainer>
@@ -361,7 +369,7 @@ function LiquidityChart({
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
-  chainId: ChainId
+  chainId: InterfaceChainId
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')

@@ -13,7 +13,7 @@ export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEp
 
 export const formatToDecimal = (
   intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
-  decimalPlace: number
+  decimalPlace: number,
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
 export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATIVE_CHAIN_ID : currency.address)
@@ -24,7 +24,7 @@ export const formatPercentNumber = (percent: Percent): number => parseFloat(perc
 
 export const getPriceUpdateBasisPoints = (
   prevPrice: Price<Currency, Currency>,
-  newPrice: Price<Currency, Currency>
+  newPrice: Price<Currency, Currency>,
 ): number => {
   const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
   const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
@@ -44,7 +44,7 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
 export function formatCommonPropertiesForTrade(
   trade: InterfaceTrade,
   allowedSlippage: Percent,
-  outputFeeFiatValue?: number
+  outputFeeFiatValue?: number,
 ) {
   return {
     routing: trade.fillType,
@@ -112,7 +112,7 @@ export const formatSwapQuoteReceivedEventProperties = (
   trade: InterfaceTrade,
   allowedSlippage: Percent,
   swapQuoteLatencyMs: number | undefined,
-  outputFeeFiatValue: number | undefined
+  outputFeeFiatValue: number | undefined,
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),

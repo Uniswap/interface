@@ -20,7 +20,4 @@ export interface LockParams extends AuthBaseParams {
   type: AuthActionType.Lock
 }
 
-export type AuthTrigger = (args: {
-  successCallback: () => void
-  failureCallback: () => void
-}) => Promise<void>
+export type AuthTrigger = (args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>

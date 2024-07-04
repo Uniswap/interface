@@ -1,9 +1,15 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import {
-  CancelLimitsDialog,
+  CancelOrdersDialog,
   CancellationState,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelLimitsDialog'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
+import {
+  OffchainOrderLineItem,
+  OffchainOrderLineItemProps,
+  OffchainOrderLineItemType,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column, { AutoColumn } from 'components/Column'
@@ -28,9 +34,9 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { PortfolioLogo } from '../PortfolioLogo'
-import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
 type Logos = {
   inputLogo?: string
@@ -55,7 +61,7 @@ export function useOpenOffchainActivityModal() {
       })
       setSelectedOrder({ order, logos, modalOpen: true })
     },
-    [setSelectedOrder]
+    [setSelectedOrder],
   )
 }
 
@@ -117,7 +123,9 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
   }
 
   if (!inputCurrency || !outputCurrency) {
-    console.error(`Could not find token(s) for order ${order.txHash}`)
+    logger.warn('OffchainActivityModal', 'useOrderAmounts', 'Could not find token(s) for order', {
+      txHash: order.txHash,
+    })
     return undefined
   }
 
@@ -128,7 +136,7 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
       outputAmount: CurrencyAmount.fromRawAmount(
         outputCurrency,
-        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
+        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw,
       ),
     }
   } else {
@@ -206,7 +214,7 @@ export function OrderContent({
 
   const currencies = useMemo(
     () => [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
-    [amounts?.inputAmount.currency, amounts?.outputAmount.currency]
+    [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
   if (!amounts?.inputAmount || !amounts?.outputAmount) {
@@ -216,7 +224,7 @@ export function OrderContent({
     <Column>
       <Row gap="md">
         <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
+          chainId={amounts?.inputAmount.currency.chainId ?? UniverseChainId.Mainnet}
           currencies={currencies}
           images={[logos?.inputLogo, logos?.outputLogo]}
         />
@@ -335,13 +343,13 @@ export function OffchainActivityModal() {
   }, [setSelectedOrder])
 
   const cancelOrder = useCancelMultipleOrdersCallback(
-    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder])
+    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder]),
   )
 
   return (
     <>
       {syncedSelectedOrder && selectedOrderAtomValue?.modalOpen && (
-        <CancelLimitsDialog
+        <CancelOrdersDialog
           isVisible={cancelState !== CancellationState.NOT_STARTED}
           orders={[syncedSelectedOrder]}
           onCancel={() => {

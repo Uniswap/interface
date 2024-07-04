@@ -1,17 +1,11 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import {
-  ACCOUNT,
-  ON_PRESS_EVENT_PAYLOAD,
-  amounts,
-  portfolio,
-  readOnlyAccount,
-  signerMnemonicAccount,
-} from 'wallet/src/test/fixtures'
+import { ACCOUNT, amounts, portfolio, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
 import { createArray, queryResolvers } from 'wallet/src/test/utils'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const tokensTotalDenominatedValue = amounts.md()
 const { resolvers } = queryResolvers({
@@ -28,8 +22,8 @@ describe(AccountList, () => {
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
-        })
-      )
+        }),
+      ),
     ).toBeDefined()
     expect(tree.toJSON()).toMatchSnapshot()
   })
@@ -46,8 +40,8 @@ describe(AccountList, () => {
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
-        })
-      )
+        }),
+      ),
     ).toBeDefined()
 
     fireEvent.press(screen.getByTestId(`account-item/${ACCOUNT.address}`), ON_PRESS_EVENT_PAYLOAD)

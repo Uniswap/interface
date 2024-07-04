@@ -96,11 +96,10 @@ And select the version that pops up.
 Taken from [RN instructions](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
 
 ```
-brew tap homebrew/cask-versions
-brew install --cask zulu17
+brew install --cask zulu@17
 
 # Get path to where cask was installed to double-click installer
-brew info --cask zulu17
+brew info --cask zulu@17
 ```
 
 Add the following to your .rc file
@@ -190,6 +189,15 @@ Resolve this issue by navigating to the `ios/` directory and running `pod update
 
 - `Build target hermes-engine: Command PhaseScriptExecution failed with a nonzero exit code`
 Node isn't being located correctly during the build phase.  Run `which node` and copy the resulting path into `.xcode.env.local`.  More context [here](https://github.com/facebook/react-native/issues/42221).
+
+- `CocoaPods could not find compatible versions for pod "hermes-engine"`
+The following commands can help you fix these types of errors:
+
+`cd ios && pod install --repo-update`
+`cd ios && pod repo update`
+`cd ios && pod update hermes-engine --no-repo-update`
+
+Context: https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12
 
 ### Common fixes
 

@@ -5,22 +5,13 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { useAccount } from 'hooks/useAccount'
 import { Trans, t } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-
-const InlineLink = styled.div`
-  color: ${({ theme }) => theme.accent1};
-  display: inline;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.8;
-  }
-`
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const LabelWrapper = styled(Column)`
   height: 100%;
@@ -39,25 +30,19 @@ enum RoutePreferenceOption {
   v2 = 'v2',
 }
 
-type RoutePreferenceOptionsType = {
-  [RoutePreferenceOption.Optimal]: boolean
-  [RoutePreferenceOption.UniswapX]: boolean
-  [RoutePreferenceOption.v3]: boolean
-  [RoutePreferenceOption.v2]: boolean
-} & (
-  | {
-      [RoutePreferenceOption.Optimal]: true
-      [RoutePreferenceOption.UniswapX]: false
-      [RoutePreferenceOption.v3]: false
-      [RoutePreferenceOption.v2]: false
-    }
+type RoutePreferenceOptionsType =
   | {
       [RoutePreferenceOption.Optimal]: false
       [RoutePreferenceOption.UniswapX]: boolean
       [RoutePreferenceOption.v3]: boolean
       [RoutePreferenceOption.v2]: boolean
     }
-)
+  | {
+      [RoutePreferenceOption.Optimal]: true
+      [RoutePreferenceOption.UniswapX]: false
+      [RoutePreferenceOption.v3]: false
+      [RoutePreferenceOption.v2]: false
+    }
 
 const DEFAULT_ROUTE_PREFERENCE_OPTIONS: RoutePreferenceOptionsType = {
   [RoutePreferenceOption.Optimal]: true,
@@ -81,8 +66,8 @@ function UniswapXPreferenceLabel() {
         text={
           <>
             <Trans i18nKey="routing.aggregateLiquidity" />{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
-              <InlineLink>Learn more</InlineLink>
+            <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapXInfo}>
+              <Trans i18nKey="common.learnMore.link" />
             </ExternalLink>
           </>
         }
@@ -126,14 +111,12 @@ function RoutePreferenceToggle({
   )
 }
 
-export default function MultipleRoutingOptions() {
-  const { chainId } = useAccount()
+export default function MultipleRoutingOptions({ chainId }: { chainId?: number }) {
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =
     !routePreferenceOptions[RoutePreferenceOption.v2] || !routePreferenceOptions[RoutePreferenceOption.v3]
   const uniswapXSupportedChain = chainId && isUniswapXSupportedChain(chainId)
-
   const handleSetRoutePreferenceOptions = useCallback(
     (options: RoutePreferenceOptionsType) => {
       if (options[RoutePreferenceOption.Optimal]) {
@@ -161,7 +144,7 @@ export default function MultipleRoutingOptions() {
       setRoutePreferenceOptions(options)
       setRoutingPreferences(routingPreferences)
     },
-    [setRoutePreferenceOptions, setRoutingPreferences]
+    [setRoutePreferenceOptions, setRoutingPreferences],
   )
 
   const handleRoutePreferenceToggle = useCallback(
@@ -188,7 +171,7 @@ export default function MultipleRoutingOptions() {
         [toggledPreferenceOption]: !routePreferenceOptions[toggledPreferenceOption],
       })
     },
-    [handleSetRoutePreferenceOptions, routePreferenceOptions]
+    [handleSetRoutePreferenceOptions, routePreferenceOptions],
   )
 
   return (

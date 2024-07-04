@@ -4,6 +4,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
+import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
@@ -11,28 +12,24 @@ import { SearchNFTCollectionItem } from 'src/components/explore/search/items/Sea
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnitagItem'
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
+import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import {
-  NFTCollectionSearchResult,
-  SearchResultType,
-  TokenSearchResult,
-} from 'wallet/src/features/search/SearchResult'
-import { getValidAddress } from 'wallet/src/utils/addresses'
-import { SEARCH_RESULT_HEADER_KEY } from './constants'
-import { SearchResultOrHeader } from './types'
+import { NFTCollectionSearchResult, SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 
 const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'
@@ -55,9 +52,11 @@ const NFTHeaderItem: SearchResultOrHeader = {
 const EtherscanHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
+    blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
   }),
 }
+
+const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
@@ -105,7 +104,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress(searchQuery, true, false) ?? undefined,
-    [searchQuery]
+    [searchQuery],
   )
 
   const countTokenResults = tokenResults?.length ?? 0
@@ -113,9 +112,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   const countWalletResults = walletSearchResults.length
   const countTotalResults = countTokenResults + countNftCollectionResults + countWalletResults
 
-  const prefixTokenMatch = tokenResults?.find((res: TokenSearchResult) =>
-    isPrefixTokenMatch(res, searchQuery)
-  )
+  const prefixTokenMatch = tokenResults?.find((res: TokenSearchResult) => isPrefixTokenMatch(res, searchQuery))
 
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
@@ -123,18 +120,14 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     return searchQuery.includes('.')
   }, [searchQuery])
 
-  const showWalletSectionFirst =
-    isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
+  const showWalletSectionFirst = isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
   const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !tokenResults?.length
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
     // Format results arrays with header, and handle empty results
-    const nftsWithHeader = nftCollectionResults?.length
-      ? [NFTHeaderItem, ...nftCollectionResults]
-      : []
+    const nftsWithHeader = nftCollectionResults?.length ? [NFTHeaderItem, ...nftCollectionResults] : []
     const tokensWithHeader = tokenResults?.length ? [TokenHeaderItem, ...tokenResults] : []
-    const walletsWithHeader =
-      walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
+    const walletsWithHeader = walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
 
     let searchResultItems: SearchResultOrHeader[] = []
 
@@ -172,15 +165,21 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   if (error) {
-    return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel="common.button.retry"
-          title={t('explore.search.error')}
-          onRetry={onRetry}
-        />
-      </AnimatedFlex>
-    )
+    const filteredErrors = error.graphQLErrors.filter((e) => !IGNORED_ERRORS.includes(e.message))
+
+    if (filteredErrors.length === 0) {
+      logger.info('SearchResultSection', 'useExploreSearchQuery', error?.message)
+    } else {
+      return (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
+          <BaseCard.ErrorState
+            retryButtonLabel={t('common.button.retry')}
+            title={t('explore.search.error')}
+            onRetry={onRetry}
+          />
+        </AnimatedFlex>
+      )
+    }
   }
 
   return (
@@ -206,9 +205,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
               ? undefined
               : props.index +
                 1 -
-                sortedSearchResults
-                  .slice(0, props.index + 1)
-                  .filter((item) => item.type === SEARCH_RESULT_HEADER_KEY).length
+                sortedSearchResults.slice(0, props.index + 1).filter((item) => item.type === SEARCH_RESULT_HEADER_KEY)
+                  .length
           return renderSearchItem({
             ...props,
             searchContext: {
@@ -256,7 +254,7 @@ export const renderSearchItem = ({
       logger.warn(
         'SearchResultsSection',
         'renderSearchItem',
-        `Found invalid list item in search results: ${JSON.stringify(searchResult)}`
+        `Found invalid list item in search results: ${JSON.stringify(searchResult)}`,
       )
       return null
   }

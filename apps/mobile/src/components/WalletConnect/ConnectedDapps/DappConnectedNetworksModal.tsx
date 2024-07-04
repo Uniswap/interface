@@ -8,13 +8,13 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -23,10 +23,7 @@ interface DappConnectedNetworkModalProps {
   onClose: () => void
 }
 
-export function DappConnectedNetworkModal({
-  session,
-  onClose,
-}: DappConnectedNetworkModalProps): JSX.Element {
+export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNetworkModalProps): JSX.Element {
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
@@ -52,7 +49,7 @@ export function DappConnectedNetworkModal({
           event: WalletConnectEvent.Disconnected,
           imageUrl: dapp.icon,
           hideDelay: 3 * ONE_SECOND_MS,
-        })
+        }),
       )
       onClose()
     } catch (error) {
@@ -77,18 +74,12 @@ export function DappConnectedNetworkModal({
           </Text>
         </Flex>
         <Flex row>
-          <Flex
-            grow
-            borderColor="$surface3"
-            borderRadius="$rounded12"
-            borderWidth={1}
-            gap="$spacing16"
-            p="$spacing16">
+          <Flex grow borderColor="$surface3" borderRadius="$rounded12" borderWidth={1} gap="$spacing16" p="$spacing16">
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
-                  {CHAIN_INFO[chainId].label}
+                  {UNIVERSE_CHAIN_INFO[chainId].label}
                 </Text>
                 <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>
                   <Flex

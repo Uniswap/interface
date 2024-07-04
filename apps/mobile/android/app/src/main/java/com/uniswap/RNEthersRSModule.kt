@@ -7,6 +7,10 @@ import com.facebook.react.bridge.WritableArray
 import com.facebook.react.bridge.WritableNativeArray
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.soloader.SoLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Bridge between the React Native JavaScript code and the native Android code.
@@ -18,6 +22,7 @@ import com.facebook.soloader.SoLoader
 class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
 
   private val ethersRs: RnEthersRs = RnEthersRs(reactContext.applicationContext)
+  private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
   // Needs to be initialized form a static context
   companion object {
@@ -40,6 +45,12 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
     promise.resolve(ethersRs.importMnemonic(mnemonic))
   }
 
+  @ReactMethod fun removeMnemonic(mnemonicId: String, promise: Promise) {
+    scope.launch(Dispatchers.IO) {
+      val result = ethersRs.removeMnemonic(mnemonicId)
+      promise.resolve(result)
+    }
+  }
 
   @ReactMethod fun generateAndStoreMnemonic(promise: Promise) {
     promise.resolve(ethersRs.generateAndStoreMnemonic())
@@ -62,7 +73,18 @@ class RNEthersRSModule(reactContext: ReactApplicationContext) : ReactContextBase
   }
 
   @ReactMethod fun generateAndStorePrivateKey(mnemonicId: String, derivationIndex: Int, promise: Promise) {
-    promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
+    try {
+      promise.resolve(ethersRs.generateAndStorePrivateKey(mnemonicId, derivationIndex))
+    } catch (error: Exception) {
+      promise.reject(error)
+    }
+  }
+
+  @ReactMethod fun removePrivateKey(address: String, promise: Promise) {
+    scope.launch(Dispatchers.IO) {
+      val result = ethersRs.removePrivateKey(address)
+      promise.resolve(result)
+    }
   }
 
   @ReactMethod fun signTransactionHashForAddress(address: String, hash: String, chainId: Int, promise: Promise) {

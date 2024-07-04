@@ -1,10 +1,11 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {
@@ -14,10 +15,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
-import {
-  createTransactionId,
-  getSerializableTransactionRequest,
-} from 'wallet/src/features/transactions/utils'
+import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -27,7 +25,7 @@ export interface SendTransactionParams {
   // internal id used for tracking transactions before they're submitted
   // this is optional as an override in txDetail.id calculation
   txId?: string
-  chainId: ChainId
+  chainId: WalletChainId
   account: Account
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
@@ -41,7 +39,7 @@ export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
   const request = options.request
 
-  logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
+  logger.debug('sendTransaction', '', `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`)
 
   if (account.type === AccountType.Readonly) {
     throw new Error('Account must support signing')
@@ -56,7 +54,7 @@ export function* sendTransaction(params: SendTransactionParams) {
     request,
     account,
     provider,
-    signerManager
+    signerManager,
   )
   logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
@@ -69,7 +67,7 @@ export async function signAndSendTransaction(
   request: providers.TransactionRequest,
   account: Account,
   provider: providers.Provider,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
@@ -86,12 +84,13 @@ export async function signAndSendTransaction(
 function* addTransaction(
   { chainId, typeInfo, account, options, txId, analytics }: SendTransactionParams,
   hash: string,
-  populatedRequest: providers.TransactionRequest
+  populatedRequest: providers.TransactionRequest,
 ) {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
 
   const transaction: TransactionDetails = {
+    routing: Routing.CLASSIC,
     id,
     chainId,
     hash,
@@ -113,6 +112,7 @@ function* addTransaction(
       })
     } else {
       yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
+        routing: transaction.routing,
         transaction_hash: hash,
         ...analytics,
       })

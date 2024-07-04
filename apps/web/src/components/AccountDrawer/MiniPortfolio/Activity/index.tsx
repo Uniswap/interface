@@ -1,4 +1,10 @@
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
+import { ActivityRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
+import { useAllActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { createGroups } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
+import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -7,13 +13,6 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-
-import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useToggleAccountDrawer } from '../hooks'
-import { ActivityRow } from './ActivityRow'
-import { useAllActivities } from './hooks'
-import { createGroups } from './utils'
 
 const ActivityGroupWrapper = styled(Column)`
   margin-top: 16px;
@@ -26,7 +25,7 @@ const OpenLimitOrdersActivityButton = styled(OpenLimitOrdersButton)`
 `
 
 export function ActivityTab({ account }: { account: string }) {
-  const toggleAccountDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const setMenu = useUpdateAtom(miniPortfolioMenuStateAtom)
 
   const { activities, loading } = useAllActivities(account)
@@ -46,7 +45,7 @@ export function ActivityTab({ account }: { account: string }) {
       return (
         <>
           <OpenLimitOrdersActivityButton openLimitsMenu={() => setMenu(MenuState.LIMITS)} account={account} />
-          <EmptyWalletModule type="activity" onNavigateClick={toggleAccountDrawer} />
+          <EmptyWalletModule type="activity" onNavigateClick={accountDrawer.close} />
         </>
       )
     }
@@ -64,7 +63,7 @@ export function ActivityTab({ account }: { account: string }) {
               <Column data-testid="activity-content">
                 {activityGroup.transactions.map(
                   (activity) =>
-                    !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />
+                    !(hideSpam && activity.isSpam) && <ActivityRow key={activity.hash} activity={activity} />,
                 )}
               </Column>
             </ActivityGroupWrapper>

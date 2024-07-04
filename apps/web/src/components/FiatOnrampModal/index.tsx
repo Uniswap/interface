@@ -1,4 +1,6 @@
-import { useWeb3React } from '@web3-react/core'
+import Circle from 'assets/images/blue-loader.svg'
+import Modal from 'components/Modal'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
 //import { useHref } from 'react-router-dom'
@@ -7,11 +9,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-
-import Circle from '../../assets/images/blue-loader.svg'
-import Modal from '../Modal'
-//import { MOONPAY_SUPPORTED_CURRENCY_CODES } from './constants'
-//import { getDefaultCurrencyCode, parsePathParts } from './utils'
+import { logger } from 'utilities/src/logger/logger'
 
 const MOONPAY_DARK_BACKGROUND = '#054186'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -70,13 +68,17 @@ const MoonpayTextWrapper = styled.div`
 `
 
 export default function FiatOnrampModal() {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const theme = useTheme()
   const isDarkMode = useIsDarkMode()
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
   //const { chain, tokenAddress } = parsePathParts(location.pathname)
+  //const parsedChainName = useParsedQueryString().chain
+  //const queryChain =
+  //  typeof parsedChainName === 'string' ? getChainFromChainUrlParam(getChainUrlParam(parsedChainName)) : undefined
+  //const accountChainInfo = getChain({ chainId: account.chainId })
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -85,7 +87,7 @@ export default function FiatOnrampModal() {
   //const swapUrl = useHref('/swap')
 
   const fetchSignedIframeUrl = useCallback(async () => {
-    if (!account) {
+    if (!account.isConnected) {
       setError('Please connect an account before making a purchase.')
       return
     }
@@ -127,7 +129,7 @@ export default function FiatOnrampModal() {
       const fiatOnrampUrl = `${process.env.REACT_APP_MOONPAY_LINK}/?specificSettings=${specificSettingsParams}`
       setSignedIframeUrl(fiatOnrampUrl)
     } catch (e) {
-      console.log('there was an error fetching the link', e)
+      logger.info('FiatOnrampModal', 'fetchSingedIframeUrl', 'there was an error fetching the link', e)
       setError(e.toString())
     } finally {
       setLoading(false)
@@ -139,37 +141,35 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <>
-      <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} height={80 /* vh */}>
-        <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
-          {error ? (
-            <>
-              <ThemedText.MediumHeader>
-                <Trans i18nKey="moonpay.rampIframe" />
-              </ThemedText.MediumHeader>
-              <ErrorText>
-                <Trans i18nKey="common.error.somethingWrong" />
-                <br />
-                {error}
-              </ErrorText>
-            </>
-          ) : loading ? (
-            <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
-          ) : (
-            <StyledIframe
-              src={signedIframeUrl ?? ''}
-              frameBorder="0"
-              title="fiat-onramp-iframe"
-              isDarkMode={isDarkMode}
-            />
-          )}
-        </Wrapper>
-        <MoonpayTextWrapper>
-          <ThemedText.BodySmall color="neutral3">
-            <Trans i18nKey="moonpay.poweredBy" />
-          </ThemedText.BodySmall>
-        </MoonpayTextWrapper>
-      </Modal>
-    </>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} maxHeight="80vh" height="80vh">
+      <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
+        {error ? (
+          <>
+            <ThemedText.MediumHeader>
+              <Trans i18nKey="moonpay.rampIframe" />
+            </ThemedText.MediumHeader>
+            <ErrorText>
+              <Trans i18nKey="common.error.somethingWrong" />
+              <br />
+              {error}
+            </ErrorText>
+          </>
+        ) : loading ? (
+          <StyledSpinner src={Circle} alt="loading spinner" size="90px" />
+        ) : (
+          <StyledIframe
+            src={signedIframeUrl ?? ''}
+            frameBorder="0"
+            title="fiat-onramp-iframe"
+            isDarkMode={isDarkMode}
+          />
+        )}
+      </Wrapper>
+      <MoonpayTextWrapper>
+        <ThemedText.BodySmall color="neutral3">
+          <Trans i18nKey="moonpay.poweredBy" />
+        </ThemedText.BodySmall>
+      </MoonpayTextWrapper>
+    </Modal>
   )
 }

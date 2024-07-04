@@ -3,20 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { NumberType } from 'utilities/src/format/types'
-import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import {
-  LocalizationContextState,
-  useLocalizationContext,
-} from 'wallet/src/features/language/LocalizationContext'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type TransferStatusProps = {
@@ -31,13 +25,12 @@ const getTextFromTransferStatus = (
   fiatCurrencyInfo: FiatCurrencyInfo,
   derivedTransferInfo: DerivedTransferInfo,
   recipient: string | undefined,
-  transactionDetails?: TransactionDetails
+  transactionDetails?: TransactionDetails,
 ): {
   title: string
   description: string
 } => {
-  const { currencyInInfo, nftIn, currencyAmounts, isFiatInput, exactAmountFiat } =
-    derivedTransferInfo
+  const { currencyInInfo, nftIn, currencyAmounts, isFiatInput, exactAmountFiat } = derivedTransferInfo
   if (
     !transactionDetails ||
     transactionDetails.typeInfo.type !== TransactionType.Send ||
@@ -88,11 +81,7 @@ const getTextFromTransferStatus = (
   }
 }
 
-export function TransferStatus({
-  derivedTransferInfo,
-  onNext,
-  onTryAgain,
-}: TransferStatusProps): JSX.Element | null {
+export function TransferStatus({ derivedTransferInfo, onNext, onTryAgain }: TransferStatusProps): JSX.Element | null {
   const { t } = useTranslation()
   const formatter = useLocalizationContext()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
@@ -105,14 +94,7 @@ export function TransferStatus({
   const displayName = useDisplayName(recipient, { includeUnitagSuffix: true })
   const recipientName = displayName?.name ?? recipient
   const { title, description } = useMemo(() => {
-    return getTextFromTransferStatus(
-      t,
-      formatter,
-      appFiatCurrencyInfo,
-      derivedTransferInfo,
-      recipientName,
-      transaction
-    )
+    return getTextFromTransferStatus(t, formatter, appFiatCurrencyInfo, derivedTransferInfo, recipientName, transaction)
   }, [t, formatter, appFiatCurrencyInfo, derivedTransferInfo, recipientName, transaction])
 
   const onClose = useCallback(() => {

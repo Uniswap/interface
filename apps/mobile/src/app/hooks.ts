@@ -1,11 +1,12 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { ThunkDispatch } from '@reduxjs/toolkit'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import type { MobileState } from 'src/app/reducer'
 import type { AppDispatch } from 'src/app/store'
 import { SagaGenerator, select } from 'typed-redux-saga'
 import { spacing } from 'ui/src/theme'
-import type { MobileState } from './reducer'
 
 // Use throughout the app instead of plain `useDispatch` and `useSelector`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,9 +46,7 @@ export function useShouldShowNativeKeyboard(): {
   const isLayoutPending = containerHeight === undefined || decimalPadY === undefined
 
   // If decimal pad renders below the input panel, we need to show the native keyboard
-  const showNativeKeyboard = isLayoutPending
-    ? false
-    : containerHeight + MIN_INPUT_DECIMAL_PAD_GAP > decimalPadY
+  const showNativeKeyboard = isLayoutPending ? false : containerHeight + MIN_INPUT_DECIMAL_PAD_GAP > decimalPadY
 
   return {
     onInputPanelLayout,
@@ -55,7 +54,36 @@ export function useShouldShowNativeKeyboard(): {
     isLayoutPending,
     showNativeKeyboard,
     // can be used to imitate flexGrow=1 for the input panel
-    maxContentHeight:
-      isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMAL_PAD_GAP,
+    maxContentHeight: isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMAL_PAD_GAP,
+  }
+}
+
+const getNativeComponentKey = (): string => `native-component-${Math.random().toString()}`
+
+export function useNativeComponentKey(autoUpdate = true): {
+  key: string
+  triggerUpdate: () => void
+} {
+  const isInitialRenderRef = useRef(true)
+
+  const [key, setKey] = useState(getNativeComponentKey)
+
+  useFocusEffect(
+    useCallback(() => {
+      if (isInitialRenderRef.current || !autoUpdate) {
+        isInitialRenderRef.current = false
+        return
+      }
+      setKey(getNativeComponentKey())
+    }, [autoUpdate]),
+  )
+
+  const triggerUpdate = useCallback(() => {
+    setKey(getNativeComponentKey())
+  }, [])
+
+  return {
+    key,
+    triggerUpdate,
   }
 }

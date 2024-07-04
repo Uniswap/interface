@@ -38,18 +38,13 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import {
-  EthMethod,
-  UwULinkMethod,
-  WCEventType,
-  WCRequestOutcome,
-} from 'uniswap/src/types/walletConnect'
+import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
@@ -122,7 +117,7 @@ type SwapTransactionResultProperties = {
 }
 
 type TransferProperties = {
-  chainId: ChainId
+  chainId: WalletChainId
   tokenAddress: Address
   toAddress: Address
 }
@@ -135,7 +130,7 @@ export type WindowEthereumRequestProperties = {
 
 export type DappContextProperties = {
   dappUrl: string
-  chainId: ChainId
+  chainId: WalletChainId
   activeConnectedAddress: Address
   connectedAddresses: Address[]
 }
@@ -190,8 +185,16 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ProviderDirectMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.ExtensionEthMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.DeprecatedMethodRequest]: WindowEthereumRequestProperties
+  [ExtensionEventName.SidebarSwitchChain]: {
+    previousChainId?: number
+    newChainId: number
+  }
+  [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
-  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & { source: 'chip' | 'textInput' }
+  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & {
+    source: 'chip' | 'textInput'
+    amountUSD?: number
+  }
   [FiatOnRampEventName.FiatOnRampTokenSelected]: ITraceContext & { token: string }
   [FiatOnRampEventName.FiatOnRampTransactionUpdated]: {
     status: string
@@ -312,6 +315,8 @@ export type UniverseEventProperties = {
   [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: {
     source: LiquiditySource
     label: string
+    type: string
+    fee_tier?: number
   }
   [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
@@ -322,17 +327,24 @@ export type UniverseEventProperties = {
   } & ITraceContext
   [LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]: {
     label: string
-    type: number
+    type: string
     createPool?: boolean
     baseCurrencyId: string
     quoteCurrencyId: string
     feeAmount?: number
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
   } & ITraceContext
   [LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]: {
     source: LiquiditySource
     label: string
+    type: string
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
   } & ITraceContext
   [MobileEventName.ExtensionPromoBannerActionTaken]: {
     action: 'join' | 'dismiss'
@@ -341,6 +353,15 @@ export type UniverseEventProperties = {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number
     appRatingProvidedMs?: number
+  }
+  [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
+    showNotificationScreen: boolean
+    showBiometricsScreen: boolean
+    notificationOSPermission: string
+    hasAnyNotificationsEnabled: boolean
+    deviceSupportsBiometrics: boolean | undefined
+    isBiometricsEnrolled: boolean | undefined
+    isBiometricAuthEnabled: boolean
   }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
@@ -566,7 +587,7 @@ export type UniverseEventProperties = {
     query: string
   }
   [WalletEventName.NetworkFilterSelected]: ITraceContext & {
-    chain: ChainId | 'All'
+    chain: UniverseChainId | 'All'
   }
   [WalletEventName.NFTsLoaded]: {
     shown: number
@@ -589,9 +610,17 @@ export type UniverseEventProperties = {
     entity: ShareableEntity
     url: string
   }
-  [WalletEventName.SwapSubmitted]: {
-    transaction_hash: string
-  } & SwapTradeBaseProperties
+  [WalletEventName.SwapSubmitted]: (
+    | {
+        routing: 'CLASSIC'
+        transaction_hash: string
+      }
+    | {
+        routing: 'DUTCH_V2'
+        order_hash: string
+      }
+  ) &
+    SwapTradeBaseProperties
   // Please sort new values by EventName type!
 }
 

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { TripleDot } from 'src/components/icons/TripleDot'
+import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -11,7 +12,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { getNftCollectionUrl, getTwitterLink, openUri } from 'wallet/src/utils/linking'
-import { NFTCollectionData } from './types'
 
 type MenuOption = {
   title: string
@@ -102,14 +102,16 @@ export function NFTCollectionContextMenu({
       dropdownMenuMode={true}
       onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
         await menuActions[e.nativeEvent.index]?.action()
-      }}>
+      }}
+    >
       <TouchableArea
         hapticFeedback
         backgroundColor={showButtonOutline ? '$scrim' : '$transparent'}
         borderRadius="$roundedFull"
         style={{ padding: ICON_PADDING }}
         onLongPress={disableOnPress}
-        onPress={disableOnPress}>
+        onPress={disableOnPress}
+      >
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
           <TripleDot color={iconColor} size={3.5} />
         </Flex>

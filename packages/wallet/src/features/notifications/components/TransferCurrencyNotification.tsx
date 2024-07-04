@@ -1,3 +1,4 @@
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -8,7 +9,6 @@ import { TransferCurrencyTxNotification } from 'wallet/src/features/notification
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionType } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferCurrencyNotification({
   notification,
@@ -16,18 +16,8 @@ export function TransferCurrencyNotification({
   notification: TransferCurrencyTxNotification
 }): JSX.Element {
   const formatter = useLocalizationContext()
-  const {
-    address,
-    assetType,
-    chainId,
-    tokenAddress,
-    currencyAmountRaw,
-    txType,
-    txStatus,
-    hideDelay,
-  } = notification
-  const senderOrRecipient =
-    txType === TransactionType.Send ? notification.recipient : notification.sender
+  const { address, assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus, hideDelay } = notification
+  const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
 
@@ -38,7 +28,7 @@ export function TransferCurrencyNotification({
     currencyInfo?.currency,
     tokenAddress,
     currencyAmountRaw,
-    ensName ?? senderOrRecipient
+    ensName ?? senderOrRecipient,
   )
 
   const { navigateToAccountActivityList } = useWalletNavigation()

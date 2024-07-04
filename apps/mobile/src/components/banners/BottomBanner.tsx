@@ -1,6 +1,7 @@
 import React from 'react'
 import { FadeIn, FadeOut, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex, ColorTokens, Text } from 'ui/src'
+import { ColorTokens, Text } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 export const BANNER_HEIGHT = 45
 
@@ -11,12 +12,7 @@ export type BottomBannerProps = {
   translateY?: number
 }
 
-export function BottomBanner({
-  text,
-  icon,
-  backgroundColor,
-  translateY,
-}: BottomBannerProps): JSX.Element {
+export function BottomBanner({ text, icon, backgroundColor, translateY }: BottomBannerProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -50,7 +46,8 @@ export function BottomBanner({
       position="absolute"
       right={0}
       style={animatedStyle}
-      zIndex="$modal">
+      zIndex="$modal"
+    >
       {icon}
       <Text variant="body2">{text}</Text>
     </AnimatedFlex>

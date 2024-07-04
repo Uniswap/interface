@@ -6,13 +6,13 @@ import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType } from 'wallet/src/entities/assets'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
-import { isNativeCurrencyAddress } from 'wallet/src/utils/currencyId'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 type Params = {
@@ -63,29 +63,15 @@ function* validateTransfer(transferTokenParams: TransferTokenParams) {
 
   switch (type) {
     case AssetType.ERC1155: {
-      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(
-        chainId,
-        tokenAddress,
-        provider,
-        ERC1155_ABI
-      )
+      const erc1155Contract = contractManager.getOrCreateContract<Erc1155>(chainId, tokenAddress, provider, ERC1155_ABI)
 
-      const balance = yield* call(
-        erc1155Contract.balanceOf,
-        account.address,
-        transferTokenParams.tokenId
-      )
+      const balance = yield* call(erc1155Contract.balanceOf, account.address, transferTokenParams.tokenId)
 
       validateTransferAmount('1', balance)
       return
     }
     case AssetType.ERC721: {
-      const erc721Contract = contractManager.getOrCreateContract<Erc721>(
-        chainId,
-        tokenAddress,
-        provider,
-        ERC721_ABI
-      )
+      const erc721Contract = contractManager.getOrCreateContract<Erc721>(chainId, tokenAddress, provider, ERC721_ABI)
       const balance = yield* call(erc721Contract.balanceOf, account.address)
       validateTransferAmount('1', balance)
       return
@@ -97,12 +83,7 @@ function* validateTransfer(transferTokenParams: TransferTokenParams) {
         return
       }
 
-      const tokenContract = contractManager.getOrCreateContract<Erc20>(
-        chainId,
-        tokenAddress,
-        provider,
-        ERC20_ABI
-      )
+      const tokenContract = contractManager.getOrCreateContract<Erc20>(chainId, tokenAddress, provider, ERC20_ABI)
       const currentBalance = yield* call(tokenContract.balanceOf, account.address)
       validateTransferAmount(transferTokenParams.amountInWei, currentBalance)
     }

@@ -11,7 +11,12 @@ import { AnimatedBox, Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
 import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
+import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import * as styles from 'nft/components/collection/CollectionNfts.css'
+import { MARKETPLACE_ITEMS } from 'nft/components/collection/MarketplaceSelect'
+import { Sweep } from 'nft/components/collection/Sweep'
+import { TraitChip } from 'nft/components/collection/TraitChip'
+import { ClearAllButton } from 'nft/components/collection/shared'
 import { SortDropdown } from 'nft/components/common/SortDropdown'
 import { SweepIcon } from 'nft/components/icons'
 import { bodySmall, buttonTextMedium, headlineMedium } from 'nft/css/common.css'
@@ -57,11 +62,6 @@ import {
   NftStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { LoadingAssets } from './CollectionAssetLoading'
-import { MARKETPLACE_ITEMS } from './MarketplaceSelect'
-import { Sweep } from './Sweep'
-import { TraitChip } from './TraitChip'
-import { ClearAllButton } from './shared'
 
 interface CollectionNftsProps {
   contractAddress: string
@@ -285,7 +285,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
       const assetInBag = itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address,
       )
 
       if (asset.marketplace === Markets.Sudoswap) {
@@ -303,14 +303,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             .findIndex((item) => item.asset.tokenId === asset.tokenId)
         : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
     },
-    [itemsInBag]
+    [itemsInBag],
   )
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
-    [getPoolPosition]
+    [getPoolPosition],
   )
 
   const collectionAssets = useMemo(() => {
@@ -324,7 +324,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       (asset) =>
         asset.marketplace &&
         isPooledMarket(asset.marketplace) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0')
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0'),
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
@@ -371,7 +371,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity),
-    [hasRarity, setSortBy]
+    [hasRarity, setSortBy],
   )
 
   useEffect(() => {

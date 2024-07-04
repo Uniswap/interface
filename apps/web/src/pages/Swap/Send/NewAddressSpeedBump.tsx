@@ -1,15 +1,12 @@
 import { ColumnCenter } from 'components/Column'
 import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
+import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
 import Row from 'components/Row'
-import { Unicon } from 'components/Unicon'
 import { Trans } from 'i18n'
 import { useSendContext } from 'state/send/SendContext'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const StyledUserIcon = styled(UserIcon)`
   width: 28px;
@@ -28,7 +25,7 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
-  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+  const identiconType = useIdenticonType(recipientData?.address)
 
   return (
     <Dialog
@@ -39,10 +36,8 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
       body={
         <RecipientInfo>
           <Row justify="center" align="center" gap="xs">
-            {uniconsV2Enabled ? (
-              <UniconV2 size={16} address={recipientData?.address ?? ''} />
-            ) : (
-              <Unicon size={16} address={recipientData?.address ?? ''} />
+            {(identiconType === IdenticonType.ENS_AVATAR || identiconType === IdenticonType.UNITAG_PROFILE_PICTURE) && (
+              <Identicon data-testid="speedbump-identicon" size={16} account={recipientData?.address ?? ''} />
             )}
             <ThemedText.BodyPrimary lineHeight="24px">
               {recipientData?.ensName ?? recipientData?.address}

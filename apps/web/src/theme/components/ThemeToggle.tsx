@@ -1,27 +1,42 @@
 import Row from 'components/Row'
+import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
+import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components/text'
+import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
-
-import { Segment, SegmentedControl } from './SegmentedControl'
-import { ThemedText } from './text'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
 
 export enum ThemeMode {
-  LIGHT,
+  LIGHT = 0,
   DARK,
   AUTO,
 }
 
+const OptionPill = styled.div`
+  padding: 6px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const CompactOptionPill = styled.div`
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8px;
+`
+
 // Tracks the device theme
 const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
-  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
+  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT,
 )
 
 // Tracks the user's selected theme mode
@@ -34,7 +49,7 @@ export function SystemThemeUpdater() {
     (event: MediaQueryListEvent) => {
       setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
     },
-    [setSystemTheme]
+    [setSystemTheme],
   )
 
   useEffect(() => {
@@ -81,32 +96,97 @@ export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
   }, [isDarkMode, setMode])
 }
 
-export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
+const ThemePillMultiToggleContainer = styled.div`
+  width: fit;
+`
+
+const compactOptions = [
+  {
+    value: ThemeMode.AUTO,
+    display: (
+      <CompactOptionPill data-testid="theme-auto">
+        <Trans>Auto</Trans>
+      </CompactOptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.LIGHT,
+    display: (
+      <CompactOptionPill data-testid="theme-light">
+        <SunFilled size="$icon.20" />
+      </CompactOptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.DARK,
+    display: (
+      <CompactOptionPill data-testid="theme-dark">
+        <MoonFilled size="$icon.20" />
+      </CompactOptionPill>
+    ),
+  },
+]
+
+const defaultOptions = [
+  {
+    value: ThemeMode.AUTO,
+    display: (
+      <OptionPill data-testid="theme-auto">
+        <Trans>Auto</Trans>
+      </OptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.LIGHT,
+    display: (
+      <OptionPill data-testid="theme-light">
+        <Sun size="20" />
+      </OptionPill>
+    ),
+  },
+  {
+    value: ThemeMode.DARK,
+    display: (
+      <OptionPill data-testid="theme-dark">
+        <Moon size="20" />
+      </OptionPill>
+    ),
+  },
+]
+
+export function ThemeSelector({ disabled, compact = false }: { disabled?: boolean; compact?: boolean }) {
+  const theme = useTheme()
   const [mode, setMode] = useAtom(themeModeAtom)
   const switchMode = useCallback(
-    (mode: ThemeMode) => {
+    (mode: string | number) => {
       // Switch feels less jittery with short delay
-      !disabled && setTimeout(() => setMode(mode), THEME_UPDATE_DELAY)
+      !disabled && setTimeout(() => setMode(mode as ThemeMode), THEME_UPDATE_DELAY)
     },
-    [disabled, setMode]
+    [disabled, setMode],
   )
 
   return (
-    <Row align="center">
+    <ThemePillMultiToggleContainer>
+      <PillMultiToggle
+        options={compact ? compactOptions : defaultOptions}
+        currentSelected={mode}
+        onSelectOption={switchMode}
+        activePillColor={theme.accent2}
+        activeTextColor={theme.accent1}
+      />
+    </ThemePillMultiToggleContainer>
+  )
+}
+
+export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
+  return (
+    <Row align="center" justify="space-between">
       <Row width="40%">
         <ThemedText.SubHeaderSmall color="primary">
           <Trans i18nKey="themeToggle.theme" />
         </ThemedText.SubHeaderSmall>
       </Row>
-      <Row style={{ flexGrow: 1 }} justify="flex-end" width="60%">
-        <SegmentedControl selected={mode} onSelect={switchMode}>
-          <Segment value={ThemeMode.AUTO} testId="theme-auto">
-            <Trans i18nKey="commmon.automatic" />
-          </Segment>
-          <Segment value={ThemeMode.LIGHT} Icon={Sun} testId="theme-lightmode" />
-          <Segment value={ThemeMode.DARK} Icon={Moon} testId="theme-darkmode" />
-        </SegmentedControl>
-      </Row>
+      <ThemeSelector disabled={disabled} />
     </Row>
   )
 }

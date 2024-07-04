@@ -14,7 +14,7 @@ import {
   wrapChildrenInText,
   XStack,
 } from 'tamagui'
-import { IconProps } from 'ui/src/components/factories/createIcon'
+import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { HapticFeedback, HapticFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'
@@ -244,7 +244,7 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
       size,
       disabled: propsActive.disabled,
       maxFontSizeMultiplier: 1.2,
-    }
+    },
   )
 
   const inner = spacedChildren({
@@ -260,10 +260,10 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
   const tag = isNested
     ? 'span'
     : // defaults to <a /> when accessibilityRole = link
-    // see https://github.com/tamagui/tamagui/issues/505
-    propsIn.accessibilityRole === 'link'
-    ? 'a'
-    : undefined
+      // see https://github.com/tamagui/tamagui/issues/505
+      propsIn.accessibilityRole === 'link'
+      ? 'a'
+      : undefined
 
   const props = {
     ...(propsActive.disabled && {

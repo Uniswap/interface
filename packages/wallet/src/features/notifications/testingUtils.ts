@@ -51,7 +51,7 @@ export const useMockNotification = (ms?: number): void => {
           ...exampleSwapSuccess,
           hideDelay: ms ?? exampleSwapSuccess.hideDelay,
           address: activeAddress,
-        })
+        }),
       )
       setSent(true)
     }

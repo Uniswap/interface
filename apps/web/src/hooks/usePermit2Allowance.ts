@@ -1,7 +1,7 @@
-import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
 import useInterval from 'lib/hooks/useInterval'
@@ -48,14 +48,18 @@ export default function usePermit2Allowance(
   amount?: CurrencyAmount<Token>,
   spender?: string,
   tradeFillType?: TradeFillType,
-  isPool?: boolean
+  isPool?: boolean,
 ): Allowance {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const token = amount?.currency
-
-  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(token, account, PERMIT2_ADDRESS)
-  const updateTokenAllowance = useUpdateTokenAllowance(amount, PERMIT2_ADDRESS)
-  const revokeTokenAllowance = useRevokeTokenAllowance(token, PERMIT2_ADDRESS)
+  const permit2AddressForChain = permit2Address(token?.chainId)
+  const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(
+    token,
+    account.address,
+    permit2AddressForChain,
+  )
+  const updateTokenAllowance = useUpdateTokenAllowance(amount, permit2AddressForChain)
+  const revokeTokenAllowance = useRevokeTokenAllowance(token, permit2AddressForChain)
   const isApproved = useMemo(() => {
     // early return for smart pools
     if (isPool) {
@@ -72,8 +76,8 @@ export default function usePermit2Allowance(
   // until it has been re-observed. It wll sync immediately, because confirmation fast-forwards the block number.
   const [approvalState, setApprovalState] = useState(ApprovalState.SYNCED)
   const isApprovalLoading = approvalState !== ApprovalState.SYNCED
-  const isApprovalPending = useHasPendingApproval(token, PERMIT2_ADDRESS)
-  const isRevocationPending = useHasPendingRevocation(token, PERMIT2_ADDRESS)
+  const isApprovalPending = useHasPendingApproval(token, permit2AddressForChain)
+  const isRevocationPending = useHasPendingRevocation(token, permit2AddressForChain)
 
   useEffect(() => {
     if (isApprovalPending) {
@@ -95,7 +99,7 @@ export default function usePermit2Allowance(
   const [now, setNow] = useState(Date.now() + AVERAGE_L1_BLOCK_TIME)
   useInterval(
     useCallback(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME) / 1000), []),
-    AVERAGE_L1_BLOCK_TIME
+    AVERAGE_L1_BLOCK_TIME,
   )
 
   const [signature, setSignature] = useState<PermitSignature>()
@@ -106,7 +110,7 @@ export default function usePermit2Allowance(
     return signature.details.token === token?.address && signature.spender === spender && signature.sigDeadline >= now
   }, [amount, now, signature, spender, token?.address])
 
-  const { permitAllowance, expiration: permitExpiration, nonce } = usePermitAllowance(token, account, spender)
+  const { permitAllowance, expiration: permitExpiration, nonce } = usePermitAllowance(token, account.address, spender)
   const updatePermitAllowance = useUpdatePermitAllowance(token, spender, nonce, setSignature)
   const isPermitted = useMemo(() => {
     if (!amount || !permitAllowance || !permitExpiration) {

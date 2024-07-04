@@ -1,5 +1,4 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
@@ -10,23 +9,20 @@ import Toggle from 'components/Toggle'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import { ProposalStatus } from 'pages/Vote/styled'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-//import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-//import { shortenAddress } from 'utilities/src/addresses'
-//import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;
@@ -102,9 +98,9 @@ const Header = styled(ThemedText.H1Small)`
 
 export default function Landing() {
   const theme = useTheme()
-  const [hideCancelled, setHideCancelled] = useState(true)
+  const account = useAccount()
 
-  const { account } = useWeb3React()
+  const [hideCancelled, setHideCancelled] = useState(true)
 
   // toggle for showing delegation modal
   const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
@@ -175,7 +171,7 @@ export default function Landing() {
               <AutoRow gap="6px" justify="flex-end">
                 {loadingProposals || loadingAvailableVotes ? (
                   <Loader />
-                ) : account ? (
+                ) : account.isConnected ? (
                   <ButtonPrimary
                     style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"

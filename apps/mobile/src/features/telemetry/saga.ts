@@ -1,10 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { OriginApplication } from '@uniswap/analytics'
-import DeviceInfo from 'react-native-device-info'
-import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
+import DeviceInfo, { getUniqueId } from 'react-native-device-info'
 import { call, delay, fork, select, takeEvery } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
+import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
@@ -21,7 +21,9 @@ export function* telemetrySaga() {
       originOverride: uniswapUrls.apiOrigin,
       appBuild: DeviceInfo.getBundleId(),
     }),
-    allowAnalytics
+    allowAnalytics,
+    undefined,
+    async () => getUniqueId(),
   )
   yield* fork(watchTransactionEvents)
 }

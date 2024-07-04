@@ -26,6 +26,7 @@ interface DecimalPadProps {
   onKeyPress?: (label: KeyLabel, action: KeyAction) => void
   onKeyLongPress?: (label: KeyLabel, action: KeyAction) => void
   onReady: () => void
+  onTriggerInputShakeAnimation: () => void
 }
 
 type SizeMultiplier = {
@@ -43,6 +44,7 @@ export const DecimalPad = memo(function DecimalPad({
   onKeyPress,
   onKeyLongPress,
   onReady,
+  onTriggerInputShakeAnimation,
 }: DecimalPadProps): JSX.Element {
   const currentHeightRef = useRef<number | null>(null)
   const maxHeightRef = useRef<number | null>(maxHeight)
@@ -138,21 +140,30 @@ export const DecimalPad = memo(function DecimalPad({
     <Flex onLayout={onLayout}>
       {keys.map((row, rowIndex) => (
         <Flex key={rowIndex} row alignItems="center">
-          {row.map((key, keyIndex) =>
-            key.hidden ? (
+          {row.map((key, keyIndex) => {
+            const isNumberKey =
+              key.label.charCodeAt(0) >= '0'.charCodeAt(0) && key.label.charCodeAt(0) <= '9'.charCodeAt(0)
+
+            const isKeyDisabled = disabled || disabledKeys[key.label]
+            const shouldTriggerShake = isKeyDisabled && isNumberKey
+
+            return key.hidden ? (
               <Flex key={keyIndex} alignItems="center" width="50%" />
             ) : (
               <KeyButton
                 {...key}
                 key={keyIndex}
-                disabled={disabled || disabledKeys[key.label]}
+                // Unless the entire `DecimalPad` is disabled, we only truly disable and gray out the decimal separator and backspace keys.
+                // We never gray out the number keys. Instead we trigger a shake animation if the user presses them when they're "disabled".
+                // Because of this, we don't set the `disabled` prop on the number keys so we can trigger the `onPress` event.
+                disabled={disabled || (isKeyDisabled && !shouldTriggerShake)}
                 index={keyIndex}
                 sizeMultiplier={sizeMultiplier}
-                onLongPress={onKeyLongPress}
-                onPress={onKeyPress}
+                onLongPress={shouldTriggerShake ? onTriggerInputShakeAnimation : onKeyLongPress}
+                onPress={shouldTriggerShake ? onTriggerInputShakeAnimation : onKeyPress}
               />
             )
-          )}
+          })}
         </Flex>
       ))}
     </Flex>
@@ -219,7 +230,8 @@ const KeyButton = memo(function KeyButton({
       testID={'decimal-pad-' + label}
       width={keyWidth}
       onLongPress={handleLongPress}
-      onPress={handlePress}>
+      onPress={handlePress}
+    >
       {label === 'backspace' ? (
         I18nManager.isRTL ? (
           <RightArrow color={color} size={24 * sizeMultiplier.icon} />
@@ -233,7 +245,8 @@ const KeyButton = memo(function KeyButton({
             lineHeight: fonts.heading2.lineHeight * sizeMultiplier.lineHeight,
             fontSize: fonts.heading2.fontSize * sizeMultiplier.fontSize,
           }}
-          textAlign="center">
+          textAlign="center"
+        >
           {
             label === '.' ? decimalSeparator : label
             /* respect phone settings to show decimal separator in the numpad,

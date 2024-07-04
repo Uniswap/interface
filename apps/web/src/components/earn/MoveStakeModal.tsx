@@ -1,6 +1,5 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
@@ -10,15 +9,16 @@ import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { TextButton } from '../../components/vote/DelegateModal'
-import { GRG } from '../../constants/tokens'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useENS from '../../hooks/useENS'
-import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
+import { TextButton } from 'components/vote/DelegateModal'
+import { GRG } from 'constants/tokens'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import useENS from 'hooks/useENS'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
+import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import {
   StakeData,
   useDeactivateStakeCallback,
@@ -26,18 +26,19 @@ import {
   usePoolExtendedContract,
   usePoolIdByAddress,
   useStakeBalance,
-} from '../../state/governance/hooks'
-import { useFreeStakeBalance } from '../../state/stake/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import AddressInputPanel from '../AddressInputPanel'
-import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
+} from 'state/governance/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button'
 //import { ButtonError } from '../Button'
-import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { AutoRow, RowBetween } from '../Row'
-import Slider from '../Slider'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { AutoRow, RowBetween } from 'components/Row'
+import Slider from 'components/Slider'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -59,10 +60,10 @@ interface MoveStakeModalProps {
 }
 
 export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismiss, title }: MoveStakeModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
   const [typed, setTyped] = useState('')
   const [isPoolMoving, setIsPoolMoving] = useState(false)
 
@@ -165,7 +166,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
     // try delegation and store hash
     const hash = await moveCallback(moveStakeData)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('MoveStakeModal', 'onMoveStake', error)
     })
 
     if (hash) {
@@ -174,7 +175,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
@@ -244,7 +245,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
                 )}{' '}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
-            {isDeactivate && poolInfo?.owner === account && (
+            {isDeactivate && poolInfo?.owner === account.address && (
               <TextButton onClick={() => setIsPoolMoving(!isPoolMoving)}>
                 <ThemedText.DeprecatedMediumHeader>
                   {isPoolMoving ? <Trans>Deactivate Stake</Trans> : <Trans>Deactivate Pool Stake</Trans>}

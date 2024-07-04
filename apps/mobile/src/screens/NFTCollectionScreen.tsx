@@ -10,30 +10,20 @@ import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
-import {
-  NFTCollectionHeader,
-  NFT_BANNER_HEIGHT,
-} from 'src/features/nfts/collection/NFTCollectionHeader'
+import { NFTCollectionHeader, NFT_BANNER_HEIGHT } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import {
-  AnimatedBottomSheetFlashList,
-  AnimatedFlashList,
-  Flex,
-  ImpactFeedbackStyle,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-} from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'uniswap/src/utils/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { isIOS } from 'utilities/src/platform'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
@@ -48,9 +38,7 @@ const LOADING_BUFFER_AMOUNT = 9
 const LOADING_ITEMS_ARRAY: NFTItem[] = Array(LOADING_BUFFER_AMOUNT).fill(LOADING_ITEM)
 
 const keyExtractor = (item: NFTItem | string, index: number): string =>
-  typeof item === 'string'
-    ? `${LOADING_ITEM}-${index}`
-    : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
+  typeof item === 'string' ? `${LOADING_ITEM}-${index}` : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
@@ -165,7 +153,8 @@ export function NFTCollectionScreen({
         backgroundColor="$surface3"
         borderRadius="$rounded16"
         overflow="hidden"
-        style={containerStyle}>
+        style={containerStyle}
+      >
         {typeof item === 'string' ? (
           <Loader.Box height="100%" width="100%" />
         ) : (
@@ -175,7 +164,8 @@ export function NFTCollectionScreen({
             alignItems="center"
             flex={1}
             hapticStyle={ImpactFeedbackStyle.Light}
-            onPress={(): void => onPressItem(item)}>
+            onPress={(): void => onPressItem(item)}
+          >
             <NFTViewer
               autoplay
               showSvgPreview
@@ -213,19 +203,14 @@ export function NFTCollectionScreen({
       return LOADING_ITEMS_ARRAY
     }
 
-    const extraLoadingItems: NFTItem[] = extraLoadingItemAmount
-      ? Array(extraLoadingItemAmount).fill(LOADING_ITEM)
-      : []
+    const extraLoadingItems: NFTItem[] = extraLoadingItemAmount ? Array(extraLoadingItemAmount).fill(LOADING_ITEM) : []
 
     return [...(collectionItems ?? []), ...extraLoadingItems]
   }, [collectionItems, extraLoadingItemAmount, gridDataLoading])
 
   const traceProperties = useMemo(
-    () =>
-      collectionData?.name
-        ? { collectionAddress, collectionName: collectionData?.name }
-        : undefined,
-    [collectionAddress, collectionData?.name]
+    () => (collectionData?.name ? { collectionAddress, collectionName: collectionData?.name } : undefined),
+    [collectionAddress, collectionData?.name],
   )
 
   if (isError(networkStatus, !!data)) {
@@ -252,29 +237,21 @@ export function NFTCollectionScreen({
         directFromPage
         logImpression={!!traceProperties}
         properties={traceProperties}
-        screen={MobileScreens.NFTCollection}>
+        screen={MobileScreens.NFTCollection}
+      >
         <Screen noInsets={true}>
           <ScrollHeader
             fullScreen
-            centerElement={
-              collectionData?.name ? <Text variant="body1">{collectionData.name}</Text> : undefined
-            }
+            centerElement={collectionData?.name ? <Text variant="body1">{collectionData.name}</Text> : undefined}
             listRef={listRef}
-            rightElement={
-              <NFTCollectionContextMenu
-                collectionAddress={collectionAddress}
-                data={collectionData}
-              />
-            }
+            rightElement={<NFTCollectionContextMenu collectionAddress={collectionAddress} data={collectionData} />}
             scrollY={scrollY}
             showHeaderScrollYDistance={NFT_BANNER_HEIGHT}
           />
           <List
             ref={listRef}
             ListEmptyComponent={
-              gridDataLoading ? null : (
-                <BaseCard.EmptyState description={t('tokens.nfts.empty.description')} />
-              )
+              gridDataLoading ? null : <BaseCard.EmptyState description={t('tokens.nfts.empty.description')} />
             }
             ListHeaderComponent={
               <NFTCollectionHeader

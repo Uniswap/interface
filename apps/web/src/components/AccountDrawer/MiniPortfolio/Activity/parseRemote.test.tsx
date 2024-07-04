@@ -1,7 +1,4 @@
 import { act, renderHook } from '@testing-library/react'
-import ms from 'ms'
-
-import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 import {
   MockMint,
   MockMoonpayPurchase,
@@ -22,13 +19,15 @@ import {
   mockTokenTransferInPartsFragment,
   mockTokenTransferOutPartsFragment,
   mockTransactionDetailsPartsFragment,
-} from './fixtures/activity'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/fixtures/activity'
 import {
   offchainOrderDetailsFromGraphQLTransactionActivity,
   parseRemoteActivities,
   parseSwapAmounts,
   useTimeSince,
-} from './parseRemote'
+} from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import ms from 'ms'
+import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 
 const swapOrderTokenChanges = {
   TokenTransfer: [mockTokenTransferOutPartsFragment, mockTokenTransferInPartsFragment],
@@ -182,7 +181,7 @@ describe('parseRemote', () => {
           ...swapOrderTokenChanges,
           TokenTransfer: [mockTokenTransferOutPartsFragment],
         },
-        jest.fn().mockReturnValue('100')
+        jest.fn().mockReturnValue('100'),
       )
       expect(result).toEqual(undefined)
     })
@@ -196,7 +195,7 @@ describe('parseRemote', () => {
           ...swapOrderTokenChanges,
           TokenTransfer: [],
         }, // no token changes
-        jest.fn().mockReturnValue('100')
+        jest.fn().mockReturnValue('100'),
       )
       expect(result).toEqual(undefined)
     })
@@ -205,7 +204,7 @@ describe('parseRemote', () => {
       const result = offchainOrderDetailsFromGraphQLTransactionActivity(
         { ...MockSwapOrder, details: { ...mockTransactionDetailsPartsFragment, __typename: 'TransactionDetails' } },
         swapOrderTokenChanges,
-        jest.fn().mockReturnValue('100')
+        jest.fn().mockReturnValue('100'),
       )
       expect(result).toEqual({
         chainId: 1,

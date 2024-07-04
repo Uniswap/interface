@@ -29,7 +29,7 @@ export function SwapScreenContextProvider({ children }: { children: ReactNode })
       screenRef,
       setScreen: wrappedSetScreen,
     }),
-    [screen, wrappedSetScreen]
+    [screen, wrappedSetScreen],
   )
 
   return <SwapScreenContext.Provider value={state}>{children}</SwapScreenContext.Provider>

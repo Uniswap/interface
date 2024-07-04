@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
 import { colors as GlobalColors, GlobalPalette, colorsLight } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { assert } from 'utilities/src/errors'
 import { hex } from 'wcag-contrast'
 
@@ -18,9 +18,7 @@ export function opacify(amount: number, hexColor: string): string {
   }
 
   if (hexColor.length !== 7) {
-    throw new Error(
-      `opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`
-    )
+    throw new Error(`opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`)
   }
 
   if (amount < 0 || amount > 100) {
@@ -33,12 +31,12 @@ export function opacify(amount: number, hexColor: string): string {
   return `${hexColor.slice(0, 7)}${opacifySuffix}`
 }
 
-export function getNetworkColorKey(chainId: ChainId): `chain_${ChainId}` {
+export function getNetworkColorKey(chainId: WalletChainId): `chain_${WalletChainId}` {
   return `chain_${chainId}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
-export function useNetworkColors(chainId: ChainId): {
+export function useNetworkColors(chainId: WalletChainId): {
   foreground: string
   background: string
 } {
@@ -60,9 +58,7 @@ export function useNetworkColors(chainId: ChainId): {
  * @param backgroundColor The hex value of the background color to check contrast against
  * @returns either 'sporeWhite' or 'sporeBlack'
  */
-export function getContrastPassingTextColor(
-  backgroundColor: string
-): '$sporeWhite' | '$sporeBlack' {
+export function getContrastPassingTextColor(backgroundColor: string): '$sporeWhite' | '$sporeBlack' {
   const lightText = colorsLight.sporeWhite
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
     return '$sporeWhite'
@@ -115,7 +111,7 @@ const ColorVariant = {
  */
 export function adjustColorVariant(
   colorName: string | undefined,
-  adjustmentType: AdjustmentType
+  adjustmentType: AdjustmentType,
 ): keyof GlobalPalette | undefined {
   if (!colorName) {
     return undefined
@@ -161,17 +157,14 @@ export function findNearestThemeColor(hexString: string): keyof GlobalPalette | 
     } as {
       colorDiff: number | undefined
       colorName: keyof GlobalPalette | undefined
-    }
+    },
   ).colorName
 }
 
 /**
  * Returns a number representing the difference between two colors. Lower means more similar.
  */
-export function getColorDiffScore(
-  colorA: string | null,
-  colorB: string | null
-): number | undefined {
+export function getColorDiffScore(colorA: string | null, colorB: string | null): number | undefined {
   if (!colorA || !colorB) {
     return undefined
   }

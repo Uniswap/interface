@@ -8,12 +8,7 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import {
-  FiatOnRampScreens,
-  MobileScreens,
-  OnboardingScreens,
-  UnitagScreens,
-} from 'uniswap/src/types/screens/mobile'
+import { FiatOnRampScreens, MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 type NFTItemScreenParams = {
@@ -71,10 +66,7 @@ export type OnboardingStackBaseParams = {
   entryPoint: OnboardingEntryPoint
 }
 
-export type UnitagEntryPoint =
-  | OnboardingScreens.Landing
-  | MobileScreens.Home
-  | MobileScreens.Settings
+export type UnitagEntryPoint = OnboardingScreens.Landing | MobileScreens.Home | MobileScreens.Settings
 
 export type SharedUnitagScreenParams = {
   [UnitagScreens.ClaimUnitag]: {
@@ -90,6 +82,7 @@ export type SharedUnitagScreenParams = {
 }
 
 export type OnboardingStackParamList = {
+  [OnboardingScreens.AppLoading]: undefined
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordCreate]: {
     address: Address
@@ -104,6 +97,10 @@ export type OnboardingStackParamList = {
 
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
+  [OnboardingScreens.OnDeviceRecovery]: OnboardingStackBaseParams & { mnemonicIds: Address[] }
+  [OnboardingScreens.OnDeviceRecoveryViewSeedPhrase]: {
+    mnemonicId: string
+  } & OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupPassword]: {
@@ -163,16 +160,20 @@ export type SettingsStackNavigationProp = CompositeNavigationProp<
   AppStackNavigationProp
 >
 
-export type SettingsStackScreenProp<Screen extends keyof SettingsStackParamList> =
-  CompositeScreenProps<NativeStackScreenProps<SettingsStackParamList, Screen>, AppStackScreenProps>
+export type SettingsStackScreenProp<Screen extends keyof SettingsStackParamList> = CompositeScreenProps<
+  NativeStackScreenProps<SettingsStackParamList, Screen>,
+  AppStackScreenProps
+>
 
 export type OnboardingStackNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<OnboardingStackParamList>,
   AppStackNavigationProp
 >
 
-export type UnitagStackScreenProp<Screen extends keyof UnitagStackParamList> =
-  NativeStackScreenProps<UnitagStackParamList, Screen>
+export type UnitagStackScreenProp<Screen extends keyof UnitagStackParamList> = NativeStackScreenProps<
+  UnitagStackParamList,
+  Screen
+>
 
 export type RootParamList = AppStackParamList &
   ExploreStackParamList &
@@ -181,10 +182,8 @@ export type RootParamList = AppStackParamList &
   UnitagStackParamList &
   FiatOnRampStackParamList
 
-export const useAppStackNavigation = (): AppStackNavigationProp =>
-  useNavigation<AppStackNavigationProp>()
-export const useExploreStackNavigation = (): ExploreStackNavigationProp =>
-  useNavigation<ExploreStackNavigationProp>()
+export const useAppStackNavigation = (): AppStackNavigationProp => useNavigation<AppStackNavigationProp>()
+export const useExploreStackNavigation = (): ExploreStackNavigationProp => useNavigation<ExploreStackNavigationProp>()
 export const useSettingsStackNavigation = (): SettingsStackNavigationProp =>
   useNavigation<SettingsStackNavigationProp>()
 export const useOnboardingStackNavigation = (): OnboardingStackNavigationProp =>

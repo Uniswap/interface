@@ -2,13 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -21,16 +21,10 @@ export function TransactionAmountsReview({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted, formatCurrencyAmount, formatNumberOrString } =
-    useLocalizationContext()
+  const { convertFiatAmountFormatted, formatCurrencyAmount, formatNumberOrString } = useLocalizationContext()
 
-  const {
-    currencies,
-    currencyAmounts,
-    currencyAmountsUSDValue,
-    exactAmountToken,
-    exactCurrencyField,
-  } = acceptedDerivedSwapInfo
+  const { currencies, currencyAmounts, currencyAmountsUSDValue, exactAmountToken, exactCurrencyField } =
+    acceptedDerivedSwapInfo
 
   const currencyInInfo = currencies[CurrencyField.INPUT]
   const currencyOutInfo = currencies[CurrencyField.OUTPUT]
@@ -45,17 +39,10 @@ export function TransactionAmountsReview({
       ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
       : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
 
-  const formattedFiatAmountIn = convertFiatAmountFormatted(
-    usdAmountIn,
-    NumberType.FiatTokenQuantity
-  )
-  const formattedFiatAmountOut = convertFiatAmountFormatted(
-    usdAmountOut,
-    NumberType.FiatTokenQuantity
-  )
+  const formattedFiatAmountIn = convertFiatAmountFormatted(usdAmountIn, NumberType.FiatTokenQuantity)
+  const formattedFiatAmountOut = convertFiatAmountFormatted(usdAmountOut, NumberType.FiatTokenQuantity)
 
-  const derivedCurrencyField =
-    exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const derivedCurrencyField = exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   const derivedAmount = formatCurrencyAmount({
     value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
@@ -84,9 +71,7 @@ export function TransactionAmountsReview({
     !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
   ) {
     // This should never happen. It's just to keep TS happy.
-    throw new Error(
-      'Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.'
-    )
+    throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
   }
 
   return (

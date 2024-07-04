@@ -2,47 +2,44 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { ButtonPrimary } from 'components/Button'
+import { GrayCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from 'components/Row'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { CardSection, DataCard } from 'components/earn/styled'
+import DelegateModal from 'components/vote/DelegateModal'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
+import VoteModal from 'components/vote/VoteModal'
+import {
+  AVERAGE_BLOCK_TIME_IN_SECS,
+  COMMON_CONTRACT_NAMES,
+  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+} from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { GRG } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
+import { ProposalStatus } from 'pages/Vote/styled'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
 import { useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'utilities/src/addresses'
-import { ButtonPrimary } from '../../components/Button'
-import { GrayCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { CardSection, DataCard } from '../../components/earn/styled'
-import DelegateModal from '../../components/vote/DelegateModal'
-import VoteModal from '../../components/vote/VoteModal'
-import {
-  AVERAGE_BLOCK_TIME_IN_SECS,
-  COMMON_CONTRACT_NAMES,
-  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-} from '../../constants/governance'
-import { GRG } from '../../constants/tokens'
 import {
   useModalIsOpen,
   useToggleDelegateModal,
   useToggleExecuteModal,
   useToggleQueueModal,
   useToggleVoteModal,
-} from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { useTokenBalance } from '../../state/connection/hooks'
+} from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import { useTokenBalance } from 'state/connection/hooks'
 import {
   ProposalData,
   ProposalState,
@@ -50,10 +47,13 @@ import {
   useQuorum,
   useUserDelegatee,
   useUserVotes,
-} from '../../state/governance/hooks'
-import { VoteOption } from '../../state/governance/types'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { ProposalStatus } from './styled'
+} from 'state/governance/hooks'
+import { VoteOption } from 'state/governance/types'
+import styled from 'styled-components'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isAddress } from 'utilities/src/addresses'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;
@@ -148,7 +148,7 @@ function getDateFromBlockOrTime(
   currentBlock: number | undefined,
   averageBlockTimeInSeconds: number | undefined,
   currentTimestamp: BigNumber | undefined,
-  isTimestamp?: boolean
+  isTimestamp?: boolean,
 ): Date | undefined {
   if (targetBlockOrTime && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
     const date = new Date()
@@ -159,7 +159,7 @@ function getDateFromBlockOrTime(
     date.setTime(
       currentTimestamp
         .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlockOrTime - currentBlock)))
-        .toNumber() * ms(`1s`)
+        .toNumber() * ms(`1s`),
     )
     return date
   }
@@ -171,7 +171,7 @@ export default function VotePage() {
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
 
   const quorumAmount = useQuorum(parsedGovernorIndex)
 
@@ -203,16 +203,16 @@ export default function VotePage() {
   const startDate = getDateFromBlockOrTime(
     proposalData?.startBlock,
     currentBlock,
-    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp,
-    true
+    true,
   )
   const endDate = getDateFromBlockOrTime(
     proposalData?.endBlock,
     currentBlock,
-    (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+    (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
     currentTimestamp,
-    true
+    true,
   )
   const now = new Date()
   const locale = useActiveLocale()
@@ -243,31 +243,33 @@ export default function VotePage() {
     proposalData.status === ProposalState.ACTIVE
 
   // we only show the button if there's an account connected and the proposal state is correct
-  //const showQueueButton = account && proposalData?.status === ProposalState.SUCCEEDED
+  //const showQueueButton = account.isConnected && proposalData?.status === ProposalState.SUCCEEDED
 
   // we only show the button if there's an account connected and the proposal state is correct
   const showExecuteButton =
-    (account && proposalData?.status === ProposalState.SUCCEEDED) ||
-    (account && proposalData?.status === ProposalState.QUALIFIED)
+    (account.isConnected && proposalData?.status === ProposalState.SUCCEEDED) ||
+    (account.isConnected && proposalData?.status === ProposalState.QUALIFIED)
 
   const grgBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    chainId ? GRG[chainId] : undefined
+    account.address,
+    account.chainId ? GRG[account.chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
 
   // show links in propsoal details if content is an address
   // if content is contract with common name, replace address with common name
   const linkIfAddress = (content: string) => {
-    if (isAddress(content) && chainId) {
-      const commonName = COMMON_CONTRACT_NAMES[chainId]?.[content] ?? content
+    if (isAddress(content) && account.chainId) {
+      const commonName = COMMON_CONTRACT_NAMES[account.chainId]?.[content] ?? content
       return (
-        <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
+        <ExternalLink href={getExplorerLink(account.chainId, content, ExplorerDataType.ADDRESS)}>
+          {commonName}
+        </ExternalLink>
       )
     }
     return <span>{content}</span>
@@ -534,8 +536,8 @@ export default function VotePage() {
               </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink
                 href={
-                  proposalData?.proposer && chainId
-                    ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
+                  proposalData?.proposer && account.chainId
+                    ? getExplorerLink(account.chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
                     : ''
                 }
               >

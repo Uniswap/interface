@@ -4,11 +4,11 @@ import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { shortenAddress } from 'wallet/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
 
 type SearchEtherscanItemProps = {
@@ -22,30 +22,25 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   const { address } = etherscanResult
 
   const onPressViewEtherscan = async (): Promise<void> => {
-    const explorerLink = getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS)
+    const explorerLink = getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS)
     await openUri(explorerLink)
     dispatch(
       addToSearchHistory({
         searchResult: etherscanResult,
-      })
+      }),
     )
   }
 
-  const EtherscanIcon = getBlockExplorerIcon(ChainId.Mainnet)
+  const EtherscanIcon = getBlockExplorerIcon(UniverseChainId.Mainnet)
 
   return (
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
       testID={ElementName.SearchEtherscanItem}
-      onPress={onPressViewEtherscan}>
-      <Flex
-        row
-        alignItems="center"
-        gap="$spacing12"
-        justifyContent="space-between"
-        px="$spacing8"
-        py="$spacing12">
+      onPress={onPressViewEtherscan}
+    >
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>

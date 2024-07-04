@@ -1,4 +1,4 @@
-import { anonymizeLink } from './anonymizeLink'
+import { anonymizeLink } from 'utils/anonymizeLink'
 
 describe('#anonymizeLink', () => {
   it('does nothing to non-urls', () => {

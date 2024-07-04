@@ -1,12 +1,12 @@
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/bag/MobileHoverBag.css'
 import { body, bodySmall } from 'nft/css/common.css'
 import { useBag } from 'nft/hooks'
 import { useBagTotalEthPrice, useBagTotalUsdPrice } from 'nft/hooks/useBagTotalEthPrice'
 import { roundAndPluralize } from 'nft/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import * as styles from './MobileHoverBag.css'
 export const MobileHoverBag = () => {
   const itemsInBag = useBag((state) => state.itemsInBag)
   const toggleBag = useBag((state) => state.toggleBag)
@@ -37,8 +37,8 @@ export const MobileHoverBag = () => {
                     index === 0
                       ? 'translate(-50%, -50%) rotate(-4.42deg)'
                       : index === 1
-                      ? 'translate(-50%, -50%) rotate(-14.01deg)'
-                      : 'translate(-50%, -50%) rotate(10.24deg)',
+                        ? 'translate(-50%, -50%) rotate(-14.01deg)'
+                        : 'translate(-50%, -50%) rotate(10.24deg)',
                   zIndex: index,
                 }}
               />

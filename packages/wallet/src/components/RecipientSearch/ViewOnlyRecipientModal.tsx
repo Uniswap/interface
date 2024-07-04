@@ -2,18 +2,15 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 type ViewOnlyRecipientModalProps = {
   onConfirm: () => void
   onCancel: () => void
 }
 
-export function ViewOnlyRecipientModal({
-  onConfirm,
-  onCancel,
-}: ViewOnlyRecipientModalProps): JSX.Element {
+export function ViewOnlyRecipientModal({ onConfirm, onCancel }: ViewOnlyRecipientModalProps): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -25,7 +22,8 @@ export function ViewOnlyRecipientModal({
           borderRadius="$rounded12"
           height={iconSizes.icon48}
           mb="$spacing8"
-          width={iconSizes.icon48}>
+          width={iconSizes.icon48}
+        >
           <Eye color="$neutral2" size={iconSizes.icon24} />
         </Flex>
 

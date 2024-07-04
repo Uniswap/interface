@@ -1,10 +1,13 @@
+import {
+  FailedNetworkSwitchPopup,
+  TransactionPopupContent,
+  UniswapXOrderPopupContent,
+} from 'components/Popups/PopupContent'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useEffect } from 'react'
-
-import { useRemovePopup } from '../../state/application/hooks'
-import { PopupContent, PopupType } from '../../state/application/reducer'
-import { FailedNetworkSwitchPopup, TransactionPopupContent, UniswapXOrderPopupContent } from './PopupContent'
+import { useRemovePopup } from 'state/application/hooks'
+import { PopupContent, PopupType } from 'state/application/reducer'
 
 export default function PopupItem({
   removeAfterMs,

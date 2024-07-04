@@ -50,18 +50,16 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       alignItems="center"
       gap="$spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}
-      testID="relative-change">
-      {change !== undefined && (
-        <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
-      )}
+      testID="relative-change"
+    >
+      {change !== undefined && <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />}
       <Flex>
         <Text
-          color={
-            semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'
-          }
+          color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'}
           loading={loading}
           loadingPlaceholderText="▲ 00.00 (0.00)%"
-          variant={variant}>
+          variant={variant}
+        >
           {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
         </Text>
       </Flex>

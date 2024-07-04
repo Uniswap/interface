@@ -2,7 +2,12 @@
 
 exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c0 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c1 {
   outline: none;
   border: none;
   font-size: inherit;
@@ -25,11 +30,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 .c1:focus {
   -webkit-text-decoration: underline;
   text-decoration: underline;
-}
-
-.c0 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c2 {

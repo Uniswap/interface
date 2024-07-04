@@ -6,6 +6,15 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
+import {
+  isPricePoint,
+  PollingInterval,
+  PricePoint,
+  supportedChainIdFromGQLChain,
+  toHistoryDuration,
+  unwrapToken,
+  usePollQueryWhileMounted,
+} from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -15,15 +24,6 @@ import {
   useTopTokens100Query,
   useTopTokensSparklineQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import {
-  isPricePoint,
-  PollingInterval,
-  PricePoint,
-  supportedChainIdFromGQLChain,
-  toHistoryDuration,
-  unwrapToken,
-  usePollQueryWhileMounted,
-} from './util'
 
 const TokenSortMethods = {
   [TokenSortMethod.PRICE]: (a: TopToken, b: TopToken) =>
@@ -102,7 +102,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
       variables: { duration, chain },
       skip: !isWindowVisible,
     }),
-    PollingInterval.Slow
+    PollingInterval.Slow,
   )
 
   const sparklines = useMemo(() => {
@@ -125,12 +125,12 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
       variables: { duration, chain },
       skip: !isWindowVisible,
     }),
-    PollingInterval.Fast
+    PollingInterval.Fast,
   )
 
   const unwrappedTokens = useMemo(
     () => chainId && data?.topTokens?.map((token) => unwrapToken(chainId, token)),
-    [chainId, data]
+    [chainId, data],
   )
   const sortedTokens = useSortedTokens(unwrappedTokens)
   const tokenSortRank = useMemo(
@@ -144,11 +144,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
           [cur.address]: i + 1,
         }
       }, {}) ?? {},
-    [sortedTokens]
+    [sortedTokens],
   )
   const filteredTokens = useFilteredTokens(sortedTokens)
   return useMemo(
     () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines, error }),
-    [filteredTokens, tokenSortRank, loadingTokens, sparklines, error]
+    [filteredTokens, tokenSortRank, loadingTokens, sparklines, error],
   )
 }

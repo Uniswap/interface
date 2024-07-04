@@ -1,4 +1,4 @@
-import { arrayToSlices } from './arrays'
+import { arrayToSlices } from 'utils/arrays'
 
 describe('#arrayToSlices', () => {
   it('returns properly sized slices', () => {

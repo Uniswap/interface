@@ -15,8 +15,7 @@ import {
 import { useChainFromUrlParam } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
-import { getSupportedGraphQlChain } from 'graphql/data/util'
-import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
@@ -29,26 +28,17 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-type ExploreTxTableSortState = {
-  sortBy: Transaction_OrderBy
-  sortDirection: OrderDirection
-}
-
 export default function RecentTransactions() {
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const [filter, setFilters] = useState<TransactionType[]>([
     TransactionType.SWAP,
-    TransactionType.BURN,
-    TransactionType.MINT,
+    TransactionType.REMOVE,
+    TransactionType.ADD,
   ])
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
 
-  const [sortState] = useState<ExploreTxTableSortState>({
-    sortBy: Transaction_OrderBy.Timestamp,
-    sortDirection: OrderDirection.Desc,
-  })
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chain.backendChain.chain, filter)
   const combinedError =
     errorV2 && errorV3
@@ -66,10 +56,8 @@ export default function RecentTransactions() {
         header: () => (
           <Cell minWidth={120} justifyContent="flex-start" grow>
             <Row gap="4px">
-              {sortState.sortBy === Transaction_OrderBy.Timestamp && (
-                <HeaderArrow direction={sortState.sortDirection} />
-              )}
-              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
+              <HeaderArrow direction={OrderDirection.Desc} />
+              <HeaderSortText $active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
@@ -114,7 +102,7 @@ export default function RecentTransactions() {
                 {transaction.getValue?.().type === PoolTransactionType.Swap ? (
                   <Trans i18nKey="common.for" />
                 ) : (
-                  <Trans i18nKey="common.and" />
+                  <Trans i18nKey="common.endAdornment" />
                 )}
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token1} />
@@ -197,17 +185,7 @@ export default function RecentTransactions() {
         ),
       }),
     ]
-  }, [
-    activeLocalCurrency,
-    chain.id,
-    filter,
-    filterModalIsOpen,
-    formatFiatPrice,
-    formatNumber,
-    showLoadingSkeleton,
-    sortState.sortBy,
-    sortState.sortDirection,
-  ])
+  }, [activeLocalCurrency, chain.id, filter, filterModalIsOpen, formatFiatPrice, formatNumber, showLoadingSkeleton])
 
   return (
     <Table

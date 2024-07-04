@@ -16,7 +16,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'uniswap/src/utils/platform'
+import { isIOS } from 'utilities/src/platform'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
@@ -32,7 +32,7 @@ export const showNotificationSettingsAlert = (): void => {
       {
         text: i18n.t('common.button.cancel'),
       },
-    ]
+    ],
   )
 }
 
@@ -47,27 +47,21 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   const renderBackButton = useCallback(
     (nav: OnboardingScreens): JSX.Element => (
-      <BackButton
-        onPressBack={(): void => navigation.navigate({ name: nav, params, merge: true })}
-      />
+      <BackButton onPressBack={(): void => navigation.navigate({ name: nav, params, merge: true })} />
     ),
-    [navigation, params]
+    [navigation, params],
   )
 
   /* For some screens, we want to override the back button to go to a different screen.
    * This helps avoid re-visiting loading states or confirmation views.
    */
   useEffect(() => {
-    const shouldOverrideBackButton = [
-      ImportType.SeedPhrase,
-      ImportType.Restore,
-      ImportType.CreateNew,
-    ].includes(params.importType)
+    const shouldOverrideBackButton = [ImportType.SeedPhrase, ImportType.Restore, ImportType.CreateNew].includes(
+      params.importType,
+    )
     if (shouldOverrideBackButton) {
       const nextScreen =
-        params.importType === ImportType.Restore
-          ? OnboardingScreens.RestoreCloudBackup
-          : OnboardingScreens.Backup
+        params.importType === ImportType.Restore ? OnboardingScreens.RestoreCloudBackup : OnboardingScreens.Backup
       navigation.setOptions({
         headerLeft: () => renderBackButton(nextScreen),
       })
@@ -85,14 +79,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     } else {
       navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
     }
-  }, [
-    deviceSupportsBiometrics,
-    hasSeedPhrase,
-    isBiometricAuthEnabled,
-    navigation,
-    onCompleteOnboarding,
-    params,
-  ])
+  }, [deviceSupportsBiometrics, hasSeedPhrase, isBiometricAuthEnabled, navigation, onCompleteOnboarding, params])
 
   const onPressEnableNotifications = useCallback(async () => {
     promptPushPermission(() => {
@@ -103,9 +90,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   }, [enableNotifications, navigateToNextScreen])
 
   return (
-    <OnboardingScreen
-      subtitle={t('onboarding.notification.subtitle')}
-      title={t('onboarding.notification.title')}>
+    <OnboardingScreen subtitle={t('onboarding.notification.subtitle')} title={t('onboarding.notification.title')}>
       <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
@@ -133,9 +118,7 @@ const NotificationsBackgroundImage = (): JSX.Element => {
     <Image
       resizeMode="contain"
       source={
-        isDarkMode
-          ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK)
-          : Platform.select(ONBOARDING_NOTIFICATIONS_LIGHT)
+        isDarkMode ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK) : Platform.select(ONBOARDING_NOTIFICATIONS_LIGHT)
       }
       style={styles.image}
     />

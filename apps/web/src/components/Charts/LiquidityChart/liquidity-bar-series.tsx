@@ -1,13 +1,17 @@
 import {
-  customSeriesDefaultOptions,
+  LiquidityBarData,
+  LiquidityBarProps,
+  LiquidityBarSeriesOptions,
+  LiquidityBarSeriesRenderer,
+} from 'components/Charts/LiquidityChart/renderer'
+import {
   CustomSeriesPricePlotValues,
   ICustomSeriesPaneView,
   PaneRendererCustomData,
   Time,
   WhitespaceData,
+  customSeriesDefaultOptions,
 } from 'lightweight-charts'
-
-import { LiquidityBarData, LiquidityBarProps, LiquidityBarSeriesOptions, LiquidityBarSeriesRenderer } from './renderer'
 
 export class LiquidityBarSeries<TData extends LiquidityBarData>
   implements ICustomSeriesPaneView<Time, TData, LiquidityBarSeriesOptions>

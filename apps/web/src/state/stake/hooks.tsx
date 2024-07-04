@@ -2,11 +2,12 @@ import { Interface } from '@ethersproject/abi'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { POP_ADDRESSES } from 'constants/addresses'
-import { GRG } from 'constants/tokens'
+import { DAI, GRG, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -23,9 +24,9 @@ import { usePoolExtendedContract } from 'state/pool/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import POP_ABI from 'uniswap/src/abis/pop.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
-
-import { DAI, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
+import { logger } from 'utilities/src/logger/logger'
 
 const STAKING_REWARDS_INTERFACE = new Interface(StakingRewardsJSON.abi)
 
@@ -39,19 +40,19 @@ const STAKING_REWARDS_INFO: {
 } = {
   1: [
     {
-      tokens: [WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token, DAI],
+      tokens: [WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token, DAI],
       stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
     },
     {
-      tokens: [WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token, USDC_MAINNET],
+      tokens: [WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token, USDC_MAINNET],
       stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
     },
     {
-      tokens: [WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token, USDT],
+      tokens: [WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token, USDT],
       stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a',
     },
     {
-      tokens: [WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token, WBTC],
+      tokens: [WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token, WBTC],
       stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
     },
   ],
@@ -81,37 +82,37 @@ interface StakingInfo {
   getHypotheticalRewardRate: (
     stakedAmount: CurrencyAmount<Token>,
     totalStakedAmount: CurrencyAmount<Token>,
-    totalRewardRate: CurrencyAmount<Token>
+    totalRewardRate: CurrencyAmount<Token>,
   ) => CurrencyAmount<Token>
 }
 
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
 
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
 
   const info = useMemo(
     () =>
-      chainId
-        ? STAKING_REWARDS_INFO[chainId]?.filter((stakingRewardInfo) =>
+      account.chainId
+        ? STAKING_REWARDS_INFO[account.chainId]?.filter((stakingRewardInfo) =>
             pairToFilterBy === undefined
               ? true
               : pairToFilterBy === null
-              ? false
-              : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+                ? false
+                : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+                  pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1]),
           ) ?? []
         : [],
-    [chainId, pairToFilterBy]
+    [account.chainId, pairToFilterBy],
   )
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = account.chainId ? UNI[account.chainId] : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
+  const accountArg = useMemo(() => [account.address], [account.address])
 
   // get all the info from the staking rewards contracts
   const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
@@ -124,18 +125,18 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     STAKING_REWARDS_INTERFACE,
     'rewardRate',
     undefined,
-    NEVER_RELOAD
+    NEVER_RELOAD,
   )
   const periodFinishes = useMultipleContractSingleData(
     rewardsAddresses,
     STAKING_REWARDS_INTERFACE,
     'periodFinish',
     undefined,
-    NEVER_RELOAD
+    NEVER_RELOAD,
   )
 
   return useMemo(() => {
-    if (!chainId || !uni) {
+    if (!account.chainId || !uni) {
       return []
     }
 
@@ -168,7 +169,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           rewardRateState.error ||
           periodFinishState.error
         ) {
-          console.error('Failed to load staking rewards info')
+          logger.warn('stake/hooks', 'useStakingInfo', 'Failed to load staking rewards info')
           return memo
         }
 
@@ -176,31 +177,31 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const tokens = info[index].tokens
         const dummyPair = new Pair(
           CurrencyAmount.fromRawAmount(tokens[0], '0'),
-          CurrencyAmount.fromRawAmount(tokens[1], '0')
+          CurrencyAmount.fromRawAmount(tokens[1], '0'),
         )
 
         // check for account, if no account set to 0
 
         const stakedAmount = CurrencyAmount.fromRawAmount(
           dummyPair.liquidityToken,
-          JSBI.BigInt(balanceState?.result?.[0] ?? 0)
+          JSBI.BigInt(balanceState?.result?.[0] ?? 0),
         )
         const totalStakedAmount = CurrencyAmount.fromRawAmount(
           dummyPair.liquidityToken,
-          JSBI.BigInt(totalSupplyState.result?.[0])
+          JSBI.BigInt(totalSupplyState.result?.[0]),
         )
         const totalRewardRate = CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
           stakedAmount: CurrencyAmount<Token>,
           totalStakedAmount: CurrencyAmount<Token>,
-          totalRewardRate: CurrencyAmount<Token>
+          totalRewardRate: CurrencyAmount<Token>,
         ): CurrencyAmount<Token> => {
           return CurrencyAmount.fromRawAmount(
             uni,
             JSBI.greaterThan(totalStakedAmount.quotient, JSBI.BigInt(0))
               ? JSBI.divide(JSBI.multiply(totalRewardRate.quotient, stakedAmount.quotient), totalStakedAmount.quotient)
-              : JSBI.BigInt(0)
+              : JSBI.BigInt(0),
           )
         }
 
@@ -230,7 +231,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     }, [])
   }, [
     balances,
-    chainId,
+    account.chainId,
     currentBlockTimestamp,
     earnedAmounts,
     info,
@@ -243,13 +244,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 }
 
 export function useFreeStakeBalance(isDelegateFreeStake?: boolean): CurrencyAmount<Token> | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
   const freeStake = useSingleCallResult(stakingContract ?? undefined, 'getOwnerStakeByStatus', [
-    isDelegateFreeStake ? account : poolAddressFromUrl ?? account,
+    isDelegateFreeStake ? account.address : poolAddressFromUrl ?? account.address,
     StakeStatus.UNDELEGATED,
   ])?.result?.[0]
 
@@ -272,12 +273,12 @@ interface UnclaimedRewardsData {
 
 // TODO: check as from pool page we are passing [] if not pool operator, i.e. we want to skip the rpc call when normal user
 export function useUnclaimedRewards(poolIds: string[]): UnclaimedRewardsData[] | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   //const members = Array(poolIds.length).fill(poolAddressFromUrl ?? account)
-  const farmer = poolAddressFromUrl ?? account
+  const farmer = poolAddressFromUrl ?? account.address
   // TODO: check if can improve as whenever there is an address in the url the pool's balance will be checked
   //  we should check the logic of appending pool address as we should also append its pool id, but will result
   //  in a duplicate id, however the positive reward filter will return that id either for user or for pool, never both
@@ -316,13 +317,13 @@ interface UserStakeData {
 }
 
 export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
+  const account = useAccount()
+  const grg = useMemo(() => (account.chainId ? GRG[account.chainId] : undefined), [account.chainId])
   const stakingContract = useStakingContract()
 
   const inputs = useMemo(() => {
     return poolIds.map((poolId) => {
-      return [account, poolId]
+      return [account.address, poolId]
     })
   }, [account, poolIds])
 
@@ -348,7 +349,8 @@ export function useUserStakeBalances(poolIds: string[]): UserStakeData[] | undef
 }
 
 export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: boolean) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const stakingContract = useStakingContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
   const poolContract = usePoolExtendedContract(poolAddressFromUrl ?? undefined)
@@ -358,7 +360,7 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
 
   return useCallback(
     (amount: CurrencyAmount<Token>, isPool?: boolean) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!stakingContract) {
@@ -377,7 +379,7 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
             .then((response: TransactionResponse) => {
               addTransaction(response, {
                 type: TransactionType.CLAIM,
-                recipient: account,
+                recipient: account.address ?? '',
               })
               return response.hash
             })
@@ -399,12 +401,13 @@ export function useUnstakeCallback(): (amount: CurrencyAmount<Token>, isPool?: b
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract, addTransaction]
+    [account.address, account.chainId, provider, poolContract, stakingContract, addTransaction]
   )
 }
 
 export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
   const { poolAddress: poolAddressFromUrl } = useParams<{ poolAddress?: string }>()
@@ -415,7 +418,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
 
   return useCallback(
     (poolIds: string[], isPool?: boolean) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!stakingContract || !stakingProxy) {
@@ -446,7 +449,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
             .then((response: TransactionResponse) => {
               addTransaction(response, {
                 type: TransactionType.CLAIM,
-                recipient: account,
+                recipient: account.address ?? '',
               })
               return response.hash
             })
@@ -468,7 +471,7 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
         })
       }
     },
-    [account, chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
+    [account.address, account.chainId, provider, poolContract, stakingContract, stakingProxy, addTransaction]
   )
 }
 
@@ -477,7 +480,8 @@ export function usePopContract(): Contract | null {
 }
 
 export function useRaceCallback(): (poolAddress: string | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const popContract = usePopContract()
 
   // state for pending and submitted txn views
@@ -485,7 +489,7 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
 
   return useCallback(
     (poolAddress: string | undefined) => {
-      if (!provider || !chainId || !account) {
+      if (!provider || !account.chainId || !account.address) {
         return undefined
       }
       if (!popContract) {
@@ -500,12 +504,12 @@ export function useRaceCallback(): (poolAddress: string | undefined) => undefine
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               type: TransactionType.CLAIM,
-              recipient: account,
+              recipient: account.address ?? '',
             })
             return response.hash
           })
       })
     },
-    [account, chainId, provider, popContract, addTransaction]
+    [account.address, account.chainId, provider, popContract, addTransaction]
   )
 }

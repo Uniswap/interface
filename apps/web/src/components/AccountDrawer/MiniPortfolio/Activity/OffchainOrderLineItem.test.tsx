@@ -1,10 +1,13 @@
-import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import {
+  OffchainOrderLineItem,
+  OffchainOrderLineItemType,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-
-import { OffchainOrderLineItem, OffchainOrderLineItemType } from './OffchainOrderLineItem'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('OffchainOrderLineItem', () => {
   it('should render type EXCHANGE_RATE', () => {
@@ -15,7 +18,7 @@ describe('OffchainOrderLineItem', () => {
           inputAmount: CurrencyAmount.fromRawAmount(DAI, 1),
           outputAmount: CurrencyAmount.fromRawAmount(USDC_MAINNET, 1),
         }}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Rate')).toBeInTheDocument()
@@ -38,7 +41,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -47,7 +50,7 @@ describe('OffchainOrderLineItem', () => {
           addedTime: 1,
           expiry: 2,
         }}
-      />
+      />,
     )
     expect(screen.getByText('Expiry')).toBeInTheDocument()
   })
@@ -76,7 +79,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[UniverseChainId.Mainnet].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -85,7 +88,7 @@ describe('OffchainOrderLineItem', () => {
           addedTime: 1,
           expiry: 2,
         }}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Transaction ID')).toBeInTheDocument()

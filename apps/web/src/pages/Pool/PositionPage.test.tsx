@@ -7,12 +7,11 @@ import { USDC_MAINNET } from 'constants/tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import * as useV3Positions from 'hooks/useV3Positions'
+import PositionPage from 'pages/Pool/PositionPage'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, renderHook, screen } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
 import { useFormatter } from 'utils/formatNumbers'
-
-import PositionPage from './PositionPage'
 
 jest.mock('utils/unwrappedToken')
 jest.mock('hooks/useV3Positions')
@@ -41,7 +40,7 @@ const pool = new Pool(
   FeeAmount.LOW,
   '1829845065927797685282268152898194',
   '118646741804633449199',
-  200958
+  200958,
 )
 
 const USDC_AMOUNT = CurrencyAmount.fromRawAmount(USDC_MAINNET, '1224156977')

@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
+import { SpaceTokens } from '@tamagui/core'
 import { PropsWithChildren } from 'react'
-import { SpaceTokens } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 
 interface InsetProps {
@@ -16,9 +17,6 @@ interface InsetProps {
  *  API can be expanded to specific sides
  *  Debug options to color bg to debug spacing
  */
-export function Inset({
-  all = '$spacing16',
-  children,
-}: PropsWithChildren<InsetProps>): JSX.Element {
+export function Inset({ all = '$spacing16', children }: PropsWithChildren<InsetProps>): JSX.Element {
   return <Flex p={all}>{children}</Flex>
 }

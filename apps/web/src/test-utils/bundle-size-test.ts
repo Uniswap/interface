@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // This ensures the web app entry js size is under a limit
 
 // NOTE: not using a typical jest/.test.ts file because this test requires the
@@ -28,15 +29,15 @@ const entryGzipSize = report.reduce(
     acc +
     // only collect the entry point size to keep things simple
     (r.isInitialByEntrypoint?.main ? r.gzipSize || 0 : 0),
-  0
+  0,
 )
 
-// somewhat arbitrary, just a bit above where we are currently (4/19/2024)
-const currentSize = 1620714
+// somewhat arbitrary, just a bit above where we are currently (6/12/2024)
+const currentSize = 1789656
 const limit = Math.round(currentSize * 1.1)
 
 if (entryGzipSize > limit) {
-  console.error(`Bundle size has grown too big!`)
+  console.error(`Bundle size has grown too big! Entry JS size is ${entryGzipSize}, over the limit of ${limit}.`)
   process.exit(1)
 }
 

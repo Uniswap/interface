@@ -1,12 +1,11 @@
 import { Store } from '@reduxjs/toolkit'
 import { persistStore } from 'redux-persist'
 import { createDefaultStore } from 'state'
-
-import { initialState as initialListsState } from './lists/reducer'
-import { RouterPreference } from './routing/types'
-import { initialState as initialSignaturesState } from './signatures/reducer'
-import { initialState as initialTransactionsState } from './transactions/reducer'
-import { initialState as initialUserState } from './user/reducer'
+import { initialState as initialListsState } from 'state/lists/reducer'
+import { RouterPreference } from 'state/routing/types'
+import { initialState as initialSignaturesState } from 'state/signatures/reducer'
+import { initialState as initialTransactionsState } from 'state/transactions/reducer'
+import { initialState as initialUserState } from 'state/user/reducer'
 
 const defaultState = {
   lists: {},
@@ -14,7 +13,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 9,
+    version: 12,
   },
   application: {
     chainId: null,

@@ -1,16 +1,19 @@
 import type { Filter } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
-
-import { useAppDispatch, useAppSelector } from '../hooks'
-import { fetchedLogs, fetchedLogsError, fetchingLogs } from './slice'
-import { isHistoricalLog, keyToFilter } from './utils'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
+import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
+import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.logs)
-  const { chainId, provider } = useWeb3React()
+  const { chainId } = useAccount()
+  const { provider } = useWeb3React()
+
   const blockNumber = useBlockNumber()
 
   const filtersNeedFetch: Filter[] = useMemo(() => {
@@ -72,17 +75,17 @@ export default function Updater(): null {
               chainId,
               filter,
               results: { logs, blockNumber },
-            })
+            }),
           )
         })
         .catch((error) => {
-          console.error('Failed to get logs', filter, error)
+          logger.warn('logs/updater', 'Updater#useEffect', 'Failed to fetch logs', { error, filter })
           dispatch(
             fetchedLogsError({
               chainId,
               filter,
               blockNumber,
-            })
+            }),
           )
         })
     })

@@ -1,16 +1,13 @@
-import { ChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export function getSendPrefilledState({
   chainId,
   currencyAddress,
 }: {
-  chainId: ChainId
+  chainId: WalletChainId
   currencyAddress?: Address
 }): TransactionState {
   const nativeTokenAddress = getNativeAddress(chainId)

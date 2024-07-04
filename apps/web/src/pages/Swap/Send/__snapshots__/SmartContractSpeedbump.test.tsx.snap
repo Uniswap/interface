@@ -309,8 +309,8 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   width: 50vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-width: 420px;
   max-height: 90vh;
+  max-width: 420px;
   display: inline-table;
   border-radius: 20px;
 }
@@ -423,7 +423,11 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
     >
       <span
         class=" t_light _dsp_contents is_Theme"
-      />
+      >
+        <div
+          tabindex="0"
+        />
+      </span>
     </span>
   </div>
   <reach-portal>

@@ -1,19 +1,17 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
-import * as Sentry from '@sentry/react'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,
-  CHAIN_INFO,
   CHAIN_NAME_TO_CHAIN_ID,
   GQL_MAINNET_CHAINS,
   InterfaceGqlChain,
-  SupportedInterfaceChain,
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
+  isSupportedChainId,
 } from 'constants/chains'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
@@ -21,6 +19,7 @@ import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -29,6 +28,8 @@ import {
   PriceSource,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/types/chains'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 export enum PollingInterval {
@@ -41,7 +42,7 @@ export enum PollingInterval {
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
 export function usePollQueryWhileMounted<T, K extends OperationVariables>(
   queryResult: QueryResult<T, K>,
-  interval: PollingInterval
+  interval: PollingInterval,
 ) {
   const { startPolling, stopPolling } = queryResult
 
@@ -86,7 +87,7 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
 export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
 
 export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
-  return !!chainId && GQL_MAINNET_CHAINS.includes(CHAIN_INFO[chainId].backendChain.chain)
+  return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
 }
 
 export function toContractInput(currency: Currency): ContractInput {
@@ -110,24 +111,38 @@ export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefine
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.project?.name ?? token.name ?? undefined
+      token.project?.name ?? token.name ?? undefined,
     )
   }
 }
 
+export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency | undefined {
+  if (!isSupportedChainId(Number(forCurrency.chainId))) {
+    return
+  }
+  const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
+
+  if (!forCurrency.address) {
+    return nativeOnChain(supportedChainId)
+  } else {
+    // The Meld code may not match the currency's symbol (e.g. codes like USDC_BASE), so these should not be used for display.
+    return new Token(supportedChainId, forCurrency.address, 18, forCurrency.cryptoCurrencyCode, forCurrency.displayName)
+  }
+}
+
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
-  options?: undefined
-): SupportedInterfaceChain | undefined
+  chain: UniverseChainInfo | undefined,
+  options?: undefined,
+): UniverseChainInfo | undefined
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
-  options: { fallbackToEthereum: true }
-): SupportedInterfaceChain
+  chain: UniverseChainInfo | undefined,
+  options: { fallbackToEthereum: true },
+): UniverseChainInfo
 export function getSupportedGraphQlChain(
-  chain: SupportedInterfaceChain | undefined,
-  options?: { fallbackToEthereum?: boolean }
-): SupportedInterfaceChain | undefined {
-  const fallbackChain = options?.fallbackToEthereum ? CHAIN_INFO[ChainId.MAINNET] : undefined
+  chain: UniverseChainInfo | undefined,
+  options?: { fallbackToEthereum?: boolean },
+): UniverseChainInfo | undefined {
+  const fallbackChain = options?.fallbackToEthereum ? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet] : undefined
   return chain?.backendChain.backendSupported ? chain : fallbackChain
 }
 
@@ -140,22 +155,6 @@ export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): Supporte
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined
 export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
-}
-
-export function logSentryErrorForUnsupportedChain({
-  extras,
-  errorMessage,
-}: {
-  extras?: Record<string, any>
-  errorMessage: string
-}) {
-  Sentry.withScope((scope) => {
-    extras &&
-      Object.entries(extras).map(([k, v]) => {
-        scope.setExtra(k, v)
-      })
-    Sentry.captureException(new Error(errorMessage))
-  })
 }
 
 export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChain {
@@ -182,8 +181,9 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-// TODO: add chain name to url, update PoolPositionListItem, PoolPositionPage, RouteDefinitions
-export function getPoolDetailsURL({ address }: { address?: string }) {
+// TODO: add chainId, update PoolPositionListItem, PoolPositionPage, RouteDefinitions
+// TODO: should check we are correctly defining url for liquidity pools, no redirect to smart-pool
+export function getPoolDetailsURL(address: string) {
   return `/smart-pool/${address}`
 }
 
@@ -193,7 +193,7 @@ export function unwrapToken<
         address?: string | null
         project?: { name?: string | null }
       }
-    | undefined
+    | undefined,
 >(chainId: number, token: T): T {
   if (!token?.address) {
     return token
@@ -248,9 +248,9 @@ export function apolloQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
+  TQueryKey extends QueryKey = QueryKey,
 >(
-  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>
+  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>,
 ): Pick<
   UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
     queryKey: DataTag<TQueryKey, TQueryFnData>

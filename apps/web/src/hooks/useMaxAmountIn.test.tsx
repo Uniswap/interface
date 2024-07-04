@@ -1,7 +1,6 @@
+import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { renderHook } from 'test-utils/render'
-
-import { useMaxAmountIn } from './useMaxAmountIn'
 
 describe('useMaxAmountIn', () => {
   it('returns undefined for an undefined trade', () => {

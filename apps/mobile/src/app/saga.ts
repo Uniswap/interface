@@ -11,12 +11,7 @@ import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { call, delay, select, spawn } from 'typed-redux-saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
-import {
-  swapActions,
-  swapReducer,
-  swapSaga,
-  swapSagaName,
-} from 'wallet/src/features/transactions/swap/swapSaga'
+import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,
   tokenWrapReducer,
@@ -31,24 +26,11 @@ import {
   editAccountSagaName,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import {
-  createAccountActions,
-  createAccountReducer,
-  createAccountSaga,
-  createAccountSagaName,
-} from 'wallet/src/features/wallet/create/createAccountSaga'
-import {
   createAccountsActions,
   createAccountsReducer,
   createAccountsSaga,
   createAccountsSagaName,
 } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { pendingAccountSaga } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import {
-  importAccountActions,
-  importAccountReducer,
-  importAccountSaga,
-  importAccountSagaName,
-} from 'wallet/src/features/wallet/import/importAccountSaga'
 import { MonitoredSaga, getMonitoredSagaReducers } from 'wallet/src/state/saga'
 
 const REHYDRATION_STATUS_POLLING_INTERVAL = 50
@@ -61,7 +43,6 @@ const sagas = [
   deepLinkWatcher,
   firebaseDataWatcher,
   modalWatcher,
-  pendingAccountSaga,
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,
   telemetrySaga,
@@ -70,12 +51,6 @@ const sagas = [
 
 // All monitored sagas must be included here
 export const monitoredSagas: Record<string, MonitoredSaga> = {
-  [createAccountSagaName]: {
-    name: createAccountSagaName,
-    wrappedSaga: createAccountSaga,
-    reducer: createAccountReducer,
-    actions: createAccountActions,
-  },
   [createAccountsSagaName]: {
     name: createAccountsSagaName,
     wrappedSaga: createAccountsSaga,
@@ -87,12 +62,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: editAccountSaga,
     reducer: editAccountReducer,
     actions: editAccountActions,
-  },
-  [importAccountSagaName]: {
-    name: importAccountSagaName,
-    wrappedSaga: importAccountSaga,
-    reducer: importAccountReducer,
-    actions: importAccountActions,
   },
   [swapSagaName]: {
     name: swapSagaName,
@@ -113,11 +82,7 @@ export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 export function* mobileSaga() {
   // wait until redux-persist has finished rehydration
   while (true) {
-    if (
-      yield* select(
-        (state: { _persist?: PersistState }): boolean | undefined => state._persist?.rehydrated
-      )
-    ) {
+    if (yield* select((state: { _persist?: PersistState }): boolean | undefined => state._persist?.rehydrated)) {
       break
     }
     yield* delay(REHYDRATION_STATUS_POLLING_INTERVAL)

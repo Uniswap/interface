@@ -3,11 +3,7 @@ import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { selectTransactions } from 'wallet/src/features/transactions/selectors'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { RootState } from 'wallet/src/state'
 
 const NUM_CONSECUTIVE_SWAPS = 2
@@ -33,14 +29,12 @@ export const hasConsecutiveRecentSwapsSelector: Selector<RootState, boolean> = c
 
     const recentSwaps = swapTxs.slice(-NUM_CONSECUTIVE_SWAPS)
     const mostRecentSwapTime = recentSwaps[recentSwaps.length - 1]?.addedTime
-    const mostRecentSwapLessThanMinAgo = Boolean(
-      mostRecentSwapTime && Date.now() - mostRecentSwapTime < ONE_MINUTE_MS
-    )
+    const mostRecentSwapLessThanMinAgo = Boolean(mostRecentSwapTime && Date.now() - mostRecentSwapTime < ONE_MINUTE_MS)
 
     return (
       swapTxs.length >= NUM_CONSECUTIVE_SWAPS &&
       recentSwaps.every((tx) => tx.status === TransactionStatus.Success) &&
       mostRecentSwapLessThanMinAgo
     )
-  }
+  },
 )

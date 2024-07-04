@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, CheckBox, Flex, Text } from 'ui/src'
+import { Button, CheckBox, Flex, SpinningLoader, Text } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 
 export function RemoveLastMnemonicWalletFooter({
   onPress,
@@ -18,12 +17,7 @@ export function RemoveLastMnemonicWalletFooter({
 
   return (
     <>
-      <Flex
-        backgroundColor="$surface2"
-        borderRadius="$rounded16"
-        mx="$spacing16"
-        p="$spacing12"
-        width="100%">
+      <Flex backgroundColor="$surface2" borderRadius="$rounded16" mx="$spacing16" p="$spacing12" width="100%">
         <CheckBox
           checked={checkBoxAccepted}
           text={
@@ -43,7 +37,8 @@ export function RemoveLastMnemonicWalletFooter({
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
           testID={ElementName.Confirm}
           theme="detrimental"
-          onPress={onPress}>
+          onPress={onPress}
+        >
           {!inProgress ? t('account.wallet.button.remove') : undefined}
         </Button>
       </Flex>

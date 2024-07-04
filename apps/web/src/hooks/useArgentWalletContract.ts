@@ -1,16 +1,15 @@
-import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
+import { useContract } from 'hooks/useContract'
+import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import ArgentWalletContractABI from 'uniswap/src/abis/argent-wallet-contract.json'
 import { ArgentWalletContract } from 'uniswap/src/abis/types'
 
-import { useContract } from './useContract'
-import useIsArgentWallet from './useIsArgentWallet'
-
 export function useArgentWalletContract(): ArgentWalletContract | null {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const isArgentWallet = useIsArgentWallet()
   return useContract(
-    isArgentWallet ? account ?? undefined : undefined,
+    isArgentWallet ? account.address : undefined,
     ArgentWalletContractABI,
-    true
+    true,
   ) as ArgentWalletContract
 }

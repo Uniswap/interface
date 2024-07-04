@@ -5,26 +5,20 @@ import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading'
-import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
-import {
-  AnimatedFlex,
-  Flex,
-  Text,
-  TouchableArea,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
+import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORCountry } from 'wallet/src/features/fiatOnRamp/types'
-import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 const ICON_SIZE = 32 // design prefers a custom value here
@@ -38,10 +32,7 @@ function key(item: FORCountry): string {
   return item.countryCode
 }
 
-function CountrySelectorContent({
-  onSelectCountry,
-  countryCode,
-}: CountrySelectorProps): JSX.Element {
+function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelectorProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useDeviceInsets()
   const colors = useSporeColors()
@@ -57,9 +48,7 @@ function CountrySelectorContent({
       return []
     }
     return bubbleToTop(data.supportedCountries, (c) => c.countryCode === countryCode).filter(
-      (item) =>
-        !debouncedSearchText ||
-        item.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase())
+      (item) => !debouncedSearchText || item.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase()),
     )
   }, [countryCode, data, debouncedSearchText])
 
@@ -70,28 +59,20 @@ function CountrySelectorContent({
       return (
         <TouchableArea onPress={(): void => onSelectCountry(item)}>
           <Flex row alignItems="center" gap="$spacing12" p="$spacing12">
-            <Flex
-              borderRadius="$roundedFull"
-              height={ICON_SIZE}
-              overflow="hidden"
-              width={ICON_SIZE}>
+            <Flex borderRadius="$roundedFull" height={ICON_SIZE} overflow="hidden" width={ICON_SIZE}>
               <SvgUri height={ICON_SIZE} uri={countryFlagUrl} width={ICON_SIZE} />
             </Flex>
             <Text>{item.displayName}</Text>
             {item.countryCode === countryCode && (
               <Flex grow alignItems="flex-end" justifyContent="center">
-                <Check
-                  color={colors.accent1.get()}
-                  height={iconSizes.icon20}
-                  width={iconSizes.icon20}
-                />
+                <Check color={colors.accent1.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
               </Flex>
             )}
           </Flex>
         </TouchableArea>
       )
     },
-    [colors.accent1, countryCode, onSelectCountry]
+    [colors.accent1, countryCode, onSelectCountry],
   )
 
   return (
@@ -168,7 +149,8 @@ export function FiatOnRampCountryListModal({
       backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <CountrySelectorContent countryCode={countryCode} onSelectCountry={onSelectCountry} />
     </BottomSheetModal>
   )

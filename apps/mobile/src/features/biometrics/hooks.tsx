@@ -8,7 +8,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 type TriggerArgs<T> = {
@@ -49,7 +49,7 @@ type TriggerArgs<T> = {
  */
 export function useBiometricPrompt<T = undefined>(
   successCallback?: (params?: T) => void,
-  failureCallback?: () => void
+  failureCallback?: () => void,
 ): {
   trigger: (args?: TriggerArgs<T>) => Promise<void>
 } {
@@ -64,10 +64,7 @@ export function useBiometricPrompt<T = undefined>(
     const _successCallback = args?.successCallback ?? successCallback
     const _failureCallback = args?.failureCallback ?? failureCallback
 
-    if (
-      biometricAuthenticationSuccessful(authStatus) ||
-      biometricAuthenticationDisabledByOS(authStatus)
-    ) {
+    if (biometricAuthenticationSuccessful(authStatus) || biometricAuthenticationDisabledByOS(authStatus)) {
       _successCallback?.(args?.params)
     } else {
       _failureCallback?.()
@@ -85,12 +82,9 @@ export function biometricAuthenticationRejected(status: BiometricAuthenticationS
   return status === BiometricAuthenticationStatus.Rejected
 }
 
-export function biometricAuthenticationDisabledByOS(
-  status: BiometricAuthenticationStatus
-): boolean {
+export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticationStatus): boolean {
   return (
-    status === BiometricAuthenticationStatus.Unsupported ||
-    status === BiometricAuthenticationStatus.MissingEnrollment
+    status === BiometricAuthenticationStatus.Unsupported || status === BiometricAuthenticationStatus.MissingEnrollment
   )
 }
 

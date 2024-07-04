@@ -11,7 +11,6 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -24,13 +23,8 @@ import {
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
 
 type Props = CompositeScreenProps<
   NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WelcomeWallet>,
@@ -53,8 +47,6 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const walletName = useDisplayName(onboardingAccountAddress)
   const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
-  const dispatch = useAppDispatch()
-
   const onPressNext = (): void => {
     navigation.navigate({
       name: OnboardingScreens.Backup,
@@ -63,18 +55,9 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
     })
   }
 
-  // Ensure pending account is cleared before navigating away
-  navigation.addListener('beforeRemove', () => {
-    if (params.entryPoint === OnboardingEntryPoint.Sidebar) {
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-    }
-  })
-
   const zeroBalance = convertFiatAmountFormatted(0, NumberType.PortfolioBalance)
 
-  const displayName = unitagClaim
-    ? { type: DisplayNameType.Unitag, name: unitagClaim.username }
-    : walletName
+  const displayName = unitagClaim ? { type: DisplayNameType.Unitag, name: unitagClaim.username } : walletName
 
   return (
     <Screen mb="$spacing12" mx="$spacing24">
@@ -96,11 +79,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
               size={iconSizes.icon64}
             />
           )}
-          <DisplayNameText
-            displayName={displayName}
-            justifyContent="flex-start"
-            textProps={{ variant: 'body1' }}
-          />
+          <DisplayNameText displayName={displayName} justifyContent="flex-start" textProps={{ variant: 'body1' }} />
           <AnimatedNumber
             colorIndicationDuration={0}
             loading={false}
@@ -116,7 +95,8 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             $short={{ variant: 'heading3' }}
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.heading3.maxFontSizeMultiplier}
             textAlign="center"
-            variant="heading3">
+            variant="heading3"
+          >
             {t('onboarding.wallet.title')}
           </Text>
           <Text
@@ -124,25 +104,24 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             color="$neutral2"
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.body1.maxFontSizeMultiplier}
             textAlign="center"
-            variant="subheading2">
+            variant="subheading2"
+          >
             {t('onboarding.wallet.description.full')}
           </Text>
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
         <Button
+          disabled={!onboardingAccountAddress}
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing8">
                 <Flex
                   borderRadius="$roundedFull"
                   p="$spacing8"
-                  style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}>
-                  <LockIcon
-                    color={colors.sporeWhite.val}
-                    height={iconSizes.icon16}
-                    width={iconSizes.icon16}
-                  />
+                  style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}
+                >
+                  <LockIcon color={colors.sporeWhite.val} height={iconSizes.icon16} width={iconSizes.icon16} />
                 </Flex>
                 <Text color="$sporeWhite" variant="buttonLabel2">
                   {t('onboarding.wallet.continue')}

@@ -55,7 +55,7 @@ const AssetPage = () => {
         collection.collectionDescription ??
         'View traits, trading activity, descriptions, and other details on your NFTs.',
     }),
-    [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId]
+    [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId],
   )
   const metaTags = useDynamicMetatags(metaTagProperties)
 
@@ -75,6 +75,7 @@ const AssetPage = () => {
         {metaTags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}
+        <meta name="robots" content="max-image-preview:large" />
       </Helmet>
       <Trace
         logImpression

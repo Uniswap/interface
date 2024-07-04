@@ -35,13 +35,7 @@ export function WaveLoader(): JSX.Element {
   }))
 
   return (
-    <Flex
-      grow
-      row
-      alignItems="center"
-      height={chartHeight}
-      justifyContent="center"
-      sentry-label="WaveLoader">
+    <Flex grow row alignItems="center" height={chartHeight} justifyContent="center" sentry-label="WaveLoader">
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Flex centered grow row height="100%">
           <Wave color={colors.neutral3.get()} />

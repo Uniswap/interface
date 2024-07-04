@@ -5,26 +5,27 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
-import { NumberType } from 'utilities/src/format/types'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
   currencyIdToAddress,
   currencyIdToChain,
-} from 'wallet/src/utils/currencyId'
+} from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 export type TokenItemData = {
   name: string
   logoUrl: string
-  chainId: ChainId
+  chainId: WalletChainId
   address: Address | null
   symbol: string
   price?: number
@@ -40,11 +41,7 @@ interface TokenItemProps {
   metadataDisplayType?: TokenMetadataDisplayType
 }
 
-export const TokenItem = memo(function _TokenItem({
-  tokenItemData,
-  index,
-  metadataDisplayType,
-}: TokenItemProps) {
+export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metadataDisplayType }: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -64,10 +61,7 @@ export const TokenItem = memo(function _TokenItem({
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
   const marketCapFormatted = convertFiatAmountFormatted(marketCap, NumberType.FiatTokenDetails)
   const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
-  const totalValueLockedFormatted = convertFiatAmountFormatted(
-    totalValueLocked,
-    NumberType.FiatTokenDetails
-  )
+  const totalValueLockedFormatted = convertFiatAmountFormatted(totalValueLocked, NumberType.FiatTokenDetails)
 
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
@@ -108,7 +102,8 @@ export const TokenItem = memo(function _TokenItem({
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
         onLongPress={disableOnPress}
-        onPress={onPress}>
+        onPress={onPress}
+      >
         <AnimatedFlex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
           <Flex centered row gap="$spacing4" overflow="hidden">
             {index !== undefined && (
@@ -124,11 +119,7 @@ export const TokenItem = memo(function _TokenItem({
             <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
-            <Text
-              color="$neutral2"
-              numberOfLines={1}
-              testID="token-item/metadata-subtitle"
-              variant="subheading2">
+            <Text color="$neutral2" numberOfLines={1} testID="token-item/metadata-subtitle" variant="subheading2">
               {getMetadataSubtitle()}
             </Text>
           </Flex>

@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { Globe } from 'components/Icons/Globe'
@@ -15,6 +14,7 @@ import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -79,7 +79,7 @@ export function TokenDescription() {
   const explorerUrl = getExplorerLink(
     currency.chainId,
     address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
   )
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -91,7 +91,7 @@ export function TokenDescription() {
   const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address, currency.chainId)
   const { formatPercent } = useFormatter()
   const { sellFeeString, buyFeeString } = {
     sellFeeString: formatPercent(sellFee),
@@ -117,7 +117,7 @@ export function TokenDescription() {
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
             <EtherscanLogo width="18px" height="18px" fill={neutral2} />
-            {currency.chainId === ChainId.MAINNET ? (
+            {currency.chainId === UniverseChainId.Mainnet ? (
               <Trans i18nKey="common.etherscan" />
             ) : (
               <Trans i18nKey="common.explorer" />

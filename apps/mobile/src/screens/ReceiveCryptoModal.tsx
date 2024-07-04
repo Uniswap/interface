@@ -3,21 +3,13 @@ import { useAppSelector } from 'src/app/hooks'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import {
-  Flex,
-  HapticFeedback,
-  ImpactFeedbackStyle,
-  Separator,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, HapticFeedback, ImpactFeedbackStyle, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -39,22 +31,17 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      })
+      }),
     )
   }
 
   const onPressShowWalletQr = (): void => {
     onClose()
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-    )
+    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
   }
 
   return (
-    <TouchableArea
-      hapticFeedback
-      hapticStyle={ImpactFeedbackStyle.Light}
-      onPress={onPressShowWalletQr}>
+    <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressShowWalletQr}>
       <Flex row alignItems="flex-start" gap="$spacing12" px="$spacing8">
         <Flex
           fill
@@ -63,7 +50,8 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
           borderRadius="$rounded20"
           borderWidth="$spacing1"
           gap="$spacing12"
-          p="$spacing12">
+          p="$spacing12"
+        >
           <Flex fill>
             <AddressDisplay
               address={activeAccountAddress}
@@ -73,17 +61,15 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
             />
           </Flex>
           <Flex centered row gap="$spacing12" px="$spacing8">
-            <TouchableArea
-              hapticFeedback
-              hapticStyle={ImpactFeedbackStyle.Light}
-              onPress={onPressCopyAddress}>
+            <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressCopyAddress}>
               <Flex
                 centered
                 row
                 backgroundColor="$surface3"
                 borderRadius={ICON_BORDER_RADIUS}
                 height={ICON_SIZE}
-                width={ICON_SIZE}>
+                width={ICON_SIZE}
+              >
                 <CopySheets color="$neutral2" size={iconSizes.icon16} />
               </Flex>
             </TouchableArea>
@@ -93,7 +79,8 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
               backgroundColor="$surface3"
               borderRadius={ICON_BORDER_RADIUS}
               height={ICON_SIZE}
-              width={ICON_SIZE}>
+              width={ICON_SIZE}
+            >
               <QrCode color="$neutral2" size={iconSizes.icon16} />
             </Flex>
           </Flex>
@@ -120,7 +107,8 @@ export function ReceiveCryptoModal(): JSX.Element {
       hideKeyboardOnSwipeDown
       backgroundColor={colors.surface1.get()}
       name={ModalName.ReceiveCryptoModal}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <Flex grow gap="$spacing12" mb="$spacing16" px="$spacing16">
         <Flex gap="$spacing4" p="$spacing8">
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">

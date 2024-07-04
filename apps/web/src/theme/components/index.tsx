@@ -1,3 +1,4 @@
+import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans } from 'i18n'
@@ -15,9 +16,7 @@ import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feat
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-
-import { ReactComponent as TooltipTriangle } from '../../assets/svg/tooltip_triangle.svg'
-import { anonymizeLink } from '../../utils/anonymizeLink'
+import { anonymizeLink } from 'utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
 
@@ -143,8 +142,17 @@ export function ExternalLink({
   href,
   rel = 'noopener noreferrer',
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
-  return <StyledLink target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest} />
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref'> & { href: string }) {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      handleClickExternalLink(event)
+      if (rest.onClick) {
+        rest.onClick(event)
+      }
+    },
+    [rest],
+  )
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
 
 const TOOLTIP_WIDTH = 60
@@ -271,7 +279,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
       iconColor = 'currentColor',
       children,
     }: CopyHelperProps,
-    ref
+    ref,
   ) => {
     const [isCopied, setCopied] = useCopyClipboard()
     const copy = useCallback(() => {
@@ -315,7 +323,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
         {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
       </CopyHelperContainer>
     )
-  }
+  },
 )
 CopyHelper.displayName = 'CopyHelper'
 

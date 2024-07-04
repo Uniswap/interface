@@ -39,8 +39,7 @@ Alternatively, if you must have a custom error message, to preserve the stack tr
 try {
   ...
 } catch(err) {
-  const myCustomError = new Error('Invalid input')
-  myCustomError.cause = err
+  const myCustomError = new Error('Invalid input', { cause: err })
   logger.error(myCustomError)
 }
 ```

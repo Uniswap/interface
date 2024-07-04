@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   Chain,
   Currency,
@@ -8,21 +9,22 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DAI } from 'wallet/src/constants/tokens'
+import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
+import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
+import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
+import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'
+import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
+import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
+import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
+import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
 import {
   NFTTradeType,
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
-import extractTransactionDetails from './extractTransactionDetails'
-import parseApproveTransaction from './parseApproveTransaction'
-import parseNFTMintTransaction from './parseMintTransaction'
-import parseReceiveTransaction from './parseReceiveTransaction'
-import parseSendTransaction from './parseSendTransaction'
-import parseTradeTransaction from './parseTradeTransaction'
 
 /**
  * Testing for API transaction parsing utils.
@@ -33,7 +35,7 @@ const FROM_ADDRESS = SAMPLE_SEED_ADDRESS_1
 const TO_ADDRESS = SAMPLE_SEED_ADDRESS_2
 const TEST_HASH = '0x00'
 const ERC20_ASSET_ADDRESS = DAI.address
-const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(ChainId.Mainnet)
+const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
 const RESPONSE_BASE = {
   id: 'base_id',
@@ -108,7 +110,7 @@ const NATIVE_TRANSFER_OUT_ASSET_CHANGE = {
   ...ERC20_TRANSFER_OUT_ASSET_CHANGE,
   asset: {
     ...ERC20_TRANSFER_OUT_ASSET_CHANGE.asset,
-    address: getNativeAddress(ChainId.Mainnet),
+    address: getNativeAddress(UniverseChainId.Mainnet),
   },
   tokenbStandard: TokenStandard.Native,
 }
@@ -143,6 +145,39 @@ const ERC721_TRANSFER_IN_ASSET_CHANGE = {
 const ERC721_TRANSFER_OUT_ASSET_CHANGE = {
   ...ERC721_TRANSFER_IN_ASSET_CHANGE,
   direction: TransactionDirection.Out,
+}
+
+const ONRAMP_TRANSFER_ASSET_CHANGE = {
+  __typename: 'OnRampTransfer' as const,
+  id: ASSET_CHANGE_ID,
+  transactionReferenceId: 'transaction_reference_id',
+  token: {
+    id: 'asset_id',
+    symbol: 'asset_symbol',
+    decimals: 18,
+    address: ERC20_ASSET_ADDRESS,
+    chain: Chain.Ethereum,
+  },
+  tokenStandard: TokenStandard.Erc20,
+  amount: 1,
+  sourceCurrency: undefined,
+  sourceAmount: 1,
+  serviceProvider: {
+    serviceProvider: 'COINBASEPAY',
+    name: 'Coinbase',
+    url: 'https://www.coinbase.com/',
+    logoLightUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+    logoDarkUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+    supportUrl: 'https://help.coinbase.com/',
+  },
+  networkFee: 0,
+  transactionFee: 0,
+  totalFee: 0,
+}
+
+const ONRAMP_PURCHASE_ASSET_CHANGE = {
+  ...ONRAMP_TRANSFER_ASSET_CHANGE,
+  sourceCurrency: Currency.Usd,
 }
 
 /** ERC20 Approve */
@@ -208,6 +243,7 @@ describe(parseNFTMintTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
+        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
@@ -223,8 +259,9 @@ describe(parseNFTMintTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
+        address: 'nft_contract_address',
       },
-      purchaseCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
+      purchaseCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
       isSpam: false,
@@ -308,6 +345,7 @@ describe(parseReceiveTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
+        address: 'nft_contract_address',
       },
     })
   })
@@ -360,6 +398,7 @@ describe(parseSendTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
+        address: 'nft_contract_address',
       },
     })
   })
@@ -445,7 +484,7 @@ describe(parseTradeTransaction, () => {
   it('Swap: parse native swap', () => {
     expect(parseTradeTransaction(MOCK_NATIVE_SWAP)).toEqual({
       type: TransactionType.Swap,
-      inputCurrencyId: `1-${getNativeAddress(ChainId.Mainnet)}`,
+      inputCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
       outputCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       transactedUSDValue: 1,
       inputCurrencyAmountRaw: '1000000000000000000',
@@ -468,6 +507,7 @@ describe(parseTradeTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'asset_name',
+        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
@@ -483,10 +523,79 @@ describe(parseTradeTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'asset_name',
+        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: 1,
+    })
+  })
+})
+
+/** On-ramp transfers */
+
+const MOCK_ONRAMP_TRANSFER: TransactionListQueryResponse = {
+  ...RESPONSE_BASE,
+  details: {
+    ...RESPONSE_BASE.details,
+    type: RemoteTransactionType.OnRamp,
+    assetChanges: [ONRAMP_TRANSFER_ASSET_CHANGE],
+  },
+}
+
+const MOCK_ONRAMP_PURCHASE: TransactionListQueryResponse = {
+  ...RESPONSE_BASE,
+  details: {
+    ...RESPONSE_BASE.details,
+    type: RemoteTransactionType.OnRamp,
+    assetChanges: [ONRAMP_PURCHASE_ASSET_CHANGE],
+  },
+}
+
+describe(parseOnRampTransaction, () => {
+  it('OnRampTransfer : handle empty asset changes', () => {
+    expect(parseOnRampTransaction(RESPONSE_BASE)).toBeUndefined()
+  })
+  it('OnRampTransfer: parse transfer', () => {
+    expect(parseOnRampTransaction(MOCK_ONRAMP_TRANSFER)).toEqual({
+      type: TransactionType.OnRampTransfer,
+      destinationTokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      destinationTokenAmount: 1,
+      destinationTokenSymbol: 'asset_symbol',
+      id: 'transaction_reference_id',
+      networkFee: 0,
+      serviceProvider: {
+        id: 'COINBASEPAY',
+        logoDarkUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+        logoLightUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+        name: 'Coinbase',
+        supportUrl: 'https://help.coinbase.com/',
+        url: 'https://www.coinbase.com/',
+      },
+      totalFee: 0,
+      transactionFee: 0,
+    })
+  })
+  it('OnRampTransfer: parse purchase', () => {
+    expect(parseOnRampTransaction(MOCK_ONRAMP_PURCHASE)).toEqual({
+      type: TransactionType.OnRampPurchase,
+      destinationTokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      destinationTokenAmount: 1,
+      destinationTokenSymbol: 'asset_symbol',
+      sourceAmount: 1,
+      sourceCurrency: 'USD',
+      id: 'transaction_reference_id',
+      networkFee: 0,
+      serviceProvider: {
+        id: 'COINBASEPAY',
+        logoDarkUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+        logoLightUrl: 'https://logo.io/COINBASEPAY/short_logo_light.png',
+        name: 'Coinbase',
+        supportUrl: 'https://help.coinbase.com/',
+        url: 'https://www.coinbase.com/',
+      },
+      totalFee: 0,
+      transactionFee: 0,
     })
   })
 })
@@ -523,8 +632,58 @@ describe(extractTransactionDetails, () => {
     const txn = extractTransactionDetails(MOCK_721_MINT)
     expect(txn?.typeInfo.type).toEqual(TransactionType.NFTMint)
   })
+  it('OnRamp transfer', () => {
+    const txn = extractTransactionDetails(MOCK_ONRAMP_TRANSFER)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.OnRampTransfer)
+  })
+  it('OnRamp purchase', () => {
+    const txn = extractTransactionDetails(MOCK_ONRAMP_PURCHASE)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.OnRampPurchase)
+  })
   it('Unknown', () => {
     const txn = extractTransactionDetails(RESPONSE_BASE)
     expect(txn?.typeInfo.type).toEqual(TransactionType.Unknown)
+  })
+})
+
+const RESPONSE_PENDING_ONRAMP_TRANSFER = {
+  id: 'base_id',
+  chain: Chain.Ethereum,
+  timestamp: 1,
+  details: {
+    __typename: 'OnRampTransactionDetails' as const,
+    type: RemoteTransactionType.OnRamp,
+    id: 'base_transaction_id',
+    status: TransactionStatus.Pending,
+    receiverAddress: TO_ADDRESS,
+    onRampTransfer: ONRAMP_TRANSFER_ASSET_CHANGE,
+  },
+}
+
+const RESPONSE_PENDING_ONRAMP_PURCHASE = {
+  id: 'base_id',
+  chain: Chain.Ethereum,
+  timestamp: 1,
+  details: {
+    __typename: 'OnRampTransactionDetails' as const,
+    type: RemoteTransactionType.OnRamp,
+    id: 'base_transaction_id',
+    status: TransactionStatus.Pending,
+    receiverAddress: TO_ADDRESS,
+    onRampTransfer: ONRAMP_PURCHASE_ASSET_CHANGE,
+  },
+}
+
+describe(extractOnRampTransactionDetails, () => {
+  it('Empty transaction', () => {
+    expect(extractOnRampTransactionDetails(undefined)).toEqual(null)
+  })
+  it('Transfer', () => {
+    const txn = extractOnRampTransactionDetails(RESPONSE_PENDING_ONRAMP_TRANSFER)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.OnRampTransfer)
+  })
+  it('Purchase', () => {
+    const txn = extractOnRampTransactionDetails(RESPONSE_PENDING_ONRAMP_PURCHASE)
+    expect(txn?.typeInfo.type).toEqual(TransactionType.OnRampPurchase)
   })
 })

@@ -10,11 +10,7 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import {
-  SearchResultType,
-  WalletSearchResult,
-  extractDomain,
-} from 'wallet/src/features/search/SearchResult'
+import { SearchResultType, WalletSearchResult, extractDomain } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchWalletItemBaseProps = {
@@ -40,8 +36,8 @@ export function SearchWalletItemBase({
         type === SearchResultType.Unitag
           ? searchResult.unitag
           : type === SearchResultType.ENSAddress
-          ? searchResult.ensName
-          : undefined
+            ? searchResult.ensName
+            : undefined
       sendAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
         name: walletName,
@@ -61,13 +57,13 @@ export function SearchWalletItemBase({
             ...searchResult,
             primaryENSName: searchResult.primaryENSName,
           },
-        })
+        }),
       )
     } else {
       dispatch(
         addToSearchHistory({
           searchResult,
-        })
+        }),
       )
     }
   }
@@ -90,7 +86,8 @@ export function SearchWalletItemBase({
         onPress={onPress}
         onPressIn={async (): Promise<void> => {
           await preload(address)
-        }}>
+        }}
+      >
         {children}
       </TouchableArea>
     </ContextMenu>

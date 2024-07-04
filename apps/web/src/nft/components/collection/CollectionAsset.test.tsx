@@ -1,8 +1,7 @@
+import { CollectionAsset } from 'nft/components/collection/CollectionAsset'
 import { UniformAspectRatios } from 'nft/types'
 import { TEST_NFT_ASSET } from 'test-utils/nft/fixtures'
 import { render } from 'test-utils/render'
-
-import { CollectionAsset } from './CollectionAsset'
 
 describe('NftCard', () => {
   it('renders correctly', () => {
@@ -17,7 +16,7 @@ describe('NftCard', () => {
         uniformAspectRatio={UniformAspectRatios.square}
         setUniformAspectRatio={() => undefined}
         setRenderedHeight={() => undefined}
-      />
+      />,
     )
     expect(asFragment()).toMatchSnapshot()
   })

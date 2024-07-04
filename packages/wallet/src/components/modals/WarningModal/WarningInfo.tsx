@@ -1,10 +1,7 @@
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { Flex, TouchableArea, isWeb } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons'
-import {
-  WarningModal,
-  WarningModalProps,
-} from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { WarningModal, WarningModalProps } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningTooltip } from 'wallet/src/components/modals/WarningModal/WarningTooltip.web'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 
@@ -31,11 +28,7 @@ export function WarningInfo({
 
   if (isWeb) {
     return (
-      <WarningTooltip
-        {...tooltipProps}
-        button={infoButton}
-        trigger={trigger}
-        triggerPlacement={triggerPlacement}>
+      <WarningTooltip {...tooltipProps} button={infoButton} trigger={trigger} triggerPlacement={triggerPlacement}>
         {children}
       </WarningTooltip>
     )

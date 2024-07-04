@@ -1,4 +1,10 @@
 import { InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
+import { ActivityTab } from 'components/AccountDrawer/MiniPortfolio/Activity'
+import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import NFTs from 'components/AccountDrawer/MiniPortfolio/NFTs'
+import Pools from 'components/AccountDrawer/MiniPortfolio/Pools'
+import { PortfolioRowWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import Tokens from 'components/AccountDrawer/MiniPortfolio/Tokens'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
@@ -11,12 +17,6 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ActivityTab } from './Activity'
-import { usePendingActivity } from './Activity/hooks'
-import NFTs from './NFTs'
-import Pools from './Pools'
-import { PortfolioRowWrapper } from './PortfolioRow'
-import Tokens from './Tokens'
 
 const lastPageAtom = atom(0)
 

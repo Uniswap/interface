@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`disable nft on searchbar should render text with nfts 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  position: relative;
+}
+
+.c1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 'input' 'dropdown';
+  max-height: 100vh;
+  z-index: 1000;
+}
+
+.c6 {
+  background-color: #22222212;
+  color: #7D7D7D;
+  padding: 0px 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 535;
+  line-height: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  opacity: 0.6;
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+}
+
+.c4 {
+  grid-area: input;
+  background-color: #F9F9F9;
+  border: 1px solid #22222212;
+  min-width: 280px;
+  max-width: 400px;
+  width: 100vw;
+  padding: 8px 16px;
+  border-radius: 20px;
+  height: 40px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.c4:hover {
+  background-color: #F5F5F5;
+}
+
+.c5 {
+  width: 20px;
+  height: 20px;
+}
+
+@media screen and (max-width:396px) {
+  .c4 {
+    border: none;
+  }
+}
+
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <svg
+                fill="none"
+                height="20px"
+                stroke="#7D7D7D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="8"
+                />
+                <line
+                  x1="21"
+                  x2="16.65"
+                  y1="21"
+                  y2="16.65"
+                />
+              </svg>
+            </div>
+            <span
+              class="_dsp_contents"
+            >
+              <input
+                autocapitalize="sentences"
+                autocomplete="on"
+                autocorrect="on"
+                class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-1394778429 _borderRightColor-0hover-1394778429 _borderBottomColor-0hover-1394778429 _borderLeftColor-0hover-1394778429 _borderTopColor-0focus-1452587353 _borderRightColor-0focus-1452587353 _borderBottomColor-0focus-1452587353 _borderLeftColor-0focus-1452587353 _outlineColor-0focus-visible-834034279 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-299667014 _fontWeight-233016078 _fontSize-229441158 _lineHeight-222976511 _pr-1481558307 _pl-1481558307 _height-10037 _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-675002279 _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _backgroundColor-733175080 _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
+                dir="auto"
+                placeholder="Search tokens and NFT collections"
+                rows="1"
+                spellcheck="true"
+                style="--placeholderTextColor: #7D7D7D;"
+                tabindex="0"
+                value=""
+              />
+            </span>
+            <div
+              class="c6"
+            >
+              /
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`disable nft on searchbar should render text without nfts 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  position: relative;
+}
+
+.c1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 'input' 'dropdown';
+  max-height: 100vh;
+  z-index: 1000;
+}
+
+.c6 {
+  background-color: #22222212;
+  color: #7D7D7D;
+  padding: 0px 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 535;
+  line-height: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  opacity: 0.6;
+  -webkit-backdrop-filter: blur(60px);
+  backdrop-filter: blur(60px);
+}
+
+.c4 {
+  grid-area: input;
+  background-color: #F9F9F9;
+  border: 1px solid #22222212;
+  min-width: 280px;
+  max-width: 400px;
+  width: 100vw;
+  padding: 8px 16px;
+  border-radius: 20px;
+  height: 40px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.c4:hover {
+  background-color: #F5F5F5;
+}
+
+.c5 {
+  width: 20px;
+  height: 20px;
+}
+
+@media screen and (max-width:396px) {
+  .c4 {
+    border: none;
+  }
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <svg
+                fill="none"
+                height="20px"
+                stroke="#7D7D7D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="20px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="8"
+                />
+                <line
+                  x1="21"
+                  x2="16.65"
+                  y1="21"
+                  y2="16.65"
+                />
+              </svg>
+            </div>
+            <span
+              class="_dsp_contents"
+            >
+              <input
+                autocapitalize="sentences"
+                autocomplete="on"
+                autocorrect="on"
+                class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-1394778429 _borderRightColor-0hover-1394778429 _borderBottomColor-0hover-1394778429 _borderLeftColor-0hover-1394778429 _borderTopColor-0focus-1452587353 _borderRightColor-0focus-1452587353 _borderBottomColor-0focus-1452587353 _borderLeftColor-0focus-1452587353 _outlineColor-0focus-visible-834034279 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-299667014 _fontWeight-233016078 _fontSize-229441158 _lineHeight-222976511 _pr-1481558307 _pl-1481558307 _height-10037 _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-675002279 _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _backgroundColor-733175080 _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
+                dir="auto"
+                placeholder="Search tokens"
+                rows="1"
+                spellcheck="true"
+                style="--placeholderTextColor: #7D7D7D;"
+                tabindex="0"
+                value=""
+              />
+            </span>
+            <div
+              class="c6"
+            >
+              /
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;

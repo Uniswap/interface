@@ -1,8 +1,11 @@
+/* eslint-disable max-lines */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
-import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
+import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
+import { isWeb } from 'ui/src'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import {
@@ -13,23 +16,18 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  fetchFiatOnRampTransaction,
-  fetchMoonpayTransaction,
-} from 'wallet/src/features/fiatOnRamp/api'
+import { selectExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/selectors'
+import { ExtensionBetaFeedbackState, setExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/slice'
+import { fetchFiatOnRampTransaction, fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import {
-  selectIncompleteTransactions,
-  selectSwapTransactionsCount,
-} from 'wallet/src/features/transactions/selectors'
+import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -39,8 +37,10 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'wallet/src/features/transactions/slice'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   BaseSwapTransactionInfo,
+  ClassicTransactionDetails,
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionReceipt,
@@ -52,12 +52,9 @@ import { getProvider, getSignerManager } from 'wallet/src/features/wallet/contex
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { appSelect } from 'wallet/src/state'
 
-export function* transactionWatcher({
-  apolloClient,
-}: {
-  apolloClient: ApolloClient<NormalizedCacheObject>
-}) {
+export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
+  yield* fork(watchForFinalizedTransactions)
 
   // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
@@ -65,6 +62,8 @@ export function* transactionWatcher({
   for (const transaction of incompleteTransactions) {
     if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
       yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+    } else if (isUniswapX(transaction)) {
+      // TODO(WEB-4296): Add watcher for UniswapX transactions
     } else {
       yield* fork(watchTransaction, { transaction, apolloClient })
     }
@@ -79,6 +78,8 @@ export function* transactionWatcher({
     try {
       if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
         yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
+      } else if (isUniswapX(transaction)) {
+        // TODO(WEB-4296): Add watcher for UniswapX transactions
       } else {
         yield* fork(watchTransaction, { transaction, apolloClient })
       }
@@ -96,16 +97,13 @@ export function* transactionWatcher({
           type: AppNotificationType.Error,
           address: transaction.from,
           errorMessage: i18n.t('transaction.watcher.error.status'),
-        })
+        }),
       )
     }
   }
 }
 
-export function* fetchUpdatedFiatOnRampTransaction(
-  transaction: FiatOnRampTransactionDetails,
-  forceFetch: boolean
-) {
+export function* fetchUpdatedFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails, forceFetch: boolean) {
   const activeAccount = yield* select(selectActiveAccount)
   if (!activeAccount) {
     return
@@ -117,7 +115,7 @@ export function* fetchUpdatedFiatOnRampTransaction(
     /** previousTransactionDetails= */ transaction,
     forceFetch,
     activeAccount,
-    signerManager
+    signerManager,
   )
 }
 
@@ -128,9 +126,7 @@ export function* fetchUpdatedMoonpayTransaction(transaction: FiatOnRampTransacti
 export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
   // we want to re-fetch this every time we've added a transaction,
   // as this feature flag could be changed after the app has started
-  const useOldMoonpayIntegration = !Statsig.checkGate(
-    getFeatureFlagName(FeatureFlags.ForAggregator)
-  )
+  const useOldMoonpayIntegration = !Statsig.checkGate(getFeatureFlagName(FeatureFlags.ForAggregator))
 
   const { id } = transaction
 
@@ -140,7 +136,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
     'Watching for updates for fiat onramp tx:',
     id,
     'useOldMoonpayIntegration:',
-    useOldMoonpayIntegration
+    useOldMoonpayIntegration,
   )
 
   let latestStatus = transaction.status
@@ -166,11 +162,10 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
         logger.debug(
           'transactionWatcherSaga',
           'watchFiatOnRampTransaction',
-          `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`
+          `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`,
         )
 
-        const isTransfer =
-          updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
+        const isTransfer = updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
         if (updatedTransaction.typeInfo.serviceProvider) {
           yield* call(
             sendAnalyticsEvent,
@@ -181,7 +176,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
               externalTransactionId: updatedTransaction.id,
               status: updatedTransaction.status,
               serviceProvider: updatedTransaction.typeInfo.serviceProvider,
-            }
+            },
           )
         }
       }
@@ -231,7 +226,7 @@ export function* watchTransaction({
   transaction,
   apolloClient,
 }: {
-  transaction: TransactionDetails
+  transaction: ClassicTransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
 }): Generator<unknown> {
   const { chainId, id, hash, options } = transaction
@@ -281,7 +276,7 @@ export function* watchTransaction({
           type: AppNotificationType.Error,
           address: transaction.from,
           errorMessage: i18n.t('transaction.watcher.error.cancel'),
-        })
+        }),
       )
     }
     return
@@ -293,7 +288,7 @@ export function* watchTransaction({
 
 export async function waitForReceipt(
   hash: string,
-  provider: providers.Provider
+  provider: providers.Provider,
 ): Promise<providers.TransactionReceipt> {
   const txReceipt = await provider.waitForTransaction(hash)
   if (txReceipt) {
@@ -302,7 +297,7 @@ export async function waitForReceipt(
   return txReceipt
 }
 
-function* waitForCancellation(chainId: ChainId, id: string) {
+function* waitForCancellation(chainId: WalletChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
@@ -311,7 +306,7 @@ function* waitForCancellation(chainId: ChainId, id: string) {
   }
 }
 
-function* waitForReplacement(chainId: ChainId, id: string) {
+function* waitForReplacement(chainId: WalletChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) {
@@ -323,16 +318,14 @@ function* waitForReplacement(chainId: ChainId, id: string) {
  * Monitor for transactions with the same nonce as the current transaction. If any duplicate is finalized, it means
  * the current transaction has been invalidated and wont be picked up on chain.
  */
-export function* waitForTxnInvalidated(
-  chainId: ChainId,
-  id: string,
-  nonce: BigNumberish | undefined
-) {
+export function* waitForTxnInvalidated(chainId: WalletChainId, id: string, nonce: BigNumberish | undefined) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
-      transactionActions.finalizeTransaction.type
+      transactionActions.finalizeTransaction.type,
     )
+
     if (
+      !isUniswapX(payload) && // UniswapX transactions are submitted by a filler, so they cannot invalidate a transaction sent by a user.
       payload.chainId === chainId &&
       payload.id !== id &&
       payload.options.request.nonce === nonce
@@ -345,20 +338,9 @@ export function* waitForTxnInvalidated(
 /**
  * Send analytics events for finalized transactions
  */
-export function logTransactionEvent(
-  actionData: ReturnType<typeof transactionActions.finalizeTransaction>
-): void {
+export function logTransactionEvent(actionData: ReturnType<typeof transactionActions.finalizeTransaction>): void {
   const { payload } = actionData
-  const {
-    hash,
-    chainId,
-    addedTime,
-    from,
-    typeInfo,
-    receipt,
-    status,
-    options: { submitViaPrivateRpc },
-  } = payload
+  const { hash, chainId, addedTime, from, typeInfo, receipt, status } = payload
   const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
 
@@ -394,7 +376,7 @@ export function logTransactionEvent(
       gasUseEstimate,
       route: routeString,
       quoteId,
-      submitViaPrivateRpc,
+      submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       protocol,
       transactedUSDValue,
     })
@@ -411,10 +393,38 @@ export function logTransactionEvent(
   }
 }
 
-type StatusOverride =
-  | TransactionStatus.Success
-  | TransactionStatus.Failed
-  | TransactionStatus.Canceled
+function* watchForFinalizedTransactions() {
+  const state = yield* appSelect(selectExtensionBetaFeedbackState)
+  const extensionBetaFeedbackPromptEnabled = Statsig.checkGate(
+    getFeatureFlagName(FeatureFlags.ExtensionBetaFeedbackPrompt),
+  )
+
+  if (isWeb && extensionBetaFeedbackPromptEnabled && state === undefined) {
+    yield* takeEvery(transactionActions.finalizeTransaction.type, maybeLaunchFeedbackModal)
+  }
+}
+
+function* maybeLaunchFeedbackModal(actionData: ReturnType<typeof transactionActions.finalizeTransaction>) {
+  const { payload } = actionData
+  const { typeInfo, status } = payload
+  const { type } = typeInfo
+  const state = yield* appSelect(selectExtensionBetaFeedbackState)
+  const extensionBetaFeedbackPromptEnabled = Statsig.checkGate(
+    getFeatureFlagName(FeatureFlags.ExtensionBetaFeedbackPrompt),
+  )
+
+  if (
+    extensionBetaFeedbackPromptEnabled &&
+    status === TransactionStatus.Success &&
+    [TransactionType.Swap, TransactionType.Send].includes(type) &&
+    state === undefined
+  ) {
+    yield* delay(3000)
+    yield* put(setExtensionBetaFeedbackState(ExtensionBetaFeedbackState.ReadyToShow))
+  }
+}
+
+type StatusOverride = TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Canceled
 
 function* finalizeTransaction({
   apolloClient,
@@ -427,8 +437,7 @@ function* finalizeTransaction({
   statusOverride?: StatusOverride
   transaction: TransactionDetails
 }) {
-  const status =
-    statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+  const status = statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
 
   const receipt: TransactionReceipt | undefined = ethersReceipt
     ? {
@@ -461,7 +470,7 @@ function* finalizeTransaction({
       hash,
       status,
       receipt,
-    })
+    }),
   )
 
   // Flip status to true so we can render Notification badge on home
@@ -490,6 +499,6 @@ export function* deleteTransaction(transaction: TransactionDetails) {
       address: transaction.from,
       id: transaction.id,
       chainId: transaction.chainId,
-    })
+    }),
   )
 }

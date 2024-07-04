@@ -1,35 +1,36 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
+import { ButtonGray } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
+import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
+import { RowBetween, RowFixed } from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Tooltip from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import { useActiveSmartPool } from 'state/application/hooks'
+import { useCurrencyBalance } from 'state/connection/hooks'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useCurrencyBalance } from '../../state/connection/hooks'
-import { ButtonGray } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
-import { FiatValue } from './FiatValue'
-import { formatCurrencySymbol } from './utils'
 
 export const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
@@ -267,15 +268,16 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       label,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
-    const { account, chainId } = useWeb3React()
+    const account = useAccount()
+    const { chainId } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const { address: smartPoolAddress } = useActiveSmartPool()
     // TODO: check if should invert definition and modify swap currency input panel
     const selectedCurrencyBalance = useCurrencyBalance(
-      !isAccount ? smartPoolAddress ?? undefined : account,
+      !isAccount ? smartPoolAddress ?? undefined : account.address,
       currency ?? undefined
     )
     const theme = useTheme()
@@ -441,7 +443,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
       </InputPanel>
     )
-  }
+  },
 )
 SwapCurrencyInputPanel.displayName = 'SwapCurrencyInputPanel'
 

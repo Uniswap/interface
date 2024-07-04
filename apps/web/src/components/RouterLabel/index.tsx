@@ -1,9 +1,8 @@
+import UniswapXRouterLabel from 'components/RouterLabel/UniswapXRouterLabel'
 import { QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { DefaultTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-
-import UniswapXRouterLabel from './UniswapXRouterLabel'
 
 export default function RouterLabel({ trade, color }: { trade: SubmittableTrade; color?: keyof DefaultTheme }) {
   if (isUniswapXTrade(trade)) {

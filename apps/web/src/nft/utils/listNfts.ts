@@ -19,12 +19,11 @@ import {
   OPENSEA_SEAPORT_V1_5_CONTRACT,
 } from 'nft/queries/openSea/constants'
 import { getX2Y2OrderId, newX2Y2Order } from 'nft/queries/x2y2'
+import { ListingMarket, ListingStatus, WalletAsset } from 'nft/types'
+import { OfferItem, OrderPayload, createSellOrder, encodeOrder, signOrderData } from 'nft/utils/x2y2'
 import ERC1155 from 'uniswap/src/abis/erc1155.json'
 import ERC721 from 'uniswap/src/abis/erc721.json'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { ListingMarket, ListingStatus, WalletAsset } from '../types'
-import { OfferItem, OrderPayload, createSellOrder, encodeOrder, signOrderData } from './x2y2'
 
 export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
 
@@ -49,7 +48,7 @@ const createConsiderationItem = (basisPoints: string, recipient: string): Consid
 const getConsiderationItems = (
   asset: WalletAsset,
   price: BigNumber,
-  signerAddress: string
+  signerAddress: string,
 ): {
   sellerFee: ConsiderationInputItem
   creatorFee?: ConsiderationInputItem
@@ -81,7 +80,7 @@ export async function approveCollection(
   collectionAddress: string,
   signer: Signer,
   setStatus: (newStatus: ListingStatus) => void,
-  nftStandard: NftStandard = NftStandard.Erc721
+  nftStandard: NftStandard = NftStandard.Erc721,
 ): Promise<void> {
   const contract = new Contract(collectionAddress, nftStandard === NftStandard.Erc721 ? ERC721 : ERC1155, signer)
   const signerAddress = await signer.getAddress()
@@ -115,7 +114,7 @@ export async function signListing(
   signer: JsonRpcSigner,
   provider: Web3Provider,
   looksRareNonce = 0,
-  setStatus: (newStatus: ListingStatus) => void
+  setStatus: (newStatus: ListingStatus) => void,
 ): Promise<boolean> {
   const seaport = new Seaport(provider, {
     conduitKeyToConduit: OPENSEA_KEY_TO_CONDUIT,
@@ -136,7 +135,7 @@ export async function signListing(
         const listingInWei = parseEther(`${listingPrice}`)
         const { sellerFee, creatorFee, openSeaFee } = getConsiderationItems(asset, listingInWei, signerAddress)
         const considerationItems = [sellerFee, creatorFee, openSeaFee].filter(
-          (item): item is ConsiderationInputItem => item !== undefined
+          (item): item is ConsiderationInputItem => item !== undefined,
         )
 
         const { executeAllActions } = await seaport.createOrder(
@@ -154,7 +153,7 @@ export async function signListing(
             zone: ZERO_ADDRESS,
             allowPartialFills: true,
           },
-          signerAddress
+          signerAddress,
         )
 
         const order = await executeAllActions()
@@ -211,7 +210,7 @@ export async function signListing(
           signer,
           SupportedChainId.MAINNET,
           makerOrder,
-          LOOKSRARE_MARKETPLACE_CONTRACT_721
+          LOOKSRARE_MARKETPLACE_CONTRACT_721,
         )
         setStatus(ListingStatus.PENDING)
         const payload = {

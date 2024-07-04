@@ -21,12 +21,12 @@ export function TokenDetailsPoolsTable({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const sortState = useMemo(
     () => ({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }),
-    [sortAscending, sortMethod]
+    [sortAscending, sortMethod],
   )
   const { pools, loading, errorV2, errorV3, loadMore } = usePoolsFromTokenAddress(
     referenceToken.address,
     sortState,
-    chainId
+    chainId,
   )
   const combinedError =
     errorV2 && errorV3

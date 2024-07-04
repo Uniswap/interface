@@ -3,6 +3,8 @@ import 'rc-slider/assets/index.css'
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/PriceRange.css'
+import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { NumericInput } from 'nft/components/layout/Input'
 import { body } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
@@ -15,9 +17,6 @@ import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { darkDeprecatedTheme } from 'theme/deprecatedColors'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
-import * as styles from './PriceRange.css'
-import { TraitsHeader } from './TraitsHeader'
 
 const StyledSlider = styled(Slider)`
   cursor: pointer;

@@ -1,19 +1,27 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { Currency } from '@uniswap/sdk-core'
+import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { Input as NumericalInput, isInputGreaterThanDecimals } from 'components/NumericalInput'
+import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { getChain, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import {
+  NumericalInputMimic,
+  NumericalInputSymbolContainer,
+  NumericalInputWrapper,
+  StyledNumericalInput,
+  useWidthAdjustedDisplayValue,
+} from 'pages/Swap/common/shared'
+import { useCallback, useMemo, useState } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
@@ -21,10 +29,10 @@ import { CurrencyState } from 'state/swap/types'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 
 const Wrapper = styled(Column)<{ $disabled: boolean }>`
   opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
@@ -60,48 +68,6 @@ const InputLabelContainer = styled.div`
   position: absolute;
   top: 16px;
   left: 16px;
-`
-
-const NumericalInputFontStyle = css`
-  text-align: left;
-  font-size: 70px;
-  font-weight: 500;
-  line-height: 60px;
-`
-
-const NumericalInputWrapper = styled(Row)`
-  position: relative;
-  max-width: 100%;
-  width: max-content;
-`
-
-const StyledNumericalInput = styled(NumericalInput)<{ $width?: number }>`
-  max-height: 84px;
-  max-width: 100%;
-  width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
-  ${NumericalInputFontStyle}
-
-  ::placeholder {
-    opacity: 1;
-  }
-`
-
-const NumericalInputMimic = styled.span`
-  position: absolute;
-  visibility: hidden;
-  bottom: 0px;
-  right: 0px;
-  ${NumericalInputFontStyle}
-`
-
-const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean }>`
-  user-select: none;
-  ${NumericalInputFontStyle}
-  ${({ showPlaceholder }) =>
-    showPlaceholder &&
-    css`
-      color: ${({ theme }) => theme.neutral3};
-    `}
 `
 
 const StyledUpAndDownArrowIcon = styled(ReverseArrow)`
@@ -228,7 +194,7 @@ export default function SendCurrencyInputForm({
 }) {
   const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
@@ -242,7 +208,7 @@ export default function SendCurrencyInputForm({
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
     () => getChain({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
-    [supportedChain]
+    [supportedChain],
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 
@@ -254,13 +220,8 @@ export default function SendCurrencyInputForm({
   const fiatBalanceValue = useUSDPrice(currencyBalance, inputCurrency)
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
-  const [postWidthAdjustedDisplayValue, setPostWidthAdjustedDisplayValue] = useState('')
 
-  // Doing this to set the value the user is seeing once the width of the
-  // hidden element is known (after 1 render) so users don't see a weird jump
-  useLayoutEffect(() => {
-    requestAnimationFrame(() => setPostWidthAdjustedDisplayValue(displayValue))
-  }, [displayValue])
+  const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(displayValue)
 
   const handleUserInput = useCallback(
     (newValue: string) => {
@@ -269,7 +230,7 @@ export default function SendCurrencyInputForm({
         [inputInFiat ? 'exactAmountFiat' : 'exactAmountToken']: newValue,
       }))
     },
-    [inputInFiat, setSendState]
+    [inputInFiat, setSendState],
   )
 
   const handleSelectCurrency = useCallback(
@@ -299,7 +260,7 @@ export default function SendCurrencyInputForm({
         inputCurrency: currency,
       }))
     },
-    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState]
+    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState],
   )
 
   const toggleFiatInputAmountEnabled = useCallback(() => {
@@ -333,9 +294,9 @@ export default function SendCurrencyInputForm({
 
   const currencyFilters = useMemo(
     () => ({
-      onlyShowCurrenciesWithBalance: Boolean(account),
+      onlyShowCurrenciesWithBalance: account.isConnected,
     }),
-    [account]
+    [account.isConnected],
   )
 
   return (
@@ -371,7 +332,7 @@ export default function SendCurrencyInputForm({
           <Row width="100%" gap="md">
             <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
               {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />
+                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? UniverseChainId.Mainnet} />
               )}
               <Row width="100%">
                 <Column>

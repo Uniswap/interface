@@ -2,6 +2,12 @@
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/stacked-bars-series/renderer.ts
  * Modifications are called out with comments.
  */
+import {
+  ColumnPosition,
+  calculateColumnPositionsInPlace,
+  isStackedHistogramData,
+  positionsBox,
+} from 'components/Charts/VolumeChart/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,
@@ -13,8 +19,6 @@ import {
   UTCTimestamp,
 } from 'lightweight-charts'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { calculateColumnPositionsInPlace, ColumnPosition, isStackedHistogramData, positionsBox } from './utils'
 
 // Modification: custom implementations of lw-chart's histogram data types
 export interface SingleHistogramData extends CustomData {
@@ -95,7 +99,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       this._data.barSpacing,
       renderingScope.horizontalPixelRatio,
       this._data.visibleRange.from,
-      this._data.visibleRange.to
+      this._data.visibleRange.to,
     )
     const zeroY = priceToCoordinate(0) ?? 0
     for (let i = this._data.visibleRange.from; i < this._data.visibleRange.to; i++) {
@@ -107,7 +111,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       let previousY = zeroY
       const width = Math.min(
         Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),
-        this._data.barSpacing * renderingScope.horizontalPixelRatio
+        this._data.barSpacing * renderingScope.horizontalPixelRatio,
       )
 
       // Modification: increase space between bars

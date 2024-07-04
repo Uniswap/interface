@@ -8,10 +8,10 @@ import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Accordion, Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
-import { TextInput } from 'wallet/src/components/input/TextInput'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 export function ExperimentsModal(): JSX.Element {
   const insets = useDeviceInsets()
@@ -34,7 +34,7 @@ export function ExperimentsModal(): JSX.Element {
       dispatch(
         setCustomEndpoint({
           customEndpoint: { url, key },
-        })
+        }),
       )
     } else {
       clearEndpoint()
@@ -46,13 +46,15 @@ export function ExperimentsModal(): JSX.Element {
       fullScreen
       renderBehindBottomInset
       name={ModalName.Experiments}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.Experiments }))}
+    >
       <ScrollView
         contentContainerStyle={{
           paddingBottom: insets.bottom,
           paddingRight: spacing.spacing24,
           paddingLeft: spacing.spacing24,
-        }}>
+        }}
+      >
         <Text variant="heading3">Server</Text>
         <Accordion collapsible type="single">
           <Accordion.Item value="graphql-endpoint">
@@ -60,8 +62,8 @@ export function ExperimentsModal(): JSX.Element {
 
             <Accordion.Content>
               <Text variant="body2">
-                You will need to restart the application to pick up any changes in this section.
-                Beware of client side caching!
+                You will need to restart the application to pick up any changes in this section. Beware of client side
+                caching!
               </Text>
 
               <Flex row alignItems="center" gap="$spacing16">
@@ -90,10 +92,7 @@ export function ExperimentsModal(): JSX.Element {
             <AccordionHeader title="🚀 Apollo Cache" />
 
             <Accordion.Content>
-              <Button
-                flex={1}
-                size="small"
-                onPress={async (): Promise<unknown> => await apollo.resetStore()}>
+              <Button flex={1} size="small" onPress={async (): Promise<unknown> => await apollo.resetStore()}>
                 Reset Cache
               </Button>
             </Accordion.Content>

@@ -1,6 +1,7 @@
 import 'test-utils/tokens/mocks'
 
 import { Percent } from '@uniswap/sdk-core'
+import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
 import { InterfaceTrade } from 'state/routing/types'
 import {
   LIMIT_ORDER_TRADE,
@@ -15,7 +16,6 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
-import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 
 // Forces tooltips to render in snapshots
 jest.mock('react-dom', () => {
@@ -43,7 +43,7 @@ function testTradeLineItems(trade: InterfaceTrade, props: Partial<typeof lineIte
       {AllLineItemsTypes.map((type) => (
         <SwapLineItem key={type} trade={trade} type={type} {...lineItemProps} {...props} />
       ))}
-    </>
+    </>,
   )
   expect(asFragment()).toMatchSnapshot()
 }
@@ -85,7 +85,7 @@ describe('SwapLineItem.tsx', () => {
         type={SwapLineItemType.EXPIRY}
         syncing={false}
         allowedSlippage={new Percent(0)}
-      />
+      />,
     )
     // TODO: mock Date Time so we can use a snapshot test here
     expect(screen.getByText('Expiry')).toBeInTheDocument()

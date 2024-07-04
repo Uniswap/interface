@@ -2,10 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
-import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
-import { trace } from 'tracing/trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   ClassicAPIConfig,
   GetQuoteArgs,
@@ -20,8 +16,13 @@ import {
   URAQuoteType,
   UniswapXConfig,
   UniswapXv2Config,
-} from './types'
-import { isExactInput, transformQuoteToTrade } from './utils'
+} from 'state/routing/types'
+import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
+import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
+import { trace } from 'tracing/trace'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -165,10 +166,12 @@ export const routingApi = createApi({
               return { data: { ...tradeResult, latencyMs: trace.now() } }
             })
           } catch (error: any) {
-            console.warn(
+            logger.warn(
+              'routing/slice',
+              'queryFn',
               `GetQuote failed on Unified Routing API, falling back to client: ${
                 error?.message ?? error?.detail ?? error
-              }`
+              }`,
             )
           }
 
@@ -187,7 +190,7 @@ export const routingApi = createApi({
               }
             })
           } catch (error: any) {
-            console.warn(`GetQuote failed on client: ${error}`)
+            logger.warn('routing/slice', 'queryFn', `GetQuote failed on client: ${error}`)
             trace.setError(error)
             return {
               error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },

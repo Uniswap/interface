@@ -2,6 +2,12 @@ import { PriceChartData } from 'components/Charts/PriceChart'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import {
+  ChartQueryResult,
+  DataQuality,
+  checkDataQuality,
+  withUTCTimestamp,
+} from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useReducer } from 'react'
 import {
@@ -13,7 +19,6 @@ import {
   useTokenHistoricalVolumesQuery,
   useTokenPriceQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChartQueryResult, DataQuality, checkDataQuality, withUTCTimestamp } from './util'
 
 type TDPChartQueryVariables = { chain: Chain; address?: string; duration: HistoryDuration }
 
@@ -35,7 +40,7 @@ const CANDLESTICK_FALLBACK_THRESHOLD = 0.1
 export function useTDPPriceChartData(
   variables: TDPChartQueryVariables,
   skip: boolean,
-  priceChartType: PriceChartType
+  priceChartType: PriceChartType,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
   const { data, loading } = useTokenPriceQuery({ variables: { ...variables, fallback }, skip })
@@ -144,7 +149,7 @@ export function useTDPPriceChartData(
 
 export function useTDPVolumeChartData(
   variables: TDPChartQueryVariables,
-  skip: boolean
+  skip: boolean,
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
   const { data, loading } = useTokenHistoricalVolumesQuery({ variables, skip })
   return useMemo(() => {
@@ -163,7 +168,7 @@ function toStackedLineData(entry: { timestamp: number; value: number }): Stacked
 
 export function useTDPTVLChartData(
   variables: TDPChartQueryVariables,
-  skip: boolean
+  skip: boolean,
 ): ChartQueryResult<StackedLineData, ChartType.TVL> {
   const { data, loading } = useTokenHistoricalTvlsQuery({ variables, skip })
   return useMemo(() => {

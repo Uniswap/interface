@@ -1,14 +1,14 @@
 import { providers } from 'ethers'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
+import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { GasFeeResponse } from 'wallet/src/features/gas/types'
 
 export function useGasFeeQuery(
   tx: Maybe<providers.TransactionRequest>,
   skip?: boolean,
-  pollingInterval?: PollingInterval
+  pollingInterval?: PollingInterval,
 ): ReturnType<typeof useRestQuery<GasFeeResponse>> {
   return useRestQuery<GasFeeResponse, providers.TransactionRequest>(
     uniswapUrls.gasServicePath,
@@ -20,6 +20,6 @@ export function useGasFeeQuery(
       pollInterval: pollingInterval ?? getPollingIntervalByBlocktime(tx?.chainId),
       skip: skip || !tx,
       ttlMs: pollingInterval ?? getPollingIntervalByBlocktime(tx?.chainId),
-    }
+    },
   )
 }

@@ -1,20 +1,25 @@
+import 'test-utils/tokens/mocks'
+
 import userEvent from '@testing-library/user-event'
-import { ChainId } from '@uniswap/sdk-core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
+import { useAccount } from 'hooks/useAccount'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
+import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import 'test-utils/tokens/mocks'
-
-import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
+jest.mock('hooks/useAccount')
+
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
-    chainId: ChainId.MAINNET,
+    chainId: UniverseChainId.Mainnet,
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     feeTier: 500,
@@ -27,6 +32,7 @@ describe('PoolDetailsStatsButton', () => {
   }
 
   beforeEach(() => {
+    mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     store.dispatch(
       addSerializedToken({
@@ -37,7 +43,7 @@ describe('PoolDetailsStatsButton', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-      })
+      }),
     )
     store.dispatch(
       addSerializedToken({
@@ -48,7 +54,7 @@ describe('PoolDetailsStatsButton', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-      })
+      }),
     )
   })
 
@@ -80,7 +86,7 @@ describe('PoolDetailsStatsButton', () => {
 
     await act(() => userEvent.click(screen.getByTestId('pool-details-add-liquidity-button')))
     expect(globalThis.window.location.href).toContain(
-      '/add/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/500'
+      '/add/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/500',
     )
   })
 })

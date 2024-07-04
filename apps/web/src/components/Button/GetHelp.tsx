@@ -1,6 +1,6 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/Row'
-import { SupportArticleURL } from 'constants/supportArticles'
+import { RigoblockUrls } from 'constants/rigoblockUrls'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
@@ -24,9 +24,9 @@ const StyledExternalLink = styled(ExternalLink)`
   }
   stroke: none;
 `
-export default function GetHelp() {
+export default function GetHelp({ url }: { url?: string }) {
   return (
-    <StyledExternalLink href={SupportArticleURL.GET_HELP}>
+    <StyledExternalLink href={url ?? RigoblockUrls.GET_HELP}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
         <Trans i18nKey="common.getHelp.button" />

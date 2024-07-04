@@ -1,7 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { hideSmallBalancesAtom } from 'components/AccountDrawer/SmallBalanceToggle'
+import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
+import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
+import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
+import { useAtomValue } from 'jotai/utils'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
@@ -14,11 +18,9 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
-
-import { createAdaptiveRefetchContext } from './AdaptiveRefetch'
-import { useAssetActivitySubscription } from './AssetActivityProvider'
 
 const {
   Provider: AdaptiveTokenBalancesProvider,
@@ -43,7 +45,7 @@ function useIsRealtime() {
   const { chainId } = useAccount()
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
-  return isRealtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId)
+  return isRealtimeEnabled && chainId && (SUBSCRIPTION_CHAINIDS as unknown as InterfaceChainId[]).includes(chainId)
 }
 
 function useHasAccountUpdate() {
@@ -57,8 +59,8 @@ function useHasAccountUpdate() {
   const { data } = useAssetActivitySubscription()
   const prevData = usePrevious(data)
 
-  const { account } = useWeb3React()
-  const prevAccount = usePrevious(account)
+  const account = useAccount()
+  const prevAccount = usePrevious(account.address)
 
   const { address: smartPool } = useActiveSmartPool()
   const prevSmartPool = usePrevious(smartPool)
@@ -69,18 +71,35 @@ function useHasAccountUpdate() {
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
-    const accountChanged = Boolean(prevAccount !== account && account)
+    const accountChanged = Boolean(prevAccount !== account.address && account.address)
     const smartPoolChanged = Boolean(prevSmartPool !== smartPool && smartPool)
     const sendPageChanged = page !== prevPage && !!smartPool && (page === '/send' || prevPage === '/send')
 
     return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || smartPoolChanged || sendPageChanged
-  }, [account, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool, page, prevPage])
+  }, [account.address, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool, page, prevPage])
+}
+
+function usePortfolioValueModifiers(): {
+  includeSmallBalances: boolean
+  includeSpamTokens: boolean
+} {
+  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
+  const hideSpamTokens = useAtomValue(hideSpamAtom)
+  return useMemo(
+    () => ({
+      includeSmallBalances: !hideSmallBalances,
+      includeSpamTokens: !hideSpamTokens,
+    }),
+    [hideSmallBalances, hideSpamTokens],
+  )
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
-  const { account } = useWeb3React()
+  const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
+  const valueModifiers = usePortfolioValueModifiers()
+  const prevValueModifiers = usePrevious(valueModifiers)
   // TODO: query default pool with hook and either conditionally set, or just use pool
   const { address: smartPoolAddress } = useActiveSmartPool()
 
@@ -91,19 +110,25 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const shouldQueryPoolBalances = smartPoolAddress && !isSendPage
 
   const fetch = useCallback(() => {
-    if (!account) {
+    if (!account.address) {
       return
     }
     lazyFetch({
       variables: {
-        ownerAddress: shouldQueryPoolBalances ? smartPoolAddress : account,
+        ownerAddress: shouldQueryPoolBalances ? smartPoolAddress : account.address,
         chains: GQL_MAINNET_CHAINS_MUTABLE,
+        includeSpamTokens: valueModifiers.includeSpamTokens,
+        includeSmallBalances: valueModifiers.includeSmallBalances,
       },
     })
-  }, [account, lazyFetch, smartPoolAddress, shouldQueryPoolBalances])
+  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances, valueModifiers])
 
   return (
-    <AdaptiveTokenBalancesProvider query={query} fetch={fetch} stale={hasAccountUpdate}>
+    <AdaptiveTokenBalancesProvider
+      query={query}
+      fetch={fetch}
+      stale={hasAccountUpdate || valueModifiers !== prevValueModifiers}
+    >
       {children}
     </AdaptiveTokenBalancesProvider>
   )

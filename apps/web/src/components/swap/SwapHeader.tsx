@@ -1,17 +1,19 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { RowBetween, RowFixed } from 'components/Row'
+import SettingsTab from 'components/Settings'
+import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'
+import { SwapHeaderTabButton } from 'components/swap/styled'
 import { Trans } from 'i18n'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import styled from 'styled-components'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isIFramed } from 'utils/isIFramed'
-import { RowBetween, RowFixed } from '../Row'
-import SettingsTab from '../Settings'
-import SwapBuyFiatButton from './SwapBuyFiatButton'
-import { SwapHeaderTabButton } from './styled'
 
 const StyledSwapHeader = styled(RowBetween)`
   margin-bottom: 12px;
@@ -31,19 +33,29 @@ const PathnameToTab: { [key: string]: SwapTab } = {
   '/swap': SwapTab.Swap,
   '/send': SwapTab.Send,
   '/limit': SwapTab.Limit,
+  '/buy': SwapTab.Buy,
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const { initialChainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const [triggerBuyFlow, setTriggerBuyFlow] = useState(false)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
 
   useEffect(() => {
-    setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
-  }, [pathname, setCurrentTab])
+    if (pathname === '/buy') {
+      setCurrentTab(forAggregatorEnabled ? SwapTab.Buy : SwapTab.Swap)
+    } else {
+      setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
+    }
+    if (pathname === '/buy' && !forAggregatorEnabled) {
+      setTriggerBuyFlow(true)
+    }
+  }, [forAggregatorEnabled, pathname, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -54,7 +66,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         setCurrentTab(tab)
       }
     },
-    [navigate, setCurrentTab, syncTabToUrl]
+    [navigate, setCurrentTab, syncTabToUrl],
   )
 
   return (
@@ -71,7 +83,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         >
           <Trans i18nKey="common.swap" />
         </SwapHeaderTabButton>
-        {chainId === ChainId.SEPOLIA && (
+        {initialChainId === UniverseChainId.Sepolia && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Limit}
             onClick={() => {
@@ -91,11 +103,22 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             <Trans i18nKey="common.send.button" />
           </SwapHeaderTabButton>
         )}
-        <SwapBuyFiatButton />
+        {forAggregatorEnabled ? (
+          <SwapHeaderTabButton
+            $isActive={currentTab === SwapTab.Buy}
+            onClick={() => {
+              onTabClick(SwapTab.Buy)
+            }}
+          >
+            <Trans i18nKey="common.buy.label" />
+          </SwapHeaderTabButton>
+        ) : (
+          <SwapBuyFiatButton triggerBuyFlow={triggerBuyFlow} setTriggerBuyFlow={setTriggerBuyFlow} />
+        )}
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>
-          <SettingsTab autoSlippage={autoSlippage} chainId={chainId} compact={compact} trade={trade.trade} />
+          <SettingsTab autoSlippage={autoSlippage} chainId={initialChainId} compact={compact} trade={trade.trade} />
         </RowFixed>
       )}
     </StyledSwapHeader>

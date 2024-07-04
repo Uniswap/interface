@@ -1,7 +1,4 @@
-import {
-  AppsFlyerEventProperties,
-  UniverseEventProperties,
-} from 'uniswap/src/features/telemetry/types'
+import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -20,5 +17,5 @@ export async function sendAppsFlyerEvent<EventName extends keyof AppsFlyerEventP
     ? [EventName] | [EventName, AppsFlyerEventProperties[EventName]]
     : [EventName, AppsFlyerEventProperties[EventName]]
 ): Promise<void> {
-  logger.info('telemetry/index.web.ts', 'sendWalletAppsFlyerEvent', 'method not supported', args)
+  logger.warn('telemetry/index.web.ts', 'sendWalletAppsFlyerEvent', 'method not supported', args)
 }

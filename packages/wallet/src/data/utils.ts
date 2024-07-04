@@ -1,9 +1,14 @@
 import { ApolloClient, NetworkStatus, NormalizedCacheObject, useApolloClient } from '@apollo/client'
 import { useCallback } from 'react'
+import { OnRampTransactionsAuth } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { objectToQueryString } from 'uniswap/src/data/utils'
 import { AuthData } from 'wallet/src/data/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage } from 'wallet/src/features/wallet/signing/signing'
+
+export const ON_RAMP_AUTH_MAX_LIMIT = 100
+export const ON_RAMP_AUTH_MIN_LIMIT = 1
 
 export function isNonPollingRequestInFlight(networkStatus: NetworkStatus): boolean {
   return (
@@ -26,33 +31,22 @@ export function isError(networkStatus: NetworkStatus, hasData: boolean): boolean
 }
 
 export function useRefetchQueries(): (
-  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include']
+  include?: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include'],
 ) => void {
   const client = useApolloClient()
 
   return useCallback(
-    async (
-      include: Parameters<
-        ApolloClient<NormalizedCacheObject>['refetchQueries']
-      >[0]['include'] = 'active'
-    ) => {
+    async (include: Parameters<ApolloClient<NormalizedCacheObject>['refetchQueries']>[0]['include'] = 'active') => {
       await client?.refetchQueries({ include })
     },
-    [client]
+    [client],
   )
-}
-
-export const objectToQueryString = (obj: Record<string, string | number | boolean>): string => {
-  return Object.entries(obj)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join('&')
 }
 
 export async function createSignedRequestBody<T>(
   data: T,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<{ requestBody: T & AuthData; signature: string }> {
   const requestBody: T & AuthData = {
     ...data,
@@ -67,7 +61,7 @@ export async function createSignedRequestBody<T>(
 export async function createSignedRequestParams<T>(
   params: T,
   account: Account,
-  signerManager: SignerManager
+  signerManager: SignerManager,
 ): Promise<{ requestParams: T & AuthData; signature: string }> {
   const requestParams: T & AuthData = {
     ...params,
@@ -77,4 +71,17 @@ export async function createSignedRequestParams<T>(
   const message = objectToQueryString(requestParams)
   const signature = await signMessage(message, account, signerManager)
   return { requestParams, signature }
+}
+
+export async function createOnRampTransactionsAuth(
+  limit: number,
+  account: Account,
+  signerManager: SignerManager,
+): Promise<OnRampTransactionsAuth> {
+  const { requestParams, signature } = await createSignedRequestParams(
+    { limit }, // Parameter needed by graphql server when fetching onramp transactions
+    account,
+    signerManager,
+  )
+  return { queryParams: objectToQueryString(requestParams), signature }
 }

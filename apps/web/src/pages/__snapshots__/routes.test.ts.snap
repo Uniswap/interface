@@ -84,6 +84,14 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
+    "path": "/buy",
+  },
+  Object {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
     "path": "/send",
   },
   Object {
@@ -101,6 +109,14 @@ Array [
     "getTitle": [Function],
     "nestedPaths": Array [],
     "path": "/limit",
+  },
+  Object {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
+    "path": "/buy",
   },
   Object {
     "enabled": [Function],

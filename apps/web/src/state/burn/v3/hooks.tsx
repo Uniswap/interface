@@ -1,17 +1,16 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { useToken } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { Trans } from 'i18n'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { selectPercent } from 'state/burn/v3/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
 import { PositionDetails } from 'types/position'
 import { unwrappedToken } from 'utils/unwrappedToken'
-
-import { AppState } from '../../reducer'
-import { selectPercent } from './actions'
 
 export function useBurnV3State(): AppState['burnV3'] {
   return useAppSelector((state) => state.burnV3)
@@ -19,7 +18,7 @@ export function useBurnV3State(): AppState['burnV3'] {
 
 export function useDerivedV3BurnInfo(
   position?: PositionDetails,
-  asWETH = false
+  asWETH = false,
 ): {
   position?: Position
   liquidityPercentage?: Percent
@@ -30,7 +29,7 @@ export function useDerivedV3BurnInfo(
   outOfRange: boolean
   error?: ReactNode
 } {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { percent } = useBurnV3State()
 
   const token0 = useToken(position?.token0)
@@ -48,7 +47,7 @@ export function useDerivedV3BurnInfo(
             tickUpper: position.tickUpper,
           })
         : undefined,
-    [pool, position]
+    [pool, position],
   )
 
   const liquidityPercentage = new Percent(percent, 100)
@@ -75,7 +74,7 @@ export function useDerivedV3BurnInfo(
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false
 
   let error: ReactNode | undefined
-  if (!account) {
+  if (!account.isConnected) {
     error = <Trans i18nKey="common.connectWallet.button" />
   }
   if (percent === 0) {
@@ -102,7 +101,7 @@ export function useBurnV3ActionHandlers(): {
     (percent: number) => {
       dispatch(selectPercent({ percent }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return {

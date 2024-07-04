@@ -1,22 +1,17 @@
-import { ChainId } from 'uniswap/src/types/chains'
-import {
-  DAI_CURRENCY_INFO,
-  ETH_CURRENCY_INFO,
-  daiCurrencyInfo,
-  ethCurrencyInfo,
-} from 'wallet/src/test/fixtures'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { DAI_CURRENCY_INFO, ETH_CURRENCY_INFO, daiCurrencyInfo, ethCurrencyInfo } from 'wallet/src/test/fixtures'
 import { render, within } from 'wallet/src/test/test-utils'
-import { SplitLogo } from './SplitLogo'
 
 describe(SplitLogo, () => {
   it('renders without error', () => {
     const tree = render(
       <SplitLogo
-        chainId={ChainId.ArbitrumOne}
+        chainId={UniverseChainId.ArbitrumOne}
         inputCurrencyInfo={DAI_CURRENCY_INFO}
         outputCurrencyInfo={ETH_CURRENCY_INFO}
         size={10}
-      />
+      />,
     )
 
     expect(tree).toMatchSnapshot()
@@ -26,11 +21,11 @@ describe(SplitLogo, () => {
     it('renders input currency logo when inputCurrencyInfo is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={ChainId.ArbitrumOne}
+          chainId={UniverseChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />
+        />,
       )
 
       const inputCurrencyLogo = getByTestId('input-currency-logo-container')
@@ -41,11 +36,11 @@ describe(SplitLogo, () => {
     it('renders input currency logo when inputCurrencyInfo is not specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={ChainId.ArbitrumOne}
+          chainId={UniverseChainId.ArbitrumOne}
           inputCurrencyInfo={null}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />
+        />,
       )
 
       const inputCurrencyLogo = getByTestId('input-currency-logo-container')
@@ -58,11 +53,11 @@ describe(SplitLogo, () => {
     it('renders output currency logo when outputCurrencyInfo is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={ChainId.ArbitrumOne}
+          chainId={UniverseChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />
+        />,
       )
 
       const outputCurrencyLogo = getByTestId('output-currency-logo-container')
@@ -73,11 +68,11 @@ describe(SplitLogo, () => {
     it('renders output currency logo when outputCurrencyInfo is not specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={ChainId.ArbitrumOne}
+          chainId={UniverseChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={null}
           size={10}
-        />
+        />,
       )
 
       const outputCurrencyLogo = getByTestId('output-currency-logo-container')
@@ -90,11 +85,11 @@ describe(SplitLogo, () => {
     it('renders icon when chainId is specified', () => {
       const { getByTestId } = render(
         <SplitLogo
-          chainId={ChainId.ArbitrumOne}
+          chainId={UniverseChainId.ArbitrumOne}
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />
+        />,
       )
 
       const icon = getByTestId('network-logo')
@@ -109,7 +104,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />
+        />,
       )
 
       const icon = queryByTestId('network-logo')

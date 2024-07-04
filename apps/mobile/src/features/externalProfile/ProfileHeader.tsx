@@ -11,24 +11,21 @@ import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextM
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
-  AnimatedFlex,
   Flex,
   Image,
   LinearGradient,
   ScrollView,
   Text,
   TouchableArea,
-  getUniconV2Colors,
+  getUniconColors,
   useExtractedColors,
   useIsDarkMode,
   useSporeColors,
-  useUniconColors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
@@ -52,9 +49,7 @@ export const solidHeaderProps = {
   maxOpacity: HEADER_SOLID_COLOR_OPACITY,
 }
 
-export const ProfileHeader = memo(function ProfileHeader({
-  address,
-}: ProfileHeaderProps): JSX.Element {
+export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
@@ -64,8 +59,7 @@ export const ProfileHeader = memo(function ProfileHeader({
 
   // Note that if a user has a Unitag AND ENS, this prioritizes the Unitag's metadata over the ENS metadata
   const nameToFetchENSMetadata =
-    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) &&
-    displayName?.name
+    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName?.name
       ? displayName.name
       : undefined
 
@@ -77,16 +71,11 @@ export const ProfileHeader = memo(function ProfileHeader({
   const showENSName = primaryENSName && primaryENSName !== displayName?.name
 
   const { colors: avatarColors } = useExtractedColors(avatar)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
-  const { gradientStart: uniconGradientStart, gradientEnd: uniconGradientEnd } =
-    useUniconColors(address)
-
-  // UniconV2 colors
-  const { color } = getUniconV2Colors(address)
+  const { color } = getUniconColors(address, false)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {
@@ -96,20 +85,8 @@ export const ProfileHeader = memo(function ProfileHeader({
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
     }
-    return [
-      isUniconsV2Enabled ? color : uniconGradientStart,
-      isUniconsV2Enabled ? color : uniconGradientEnd,
-    ]
-  }, [
-    avatarColors,
-    hasAvatar,
-    avatarLoading,
-    colors.surface1,
-    uniconGradientEnd,
-    uniconGradientStart,
-    color,
-    isUniconsV2Enabled,
-  ])
+    return [color, color]
+  }, [avatarColors, hasAvatar, avatarLoading, colors.surface1, color])
 
   const onPressFavorite = useToggleWatchedWalletCallback(address)
 
@@ -129,7 +106,7 @@ export const ProfileHeader = memo(function ProfileHeader({
       openModal({
         name: ModalName.Send,
         ...{ initialState: initialSendState },
-      })
+      }),
     )
   }, [dispatch, initialSendState])
 
@@ -143,11 +120,7 @@ export const ProfileHeader = memo(function ProfileHeader({
 
   return (
     <Flex backgroundColor="$surface1" gap="$spacing16" pt="$spacing60">
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       {/* fixed gradient at 0.2 opacity overlaid on surface1 */}
       <AnimatedFlex
         bottom={0}
@@ -156,15 +129,9 @@ export const ProfileHeader = memo(function ProfileHeader({
         left={0}
         position="absolute"
         right={0}
-        top={0}>
-        <Flex
-          backgroundColor="$surface1"
-          bottom={0}
-          left={0}
-          position="absolute"
-          right={0}
-          top={0}
-        />
+        top={0}
+      >
+        <Flex backgroundColor="$surface1" bottom={0} left={0} position="absolute" right={0} top={0} />
         <Flex grow opacity={0.2}>
           <LinearGradient
             colors={fixedGradientColors}
@@ -176,10 +143,7 @@ export const ProfileHeader = memo(function ProfileHeader({
         {hasAvatar && avatarColors?.primary ? (
           <HeaderRadial color={avatarColors.primary} {...solidHeaderProps} />
         ) : (
-          <HeaderRadial
-            color={isUniconsV2Enabled ? color : uniconGradientStart}
-            {...solidHeaderProps}
-          />
+          <HeaderRadial color={color} {...solidHeaderProps} />
         )}
       </AnimatedFlex>
 
@@ -208,15 +172,10 @@ export const ProfileHeader = memo(function ProfileHeader({
               textAlign="flex-start"
               variant="heading3"
             />
-            {bio ? (
-              <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} />
-            ) : null}
+            {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}
           </Flex>
           {(twitter || showENSName) && (
-            <ScrollView
-              horizontal
-              contentContainerStyle={{ px: '$spacing24' }}
-              showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal contentContainerStyle={{ px: '$spacing24' }} showsHorizontalScrollIndicator={false}>
               <Flex row gap="$spacing16">
                 {twitter ? (
                   <TouchableArea onPress={onPressTwitter}>
@@ -259,7 +218,8 @@ export const ProfileHeader = memo(function ProfileHeader({
               shadowColor="$neutral1"
               style={styles.buttonShadow}
               testID={ElementName.Favorite}
-              onPress={onPressFavorite}>
+              onPress={onPressFavorite}
+            >
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
             <TouchableArea
@@ -275,14 +235,11 @@ export const ProfileHeader = memo(function ProfileHeader({
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               style={styles.buttonShadow}
               testID={ElementName.Send}
-              onPress={onPressSend}>
+              onPress={onPressSend}
+            >
               <Flex row alignItems="center" gap="$spacing8">
                 <SendAction color="$neutral2" size="$icon.20" />
-                <Text
-                  allowFontScaling={true}
-                  color="$neutral2"
-                  maxFontSizeMultiplier={1.2}
-                  variant="buttonLabel2">
+                <Text allowFontScaling={true} color="$neutral2" maxFontSizeMultiplier={1.2} variant="buttonLabel2">
                   {t('common.button.send')}
                 </Text>
               </Flex>

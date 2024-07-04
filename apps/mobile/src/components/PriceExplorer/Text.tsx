@@ -1,15 +1,15 @@
 import React from 'react'
 import { useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
+import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
+import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
-import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number }): JSX.Element {
   const price = useLineChartPrice()
@@ -19,8 +19,7 @@ export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number })
 
   // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
   const shouldFadePortfolioDecimals =
-    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
-    symbolAtFront
+    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && symbolAtFront
 
   // TODO(MOB-2308): re-enable this when we have a better solution for handling the loading state
   // if (loading) {
@@ -61,11 +60,7 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
   }
 
   return (
-    <Flex
-      row
-      alignItems={isAndroid ? 'center' : 'flex-end'}
-      gap="$spacing2"
-      mt={isAndroid ? '$none' : '$spacing2'}>
+    <Flex row alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
       <AnimatedCaretChange
         size="$icon.16"
         strokeWidth={2}
@@ -75,12 +70,7 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
           { translateY: relativeChange.value.value > 0 ? -1 : 1 },
         ]}
       />
-      <AnimatedText
-        style={styles}
-        testID="relative-change-text"
-        text={relativeChange.formatted}
-        variant="body1"
-      />
+      <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />
     </Flex>
   )
 }

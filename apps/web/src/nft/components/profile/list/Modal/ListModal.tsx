@@ -7,6 +7,9 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
+import { ListModalSection, Section } from 'nft/components/profile/list/Modal/ListModalSection'
+import { SuccessScreen } from 'nft/components/profile/list/Modal/SuccessScreen'
+import { TitleRow } from 'nft/components/profile/list/shared'
 import { getTotalEthValue, signListingRow } from 'nft/components/profile/list/utils'
 import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
@@ -20,9 +23,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { TitleRow } from '../shared'
-import { ListModalSection, Section } from './ListModalSection'
-import { SuccessScreen } from './SuccessScreen'
 
 const ListModalWrapper = styled.div`
   position: fixed;
@@ -67,13 +67,13 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
         getLooksRareNonce,
         collectionsRequiringApproval,
         listings,
-      })
+      }),
     )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
-    Section.APPROVE
+    Section.APPROVE,
   )
   const nativeCurrency = useNativeCurrency(account.chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
@@ -85,12 +85,12 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
-    [collectionsRequiringApproval]
+    [collectionsRequiringApproval],
   )
 
   const allListingsApproved = useMemo(
     () => listings.every((listing) => listing.status === ListingStatus.APPROVED),
-    [listings]
+    [listings],
   )
 
   const signListings = async () => {

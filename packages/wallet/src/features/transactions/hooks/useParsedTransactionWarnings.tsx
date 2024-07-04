@@ -4,10 +4,7 @@ import { isWeb } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
-import {
-  isPriceImpactWarning,
-  useSwapWarnings,
-} from 'wallet/src/features/transactions/hooks/useSwapWarnings'
+import { isPriceImpactWarning, useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
 import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import {
   Warning,
@@ -67,17 +64,11 @@ export function useParsedSendWarnings(allSendWarnings: Warning[]): ParsedWarning
 function useFormattedWarnings(warnings: Warning[]): ParsedWarnings {
   return useMemo(() => {
     const blockingWarning = warnings.find(
-      (warning) =>
-        warning.action === WarningAction.DisableReview ||
-        warning.action === WarningAction.DisableSubmit
+      (warning) => warning.action === WarningAction.DisableReview || warning.action === WarningAction.DisableSubmit,
     )
 
-    const insufficientBalanceWarning = warnings.find(
-      (warning) => warning.type === WarningLabel.InsufficientFunds
-    )
-    const insufficientGasFundsWarning = warnings.find(
-      (warning) => warning.type === WarningLabel.InsufficientGasFunds
-    )
+    const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
+    const insufficientGasFundsWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientGasFunds)
     const priceImpactWarning = warnings.find((warning) => isPriceImpactWarning(warning))
 
     return {
@@ -92,25 +83,19 @@ function useFormattedWarnings(warnings: Warning[]): ParsedWarnings {
   }, [warnings])
 }
 
-function getReviewScreenWarning(
-  warnings: Warning[]
-): ParsedWarnings['reviewScreenWarning'] | undefined {
+function getReviewScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
   const reviewWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   if (!reviewWarning) {
     return undefined
   }
 
-  return getWarningWithStyle(reviewWarning, true)
+  return getWarningWithStyle({ warning: reviewWarning, displayedInline: true })
 }
 
 // This function decides which warning to show when there is more than one.
-function getFormScreenWarning(
-  warnings: Warning[]
-): ParsedWarnings['reviewScreenWarning'] | undefined {
-  const insufficientBalanceWarning = warnings.find(
-    (warning) => warning.type === WarningLabel.InsufficientFunds
-  )
+function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreenWarning'] | undefined {
+  const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
 
   if (insufficientBalanceWarning) {
     return {
@@ -122,19 +107,18 @@ function getFormScreenWarning(
   }
 
   const formWarning = warnings.find(
-    (warning) =>
-      warning.type === WarningLabel.InsufficientFunds || warning.severity >= WarningSeverity.Low
+    (warning) => warning.type === WarningLabel.InsufficientFunds || warning.severity >= WarningSeverity.Low,
   )
 
   if (!formWarning) {
     return undefined
   }
 
-  return getWarningWithStyle(
-    formWarning,
-    !isWeb ||
-      !(formWarning.type === WarningLabel.InsufficientGasFunds || isPriceImpactWarning(formWarning))
-  )
+  return getWarningWithStyle({
+    warning: formWarning,
+    displayedInline:
+      formWarning.type !== WarningLabel.InsufficientGasFunds && (!isWeb || !isPriceImpactWarning(formWarning)),
+  })
 }
 
 function getAlertColor(severity?: WarningSeverity): WarningColor {
@@ -172,7 +156,13 @@ function getAlertColor(severity?: WarningSeverity): WarningColor {
   }
 }
 
-function getWarningWithStyle(warning: Warning, displayedInline: boolean): WarningWithStyle {
+function getWarningWithStyle({
+  warning,
+  displayedInline,
+}: {
+  warning: Warning
+  displayedInline: boolean
+}): WarningWithStyle {
   return {
     warning,
     displayedInline,

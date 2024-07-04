@@ -2,22 +2,22 @@ import { MoonpayEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-
 import {
-  addPopup,
-  addSuppressedPopups,
   ApplicationModal,
   PopupContent,
   PopupType,
+  addPopup,
+  addSuppressedPopups,
   removePopup,
   removeSuppressedPopups,
   setFiatOnrampAvailability,
   setOpenModal,
   setSmartPoolValue,
-} from './reducer'
+} from 'state/application/reducer'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
   const openModal = useAppSelector((state: AppState) => state.application.openModal)
@@ -68,7 +68,7 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
           callback()
         }
       } catch (e) {
-        console.error('Error checking onramp availability', e.toString())
+        logger.warn('useFiatOnrampAvailability', 'checkAvailability', 'Error fetching FOR availability', e)
         if (stale) {
           return
         }
@@ -113,7 +113,7 @@ export function useCloseModal() {
         dispatch(setOpenModal(null))
       }
     },
-    [currentlyOpenModal, dispatch]
+    [currentlyOpenModal, dispatch],
   )
 }
 
@@ -162,10 +162,6 @@ export function useTogglePrivacyPolicy(): () => void {
   return useToggleModal(ApplicationModal.PRIVACY_POLICY)
 }
 
-export function useToggleFeatureFlags(): () => void {
-  return useToggleModal(ApplicationModal.FEATURE_FLAGS)
-}
-
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string, removeAfterMs?: number) => void {
   const dispatch = useAppDispatch()
@@ -173,7 +169,7 @@ export function useAddPopup(): (content: PopupContent, key?: string, removeAfter
     (content: PopupContent, key?: string, removeAfterMs?: number) => {
       dispatch(addPopup({ content, key, removeAfterMs: removeAfterMs ?? DEFAULT_TXN_DISMISS_MS }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -184,7 +180,7 @@ export function useRemovePopup(): (key: string) => void {
     (key: string) => {
       dispatch(removePopup({ key }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 

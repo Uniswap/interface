@@ -3,7 +3,7 @@ import 'zone.js'
 import { SpanStatusType } from '@sentry/core'
 import * as Sentry from '@sentry/react'
 import { Span, TransactionContext } from '@sentry/types'
-import { TraceContext } from './types'
+import { TraceContext } from 'tracing/types'
 
 // @ts-ignore Avoid logging unhandled errors - they're already logged by the browser and Sentry.
 Zone[Zone.__symbol__('ignoreConsoleErrorUncaughtError')] = true

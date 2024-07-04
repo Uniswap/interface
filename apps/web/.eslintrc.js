@@ -14,9 +14,28 @@ module.exports = {
   rules: {
     // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
     'cypress/unsafe-to-chain-command': 'off',
+
+    // let prettier do things:
+    semi: 0,
+    quotes: 0,
+    'comma-dangle': 0,
+    'no-trailing-spaces': 0,
+    'no-extra-semi': 0,
   },
 
   overrides: [
+    {
+      files: ['src/**/*.ts', 'src/**/*.tsx'],
+      rules: {
+        'no-relative-import-paths/no-relative-import-paths': [
+          'error',
+          {
+            allowSameFolder: false,
+            rootDir: 'src',
+          },
+        ],
+      },
+    },
     {
       files: ['**/*'],
       rules: {
@@ -38,9 +57,7 @@ module.exports = {
         '@typescript-eslint/no-restricted-imports': [
           'error',
           {
-            ...restrictedImports,
             paths: [
-              ...restrictedImports.paths,
               {
                 name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
                 importNames: ['usePortfolioBalancesQuery', 'usePortfolioBalancesWebLazyQuery'],
@@ -72,7 +89,7 @@ module.exports = {
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
               {
-                name: 'uniswap/src/utils/platform',
+                name: 'utilities/src/platform',
                 importNames: ['isIOS', 'isAndroid'],
                 message:
                   'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
@@ -81,6 +98,11 @@ module.exports = {
                 name: 'wagmi',
                 importNames: ['useChainId', 'useAccount'],
                 message: 'Import properly typed account data from `hooks/useAccount` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useConnect'],
+                message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
               },
             ],
           },
@@ -107,7 +129,34 @@ module.exports = {
             message:
               "Don't use the string 'NATIVE' directly. Use the NATIVE_CHAIN_ID variable from constants/tokens instead.",
           },
+          {
+            selector: `ImportDeclaration[source.value='@uniswap/sdk-core'] > ImportSpecifier[imported.name='ChainId']`,
+            message: "Don't use ChainId from @uniswap/sdk-core. Use the InterfaceChainId from universe/uniswap.",
+          },
+          // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='account']`,
+            message:
+              "Do not use account directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useWeb3React'] > ObjectPattern > Property[key.name='chainId']`,
+            message:
+              "Do not use chainId directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.chainId instead.",
+          },
+          {
+            selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']`,
+            message:
+              "Do not use address directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.address instead.",
+          },
         ],
+      },
+    },
+    {
+      files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.native.*', '*.ios.*', '*.android.*'],
+      rules: {
+        'no-restricted-imports': ['error', restrictedImports],
       },
     },
     {

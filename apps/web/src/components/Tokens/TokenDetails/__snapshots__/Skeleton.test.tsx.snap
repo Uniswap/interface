@@ -72,6 +72,68 @@ exports[`TDP Skeleton should render correctly 1`] = `
   color: #CECECE;
 }
 
+.c23 {
+  gap: 16px;
+  padding: 24px 0px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c25 {
+  font-size: 28px !important;
+}
+
+.c4 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c19 {
+  color: #7D7D7D;
+  font-size: 14px;
+  min-width: 121px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 0px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c14 {
+  gap: 16px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c22 {
+  background-color: #22222212;
+  border: none;
+  height: 0.5px;
+}
+
 .c39 {
   border-radius: 12px;
   height: 40px;
@@ -197,68 +259,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
 
 .c38 {
   position: relative;
-}
-
-.c4 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
-.c23 {
-  gap: 16px;
-  padding: 24px 0px;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
-}
-
-.c25 {
-  font-size: 28px !important;
-}
-
-.c19 {
-  color: #7D7D7D;
-  font-size: 14px;
-  min-width: 121px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  padding-top: 24px;
-  padding-bottom: 0px;
-}
-
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c14 {
-  gap: 16px;
-  -webkit-animation: iAjNNh 125ms ease-in;
-  animation: iAjNNh 125ms ease-in;
-}
-
-.c22 {
-  background-color: #22222212;
-  border: none;
-  height: 0.5px;
 }
 
 .c0 {

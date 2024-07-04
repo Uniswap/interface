@@ -6,7 +6,7 @@ import { createIcon } from '../factories/createIcon'
 export const [ReceiveArrow, AnimatedReceiveArrow] = createIcon({
   name: 'ReceiveArrow',
   getIcon: (props) => (
-    <Svg fill="none" viewBox="0 0 20 20" {...props}>
+    <Svg viewBox="0 0 20 20" fill="none" {...props}>
       <Path
         d="M13.2627 7.5V3.33333C13.2627 2.87333 12.8893 2.5 12.4293 2.5H7.42934C6.96934 2.5 6.596 2.87333 6.596 3.33333V7.5H4.57676C3.83009 7.5 3.46765 8.41165 4.01015 8.92415L9.23923 13.8642C9.6659 14.2675 10.3344 14.2675 10.761 13.8642L15.9901 8.92415C16.5326 8.41165 16.1702 7.5 15.4235 7.5H13.2627Z"
         fill="currentColor"

@@ -1,8 +1,12 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import Column from 'components/Column'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
+import Row, { RowBetween } from 'components/Row'
+import CommonBases from 'components/SearchModal/CommonBases'
+import CurrencyList, { CurrencyRow, formatAnalyticsEventProperties } from 'components/SearchModal/CurrencyList'
+import { PaddedColumn, SearchInput, Separator } from 'components/SearchModal/styled'
 import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
@@ -15,15 +19,12 @@ import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useRef, 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
-import Column from '../Column'
-import Row, { RowBetween } from '../Row'
-import CommonBases from './CommonBases'
-import CurrencyList, { CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
-import { PaddedColumn, SearchInput, Separator } from './styled'
+import { currencyKey } from 'utils/currencyKey'
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.surface1};
@@ -78,7 +79,8 @@ export function CurrencySearch({
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
     ...filters,
   }
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
+
   const theme = useTheme()
 
   // refs for fixed size lists
@@ -119,7 +121,7 @@ export function CurrencySearch({
         onDismiss()
       }
     },
-    [chainId, onCurrencySelect, onDismiss, selectChain]
+    [chainId, onCurrencySelect, onDismiss, selectChain],
   )
 
   // clear the input on open
@@ -157,7 +159,7 @@ export function CurrencySearch({
         }
       }
     },
-    [allCurrencyRows, debouncedQuery, native, handleCurrencySelect]
+    [allCurrencyRows, debouncedQuery, native, handleCurrencySelect],
   )
 
   // menu ui
@@ -219,7 +221,7 @@ export function CurrencySearch({
               isSelected={Boolean(searchCurrency && selectedCurrency && selectedCurrency.equals(searchCurrency))}
               onSelect={(hasWarning: boolean) => searchCurrency && handleCurrencySelect(searchCurrency, hasWarning)}
               otherSelected={Boolean(
-                searchCurrency && otherSelectedCurrency && otherSelectedCurrency.equals(searchCurrency)
+                searchCurrency && otherSelectedCurrency && otherSelectedCurrency.equals(searchCurrency),
               )}
               showCurrencyAmount={showCurrencyAmount}
               eventProperties={formatAnalyticsEventProperties(
@@ -227,15 +229,11 @@ export function CurrencySearch({
                 0,
                 [searchCurrency],
                 searchQuery,
-                isAddressSearch
+                isAddressSearch,
               )}
               balance={
-                tryParseCurrencyAmount(
-                  String(
-                    balanceMap[searchCurrency.isNative ? 'ETH' : searchCurrency.address?.toLowerCase()]?.balance ?? 0
-                  ),
-                  searchCurrency
-                ) ?? CurrencyAmount.fromRawAmount(searchCurrency, 0)
+                tryParseCurrencyAmount(String(balanceMap[currencyKey(searchCurrency)]?.balance ?? 0), searchCurrency) ??
+                CurrencyAmount.fromRawAmount(searchCurrency, 0)
               }
             />
           </Column>

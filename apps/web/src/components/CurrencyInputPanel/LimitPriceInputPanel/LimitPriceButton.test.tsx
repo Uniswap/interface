@@ -1,7 +1,9 @@
 import userEvent from '@testing-library/user-event'
+import {
+  LimitCustomMarketPriceButton,
+  LimitPresetPriceButton,
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceButton'
 import { act, render, screen } from 'test-utils/render'
-
-import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
 
 describe('LimitPresetPriceButton', () => {
   it.each([
@@ -19,7 +21,7 @@ describe('LimitPresetPriceButton', () => {
         onSelect={onSelect}
         disabled={disabled}
         selected={selected}
-      />
+      />,
     )
     await act(() => userEvent.click(screen.getByText(num > 0 ? `+${num}%` : 'Market')))
     expect(container.firstChild).toMatchSnapshot()

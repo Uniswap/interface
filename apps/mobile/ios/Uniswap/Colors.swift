@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct Colors {
+  static let surface1 = Color("surface1")
   static let surface2 = Color("surface2")
   static let surface3 = Color("surface3")
   static let neutral1 = Color("neutral1")

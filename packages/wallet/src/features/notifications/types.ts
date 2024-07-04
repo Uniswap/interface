@@ -1,19 +1,16 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
-import {
-  FinalizedTransactionStatus,
-  TransactionType,
-  WrapType,
-} from 'wallet/src/features/transactions/types'
+import { FinalizedTransactionStatus, TransactionType, WrapType } from 'wallet/src/features/transactions/types'
 
 export enum AppNotificationType {
   Default,
   Error,
   WalletConnect,
   Transaction,
+  TransactionPending,
   Favorites,
   Copied,
   CopyFailed,
@@ -27,12 +24,14 @@ export enum AppNotificationType {
   DappConnected,
   DappDisconnected,
   NotSupportedNetwork,
+  PasswordChanged,
 }
 
 export interface AppNotificationBase {
   type: AppNotificationType
   address?: Address
   hideDelay?: number
+  shown?: boolean
 }
 
 export interface AppNotificationDefault extends AppNotificationBase {
@@ -58,7 +57,7 @@ export interface TransactionNotificationBase extends AppNotificationBase {
   txStatus: FinalizedTransactionStatus
   txHash: string
   txId: string
-  chainId: ChainId
+  chainId: WalletChainId
   tokenAddress?: string
 }
 
@@ -121,9 +120,7 @@ export interface UnknownTxNotification extends TransactionNotificationBase {
   txType: TransactionType.Unknown
 }
 
-export type TransferCurrencyTxNotification =
-  | SendCurrencyTxNotification
-  | ReceiveCurrencyTxNotification
+export type TransferCurrencyTxNotification = SendCurrencyTxNotification | ReceiveCurrencyTxNotification
 
 export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotification
 
@@ -162,8 +159,8 @@ export interface SuccessNotification extends AppNotificationBase {
 
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
-  chainId: ChainId
-  flow: 'swap' | 'send'
+  chainId: WalletChainId
+  flow?: 'swap' | 'send'
 }
 
 export interface ChooseCountryNotification extends AppNotificationBase {
@@ -204,6 +201,15 @@ export interface NotSupportedNetworkNotification extends AppNotificationBase {
   type: AppNotificationType.NotSupportedNetwork
 }
 
+export interface TransactionPendingNotification extends AppNotificationBase {
+  type: AppNotificationType.TransactionPending
+  chainId: WalletChainId
+}
+
+export interface PasswordChangedNotification extends AppNotificationBase {
+  type: AppNotificationType.PasswordChanged
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
@@ -221,3 +227,5 @@ export type AppNotification =
   | DappConnectedNotification
   | DappDisconnectedNotification
   | NotSupportedNetworkNotification
+  | TransactionPendingNotification
+  | PasswordChangedNotification

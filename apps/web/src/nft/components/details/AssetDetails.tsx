@@ -6,7 +6,12 @@ import { Box } from 'nft/components/Box'
 import { Center } from 'nft/components/Flex'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
+import AssetActivity, { LoadingAssetActivity } from 'nft/components/details/AssetActivity'
+import * as styles from 'nft/components/details/AssetDetails.css'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import DetailsContainer from 'nft/components/details/DetailsContainer'
+import InfoContainer from 'nft/components/details/InfoContainer'
+import TraitsContainer from 'nft/components/details/TraitsContainer'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { isAudio } from 'nft/utils/isAudio'
@@ -18,12 +23,6 @@ import styled from 'styled-components'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import AssetActivity, { LoadingAssetActivity } from './AssetActivity'
-import * as styles from './AssetDetails.css'
-import DetailsContainer from './DetailsContainer'
-import InfoContainer from './InfoContainer'
-import TraitsContainer from './TraitsContainer'
 
 const AssetPriceDetailsContainer = styled.div`
   margin-top: 20px;
@@ -250,11 +249,11 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       asset.rarity
         ? {
             rarityProvider: asset?.rarity?.providers?.find(
-              ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+              ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider,
             ),
           }
         : {},
-    [asset.rarity]
+    [asset.rarity],
   )
 
   const assetMediaType = useMemo(() => {
@@ -277,7 +276,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       tokenId: token_id,
     },
     1,
-    'no-cache'
+    'no-cache',
   )
 
   const weiPrice = gqlPriceData?.[0]?.price
@@ -301,7 +300,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
         </FilterBox>
       )
     },
-    [activeFilters]
+    [activeFilters],
   )
 
   const {
@@ -318,7 +317,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
       address: contractAddress,
       tokenId: token_id,
     },
-    25
+    25,
   )
 
   const rarity = asset?.rarity?.providers?.[0]

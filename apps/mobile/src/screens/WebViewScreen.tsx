@@ -10,9 +10,7 @@ import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function WebViewScreen({
   route,
-}:
-  | SettingsStackScreenProp<MobileScreens.WebView>
-  | AppStackScreenProp<MobileScreens.WebView>): JSX.Element {
+}: SettingsStackScreenProp<MobileScreens.WebView> | AppStackScreenProp<MobileScreens.WebView>): JSX.Element {
   const { headerTitle, uriLink } = route.params
 
   return (
@@ -23,11 +21,7 @@ export function WebViewScreen({
 
       <Separator />
 
-      {uriLink === uniswapUrls.helpUrl ? (
-        <ZendeskWebView uriLink={uriLink} />
-      ) : (
-        <WebView source={{ uri: uriLink }} />
-      )}
+      {uriLink === uniswapUrls.helpUrl ? <ZendeskWebView uriLink={uriLink} /> : <WebView source={{ uri: uriLink }} />}
     </Screen>
   )
 }
@@ -45,16 +39,10 @@ function ZendeskWebView({ uriLink }: { uriLink: string }): JSX.Element {
         webviewRef.current?.injectJavaScript(zendeskInjectJs)
       }
     },
-    [zendeskInjectJs]
+    [zendeskInjectJs],
   )
 
-  return (
-    <WebView
-      ref={webviewRef}
-      source={{ uri: uriLink }}
-      onNavigationStateChange={onNavigationStateChange}
-    />
-  )
+  return <WebView ref={webviewRef} source={{ uri: uriLink }} onNavigationStateChange={onNavigationStateChange} />
 }
 
 const WALLET_ADDRESS_QUERY_SELECTOR = '#request_custom_fields_11041337007757'

@@ -1,8 +1,8 @@
-import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
 import Row from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -83,7 +83,10 @@ const MenuFlyout = styled(AutoColumn)`
   width: calc(100% - 8px);
   background-color: ${({ theme }) => theme.surface2};
   border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow:
+    0px 0px 1px rgba(0, 0, 0, 0.01),
+    0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: absolute;
@@ -117,7 +120,7 @@ const AutocompleteRow = ({
   numberOfTransfers: number
   selectRecipient: (recipient: RecipientData) => void
 }) => {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { unitag } = useUnitagByAddress(address)
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
@@ -131,7 +134,7 @@ const AutocompleteRow = ({
         ensName: cachedEnsName,
         unitag: unitag?.username,
       }),
-    [address, cachedEnsName, selectRecipient, unitag?.username]
+    [address, cachedEnsName, selectRecipient, unitag?.username],
   )
 
   return (
@@ -158,7 +161,7 @@ const AutocompleteRow = ({
           )}
         </Column>
       </Row>
-      {account && (
+      {account.isConnected && (
         <StyledTransferText>
           {numberOfTransfers}{' '}
           <Plural value={numberOfTransfers} one={t('common.transfer')} other={t('common.transfers')} />
@@ -216,12 +219,12 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 AutocompleteFlyout.displayName = 'AutocompleteFlyout'
 
 export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
 
-  const { transfers: recentTransfers } = useGroupedRecentTransfers(account)
+  const { transfers: recentTransfers } = useGroupedRecentTransfers(account.address)
 
   const [[isFocusing, isForcingFocus], setFocus] = useState([false, false])
   const handleFocus = useCallback((focus: boolean) => setFocus([focus, false]), [])
@@ -243,7 +246,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         validatedRecipient: value,
       }))
     },
-    [setSendState]
+    [setSendState],
   )
 
   const handleInput = useCallback(
@@ -256,7 +259,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         validatedRecipient: undefined,
       }))
     },
-    [setSendState]
+    [setSendState],
   )
 
   const selectValidatedRecipient = useCallback(
@@ -268,7 +271,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       handleFocus(false)
       inputNode.current?.blur()
     },
-    [handleFocus, handleInputValidatedRecipient, recipientData]
+    [handleFocus, handleInputValidatedRecipient, recipientData],
   )
 
   const clearValidatedRecipient = useCallback(
@@ -278,7 +281,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       handleForceFocus(true)
       handleInputValidatedRecipient(undefined)
     },
-    [handleForceFocus, handleInputValidatedRecipient]
+    [handleForceFocus, handleInputValidatedRecipient],
   )
 
   const editValidatedRecipient = useCallback(() => {
@@ -294,7 +297,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         }
       }
     },
-    [handleFocus, recipientData]
+    [handleFocus, recipientData],
   )
 
   const showInputField = !recipientData || isFocusing || isForcingFocus

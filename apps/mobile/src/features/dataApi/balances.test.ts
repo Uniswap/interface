@@ -1,8 +1,8 @@
+import { useBalances } from 'src/features/dataApi/balances'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { SAMPLE_CURRENCY_ID_1, portfolio, portfolioBalances } from 'wallet/src/test/fixtures'
 import { queryResolvers } from 'wallet/src/test/utils'
-import { useBalances } from './balances'
 
 const preloadedState = preloadedMobileState()
 

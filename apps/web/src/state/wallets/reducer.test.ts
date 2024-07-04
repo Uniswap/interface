@@ -1,5 +1,5 @@
-import walletsReducer from './reducer'
-import { Wallet } from './types'
+import walletsReducer from 'state/wallets/reducer'
+import { Wallet } from 'state/wallets/types'
 
 const WALLET: Wallet = { account: '0x123', walletType: 'test' }
 

@@ -1,6 +1,6 @@
-import { Flex, UniconV2 } from 'ui/src'
+import { Flex, Unicon } from 'ui/src'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 const generateRandomEthereumAddresses = (numberOfAddresses: number): string[] => {
   const addresses = []
@@ -13,17 +13,13 @@ const generateRandomEthereumAddresses = (numberOfAddresses: number): string[] =>
 
 export const UniconSampleSheet = ({ onClose }: { onClose: () => void }): JSX.Element => {
   return (
-    <BottomSheetModal
-      blurredBackground
-      backgroundColor="$surface1"
-      name={ModalName.UniconsDevModal}
-      onClose={onClose}>
+    <BottomSheetModal blurredBackground backgroundColor="$surface1" name={ModalName.UniconsDevModal} onClose={onClose}>
       <Flex centered height="100%" width="100%">
         <Flex row alignItems="center" flexWrap="wrap" justifyContent="center" width="100%">
           {generateRandomEthereumAddresses(80).map((address) => {
             return (
               <Flex>
-                <UniconV2 key={address} address={address} size={42} />
+                <Unicon key={address} address={address} size={42} />
               </Flex>
             )
           })}

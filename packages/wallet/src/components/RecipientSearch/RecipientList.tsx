@@ -2,7 +2,8 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { memo, useCallback, useState } from 'react'
 import { Keyboard, ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
+import { Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -18,14 +19,9 @@ interface RecipientListProps {
   onPress: (recipient: string) => void
 }
 
-export function RecipientList({
-  onPress,
-  sections,
-  renderedInModal = false,
-}: RecipientListProps): JSX.Element {
+export function RecipientList({ onPress, sections, renderedInModal = false }: RecipientListProps): JSX.Element {
   const insets = useDeviceInsets()
-  const [selectedViewOnlyRecipient, setSelectedViewOnlyRecipient] =
-    useState<SearchableRecipient | null>(null)
+  const [selectedViewOnlyRecipient, setSelectedViewOnlyRecipient] = useState<SearchableRecipient | null>(null)
 
   const onRecipientPress = useCallback(
     (recipient: SearchableRecipient) => {
@@ -36,8 +32,16 @@ export function RecipientList({
         onPress(recipient.address)
       }
     },
-    [onPress]
+    [onPress],
   )
+
+  const onConfirmViewOnlyRecipient = useCallback(() => {
+    const address = selectedViewOnlyRecipient?.address
+    if (address) {
+      setSelectedViewOnlyRecipient(null)
+      onPress(address)
+    }
+  }, [onPress, selectedViewOnlyRecipient])
 
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
@@ -68,7 +72,7 @@ export function RecipientList({
       {selectedViewOnlyRecipient && (
         <ViewOnlyRecipientModal
           onCancel={(): void => setSelectedViewOnlyRecipient(null)}
-          onConfirm={(): void => onPress(selectedViewOnlyRecipient.address)}
+          onConfirm={onConfirmViewOnlyRecipient}
         />
       )}
     </>
@@ -82,7 +86,8 @@ function SectionHeader(info: { section: SectionListData<SearchableRecipient> }):
       entering={FadeIn}
       // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
       exiting={isWeb ? undefined : FadeOut}
-      py="$spacing8">
+      py="$spacing8"
+    >
       <Text color="$neutral2" variant="subheading2">
         {info.section.title}
       </Text>
@@ -99,15 +104,9 @@ interface RecipientProps {
   onPress: (recipient: SearchableRecipient) => void
 }
 
-export const RecipientRow = memo(function RecipientRow({
-  recipient,
-  onPress,
-}: RecipientProps): JSX.Element {
+export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
   const domain = recipient.name
-    ? extractDomain(
-        recipient.name,
-        recipient.isUnitag ? SearchResultType.Unitag : SearchResultType.ENSAddress
-      )
+    ? extractDomain(recipient.name, recipient.isUnitag ? SearchResultType.Unitag : SearchResultType.ENSAddress)
     : undefined
 
   const onPressWithAnalytics = (): void => {

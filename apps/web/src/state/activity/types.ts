@@ -1,6 +1,6 @@
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { FilledUniswapXOrderDetails, SignatureDetails, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
-import { ConfirmedTransactionDetails, TransactionDetails } from '../transactions/types'
+import { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
 
 interface BaseUpdate<T> {
   type: string

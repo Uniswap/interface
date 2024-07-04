@@ -1,8 +1,7 @@
 import { ChainSlug, isChainUrlParam } from 'constants/chains'
 import { t } from 'i18n'
+import { ExploreTab } from 'pages/Explore'
 import { capitalize } from 'tsafe/capitalize'
-
-import { ExploreTab } from './Explore'
 
 export const getExploreTitle = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')
@@ -25,6 +24,6 @@ export const getExploreDescription = (path?: string) => {
     `Discover and research tokens on {{network}}. Explore top pools. View real-time prices, trading volume, TVL, charts, and transaction data.`,
     {
       network: capitalize(network),
-    }
+    },
   )
 }

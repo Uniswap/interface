@@ -2,6 +2,20 @@ import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
+export function hasTokenFee(currencyInfo: Maybe<CurrencyInfo>): {
+  hasBuyTax: boolean
+  hasSellTax: boolean
+} {
+  if (!(currencyInfo?.currency instanceof Token)) {
+    return { hasBuyTax: false, hasSellTax: false }
+  }
+
+  return {
+    hasBuyTax: !!currencyInfo.currency.buyFeeBps && currencyInfo.currency.buyFeeBps.gt(0),
+    hasSellTax: !!currencyInfo.currency.sellFeeBps && currencyInfo.currency.sellFeeBps.gt(0),
+  }
+}
+
 export function useExactOutputWillFail({
   currencies,
 }: {
@@ -14,18 +28,12 @@ export function useExactOutputWillFail({
   exactOutputWillFail: boolean
   exactOutputWouldFailIfCurrenciesSwitched: boolean
 } {
-  const inputTokenHasBuyTax =
-    currencies[CurrencyField.INPUT]?.currency instanceof Token &&
-    !!currencies[CurrencyField.INPUT]?.currency.buyFeeBps
-  const inputTokenHasSellTax =
-    currencies[CurrencyField.INPUT]?.currency instanceof Token &&
-    !!currencies[CurrencyField.INPUT]?.currency.sellFeeBps
-  const outputTokenHasBuyTax =
-    currencies[CurrencyField.OUTPUT]?.currency instanceof Token &&
-    !!currencies[CurrencyField.OUTPUT]?.currency.buyFeeBps
-  const outputTokenHasSellTax =
-    currencies[CurrencyField.OUTPUT]?.currency instanceof Token &&
-    !!currencies[CurrencyField.OUTPUT]?.currency.sellFeeBps
+  const { hasBuyTax: inputTokenHasBuyTax, hasSellTax: inputTokenHasSellTax } = hasTokenFee(
+    currencies[CurrencyField.INPUT],
+  )
+  const { hasBuyTax: outputTokenHasBuyTax, hasSellTax: outputTokenHasSellTax } = hasTokenFee(
+    currencies[CurrencyField.OUTPUT],
+  )
   const exactOutputWillFail = inputTokenHasSellTax || outputTokenHasBuyTax
   const exactOutputWouldFailIfCurrenciesSwitched = inputTokenHasBuyTax || outputTokenHasSellTax
 

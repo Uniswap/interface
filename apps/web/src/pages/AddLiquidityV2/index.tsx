@@ -1,54 +1,61 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import {
+  InterfaceElementName,
+  InterfaceEventName,
+  LiquidityEventName,
+  LiquiditySource,
+} from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { computePairAddress } from '@uniswap/v2-sdk'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { BlueCard, LightCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import { MinimalPositionCard } from 'components/PositionCard'
+import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { V2Unsupported } from 'components/V2Unsupported'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { ZERO_PERCENT } from 'constants/misc'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useV2RouterContract } from 'hooks/useContract'
 import { useEthersSigner } from 'hooks/useEthersSigner'
+import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
+import { PairState } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
+import { ConfirmAddModalBottom } from 'pages/AddLiquidityV2/ConfirmAddModalBottom'
+import { PoolPriceBar } from 'pages/AddLiquidityV2/PoolPriceBar'
+import AppBody from 'pages/App/AppBody'
+import { Dots, Wrapper } from 'pages/Pool/styled'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Field } from 'state/mint/actions'
+import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/mint/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionInfo, TransactionType } from 'state/transactions/types'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { ZERO_PERCENT } from '../../constants/misc'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useV2RouterContract } from '../../hooks/useContract'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
-import { PairState } from '../../hooks/useV2Pairs'
-import { Field } from '../../state/mint/actions'
-import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionInfo, TransactionType } from '../../state/transactions/types'
-import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
-import { currencyId } from '../../utils/currencyId'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import AppBody from '../AppBody'
-import { Dots, Wrapper } from '../Pool/styled'
-import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
-import { PoolPriceBar } from './PoolPriceBar'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
+import { currencyId } from 'utils/currencyId'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -75,10 +82,11 @@ export default function AddLiquidity() {
   const oneCurrencyIsWETH = Boolean(
     account.chainId &&
       wrappedNativeCurrency &&
-      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) ||
+        (currencyB && currencyB.equals(wrappedNativeCurrency))),
   )
 
-  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
+  const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -123,7 +131,7 @@ export default function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -133,7 +141,7 @@ export default function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const router = useV2RouterContract()
@@ -221,14 +229,26 @@ export default function AddLiquidity() {
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
             ...trace,
             ...transactionInfo,
+            type: LiquiditySource.V2,
+            transaction_hash: response.hash,
+            pool_address: computePairAddress({
+              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+              tokenA: currencyA.wrapped,
+              tokenB: currencyB.wrapped,
+            }),
           })
-        })
+        }),
       )
       .catch((error) => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
-          console.error(error)
+          logger.error(error, {
+            tags: {
+              file: 'AddLiquidityV2',
+              function: 'AddLiquidity',
+            },
+          })
         }
       })
   }
@@ -301,7 +321,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, navigate, currencyIdA]
+    [currencyIdB, navigate, currencyIdA],
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -316,7 +336,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, navigate, currencyIdB]
+    [currencyIdA, navigate, currencyIdB],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -448,7 +468,7 @@ export default function AddLiquidity() {
                 properties={{ received_swap_quote: false }}
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
-                <ButtonLight onClick={toggleWalletDrawer}>
+                <ButtonLight onClick={accountDrawer.open}>
                   <Trans i18nKey="common.connectWallet.button" />
                 </ButtonLight>
               </Trace>

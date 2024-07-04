@@ -4,6 +4,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
@@ -12,7 +13,6 @@ import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Checkbox } from '../layout/Checkbox'
 
 const FilterItemWrapper = styled(Row)`
   justify-content: space-between;
@@ -192,7 +192,7 @@ export const MarketplaceSelect = () => {
           {...{ addMarket, removeMarket, isMarketSelected: selectedMarkets.includes(value) }}
         />
       )),
-    [addMarket, marketCount, removeMarket, selectedMarkets]
+    [addMarket, marketCount, removeMarket, selectedMarkets],
   )
 
   const onClick: React.MouseEventHandler<HTMLElement> = (e) => {

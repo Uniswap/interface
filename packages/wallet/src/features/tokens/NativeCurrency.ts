@@ -1,10 +1,10 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
-import { ChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { wrappedNativeCurrency } from 'wallet/src/constants/tokens'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {
@@ -13,7 +13,7 @@ export class NativeCurrency implements NativeCurrencyClass {
       throw new Error(`Unsupported chain ID: ${chainId}`)
     }
 
-    const chainInfo = CHAIN_INFO[supportedChainId]
+    const chainInfo = UNIVERSE_CHAIN_INFO[supportedChainId]
     if (!chainInfo) {
       throw new Error('Native currrency info not found')
     }
@@ -27,7 +27,7 @@ export class NativeCurrency implements NativeCurrencyClass {
     this.address = getNativeAddress(this.chainId)
   }
 
-  chainId: ChainId
+  chainId: WalletChainId
   decimals: number
   name: string
   symbol: string
@@ -46,9 +46,6 @@ export class NativeCurrency implements NativeCurrencyClass {
   private static _cachedNativeCurrency: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): NativeCurrency {
-    return (
-      this._cachedNativeCurrency[chainId] ??
-      (this._cachedNativeCurrency[chainId] = new NativeCurrency(chainId))
-    )
+    return this._cachedNativeCurrency[chainId] ?? (this._cachedNativeCurrency[chainId] = new NativeCurrency(chainId))
   }
 }

@@ -80,7 +80,7 @@ export const TextInput = ({
     (event: ChangeEvent<HTMLInputElement>) => {
       onUserInput(event.target.value)
     },
-    [onUserInput]
+    [onUserInput],
   )
 
   return (
@@ -122,7 +122,7 @@ export const ResizingTextArea = memo(
         inputRef.current.style.height = inputRef.current.scrollHeight + 'px'
         onUserInput(event.target.value)
       },
-      [onUserInput]
+      [onUserInput],
     )
 
     return (
@@ -140,7 +140,7 @@ export const ResizingTextArea = memo(
         ref={inputRef}
       />
     )
-  }
+  },
 )
 
 ResizingTextArea.displayName = 'ResizingTextArea'

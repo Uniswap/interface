@@ -1,10 +1,11 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
-import React from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import React, { KeyboardEvent, useCallback, useRef } from 'react'
 import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isMobile } from 'uniswap/src/utils/platform'
+import { isMobile } from 'utilities/src/platform'
 
 export const MODAL_TRANSITION_DURATION = 200
 
@@ -29,12 +30,22 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ $scrollOverlay?: boo
   }
 `
 
+type Dimension = number | string
+
+function dimensionsToCss(dimensions: Dimension) {
+  if (typeof dimensions === 'number') {
+    return `${dimensions}px`
+  }
+  return dimensions
+}
+
 type StyledDialogProps = {
-  $minHeight?: number | false
-  $maxHeight?: number
+  $height?: Dimension
+  $minHeight?: Dimension
+  $maxHeight?: Dimension
   $scrollOverlay?: boolean
   $hideBorder?: boolean
-  $maxWidth: number
+  $maxWidth: Dimension
 }
 
 const AnimatedDialogContent = animated(DialogContent)
@@ -50,17 +61,10 @@ const StyledDialogContent = styled(AnimatedDialogContent)<StyledDialogProps>`
     width: 50vw;
     overflow-y: auto;
     overflow-x: hidden;
-    max-width: ${({ $maxWidth }) => $maxWidth}px;
-    ${({ $maxHeight }) =>
-      $maxHeight &&
-      css`
-        max-height: ${$maxHeight}vh;
-      `}
-    ${({ $minHeight }) =>
-      $minHeight &&
-      css`
-        min-height: ${$minHeight}vh;
-      `}
+    ${({ $height }) => $height && `height: ${dimensionsToCss($height)};`}
+    ${({ $maxHeight }) => $maxHeight && `max-height: ${dimensionsToCss($maxHeight)};`}
+    ${({ $minHeight }) => $minHeight && `min-height: ${dimensionsToCss($minHeight)};`}
+    ${({ $maxWidth }) => $maxWidth && `max-width: ${dimensionsToCss($maxWidth)};`}
     display: ${({ $scrollOverlay }) => ($scrollOverlay ? 'inline-table' : 'flex')};
     border-radius: 20px;
 
@@ -81,10 +85,10 @@ interface ModalProps {
   isOpen: boolean
   onDismiss?: () => void
   onSwipe?: () => void
-  height?: number // takes precedence over minHeight and maxHeight
-  minHeight?: number | false
-  maxHeight?: number
-  maxWidth?: number
+  height?: Dimension
+  minHeight?: Dimension
+  maxHeight?: Dimension
+  maxWidth?: Dimension
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
   $scrollOverlay?: boolean
@@ -95,8 +99,8 @@ interface ModalProps {
 export default function Modal({
   isOpen,
   onDismiss,
-  minHeight = false,
-  maxHeight = 90,
+  minHeight,
+  maxHeight = '90vh',
   maxWidth = 420,
   height,
   initialFocusRef,
@@ -106,6 +110,18 @@ export default function Modal({
   hideBorder = false,
   slideIn,
 }: ModalProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, () => (isOpen && onDismiss ? onDismiss() : undefined))
+
+  const handleEscape = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Escape' && isOpen && onDismiss) {
+        onDismiss()
+      }
+    },
+    [isOpen, onDismiss],
+  )
+
   const fadeTransition = useTransition(isOpen, {
     config: { duration: MODAL_TRANSITION_DURATION },
     from: { opacity: 0 },
@@ -133,7 +149,7 @@ export default function Modal({
   })
 
   return (
-    <>
+    <div tabIndex={0} onKeyUp={handleEscape}>
       {fadeTransition(
         ({ opacity }, item) =>
           item && (
@@ -148,17 +164,19 @@ export default function Modal({
                 (styles, item) =>
                   item && (
                     <StyledDialogContent
+                      ref={ref}
                       {...(isMobile
                         ? {
                             ...bind(),
                             style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                           }
                         : slideIn
-                        ? { style: styles }
-                        : {})}
+                          ? { style: styles }
+                          : {})}
                       aria-label="dialog"
-                      $minHeight={height ?? minHeight}
-                      $maxHeight={height ?? maxHeight}
+                      $height={height}
+                      $minHeight={minHeight}
+                      $maxHeight={maxHeight}
                       $scrollOverlay={$scrollOverlay}
                       $hideBorder={hideBorder}
                       $maxWidth={maxWidth}
@@ -167,11 +185,11 @@ export default function Modal({
                       {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
                       {children}
                     </StyledDialogContent>
-                  )
+                  ),
               )}
             </StyledDialogOverlay>
-          )
+          ),
       )}
-    </>
+    </div>
   )
 }

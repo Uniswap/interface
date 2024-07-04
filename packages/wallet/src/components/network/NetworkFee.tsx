@@ -2,9 +2,9 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -16,7 +16,7 @@ export function NetworkFee({
   gasFee,
   transactionUSDValue,
 }: {
-  chainId: ChainId
+  chainId: WalletChainId
   gasFee: GasFeeResult
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }): JSX.Element {
@@ -45,10 +45,9 @@ export function NetworkFee({
           </Text>
         ) : (
           <Text
-            color={
-              isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'
-            }
-            variant="body3">
+            color={isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'}
+            variant="body3"
+          >
             {gasFeeFormatted}
           </Text>
         )}

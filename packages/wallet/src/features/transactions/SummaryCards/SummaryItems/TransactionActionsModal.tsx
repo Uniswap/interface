@@ -2,37 +2,30 @@ import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
+import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import {
-  ActionSheetModalContent,
-  MenuItemProp,
-} from 'wallet/src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'wallet/src/features/language/localizedDayjs'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  BaseSwapTransactionInfo,
-  TransactionDetails,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { BaseSwapTransactionInfo, TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { setClipboard } from 'wallet/src/utils/clipboard'
-import { openMoonpayHelpLink, openUniswapHelpLink } from 'wallet/src/utils/linking'
+import {
+  openLegacyFiatOnRampServiceProviderLink,
+  openOnRampSupportLink,
+  openUniswapHelpLink,
+} from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {
     return (
       <>
         <Separator />
-        <Text
-          color={textColorOverride ?? '$neutral1'}
-          p="$spacing16"
-          textAlign="center"
-          variant="body1">
+        <Text color={textColorOverride ?? '$neutral1'} p="$spacing16" textAlign="center" variant="body1">
           {label}
         </Text>
       </>
@@ -71,18 +64,11 @@ export default function TransactionActionsModal({
     onClose()
   }, [onClose])
 
-  const inputCurrencyInfo = useCurrencyInfo(
-    (transactionDetails.typeInfo as BaseSwapTransactionInfo).inputCurrencyId
-  )
+  const inputCurrencyInfo = useCurrencyInfo((transactionDetails.typeInfo as BaseSwapTransactionInfo).inputCurrencyId)
 
-  const outputCurrencyInfo = useCurrencyInfo(
-    (transactionDetails.typeInfo as BaseSwapTransactionInfo).outputCurrencyId
-  )
+  const outputCurrencyInfo = useCurrencyInfo((transactionDetails.typeInfo as BaseSwapTransactionInfo).outputCurrencyId)
 
   const options = useMemo(() => {
-    const isFiatOnRampTransaction =
-      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
-
     const isSwapTransaction = transactionDetails.typeInfo.type === TransactionType.Swap
 
     const maybeViewSwapToken =
@@ -94,7 +80,7 @@ export default function TransactionActionsModal({
               render: renderOptionItem(
                 t('transaction.action.view', {
                   tokenSymbol: inputCurrencyInfo?.currency.symbol,
-                })
+                }),
               ),
             },
             {
@@ -103,7 +89,7 @@ export default function TransactionActionsModal({
               render: renderOptionItem(
                 t('transaction.action.view', {
                   tokenSymbol: outputCurrencyInfo?.currency.symbol,
-                })
+                }),
               ),
             },
           ]
@@ -119,7 +105,7 @@ export default function TransactionActionsModal({
         ]
       : []
 
-    const chainInfo = CHAIN_INFO[transactionDetails.chainId]
+    const chainInfo = UNIVERSE_CHAIN_INFO[transactionDetails.chainId]
 
     const maybeViewOnEtherscanOption = transactionDetails.hash
       ? [
@@ -129,17 +115,13 @@ export default function TransactionActionsModal({
             render: renderOptionItem(
               t('transaction.action.viewEtherscan', {
                 blockExplorerName: chainInfo.explorer.name,
-              })
+              }),
             ),
           },
         ]
       : []
 
-    const transactionId =
-      // isFiatOnRampTransaction would not provide type narrowing here
-      transactionDetails.typeInfo.type === TransactionType.FiatPurchase
-        ? transactionDetails.typeInfo.id
-        : transactionDetails.hash
+    const transactionId = getTransactionId(transactionDetails)
 
     const maybeCopyTransactionIdOption = transactionId
       ? [
@@ -151,7 +133,7 @@ export default function TransactionActionsModal({
                 pushNotification({
                   type: AppNotificationType.Copied,
                   copyType: CopyNotificationType.TransactionId,
-                })
+                }),
               )
               handleClose()
             },
@@ -170,12 +152,7 @@ export default function TransactionActionsModal({
       {
         key: ElementName.GetHelp,
         onPress: async (): Promise<void> => {
-          if (isFiatOnRampTransaction) {
-            await openMoonpayHelpLink()
-          } else {
-            await openUniswapHelpLink()
-          }
-
+          await openSupportLink(transactionDetails)
           handleClose()
         },
         render: renderOptionItem(t('settings.action.help')),
@@ -209,7 +186,8 @@ export default function TransactionActionsModal({
       backgroundColor="$transparent"
       name={ModalName.TransactionActions}
       onClose={handleClose}
-      {...(isWeb && { alignment: 'top' })}>
+      {...(isWeb && { alignment: 'top' })}
+    >
       <Flex px="$spacing12">
         <ActionSheetModalContent
           header={
@@ -223,4 +201,27 @@ export default function TransactionActionsModal({
       </Flex>
     </BottomSheetModal>
   )
+}
+
+export async function openSupportLink(transactionDetails: TransactionDetails): Promise<void> {
+  switch (transactionDetails.typeInfo.type) {
+    case TransactionType.FiatPurchase:
+      return openLegacyFiatOnRampServiceProviderLink(transactionDetails.typeInfo.serviceProvider ?? 'MOONPAY')
+    case TransactionType.OnRampPurchase:
+    case TransactionType.OnRampTransfer:
+      return openOnRampSupportLink(transactionDetails.typeInfo.serviceProvider)
+    default:
+      return openUniswapHelpLink()
+  }
+}
+
+export function getTransactionId(transactionDetails: TransactionDetails): string | undefined {
+  switch (transactionDetails.typeInfo.type) {
+    case TransactionType.FiatPurchase:
+    case TransactionType.OnRampPurchase:
+    case TransactionType.OnRampTransfer:
+      return transactionDetails.typeInfo.id
+    default:
+      return transactionDetails.hash
+  }
 }

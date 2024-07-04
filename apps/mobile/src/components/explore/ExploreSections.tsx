@@ -17,24 +17,21 @@ import {
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   Chain,
   ExploreTokensTabQuery,
   useExploreTokensTabQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
-import {
-  selectHasFavoriteTokens,
-  selectHasWatchedWallets,
-} from 'wallet/src/features/favorites/selectors'
+import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'wallet/src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type ExploreSectionsProps = {
   listRef: React.MutableRefObject<null>
@@ -78,7 +75,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-    const wethAddress = getWrappedNativeAddress(ChainId.Mainnet)
+    const wethAddress = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
     const topTokens = data.topTokens
       .map((token) => {
@@ -86,8 +83,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           return
         }
 
-        const isWeth =
-          areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
+        const isWeth = areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
 
         // manually replace weth with eth given backend only returns eth data as a proxy for eth
         if (isWeth && eth) {
@@ -109,20 +105,13 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const renderItem: ListRenderItem<TokenItemData> = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
-      return (
-        <TokenItem
-          index={index}
-          metadataDisplayType={tokenMetadataDisplayType}
-          tokenItemData={item}
-        />
-      )
+      return <TokenItem index={index} metadataDisplayType={tokenMetadataDisplayType} tokenItemData={item} />
     },
-    [tokenMetadataDisplayType]
+    [tokenMetadataDisplayType],
   )
 
   // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
-  const isLoading =
-    networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
+  const isLoading = networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
   const hasAllData = !!data?.topTokens
   const error = usePersistedError(requestLoading, requestError)
 
@@ -161,7 +150,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         },
       }): void => {
         visibleListHeight.value = height
-      }}>
+      }}
+    >
       <AnimatedBottomSheetFlatList
         ref={listRef}
         ListEmptyComponent={
@@ -186,7 +176,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
               ml="$spacing16"
               mr="$spacing12"
               mt="$spacing16"
-              pl="$spacing4">
+              pl="$spacing4"
+            >
               <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading2">
                 {t('explore.tokens.top.title')}
               </Text>
@@ -211,13 +202,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 }
 
 const tokenKey = (token: TokenItemData): string => {
-  return token.address
-    ? buildCurrencyId(token.chainId, token.address)
-    : buildNativeCurrencyId(token.chainId)
+  return token.address ? buildCurrencyId(token.chainId, token.address) : buildNativeCurrencyId(token.chainId)
 }
 
 function gqlTokenToTokenItemData(
-  token: Maybe<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
+  token: Maybe<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>,
 ): TokenItemData | null {
   if (!token || !token.project) {
     return null
@@ -256,13 +245,7 @@ function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
   }
 
   return (
-    <Flex
-      backgroundColor="$transparent"
-      gap="$spacing12"
-      pb="$spacing12"
-      pt="$spacing8"
-      px="$spacing12"
-      zIndex={1}>
+    <Flex backgroundColor="$transparent" gap="$spacing12" pb="$spacing12" pt="$spacing8" px="$spacing12" zIndex={1}>
       {hasFavoritedTokens && <FavoriteTokensGrid {...props} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid {...props} />}
     </Flex>

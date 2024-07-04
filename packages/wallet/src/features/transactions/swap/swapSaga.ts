@@ -2,21 +2,15 @@ import { providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { RPCType } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import {
-  SendTransactionParams,
-  sendTransaction,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
-import {
-  TransactionStatus,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'wallet/src/features/transactions/types'
+import { TransactionStatus, TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -40,12 +34,7 @@ export function* approveAndSwap(params: SwapParams) {
     }
     const { chainId } = swapTxRequest
     const submitViaPrivateRpc = yield* call(shouldSubmitViaPrivateRpc, chainId)
-    const nonce = yield* call(
-      getNonceForApproveAndSwap,
-      account.address,
-      chainId,
-      submitViaPrivateRpc
-    )
+    const nonce = yield* call(getNonceForApproveAndSwap, account.address, chainId, submitViaPrivateRpc)
 
     if (approveTxRequest && approveTxRequest.to) {
       const typeInfo: TransactionTypeInfo = {
@@ -95,11 +84,7 @@ export const {
   actions: swapActions,
 } = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
 
-function* getNonceForApproveAndSwap(
-  address: Address,
-  chainId: number,
-  submitViaPrivateRpc: boolean
-) {
+function* getNonceForApproveAndSwap(address: Address, chainId: number, submitViaPrivateRpc: boolean) {
   const rpcType = submitViaPrivateRpc ? RPCType.Private : RPCType.Public
   const provider = yield* call(getProvider, chainId, rpcType)
   const nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
@@ -134,6 +119,7 @@ function* getPendingPrivateTxCount(address: Address, chainId: number) {
     (tx) =>
       tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
-      Boolean(tx.options.submitViaPrivateRpc)
+      isClassic(tx) &&
+      Boolean(tx.options.submitViaPrivateRpc),
   ).length
 }

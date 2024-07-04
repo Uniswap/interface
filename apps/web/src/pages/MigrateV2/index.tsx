@@ -2,27 +2,26 @@ import { getCreate2Address } from '@ethersproject/address'
 import { keccak256, pack } from '@ethersproject/solidity'
 import { Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
+import QuestionHelper from 'components/QuestionHelper'
+import { AutoRow } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { Dots } from 'components/swap/styled'
+import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
+import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
+import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
-
-import { LightCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import QuestionHelper from '../../components/QuestionHelper'
-import { AutoRow } from '../../components/Row'
-import { Dots } from '../../components/swap/styled'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { BodyWrapper } from '../AppBody'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
   font-weight: 535;
@@ -42,7 +41,7 @@ const computeSushiPairAddress = ({ tokenA, tokenB }: { tokenA: Token; tokenB: To
   return getCreate2Address(
     '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
     keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
-    '0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303'
+    '0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303',
   )
 }
 
@@ -57,9 +56,9 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 
 export default function MigrateV2() {
   const theme = useTheme()
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
-  const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
+  const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -69,14 +68,14 @@ export default function MigrateV2() {
     () =>
       trackedTokenPairs.map((tokens) => {
         // sushi liquidity token or null
-        const sushiLiquidityToken = chainId === 1 ? toSushiLiquidityToken(tokens) : null
+        const sushiLiquidityToken = account.chainId === 1 ? toSushiLiquidityToken(tokens) : null
         return {
           v2liquidityToken: v2FactoryAddress ? toV2LiquidityToken(tokens) : undefined,
           sushiLiquidityToken,
           tokens,
         }
       }),
-    [trackedTokenPairs, chainId, v2FactoryAddress]
+    [trackedTokenPairs, account.chainId, v2FactoryAddress],
   )
 
   //  get pair liquidity token addresses for balance-fetching purposes
@@ -90,9 +89,9 @@ export default function MigrateV2() {
   }, [tokenPairsWithLiquidityTokens])
 
   // fetch pair balances
-  const [pairBalances, fetchingPairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    allLiquidityTokens
+  const [pairBalances, fetchingPairBalances] = useRpcTokenBalancesWithLoadingIndicator(
+    account.address,
+    allLiquidityTokens,
   )
 
   // filter for v2 liquidity tokens that the user has a balance in
@@ -113,7 +112,7 @@ export default function MigrateV2() {
     }
 
     return tokenPairsWithLiquidityTokens.filter(
-      ({ sushiLiquidityToken }) => !!sushiLiquidityToken && pairBalances[sushiLiquidityToken.address]?.greaterThan(0)
+      ({ sushiLiquidityToken }) => !!sushiLiquidityToken && pairBalances[sushiLiquidityToken.address]?.greaterThan(0),
     )
   }, [fetchingPairBalances, tokenPairsWithLiquidityTokens, pairBalances])
 
@@ -143,7 +142,7 @@ export default function MigrateV2() {
             <Trans i18nKey="migrate.v2Instruction" />
           </ThemedText.DeprecatedBody>
 
-          {!account ? (
+          {!account.isConnected ? (
             <LightCard padding="40px">
               <ThemedText.DeprecatedBody color={theme.neutral3} textAlign="center">
                 <Trans i18nKey="migrate.connectWallet" />

@@ -2,8 +2,11 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonSecondary } from 'components/Button'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
+import { RowBetween } from 'components/Row'
+import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
@@ -18,9 +21,6 @@ import { Unitag } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isIFramed } from 'utils/isIFramed'
-import { ButtonSecondary } from '../Button'
-import { RowBetween } from '../Row'
-import { useAccountIdentifier } from './useAccountIdentifier'
 
 // https://stackoverflow.com/a/31617326
 const FULL_BORDER_RADIUS = 9999
@@ -130,19 +130,19 @@ const StyledConnectButton = styled.button`
 
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const { address, isConnecting, isReconnecting } = useAccount()
+  const account = useAccount()
 
-  const [, toggleAccountDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    toggleAccountDrawer()
-  }, [toggleAccountDrawer])
+    accountDrawer.open()
+  }, [accountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if ((isConnecting || isReconnecting) && hasRecent && !isIFramed()) {
+  if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
     return (
       <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick}>
         <IconWrapper size={24}>
@@ -156,7 +156,7 @@ function Web3StatusInner() {
     )
   }
 
-  if (address) {
+  if (account.address) {
     return (
       <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'open' }}>
         <Web3StatusConnected

@@ -9,7 +9,12 @@ export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<bool
 }
 
 export interface Analytics {
-  init(transportProvider: ApplicationTransport, allowed: boolean, initHash?: string): Promise<void>
+  init(
+    transportProvider: ApplicationTransport,
+    allowed: boolean,
+    initHash?: string,
+    userIdGetter?: () => Promise<string>,
+  ): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
   flushEvents(): void
@@ -20,7 +25,8 @@ export const analytics: Analytics = {
   init(
     _transportProvider: ApplicationTransport,
     _allowed: boolean,
-    _initHash?: string
+    _initHash?: string,
+    _userIdGetter?: () => Promise<string>,
   ): Promise<void> {
     throw new NotImplementedError('initAnalytics')
   },

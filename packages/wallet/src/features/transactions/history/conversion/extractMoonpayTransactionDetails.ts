@@ -1,22 +1,16 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
-import {
-  FiatOnRampTransactionDetails,
-  MoonpayTransactionsResponse,
-} from 'wallet/src/features/fiatOnRamp/types'
-import {
-  FiatPurchaseTransactionInfo,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { FiatOnRampTransactionDetails, MoonpayTransactionsResponse } from 'wallet/src/features/fiatOnRamp/types'
+import { FiatPurchaseTransactionInfo, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 
 const MOONPAY_ETH_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 function parseFiatPurchaseTransaction(
-  transaction: Partial<MoonpayTransactionsResponse[0]>
-): FiatPurchaseTransactionInfo & { chainId: ChainId } {
+  transaction: Partial<MoonpayTransactionsResponse[0]>,
+): FiatPurchaseTransactionInfo & { chainId: WalletChainId } {
   const {
     currency: outputCurrency,
     baseCurrencyAmount: inputCurrencyAmount,
@@ -69,9 +63,7 @@ function parseFiatPurchaseTransaction(
   }
 }
 
-function moonpayStatusToTransactionInfoStatus(
-  status: MoonpayTransactionsResponse[0]['status']
-): TransactionStatus {
+function moonpayStatusToTransactionInfoStatus(status: MoonpayTransactionsResponse[0]['status']): TransactionStatus {
   switch (status) {
     case 'failed':
       return TransactionStatus.Failed
@@ -88,10 +80,7 @@ function moonpayStatusToTransactionInfoStatus(
 // MoonPay does not always (ever?) return the transaction id inside `returnUrl`
 //  returnUrl": "https://buy-sandbox.moonpay.com/transaction_receipt
 // This adds `transactionId` param if required
-function formatReturnUrl(
-  providedReturnUrl: string | undefined,
-  id: string | undefined
-): string | undefined {
+function formatReturnUrl(providedReturnUrl: string | undefined, id: string | undefined): string | undefined {
   if (!providedReturnUrl || !id) {
     return
   }
@@ -105,7 +94,7 @@ function formatReturnUrl(
 }
 
 export function extractMoonpayTransactionDetails(
-  transaction?: MoonpayTransactionsResponse[0]
+  transaction?: MoonpayTransactionsResponse[0],
 ): FiatOnRampTransactionDetails | undefined {
   if (!transaction) {
     return
@@ -119,6 +108,7 @@ export function extractMoonpayTransactionDetails(
     }
 
     return {
+      routing: Routing.CLASSIC,
       id: transaction.externalTransactionId,
       chainId,
       hash: transaction.cryptoTransactionId,

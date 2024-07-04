@@ -9,12 +9,14 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans, t } from 'i18n'
 import { useRef } from 'react'
 import { Link } from 'react-feather'
+import { useSearchParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { isMobile } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -42,11 +44,11 @@ export function openShareTweetWindow(name: string) {
   window.open(
     `https://twitter.com/intent/tweet?text=Check%20out%20${name}%20${currentLocation}%20via%20@Uniswap`,
     'newwindow',
-    `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+    `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`,
   )
 }
 
-export default function ShareButton({ name }: { name: string }) {
+export default function ShareButton({ name, utmSource }: { name: string; utmSource: string }) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.SHARE)
@@ -55,7 +57,9 @@ export default function ShareButton({ name }: { name: string }) {
 
   useDisableScrolling(open)
 
-  const currentLocation = window.location.href
+  const [searchParams] = useSearchParams()
+  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=${utmSource}&utm_medium=${isMobile ? 'mobile' : 'web'}`
+  const currentLocation = window.location.href + utmTag
 
   const [isCopied, setCopied] = useCopyClipboard()
 

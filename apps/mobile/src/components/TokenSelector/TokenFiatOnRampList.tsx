@@ -2,11 +2,11 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { Flex, Inset, Loader } from 'ui/src'
-import { ChainId } from 'uniswap/src/types/chains'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
@@ -31,7 +31,7 @@ function TokenOptionItemWrapper({
     // we need to convert to TokenOption without quantity and balanceUSD
     // to use in Token Selector
     () => (currencyInfo ? { currencyInfo, quantity: 0, balanceUSD: 0 } : null),
-    [currencyInfo]
+    [currencyInfo],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
 
@@ -42,20 +42,14 @@ function TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       option={option}
-      showNetworkPill={currencyInfo?.currency.chainId !== ChainId.Mainnet}
+      showNetworkPill={currencyInfo?.currency.chainId !== UniverseChainId.Mainnet}
       showWarnings={true}
       onPress={onPress}
     />
   )
 }
 
-function _TokenFiatOnRampList({
-  onSelectCurrency,
-  error,
-  onRetry,
-  list,
-  loading,
-}: Props): JSX.Element {
+function _TokenFiatOnRampList({ onSelectCurrency, error, onRetry, list, loading }: Props): JSX.Element {
   const { t } = useTranslation()
 
   const flatListRef = useRef(null)
@@ -64,7 +58,7 @@ function _TokenFiatOnRampList({
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {
       return <TokenOptionItemWrapper currency={currency} onSelectCurrency={onSelectCurrency} />
     },
-    [onSelectCurrency]
+    [onSelectCurrency],
   )
 
   if (error) {

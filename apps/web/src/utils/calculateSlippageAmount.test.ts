@@ -1,7 +1,6 @@
 import { AddressZero } from '@ethersproject/constants'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-
-import { calculateSlippageAmount } from './calculateSlippageAmount'
+import { calculateSlippageAmount } from 'utils/calculateSlippageAmount'
 
 describe('#calculateSlippageAmount', () => {
   it('bounds are correct', () => {

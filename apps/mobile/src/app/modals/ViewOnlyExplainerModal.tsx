@@ -4,10 +4,10 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 
@@ -53,12 +53,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
           </Flex>
         </Flex>
         <Flex gap="$spacing8">
-          <Button
-            alignSelf="center"
-            borderRadius="$rounded20"
-            px={40}
-            theme="primary"
-            onPress={onPressImportWallet}>
+          <Button alignSelf="center" borderRadius="$rounded20" px={40} theme="primary" onPress={onPressImportWallet}>
             {t('account.wallet.viewOnly.button')}
           </Button>
           <Button
@@ -68,7 +63,8 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             color="$neutral2"
             px={40}
             theme="secondary"
-            onPress={onClose}>
+            onPress={onClose}
+          >
             {t('common.button.later')}
           </Button>
         </Flex>

@@ -1,19 +1,19 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
+import MobileAppLogo from 'assets/svg/mobile-app-qr-logo.svg'
+import { DownloadButton } from 'components/AccountDrawer/DownloadButton'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
+import { useConnect } from 'hooks/useConnect'
 import { Trans } from 'i18n'
 import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
-import { useAccountEffect, useConnect, useDisconnect } from 'wagmi'
-import uniPng from '../../assets/images/uniwallet_modal_icon.png'
-import { DownloadButton } from './DownloadButton'
+import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 
 const UniwalletConnectWrapper = styled(RowBetween)`
   display: flex;
@@ -37,18 +37,12 @@ const Divider = styled.div`
 
 export default function UniwalletModal() {
   const [uri, setUri] = useState<string>()
+  const connection = useConnect()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
-  const open = !onLaunchedMobilePlatform && !!uri
+  const open = !onLaunchedMobilePlatform && !!uri && connection.isPending
 
-  const { disconnect } = useDisconnect()
-  const { connectors } = useConnect()
-  useAccountEffect({
-    onConnect: () => {
-      setUri(undefined)
-    },
-  })
   const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
     shouldThrow: true,
   })
@@ -65,16 +59,18 @@ export default function UniwalletModal() {
     return () => {
       uniswapWalletConnectConnector.emitter.off('message', listener)
     }
-  }, [connectors, uniswapWalletConnectConnector.emitter])
+  }, [uniswapWalletConnectConnector.emitter])
 
   const close = useCallback(() => {
-    disconnect()
+    connection?.reset()
     setUri(undefined)
-  }, [disconnect])
+  }, [connection])
 
   useEffect(() => {
     if (open) {
       sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
+    } else {
+      setUri(undefined)
     }
   }, [open])
 
@@ -97,7 +93,7 @@ export default function UniwalletModal() {
               level="M"
               fgColor={theme.darkMode ? theme.surface1 : theme.black}
               imageSettings={{
-                src: uniPng,
+                src: MobileAppLogo,
                 height: 33,
                 width: 33,
                 excavate: false,

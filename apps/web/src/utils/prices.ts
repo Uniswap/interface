@@ -2,8 +2,6 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { DefaultTheme } from 'styled-components'
-
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
@@ -12,7 +10,8 @@ import {
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
-} from '../constants/misc'
+} from 'constants/misc'
+import { DefaultTheme } from 'styled-components'
 
 const THIRTY_BIPS_FEE = new Percent(30, BIPS_BASE)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
@@ -33,8 +32,8 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
     percent = ONE_HUNDRED_PERCENT.subtract(
       trade.swaps.reduce<Percent>(
         (currentFee: Percent): Percent => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-        ONE_HUNDRED_PERCENT
-      )
+        ONE_HUNDRED_PERCENT,
+      ),
     )
   } else {
     percent = ZERO_PERCENT
@@ -51,8 +50,8 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
                   FeeAmount.MEDIUM
                 : pool.fee
             return currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(fee, 1_000_000)))
-          }, ONE_HUNDRED_PERCENT)
-        )
+          }, ONE_HUNDRED_PERCENT),
+        ),
       )
 
       percent = percent.add(routeRealizedLPFeePercent)
@@ -64,7 +63,7 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
 
 // computes price breakdown for the trade
 export function computeRealizedLPFeeAmount(
-  trade?: Trade<Currency, Currency, TradeType> | null
+  trade?: Trade<Currency, Currency, TradeType> | null,
 ): CurrencyAmount<Currency> | undefined {
   if (trade) {
     const realizedLPFee = computeRealizedLPFeePercent(trade)

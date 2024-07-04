@@ -2,8 +2,8 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ExchangeTransferConnecting } from 'src/screens/ExchangeTransferConnecting'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 export function ExchangeTransferModal(): JSX.Element | null {
   const dispatch = useAppDispatch()
@@ -21,7 +21,8 @@ export function ExchangeTransferModal(): JSX.Element | null {
       hideKeyboardOnDismiss
       renderBehindTopInset
       name={ModalName.ExchangeTransferModal}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <ExchangeTransferConnecting serviceProvider={serviceProvider} onClose={onClose} />
     </BottomSheetModal>
   ) : null

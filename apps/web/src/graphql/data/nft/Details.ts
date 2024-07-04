@@ -6,7 +6,7 @@ import { NftAsset, useNftDetailsQuery } from 'uniswap/src/data/graphql/uniswap-d
 
 export function useNftAssetDetails(
   address: string,
-  tokenId: string
+  tokenId: string,
 ): { data: [GenieAsset, CollectionInfoForAsset]; loading: boolean } {
   const { data: queryData, loading } = useNftDetailsQuery({
     variables: {
@@ -85,6 +85,6 @@ export function useNftAssetDetails(
       ],
       loading,
     }),
-    [address, asset, collection, ethPrice, listing?.marketplace, loading, tokenId]
+    [address, asset, collection, ethPrice, listing?.marketplace, loading, tokenId],
   )
 }

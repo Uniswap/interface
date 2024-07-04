@@ -1,9 +1,4 @@
-import {
-  BottomSheetFooter,
-  BottomSheetView,
-  KEYBOARD_STATE,
-  useBottomSheetInternal,
-} from '@gorhom/bottom-sheet'
+import { BottomSheetFooter, BottomSheetView, KEYBOARD_STATE, useBottomSheetInternal } from '@gorhom/bottom-sheet'
 import { useMemo } from 'react'
 import { StyleProp, TouchableWithoutFeedback, ViewStyle } from 'react-native'
 import {
@@ -14,17 +9,12 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  AnimatedFlex,
-  Flex,
-  LinearGradient,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, LinearGradient, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify } from 'ui/src/theme'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { TransactionModalContextProvider } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import {
   TransactionModalFooterContainerProps,
@@ -58,7 +48,7 @@ export function TransactionModal({
       animatedPosition.value,
       [0, insets.top],
       [0, borderRadii.rounded24],
-      Extrapolate.CLAMP
+      Extrapolate.CLAMP,
     )
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
   })
@@ -72,7 +62,7 @@ export function TransactionModal({
       },
       animatedBorderRadius,
     ],
-    [animatedBorderRadius, backgroundColorValue, fullContentHeight, fullscreen]
+    [animatedBorderRadius, backgroundColorValue, fullContentHeight, fullscreen],
   )
 
   return (
@@ -86,11 +76,13 @@ export function TransactionModal({
       fullScreen={fullscreen}
       hideHandlebar={fullscreen}
       name={modalName}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <TransactionModalContextProvider
         bottomSheetViewStyles={bottomSheetViewStyles}
         onClose={onClose}
-        {...transactionContextProps}>
+        {...transactionContextProps}
+      >
         {children}
       </TransactionModalContextProvider>
     </BottomSheetModal>
@@ -116,11 +108,7 @@ export function TransactionModalInnerContainer({
         <Flex mt={fullscreen ? insets.top : '$spacing8'}>
           {fullscreen && <HandleBar backgroundColor="none" />}
 
-          <AnimatedFlex
-            grow
-            row
-            height={fullscreen ? '100%' : undefined}
-            style={animatedPaddingBottom}>
+          <AnimatedFlex grow row height={fullscreen ? '100%' : undefined} style={animatedPaddingBottom}>
             <Flex px="$spacing16" width="100%">
               {children}
             </Flex>
@@ -131,9 +119,7 @@ export function TransactionModalInnerContainer({
   )
 }
 
-export function TransactionModalFooterContainer({
-  children,
-}: TransactionModalFooterContainerProps): JSX.Element {
+export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
   const insets = useDeviceInsets()
   const colors = useSporeColors()
 
@@ -169,12 +155,7 @@ export function TransactionModalFooterContainer({
 
   return (
     <BottomSheetFooter animatedFooterPosition={animatedFooterPosition}>
-      <AnimatedFlex
-        entering={FadeIn}
-        mx="$spacing16"
-        pb={insets.bottom}
-        position="relative"
-        pt="$spacing24">
+      <AnimatedFlex entering={FadeIn} mx="$spacing16" pb={insets.bottom} position="relative" pt="$spacing24">
         {children}
 
         {/*

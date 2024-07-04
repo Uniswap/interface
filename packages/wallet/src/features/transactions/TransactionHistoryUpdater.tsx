@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   TransactionHistoryUpdaterQueryResult,
   TransactionListQuery,
@@ -11,7 +12,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { selectLastTxNotificationUpdate } from 'wallet/src/features/notifications/selectors'
 import {
@@ -19,20 +19,19 @@ import {
   setLastTxNotificationUpdate,
   setNotificationStatus,
 } from 'wallet/src/features/notifications/slice'
-import {
-  ReceiveCurrencyTxNotification,
-  ReceiveNFTNotification,
-} from 'wallet/src/features/notifications/types'
+import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'wallet/src/features/notifications/types'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import {
-  useAccounts,
-  useActiveAccountAddress,
-  useHideSpamTokensSetting,
-} from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddress, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+
+export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
+  GQLQueries.PortfolioBalances,
+  GQLQueries.TransactionList,
+  GQLQueries.NftsTab,
+]
 
 /**
  * For all imported accounts, checks for new transactions and updates
@@ -62,10 +61,7 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
     skip: nonActiveAccountAddresses.length === 0,
   })
 
-  const combinedPortfoliosData = [
-    ...(activeAccountData?.portfolios ?? []),
-    ...(nonActiveAccountData?.portfolios ?? []),
-  ]
+  const combinedPortfoliosData = [...(activeAccountData?.portfolios ?? []), ...(nonActiveAccountData?.portfolios ?? [])]
 
   if (!combinedPortfoliosData.length) {
     return null
@@ -79,13 +75,8 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
         }
 
         return (
-          <View
-            key={portfolio.ownerAddress}
-            testID={`AddressTransactionHistoryUpdater/${portfolio.ownerAddress}`}>
-            <AddressTransactionHistoryUpdater
-              activities={portfolio.assetActivities}
-              address={portfolio.ownerAddress}
-            />
+          <View key={portfolio.ownerAddress} testID={`AddressTransactionHistoryUpdater/${portfolio.ownerAddress}`}>
+            <AddressTransactionHistoryUpdater activities={portfolio.assetActivities} address={portfolio.ownerAddress} />
           </View>
         )
       })}
@@ -143,9 +134,7 @@ function AddressTransactionHistoryUpdater({
           // Dont flag notification status for txns submitted from app, this is handled in transactionWatcherSaga.
           const confirmedLocally = localTransactions?.some(
             // eslint-disable-next-line max-nested-callbacks
-            (localTx) =>
-              activity.details.__typename === 'TransactionDetails' &&
-              localTx.hash === activity.details.hash
+            (localTx) => activity.details.__typename === 'TransactionDetails' && localTx.hash === activity.details.hash,
           )
           if (!confirmedLocally) {
             dispatch(setNotificationStatus({ address, hasNotifications: true }))
@@ -159,15 +148,11 @@ function AddressTransactionHistoryUpdater({
       if (newTransactionsFound) {
         // Fetch full recent txn history and dispatch receive notification if needed.
         if (address === activeAccountAddress) {
-          await fetchAndDispatchReceiveNotification(
-            address,
-            lastTxNotificationUpdateTimestamp,
-            hideSpamTokens
-          )
+          await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp, hideSpamTokens)
         }
 
         await apolloClient.refetchQueries({
-          include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+          include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
         })
       }
     }).catch(() => undefined)
@@ -197,7 +182,7 @@ function AddressTransactionHistoryUpdater({
 export function useFetchAndDispatchReceiveNotification(): (
   address: string,
   lastTxNotificationUpdateTimestamp: number | undefined,
-  hideSpamTokens: boolean
+  hideSpamTokens: boolean,
 ) => Promise<void> {
   const [fetchFullTransactionData] = useTransactionListLazyQuery()
   const dispatch = useAppDispatch()
@@ -205,7 +190,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   return async (
     address: string,
     lastTxNotificationUpdateTimestamp: number | undefined,
-    hideSpamTokens = false
+    hideSpamTokens = false,
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
@@ -217,7 +202,7 @@ export function useFetchAndDispatchReceiveNotification(): (
       fullTransactionData,
       address,
       lastTxNotificationUpdateTimestamp,
-      hideSpamTokens
+      hideSpamTokens,
     )
 
     if (notification) {
@@ -230,7 +215,7 @@ export function getReceiveNotificationFromData(
   data: TransactionListQuery | undefined,
   address: Address,
   lastTxNotificationUpdateTimestamp: number | undefined,
-  hideSpamTokens = false
+  hideSpamTokens = false,
 ): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
   if (!data || !lastTxNotificationUpdateTimestamp) {
     return
@@ -248,7 +233,7 @@ export function getReceiveNotificationFromData(
         tx.addedTime &&
         tx.addedTime >= lastTxNotificationUpdateTimestamp &&
         tx.typeInfo.type === TransactionType.Receive &&
-        tx.status === TransactionStatus.Success
+        tx.status === TransactionStatus.Success,
     )
 
   if (!latestReceivedTx) {

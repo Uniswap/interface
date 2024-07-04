@@ -1,5 +1,4 @@
 import { parseUnits } from '@ethersproject/units'
-import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { ReactNode, useCallback, useState } from 'react'
@@ -7,15 +6,17 @@ import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
-import { useSetSpreadCallback } from '../../state/pool/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import NameInputPanel from '../NameInputPanel'
-import { RowBetween } from '../Row'
+import { useSetSpreadCallback } from 'state/pool/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { ButtonError } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import NameInputPanel from 'components/NameInputPanel'
+import { RowBetween } from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -36,7 +37,7 @@ interface SetSpreadModalProps {
 }
 
 export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title }: SetSpreadModalProps) {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
 
   // state for create input
   const [typed, setTyped] = useState('')
@@ -53,7 +54,8 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
   try {
     parsedSpread = typed !== '' ? parseUnits(typed, 2).toString() : typed
   } catch (error) {
-    console.debug(`Failed to parse spread: "${typed}"`, error)
+    const message = `failed to parse spread: "${typed}"`
+    logger.debug('SetSpreadModal', 'SetSpreadModal', message, error)
   }
   const isSameAsCurrent: boolean = currentSpread === Number(parsedSpread)
 
@@ -78,14 +80,14 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
     setAttempting(true)
 
     // if callback not returned properly ignore
-    if (!account || !chainId || !setSpreadCallback || !parsedSpread) {
+    if (!account.address || !account.chainId || !setSpreadCallback || !parsedSpread) {
       return
     }
 
     // try set spread and store hash
     const hash = await setSpreadCallback(parsedSpread)?.catch((error) => {
       setAttempting(false)
-      console.log(error)
+      logger.info('SetSpreadModal', 'onSetSpread', error)
     })
 
     if (hash) {
@@ -94,7 +96,7 @@ export default function SetSpreadModal({ isOpen, currentSpread, onDismiss, title
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={360}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

@@ -1,6 +1,5 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
@@ -8,11 +7,13 @@ import PositionList from 'components/PositionList'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { useIsSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import { PoolVersionMenu } from 'pages/Pool/shared'
+import { LoadingRows } from 'pages/Pool/styled'
 import { useMemo } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, Inbox, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -24,8 +25,6 @@ import { /*HideSmall,*/ ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-//import CTACards from './CTACards'
-import { LoadingRows } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -191,10 +190,10 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
-  const { account, chainId } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const account = useAccount()
+  const isSupportedChain = useIsSupportedChainId(account.chainId)
   const networkSupportsV2 = useNetworkSupportsV2()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
@@ -208,12 +207,12 @@ export default function Pool() {
       acc[p.liquidity?.isZero() ? 1 : 0].push(p)
       return acc
     },
-    [[], []]
+    [[], []],
   ) ?? [[], []]
 
   const userSelectedPositionSet = useMemo(
     () => [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)],
-    [closedPositions, openPositions, userHideClosedPositions]
+    [closedPositions, openPositions, userHideClosedPositions],
   )
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
@@ -315,7 +314,7 @@ export default function Pool() {
                     >
                       <ButtonPrimary
                         style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                        onClick={toggleWalletDrawer}
+                        onClick={accountDrawer.open}
                       >
                         <Trans i18nKey="common.connectAWallet.button" />
                       </ButtonPrimary>

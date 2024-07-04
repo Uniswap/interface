@@ -1,12 +1,8 @@
 import { useEffect } from 'react'
-import { NumberType } from 'utilities/src/format/types'
+import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import {
-  STABLECOIN_AMOUNT_OUT,
-  useUSDCPrice,
-} from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { currencyIdToChain } from 'wallet/src/utils/currencyId'
+import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // Used for rounding in conversion math
@@ -21,20 +17,14 @@ const NUM_DECIMALS_DISPLAY_FIAT = 2
  * amount. This allows us to toggle between 2 modes, without losing the entered amount.
  */
 export function useSyncFiatAndTokenAmountUpdater(): void {
-  const {
-    isFiatMode,
-    updateSwapForm,
-    exactAmountToken,
-    exactAmountFiat,
-    derivedSwapInfo,
-    exactCurrencyField,
-  } = useSwapFormContext()
+  const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, derivedSwapInfo, exactCurrencyField } =
+    useSwapFormContext()
 
   const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
   const usdPriceOfCurrency = useUSDCPrice(exactCurrency?.currency ?? undefined)
-  const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
-  const conversionRate = convertFiatAmount().amount
+  const { convertFiatAmount } = useLocalizationContext()
+  const conversionRate = convertFiatAmount(1).amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')
 
   useEffect(() => {
@@ -43,23 +33,15 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
     }
 
     if (isFiatMode) {
-      const fiatAmount =
-        exactAmountFiat && !isNaN(parseFloat(exactAmountFiat)) ? parseFloat(exactAmountFiat) : 0
+      const fiatAmount = exactAmountFiat && !isNaN(parseFloat(exactAmountFiat)) ? parseFloat(exactAmountFiat) : 0
       const usdAmount = (fiatAmount / conversionRate).toFixed(NUM_DECIMALS_FIAT_ROUNDING)
       const stablecoinAmount = getCurrencyAmount({
         value: usdAmount,
         valueType: ValueType.Exact,
         currency: STABLECOIN_AMOUNT_OUT[chainId]?.currency,
       })
-      const tokenAmount = stablecoinAmount
-        ? usdPriceOfCurrency?.invert().quote(stablecoinAmount)
-        : undefined
-      const tokenAmountFormatted = formatCurrencyAmount({
-        value: tokenAmount,
-        type: NumberType.SwapTradeAmount,
-        placeholder: '',
-      })
-      updateSwapForm({ exactAmountToken: tokenAmountFormatted })
+      const tokenAmount = stablecoinAmount ? usdPriceOfCurrency?.invert().quote(stablecoinAmount) : undefined
+      updateSwapForm({ exactAmountToken: tokenAmount?.toExact() })
     }
 
     // Special case when we have token amount, but not fiat, which can occur when we hit "max"
@@ -81,7 +63,6 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
     exactAmountToken,
     exactCurrency,
     conversionRate,
-    formatCurrencyAmount,
     updateSwapForm,
     chainId,
     usdPriceOfCurrency,

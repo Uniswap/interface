@@ -2,7 +2,28 @@
 
 exports[`renders multi route 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #7D7D7D;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -75,27 +96,6 @@ exports[`renders multi route 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
 }
 
 .c0 {
@@ -281,7 +281,28 @@ exports[`renders multi route 1`] = `
 
 exports[`renders single route 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #7D7D7D;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -354,27 +375,6 @@ exports[`renders single route 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c7 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
 }
 
 .c0 {

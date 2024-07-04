@@ -1,12 +1,11 @@
 import { usePoolData } from 'graphql/data/pools/usePoolData'
+import PoolDetails from 'pages/PoolDetails'
 import Router from 'react-router-dom'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { render, screen, waitFor } from 'test-utils/render'
-
-import PoolDetails from '.'
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -42,7 +41,7 @@ describe('PoolDetailsPage', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-      })
+      }),
     )
     store.dispatch(
       addSerializedToken({
@@ -53,7 +52,7 @@ describe('PoolDetailsPage', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-      })
+      }),
     )
   })
 
@@ -95,7 +94,7 @@ describe('PoolDetailsPage', () => {
     })
   })
 
-  it('not found page displayed when no data is received from thegraph', () => {
+  it('not found page displayed when no data is received from backend', () => {
     mocked(usePoolData).mockReturnValue({
       data: undefined,
       loading: false,

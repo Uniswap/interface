@@ -1,15 +1,15 @@
-import { ChainId } from '@uniswap/sdk-core'
+import SwapHeader from 'components/swap/SwapHeader'
+import { Field } from 'components/swap/constants'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { act, render, screen } from 'test-utils/render'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import SwapHeader from './SwapHeader'
-import { Field } from './constants'
 
 interface WrapperProps {
   setCurrentTab?: Dispatch<SetStateAction<SwapTab>>
   setCurrencyState?: Dispatch<SetStateAction<CurrencyState>>
-  chainId?: ChainId
+  chainId?: InterfaceChainId
 }
 
 function Wrapper(props: PropsWithChildren<WrapperProps>) {
@@ -18,13 +18,16 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
       value={{
         currencyState: { inputCurrency: undefined, outputCurrency: undefined },
         setCurrencyState: props.setCurrencyState ?? jest.fn(),
+        setSelectedChainId: jest.fn(),
         prefilledState: {
           inputCurrency: undefined,
           outputCurrency: undefined,
         },
-        chainId: props.chainId ?? ChainId.MAINNET,
+        initialChainId: props.chainId ?? UniverseChainId.Mainnet,
+        chainId: props.chainId ?? UniverseChainId.Mainnet,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
+        isSwapAndLimitContext: true,
       }}
     >
       <SwapContext.Provider
@@ -48,7 +51,7 @@ describe('SwapHeader.tsx', () => {
     const { asFragment } = render(
       <Wrapper>
         <SwapHeader compact={false} syncTabToUrl={false} />
-      </Wrapper>
+      </Wrapper>,
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Swap')).toBeInTheDocument()
@@ -61,7 +64,7 @@ describe('SwapHeader.tsx', () => {
     render(
       <Wrapper setCurrentTab={onClickTab}>
         <SwapHeader compact={false} syncTabToUrl={true} />
-      </Wrapper>
+      </Wrapper>,
     )
     act(() => {
       screen.getByText('Limit').click()

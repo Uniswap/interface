@@ -1,8 +1,8 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral2};
@@ -39,13 +39,13 @@ const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
 export default function ProposalEmptyState() {
   const { chainId } = useAccount()
   if (
-    (chainId === ChainId.MAINNET ||
-      chainId === ChainId.GOERLI ||
-      chainId === ChainId.ARBITRUM_ONE ||
-      chainId === ChainId.OPTIMISM ||
-      chainId === ChainId.POLYGON ||
-      chainId === ChainId.BASE ||
-      chainId === ChainId.BNB) &&
+    (chainId === UniverseChainId.Mainnet ||
+      chainId === UniverseChainId.Goerli ||
+      chainId === UniverseChainId.ArbitrumOne ||
+      chainId === UniverseChainId.Optimism ||
+      chainId === UniverseChainId.Polygon ||
+      chainId === UniverseChainId.Base ||
+      chainId === UniverseChainId.Bnb) &&
     chainId
   ) {
     return (

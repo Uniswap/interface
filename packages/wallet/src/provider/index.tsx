@@ -1,7 +1,7 @@
 import { Store } from '@reduxjs/toolkit'
 import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
-import { TamaguiProvider } from './tamagui-provider'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 
 interface SharedProviderProps {
   children: ReactNode

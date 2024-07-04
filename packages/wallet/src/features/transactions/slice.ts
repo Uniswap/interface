@@ -25,31 +25,19 @@ const slice = createSlice({
   reducers: {
     addTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
       const { chainId, id, from } = transaction
-      assert(
-        !state?.[from]?.[chainId]?.[id],
-        `addTransaction: Attempted to overwrite tx with id ${id}`
-      )
+      assert(!state?.[from]?.[chainId]?.[id], `addTransaction: Attempted to overwrite tx with id ${id}`)
       state[from] ??= {}
       state[from]![chainId] ??= {}
       state[from]![chainId]![id] = transaction
     },
     updateTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
       const { chainId, id, from } = transaction
-      assert(
-        state?.[from]?.[chainId]?.[id],
-        `updateTransaction: Attempted to update a missing tx with id ${id}`
-      )
+      assert(state?.[from]?.[chainId]?.[id], `updateTransaction: Attempted to update a missing tx with id ${id}`)
       state[from]![chainId]![id] = transaction
     },
-    finalizeTransaction: (
-      state,
-      { payload: transaction }: PayloadAction<FinalizedTransactionDetails>
-    ) => {
+    finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
       const { chainId, id, status, receipt, from } = transaction
-      assert(
-        state?.[from]?.[chainId]?.[id],
-        `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`
-      )
+      assert(state?.[from]?.[chainId]?.[id], `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`)
       state[from]![chainId]![id]!.status = status
       if (receipt) {
         state[from]![chainId]![id]!.receipt = receipt
@@ -57,11 +45,11 @@ const slice = createSlice({
     },
     deleteTransaction: (
       state,
-      { payload: { chainId, id, address } }: PayloadAction<TransactionId & { address: string }>
+      { payload: { chainId, id, address } }: PayloadAction<TransactionId & { address: string }>,
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
-        `deleteTransaction: Attempted to delete a tx that doesn't exist with id ${id}`
+        `deleteTransaction: Attempted to delete a tx that doesn't exist with id ${id}`,
       )
       delete state[address]![chainId]![id]
     },
@@ -69,13 +57,11 @@ const slice = createSlice({
       state,
       {
         payload: { chainId, id, address, cancelRequest },
-      }: PayloadAction<
-        TransactionId & { address: string; cancelRequest: providers.TransactionRequest }
-      >
+      }: PayloadAction<TransactionId & { address: string; cancelRequest: providers.TransactionRequest }>,
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
-        `cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`
+        `cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`,
       )
       state[address]![chainId]![id]!.status = TransactionStatus.Cancelling
       state[address]![chainId]![id]!.cancelRequest = cancelRequest
@@ -88,11 +74,11 @@ const slice = createSlice({
         TransactionId & {
           newTxParams: providers.TransactionRequest
         } & { address: string }
-      >
+      >,
     ) => {
       assert(
         state?.[address]?.[chainId]?.[id],
-        `replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`
+        `replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`,
       )
       state[address]![chainId]![id]!.status = TransactionStatus.Replacing
     },
@@ -100,9 +86,7 @@ const slice = createSlice({
     // fiat onramp transactions re-use this slice to store (off-chain) pending txs
     upsertFiatOnRampTransaction: (
       state,
-      {
-        payload: transaction,
-      }: PayloadAction<TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }>
+      { payload: transaction }: PayloadAction<TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }>,
     ) => {
       const {
         chainId,
@@ -115,19 +99,17 @@ const slice = createSlice({
 
       state[from] ??= {}
       state[from]![chainId] ??= {}
-      const oldTypeInfo = state[from]![chainId]![id]?.typeInfo
+      const oldTypeInfo = state[from]![chainId]![id]?.typeInfo as FiatPurchaseTransactionInfo | undefined
       state[from]![chainId]![id] = {
         ...transaction,
-        ...{ typeInfo: { ...oldTypeInfo, ...transaction.typeInfo } },
+        typeInfo: { ...oldTypeInfo, ...transaction.typeInfo },
       }
     },
   },
 })
 
 // This action is fired, when user has come back from Moonpay flow using Return to Uniswap button
-export const forceFetchFiatOnRampTransactions = createAction(
-  'transactions/forceFetchFiatOnRampTransactions'
-)
+export const forceFetchFiatOnRampTransactions = createAction('transactions/forceFetchFiatOnRampTransactions')
 
 export const {
   addTransaction,

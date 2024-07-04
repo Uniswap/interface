@@ -1,14 +1,15 @@
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
+import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
+import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
-import { SignatureType } from 'state/signatures/types'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
-
-import { useAssetActivity } from 'graphql/data/apollo/AssetActivityProvider'
-import { parseRemoteActivities } from './parseRemote'
-import { Activity, ActivityMap } from './types'
 
 /** Detects transactions from same account with the same nonce and different hash */
 function findCancelTx(localActivity: Activity, remoteMap: ActivityMap, account: string): string | undefined {
@@ -68,7 +69,7 @@ export function useAllActivities(account: string) {
   const localMap = useLocalActivities(account)
   const remoteMap = useMemo(
     () => parseRemoteActivities(activities, account, formatNumberOrString),
-    [account, activities, formatNumberOrString]
+    [account, activities, formatNumberOrString],
   )
   const updateCancelledTx = useTransactionCanceller()
 
@@ -102,7 +103,7 @@ export function useOpenLimitOrders(account: string) {
     activities?.filter(
       (activity) =>
         activity.offchainOrderDetails?.type === SignatureType.SIGN_LIMIT &&
-        activity.status === TransactionStatus.Pending
+        activity.status === TransactionStatus.Pending,
     ) ?? []
   return {
     openLimitOrders,
@@ -120,4 +121,25 @@ export function usePendingActivity() {
   const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length
 
   return { hasPendingActivity, pendingActivityCount }
+}
+
+export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): GasFeeResult {
+  const cancelTransactionParams = useMemo(
+    () =>
+      orders && orders.length > 0
+        ? {
+            orders: orders.map((order) => {
+              return {
+                encodedOrder: order.encodedOrder as string,
+                type: order.type as SignatureType,
+              }
+            }),
+            chainId: orders[0].chainId,
+          }
+        : undefined,
+    [orders],
+  )
+  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
+  const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
+  return gasEstimate
 }

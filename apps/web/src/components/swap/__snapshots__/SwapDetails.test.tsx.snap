@@ -130,21 +130,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   background-color: #22222212;
 }
 
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c23 {
   padding: 16px;
   width: 100%;
@@ -231,6 +216,21 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   box-shadow: none;
   border: 1px solid transparent;
   outline: none;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .c17 {
@@ -367,7 +367,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=" _dsp_contents"
   >
     <span
       class=" t_light _dsp_contents is_Theme"
@@ -737,72 +737,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   background-color: #22222212;
 }
 
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c24 {
-  width: 8px;
-  height: 8px;
-  min-height: 8px;
-  min-width: 8px;
-  border-radius: 50%;
-  position: relative;
-  background-color: #22222212;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-}
-
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  height: 16px;
-  width: 16px;
-  margin-right: 2px;
-  margin-left: 2px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  color: #222222;
-  -webkit-transition: 250ms ease color;
-  transition: 250ms ease color;
-}
-
-.c25 {
-  -webkit-animation: fvtopB 1s cubic-bezier(0.83,0,0.17,1) infinite;
-  animation: fvtopB 1s cubic-bezier(0.83,0,0.17,1) infinite;
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  border-top: 1px solid transparent;
-  border-right: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-left: 2px solid #222222;
-  background: transparent;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  position: relative;
-  -webkit-transition: 250ms ease border-color;
-  transition: 250ms ease border-color;
-  left: -3px;
-  top: -3px;
-}
-
 .c20 {
   padding: 16px;
   width: 100%;
@@ -889,6 +823,21 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   box-shadow: none;
   border: 1px solid transparent;
   outline: none;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
 }
 
 .c17 {
@@ -1019,12 +968,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   -ms-flex-align: center;
   align-items: center;
   cursor: pointer;
-}
-
-@media (max-width:960px) {
-  .c23 {
-    display: none;
-  }
 }
 
 <span
@@ -1218,14 +1161,31 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             <div
               class="c6 c7"
             >
+              <style>
+                
+  @keyframes rotate360 {
+      from {
+          transform: rotate(0deg);
+      }
+      to {
+          transform: rotate(360deg);
+      }
+  }
+
+  .RotateElement {
+      animation: rotate360 3s linear infinite;
+      transform-origin: center center;
+  }
+
+              </style>
               <div
-                class="c23"
+                class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _height-16px _justifyContent-center _marginEnd-2px _marginStart-2px _width-16px RotateElement"
               >
                 <div
-                  class="c24"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _flexShrink-0 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _height-8px _minHeight-8px _minWidth-8px _position-relative _width-8px"
                 >
                   <div
-                    class="c25"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-1px _borderLeftColor-843134974 _borderLeftWidth-2px _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderRightColor-transparent _borderRightWidth-1px _borderTopColor-transparent _borderTopWidth-1px _height-14px _left--6px _position-relative _top--6px _width-14px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
                   />
                 </div>
               </div>
@@ -1234,6 +1194,48 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
           </div>
         </button>
       </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
+<DocumentFragment>
+  .c0 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c0:hover {
+  opacity: 0.6;
+}
+
+.c0:active {
+  opacity: 0.4;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      The maximum price movement before your transaction will revert.
+      <br />
+      <a
+        class="c0"
+        href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Learn more
+      </a>
     </span>
   </span>
 </DocumentFragment>

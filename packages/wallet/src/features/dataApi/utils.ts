@@ -9,21 +9,20 @@ import {
   TokenProjectsQuery,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   currencyId,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
-} from 'wallet/src/utils/currencyId'
+} from 'uniswap/src/utils/currencyId'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 type BuildCurrencyParams = {
-  chainId?: Nullable<ChainId>
+  chainId?: Nullable<WalletChainId>
   address?: Nullable<string>
   decimals?: Nullable<number>
   symbol?: Nullable<string>
@@ -36,14 +35,14 @@ type BuildCurrencyParams = {
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
-    chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
+    chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet) ?? Chain.Ethereum,
     address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
 }
 
 export function tokenProjectToCurrencyInfos(
   tokenProjects: TokenProjectsQuery['tokenProjects'],
-  chainFilter?: ChainId | null
+  chainFilter?: WalletChainId | null,
 ): CurrencyInfo[] {
   return tokenProjects
     ?.flatMap((project) =>
@@ -76,13 +75,13 @@ export function tokenProjectToCurrencyInfos(
         }
 
         return currencyInfo
-      })
+      }),
     )
     .filter(Boolean) as CurrencyInfo[]
 }
 
 // use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
-function isNonNativeAddress(chainId: ChainId, address: Maybe<string>): address is string {
+function isNonNativeAddress(chainId: WalletChainId, address: Maybe<string>): address is string {
   return !isNativeCurrencyAddress(chainId, address)
 }
 
@@ -112,23 +111,15 @@ export function buildCurrency({
     return undefined
   }
 
+  const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
+  const sellFee = sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined
+
   return isNonNativeAddress(chainId, address)
-    ? new Token(
-        chainId,
-        address,
-        decimals,
-        symbol ?? undefined,
-        name ?? undefined,
-        bypassChecksum,
-        buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
-        sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
-      )
+    ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum, buyFee, sellFee)
     : NativeCurrency.onChain(chainId)
 }
 
-export function gqlTokenToCurrencyInfo(
-  token: NonNullable<NonNullable<TokenQuery['token']>>
-): CurrencyInfo | null {
+export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery['token']>>): CurrencyInfo | null {
   const { chain, address, decimals, symbol, project, feeData } = token
   const chainId = fromGraphQLChain(chain)
 

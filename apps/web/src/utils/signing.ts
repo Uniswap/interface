@@ -1,6 +1,7 @@
 import type { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import type { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+import { logger } from 'utilities/src/logger/logger'
 import { WalletType, getWalletMeta } from 'utils/walletMeta'
 
 // These are WalletConnect peers which do not implement eth_signTypedData_v4, but *do* implement eth_signTypedData.
@@ -34,7 +35,7 @@ export async function signTypedData(
   types: Record<string, TypedDataField[]>,
   // Use Record<string, any> for the value to match the JsonRpcSigner._signTypedData signature.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value: Record<string, any>
+  value: Record<string, any>,
 ) {
   // Populate any ENS names (in-place)
   const populated = await _TypedDataEncoder.resolveNames(domain, types, value, (name: string) => {
@@ -55,7 +56,12 @@ export async function signTypedData(
         error.message.match(/TrustWalletConnect.WCError error 1/) ||
         error.message.match(/Missing or invalid/))
     ) {
-      console.warn('signTypedData: wallet does not implement EIP-712, falling back to eth_sign', error.message)
+      logger.warn(
+        'signing',
+        'signTypedData',
+        'signTypedData: wallet does not implement EIP-712, falling back to eth_sign',
+        error,
+      )
       const hash = _TypedDataEncoder.hash(populated.domain, types, populated.value)
       return await signer.provider.send('eth_sign', [address, hash])
     }

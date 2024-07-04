@@ -1,4 +1,5 @@
 import { getTestSelector, getTestSelectorStartsWith } from '../utils'
+import { waitsForActiveChain } from './wallet-connection/switch-network.test'
 
 describe('Token explore', () => {
   before(() => {
@@ -45,13 +46,13 @@ describe('Token explore', () => {
 
   it('should update when global network changed', () => {
     cy.visit('/explore/tokens/ethereum')
-    cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Ethereum')
+    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Ethereum logo`)
     cy.get(getTestSelector('token-table-row-NATIVE')).should('exist')
 
     // note: cannot switch global chain via UI because we cannot approve the network switch
     // in metamask modal using plain cypress. this is a workaround.
     cy.visit('/explore/tokens/polygon')
-    cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Polygon')
+    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Polygon logo`)
     cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Matic')
   })
 
@@ -59,7 +60,7 @@ describe('Token explore', () => {
     cy.visit('/explore/tokens/ethereum')
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()
-    cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Optimism')
-    cy.get(getTestSelector('chain-selector-logo')).find('title').should('include.text', 'Ethereum logo')
+    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Optimism logo`)
+    waitsForActiveChain('Ethereum')
   })
 })

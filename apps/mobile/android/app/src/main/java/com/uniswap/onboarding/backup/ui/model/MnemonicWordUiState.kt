@@ -1,9 +1,13 @@
 package com.uniswap.onboarding.backup.ui.model
 
+enum class MnemonicInputStatus {
+  NO_INPUT,
+  CORRECT_INPUT,
+  WRONG_INPUT
+}
+
 data class MnemonicWordUiState(
   val num: Int,
   val text: String,
-  val focused: Boolean = false,
-  val hasError: Boolean = false,
-  val sourceIndex: Int? = null,
+  val status: MnemonicInputStatus = MnemonicInputStatus.CORRECT_INPUT
 )

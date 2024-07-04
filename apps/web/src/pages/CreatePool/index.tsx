@@ -1,23 +1,21 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonPrimary } from 'components/Button'
+import { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import CreateModal from 'components/createPool/CreateModal'
+import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import Loader from 'components/Icons/LoadingSpinner'
+import PoolPositionList from 'components/PoolPositionList'
+import { RowBetween, RowFixed } from 'components/Row'
 import { Trans } from 'i18n'
+import { useAccount } from 'hooks/useAccount'
+import { useModalIsOpen, useToggleCreateModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import { useAllPoolsData } from 'state/pool/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
-import { ButtonPrimary } from '../../components/Button'
-import { OutlineCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import CreateModal from '../../components/createPool/CreateModal'
-//import PoolCard from '../../components/earn/PoolCard'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import PoolPositionList from '../../components/PoolPositionList'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { useModalIsOpen, useToggleCreateModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { useAllPoolsData } from '../../state/pool/hooks'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -72,8 +70,8 @@ const WrapSmall = styled(RowBetween)`
 `
 
 export default function CreatePool() {
-  const { account } = useWeb3React()
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const account = useAccount()
+  const accountDrawer = useAccountDrawer()
 
   const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
@@ -114,7 +112,7 @@ export default function CreatePool() {
                 <Trans>Pools</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-                {account ? (
+                {account.address ? (
                   <ButtonPrimary
                     style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"
@@ -132,7 +130,7 @@ export default function CreatePool() {
                   >
                     <ButtonPrimary
                       style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                      onClick={toggleWalletDrawer}
+                      onClick={accountDrawer.open}
                     >
                       <Trans i18nKey="common.connectAWallet.button" />
                     </ButtonPrimary>
@@ -144,7 +142,7 @@ export default function CreatePool() {
 
           <MainContentWrapper>
             {/* TODO: check why on some mobile wallets pool list not rendered */}
-            {!account ? (
+            {!account.address ? (
               <OutlineCard>
                 <Trans>Please connect your wallet</Trans>
               </OutlineCard>

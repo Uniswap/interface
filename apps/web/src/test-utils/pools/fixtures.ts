@@ -1,24 +1,20 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
+import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { Token as BEToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 
-export const validPoolToken0 = {
+export const validBEPoolToken0 = {
   id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   symbol: 'USDC',
   name: 'USD Coin',
-  decimals: '6',
   derivedETH: '0.0006240873011635544626425964678706127',
   __typename: 'Token',
-} as Token
-export const validBEPoolToken0 = {
-  ...validPoolToken0,
-  address: validPoolToken0.id,
   chain: 'ETHEREUM',
   decimals: 6,
   project: {
@@ -29,7 +25,7 @@ export const validBEPoolToken0 = {
       url: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
     },
   },
-} as BEToken
+} as Token
 
 export const validUSDCCurrency = {
   isNative: false,
@@ -43,20 +39,16 @@ export const validUSDCCurrency = {
     'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
   _checksummedAddress: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   _tags: null,
-  wrapped: validPoolToken0,
+  wrapped: validBEPoolToken0,
 } as unknown as Currency
 
-const validPoolToken1 = {
-  id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+export const validBEPoolToken1 = {
   symbol: 'WETH',
   name: 'Wrapped Ether',
-  decimals: '18',
   derivedETH: '1',
   __typename: 'Token',
-} as Token
-export const validBEPoolToken1 = {
-  ...validPoolToken1,
-  address: validPoolToken1.id,
+  address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
+  id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   chain: 'ETHEREUM',
   decimals: 18,
   project: {
@@ -67,17 +59,17 @@ export const validBEPoolToken1 = {
       url: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
     },
   },
-} as BEToken
+} as Token
 
 export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
   USDC_MAINNET,
-  WETH9[ChainId.MAINNET],
+  WETH9[UniverseChainId.Mainnet],
   FeeAmount.MEDIUM,
   '1851127709498178402383049949138810',
   '7076437181775065414',
-  201189
+  201189,
 )
 
 const position = new Position({
@@ -91,7 +83,7 @@ const details = {
   tokenId: BigNumber.from('0'),
   operator: '0x0',
   token0: USDC_MAINNET.address,
-  token1: WETH9[ChainId.MAINNET].address,
+  token1: WETH9[UniverseChainId.Mainnet].address,
   fee: FeeAmount.MEDIUM,
   tickLower: -100,
   tickUpper: 100,
@@ -105,7 +97,7 @@ export const useMultiChainPositionsReturnValue = {
   positions: [
     {
       owner,
-      chainId: ChainId.MAINNET,
+      chainId: UniverseChainId.Mainnet,
       position,
       pool,
       details,

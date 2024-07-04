@@ -1,59 +1,61 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { ChainId, CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import FeeSelector from 'components/FeeSelector'
+import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import SettingsTab from 'components/Settings'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { Dots } from 'components/swap/styled'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useToken } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { usePairContract, useV2MigratorContract } from 'hooks/useContract'
+import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { Trans, t } from 'i18n'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
+import { useTokenBalance } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTheme } from 'styled-components'
+import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { MigrateHeader } from '.'
-import { AutoColumn } from '../../components/Column'
-import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
-import CurrencyLogo from '../../components/Logo/CurrencyLogo'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useToken } from '../../hooks/Tokens'
-import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
-import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useTokenBalance } from '../../state/connection/hooks'
-import { TransactionType } from '../../state/transactions/types'
-import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { currencyId } from '../../utils/currencyId'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { BodyWrapper } from '../AppBody'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -126,9 +128,9 @@ function V2PairMigration({
   token0: Token
   token1: Token
 }) {
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   const theme = useTheme()
-  const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
+  const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
   const trace = useTrace()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
@@ -145,17 +147,17 @@ function V2PairMigration({
     () =>
       CurrencyAmount.fromRawAmount(
         token0,
-        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient)
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient),
       ),
-    [token0, pairBalance, reserve0, totalSupply]
+    [token0, pairBalance, reserve0, totalSupply],
   )
   const token1Value = useMemo(
     () =>
       CurrencyAmount.fromRawAmount(
         token1,
-        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient)
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient),
       ),
-    [token1, pairBalance, reserve1, totalSupply]
+    [token1, pairBalance, reserve1, totalSupply],
   )
 
   // set up v3 pool
@@ -166,7 +168,7 @@ function V2PairMigration({
   // get spot prices + price difference
   const v2SpotPrice = useMemo(
     () => new Price(token0, token1, reserve0.quotient, reserve1.quotient),
-    [token0, token1, reserve0, reserve1]
+    [token0, token1, reserve0, reserve1],
   )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
@@ -184,7 +186,7 @@ function V2PairMigration({
     token0,
     token1,
     feeAmount,
-    baseToken
+    baseToken,
   )
 
   // get value and prices at ticks
@@ -196,7 +198,7 @@ function V2PairMigration({
     baseToken.equals(token0) ? token1 : token0,
     feeAmount,
     tickLower,
-    tickUpper
+    tickUpper,
   )
 
   const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
@@ -219,18 +221,18 @@ function V2PairMigration({
 
   const { amount0: v3Amount0Min, amount1: v3Amount1Min } = useMemo(
     () => (position ? position.mintAmountsWithSlippage(allowedSlippage) : { amount0: undefined, amount1: undefined }),
-    [position, allowedSlippage]
+    [position, allowedSlippage],
   )
 
   const refund0 = useMemo(
     () =>
       position && CurrencyAmount.fromRawAmount(token0, JSBI.subtract(token0Value.quotient, position.amount0.quotient)),
-    [token0Value, position, token0]
+    [token0Value, position, token0],
   )
   const refund1 = useMemo(
     () =>
       position && CurrencyAmount.fromRawAmount(token1, JSBI.subtract(token1Value.quotient, position.amount1.quotient)),
-    [token1Value, position, token1]
+    [token1Value, position, token1],
   )
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
@@ -270,12 +272,12 @@ function V2PairMigration({
   const migrate = useCallback(async () => {
     if (
       !migrator ||
-      !account ||
+      !account.address ||
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
       !v3Amount1Min ||
-      !chainId ||
+      !account.chainId ||
       !networkSupportsV2
     ) {
       return
@@ -298,7 +300,7 @@ function V2PairMigration({
           signatureData.v,
           signatureData.r,
           signatureData.s,
-        ])
+        ]),
       )
     }
 
@@ -310,7 +312,7 @@ function V2PairMigration({
           token1.address,
           feeAmount,
           `0x${sqrtPrice.toString(16)}`,
-        ])
+        ]),
       )
     }
 
@@ -328,11 +330,11 @@ function V2PairMigration({
           tickUpper,
           amount0Min: `0x${v3Amount0Min.toString(16)}`,
           amount1Min: `0x${v3Amount1Min.toString(16)}`,
-          recipient: account,
+          recipient: account.address,
           deadline,
           refundAsETH: true, // hard-code this for now
         },
-      ])
+      ]),
     )
 
     setConfirmingMigration(true)
@@ -363,12 +365,12 @@ function V2PairMigration({
       })
   }, [
     migrator,
-    account,
     tickLower,
     tickUpper,
     v3Amount0Min,
     v3Amount1Min,
-    chainId,
+    account.address,
+    account.chainId,
     networkSupportsV2,
     signatureData,
     getDeadline,
@@ -403,7 +405,11 @@ function V2PairMigration({
         >
           <ExternalLink
             key="migration-contract"
-            href={getExplorerLink(chainId ?? ChainId.MAINNET, migrator?.address ?? '', ExplorerDataType.ADDRESS)}
+            href={getExplorerLink(
+              account.chainId ?? UniverseChainId.Mainnet,
+              migrator?.address ?? '',
+              ExplorerDataType.ADDRESS,
+            )}
           >
             <Text color="$accent1" display="inline">
               <Trans i18nKey="migrate.contract" /> ↗
@@ -610,15 +616,21 @@ function V2PairMigration({
             <DarkGrayCard>
               <AutoColumn gap="md">
                 <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
-                {chainId && refund0 && refund1 ? (
+                {account.chainId && refund0 && refund1 ? (
                   <ThemedText.DeprecatedBlack fontSize={12}>
                     <Trans
                       i18nKey="migrate.refund"
                       values={{
                         amtA: formatCurrencyAmount(refund0, 4),
-                        symA: chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol,
+                        symA:
+                          account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token0)
+                            ? 'ETH'
+                            : token0.symbol,
                         amtB: formatCurrencyAmount(refund1, 4),
-                        symB: chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol,
+                        symB:
+                          account.chainId && WRAPPED_NATIVE_CURRENCY[account.chainId]?.equals(token1)
+                            ? 'ETH'
+                            : token1.symbol,
                       }}
                     />
                   </ThemedText.DeprecatedBlack>
@@ -696,7 +708,7 @@ export default function MigrateV2Pair() {
     }
   }, [dispatch])
 
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
 
   // get pair contract
   const validatedAddress = isAddress(address)
@@ -713,21 +725,21 @@ export default function MigrateV2Pair() {
 
   // get liquidity token balance
   const liquidityToken: Token | undefined = useMemo(
-    () => (chainId && validatedAddress ? new Token(chainId, validatedAddress, 18) : undefined),
-    [chainId, validatedAddress]
+    () => (account.chainId && validatedAddress ? new Token(account.chainId, validatedAddress, 18) : undefined),
+    [account.chainId, validatedAddress],
   )
 
   // get data required for V2 pair migration
-  const pairBalance = useTokenBalance(account ?? undefined, liquidityToken)
+  const pairBalance = useTokenBalance(account.address, liquidityToken)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
   const reserve0 = useMemo(
     () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
-    [token0, reserve0Raw]
+    [token0, reserve0Raw],
   )
   const reserve1 = useMemo(
     () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
-    [token1, reserve1Raw]
+    [token1, reserve1Raw],
   )
 
   // redirect for invalid url params
@@ -740,7 +752,11 @@ export default function MigrateV2Pair() {
       !token0AddressCallState?.error &&
       !token0Address)
   ) {
-    console.error('Invalid pair address')
+    logger.warn('MigrateV2Pair', 'MigrateV2Pair', 'Invalid pair address', {
+      token0Address,
+      token1Address,
+      chainId: account.chainId,
+    })
     return <Navigate to="/migrate/v2" replace />
   }
 
@@ -752,10 +768,14 @@ export default function MigrateV2Pair() {
           <MigrateHeader>
             <Trans i18nKey="migrate.v2Title" />
           </MigrateHeader>
-          <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} hideRoutingSettings />
+          <SettingsTab
+            autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
+            chainId={account.chainId}
+            hideRoutingSettings
+          />
         </AutoRow>
 
-        {!account ? (
+        {!account.isConnected ? (
           <ThemedText.DeprecatedLargeHeader>
             <Trans i18nKey="migrate.connectAccount" />
           </ThemedText.DeprecatedLargeHeader>

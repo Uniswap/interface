@@ -131,6 +131,8 @@ export const colors = {
   violet800: '#121643',
   violet900: '#0E0D30',
   violetVibrant: '#5065FD',
+  uniswapXViolet: '#4673FA',
+  uniswapXPurple: '#9646FA',
   cyan50: '#D6F5FE',
   cyan100: '#B0EDFE',
   cyan200: '#63CDE8',
@@ -153,14 +155,54 @@ export const colors = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
-  networkEthereum: '#627EEA',
-  networkOptimism: '#FF0420',
-  networkPolygon: '#A457FF',
-  networkArbitrum: '#28A0F0',
-  networkBsc: '#F0B90B',
-  networkBase: '#0052FF',
-  networkBlast: '#FCFC03',
   fiatOnRampBanner: '#FB36D0',
+}
+
+export const networkColors = {
+  ethereum: {
+    light: '#627EEA',
+    dark: '#627EEA',
+  },
+  optimism: {
+    light: '#FF0420',
+    dark: '#FF0420',
+  },
+  polygon: {
+    light: '#8247E5',
+    dark: '#8247E5',
+  },
+  arbitrum: {
+    light: '#12AAFF',
+    dark: '#12AAFF',
+  },
+  bnb: {
+    light: '#B08603',
+    dark: '#FFBF17',
+  },
+  base: {
+    light: '#0052FF',
+    dark: '#0052FF',
+  },
+  blast: {
+    light: '#222222',
+    dark: '#FCFC03',
+  },
+  avalanche: {
+    light: '#E84142',
+    dark: '#E84142',
+  },
+  celo: {
+    light: '#222222',
+    dark: '#FCFF52',
+  },
+  zora: {
+    light: '#222222',
+    dark: '#FFFFFF',
+  },
+  zksync: {
+    light: '#3667F6',
+    dark: '#3667F6',
+  },
 }
 
 // TODO: map named colors to new Spore colors
@@ -171,7 +213,9 @@ const sporeLight = {
   sporeBlack: '#000000',
 
   surface1: '#FFFFFF',
+  surface1Hovered: '#F5F5F5',
   surface2: '#F9F9F9',
+  surface2Hovered: '#F2F2F2',
   surface3: '#2222220D', //0D = 5%
   surface4: '#FFFFFFA3', //A3 = 64%
   surface5: '#0000000A', //0A = 4%
@@ -183,7 +227,9 @@ const sporeLight = {
   neutral3: '#CECECE',
 
   accent1: '#FC72FF',
+  accent1Hovered: '#C70A92',
   accent2: '#FFEFFF',
+  accent2Hovered: '#FEEBFC',
 
   accentSoft: '#FC72FF33', //33 = 20%
 
@@ -198,7 +244,9 @@ const sporeDark = {
   sporeBlack: '#000000',
 
   surface1: '#131313',
+  surface1Hovered: '#181818',
   surface2: '#1B1B1B',
+  surface2Hovered: '#242424',
   surface3: '#FFFFFF1F', //1F = 12%
   surface4: '#FFFFFF33', //33 = 20%
   surface5: '#0000000A', //0A = 4%
@@ -210,7 +258,9 @@ const sporeDark = {
   neutral3: '#5E5E5E',
 
   accent1: '#FC72FF',
+  accent1Hovered: '#FD3CFE',
   accent2: '#311C31',
+  accent2Hovered: '#510D43',
 
   accentSoft: '#FC72FF33', //33 = 20%
 
@@ -227,7 +277,9 @@ export const colorsLight = {
   sporeBlack: sporeLight.sporeBlack,
 
   surface1: sporeLight.surface1,
+  surface1Hovered: sporeLight.surface1Hovered,
   surface2: sporeLight.surface2,
+  surface2Hovered: sporeLight.surface2Hovered,
   surface3: sporeLight.surface3,
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
@@ -241,7 +293,9 @@ export const colorsLight = {
   neutral3: sporeLight.neutral3,
 
   accent1: sporeLight.accent1,
+  accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
+  accent2Hovered: sporeLight.accent2Hovered,
 
   accentSoft: sporeLight.accentSoft,
 
@@ -268,18 +322,23 @@ export const colorsLight = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: colors.networkEthereum,
+  chain_1: networkColors.ethereum.light,
+  chain_10: networkColors.optimism.light,
+  chain_137: networkColors.polygon.light,
+  chain_42161: networkColors.arbitrum.light,
+  chain_80001: networkColors.polygon.light,
+  chain_8453: networkColors.base.light,
+  chain_7777777: networkColors.zora.light,
+  chain_81457: networkColors.blast.light,
+  chain_56: networkColors.bnb.light,
+  chain_42220: networkColors.celo.light,
+  chain_43114: networkColors.avalanche.light,
+  chain_324: networkColors.zksync.light,
+
+  // Testnets
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
-  chain_10: colors.networkOptimism,
-  chain_137: colors.networkPolygon,
-  chain_42161: colors.networkArbitrum,
-  chain_80001: colors.networkPolygon,
-  chain_8453: colors.networkBase,
-  chain_7777777: sporeLight.neutral1,
-  chain_81457: colors.networkBlast,
-  chain_56: colors.networkBsc,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -291,7 +350,9 @@ export const colorsDark = {
   sporeBlack: sporeDark.sporeBlack,
 
   surface1: sporeDark.surface1,
+  surface1Hovered: sporeDark.surface1Hovered,
   surface2: sporeDark.surface2,
+  surface2Hovered: sporeDark.surface2Hovered,
   surface3: sporeDark.surface3,
   surface4: sporeDark.surface4,
   surface5: sporeDark.surface5,
@@ -305,7 +366,9 @@ export const colorsDark = {
   neutral3: sporeDark.neutral3,
 
   accent1: sporeDark.accent1,
+  accent1Hovered: sporeDark.accent1Hovered,
   accent2: sporeDark.accent2,
+  accent2Hovered: sporeDark.accent2Hovered,
 
   accentSoft: sporeDark.accentSoft,
 
@@ -333,16 +396,21 @@ export const colorsDark = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: colors.networkEthereum,
+  chain_1: networkColors.ethereum.dark,
+  chain_10: networkColors.optimism.dark,
+  chain_137: networkColors.polygon.dark,
+  chain_42161: networkColors.arbitrum.dark,
+  chain_80001: networkColors.polygon.dark,
+  chain_8453: networkColors.base.dark,
+  chain_7777777: networkColors.zora.dark,
+  chain_81457: networkColors.blast.dark,
+  chain_56: networkColors.bnb.dark,
+  chain_42220: networkColors.celo.dark,
+  chain_43114: networkColors.avalanche.dark,
+  chain_324: networkColors.zksync.dark,
+
+  // Testnets
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
-  chain_10: colors.networkOptimism,
-  chain_137: colors.networkPolygon,
-  chain_42161: colors.networkArbitrum,
-  chain_80001: colors.networkPolygon,
-  chain_8453: colors.networkBase,
-  chain_7777777: sporeDark.neutral1,
-  chain_81457: colors.networkBlast,
-  chain_56: colors.networkBsc,
 }

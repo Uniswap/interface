@@ -1,9 +1,11 @@
 import renderer from 'react-test-renderer'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { Locale } from 'wallet/src/features/language/constants'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { mockLocalizationContext } from 'wallet/src/test/mocks'
-import { RelativeChange } from './RelativeChange'
+
+// Needs to be imported after the mock localization context
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 
 const mockLocale = Locale.EnglishUnitedStates
 
@@ -15,6 +17,7 @@ jest.mock('wallet/src/features/language/hooks', () => {
 
 const mockFiatCurrencyInfo: FiatCurrencyInfo = {
   name: 'United States Dollar',
+  shortName: 'USD ($)',
   code: 'USD',
   symbol: '$',
   groupingSeparator: ',',
@@ -35,7 +38,7 @@ it('renders a relative change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange change={12} />
-    </TamaguiProvider>
+    </TamaguiProvider>,
   )
   expect(tree).toMatchSnapshot()
 })
@@ -44,7 +47,7 @@ it('renders placeholders without a change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange />
-    </TamaguiProvider>
+    </TamaguiProvider>,
   )
   expect(tree).toMatchSnapshot()
 })
@@ -53,7 +56,7 @@ it('renders placeholders with absolute change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange absoluteChange={100} change={12} />
-    </TamaguiProvider>
+    </TamaguiProvider>,
   )
   expect(tree).toMatchSnapshot()
 })

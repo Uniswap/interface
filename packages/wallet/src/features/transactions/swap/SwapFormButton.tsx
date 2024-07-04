@@ -11,10 +11,7 @@ import {
   selectHasViewedReviewScreen,
 } from 'wallet/src/features/behaviorHistory/selectors'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import {
-  SwapScreen,
-  useSwapScreenContext,
-} from 'wallet/src/features/transactions/contexts/SwapScreenContext'
+import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import {
@@ -50,8 +47,7 @@ export function SwapFormButton(): JSX.Element {
 
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
 
-  const reviewButtonDisabled =
-    noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
+  const reviewButtonDisabled = noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap || isSubmitting
 
@@ -70,7 +66,7 @@ export function SwapFormButton(): JSX.Element {
       updateSwapForm({ txId: createTransactionId() })
       setScreen(nextScreen)
     },
-    [setScreen, updateSwapForm]
+    [setScreen, updateSwapForm],
   )
 
   const onReviewPress = useCallback(() => {
@@ -100,11 +96,7 @@ export function SwapFormButton(): JSX.Element {
   const hasButtonWarning = !!blockingWarning?.buttonText
   const buttonText = blockingWarning?.buttonText ?? t('swap.button.review')
   const buttonTextColor = hasButtonWarning ? '$neutral2' : '$white'
-  const buttonBgColor = hasButtonWarning
-    ? '$surface3'
-    : isHoldToSwapPressed
-    ? '$accent2'
-    : '$accent1'
+  const buttonBgColor = hasButtonWarning ? '$surface3' : isHoldToSwapPressed ? '$accent2' : '$accent1'
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
@@ -123,17 +115,13 @@ export function SwapFormButton(): JSX.Element {
           onLongPress={onLongPressHoldToSwap}
           onPress={onReviewPress}
           onResponderRelease={onReleaseHoldToSwap}
-          onResponderTerminate={onReleaseHoldToSwap}>
+          onResponderTerminate={onReleaseHoldToSwap}
+        >
           {isHoldToSwapPressed ? (
             <Flex row gap="$spacing4" px="$spacing4">
               <HoldToSwapProgressCircle />
 
-              <Text
-                color="$accent1"
-                flex={1}
-                pr={PROGRESS_CIRCLE_SIZE}
-                textAlign="center"
-                variant="buttonLabel1">
+              <Text color="$accent1" flex={1} pr={PROGRESS_CIRCLE_SIZE} textAlign="center" variant="buttonLabel1">
                 {holdButtonText}
               </Text>
             </Flex>

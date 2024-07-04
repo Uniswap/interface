@@ -28,7 +28,6 @@ import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
-import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
   processWidgetEvents,
@@ -37,31 +36,28 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import {
-  getSentryEnvironment,
-  getSentryTracesSamplingRate,
-  getStatsigEnvironmentTier,
-} from 'src/utils/version'
+import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
+import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
-import { Statsig, StatsigProvider } from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { isDetoxBuild } from 'utilities/src/environment'
+import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
@@ -70,7 +66,7 @@ import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { updateLanguage } from 'wallet/src/features/language/slice'
+import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -133,7 +129,12 @@ function App(): JSX.Element | null {
 
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
-  const statSigOptions = {
+  const statSigOptions: {
+    user: StatsigUser
+    options: StatsigOptions
+    sdkKey: string
+    waitForInitialization: boolean
+  } = {
     options: {
       environment: {
         tier: getStatsigEnvironmentTier(),
@@ -144,7 +145,12 @@ function App(): JSX.Element | null {
       initCompletionCallback: loadStatsigOverrides,
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
-    user: deviceId ? { userID: deviceId } : {},
+    user: {
+      ...(deviceId ? { userID: deviceId } : {}),
+      custom: {
+        app: StatsigCustomAppValue.Mobile,
+      },
+    },
     waitForInitialization: true,
   }
 
@@ -158,7 +164,8 @@ function App(): JSX.Element | null {
                 <SharedProvider reduxStore={store}>
                   <AnalyticsNavigationContextProvider
                     shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
+                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                  >
                     <AppOuter />
                   </AnalyticsNavigationContextProvider>
                 </SharedProvider>
@@ -180,7 +187,7 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
     for (const experiment of Object.values(Experiments)) {
       Sentry.setTag(
         `experiment.${experiment}`,
-        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName()
+        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       )
     }
   }, [])
@@ -222,7 +229,8 @@ function AppOuter(): JSX.Element | null {
                         <NavigationContainer
                           onReady={(navigationRef): void => {
                             routingInstrumentation.registerNavigationContainer(navigationRef)
-                          }}>
+                          }}
+                        >
                           <MobileWalletNavigationProvider>
                             <BottomSheetModalProvider>
                               <AppModals />
@@ -255,17 +263,13 @@ function AppInner(): JSX.Element {
   useEffect(() => {
     if (allowAnalytics) {
       appsFlyer.startSdk()
-      logger.info('AppsFlyer', 'status', 'started')
+      logger.debug('AppsFlyer', 'status', 'started')
     } else {
       appsFlyer.stop(!allowAnalytics, (res: unknown) => {
         if (typeof res === 'string' && res === 'Success') {
-          logger.info('AppsFlyer', 'status', 'stopped')
+          logger.debug('AppsFlyer', 'status', 'stopped')
         } else {
-          logger.warn(
-            'AppsFlyer',
-            'stop',
-            `Got an error when trying to stop the AppsFlyer SDK: ${res}`
-          )
+          logger.warn('AppsFlyer', 'stop', `Got an error when trying to stop the AppsFlyer SDK: ${res}`)
         }
       })
     }
@@ -273,7 +277,7 @@ function AppInner(): JSX.Element {
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
-    dispatch(updateLanguage(null))
+    dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
 
   useEffect(() => {
@@ -286,11 +290,7 @@ function AppInner(): JSX.Element {
     <>
       <OfflineBanner />
       <AppStackNavigator />
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </>
   )
 }

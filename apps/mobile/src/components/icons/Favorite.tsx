@@ -1,12 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import {
-  useAnimatedStyle,
-  useDerivedValue,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated'
-import { AnimatedFlex, useSporeColors } from 'ui/src'
+import { useAnimatedStyle, useDerivedValue, withSequence, withTiming } from 'react-native-reanimated'
+import { useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 
 interface FavoriteButtonProps {
   isFavorited: boolean
@@ -22,7 +18,7 @@ export const Favorite = ({ isFavorited, size }: FavoriteButtonProps): JSX.Elemen
 
   const getColor = useCallback(
     () => (isFavorited ? colors.accent1.val : unfilledColor),
-    [isFavorited, colors.accent1, unfilledColor]
+    [isFavorited, colors.accent1, unfilledColor],
   )
 
   const [color, setColor] = useState(getColor())

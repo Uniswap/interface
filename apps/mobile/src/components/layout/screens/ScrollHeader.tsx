@@ -1,15 +1,11 @@
 import { useScrollToTop } from '@react-navigation/native'
 import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import Animated, {
-  Extrapolate,
-  SharedValue,
-  interpolate,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
+import Animated, { Extrapolate, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { AnimatedFlex, ColorTokens, Flex, useDeviceInsets } from 'ui/src'
+import { ColorTokens, Flex, useDeviceInsets } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndices } from 'ui/src/theme'
 
 type ScrollHeaderProps = {
@@ -49,12 +45,7 @@ export function ScrollHeader({
 
   const visibleOnScrollStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(
-        scrollY.value,
-        [0, showHeaderScrollYDistance],
-        [0, 1],
-        Extrapolate.CLAMP
-      ),
+      opacity: interpolate(scrollY.value, [0, showHeaderScrollYDistance], [0, 1], Extrapolate.CLAMP),
     }
   })
 
@@ -70,10 +61,7 @@ export function ScrollHeader({
   const headerWrapperStyles = fullScreen ? [visibleOnScrollStyle, { zIndex: zIndices.popover }] : []
 
   return (
-    <HeaderWrapper
-      backgroundColor={backgroundColor}
-      fullScreen={fullScreen}
-      style={headerWrapperStyles}>
+    <HeaderWrapper backgroundColor={backgroundColor} fullScreen={fullScreen} style={headerWrapperStyles}>
       <WithScrollToTop ref={listRef}>
         <Flex
           row
@@ -81,7 +69,8 @@ export function ScrollHeader({
           justifyContent="space-between"
           mx="$spacing16"
           my="$spacing12"
-          style={headerRowStyles}>
+          style={headerRowStyles}
+        >
           <BackButton color={backButtonColor} />
           <Flex shrink gap="$spacing16">
             {alwaysShowCenterElement ? (
@@ -127,7 +116,8 @@ function HeaderWrapper({
       position="absolute"
       right={0}
       style={style}
-      top={0}>
+      top={0}
+    >
       {children}
     </AnimatedFlex>
   )

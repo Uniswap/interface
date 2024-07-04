@@ -11,8 +11,8 @@ import Reanimated, {
 } from 'react-native-reanimated'
 import { Flex } from 'ui/src/components/layout'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { ShineProps } from 'ui/src/loading/ShineProps'
 import { opacify } from 'ui/src/theme'
-import { ShineProps } from './ShineProps'
 const SHIMMER_DURATION = 2000 // 2 seconds
 
 export function Shine({ children, disabled }: ShineProps): JSX.Element {
@@ -31,14 +31,14 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: interpolate(
-          xPosition.value,
-          [0, 1],
-          [layout ? -layout.width : 0, layout ? layout.width : 0]
-        ),
+        translateX: interpolate(xPosition.value, [0, 1], [layout ? -layout.width : 0, layout ? layout.width : 0]),
       },
     ],
   }))
+
+  if (disabled) {
+    return children
+  }
 
   if (!layout) {
     return (
@@ -46,31 +46,30 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
         opacity={0}
         onLayout={(event: {
           nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> }
-        }): void => setLayout(event.nativeEvent.layout)}>
+        }): void => {
+          setLayout(event.nativeEvent.layout)
+        }}
+      >
         {children}
       </Flex>
     )
   }
 
-  if (!disabled) {
-    return (
-      <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
-        <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
-        <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
-          <LinearGradient
-            colors={[
-              opacify(0, colors.neutral2.val.slice(0, 7)),
-              opacify(44, colors.surface2.val.slice(0, 7)),
-              opacify(0, colors.neutral2.val.slice(0, 7)),
-            ]}
-            end={{ x: 1, y: 0 }}
-            start={{ x: 0, y: 0 }}
-            style={StyleSheet.absoluteFill}
-          />
-        </Reanimated.View>
-      </MaskedView>
-    )
-  }
-
-  return children
+  return (
+    <MaskedView maskElement={children} style={{ width: layout.width, height: layout.height }}>
+      <Flex grow backgroundColor="$neutral2" height="100%" overflow="hidden" />
+      <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
+        <LinearGradient
+          colors={[
+            opacify(0, colors.neutral2.val.slice(0, 7)),
+            opacify(44, colors.surface2.val.slice(0, 7)),
+            opacify(0, colors.neutral2.val.slice(0, 7)),
+          ]}
+          end={{ x: 1, y: 0 }}
+          start={{ x: 0, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
+      </Reanimated.View>
+    </MaskedView>
+  )
 }

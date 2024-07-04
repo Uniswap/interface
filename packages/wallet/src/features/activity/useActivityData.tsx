@@ -3,21 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text, isWeb } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
-import {
-  ActivityItemRenderer,
-  generateActivityItemRenderer,
-} from 'wallet/src/features/transactions/SummaryCards/utils'
-import {
-  useCreateSwapFormState,
-  useMergeLocalAndRemoteTransactions,
-} from 'wallet/src/features/transactions/hooks'
+import { ActivityItemRenderer, generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { useCreateSwapFormState, useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
 import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks/useMostRecentSwapTx'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
@@ -35,7 +29,7 @@ type ActivityDataProps = {
   owner: string
   authTrigger?: AuthTrigger
   isExternalProfile?: boolean
-  emptyContainerStyle?: StyleProp<ViewStyle>
+  emptyComponentStyle?: StyleProp<ViewStyle>
   onPressEmptyState?: () => void
 }
 
@@ -51,7 +45,7 @@ export function useActivityData({
   owner,
   authTrigger,
   isExternalProfile,
-  emptyContainerStyle,
+  emptyComponentStyle,
   onPressEmptyState,
 }: ActivityDataProps): ActivityData {
   const { t } = useTranslation()
@@ -81,19 +75,18 @@ export function useActivityData({
       <Loader.Transaction />,
       SectionTitle,
       swapCallbacks,
-      authTrigger
+      authTrigger,
     )
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
-    useFormattedTransactionDataForActivity(
-      owner,
-      hideSpamTokens,
-      useMergeLocalAndRemoteTransactions
-    )
+  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
+    owner,
+    hideSpamTokens,
+    useMergeLocalAndRemoteTransactions,
+  )
 
   const errorCard = (
-    <Flex grow style={emptyContainerStyle}>
+    <Flex grow style={emptyComponentStyle}>
       <BaseCard.ErrorState
         retryButtonLabel={t('common.button.retry')}
         title={t('home.activity.error.load')}
@@ -103,11 +96,9 @@ export function useActivityData({
   )
 
   const emptyListView = (
-    <Flex grow pt="$spacing48" px="$spacing36" style={emptyContainerStyle}>
+    <Flex centered grow pt="$spacing48" px="$spacing36" style={emptyComponentStyle}>
       <BaseCard.EmptyState
-        buttonLabel={
-          isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')
-        }
+        buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')}
         description={
           isExternalProfile
             ? t('home.activity.empty.description.external')

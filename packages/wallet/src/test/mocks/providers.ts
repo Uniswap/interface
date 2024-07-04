@@ -3,8 +3,8 @@ import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
-import { ChainId } from 'uniswap/src/types/chains'
-import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { DAI } from 'wallet/src/constants/tokens'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -37,7 +37,7 @@ export const getTxProvidersMocks = (txReceipt?: TransactionReceipt): TxProviders
     getTransactionCount: (): number => 1000,
     estimateGas: (): BigNumber => BigNumber.from('30000'),
     sendTransaction: (): { hash: string } => ({ hash: '0xabcdef' }),
-    detectNetwork: (): { name: string; chainId: ChainId } => ({
+    detectNetwork: (): { name: string; chainId: WalletChainId } => ({
       name: 'mainnet',
       chainId: 1,
     }),
@@ -57,14 +57,14 @@ export const getTxProvidersMocks = (txReceipt?: TransactionReceipt): TxProviders
 }
 
 export const contractManager = new ContractManager()
-contractManager.getOrCreateContract(ChainId.Goerli, DAI.address, provider, ERC20_ABI)
+contractManager.getOrCreateContract(UniverseChainId.Mainnet, DAI.address, provider, ERC20_ABI)
 contractManager.getOrCreateContract(
-  ChainId.Goerli,
-  getWrappedNativeAddress(ChainId.Goerli),
+  UniverseChainId.Mainnet,
+  getWrappedNativeAddress(UniverseChainId.Mainnet),
   provider,
-  WETH_ABI
+  WETH_ABI,
 )
-export const tokenContract = contractManager.getContract(ChainId.Goerli, DAI.address) as Erc20
+export const tokenContract = contractManager.getContract(UniverseChainId.Mainnet, DAI.address) as Erc20
 
 export const mockTokenContract = {
   balanceOf: (): BigNumber => BigNumber.from('1000000000000000000'),

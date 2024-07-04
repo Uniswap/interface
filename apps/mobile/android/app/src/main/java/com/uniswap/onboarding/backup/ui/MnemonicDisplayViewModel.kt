@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.update
 class MnemonicDisplayViewModel(
   private val ethersRs: RnEthersRs // Move to repository layer if app gets more complex
 ) : ViewModel() {
-
-  private val _words = MutableStateFlow<List<MnemonicWordUiState>>(emptyList())
+  private val defaultMnemonicsCount = 12
+  private val _words =
+    MutableStateFlow(List(defaultMnemonicsCount) { MnemonicWordUiState(num = it + 1, text = "") })
   val words = _words.asStateFlow()
 
   private var currentMnemonicId = ""

@@ -2,7 +2,6 @@ import { Contract } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  ChainId,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -14,7 +13,6 @@ import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
-import { useWeb3React } from '@web3-react/core'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -43,7 +41,9 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { logger } from 'utilities/src/logger/logger'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json
@@ -55,10 +55,11 @@ const { abi: V2MigratorABI } = V3MigratorJson
 export function useContract<T extends Contract = Contract>(
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: any,
-  withSignerIfPossible = true
+  withSignerIfPossible = true,
+  chainId?: InterfaceChainId,
 ): T | null {
   const account = useAccount()
-  const provider = useEthersProvider()
+  const provider = useEthersProvider({ chainId: chainId ?? account.chainId })
 
   return useMemo(() => {
     if (!addressOrAddressMap || !ABI || !provider || !account.chainId) {
@@ -68,7 +69,7 @@ export function useContract<T extends Contract = Contract>(
     if (typeof addressOrAddressMap === 'string') {
       address = addressOrAddressMap
     } else {
-      address = addressOrAddressMap[account.chainId]
+      address = addressOrAddressMap[chainId ?? account.chainId]
     }
     if (!address) {
       return null
@@ -76,15 +77,20 @@ export function useContract<T extends Contract = Contract>(
     try {
       return getContract(address, ABI, provider, withSignerIfPossible && account.address ? account.address : undefined)
     } catch (error) {
-      console.error('Failed to get contract', error)
+      const wrappedError = new Error('failed to get contract', { cause: error })
+      logger.warn('useContract', 'useContract', wrappedError.message, {
+        error: wrappedError,
+        addressOrAddressMap,
+        address: account.address,
+      })
       return null
     }
-  }, [addressOrAddressMap, ABI, provider, account.chainId, account.address, withSignerIfPossible]) as T
+  }, [addressOrAddressMap, ABI, provider, chainId, account.chainId, account.address, withSignerIfPossible]) as T
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
   const { chainId } = useAccount()
-  const isMainnet = chainId === ChainId.MAINNET
+  const isMainnet = chainId === UniverseChainId.Mainnet
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
 
   return useMemo(() => {
@@ -94,11 +100,12 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
     if (!address) {
       return null
     }
-    const provider = RPC_PROVIDERS[ChainId.MAINNET]
+    const provider = RPC_PROVIDERS[UniverseChainId.Mainnet]
     try {
       return getContract(address, ABI, provider)
     } catch (error) {
-      console.error('Failed to get mainnet contract', error)
+      const wrappedError = new Error('failed to get mainnet contract', { cause: error })
+      logger.warn('useContract', 'useMainnetContract', wrappedError.message, wrappedError)
       return null
     }
   }, [isMainnet, contract, address, ABI]) as T
@@ -116,12 +123,12 @@ export function usePoolContract(poolAddress?: string) {
   return useContract<AUniswap>(poolAddress, AUNISWAP_ABI, true)
 }
 
-export function useWETHContract(withSignerIfPossible?: boolean) {
-  const { chainId } = useAccount()
+export function useWETHContract(withSignerIfPossible?: boolean, chainId?: InterfaceChainId) {
   return useContract<Weth>(
     chainId ? WRAPPED_NATIVE_CURRENCY[chainId]?.address : undefined,
     WETH_ABI,
-    withSignerIfPossible
+    withSignerIfPossible,
+    chainId,
   )
 }
 
@@ -138,7 +145,7 @@ export function useArgentWalletDetectorContract() {
 }
 
 export function useENSRegistrarContract() {
-  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
+  return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[UniverseChainId.Mainnet], ENS_ABI)
 }
 
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -168,30 +175,30 @@ export function useInterfaceMulticall() {
 
 export function useMainnetInterfaceMulticall() {
   return useMainnetContract<UniswapInterfaceMulticall>(
-    MULTICALL_ADDRESSES[ChainId.MAINNET],
-    MulticallABI
+    MULTICALL_ADDRESSES[UniverseChainId.Mainnet],
+    MulticallABI,
   ) as UniswapInterfaceMulticall
 }
 
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const contract = useContract<NonfungiblePositionManager>(
     NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
     NFTPositionManagerABI,
-    withSignerIfPossible
+    withSignerIfPossible,
   )
   useEffect(() => {
-    if (contract && account) {
+    if (contract && account.isConnected) {
       sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
         source: 'useV3NFTPositionManagerContract',
         contract: {
           name: 'V3NonfungiblePositionManager',
           address: contract.address,
           withSignerIfPossible,
-          chainId,
+          chainId: account.chainId,
         },
       })
     }
-  }, [account, chainId, contract, withSignerIfPossible])
+  }, [account.isConnected, account.chainId, contract, withSignerIfPossible])
   return contract
 }

@@ -2,7 +2,6 @@ import { WatchQueryFetchPolicy } from '@apollo/client'
 import { ActivityEvent } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
-
 import {
   NftActivityFilterInput,
   useNftActivityQuery,
@@ -25,7 +24,7 @@ export function useNftActivity(filter: NftActivityFilterInput, first?: number, f
           after: data?.nftActivity?.pageInfo?.endCursor,
         },
       }),
-    [data, fetchMore]
+    [data, fetchMore],
   )
 
   const nftActivity: ActivityEvent[] | undefined = useMemo(
@@ -66,11 +65,11 @@ export function useNftActivity(filter: NftActivityFilterInput, first?: number, f
           eventTimestamp: activity.timestamp * 1000,
         }
       }),
-    [data]
+    [data],
   )
 
   return useMemo(
     () => ({ nftActivity, hasNext, loadMore, loading, error }),
-    [hasNext, loadMore, loading, nftActivity, error]
+    [hasNext, loadMore, loading, nftActivity, error],
   )
 }

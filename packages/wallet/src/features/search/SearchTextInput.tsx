@@ -8,6 +8,7 @@ import {
   Platform,
   TextInputFocusEventData,
 } from 'react-native'
+import { NativeViewGestureHandler } from 'react-native-gesture-handler'
 import {
   AnimatePresence,
   Button,
@@ -19,13 +20,13 @@ import {
   TouchableArea,
   isWeb,
   useComposedRefs,
-  useDeviceDimensions,
 } from 'ui/src'
 import { RotatableChevron, Search, X } from 'ui/src/components/icons'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 
 const DEFAULT_MIN_HEIGHT = 48
 
@@ -81,9 +82,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
     const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
-    const [showClearButton, setShowClearButton] = useState(
-      value && value.length > 0 && !disableClearable
-    )
+    const [showClearButton, setShowClearButton] = useState(value && value.length > 0 && !disableClearable)
 
     const onPressCancel = (): void => {
       inputRef.current?.clear()
@@ -119,7 +118,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         onChangeText?.(text)
         setShowClearButton(text.length > 0 && !disableClearable)
       },
-      [disableClearable, onChangeText]
+      [disableClearable, onChangeText],
     )
 
     return (
@@ -147,7 +146,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             '$theme-dark': {
               shadowColor: '$sporeBlack',
             },
-          })}>
+          })}
+        >
           {!hideIcon && (
             <Flex py="$spacing4">
               <Search color="$neutral2" size="$icon.20" />
@@ -155,43 +155,45 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           )}
 
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
-            <Input
-              ref={combinedRef}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={autoFocus}
-              backgroundColor="$transparent"
-              borderWidth={0}
-              fontFamily="$body"
-              height="100%"
-              maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
-              outlineColor="transparent"
-              outlineWidth={0}
-              p="$none"
-              placeholder={placeholder}
-              placeholderTextColor="$neutral3"
-              position="absolute"
-              returnKeyType="done"
-              textContentType="none"
-              top={0}
-              // fix horizontal text wobble on iOS
-              {...(Platform.OS === 'ios' && {
-                width: '100%',
-              })}
-              // avoid turning into a controlled input if not wanting to
-              {...(typeof value !== 'undefined' && {
-                value,
-              })}
-              // fix Android TextInput issue when the width is changed
-              // (the placeholder text was wrapping in 2 lines when the width was changed)
-              {...(Platform.OS === 'android' && {
-                width: value ? undefined : 9999,
-              })}
-              width="100%"
-              onChangeText={onChangeTextInput}
-              onFocus={onTextInputFocus}
-              onSubmitEditing={onTextInputSubmitEditing}
-            />
+            <NativeViewGestureHandler>
+              <Input
+                ref={combinedRef}
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoFocus={autoFocus}
+                backgroundColor="$transparent"
+                borderWidth={0}
+                fontFamily="$body"
+                height="100%"
+                maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+                outlineColor="transparent"
+                outlineWidth={0}
+                p="$none"
+                placeholder={placeholder}
+                placeholderTextColor="$neutral3"
+                position="absolute"
+                returnKeyType="done"
+                textContentType="none"
+                top={0}
+                // fix horizontal text wobble on iOS
+                {...(Platform.OS === 'ios' && {
+                  width: '100%',
+                })}
+                // avoid turning into a controlled input if not wanting to
+                {...(typeof value !== 'undefined' && {
+                  value,
+                })}
+                // fix Android TextInput issue when the width is changed
+                // (the placeholder text was wrapping in 2 lines when the width was changed)
+                {...(Platform.OS === 'android' && {
+                  width: value ? undefined : 9999,
+                })}
+                width="100%"
+                onChangeText={onChangeTextInput}
+                onFocus={onTextInputFocus}
+                onSubmitEditing={onTextInputSubmitEditing}
+              />
+            </NativeViewGestureHandler>
           </Flex>
 
           <AnimatePresence>
@@ -213,7 +215,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               <Flex
                 animation="quick"
                 opacity={isFocus && showClearButton ? 0 : 1}
-                scale={isFocus && showClearButton ? 0 : 1}>
+                scale={isFocus && showClearButton ? 0 : 1}
+              >
                 {endAdornment}
               </Flex>
             ) : null}
@@ -250,7 +253,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             right={0}
             scale={isFocus ? 1 : 0}
             x={isFocus ? 0 : dimensions.fullWidth}
-            onLayout={onCancelButtonLayout}>
+            onLayout={onCancelButtonLayout}
+          >
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
               <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
             </TouchableArea>
@@ -258,5 +262,5 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         )}
       </Flex>
     )
-  }
+  },
 )

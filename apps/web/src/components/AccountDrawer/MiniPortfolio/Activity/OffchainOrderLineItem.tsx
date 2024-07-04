@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
 import TradePrice from 'components/swap/TradePrice'
 import { Trans } from 'i18n'
@@ -6,8 +7,6 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink } from 'theme/components'
 import { ellipseMiddle } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { formatTimestamp } from '../formatTimestamp'
 
 export enum OffchainOrderLineItemType {
   EXCHANGE_RATE = 'EXCHANGE_RATE',
@@ -50,7 +49,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
                 details.amounts?.inputAmount.currency,
                 details.amounts?.outputAmount.currency,
                 details.amounts?.inputAmount.quotient,
-                details.amounts?.outputAmount.quotient
+                details.amounts?.outputAmount.quotient,
               )
             }
           />

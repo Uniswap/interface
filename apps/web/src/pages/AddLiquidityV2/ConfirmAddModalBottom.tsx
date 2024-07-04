@@ -1,12 +1,11 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import { ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { RowBetween, RowFixed } from 'components/Row'
 import { Trans } from 'i18n'
 import { Text } from 'rebass'
+import { Field } from 'state/mint/actions'
 import { ThemedText } from 'theme/components'
-
-import { ButtonPrimary } from '../../components/Button'
-import CurrencyLogo from '../../components/Logo/CurrencyLogo'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { Field } from '../../state/mint/actions'
 
 export function ConfirmAddModalBottom({
   noLiquidity,

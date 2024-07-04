@@ -1,5 +1,6 @@
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TransactionModalContextProvider } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import {
   TransactionModalFooterContainerProps,
@@ -19,7 +20,8 @@ export function TransactionModal({
         bottomSheetViewStyles={{}}
         openWalletRestoreModal={openWalletRestoreModal}
         walletNeedsRestore={walletNeedsRestore}
-        onClose={onClose}>
+        onClose={onClose}
+      >
         {children}
       </TransactionModalContextProvider>
     </Flex>
@@ -33,9 +35,7 @@ export function TransactionModalInnerContainer({
   return <Flex fill={fullscreen}>{children}</Flex>
 }
 
-export function TransactionModalFooterContainer({
-  children,
-}: TransactionModalFooterContainerProps): JSX.Element {
+export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
   return (
     <AnimatedFlex entering={FadeIn} position="relative" pt="$spacing24">
       {children}

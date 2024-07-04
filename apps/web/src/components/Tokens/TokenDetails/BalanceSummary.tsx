@@ -1,8 +1,9 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -11,9 +12,8 @@ import {
   Chain,
   PortfolioTokenBalancePartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 
 const BalancesCard = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -45,22 +45,35 @@ const BalanceItem = styled.div`
   align-items: center;
 `
 
-const BalanceAmountsContainer = styled.div`
+const BalanceAmountsContainer = styled.div<{ $alignLeft: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   margin-left: 12px;
+  ${({ $alignLeft }) =>
+    $alignLeft &&
+    `
+    justify-content: start;
+    gap: 8px;
+  `}
 `
 
 interface BalanceProps {
   currency?: Currency
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   gqlBalance?: PortfolioTokenBalancePartsFragment
+  alignLeft?: boolean
   onClick?: () => void
 }
-const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: BalanceProps) => {
+const Balance = ({
+  currency,
+  chainId = UniverseChainId.Mainnet,
+  gqlBalance,
+  alignLeft = false,
+  onClick,
+}: BalanceProps) => {
   const { formatNumber } = useFormatter()
   const currencies = useMemo(() => [currency], [currency])
 
@@ -81,7 +94,7 @@ const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: B
         images={[gqlBalance?.tokenProjectMarket?.tokenProject.logoUrl]}
         size={32}
       />
-      <BalanceAmountsContainer>
+      <BalanceAmountsContainer $alignLeft={alignLeft}>
         <BalanceItem>
           <ThemedText.BodyPrimary>{formattedUsdGqlValue}</ThemedText.BodyPrimary>
         </BalanceItem>
@@ -93,7 +106,13 @@ const Balance = ({ currency, chainId = ChainId.MAINNET, gqlBalance, onClick }: B
   )
 }
 
-const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: PortfolioTokenBalancePartsFragment }) => {
+export const PageChainBalanceSummary = ({
+  pageChainBalance,
+  alignLeft = false,
+}: {
+  pageChainBalance?: PortfolioTokenBalancePartsFragment
+  alignLeft?: boolean
+}) => {
   if (!pageChainBalance || !pageChainBalance.token) {
     return null
   }
@@ -103,7 +122,7 @@ const PageChainBalanceSummary = ({ pageChainBalance }: { pageChainBalance?: Port
       <ThemedText.HeadlineSmall color="neutral1">
         <Trans i18nKey="tdp.balanceSummary.title" />
       </ThemedText.HeadlineSmall>
-      <Balance currency={currency} chainId={currency?.chainId} gqlBalance={pageChainBalance} />
+      <Balance currency={currency} chainId={currency?.chainId} gqlBalance={pageChainBalance} alignLeft={alignLeft} />
     </BalanceSection>
   )
 }
@@ -133,7 +152,7 @@ const OtherChainsBalanceSummary = ({
       )}
       {otherChainBalances.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
-        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? ChainId.MAINNET
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? UniverseChainId.Mainnet
         return (
           <Balance
             key={balance.id}
@@ -145,7 +164,7 @@ const OtherChainsBalanceSummary = ({
                 getTokenDetailsURL({
                   address: balance.token?.address,
                   chain: balance.token?.chain ?? Chain.Ethereum,
-                })
+                }),
               )
             }
           />
@@ -156,7 +175,7 @@ const OtherChainsBalanceSummary = ({
 }
 
 export default function BalanceSummary() {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const { currencyChain, multiChainMap } = useTDPContext()
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
@@ -168,7 +187,7 @@ export default function BalanceSummary() {
   }
   const hasBalances = pageChainBalance || Boolean(otherChainBalances.length)
 
-  if (!account || !hasBalances) {
+  if (!account.isConnected || !hasBalances) {
     return null
   }
   return (

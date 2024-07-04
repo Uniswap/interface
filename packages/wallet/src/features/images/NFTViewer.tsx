@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { Flex, Text } from 'ui/src'
-import { isGifUri, isSVGUri, uriToHttp } from 'utilities/src/format/urls'
+import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
+import { ImageUri, ImageUriProps } from 'wallet/src/features/images/ImageUri'
 import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
-import { ImageUri, ImageUriProps } from './ImageUri'
 
 type PreviewProps =
   // Don't show preview if showSvgPreview is not provided or is false
@@ -45,22 +45,17 @@ export function NFTViewer(props: Props): JSX.Element {
     imageDimensions,
   } = props
   const { t } = useTranslation()
-  const imageHttpUri = uri ? uriToHttp(uri)[0] : undefined
+  const imageHttpUri = uri ? uriToHttpUrls(uri)[0] : undefined
 
   const fallback = useMemo(
     () => (
-      <Flex
-        centered
-        aspectRatio={1}
-        backgroundColor="$surface2"
-        maxHeight={maxHeight ?? '100%'}
-        width="100%">
+      <Flex centered aspectRatio={1} backgroundColor="$surface2" maxHeight={maxHeight ?? '100%'} width="100%">
         <Text color="$neutral2" flex={0} variant="subheading2">
           {placeholderContent || t('tokens.nfts.error.unavailable')}
         </Text>
       </Flex>
     ),
-    [placeholderContent, maxHeight, t]
+    [placeholderContent, maxHeight, t],
   )
 
   if (!imageHttpUri) {
@@ -78,9 +73,7 @@ export function NFTViewer(props: Props): JSX.Element {
   const isGif = isGifUri(imageHttpUri)
 
   const formattedUri =
-    isGif && limitGIFSize
-      ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize)
-      : imageHttpUri
+    isGif && limitGIFSize ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize) : imageHttpUri
 
   const imageProps: ImageUriProps = {
     fallback,
@@ -106,13 +99,7 @@ export function NFTViewer(props: Props): JSX.Element {
   }
 
   if (!props.showSvgPreview) {
-    return (
-      <WebSvgUri
-        autoplay={autoplay}
-        maxHeight={squareGridView ? undefined : maxHeight}
-        uri={imageHttpUri}
-      />
-    )
+    return <WebSvgUri autoplay={autoplay} maxHeight={squareGridView ? undefined : maxHeight} uri={imageHttpUri} />
   }
 
   // Display fallback if preview data is not provided
@@ -120,13 +107,7 @@ export function NFTViewer(props: Props): JSX.Element {
     return fallback
   }
 
-  return (
-    <NFTPreviewImage
-      contractAddress={props.contractAddress}
-      imageProps={imageProps}
-      tokenId={props.tokenId}
-    />
-  )
+  return <NFTPreviewImage contractAddress={props.contractAddress} imageProps={imageProps} tokenId={props.tokenId} />
 }
 
 const style = StyleSheet.create({

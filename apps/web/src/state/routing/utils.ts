@@ -12,9 +12,7 @@ import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BIPS_BASE } from 'constants/misc'
 import { isAvalanche, isBsc, isPolygon, nativeOnChain } from 'constants/tokens'
-import { toSlippagePercent } from 'utils/slippage'
-
-import { getApproveInfo, getWrapInfo } from './gas'
+import { getApproveInfo, getWrapInfo } from 'state/routing/gas'
 import {
   ClassicQuoteData,
   ClassicTrade,
@@ -44,7 +42,9 @@ import {
   V2PoolInRoute,
   V3PoolInRoute,
   isClassicQuoteResponse,
-} from './types'
+} from 'state/routing/types'
+import { logger } from 'utilities/src/logger/logger'
+import { toSlippagePercent } from 'utils/slippage'
 
 interface RouteResult {
   routev3: V3Route<Currency, Currency> | null
@@ -89,7 +89,7 @@ export function computeRoutes(args: GetQuoteArgs, routes: ClassicQuoteData['rout
       }
     })
   } catch (e) {
-    console.error('Error computing routes', e)
+    logger.warn('routing/utils', 'computeRoutes', 'Failed to compute routes', { error: e })
     return
   }
 }
@@ -100,7 +100,7 @@ const parsePoolOrPair = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
 
 function isVersionedRoute<T extends V2PoolInRoute | V3PoolInRoute>(
   type: T['type'],
-  route: (V3PoolInRoute | V2PoolInRoute)[]
+  route: (V3PoolInRoute | V2PoolInRoute)[],
 ): route is T[] {
   return route.every((pool) => pool.type === type)
 }
@@ -148,7 +148,7 @@ function toUnsignedV2DutchOrderInfo(orderInfoJSON: UnsignedV2DutchOrderInfoJSON)
 function getTradeCurrencies(
   args: GetQuoteArgs | GetQuickQuoteArgs,
   isUniswapXTrade: boolean,
-  routes?: ClassicQuoteData['route']
+  routes?: ClassicQuoteData['route'],
 ): [Currency, Currency] {
   const {
     tokenInAddress,
@@ -196,7 +196,7 @@ function getTradeCurrencies(
 }
 
 function getSwapFee(
-  data: ClassicQuoteData | URADutchOrderQuoteData | URADutchOrderV2QuoteData
+  data: ClassicQuoteData | URADutchOrderQuoteData | URADutchOrderV2QuoteData,
 ): SwapFeeInfo | undefined {
   const { portionAmount, portionBips, portionRecipient } = data
 
@@ -213,7 +213,7 @@ function getSwapFee(
 
 function getClassicTradeDetails(
   args: GetQuoteArgs,
-  data: URAQuoteResponse
+  data: URAQuoteResponse,
 ): {
   gasUseEstimate?: number
   gasUseEstimateUSD?: number
@@ -259,7 +259,7 @@ export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: nu
 export async function transformQuoteToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
-  quoteMethod: QuoteMethod
+  quoteMethod: QuoteMethod,
 ): Promise<TradeResult> {
   const { tradeType, needsWrapIfUniswapX, isXv2, routerPreference, account, amount } = args
 
@@ -295,7 +295,7 @@ export async function transformQuoteToTrade(
     mixedRoutes:
       routes
         ?.filter(
-          (r): r is RouteResult & { mixedRoute: NonNullable<RouteResult['mixedRoute']> } => r.mixedRoute !== null
+          (r): r is RouteResult & { mixedRoute: NonNullable<RouteResult['mixedRoute']> } => r.mixedRoute !== null,
         )
         .map(({ mixedRoute, inputAmount, outputAmount }) => ({
           mixedRoute,
@@ -382,14 +382,14 @@ function parsePool({ fee, sqrtRatioX96, liquidity, tickCurrent, tokenIn, tokenOu
     parseInt(fee) as FeeAmount,
     sqrtRatioX96,
     liquidity,
-    parseInt(tickCurrent)
+    parseInt(tickCurrent),
   )
 }
 
 const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
   new Pair(
     CurrencyAmount.fromRawAmount(parseToken(reserve0.token), reserve0.quotient),
-    CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
+    CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient),
   )
 
 // TODO(WEB-2050): Convert other instances of tradeType comparison to use this utility function
@@ -428,13 +428,13 @@ export function isSubmittableTrade(trade?: InterfaceTrade): trade is Submittable
 
 /* Returns true if trade uses UniswapX protocol. Includes both X swaps and limit orders. */
 export function isUniswapXTradeType(
-  tradeType?: TradeFillType
+  tradeType?: TradeFillType,
 ): tradeType is TradeFillType.UniswapX | TradeFillType.UniswapXv2 {
   return tradeType === TradeFillType.UniswapX || tradeType === TradeFillType.UniswapXv2
 }
 
 export function isUniswapXTrade(
-  trade?: InterfaceTrade
+  trade?: InterfaceTrade,
 ): trade is DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade {
   return isUniswapXTradeType(trade?.fillType)
 }

@@ -1,26 +1,14 @@
 import { providers } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import {
-  TransactionRequest,
-  UwuLinkErc20Request,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { TransactionRequest, UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
-import { ChainId } from 'uniswap/src/types/chains'
-import {
-  DappInfo,
-  EthMethod,
-  EthSignMethod,
-  UwULinkMethod,
-  WalletConnectEvent,
-} from 'uniswap/src/types/walletConnect'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { DappInfo, EthMethod, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import {
-  SendTransactionParams,
-  sendTransaction,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
@@ -34,7 +22,7 @@ type SignMessageParams = {
   account: Account
   method: EthSignMethod
   dapp: DappInfo
-  chainId: ChainId
+  chainId: WalletChainId
 }
 
 type SignTransactionParams = {
@@ -44,7 +32,7 @@ type SignTransactionParams = {
   account: Account
   method: EthMethod.EthSendTransaction
   dapp: DappInfo
-  chainId: ChainId
+  chainId: WalletChainId
   request: TransactionRequest | UwuLinkErc20Request
 }
 
@@ -55,14 +43,21 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     let signature = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
       signature = yield* call(signMessage, params.message, account, signerManager)
+
+      // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
+      if (params.dapp.source === 'uwulink' && params.dapp.name === 'Uniswap Cafe') {
+        yield* put(
+          pushNotification({
+            type: AppNotificationType.Success,
+            title: 'Checked in',
+          }),
+        )
+      }
     } else if (method === EthMethod.SignTypedData || method === EthMethod.SignTypedDataV4) {
       signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
-    } else if (
-      method === EthMethod.EthSendTransaction &&
-      params.request.type === UwULinkMethod.Erc20Send
-    ) {
+    } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || ChainId.Mainnet,
+        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
         account,
         options: {
           request: params.transaction,
@@ -79,7 +74,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || ChainId.Mainnet,
+        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
         account,
         options: {
           request: params.transaction,
@@ -91,6 +86,14 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
+
+      // Trigger a pending transaction notification after we send the transaction to chain
+      yield* put(
+        pushNotification({
+          type: AppNotificationType.TransactionPending,
+          chainId: txParams.chainId,
+        }),
+      )
     }
 
     if (params.dapp.source === 'walletconnect') {
@@ -114,7 +117,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       }).catch((error) =>
         logger.error(error, {
           tags: { file: 'walletConnect/saga', function: 'signWcRequest/uwulink' },
-        })
+        }),
       )
     }
   } catch (error) {
@@ -137,7 +140,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
         imageUrl: params.dapp.icon ?? null,
         chainId,
         address: account.address,
-      })
+      }),
     )
     logger.error(error, { tags: { file: 'walletConnect/saga', function: 'signWcRequest' } })
   }
@@ -145,5 +148,5 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
 
 export const { wrappedSaga: signWcRequestSaga, actions: signWcRequestActions } = createSaga(
   signWcRequest,
-  'signWalletConnect'
+  'signWalletConnect',
 )

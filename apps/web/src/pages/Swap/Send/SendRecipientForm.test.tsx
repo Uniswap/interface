@@ -1,10 +1,10 @@
 import { DAI } from 'constants/tokens'
+import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
-import { SendRecipientForm } from './SendRecipientForm'
 
 const mockSwapAndLimitContextValue = {
   currencyState: {
@@ -12,9 +12,11 @@ const mockSwapAndLimitContextValue = {
     outputCurrency: undefined,
   },
   prefilledState: {},
+  setSelectedChainId: jest.fn(),
   setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
+  isSwapAndLimitContext: true,
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -91,7 +93,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextDefault}>
           <SendRecipientForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByPlaceholderText('Wallet address or ENS name')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
@@ -103,7 +105,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextRecipientInput}>
           <SendRecipientForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByDisplayValue('hayden.eth')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
@@ -115,7 +117,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextWithVerifiedRecipientInput}>
           <SendRecipientForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByText('hayden.eth')).toBeVisible()
     expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
@@ -128,7 +130,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextWithUnitag}>
           <SendRecipientForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByText('hayden')).toBeVisible()
     expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()

@@ -1,18 +1,14 @@
 import { useFocusEffect } from '@react-navigation/core'
-import { isWeb } from '@tamagui/constants'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import React, { PropsWithChildren, ReactNode, memo, useEffect, useId, useMemo } from 'react'
+import { isWeb } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { useAnalyticsNavigationContext } from './AnalyticsNavigationContext'
-import { ITraceContext, TraceContext, useTrace } from './TraceContext'
-import { getEventHandlers } from './utils'
+import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
+import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { getEventHandlers } from 'utilities/src/telemetry/trace/utils'
 
-export function getEventsFromProps(
-  logPress?: boolean,
-  logFocus?: boolean,
-  logKeyPress?: boolean
-): string[] {
+export function getEventsFromProps(logPress?: boolean, logFocus?: boolean, logKeyPress?: boolean): string[] {
   const events = []
   if (logPress) {
     events.push(isWeb ? 'onClick' : 'onPress')
@@ -70,8 +66,7 @@ function _Trace({
 }: PropsWithChildren<TraceProps & ITraceContext>): JSX.Element {
   const id = useId()
 
-  const { useIsPartOfNavigationTree, shouldLogScreen: shouldLogScreen } =
-    useAnalyticsNavigationContext()
+  const { useIsPartOfNavigationTree, shouldLogScreen: shouldLogScreen } = useAnalyticsNavigationContext()
   const isPartOfNavigationTree = useIsPartOfNavigationTree()
   const parentTrace = useTrace()
 
@@ -135,8 +130,8 @@ function _Trace({
                 events,
                 eventOnTrigger ?? SharedEventName.ELEMENT_CLICKED,
                 element,
-                properties
-              )
+                properties,
+              ),
             )
           })
         }
@@ -154,16 +149,14 @@ function _Trace({
       combinedProps={combinedProps}
       directFromPage={directFromPage}
       logImpression={logImpression}
-      properties={properties}>
+      properties={properties}
+    >
       <TraceContext.Provider value={combinedProps}>{modifiedChildren}</TraceContext.Provider>
     </NavAwareTrace>
   )
 }
 
-type NavAwareTraceProps = Pick<
-  TraceProps,
-  'logImpression' | 'properties' | 'directFromPage' | 'eventOnTrigger'
->
+type NavAwareTraceProps = Pick<TraceProps, 'logImpression' | 'properties' | 'directFromPage' | 'eventOnTrigger'>
 
 // Internal component to keep track of navigation events
 // Needed since we need to rely on `navigation.useFocusEffect` to track
@@ -186,7 +179,7 @@ function NavAwareTrace({
           analytics.sendEvent(eventOnTrigger ?? SharedEventName.PAGE_VIEWED, eventProps)
         }
       }
-    }, [combinedProps, directFromPage, eventOnTrigger, logImpression, properties, shouldLogScreen])
+    }, [combinedProps, directFromPage, eventOnTrigger, logImpression, properties, shouldLogScreen]),
   )
 
   return <>{children}</>

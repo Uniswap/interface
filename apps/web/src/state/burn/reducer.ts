@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-
-import { Field, typeInput } from './actions'
+import { Field, typeInput } from 'state/burn/actions'
 
 export interface BurnState {
   readonly independentField: Field
@@ -19,5 +18,5 @@ export default createReducer<BurnState>(initialState, (builder) =>
       independentField: field,
       typedValue,
     }
-  })
+  }),
 )

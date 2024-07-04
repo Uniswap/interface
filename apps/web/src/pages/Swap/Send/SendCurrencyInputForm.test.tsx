@@ -2,13 +2,13 @@ jest.mock('hooks/Tokens')
 
 import { DAI } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { DAI_INFO } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen, waitFor } from 'test-utils/render'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import SendCurrencyInputForm from './SendCurrencyInputForm'
 
 const mockSwapAndLimitContextValue = {
   currencyState: {
@@ -16,9 +16,11 @@ const mockSwapAndLimitContextValue = {
     outputCurrency: undefined,
   },
   prefilledState: {},
+  setSelectedChainId: jest.fn(),
   setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
+  isSwapAndLimitContext: true,
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -74,7 +76,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextDefault}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(await screen.getByPlaceholderText('0')).toBeVisible()
     expect(screen.getByText('0 DAI')).toBeVisible()
@@ -88,7 +90,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextFiatInput}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     await waitFor(() => {
       expect(screen.getByDisplayValue('1000')).toBeVisible()
@@ -104,7 +106,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextTokenInput}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     await waitFor(() => {
       expect(screen.getByDisplayValue('1')).toBeVisible()

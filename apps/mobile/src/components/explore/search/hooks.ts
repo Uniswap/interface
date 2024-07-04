@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
-import { getValidAddress } from 'wallet/src/utils/addresses'
 
 // eslint-disable-next-line complexity
 export function useWalletSearchResults(query: string): {
@@ -13,10 +13,7 @@ export function useWalletSearchResults(query: string): {
   exactENSMatch: boolean
   exactUnitagMatch: boolean
 } {
-  const validAddress: Address | undefined = useMemo(
-    () => getValidAddress(query, true, false) ?? undefined,
-    [query]
-  )
+  const validAddress: Address | undefined = useMemo(() => getValidAddress(query, true, false) ?? undefined, [query])
 
   const querySkippedIfValidAddress = validAddress ? null : query
 
@@ -25,25 +22,26 @@ export function useWalletSearchResults(query: string): {
     address: dotEthAddress,
     name: dotEthName,
     loading: dotEthLoading,
-  } = useENS(ChainId.Mainnet, querySkippedIfValidAddress, true)
+  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, true)
 
   // Search for exact match for ENS if not a valid address
   const {
     address: ensAddress,
     name: ensName,
     loading: ensLoading,
-  } = useENS(ChainId.Mainnet, querySkippedIfValidAddress, false)
+  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, false)
 
   // Search for matching Unitag by name
   const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(query)
 
   // Search for matching Unitag by address
-  const { unitag: unitagByAddress, loading: unitagByAddressLoading } =
-    useUnitagByAddress(validAddress)
+  const { unitag: unitagByAddress, loading: unitagByAddressLoading } = useUnitagByAddress(validAddress)
 
   // Search for matching EOA wallet address
-  const { isSmartContractAddress, loading: loadingIsSmartContractAddress } =
-    useIsSmartContractAddress(validAddress, ChainId.Mainnet)
+  const { isSmartContractAddress, loading: loadingIsSmartContractAddress } = useIsSmartContractAddress(
+    validAddress,
+    UniverseChainId.Mainnet,
+  )
 
   const hasENSResult = dotEthName && dotEthAddress
   const hasEOAResult = validAddress && !isSmartContractAddress
@@ -108,11 +106,7 @@ export function useWalletSearchResults(query: string): {
 
   // Ensure loading is returned
   const walletsLoading =
-    dotEthLoading ||
-    ensLoading ||
-    loadingIsSmartContractAddress ||
-    unitagLoading ||
-    unitagByAddressLoading
+    dotEthLoading || ensLoading || loadingIsSmartContractAddress || unitagLoading || unitagByAddressLoading
 
   return {
     loading: walletsLoading,

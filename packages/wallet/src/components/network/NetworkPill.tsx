@@ -1,13 +1,13 @@
 import { ComponentProps } from 'react'
 import { iconSizes } from 'ui/src/theme'
-import { ChainId } from 'uniswap/src/types/chains'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { Pill } from 'wallet/src/components/text/Pill'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { Pill } from 'uniswap/src/components/pill/Pill'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { useNetworkColors } from 'wallet/src/utils/colors'
 
 export type NetworkPillProps = {
-  chainId: ChainId
+  chainId: WalletChainId
   showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
@@ -20,7 +20,7 @@ export function NetworkPill({
   showIcon = false,
   ...rest
 }: NetworkPillProps): JSX.Element {
-  const info = CHAIN_INFO[chainId]
+  const info = UNIVERSE_CHAIN_INFO[chainId]
   const colors = useNetworkColors(chainId)
 
   return (
@@ -36,13 +36,5 @@ export function NetworkPill({
 }
 
 export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
-  return (
-    <NetworkPill
-      borderRadius="$rounded8"
-      px="$spacing4"
-      py="$none"
-      textVariant="buttonLabel4"
-      {...props}
-    />
-  )
+  return <NetworkPill borderRadius="$rounded8" px="$spacing4" py="$none" textVariant="buttonLabel4" {...props} />
 }

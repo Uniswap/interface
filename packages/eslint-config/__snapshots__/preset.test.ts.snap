@@ -20,16 +20,9 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "import",
     "@typescript-eslint",
     "cypress",
-    "prettier",
   ],
   "reportUnusedDisableDirectives": undefined,
   "rules": {
-    "@babel/object-curly-spacing": [
-      "off",
-    ],
-    "@babel/semi": [
-      "off",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -39,40 +32,10 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/ban-types": [
       "error",
     ],
-    "@typescript-eslint/block-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/brace-style": [
-      "off",
-    ],
-    "@typescript-eslint/comma-dangle": [
-      "off",
-    ],
-    "@typescript-eslint/comma-spacing": [
-      "off",
-    ],
     "@typescript-eslint/explicit-function-return-type": [
       "off",
     ],
     "@typescript-eslint/explicit-module-boundary-types": [
-      "off",
-    ],
-    "@typescript-eslint/func-call-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/indent": [
-      "off",
-    ],
-    "@typescript-eslint/key-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/keyword-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/lines-around-comment": [
-      0,
-    ],
-    "@typescript-eslint/member-delimiter-style": [
       "off",
     ],
     "@typescript-eslint/no-array-constructor": [
@@ -86,12 +49,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     ],
     "@typescript-eslint/no-extra-non-null-assertion": [
       "error",
-    ],
-    "@typescript-eslint/no-extra-parens": [
-      "off",
-    ],
-    "@typescript-eslint/no-extra-semi": [
-      "off",
     ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
@@ -120,83 +77,17 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/no-var-requires": [
       "error",
     ],
-    "@typescript-eslint/object-curly-spacing": [
-      "off",
-    ],
     "@typescript-eslint/prefer-as-const": [
       "error",
     ],
-    "@typescript-eslint/quotes": [
-      0,
-    ],
-    "@typescript-eslint/semi": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-blocks": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-function-paren": [
-      "off",
-    ],
-    "@typescript-eslint/space-infix-ops": [
-      "off",
-    ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "@typescript-eslint/type-annotation-spacing": [
-      "off",
-    ],
-    "array-bracket-newline": [
-      "off",
-    ],
-    "array-bracket-spacing": [
-      "off",
-    ],
-    "array-element-newline": [
-      "off",
-    ],
-    "arrow-body-style": [
-      "off",
-    ],
-    "arrow-parens": [
-      "off",
-    ],
-    "arrow-spacing": [
-      "off",
-    ],
-    "babel/object-curly-spacing": [
-      "off",
-    ],
-    "babel/quotes": [
-      0,
-    ],
-    "babel/semi": [
-      "off",
-    ],
-    "block-spacing": [
-      "off",
-    ],
-    "brace-style": [
-      "off",
-    ],
-    "comma-dangle": [
-      "off",
-    ],
-    "comma-spacing": [
-      "off",
-    ],
-    "comma-style": [
-      "off",
-    ],
-    "computed-property-spacing": [
-      "off",
     ],
     "constructor-super": [
       "off",
     ],
     "curly": [
-      0,
+      "error",
     ],
     "cypress/no-assigning-return-values": [
       "error",
@@ -210,67 +101,10 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "cypress/unsafe-to-chain-command": [
       "error",
     ],
-    "dot-location": [
-      "off",
-    ],
-    "eol-last": [
-      "off",
-    ],
-    "flowtype/boolean-style": [
-      "off",
-    ],
-    "flowtype/delimiter-dangle": [
-      "off",
-    ],
-    "flowtype/generic-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-curly-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-delimiter": [
-      "off",
-    ],
-    "flowtype/quotes": [
-      "off",
-    ],
-    "flowtype/semi": [
-      "off",
-    ],
-    "flowtype/space-after-type-colon": [
-      "off",
-    ],
-    "flowtype/space-before-generic-bracket": [
-      "off",
-    ],
-    "flowtype/space-before-type-colon": [
-      "off",
-    ],
-    "flowtype/union-intersection-spacing": [
-      "off",
-    ],
     "for-direction": [
       "error",
     ],
-    "func-call-spacing": [
-      "off",
-    ],
-    "function-call-argument-newline": [
-      "off",
-    ],
-    "function-paren-newline": [
-      "off",
-    ],
-    "generator-star": [
-      "off",
-    ],
-    "generator-star-spacing": [
-      "off",
-    ],
     "getter-return": [
-      "off",
-    ],
-    "implicit-arrow-linebreak": [
       "off",
     ],
     "import/named": [
@@ -282,46 +116,7 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
         "unusedExports": true,
       },
     ],
-    "indent": [
-      "off",
-    ],
-    "indent-legacy": [
-      "off",
-    ],
-    "jsx-quotes": [
-      "off",
-    ],
-    "key-spacing": [
-      "off",
-    ],
-    "keyword-spacing": [
-      "off",
-    ],
-    "linebreak-style": [
-      "off",
-    ],
-    "lines-around-comment": [
-      0,
-    ],
-    "max-len": [
-      0,
-    ],
-    "max-statements-per-line": [
-      "off",
-    ],
-    "multiline-ternary": [
-      "off",
-    ],
-    "new-parens": [
-      "off",
-    ],
-    "newline-per-chained-call": [
-      "off",
-    ],
     "no-array-constructor": [
-      "off",
-    ],
-    "no-arrow-condition": [
       "off",
     ],
     "no-async-promise-executor": [
@@ -333,17 +128,14 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-class-assign": [
       "error",
     ],
-    "no-comma-dangle": [
-      "off",
-    ],
     "no-compare-neg-zero": [
       "error",
     ],
     "no-cond-assign": [
       "error",
     ],
-    "no-confusing-arrow": [
-      0,
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",
@@ -390,17 +182,11 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-extra-boolean-cast": [
       "error",
     ],
-    "no-extra-parens": [
-      "off",
-    ],
     "no-extra-semi": [
-      "off",
+      "error",
     ],
     "no-fallthrough": [
       "error",
-    ],
-    "no-floating-decimal": [
-      "off",
     ],
     "no-func-assign": [
       "off",
@@ -426,17 +212,8 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-misleading-character-class": [
       "error",
     ],
-    "no-mixed-operators": [
-      0,
-    ],
     "no-mixed-spaces-and-tabs": [
-      "off",
-    ],
-    "no-multi-spaces": [
-      "off",
-    ],
-    "no-multiple-empty-lines": [
-      "off",
+      "error",
     ],
     "no-new-symbol": [
       "off",
@@ -459,9 +236,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-regex-spaces": [
       "error",
     ],
-    "no-reserved-keys": [
-      "off",
-    ],
     "no-self-assign": [
       "error",
     ],
@@ -471,29 +245,17 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-shadow-restricted-names": [
       "error",
     ],
-    "no-space-before-semi": [
-      "off",
-    ],
-    "no-spaced-func": [
-      "off",
-    ],
     "no-sparse-arrays": [
       "error",
     ],
-    "no-tabs": [
-      0,
-    ],
     "no-this-before-super": [
-      "off",
-    ],
-    "no-trailing-spaces": [
       "off",
     ],
     "no-undef": [
       "off",
     ],
     "no-unexpected-multiline": [
-      0,
+      "error",
     ],
     "no-unreachable": [
       "off",
@@ -525,42 +287,12 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "no-var": [
       "error",
     ],
-    "no-whitespace-before-property": [
-      "off",
-    ],
     "no-with": [
       "error",
-    ],
-    "no-wrap-func": [
-      "off",
-    ],
-    "nonblock-statement-body-position": [
-      "off",
-    ],
-    "object-curly-newline": [
-      "off",
-    ],
-    "object-curly-spacing": [
-      "off",
-    ],
-    "object-property-newline": [
-      "off",
     ],
     "object-shorthand": [
       "error",
       "always",
-    ],
-    "one-var-declaration-per-line": [
-      "off",
-    ],
-    "operator-linebreak": [
-      "off",
-    ],
-    "padded-blocks": [
-      "off",
-    ],
-    "prefer-arrow-callback": [
-      "off",
     ],
     "prefer-const": [
       "error",
@@ -571,148 +303,8 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "prefer-spread": [
       "error",
     ],
-    "prettier/prettier": [
-      "error",
-      {
-        "printWidth": 120,
-        "semi": false,
-        "singleQuote": true,
-      },
-    ],
-    "quote-props": [
-      "off",
-    ],
-    "quotes": [
-      0,
-    ],
-    "react/jsx-child-element-spacing": [
-      "off",
-    ],
-    "react/jsx-closing-bracket-location": [
-      "off",
-    ],
-    "react/jsx-closing-tag-location": [
-      "off",
-    ],
-    "react/jsx-curly-newline": [
-      "off",
-    ],
-    "react/jsx-curly-spacing": [
-      "off",
-    ],
-    "react/jsx-equals-spacing": [
-      "off",
-    ],
-    "react/jsx-first-prop-new-line": [
-      "off",
-    ],
-    "react/jsx-indent": [
-      "off",
-    ],
-    "react/jsx-indent-props": [
-      "off",
-    ],
-    "react/jsx-max-props-per-line": [
-      "off",
-    ],
-    "react/jsx-newline": [
-      "off",
-    ],
-    "react/jsx-one-expression-per-line": [
-      "off",
-    ],
-    "react/jsx-props-no-multi-spaces": [
-      "off",
-    ],
-    "react/jsx-space-before-closing": [
-      "off",
-    ],
-    "react/jsx-tag-spacing": [
-      "off",
-    ],
-    "react/jsx-wrap-multilines": [
-      "off",
-    ],
     "require-yield": [
       "error",
-    ],
-    "rest-spread-spacing": [
-      "off",
-    ],
-    "semi": [
-      "off",
-    ],
-    "semi-spacing": [
-      "off",
-    ],
-    "semi-style": [
-      "off",
-    ],
-    "space-after-function-name": [
-      "off",
-    ],
-    "space-after-keywords": [
-      "off",
-    ],
-    "space-before-blocks": [
-      "off",
-    ],
-    "space-before-function-paren": [
-      "off",
-    ],
-    "space-before-function-parentheses": [
-      "off",
-    ],
-    "space-before-keywords": [
-      "off",
-    ],
-    "space-in-brackets": [
-      "off",
-    ],
-    "space-in-parens": [
-      "off",
-    ],
-    "space-infix-ops": [
-      "off",
-    ],
-    "space-return-throw-case": [
-      "off",
-    ],
-    "space-unary-ops": [
-      "off",
-    ],
-    "space-unary-word-ops": [
-      "off",
-    ],
-    "standard/array-bracket-even-spacing": [
-      "off",
-    ],
-    "standard/computed-property-even-spacing": [
-      "off",
-    ],
-    "standard/object-curly-even-spacing": [
-      "off",
-    ],
-    "switch-colon-spacing": [
-      "off",
-    ],
-    "template-curly-spacing": [
-      "off",
-    ],
-    "template-tag-spacing": [
-      "off",
-    ],
-    "unicode-bom": [
-      "off",
-    ],
-    "unicorn/empty-brace-spaces": [
-      "off",
-    ],
-    "unicorn/no-nested-ternary": [
-      "off",
-    ],
-    "unicorn/number-literal-case": [
-      "off",
     ],
     "unused-imports/no-unused-imports": [
       "error",
@@ -722,132 +314,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     ],
     "valid-typeof": [
       "error",
-    ],
-    "vue/array-bracket-newline": [
-      "off",
-    ],
-    "vue/array-bracket-spacing": [
-      "off",
-    ],
-    "vue/array-element-newline": [
-      "off",
-    ],
-    "vue/arrow-spacing": [
-      "off",
-    ],
-    "vue/block-spacing": [
-      "off",
-    ],
-    "vue/block-tag-newline": [
-      "off",
-    ],
-    "vue/brace-style": [
-      "off",
-    ],
-    "vue/comma-dangle": [
-      "off",
-    ],
-    "vue/comma-spacing": [
-      "off",
-    ],
-    "vue/comma-style": [
-      "off",
-    ],
-    "vue/dot-location": [
-      "off",
-    ],
-    "vue/func-call-spacing": [
-      "off",
-    ],
-    "vue/html-closing-bracket-newline": [
-      "off",
-    ],
-    "vue/html-closing-bracket-spacing": [
-      "off",
-    ],
-    "vue/html-end-tags": [
-      "off",
-    ],
-    "vue/html-indent": [
-      "off",
-    ],
-    "vue/html-quotes": [
-      "off",
-    ],
-    "vue/html-self-closing": [
-      0,
-    ],
-    "vue/key-spacing": [
-      "off",
-    ],
-    "vue/keyword-spacing": [
-      "off",
-    ],
-    "vue/max-attributes-per-line": [
-      "off",
-    ],
-    "vue/max-len": [
-      0,
-    ],
-    "vue/multiline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/multiline-ternary": [
-      "off",
-    ],
-    "vue/mustache-interpolation-spacing": [
-      "off",
-    ],
-    "vue/no-extra-parens": [
-      "off",
-    ],
-    "vue/no-multi-spaces": [
-      "off",
-    ],
-    "vue/no-spaces-around-equal-signs-in-attribute": [
-      "off",
-    ],
-    "vue/object-curly-newline": [
-      "off",
-    ],
-    "vue/object-curly-spacing": [
-      "off",
-    ],
-    "vue/object-property-newline": [
-      "off",
-    ],
-    "vue/operator-linebreak": [
-      "off",
-    ],
-    "vue/quote-props": [
-      "off",
-    ],
-    "vue/script-indent": [
-      "off",
-    ],
-    "vue/singleline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/space-in-parens": [
-      "off",
-    ],
-    "vue/space-infix-ops": [
-      "off",
-    ],
-    "vue/space-unary-ops": [
-      "off",
-    ],
-    "vue/template-curly-spacing": [
-      "off",
-    ],
-    "wrap-iife": [
-      "off",
-    ],
-    "wrap-regex": [
-      "off",
-    ],
-    "yield-star-spacing": [
-      "off",
     ],
   },
   "settings": {
@@ -905,16 +371,9 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "import",
     "@typescript-eslint",
     "jest",
-    "prettier",
   ],
   "reportUnusedDisableDirectives": undefined,
   "rules": {
-    "@babel/object-curly-spacing": [
-      "off",
-    ],
-    "@babel/semi": [
-      "off",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -924,40 +383,10 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@typescript-eslint/ban-types": [
       "error",
     ],
-    "@typescript-eslint/block-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/brace-style": [
-      "off",
-    ],
-    "@typescript-eslint/comma-dangle": [
-      "off",
-    ],
-    "@typescript-eslint/comma-spacing": [
-      "off",
-    ],
     "@typescript-eslint/explicit-function-return-type": [
       "off",
     ],
     "@typescript-eslint/explicit-module-boundary-types": [
-      "off",
-    ],
-    "@typescript-eslint/func-call-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/indent": [
-      "off",
-    ],
-    "@typescript-eslint/key-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/keyword-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/lines-around-comment": [
-      0,
-    ],
-    "@typescript-eslint/member-delimiter-style": [
       "off",
     ],
     "@typescript-eslint/no-array-constructor": [
@@ -971,12 +400,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "@typescript-eslint/no-extra-non-null-assertion": [
       "error",
-    ],
-    "@typescript-eslint/no-extra-parens": [
-      "off",
-    ],
-    "@typescript-eslint/no-extra-semi": [
-      "off",
     ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
@@ -1005,145 +428,22 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@typescript-eslint/no-var-requires": [
       "error",
     ],
-    "@typescript-eslint/object-curly-spacing": [
-      "off",
-    ],
     "@typescript-eslint/prefer-as-const": [
       "error",
     ],
-    "@typescript-eslint/quotes": [
-      0,
-    ],
-    "@typescript-eslint/semi": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-blocks": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-function-paren": [
-      "off",
-    ],
-    "@typescript-eslint/space-infix-ops": [
-      "off",
-    ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "@typescript-eslint/type-annotation-spacing": [
-      "off",
-    ],
-    "array-bracket-newline": [
-      "off",
-    ],
-    "array-bracket-spacing": [
-      "off",
-    ],
-    "array-element-newline": [
-      "off",
-    ],
-    "arrow-body-style": [
-      "off",
-    ],
-    "arrow-parens": [
-      "off",
-    ],
-    "arrow-spacing": [
-      "off",
-    ],
-    "babel/object-curly-spacing": [
-      "off",
-    ],
-    "babel/quotes": [
-      0,
-    ],
-    "babel/semi": [
-      "off",
-    ],
-    "block-spacing": [
-      "off",
-    ],
-    "brace-style": [
-      "off",
-    ],
-    "comma-dangle": [
-      "off",
-    ],
-    "comma-spacing": [
-      "off",
-    ],
-    "comma-style": [
-      "off",
-    ],
-    "computed-property-spacing": [
-      "off",
     ],
     "constructor-super": [
       "off",
     ],
     "curly": [
-      0,
-    ],
-    "dot-location": [
-      "off",
-    ],
-    "eol-last": [
-      "off",
-    ],
-    "flowtype/boolean-style": [
-      "off",
-    ],
-    "flowtype/delimiter-dangle": [
-      "off",
-    ],
-    "flowtype/generic-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-curly-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-delimiter": [
-      "off",
-    ],
-    "flowtype/quotes": [
-      "off",
-    ],
-    "flowtype/semi": [
-      "off",
-    ],
-    "flowtype/space-after-type-colon": [
-      "off",
-    ],
-    "flowtype/space-before-generic-bracket": [
-      "off",
-    ],
-    "flowtype/space-before-type-colon": [
-      "off",
-    ],
-    "flowtype/union-intersection-spacing": [
-      "off",
+      "error",
     ],
     "for-direction": [
       "error",
     ],
-    "func-call-spacing": [
-      "off",
-    ],
-    "function-call-argument-newline": [
-      "off",
-    ],
-    "function-paren-newline": [
-      "off",
-    ],
-    "generator-star": [
-      "off",
-    ],
-    "generator-star-spacing": [
-      "off",
-    ],
     "getter-return": [
-      "off",
-    ],
-    "implicit-arrow-linebreak": [
       "off",
     ],
     "import/named": [
@@ -1154,12 +454,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
       {
         "unusedExports": true,
       },
-    ],
-    "indent": [
-      "off",
-    ],
-    "indent-legacy": [
-      "off",
     ],
     "jest/expect-expect": [
       "warn",
@@ -1218,40 +512,7 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "jest/valid-title": [
       "error",
     ],
-    "jsx-quotes": [
-      "off",
-    ],
-    "key-spacing": [
-      "off",
-    ],
-    "keyword-spacing": [
-      "off",
-    ],
-    "linebreak-style": [
-      "off",
-    ],
-    "lines-around-comment": [
-      0,
-    ],
-    "max-len": [
-      0,
-    ],
-    "max-statements-per-line": [
-      "off",
-    ],
-    "multiline-ternary": [
-      "off",
-    ],
-    "new-parens": [
-      "off",
-    ],
-    "newline-per-chained-call": [
-      "off",
-    ],
     "no-array-constructor": [
-      "off",
-    ],
-    "no-arrow-condition": [
       "off",
     ],
     "no-async-promise-executor": [
@@ -1263,17 +524,11 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-class-assign": [
       "error",
     ],
-    "no-comma-dangle": [
-      "off",
-    ],
     "no-compare-neg-zero": [
       "error",
     ],
     "no-cond-assign": [
       "error",
-    ],
-    "no-confusing-arrow": [
-      0,
     ],
     "no-const-assign": [
       "off",
@@ -1320,17 +575,11 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-extra-boolean-cast": [
       "error",
     ],
-    "no-extra-parens": [
-      "off",
-    ],
     "no-extra-semi": [
-      "off",
+      "error",
     ],
     "no-fallthrough": [
       "error",
-    ],
-    "no-floating-decimal": [
-      "off",
     ],
     "no-func-assign": [
       "off",
@@ -1356,17 +605,8 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-misleading-character-class": [
       "error",
     ],
-    "no-mixed-operators": [
-      0,
-    ],
     "no-mixed-spaces-and-tabs": [
-      "off",
-    ],
-    "no-multi-spaces": [
-      "off",
-    ],
-    "no-multiple-empty-lines": [
-      "off",
+      "error",
     ],
     "no-new-symbol": [
       "off",
@@ -1389,9 +629,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-regex-spaces": [
       "error",
     ],
-    "no-reserved-keys": [
-      "off",
-    ],
     "no-self-assign": [
       "error",
     ],
@@ -1401,29 +638,17 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-shadow-restricted-names": [
       "error",
     ],
-    "no-space-before-semi": [
-      "off",
-    ],
-    "no-spaced-func": [
-      "off",
-    ],
     "no-sparse-arrays": [
       "error",
     ],
-    "no-tabs": [
-      0,
-    ],
     "no-this-before-super": [
-      "off",
-    ],
-    "no-trailing-spaces": [
       "off",
     ],
     "no-undef": [
       "off",
     ],
     "no-unexpected-multiline": [
-      0,
+      "error",
     ],
     "no-unreachable": [
       "off",
@@ -1455,42 +680,12 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-var": [
       "error",
     ],
-    "no-whitespace-before-property": [
-      "off",
-    ],
     "no-with": [
       "error",
-    ],
-    "no-wrap-func": [
-      "off",
-    ],
-    "nonblock-statement-body-position": [
-      "off",
-    ],
-    "object-curly-newline": [
-      "off",
-    ],
-    "object-curly-spacing": [
-      "off",
-    ],
-    "object-property-newline": [
-      "off",
     ],
     "object-shorthand": [
       "error",
       "always",
-    ],
-    "one-var-declaration-per-line": [
-      "off",
-    ],
-    "operator-linebreak": [
-      "off",
-    ],
-    "padded-blocks": [
-      "off",
-    ],
-    "prefer-arrow-callback": [
-      "off",
     ],
     "prefer-const": [
       "error",
@@ -1501,148 +696,8 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "prefer-spread": [
       "error",
     ],
-    "prettier/prettier": [
-      "error",
-      {
-        "printWidth": 120,
-        "semi": false,
-        "singleQuote": true,
-      },
-    ],
-    "quote-props": [
-      "off",
-    ],
-    "quotes": [
-      0,
-    ],
-    "react/jsx-child-element-spacing": [
-      "off",
-    ],
-    "react/jsx-closing-bracket-location": [
-      "off",
-    ],
-    "react/jsx-closing-tag-location": [
-      "off",
-    ],
-    "react/jsx-curly-newline": [
-      "off",
-    ],
-    "react/jsx-curly-spacing": [
-      "off",
-    ],
-    "react/jsx-equals-spacing": [
-      "off",
-    ],
-    "react/jsx-first-prop-new-line": [
-      "off",
-    ],
-    "react/jsx-indent": [
-      "off",
-    ],
-    "react/jsx-indent-props": [
-      "off",
-    ],
-    "react/jsx-max-props-per-line": [
-      "off",
-    ],
-    "react/jsx-newline": [
-      "off",
-    ],
-    "react/jsx-one-expression-per-line": [
-      "off",
-    ],
-    "react/jsx-props-no-multi-spaces": [
-      "off",
-    ],
-    "react/jsx-space-before-closing": [
-      "off",
-    ],
-    "react/jsx-tag-spacing": [
-      "off",
-    ],
-    "react/jsx-wrap-multilines": [
-      "off",
-    ],
     "require-yield": [
       "error",
-    ],
-    "rest-spread-spacing": [
-      "off",
-    ],
-    "semi": [
-      "off",
-    ],
-    "semi-spacing": [
-      "off",
-    ],
-    "semi-style": [
-      "off",
-    ],
-    "space-after-function-name": [
-      "off",
-    ],
-    "space-after-keywords": [
-      "off",
-    ],
-    "space-before-blocks": [
-      "off",
-    ],
-    "space-before-function-paren": [
-      "off",
-    ],
-    "space-before-function-parentheses": [
-      "off",
-    ],
-    "space-before-keywords": [
-      "off",
-    ],
-    "space-in-brackets": [
-      "off",
-    ],
-    "space-in-parens": [
-      "off",
-    ],
-    "space-infix-ops": [
-      "off",
-    ],
-    "space-return-throw-case": [
-      "off",
-    ],
-    "space-unary-ops": [
-      "off",
-    ],
-    "space-unary-word-ops": [
-      "off",
-    ],
-    "standard/array-bracket-even-spacing": [
-      "off",
-    ],
-    "standard/computed-property-even-spacing": [
-      "off",
-    ],
-    "standard/object-curly-even-spacing": [
-      "off",
-    ],
-    "switch-colon-spacing": [
-      "off",
-    ],
-    "template-curly-spacing": [
-      "off",
-    ],
-    "template-tag-spacing": [
-      "off",
-    ],
-    "unicode-bom": [
-      "off",
-    ],
-    "unicorn/empty-brace-spaces": [
-      "off",
-    ],
-    "unicorn/no-nested-ternary": [
-      "off",
-    ],
-    "unicorn/number-literal-case": [
-      "off",
     ],
     "unused-imports/no-unused-imports": [
       "error",
@@ -1652,132 +707,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "valid-typeof": [
       "error",
-    ],
-    "vue/array-bracket-newline": [
-      "off",
-    ],
-    "vue/array-bracket-spacing": [
-      "off",
-    ],
-    "vue/array-element-newline": [
-      "off",
-    ],
-    "vue/arrow-spacing": [
-      "off",
-    ],
-    "vue/block-spacing": [
-      "off",
-    ],
-    "vue/block-tag-newline": [
-      "off",
-    ],
-    "vue/brace-style": [
-      "off",
-    ],
-    "vue/comma-dangle": [
-      "off",
-    ],
-    "vue/comma-spacing": [
-      "off",
-    ],
-    "vue/comma-style": [
-      "off",
-    ],
-    "vue/dot-location": [
-      "off",
-    ],
-    "vue/func-call-spacing": [
-      "off",
-    ],
-    "vue/html-closing-bracket-newline": [
-      "off",
-    ],
-    "vue/html-closing-bracket-spacing": [
-      "off",
-    ],
-    "vue/html-end-tags": [
-      "off",
-    ],
-    "vue/html-indent": [
-      "off",
-    ],
-    "vue/html-quotes": [
-      "off",
-    ],
-    "vue/html-self-closing": [
-      0,
-    ],
-    "vue/key-spacing": [
-      "off",
-    ],
-    "vue/keyword-spacing": [
-      "off",
-    ],
-    "vue/max-attributes-per-line": [
-      "off",
-    ],
-    "vue/max-len": [
-      0,
-    ],
-    "vue/multiline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/multiline-ternary": [
-      "off",
-    ],
-    "vue/mustache-interpolation-spacing": [
-      "off",
-    ],
-    "vue/no-extra-parens": [
-      "off",
-    ],
-    "vue/no-multi-spaces": [
-      "off",
-    ],
-    "vue/no-spaces-around-equal-signs-in-attribute": [
-      "off",
-    ],
-    "vue/object-curly-newline": [
-      "off",
-    ],
-    "vue/object-curly-spacing": [
-      "off",
-    ],
-    "vue/object-property-newline": [
-      "off",
-    ],
-    "vue/operator-linebreak": [
-      "off",
-    ],
-    "vue/quote-props": [
-      "off",
-    ],
-    "vue/script-indent": [
-      "off",
-    ],
-    "vue/singleline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/space-in-parens": [
-      "off",
-    ],
-    "vue/space-infix-ops": [
-      "off",
-    ],
-    "vue/space-unary-ops": [
-      "off",
-    ],
-    "vue/template-curly-spacing": [
-      "off",
-    ],
-    "wrap-iife": [
-      "off",
-    ],
-    "wrap-regex": [
-      "off",
-    ],
-    "yield-star-spacing": [
-      "off",
     ],
   },
   "settings": {
@@ -1838,18 +767,12 @@ exports[`should have a correct configuration for a React file 1`] = `
     "unused-imports",
     "import",
     "@typescript-eslint",
-    "prettier",
+    "no-relative-import-paths",
     "react-hooks",
     "react",
   ],
   "reportUnusedDisableDirectives": undefined,
   "rules": {
-    "@babel/object-curly-spacing": [
-      "off",
-    ],
-    "@babel/semi": [
-      "off",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -1859,40 +782,10 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@typescript-eslint/ban-types": [
       "error",
     ],
-    "@typescript-eslint/block-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/brace-style": [
-      "off",
-    ],
-    "@typescript-eslint/comma-dangle": [
-      "off",
-    ],
-    "@typescript-eslint/comma-spacing": [
-      "off",
-    ],
     "@typescript-eslint/explicit-function-return-type": [
       "off",
     ],
     "@typescript-eslint/explicit-module-boundary-types": [
-      "off",
-    ],
-    "@typescript-eslint/func-call-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/indent": [
-      "off",
-    ],
-    "@typescript-eslint/key-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/keyword-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/lines-around-comment": [
-      0,
-    ],
-    "@typescript-eslint/member-delimiter-style": [
       "off",
     ],
     "@typescript-eslint/no-array-constructor": [
@@ -1906,12 +799,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "@typescript-eslint/no-extra-non-null-assertion": [
       "error",
-    ],
-    "@typescript-eslint/no-extra-parens": [
-      "off",
-    ],
-    "@typescript-eslint/no-extra-semi": [
-      "off",
     ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
@@ -1942,6 +829,10 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "@uniswap/analytics",
           },
           {
+            "message": "Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead",
+            "name": "expo-localization",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
@@ -1949,16 +840,17 @@ exports[`should have a correct configuration for a React file 1`] = `
         "patterns": [
           {
             "group": [
-              "*react-native*",
-              "!react-native-image-colors",
-            ],
-            "message": "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
-          },
-          {
-            "group": [
               "**/dist",
             ],
             "message": "Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.",
+          },
+          {
+            "group": [
+              "*react-native*",
+              "!react-native-reanimated",
+              "!react-native-image-colors",
+            ],
+            "message": "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
           },
         ],
       },
@@ -1978,77 +870,11 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@typescript-eslint/no-var-requires": [
       "error",
     ],
-    "@typescript-eslint/object-curly-spacing": [
-      "off",
-    ],
     "@typescript-eslint/prefer-as-const": [
       "error",
     ],
-    "@typescript-eslint/quotes": [
-      0,
-    ],
-    "@typescript-eslint/semi": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-blocks": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-function-paren": [
-      "off",
-    ],
-    "@typescript-eslint/space-infix-ops": [
-      "off",
-    ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "@typescript-eslint/type-annotation-spacing": [
-      "off",
-    ],
-    "array-bracket-newline": [
-      "off",
-    ],
-    "array-bracket-spacing": [
-      "off",
-    ],
-    "array-element-newline": [
-      "off",
-    ],
-    "arrow-body-style": [
-      "off",
-    ],
-    "arrow-parens": [
-      "off",
-    ],
-    "arrow-spacing": [
-      "off",
-    ],
-    "babel/object-curly-spacing": [
-      "off",
-    ],
-    "babel/quotes": [
-      0,
-    ],
-    "babel/semi": [
-      "off",
-    ],
-    "block-spacing": [
-      "off",
-    ],
-    "brace-style": [
-      "off",
-    ],
-    "comma-dangle": [
-      "off",
-    ],
-    "comma-spacing": [
-      "off",
-    ],
-    "comma-style": [
-      "off",
-    ],
-    "computed-property-spacing": [
-      "off",
     ],
     "constructor-super": [
       "off",
@@ -2056,67 +882,10 @@ exports[`should have a correct configuration for a React file 1`] = `
     "curly": [
       "error",
     ],
-    "dot-location": [
-      "off",
-    ],
-    "eol-last": [
-      "off",
-    ],
-    "flowtype/boolean-style": [
-      "off",
-    ],
-    "flowtype/delimiter-dangle": [
-      "off",
-    ],
-    "flowtype/generic-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-curly-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-delimiter": [
-      "off",
-    ],
-    "flowtype/quotes": [
-      "off",
-    ],
-    "flowtype/semi": [
-      "off",
-    ],
-    "flowtype/space-after-type-colon": [
-      "off",
-    ],
-    "flowtype/space-before-generic-bracket": [
-      "off",
-    ],
-    "flowtype/space-before-type-colon": [
-      "off",
-    ],
-    "flowtype/union-intersection-spacing": [
-      "off",
-    ],
     "for-direction": [
       "error",
     ],
-    "func-call-spacing": [
-      "off",
-    ],
-    "function-call-argument-newline": [
-      "off",
-    ],
-    "function-paren-newline": [
-      "off",
-    ],
-    "generator-star": [
-      "off",
-    ],
-    "generator-star-spacing": [
-      "off",
-    ],
     "getter-return": [
-      "off",
-    ],
-    "implicit-arrow-linebreak": [
       "off",
     ],
     "import/named": [
@@ -2128,46 +897,7 @@ exports[`should have a correct configuration for a React file 1`] = `
         "unusedExports": true,
       },
     ],
-    "indent": [
-      "off",
-    ],
-    "indent-legacy": [
-      "off",
-    ],
-    "jsx-quotes": [
-      "off",
-    ],
-    "key-spacing": [
-      "off",
-    ],
-    "keyword-spacing": [
-      "off",
-    ],
-    "linebreak-style": [
-      "off",
-    ],
-    "lines-around-comment": [
-      0,
-    ],
-    "max-len": [
-      0,
-    ],
-    "max-statements-per-line": [
-      "off",
-    ],
-    "multiline-ternary": [
-      "off",
-    ],
-    "new-parens": [
-      "off",
-    ],
-    "newline-per-chained-call": [
-      "off",
-    ],
     "no-array-constructor": [
-      "off",
-    ],
-    "no-arrow-condition": [
       "off",
     ],
     "no-async-promise-executor": [
@@ -2179,17 +909,14 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-class-assign": [
       "error",
     ],
-    "no-comma-dangle": [
-      "off",
-    ],
     "no-compare-neg-zero": [
       "error",
     ],
     "no-cond-assign": [
       "error",
     ],
-    "no-confusing-arrow": [
-      0,
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",
@@ -2236,17 +963,11 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-extra-boolean-cast": [
       "error",
     ],
-    "no-extra-parens": [
-      "off",
-    ],
     "no-extra-semi": [
-      "off",
+      "error",
     ],
     "no-fallthrough": [
       "error",
-    ],
-    "no-floating-decimal": [
-      "off",
     ],
     "no-func-assign": [
       "off",
@@ -2272,17 +993,8 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-misleading-character-class": [
       "error",
     ],
-    "no-mixed-operators": [
-      0,
-    ],
     "no-mixed-spaces-and-tabs": [
-      "off",
-    ],
-    "no-multi-spaces": [
-      "off",
-    ],
-    "no-multiple-empty-lines": [
-      "off",
+      "error",
     ],
     "no-new-symbol": [
       "off",
@@ -2305,9 +1017,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-regex-spaces": [
       "error",
     ],
-    "no-reserved-keys": [
-      "off",
-    ],
     "no-self-assign": [
       "error",
     ],
@@ -2317,29 +1026,17 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-shadow-restricted-names": [
       "error",
     ],
-    "no-space-before-semi": [
-      "off",
-    ],
-    "no-spaced-func": [
-      "off",
-    ],
     "no-sparse-arrays": [
       "error",
     ],
-    "no-tabs": [
-      0,
-    ],
     "no-this-before-super": [
-      "off",
-    ],
-    "no-trailing-spaces": [
       "off",
     ],
     "no-undef": [
       "off",
     ],
     "no-unexpected-multiline": [
-      0,
+      "error",
     ],
     "no-unreachable": [
       "off",
@@ -2371,42 +1068,12 @@ exports[`should have a correct configuration for a React file 1`] = `
     "no-var": [
       "error",
     ],
-    "no-whitespace-before-property": [
-      "off",
-    ],
     "no-with": [
       "error",
-    ],
-    "no-wrap-func": [
-      "off",
-    ],
-    "nonblock-statement-body-position": [
-      "off",
-    ],
-    "object-curly-newline": [
-      "off",
-    ],
-    "object-curly-spacing": [
-      "off",
-    ],
-    "object-property-newline": [
-      "off",
     ],
     "object-shorthand": [
       "error",
       "always",
-    ],
-    "one-var-declaration-per-line": [
-      "off",
-    ],
-    "operator-linebreak": [
-      "off",
-    ],
-    "padded-blocks": [
-      "off",
-    ],
-    "prefer-arrow-callback": [
-      "off",
     ],
     "prefer-const": [
       "error",
@@ -2417,20 +1084,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "prefer-spread": [
       "error",
     ],
-    "prettier/prettier": [
-      "error",
-      {
-        "printWidth": 120,
-        "semi": false,
-        "singleQuote": true,
-      },
-    ],
-    "quote-props": [
-      "off",
-    ],
-    "quotes": [
-      0,
-    ],
     "react-hooks/exhaustive-deps": [
       "warn",
     ],
@@ -2440,15 +1093,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "react/display-name": [
       2,
     ],
-    "react/jsx-child-element-spacing": [
-      "off",
-    ],
-    "react/jsx-closing-bracket-location": [
-      "off",
-    ],
-    "react/jsx-closing-tag-location": [
-      "off",
-    ],
     "react/jsx-curly-brace-presence": [
       "error",
       {
@@ -2456,32 +1100,8 @@ exports[`should have a correct configuration for a React file 1`] = `
         "props": "never",
       },
     ],
-    "react/jsx-curly-newline": [
-      "off",
-    ],
-    "react/jsx-curly-spacing": [
-      "off",
-    ],
-    "react/jsx-equals-spacing": [
-      "off",
-    ],
-    "react/jsx-first-prop-new-line": [
-      "off",
-    ],
-    "react/jsx-indent": [
-      "off",
-    ],
-    "react/jsx-indent-props": [
-      "off",
-    ],
     "react/jsx-key": [
       2,
-    ],
-    "react/jsx-max-props-per-line": [
-      "off",
-    ],
-    "react/jsx-newline": [
-      "off",
     ],
     "react/jsx-no-comment-textnodes": [
       2,
@@ -2495,26 +1115,11 @@ exports[`should have a correct configuration for a React file 1`] = `
     "react/jsx-no-undef": [
       2,
     ],
-    "react/jsx-one-expression-per-line": [
-      "off",
-    ],
-    "react/jsx-props-no-multi-spaces": [
-      "off",
-    ],
-    "react/jsx-space-before-closing": [
-      "off",
-    ],
-    "react/jsx-tag-spacing": [
-      "off",
-    ],
     "react/jsx-uses-react": [
       2,
     ],
     "react/jsx-uses-vars": [
       2,
-    ],
-    "react/jsx-wrap-multilines": [
-      "off",
     ],
     "react/no-children-prop": [
       2,
@@ -2561,84 +1166,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "require-yield": [
       "error",
     ],
-    "rest-spread-spacing": [
-      "off",
-    ],
-    "semi": [
-      "off",
-    ],
-    "semi-spacing": [
-      "off",
-    ],
-    "semi-style": [
-      "off",
-    ],
-    "space-after-function-name": [
-      "off",
-    ],
-    "space-after-keywords": [
-      "off",
-    ],
-    "space-before-blocks": [
-      "off",
-    ],
-    "space-before-function-paren": [
-      "off",
-    ],
-    "space-before-function-parentheses": [
-      "off",
-    ],
-    "space-before-keywords": [
-      "off",
-    ],
-    "space-in-brackets": [
-      "off",
-    ],
-    "space-in-parens": [
-      "off",
-    ],
-    "space-infix-ops": [
-      "off",
-    ],
-    "space-return-throw-case": [
-      "off",
-    ],
-    "space-unary-ops": [
-      "off",
-    ],
-    "space-unary-word-ops": [
-      "off",
-    ],
-    "standard/array-bracket-even-spacing": [
-      "off",
-    ],
-    "standard/computed-property-even-spacing": [
-      "off",
-    ],
-    "standard/object-curly-even-spacing": [
-      "off",
-    ],
-    "switch-colon-spacing": [
-      "off",
-    ],
-    "template-curly-spacing": [
-      "off",
-    ],
-    "template-tag-spacing": [
-      "off",
-    ],
-    "unicode-bom": [
-      "off",
-    ],
-    "unicorn/empty-brace-spaces": [
-      "off",
-    ],
-    "unicorn/no-nested-ternary": [
-      "off",
-    ],
-    "unicorn/number-literal-case": [
-      "off",
-    ],
     "unused-imports/no-unused-imports": [
       "error",
     ],
@@ -2647,132 +1174,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "valid-typeof": [
       "error",
-    ],
-    "vue/array-bracket-newline": [
-      "off",
-    ],
-    "vue/array-bracket-spacing": [
-      "off",
-    ],
-    "vue/array-element-newline": [
-      "off",
-    ],
-    "vue/arrow-spacing": [
-      "off",
-    ],
-    "vue/block-spacing": [
-      "off",
-    ],
-    "vue/block-tag-newline": [
-      "off",
-    ],
-    "vue/brace-style": [
-      "off",
-    ],
-    "vue/comma-dangle": [
-      "off",
-    ],
-    "vue/comma-spacing": [
-      "off",
-    ],
-    "vue/comma-style": [
-      "off",
-    ],
-    "vue/dot-location": [
-      "off",
-    ],
-    "vue/func-call-spacing": [
-      "off",
-    ],
-    "vue/html-closing-bracket-newline": [
-      "off",
-    ],
-    "vue/html-closing-bracket-spacing": [
-      "off",
-    ],
-    "vue/html-end-tags": [
-      "off",
-    ],
-    "vue/html-indent": [
-      "off",
-    ],
-    "vue/html-quotes": [
-      "off",
-    ],
-    "vue/html-self-closing": [
-      0,
-    ],
-    "vue/key-spacing": [
-      "off",
-    ],
-    "vue/keyword-spacing": [
-      "off",
-    ],
-    "vue/max-attributes-per-line": [
-      "off",
-    ],
-    "vue/max-len": [
-      0,
-    ],
-    "vue/multiline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/multiline-ternary": [
-      "off",
-    ],
-    "vue/mustache-interpolation-spacing": [
-      "off",
-    ],
-    "vue/no-extra-parens": [
-      "off",
-    ],
-    "vue/no-multi-spaces": [
-      "off",
-    ],
-    "vue/no-spaces-around-equal-signs-in-attribute": [
-      "off",
-    ],
-    "vue/object-curly-newline": [
-      "off",
-    ],
-    "vue/object-curly-spacing": [
-      "off",
-    ],
-    "vue/object-property-newline": [
-      "off",
-    ],
-    "vue/operator-linebreak": [
-      "off",
-    ],
-    "vue/quote-props": [
-      "off",
-    ],
-    "vue/script-indent": [
-      "off",
-    ],
-    "vue/singleline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/space-in-parens": [
-      "off",
-    ],
-    "vue/space-infix-ops": [
-      "off",
-    ],
-    "vue/space-unary-ops": [
-      "off",
-    ],
-    "vue/template-curly-spacing": [
-      "off",
-    ],
-    "wrap-iife": [
-      "off",
-    ],
-    "wrap-regex": [
-      "off",
-    ],
-    "yield-star-spacing": [
-      "off",
     ],
   },
   "settings": {
@@ -2830,16 +1231,9 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "unused-imports",
     "import",
     "@typescript-eslint",
-    "prettier",
   ],
   "reportUnusedDisableDirectives": undefined,
   "rules": {
-    "@babel/object-curly-spacing": [
-      "off",
-    ],
-    "@babel/semi": [
-      "off",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -2849,40 +1243,10 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@typescript-eslint/ban-types": [
       "error",
     ],
-    "@typescript-eslint/block-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/brace-style": [
-      "off",
-    ],
-    "@typescript-eslint/comma-dangle": [
-      "off",
-    ],
-    "@typescript-eslint/comma-spacing": [
-      "off",
-    ],
     "@typescript-eslint/explicit-function-return-type": [
       "off",
     ],
     "@typescript-eslint/explicit-module-boundary-types": [
-      "off",
-    ],
-    "@typescript-eslint/func-call-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/indent": [
-      "off",
-    ],
-    "@typescript-eslint/key-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/keyword-spacing": [
-      "off",
-    ],
-    "@typescript-eslint/lines-around-comment": [
-      0,
-    ],
-    "@typescript-eslint/member-delimiter-style": [
       "off",
     ],
     "@typescript-eslint/no-array-constructor": [
@@ -2896,12 +1260,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "@typescript-eslint/no-extra-non-null-assertion": [
       "error",
-    ],
-    "@typescript-eslint/no-extra-parens": [
-      "off",
-    ],
-    "@typescript-eslint/no-extra-semi": [
-      "off",
     ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
@@ -2930,145 +1288,22 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@typescript-eslint/no-var-requires": [
       "error",
     ],
-    "@typescript-eslint/object-curly-spacing": [
-      "off",
-    ],
     "@typescript-eslint/prefer-as-const": [
       "error",
     ],
-    "@typescript-eslint/quotes": [
-      0,
-    ],
-    "@typescript-eslint/semi": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-blocks": [
-      "off",
-    ],
-    "@typescript-eslint/space-before-function-paren": [
-      "off",
-    ],
-    "@typescript-eslint/space-infix-ops": [
-      "off",
-    ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "@typescript-eslint/type-annotation-spacing": [
-      "off",
-    ],
-    "array-bracket-newline": [
-      "off",
-    ],
-    "array-bracket-spacing": [
-      "off",
-    ],
-    "array-element-newline": [
-      "off",
-    ],
-    "arrow-body-style": [
-      "off",
-    ],
-    "arrow-parens": [
-      "off",
-    ],
-    "arrow-spacing": [
-      "off",
-    ],
-    "babel/object-curly-spacing": [
-      "off",
-    ],
-    "babel/quotes": [
-      0,
-    ],
-    "babel/semi": [
-      "off",
-    ],
-    "block-spacing": [
-      "off",
-    ],
-    "brace-style": [
-      "off",
-    ],
-    "comma-dangle": [
-      "off",
-    ],
-    "comma-spacing": [
-      "off",
-    ],
-    "comma-style": [
-      "off",
-    ],
-    "computed-property-spacing": [
-      "off",
     ],
     "constructor-super": [
       "off",
     ],
     "curly": [
-      0,
-    ],
-    "dot-location": [
-      "off",
-    ],
-    "eol-last": [
-      "off",
-    ],
-    "flowtype/boolean-style": [
-      "off",
-    ],
-    "flowtype/delimiter-dangle": [
-      "off",
-    ],
-    "flowtype/generic-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-curly-spacing": [
-      "off",
-    ],
-    "flowtype/object-type-delimiter": [
-      "off",
-    ],
-    "flowtype/quotes": [
-      "off",
-    ],
-    "flowtype/semi": [
-      "off",
-    ],
-    "flowtype/space-after-type-colon": [
-      "off",
-    ],
-    "flowtype/space-before-generic-bracket": [
-      "off",
-    ],
-    "flowtype/space-before-type-colon": [
-      "off",
-    ],
-    "flowtype/union-intersection-spacing": [
-      "off",
+      "error",
     ],
     "for-direction": [
       "error",
     ],
-    "func-call-spacing": [
-      "off",
-    ],
-    "function-call-argument-newline": [
-      "off",
-    ],
-    "function-paren-newline": [
-      "off",
-    ],
-    "generator-star": [
-      "off",
-    ],
-    "generator-star-spacing": [
-      "off",
-    ],
     "getter-return": [
-      "off",
-    ],
-    "implicit-arrow-linebreak": [
       "off",
     ],
     "import/named": [
@@ -3080,46 +1315,7 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
         "unusedExports": true,
       },
     ],
-    "indent": [
-      "off",
-    ],
-    "indent-legacy": [
-      "off",
-    ],
-    "jsx-quotes": [
-      "off",
-    ],
-    "key-spacing": [
-      "off",
-    ],
-    "keyword-spacing": [
-      "off",
-    ],
-    "linebreak-style": [
-      "off",
-    ],
-    "lines-around-comment": [
-      0,
-    ],
-    "max-len": [
-      0,
-    ],
-    "max-statements-per-line": [
-      "off",
-    ],
-    "multiline-ternary": [
-      "off",
-    ],
-    "new-parens": [
-      "off",
-    ],
-    "newline-per-chained-call": [
-      "off",
-    ],
     "no-array-constructor": [
-      "off",
-    ],
-    "no-arrow-condition": [
       "off",
     ],
     "no-async-promise-executor": [
@@ -3131,17 +1327,14 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-class-assign": [
       "error",
     ],
-    "no-comma-dangle": [
-      "off",
-    ],
     "no-compare-neg-zero": [
       "error",
     ],
     "no-cond-assign": [
       "error",
     ],
-    "no-confusing-arrow": [
-      0,
+    "no-console": [
+      "error",
     ],
     "no-const-assign": [
       "off",
@@ -3188,17 +1381,11 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-extra-boolean-cast": [
       "error",
     ],
-    "no-extra-parens": [
-      "off",
-    ],
     "no-extra-semi": [
-      "off",
+      "error",
     ],
     "no-fallthrough": [
       "error",
-    ],
-    "no-floating-decimal": [
-      "off",
     ],
     "no-func-assign": [
       "off",
@@ -3224,17 +1411,8 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-misleading-character-class": [
       "error",
     ],
-    "no-mixed-operators": [
-      0,
-    ],
     "no-mixed-spaces-and-tabs": [
-      "off",
-    ],
-    "no-multi-spaces": [
-      "off",
-    ],
-    "no-multiple-empty-lines": [
-      "off",
+      "error",
     ],
     "no-new-symbol": [
       "off",
@@ -3257,9 +1435,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-regex-spaces": [
       "error",
     ],
-    "no-reserved-keys": [
-      "off",
-    ],
     "no-self-assign": [
       "error",
     ],
@@ -3269,29 +1444,17 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-shadow-restricted-names": [
       "error",
     ],
-    "no-space-before-semi": [
-      "off",
-    ],
-    "no-spaced-func": [
-      "off",
-    ],
     "no-sparse-arrays": [
       "error",
     ],
-    "no-tabs": [
-      0,
-    ],
     "no-this-before-super": [
-      "off",
-    ],
-    "no-trailing-spaces": [
       "off",
     ],
     "no-undef": [
       "off",
     ],
     "no-unexpected-multiline": [
-      0,
+      "error",
     ],
     "no-unreachable": [
       "off",
@@ -3323,42 +1486,12 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "no-var": [
       "error",
     ],
-    "no-whitespace-before-property": [
-      "off",
-    ],
     "no-with": [
       "error",
-    ],
-    "no-wrap-func": [
-      "off",
-    ],
-    "nonblock-statement-body-position": [
-      "off",
-    ],
-    "object-curly-newline": [
-      "off",
-    ],
-    "object-curly-spacing": [
-      "off",
-    ],
-    "object-property-newline": [
-      "off",
     ],
     "object-shorthand": [
       "error",
       "always",
-    ],
-    "one-var-declaration-per-line": [
-      "off",
-    ],
-    "operator-linebreak": [
-      "off",
-    ],
-    "padded-blocks": [
-      "off",
-    ],
-    "prefer-arrow-callback": [
-      "off",
     ],
     "prefer-const": [
       "error",
@@ -3369,148 +1502,8 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "prefer-spread": [
       "error",
     ],
-    "prettier/prettier": [
-      "error",
-      {
-        "printWidth": 120,
-        "semi": false,
-        "singleQuote": true,
-      },
-    ],
-    "quote-props": [
-      "off",
-    ],
-    "quotes": [
-      0,
-    ],
-    "react/jsx-child-element-spacing": [
-      "off",
-    ],
-    "react/jsx-closing-bracket-location": [
-      "off",
-    ],
-    "react/jsx-closing-tag-location": [
-      "off",
-    ],
-    "react/jsx-curly-newline": [
-      "off",
-    ],
-    "react/jsx-curly-spacing": [
-      "off",
-    ],
-    "react/jsx-equals-spacing": [
-      "off",
-    ],
-    "react/jsx-first-prop-new-line": [
-      "off",
-    ],
-    "react/jsx-indent": [
-      "off",
-    ],
-    "react/jsx-indent-props": [
-      "off",
-    ],
-    "react/jsx-max-props-per-line": [
-      "off",
-    ],
-    "react/jsx-newline": [
-      "off",
-    ],
-    "react/jsx-one-expression-per-line": [
-      "off",
-    ],
-    "react/jsx-props-no-multi-spaces": [
-      "off",
-    ],
-    "react/jsx-space-before-closing": [
-      "off",
-    ],
-    "react/jsx-tag-spacing": [
-      "off",
-    ],
-    "react/jsx-wrap-multilines": [
-      "off",
-    ],
     "require-yield": [
       "error",
-    ],
-    "rest-spread-spacing": [
-      "off",
-    ],
-    "semi": [
-      "off",
-    ],
-    "semi-spacing": [
-      "off",
-    ],
-    "semi-style": [
-      "off",
-    ],
-    "space-after-function-name": [
-      "off",
-    ],
-    "space-after-keywords": [
-      "off",
-    ],
-    "space-before-blocks": [
-      "off",
-    ],
-    "space-before-function-paren": [
-      "off",
-    ],
-    "space-before-function-parentheses": [
-      "off",
-    ],
-    "space-before-keywords": [
-      "off",
-    ],
-    "space-in-brackets": [
-      "off",
-    ],
-    "space-in-parens": [
-      "off",
-    ],
-    "space-infix-ops": [
-      "off",
-    ],
-    "space-return-throw-case": [
-      "off",
-    ],
-    "space-unary-ops": [
-      "off",
-    ],
-    "space-unary-word-ops": [
-      "off",
-    ],
-    "standard/array-bracket-even-spacing": [
-      "off",
-    ],
-    "standard/computed-property-even-spacing": [
-      "off",
-    ],
-    "standard/object-curly-even-spacing": [
-      "off",
-    ],
-    "switch-colon-spacing": [
-      "off",
-    ],
-    "template-curly-spacing": [
-      "off",
-    ],
-    "template-tag-spacing": [
-      "off",
-    ],
-    "unicode-bom": [
-      "off",
-    ],
-    "unicorn/empty-brace-spaces": [
-      "off",
-    ],
-    "unicorn/no-nested-ternary": [
-      "off",
-    ],
-    "unicorn/number-literal-case": [
-      "off",
     ],
     "unused-imports/no-unused-imports": [
       "error",
@@ -3520,132 +1513,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "valid-typeof": [
       "error",
-    ],
-    "vue/array-bracket-newline": [
-      "off",
-    ],
-    "vue/array-bracket-spacing": [
-      "off",
-    ],
-    "vue/array-element-newline": [
-      "off",
-    ],
-    "vue/arrow-spacing": [
-      "off",
-    ],
-    "vue/block-spacing": [
-      "off",
-    ],
-    "vue/block-tag-newline": [
-      "off",
-    ],
-    "vue/brace-style": [
-      "off",
-    ],
-    "vue/comma-dangle": [
-      "off",
-    ],
-    "vue/comma-spacing": [
-      "off",
-    ],
-    "vue/comma-style": [
-      "off",
-    ],
-    "vue/dot-location": [
-      "off",
-    ],
-    "vue/func-call-spacing": [
-      "off",
-    ],
-    "vue/html-closing-bracket-newline": [
-      "off",
-    ],
-    "vue/html-closing-bracket-spacing": [
-      "off",
-    ],
-    "vue/html-end-tags": [
-      "off",
-    ],
-    "vue/html-indent": [
-      "off",
-    ],
-    "vue/html-quotes": [
-      "off",
-    ],
-    "vue/html-self-closing": [
-      0,
-    ],
-    "vue/key-spacing": [
-      "off",
-    ],
-    "vue/keyword-spacing": [
-      "off",
-    ],
-    "vue/max-attributes-per-line": [
-      "off",
-    ],
-    "vue/max-len": [
-      0,
-    ],
-    "vue/multiline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/multiline-ternary": [
-      "off",
-    ],
-    "vue/mustache-interpolation-spacing": [
-      "off",
-    ],
-    "vue/no-extra-parens": [
-      "off",
-    ],
-    "vue/no-multi-spaces": [
-      "off",
-    ],
-    "vue/no-spaces-around-equal-signs-in-attribute": [
-      "off",
-    ],
-    "vue/object-curly-newline": [
-      "off",
-    ],
-    "vue/object-curly-spacing": [
-      "off",
-    ],
-    "vue/object-property-newline": [
-      "off",
-    ],
-    "vue/operator-linebreak": [
-      "off",
-    ],
-    "vue/quote-props": [
-      "off",
-    ],
-    "vue/script-indent": [
-      "off",
-    ],
-    "vue/singleline-html-element-content-newline": [
-      "off",
-    ],
-    "vue/space-in-parens": [
-      "off",
-    ],
-    "vue/space-infix-ops": [
-      "off",
-    ],
-    "vue/space-unary-ops": [
-      "off",
-    ],
-    "vue/template-curly-spacing": [
-      "off",
-    ],
-    "wrap-iife": [
-      "off",
-    ],
-    "wrap-regex": [
-      "off",
-    ],
-    "yield-star-spacing": [
-      "off",
     ],
   },
   "settings": {

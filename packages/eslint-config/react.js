@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
     node: false,
   },
-  plugins: ['react', 'react-hooks'],
+  plugins: ['react', 'react-hooks', 'no-relative-import-paths'],
   ignorePatterns: ['**/__generated__/'],
   parserOptions: {
     ecmaFeatures: {
@@ -26,6 +26,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.native.*', '*.ios.*', '*.android.*'],
       rules: {
         '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
       },

@@ -7,39 +7,40 @@ import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/st
 // eslint-disable-next-line no-restricted-imports
 //import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
 import UniJSON from '@uniswap/governance/build/Uni.json'
-import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
-import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
-import { useAccount } from 'hooks/useAccount'
-import { useContract } from 'hooks/useContract'
-import { t } from 'i18n'
-import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
-import { useCallback, useMemo } from 'react'
-import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
-//import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
-import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
-import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
-import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
-import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
-
 import {
   BRAVO_START_BLOCK,
   MOONBEAN_START_BLOCK,
   ONE_BIP_START_BLOCK,
   POLYGON_START_BLOCK,
   UNISWAP_GRANTS_START_BLOCK,
-} from '../../constants/proposals'
-import { GRG, UNI } from '../../constants/tokens'
-import { useLogs } from '../logs/hooks'
-import { useTransactionAdder } from '../transactions/hooks'
-import { TransactionType } from '../transactions/types'
-import { VoteOption } from './types'
+} from 'constants/proposals'
+import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { GRG, UNI } from 'constants/tokens'
+import { useAccount } from 'hooks/useAccount'
+import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { useContract } from 'hooks/useContract'
+import { t } from 'i18n'
+import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
+import { useCallback, useMemo } from 'react'
+import { VoteOption } from 'state/governance/types'
+import { useLogs } from 'state/logs/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
+import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
+//import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
+import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
+import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
+import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
+import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceProxyContract(): Contract | null {
   return useContract(GOVERNANCE_PROXY_ADDRESSES, GOVERNANCE_RB_ABI, true)
@@ -186,7 +187,7 @@ function useFormattedProposalCreatedLogs(
   contract: Contract | null,
   indices: number[][],
   fromBlock?: number,
-  toBlock?: number
+  toBlock?: number,
 ): FormattedProposalLog[] | undefined {
   // create filters for ProposalCreated events
   const filter = useMemo(() => {
@@ -306,20 +307,20 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   // get metadata from past events
   let govStartBlock
 
-  if (chainId === ChainId.MAINNET) {
+  if (chainId === UniverseChainId.Mainnet) {
     govStartBlock = 16620590
-  } else if (chainId === ChainId.GOERLI) {
+  } else if (chainId === UniverseChainId.Goerli) {
     govStartBlock = 8485377
-  } else if (chainId === ChainId.ARBITRUM_ONE) {
+  } else if (chainId === UniverseChainId.ArbitrumOne) {
     govStartBlock = 60590354
-  } else if (chainId === ChainId.OPTIMISM) {
+  } else if (chainId === UniverseChainId.Optimism) {
     govStartBlock = 74115128
-  } else if (chainId === ChainId.POLYGON) {
+  } else if (chainId === UniverseChainId.Polygon) {
     govStartBlock = 39249858
-  } else if (chainId === ChainId.BASE) {
+  } else if (chainId === UniverseChainId.Base) {
     // quicknode returns only a very limited number of logs, therefore we won't see proposal details
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570523
-  } else if (chainId === ChainId.BNB) {
+  } else if (chainId === UniverseChainId.Bnb) {
     // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
     govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //29095808
   }
@@ -415,7 +416,7 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   if (
     !latestGovernanceContract ||
     !quorumVotes ||
-    //chainId !== ChainId.MAINNET ||
+    //chainId !== UniverseChainId.Mainnet ||
     !grg ||
     governorIndex !== LATEST_GOVERNOR_INDEX
   ) {
@@ -427,34 +428,33 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
 
 // get the users delegatee if it exists
 export function useUserDelegatee(): string {
-  const { account } = useWeb3React()
+  const account = useAccount()
   const uniContract = useUniContract()
-  const { result } = useSingleCallResult(uniContract, 'delegates', [account ?? undefined])
+  const { result } = useSingleCallResult(uniContract, 'delegates', [account.address])
   return result?.[0] ?? undefined
 }
 
 // gets the users current votes
 export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const governance = useGovernanceProxyContract()
 
   // check for available votes
-  const { result, loading } = useSingleCallResult(governance, 'getVotingPower', [account ?? undefined])
+  const { result, loading } = useSingleCallResult(governance, 'getVotingPower', [account.address])
   return useMemo(() => {
-    const grg = chainId ? GRG[chainId] : undefined
+    const grg = account.chainId ? GRG[account.chainId] : undefined
     return { loading, votes: grg && result ? CurrencyAmount.fromRawAmount(grg, result?.[0]) : undefined }
-  }, [chainId, loading, result])
+  }, [account.chainId, loading, result])
 }
 
 // fetch available votes as of block (usually proposal start block)
 export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const uniContract = useUniContract()
 
   // check for available votes
-  const uni = useMemo(() => (chainId ? UNI[chainId] : undefined), [chainId])
-  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
-    ?.result?.[0]
+  const uni = useMemo(() => (account.chainId ? UNI[account.chainId] : undefined), [account.chainId])
+  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account.address, block ?? undefined])?.result?.[0]
   return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
@@ -479,11 +479,11 @@ export function useStakeBalance(
   poolId: string | null | undefined,
   owner?: string
 ): CurrencyAmount<Currency> | undefined {
-  const { account, chainId } = useWeb3React()
-  const grg = chainId ? GRG[chainId] : undefined
+  const account = useAccount()
+  const grg = account.chainId ? GRG[account.chainId] : undefined
   const stakingContract = useStakingContract()
   const stake = useSingleCallResult(stakingContract ?? undefined, 'getStakeDelegatedToPoolByOwner', [
-    owner ?? account,
+    owner ?? account.address,
     poolId ?? undefined,
   ])?.result?.[0]
 
@@ -491,14 +491,15 @@ export function useStakeBalance(
 }
 
 export function useDelegateCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+      if (!provider || !account.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
         return undefined
       }
       //if (!stakeData.amount) return
@@ -535,17 +536,18 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 
 export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const provider = useEthersWeb3Provider()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+      if (!provider || !account?.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
         return undefined
       }
       //if (!stakeData.amount) return
@@ -572,12 +574,13 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
           })
       })
     },
-    [account, addTransaction, chainId, provider]
+    [account.address, addTransaction, account.chainId, provider],
   )
 }
 
 export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
@@ -586,8 +589,8 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
     (stakeData: StakeData | undefined) => {
       if (
         !provider ||
-        !chainId ||
-        !account ||
+        !account.chainId ||
+        !account.address ||
         !stakeData ||
         !stakeData.fromPoolId ||
         !isAddress(stakeData.pool ?? '')
@@ -640,19 +643,20 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 
 export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+      if (!provider || !account.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
         return undefined
       }
       const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
@@ -704,21 +708,21 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 
 export function useVoteCallback(): (
   proposalId: string | undefined,
-  voteOption: VoteOption
+  voteOption: VoteOption,
 ) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId, voteOption === VoteOption.For ? 0 : voteOption === VoteOption.Against ? 1 : 2]
@@ -737,18 +741,18 @@ export function useVoteCallback(): (
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
 export function useQueueCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId]
@@ -765,18 +769,18 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
 export function useExecuteCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
-      if (!account || !latestGovernanceContract || !proposalId || !chainId) {
+      if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
         return
       }
       const args = [proposalId]
@@ -793,20 +797,20 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 
 export function useCreateProposalCallback(): (
-  createProposalData: CreateProposalData | undefined
+  createProposalData: CreateProposalData | undefined,
 ) => undefined | Promise<string> {
-  const { account, chainId } = useWeb3React()
+  const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (createProposalData: CreateProposalData | undefined) => {
-      if (!account || !latestGovernanceContract || !createProposalData || !chainId) {
+      if (!account.address || !latestGovernanceContract || !createProposalData || !account.chainId) {
         return undefined
       }
 
@@ -829,7 +833,7 @@ export function useCreateProposalCallback(): (
           })
       })
     },
-    [account, addTransaction, latestGovernanceContract, chainId]
+    [account.address, addTransaction, latestGovernanceContract, account.chainId],
   )
 }
 

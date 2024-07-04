@@ -10,31 +10,17 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
-import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import {
-  AnimatedFlex,
-  ColorTokens,
-  Flex,
-  HapticFeedback,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { NumberType } from 'utilities/src/format/types'
+import { ColorTokens, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { fonts, spacing } from 'ui/src/theme'
+import { Pill } from 'uniswap/src/components/pill/Pill'
+import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
+import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
-import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
-import { Pill } from 'wallet/src/components/text/Pill'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 56
@@ -126,8 +112,6 @@ export function FiatOnRampAmountSection({
     setSelection({ start, end })
   }
 
-  const { formatNumberOrString } = useLocalizationContext()
-
   const inputShakeX = useSharedValue(0)
   const inputAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: inputShakeX.value }],
@@ -146,18 +130,16 @@ export function FiatOnRampAmountSection({
   // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
   const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
+  const formattedAmount = useFormatExactCurrencyAmount(quoteAmount.toString(), currency.currencyInfo?.currency)
+
   return (
     <Flex onLayout={onInputPanelLayout}>
-      <Flex
-        grow
-        alignItems="center"
-        gap="$spacing8"
-        justifyContent="center"
-        onLayout={onInputLayout}>
+      <Flex grow alignItems="center" gap="$spacing8" justifyContent="center" onLayout={onInputLayout}>
         <AnimatedFlex
           height={spacing.spacing24}
           /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}>
+          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}
+        >
           {debouncedErrorText && errorColor && (
             <Text color={errorColor} textAlign="center" variant="buttonLabel4">
               {debouncedErrorText}
@@ -165,41 +147,48 @@ export function FiatOnRampAmountSection({
           )}
         </AnimatedFlex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
-          <AmountInput
-            ref={inputRef}
-            autoFocus
-            alignSelf="stretch"
-            backgroundColor="$transparent"
-            borderWidth={0}
-            caretHidden={!showNativeKeyboard}
-            disabled={disabled}
-            fiatCurrencyInfo={fiatCurrencyInfo}
-            fontFamily="$heading"
-            fontSize={fontSize}
-            maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-            minHeight={MAX_INPUT_FONT_SIZE}
-            placeholder={formatNumberOrString({
-              value: 0,
-              type: NumberType.FiatStandard,
-              currencyCode: fiatCurrencyInfo.code,
-            })}
-            placeholderTextColor="$neutral3"
-            px="$none"
-            py="$none"
-            returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-            showCurrencySign={value !== ''}
-            showSoftInputOnFocus={showSoftInputOnFocus}
-            textAlign="center"
-            value={value}
-            onChangeText={onChangeValue(onEnterAmount)}
-            onSelectionChange={onSelectionChange}
-          />
+          <Flex row alignItems="center" justifyContent="center">
+            <Text
+              allowFontScaling
+              color={!value ? '$neutral3' : '$neutral1'}
+              fontSize={fontSize}
+              height={fontSize}
+              lineHeight={fontSize}
+            >
+              {fiatCurrencyInfo.symbol}
+            </Text>
+            <AmountInput
+              ref={inputRef}
+              adjustWidthToContent
+              autoFocus
+              alignSelf="stretch"
+              backgroundColor="$transparent"
+              borderWidth={0}
+              caretHidden={!showNativeKeyboard}
+              disabled={disabled}
+              fiatCurrencyInfo={fiatCurrencyInfo}
+              fontFamily="$heading"
+              fontSize={fontSize}
+              maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+              minHeight={MAX_INPUT_FONT_SIZE}
+              placeholder="0"
+              placeholderTextColor="$neutral3"
+              px="$none"
+              py="$none"
+              returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+              showSoftInputOnFocus={showSoftInputOnFocus}
+              textAlign="left"
+              value={value}
+              onChangeText={onChangeValue(onEnterAmount)}
+              onSelectionChange={onSelectionChange}
+            />
+          </Flex>
         </AnimatedFlex>
-        {currency.currencyInfo && (
+        {currency.currencyInfo && formattedAmount && (
           <SelectTokenButton
-            amount={quoteAmount}
             amountReady={quoteCurrencyAmountReady}
             disabled={notAvailableInThisRegion}
+            formattedAmount={formattedAmount}
             loading={selectTokenLoading}
             selectedCurrencyInfo={currency.currencyInfo}
             onPress={onTokenSelectorPress}
@@ -226,58 +215,6 @@ export function FiatOnRampAmountSection({
         ) : null}
       </Flex>
     </Flex>
-  )
-}
-
-interface SelectTokenButtonProps {
-  onPress: () => void
-  selectedCurrencyInfo: CurrencyInfo
-  amount: number
-  amountReady?: boolean
-  disabled?: boolean
-  loading?: boolean
-}
-
-function SelectTokenButton({
-  selectedCurrencyInfo,
-  onPress,
-  amount,
-  amountReady,
-  disabled,
-  loading,
-}: SelectTokenButtonProps): JSX.Element {
-  const formattedAmount = useFormatExactCurrencyAmount(
-    amount.toString(),
-    selectedCurrencyInfo.currency
-  )
-  const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
-
-  return (
-    <TouchableArea
-      hapticFeedback
-      borderRadius="$roundedFull"
-      disabled={disabled}
-      testID={ElementName.TokenSelectorToggle}
-      onPress={onPress}>
-      <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
-        {loading ? (
-          <SpinningLoader />
-        ) : (
-          <CurrencyLogo
-            currencyInfo={selectedCurrencyInfo}
-            networkLogoBorderWidth={spacing.spacing1}
-            size={iconSizes.icon24}
-          />
-        )}
-        <Text color={textColor} pl="$spacing8" variant="body1">
-          {formattedAmount}
-        </Text>
-        <Text color={textColor} pl="$spacing1" variant="body1">
-          {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
-        </Text>
-        <RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
-      </Flex>
-    </TouchableArea>
   )
 }
 
@@ -311,7 +248,8 @@ function PredefinedAmount({
       onPress={async (): Promise<void> => {
         await HapticFeedback.impact()
         onPress(amount.toString())
-      }}>
+      }}
+    >
       <Pill
         backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
         customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}

@@ -1,16 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { SendSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SendSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
+  ClassicTransactionDetails,
   SendTokenTransactionInfo,
-  TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 
 const meta: Meta<typeof SendSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -82,7 +84,10 @@ const meta: Meta<typeof SendSummaryItem> = {
 
 export default meta
 
-const baseSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenTransactionInfo } = {
+const baseSendTx: Omit<ClassicTransactionDetails, 'status'> & {
+  typeInfo: SendTokenTransactionInfo
+} = {
+  routing: Routing.CLASSIC,
   from: '0x76e4de46c21603545eaaf7daf25e54c0d06bafa9',
   addedTime: Date.now() - 30000,
   hash: '0x3ba4b82fb3bcb237cff0180b4fb4f94902cde2cfa56c57567b59b5608590d077',
@@ -99,7 +104,9 @@ const baseSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenTran
   },
 }
 
-const baseNFTSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenTransactionInfo } = {
+const baseNFTSendTx: Omit<ClassicTransactionDetails, 'status'> & {
+  typeInfo: SendTokenTransactionInfo
+} = {
   ...baseSendTx,
   typeInfo: {
     type: TransactionType.Send,
@@ -112,6 +119,7 @@ const baseNFTSendTx: Omit<TransactionDetails, 'status'> & { typeInfo: SendTokenT
         'https://lh3.googleusercontent.com/9LokgAuB0Xqkio273GE0pY0WSJwOExFtFI1SkJT2jK-USvqFc-5if7ZP5PQ1h8s5YPimyJG5cSOdGGR2UaD3gTYMKAhj6yikYaw=s250',
       name: 'Froggy Friend #1777',
       tokenId: '1777',
+      address: '0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f',
     },
   },
 }
@@ -158,7 +166,7 @@ export const Send: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
-          chainId: ChainId.Optimism,
+          chainId: UniverseChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />
@@ -208,7 +216,7 @@ export const NFTSend: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
-          chainId: ChainId.Optimism,
+          chainId: UniverseChainId.Optimism,
           status: TransactionStatus.Success,
         }}
       />

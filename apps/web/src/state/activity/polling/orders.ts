@@ -1,7 +1,9 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
+import { OnActivityUpdate, OrderUpdate } from 'state/activity/types'
 import { OffchainOrderType } from 'state/routing/types'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
@@ -9,7 +11,7 @@ import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { OnActivityUpdate, OrderUpdate } from '../types'
+import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -19,7 +21,7 @@ if (UNISWAP_GATEWAY_DNS_URL === undefined) {
 async function fetchStatuses(
   orders: UniswapXOrderDetails[],
   filter: (order: UniswapXOrderDetails) => boolean,
-  path: (hashes: string[]) => string
+  path: (hashes: string[]) => string,
 ): Promise<UniswapXBackendOrder[]> {
   const hashes = orders.filter(filter).map((order) => order.orderHash)
   if (!hashes || hashes.length === 0) {
@@ -35,7 +37,7 @@ async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_LIMIT,
-    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`
+    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`,
   )
 }
 
@@ -43,7 +45,7 @@ async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`
+    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`,
   )
 }
 
@@ -52,7 +54,8 @@ const OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL = ms(`2s`)
 export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
-  const { account, provider } = useWeb3React()
+  const { provider } = useWeb3React()
+  const account = useAccount()
   const pendingOrders = usePendingOrders()
 
   const [currentDelay, setCurrentDelay] = useState(OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL)
@@ -60,7 +63,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   useEffect(() => {
     let timeout: NodeJS.Timeout
     async function getOrderStatuses() {
-      if (!account || pendingOrders.length === 0) {
+      if (!account.address || pendingOrders.length === 0) {
         return
       }
 
@@ -71,7 +74,10 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       }
       try {
         const statuses = (
-          await Promise.all([fetchOrderStatuses(account, pendingOrders), fetchLimitStatuses(account, pendingOrders)])
+          await Promise.all([
+            fetchOrderStatuses(account.address, pendingOrders),
+            fetchLimitStatuses(account.address, pendingOrders),
+          ])
         ).flat()
 
         pendingOrders.forEach(async (pendingOrder) => {
@@ -110,7 +116,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           })
         })
       } catch (e) {
-        console.error('Error fetching order statuses', e)
+        logger.debug('usePollPendingOrders', 'getOrderStatuses', 'Failed to fetch order statuses', e)
       }
       setCurrentDelay((currentDelay) => Math.min(currentDelay * 2, ms('30s')))
       timeout = setTimeout(getOrderStatuses, currentDelay)
@@ -121,7 +127,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       return () => clearTimeout(timeout)
     }
     return
-  }, [account, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
+  }, [account.address, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
 
   return null
 }

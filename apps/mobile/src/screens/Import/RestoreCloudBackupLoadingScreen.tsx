@@ -15,27 +15,21 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Loader } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.RestoreCloudBackupLoading
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupLoading>
 
 const MIN_LOADING_UI_MS = ONE_SECOND_MS
 // 10s timeout time for query for backups, since we don't know when the query completes
 const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 
-export function RestoreCloudBackupLoadingScreen({
-  navigation,
-  route: { params },
-}: Props): JSX.Element {
+export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const entryPoint = params.entryPoint
@@ -47,7 +41,7 @@ export function RestoreCloudBackupLoadingScreen({
   const [isError, setIsError] = useState(false)
 
   // when we are restoring after phone migration
-  const signerAccounts = useNonPendingSignerAccounts()
+  const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
   const backups = useCloudBackups(mnemonicId)
@@ -64,8 +58,6 @@ export function RestoreCloudBackupLoadingScreen({
         await startFetchingCloudStorageBackups()
       } catch (e) {
         setIsError(true)
-      } finally {
-        setIsLoading(false)
       }
     }, 0)
   }, [])
@@ -86,14 +78,14 @@ export function RestoreCloudBackupLoadingScreen({
           logger.debug(
             'RestoreCloudBackupLoadingScreen',
             'fetchCloudStorageBackups',
-            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
+            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`,
           )
         }
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         stopFetchingCloudStorageBackups()
         setIsLoading(false)
       },
-      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS
+      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS,
     )
 
     return () => {
@@ -113,7 +105,7 @@ export function RestoreCloudBackupLoadingScreen({
         dispatch(clearCloudBackups())
         fetchCloudStorageBackups()
       })
-    }, [dispatch, fetchCloudStorageBackups, navigation])
+    }, [dispatch, fetchCloudStorageBackups, navigation]),
   )
 
   /**

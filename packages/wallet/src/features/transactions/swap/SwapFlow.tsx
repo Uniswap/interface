@@ -1,12 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import {
-  SwapFormContextProvider,
-  SwapFormState,
-} from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { logger } from 'utilities/src/logger/logger'
+import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   SwapScreen,
   SwapScreenContextProvider,
@@ -21,6 +19,7 @@ import {
   TransactionModalFooterContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { TransactionModalProps } from 'wallet/src/features/transactions/swap/TransactionModalProps'
+import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 
 export function SwapFlow({
   prefilledState,
@@ -29,6 +28,9 @@ export function SwapFlow({
   prefilledState?: SwapFormState
   onClose: () => void
 } & Omit<TransactionModalProps, 'fullscreen' | 'modalName'>): JSX.Element {
+  // We reset the cache every time the swap flow reopens to avoid old quotes persisting between retries after a failed transaction.
+  useResetTradingApiCacheOnMount()
+
   // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`'s `Container`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
@@ -56,6 +58,16 @@ export function SwapFlow({
       </SwapScreenContextProvider>
     </TransactionModal>
   )
+}
+
+function useResetTradingApiCacheOnMount(): void {
+  useEffect(() => {
+    TradingApiApolloClient.resetStore().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'SwapFlow.tsx', function: 'TradingApiApolloClient.resetStore' },
+      })
+    })
+  }, [])
 }
 
 function CurrentScreen({
@@ -88,7 +100,8 @@ function CurrentScreen({
             <BottomSheetModal
               alignment="top"
               isModalOpen={screen === SwapScreen.SwapReview}
-              name={ModalName.SwapReview}>
+              name={ModalName.SwapReview}
+            >
               <Trace logImpression section={SectionName.SwapReview}>
                 <SwapReviewScreen hideContent={false} />
               </Trace>

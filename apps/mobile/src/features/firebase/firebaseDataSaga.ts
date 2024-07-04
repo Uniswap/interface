@@ -2,13 +2,9 @@ import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { appSelect } from 'src/app/hooks'
-import {
-  getFirebaseUidOrError,
-  getFirestoreMetadataRef,
-  getFirestoreUidRef,
-} from 'src/features/firebase/utils'
+import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
-import { call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
+import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { Language } from 'wallet/src/features/language/constants'
@@ -20,12 +16,8 @@ import {
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  makeSelectAccountNotificationSetting,
-  selectAccounts,
-  selectNonPendingAccounts,
-} from 'wallet/src/features/wallet/selectors'
-import { editAccount, setAccountsNonPending } from 'wallet/src/features/wallet/slice'
+import { makeSelectAccountNotificationSetting, selectAccounts } from 'wallet/src/features/wallet/selectors'
+import { addAccounts, editAccount } from 'wallet/src/features/wallet/slice'
 
 interface AccountMetadata {
   name?: string
@@ -54,12 +46,12 @@ export function* firebaseDataWatcher() {
   // Can't merge with `editAccountSaga` because it can't handle simultaneous actions
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
   yield* takeLatest(setCurrentLanguage, syncLanguageWithFirebase)
-  yield* takeEvery(setAccountsNonPending, syncAccountWithFirebase)
+  yield* takeEvery(addAccounts, syncAccountWithFirebase)
 }
 
 function* syncNotificationsWithFirebase() {
   try {
-    const accounts = yield* select(selectNonPendingAccounts)
+    const accounts = yield* select(selectAccounts)
     const addresses = Object.keys(accounts)
 
     for (const address of addresses) {
@@ -83,15 +75,16 @@ function* syncNotificationsWithFirebase() {
 }
 
 function* syncLanguageWithFirebase(actionData: ReturnType<typeof setCurrentLanguage>) {
-  const accounts = yield* select(selectNonPendingAccounts)
+  const accounts = yield* select(selectAccounts)
   const addresses = Object.keys(accounts)
 
   yield* call(updateFirebaseLanguage, addresses, actionData.payload)
 }
 
-function* syncAccountWithFirebase(actionData: ReturnType<typeof setAccountsNonPending>) {
+function* syncAccountWithFirebase(actionData: ReturnType<typeof addAccounts>) {
   const currentLanguage = yield* select(selectCurrentLanguage)
-  yield* call(updateFirebaseLanguage, actionData.payload, currentLanguage)
+  const addedAccountsAddresses = actionData.payload.map((account) => account.address)
+  yield* call(updateFirebaseLanguage, addedAccountsAddresses, currentLanguage)
 }
 
 function* updateFirebaseLanguage(addresses: Address[], language: Language) {
@@ -103,7 +96,7 @@ function* updateFirebaseLanguage(addresses: Address[], language: Language) {
         type: EditAccountAction.UpdateLanguage,
         address,
         locale,
-      })
+      }),
     )
   }
 }
@@ -113,9 +106,15 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
   const { type, address } = payload
 
   switch (type) {
-    case EditAccountAction.Remove:
-      yield* call(removeAccountFromFirebase, address, payload.notificationsEnabled)
-      break
+    case EditAccountAction.Remove: {
+      const accountsToRemove = payload.accounts
+      yield* all(
+        accountsToRemove.map((account: { address: Address; pushNotificationsEnabled: boolean }) =>
+          call(removeAccountFromFirebase, account.address, account.pushNotificationsEnabled),
+        ),
+      )
+      return
+    }
     case EditAccountAction.Rename:
       yield* call(renameAccountInFirebase, address, payload.newName)
       break
@@ -169,6 +168,10 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
 const selectAccountNotificationSetting = makeSelectAccountNotificationSetting()
 
 export function* renameAccountInFirebase(address: Address, newName: string) {
+  if (!address) {
+    throw new Error('Address is required for renameAccountInFirebase')
+  }
+
   try {
     yield* call(maybeUpdateFirebaseMetadata, address, { name: newName })
   } catch (error) {
@@ -176,10 +179,11 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
   }
 }
 
-export function* toggleFirebaseNotificationSettings({
-  address,
-  enabled,
-}: TogglePushNotificationParams) {
+export function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
+  if (!address) {
+    throw new Error('Address is required for toggleFirebaseNotificationSettings')
+  }
+
   try {
     const accounts = yield* appSelect(selectAccounts)
     const account = accounts[address]
@@ -200,7 +204,7 @@ export function* toggleFirebaseNotificationSettings({
           ...account,
           pushNotificationsEnabled: enabled,
         },
-      })
+      }),
     )
   } catch (error) {
     logger.error(error, {
@@ -253,16 +257,13 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
     const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
 
     // Firestore does not support updating properties with an `undefined` value so must strip them out
-    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce(
-      (obj: Record<string, unknown>, prop) => {
-        const value = metadata[prop]
-        if (value !== undefined) {
-          obj[prop] = value
-        }
-        return obj
-      },
-      {}
-    )
+    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: Record<string, unknown>, prop) => {
+      const value = metadata[prop]
+      if (value !== undefined) {
+        obj[prop] = value
+      }
+      return obj
+    }, {})
 
     await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
   } catch (error) {

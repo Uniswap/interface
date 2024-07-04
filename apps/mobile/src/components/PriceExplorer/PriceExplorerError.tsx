@@ -2,7 +2,7 @@ import React, { ComponentProps } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { Flex, Text } from 'ui/src'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 
 export function PriceExplorerError({
   showRetry,
@@ -27,7 +27,8 @@ export function PriceExplorerError({
         borderRadius="$rounded16"
         height={chartHeight}
         justifyContent="center"
-        overflow="hidden">
+        overflow="hidden"
+      >
         <BaseCard.ErrorState
           description={t('token.priceExplorer.error.description')}
           retryButtonLabel={showRetry ? t('common.button.retry') : undefined}

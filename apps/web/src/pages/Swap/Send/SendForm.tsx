@@ -1,26 +1,26 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
+import useSelectChain from 'hooks/useSelectChain'
 import { useSendCallback } from 'hooks/useSendCallback'
-import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
+import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
+import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
+import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
+import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
+import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { useIsSmartContractAddress } from 'utils/transfer'
-import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
-import SendCurrencyInputForm from './SendCurrencyInputForm'
-import { SendRecipientForm } from './SendRecipientForm'
-import { SendReviewModal } from './SendReviewModal'
-import { SmartContractSpeedBumpModal } from './SmartContractSpeedBump'
 
 type SendFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -74,25 +74,25 @@ enum SendSpeedBump {
 }
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
-  const { address: account, isDisconnected, chainId: connectedChainId } = useAccount()
-  const switchChain = useSwitchChain()
+  const account = useAccount()
+  const selectChain = useSelectChain()
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   const [sendFormModalState, setSendFormModalState] = useState(SendFormModalState.None)
   const [sendFormSpeedBumpState, setSendFormSpeedBumpState] = useState({
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
-  const { chainId } = useSwapAndLimitContext()
+  const { initialChainId, chainId, multichainUXEnabled } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { setSendState, derivedSendInfo } = useSendContext()
   const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
-    recipientData?.address
+    recipientData?.address,
   )
-  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account)
+  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account.address)
   const isRecentAddress = useMemo(() => {
     if (!recipientData?.address) {
       return undefined
@@ -140,7 +140,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 
       handleModalState(SendFormModalState.REVIEW)
     },
-    [handleModalState, sendFormSpeedBumpState]
+    [handleModalState, sendFormSpeedBumpState],
   )
 
   const handleConfirmSmartContractSpeedBump = useCallback(() => {
@@ -153,7 +153,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   }, [handleModalState, handleSendButton])
   const handleCancelSmartContractSpeedBump = useCallback(
     () => handleModalState(SendFormModalState.None),
-    [handleModalState]
+    [handleModalState],
   )
 
   const handleConfirmNewAddressSpeedBump = useCallback(() => {
@@ -166,7 +166,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   }, [handleModalState, handleSendButton])
   const handleCancelNewAddressSpeedBump = useCallback(
     () => handleModalState(SendFormModalState.None),
-    [handleModalState]
+    [handleModalState],
   )
 
   const handleSend = useCallback(() => {
@@ -190,35 +190,21 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       <Column gap="xs">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
-        {isDisconnected ? (
+        {account.isDisconnected ? (
           <Trace
             logPress
             eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
-            <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+            <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
               <Trans i18nKey="common.connectWallet.button" />
             </ButtonLight>
           </Trace>
-        ) : chainId && chainId !== connectedChainId ? (
-          <ButtonPrimary
-            $borderRadius="16px"
-            onClick={async () => {
-              try {
-                await switchChain(chainId)
-              } catch (error) {
-                if (didUserReject(error)) {
-                  // Ignore error, which keeps the user on the previous chain.
-                } else {
-                  // TODO(WEB-3306): This UX could be improved to show an error state.
-                  throw error
-                }
-              }
-            }}
-          >
+        ) : !multichainUXEnabled && initialChainId && initialChainId !== account.chainId ? (
+          <ButtonPrimary $borderRadius="16px" onClick={async () => await selectChain(initialChainId)}>
             <Trans
               i18nKey="common.connectToChain.button"
-              values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : undefined }}
+              values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[initialChainId].label : undefined }}
             />
           </ButtonPrimary>
         ) : (

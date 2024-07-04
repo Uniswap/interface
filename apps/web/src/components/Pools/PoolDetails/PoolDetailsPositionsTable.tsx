@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import Column from 'components/Column'
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
@@ -6,6 +5,7 @@ import { ClosedCircle, DoubleArrow } from 'components/Pools/PoolDetails/icons'
 import Row from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
 import { useCurrency } from 'hooks/Tokens'
+import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { useCallback } from 'react'
@@ -46,8 +46,8 @@ const StatusWrapper = styled(Row)<{ status: PositionStatus }>`
     status === PositionStatus.IN_RANGE
       ? theme.success
       : status === PositionStatus.OUT_OF_RANGE
-      ? theme.deprecated_accentWarning
-      : theme.neutral2};
+        ? theme.deprecated_accentWarning
+        : theme.neutral2};
 `
 
 const RangeWrapper = styled(Row)`
@@ -89,24 +89,24 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
     useCurrency(positionInfo.details.token0, positionInfo.chainId),
     useCurrency(positionInfo.details.token1, positionInfo.chainId),
   ]
-  const { chainId: walletChainId } = useWeb3React()
+  const account = useAccount()
   const navigate = useNavigate()
   const switchChain = useSwitchChain()
   const theme = useTheme()
   const { formatTickPrice } = useFormatter()
 
   const onClick = useCallback(async () => {
-    if (walletChainId !== positionInfo.chainId) {
+    if (account.chainId !== positionInfo.chainId) {
       await switchChain(positionInfo.chainId)
     }
     navigate('/pool/' + positionInfo.details.tokenId)
-  }, [navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, walletChainId])
+  }, [navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, account.chainId])
 
   const status = positionInfo.inRange
     ? PositionStatus.IN_RANGE
     : positionInfo.closed
-    ? PositionStatus.CLOSED
-    : PositionStatus.OUT_OF_RANGE
+      ? PositionStatus.CLOSED
+      : PositionStatus.OUT_OF_RANGE
 
   const priceUpper = positionInfo.position.token0PriceLower.invert()
   const priceLower = positionInfo.position.token0PriceUpper.invert()

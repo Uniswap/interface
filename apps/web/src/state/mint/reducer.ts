@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-
-import { Field, resetMintState, typeInput } from './actions'
+import { Field, resetMintState, typeInput } from 'state/mint/actions'
 
 export interface MintState {
   readonly independentField: Field
@@ -50,5 +49,5 @@ export default createReducer<MintState>(initialState, (builder) =>
           otherTypedValue: '',
         }
       }
-    })
+    }),
 )

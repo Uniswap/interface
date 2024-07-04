@@ -1,12 +1,13 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 enum ArbitrumXV2ExperimentGroup {
   Test = 'Test',
@@ -39,7 +40,7 @@ export function useRoutingAPIArguments({
   const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
   const xv2ArbitrumEnabled =
     useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
-  const isXv2Arbitrum = tokenIn?.chainId === ChainId.ARBITRUM_ONE && xv2ArbitrumEnabled
+  const isXv2Arbitrum = tokenIn?.chainId === UniverseChainId.ArbitrumOne && xv2ArbitrumEnabled
   const priceImprovementBps = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'priceImprovementBps', 0)
   const forceOpenOrders = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'forceOpenOrders', false)
   const deadlineBufferSecs = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'deadlineBufferSecs', 30)
@@ -88,6 +89,6 @@ export function useRoutingAPIArguments({
       priceImprovementBps,
       forceOpenOrders,
       deadlineBufferSecs,
-    ]
+    ],
   )
 }

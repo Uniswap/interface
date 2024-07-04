@@ -5,6 +5,7 @@ import { ActivityIndicator } from 'react-native'
 import { Button, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
@@ -12,7 +13,6 @@ import { useCancelationGasFeeInfo, useUSDValue } from 'wallet/src/features/gas/h
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function CancelConfirmationView({
   authTrigger,
@@ -31,10 +31,7 @@ export function CancelConfirmationView({
   const accountAddress = useActiveAccount()?.address
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const gasFeeUSD = useUSDValue(
-    transactionDetails.chainId,
-    cancelationGasFeeInfo?.cancelationGasFee
-  )
+  const gasFeeUSD = useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
@@ -58,13 +55,7 @@ export function CancelConfirmationView({
     !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending
 
   return (
-    <Flex
-      centered
-      grow
-      backgroundColor="$surface1"
-      borderRadius="$rounded20"
-      gap="$spacing12"
-      p="$spacing12">
+    <Flex centered grow backgroundColor="$surface1" borderRadius="$rounded20" gap="$spacing12" p="$spacing12">
       <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
         <SlashCircleIcon color={colors.neutral2.get()} strokeWidth="1" />
       </Flex>
@@ -103,7 +94,8 @@ export function CancelConfirmationView({
           testID={ElementName.Cancel}
           theme="detrimental"
           width="50%"
-          onPress={onPressCancel}>
+          onPress={onPressCancel}
+        >
           {t('common.button.confirm')}
         </Button>
       </Flex>

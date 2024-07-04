@@ -33,7 +33,6 @@ module.exports = {
     'eslint:recommended',
     '@react-native-community',
     'plugin:jest/recommended',
-    'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
   ],
   plugins: [
@@ -50,21 +49,22 @@ module.exports = {
   ],
   rules: {
     ...complexityRules,
+
+    // disable prettier linting and linting that we leave to prettier:
+    'prettier/prettier': 0,
+    semi: 0,
+    quotes: 0,
+    'comma-dangle': 0,
+    'no-trailing-spaces': 0,
+
     // tamagui encourages inline styles and makes them fast
     'react-native/no-inline-styles': 'off',
     'guard-for-in': 'error',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
-    'no-console': 'warn',
     curly: 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
-    'no-relative-import-paths/no-relative-import-paths': [
-      2,
-      {
-        allowSameFolder: true,
-      },
-    ],
     'object-shorthand': 'error',
     // https://stackoverflow.com/questions/63961803/eslint-says-all-enums-in-typescript-app-are-already-declared-in-the-upper-scope
     'no-shadow': 'off',
@@ -180,12 +180,7 @@ module.exports = {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
             message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/wallet/src/components/modals/BottomSheetModal`.',
-          },
-          {
-            name: 'expo-localization',
-            message:
-              'Avoid using due to issue with unsupported locales. Use utilties/src/device/locales.ts getDeviceLocales instead',
+              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/BottomSheetModal`.',
           },
           {
             name: 'expo-haptics',
@@ -289,16 +284,6 @@ module.exports = {
     'react/no-danger': 'error',
     'react/no-danger-with-children': 'error',
     'react/no-unsafe': 'error',
-    // Overwrite default Prettier settings - https://prettier.io/docs/en/options.html
-    'prettier/prettier': [
-      2,
-      {
-        bracketSameLine: true,
-        singleQuote: true,
-        printWidth: 100,
-        semi: false,
-      },
-    ],
   },
   overrides: [
     {
@@ -310,7 +295,7 @@ module.exports = {
       },
     },
     {
-      // enable the rule specifically for TypeScript files
+      // enable these rules specifically for TypeScript files
       files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': ['error', { allowedNames: ['useEffect'] }],
@@ -342,6 +327,7 @@ module.exports = {
       rules: {
         '@jambit/typed-redux-saga/use-typed-effects': 'error',
         '@jambit/typed-redux-saga/delegate-effects': 'error',
+        'no-console': 'error',
       },
     },
     // Allow more depth for testing files
@@ -473,6 +459,19 @@ module.exports = {
           },
         ],
         'max-lines': ['off'], // cap file length
+      },
+    },
+    {
+      files: ['apps/stretch/src/contentScript/injected.ts'],
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'CallExpression[callee.object.name="logger"][callee.property.name!=/^(debug)$/]',
+            message:
+              'Only logger.debug is allowed in this file. Please handle errors and info logs explicitly using ErrorLog and InfoLog message passing.',
+          },
+        ],
       },
     },
   ],

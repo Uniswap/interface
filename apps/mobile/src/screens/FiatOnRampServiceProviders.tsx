@@ -6,17 +6,17 @@ import { ListRenderItemInfo, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { FORQuoteItem } from 'src/components/fiatOnRamp/QuoteItem'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
-import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
-import { AnimatedFlex, ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src'
+import { ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
+import { FORQuote, InitialQuoteSelection } from 'uniswap/src/features/fiatOnRamp/types'
+import { getServiceProviderForQuote } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
@@ -55,8 +55,7 @@ function Footer(): JSX.Element {
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { setSelectedQuote, quotesSections, baseCurrencyInfo, serviceProviders } =
-    useFiatOnRampContext()
+  const { setSelectedQuote, quotesSections, baseCurrencyInfo, serviceProviders } = useFiatOnRampContext()
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     const onPress = (): void => {
@@ -69,10 +68,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     return (
       <Flex px="$spacing12" py="$spacing8">
         {baseCurrencyInfo && (
-          <FORQuoteItem
-            serviceProvider={getServiceProviderForQuote(item, serviceProviders)}
-            onPress={onPress}
-          />
+          <FORQuoteItem serviceProvider={getServiceProviderForQuote(item, serviceProviders)} onPress={onPress} />
         )}
       </Flex>
     )
@@ -85,11 +81,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }): JSX.Element => (
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? null : type === InitialQuoteSelection.MostRecent ? (
-        <SectionHeader
-          Icon={TimePast}
-          iconColor="$neutral3"
-          title={t('fiatOnRamp.quote.type.recent')}
-        />
+        <SectionHeader Icon={TimePast} iconColor="$neutral3" title={t('fiatOnRamp.quote.type.recent')} />
       ) : (
         <Flex centered row gap="$spacing12" my="$spacing12">
           <Separator />
@@ -106,13 +98,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex height="100%">
-        <Flex
-          row
-          alignItems="center"
-          justifyContent="space-between"
-          pb="$spacing16"
-          pt="$spacing12"
-          px="$spacing16">
+        <Flex row alignItems="center" justifyContent="space-between" pb="$spacing16" pt="$spacing12" px="$spacing16">
           <BackButton />
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
             {t('fiatOnRamp.checkout.title')}

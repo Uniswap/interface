@@ -1,16 +1,19 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
+import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import Row from 'components/Row'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { StyledExternalLink } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
@@ -24,13 +27,10 @@ import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useFormatter } from 'utils/formatNumbers'
-import { DetailBubble } from './shared'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -184,7 +184,7 @@ const ContractsDropdownRow = ({
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   if (!chainId || !explorerUrl) {
@@ -248,7 +248,7 @@ const PoolDetailsHeaderActions = ({
           isOpen={contractsModalIsOpen}
           toggleOpen={toggleContractsModal}
           menuLabel={
-            chainId === ChainId.MAINNET ? (
+            chainId === UniverseChainId.Mainnet ? (
               <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
             ) : (
               <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
@@ -267,7 +267,7 @@ const PoolDetailsHeaderActions = ({
           menuFlyoutCss={ContractsModalContainer}
         />
       </div>
-      <ShareButton name={poolName} />
+      <ShareButton name={poolName} utmSource="share-pool" />
     </Row>
   )
 }
@@ -304,7 +304,7 @@ export function PoolDetailsHeader({
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
   const currencies = useMemo(
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
-    [token0, token1]
+    [token0, token1],
   )
 
   if (loading) {

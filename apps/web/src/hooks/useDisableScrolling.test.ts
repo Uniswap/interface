@@ -1,9 +1,8 @@
 import { renderHook } from '@testing-library/react'
+import useDisableScrolling from 'hooks/useDisableScrolling'
 
-import useDisableScrolling from './useDisableScrolling'
-
-const UserAgentMock = jest.requireMock('uniswap/src/utils/platform')
-jest.mock('uniswap/src/utils/platform', () => ({
+const UserAgentMock = jest.requireMock('utilities/src/platform')
+jest.mock('utilities/src/platform', () => ({
   isMobile: true,
 }))
 

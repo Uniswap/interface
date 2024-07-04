@@ -2,31 +2,28 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
-  getTokenAddressForApiRequest,
+  getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import {
-  ApprovalAction,
-  TokenApprovalInfo,
-} from 'wallet/src/features/transactions/swap/trade/types'
+import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenApprovalInfoParams {
-  chainId: ChainId
+  chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   skip?: boolean
 }
 
 export function useTokenApprovalInfo(
-  params: TokenApprovalInfoParams
+  params: TokenApprovalInfoParams,
 ): (TokenApprovalInfo & { gasFee?: string }) | undefined {
   const { chainId, wrapType, currencyInAmount, skip } = params
 
@@ -36,7 +33,7 @@ export function useTokenApprovalInfo(
   const currencyIn = currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
-  const tokenAddress = getTokenAddressForApiRequest(currencyIn)
+  const tokenAddress = getTokenAddressForApi(currencyIn)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const supportedChainId = toTradingApiSupportedChainId(chainId)
@@ -62,7 +59,7 @@ export function useTokenApprovalInfo(
       skip: skip || !approvalRequestArgs || isWrap,
     },
     'POST',
-    TradingApiApolloClient
+    TradingApiApolloClient,
   )
 
   return useMemo(() => {

@@ -1,11 +1,8 @@
 import { useMemo } from 'react'
+import { isL2Chain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
-import {
-  MAX_AUTO_SLIPPAGE_TOLERANCE,
-  MIN_AUTO_SLIPPAGE_TOLERANCE,
-} from 'wallet/src/constants/transactions'
-import { isL2Chain, toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE, MIN_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import {
   getClassicQuoteFromResponse,
@@ -15,7 +12,7 @@ import { Trade, TradeWithStatus } from 'wallet/src/features/transactions/swap/tr
 
 export function useSetTradeSlippage(
   trade: TradeWithStatus,
-  userSetSlippage?: number
+  userSetSlippage?: number,
 ): { trade: TradeWithStatus; autoSlippageTolerance: number } {
   // Always calculate and return autoSlippageTolerance so the UI can warn user when custom slippage is set higher than auto slippage
   const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
@@ -28,16 +25,14 @@ export function useSetTradeSlippage(
 
     const { loading, error, isFetching } = trade
     const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
-    const tokenInIsNative = inputAmount.currency.isNative
-    const tokenOutIsNative = outputAmount.currency.isNative
 
     if (!quote) {
       return { trade, autoSlippageTolerance }
     }
 
     const newTrade = transformTradingApiResponseToTrade({
-      tokenInIsNative,
-      tokenOutIsNative,
+      currencyIn: inputAmount.currency,
+      currencyOut: outputAmount.currency,
       tradeType,
       deadline,
       slippageTolerance: autoSlippageTolerance,
@@ -68,9 +63,7 @@ export function useSetTradeSlippage(
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
-  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(
-    SlippageConfigName.MinAutoSlippageToleranceL2
-  )
+  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(SlippageConfigName.MinAutoSlippageToleranceL2)
 
   return useMemo<number>(() => {
     const quote = getClassicQuoteFromResponse(trade?.quote)

@@ -1,4 +1,5 @@
 import { isAddress } from '@ethersproject/address'
+import { formatCollectionQueryData, useCollection } from 'graphql/data/nft/Collection'
 import { GenieCollection } from 'nft/types'
 import { blocklistedCollections } from 'nft/utils'
 import { useMemo } from 'react'
@@ -6,7 +7,6 @@ import {
   NftCollection,
   useCollectionSearchQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { formatCollectionQueryData, useCollection } from './Collection'
 
 const MAX_SEARCH_RESULTS = 6
 
@@ -30,7 +30,7 @@ function useCollectionQuerySearch(query: string, skip?: boolean): useCollectionS
           ?.filter(
             (collectionEdge) =>
               collectionEdge.node.nftContracts?.[0]?.address &&
-              !blocklistedCollections.includes(collectionEdge.node.nftContracts?.[0]?.address)
+              !blocklistedCollections.includes(collectionEdge.node.nftContracts?.[0]?.address),
           )
           .slice(0, MAX_SEARCH_RESULTS)
           .map((collectionEdge) => {
@@ -51,6 +51,6 @@ export function useCollectionSearch(queryOrAddress: string): useCollectionSearch
   return isName
     ? queryResult
     : invalidCollectionAddress
-    ? { data: [], loading: false }
-    : { data: [addressResult.data], loading: addressResult.loading }
+      ? { data: [], loading: false }
+      : { data: [addressResult.data], loading: addressResult.loading }
 }

@@ -1,10 +1,10 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
-import { ChainId } from 'uniswap/src/types/chains'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 /**
  * A signer that uses a native keyring to access keys
@@ -12,7 +12,10 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
  */
 
 export class NativeSigner extends Signer {
-  constructor(private readonly address: string, provider?: providers.Provider) {
+  constructor(
+    private readonly address: string,
+    provider?: providers.Provider,
+  ) {
     super()
 
     if (provider && !providers.Provider.isProvider(provider)) {
@@ -34,12 +37,12 @@ export class NativeSigner extends Signer {
   async _signTypedData(
     domain: TypedDataDomain,
     types: Record<string, Array<TypedDataField>>,
-    value: Record<string, unknown>
+    value: Record<string, unknown>,
   ): Promise<string> {
     const signature = await Keyring.signHashForAddress(
       this.address,
       _TypedDataEncoder.hash(domain, types, value),
-      toSupportedChainId(domain.chainId) || ChainId.Mainnet
+      toSupportedChainId(domain.chainId) || UniverseChainId.Mainnet,
     )
     return signature
   }
@@ -63,7 +66,7 @@ export class NativeSigner extends Signer {
     const signature = await Keyring.signTransactionHashForAddress(
       this.address,
       hashedTx,
-      tx.chainId || ChainId.Mainnet
+      tx.chainId || UniverseChainId.Mainnet,
     )
 
     return utils.serializeTransaction(ut, signature)

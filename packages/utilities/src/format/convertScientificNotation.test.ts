@@ -1,4 +1,4 @@
-import { convertScientificNotationToNumber } from './convertScientificNotation'
+import { convertScientificNotationToNumber } from 'utilities/src/format/convertScientificNotation'
 
 describe('convertScientificNotationToNumber', () => {
   it('does not do anything to a regular number', () => {

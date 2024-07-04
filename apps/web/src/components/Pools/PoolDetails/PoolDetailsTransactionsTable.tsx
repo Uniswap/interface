@@ -11,8 +11,7 @@ import {
   PoolTableTransactionType,
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
-import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { OrderDirection, getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
@@ -31,11 +30,6 @@ const StyledExternalLink = styled(ExternalLink)`
 const TableWrapper = styled.div`
   min-height: 256px;
 `
-
-type PoolTxTableSortState = {
-  sortBy: Transaction_OrderBy
-  sortDirection: OrderDirection
-}
 
 enum PoolTransactionColumn {
   Timestamp,
@@ -81,20 +75,16 @@ export function PoolDetailsTransactionsTable({
   const [filter, setFilters] = useState<PoolTableTransactionType[]>([
     PoolTableTransactionType.BUY,
     PoolTableTransactionType.SELL,
-    PoolTableTransactionType.BURN,
-    PoolTableTransactionType.MINT,
+    PoolTableTransactionType.REMOVE,
+    PoolTableTransactionType.ADD,
   ])
 
-  const [sortState] = useState<PoolTxTableSortState>({
-    sortBy: Transaction_OrderBy.Timestamp,
-    sortDirection: OrderDirection.Desc,
-  })
   const { transactions, loading, loadMore, error } = usePoolTransactions(
     poolAddress,
     chain.id,
     filter,
     token0,
-    protocolVersion
+    protocolVersion,
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -106,8 +96,8 @@ export function PoolDetailsTransactionsTable({
         header: () => (
           <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]} justifyContent="flex-start">
             <Row gap="4px">
-              {sortState.sortBy === Transaction_OrderBy.Timestamp && <HeaderArrow direction={OrderDirection.Desc} />}
-              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
+              <HeaderArrow direction={OrderDirection.Desc} />
+              <HeaderSortText $active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
@@ -146,9 +136,9 @@ export function PoolDetailsTransactionsTable({
               </span>
             )
           } else {
-            color = row.type === PoolTableTransactionType.MINT ? 'success' : 'critical'
+            color = row.type === PoolTableTransactionType.ADD ? 'success' : 'critical'
             text =
-              row.type === PoolTableTransactionType.MINT ? (
+              row.type === PoolTableTransactionType.ADD ? (
                 <Trans i18nKey="common.add.label" />
               ) : (
                 <Trans i18nKey="common.remove.label" />
@@ -183,7 +173,7 @@ export function PoolDetailsTransactionsTable({
               {PoolTransactionTableType.getValue?.()}
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor((row) => row.amountUSD, {
         id: 'fiat-value',
@@ -288,7 +278,6 @@ export function PoolDetailsTransactionsTable({
     formatFiatPrice,
     formatNumber,
     showLoadingSkeleton,
-    sortState.sortBy,
     token0,
     token1?.symbol,
   ])

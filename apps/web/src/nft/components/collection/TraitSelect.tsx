@@ -2,7 +2,10 @@ import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import * as styles from 'nft/components/collection/Filters.css'
+import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
 import { Checkbox } from 'nft/components/layout/Checkbox'
+import { Input } from 'nft/components/layout/Input'
 import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { pluralize } from 'nft/utils/roundAndPluralize'
@@ -11,9 +14,6 @@ import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, 
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Input } from '../layout/Input'
-import * as styles from './Filters.css'
-import { TraitsHeader } from './TraitsHeader'
 
 const TRAIT_ROW_HEIGHT = 44
 
@@ -126,7 +126,7 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
 
   const searchedTraits = useMemo(
     () => traits.filter((t) => t.trait_value?.toString().toLowerCase().includes(debouncedSearch.toLowerCase())),
-    [debouncedSearch, traits]
+    [debouncedSearch, traits],
   )
 
   const Row = useCallback(
@@ -135,11 +135,11 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
 
       const isTraitSelected = selectedTraits.find(
         ({ trait_type, trait_value }) =>
-          trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value)
+          trait_type === trait.trait_type && String(trait_value) === String(trait.trait_value),
       )
       return <TraitItem style={style} isTraitSelected={!!isTraitSelected} {...{ trait, addTrait, removeTrait }} />
     },
-    [selectedTraits, addTrait, removeTrait]
+    [selectedTraits, addTrait, removeTrait],
   )
 
   const itemKey = useCallback((index: number, data: Trait[]) => {
@@ -161,7 +161,9 @@ export const TraitSelect = ({ traits, type, index }: { traits: Trait[]; type: st
       />
       <Column
         className={styles.filterDropDowns}
-        style={{ height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px` }}
+        style={{
+          height: `${Math.min(TRAIT_ROW_HEIGHT * searchedTraits.length, styles.MAX_FILTER_DROPDOWN_HEIGHT)}px`,
+        }}
       >
         <AutoSizer disableWidth>
           {({ height }: { height: number }) => (

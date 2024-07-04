@@ -1,6 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
+import { logger } from 'utilities/src/logger/logger'
 
 function truncateValue(value: string, decimals: number): string {
   const parts = value.split(/[.,]/)
@@ -17,7 +18,7 @@ function truncateValue(value: string, decimals: number): string {
  */
 export default function tryParseCurrencyAmount<T extends Currency>(
   value?: string,
-  currency?: T
+  currency?: T,
 ): CurrencyAmount<T> | undefined {
   if (!value || !currency || isNaN(parseFloat(value))) {
     return undefined
@@ -29,7 +30,7 @@ export default function tryParseCurrencyAmount<T extends Currency>(
     }
   } catch (error) {
     // fails if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-    console.debug(`Failed to parse input amount: "${value}"`, error)
+    logger.debug('tryParseCurrencyAmount', 'tryParseCurrencyAmount', `Failed to parse input amount: "${value}"`, error)
   }
   return undefined
 }

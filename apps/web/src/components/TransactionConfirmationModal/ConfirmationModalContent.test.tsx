@@ -1,7 +1,6 @@
+import { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { render, screen } from 'test-utils/render'
 import noop from 'utilities/src/react/noop'
-
-import { ConfirmationModalContent } from '.'
 
 describe('ConfirmationModalContent', () => {
   it('should render the L2 icon for optimism', () => {
@@ -12,7 +11,7 @@ describe('ConfirmationModalContent', () => {
         topContent={() => <div>topContent</div>}
         bottomContent={() => <div>bottomContent</div>}
         headerContent={() => <div data-testid="confirmation-modal-chain-icon">headerContent</div>}
-      />
+      />,
     )
     expect(screen.getByTestId('confirmation-modal-chain-icon')).toBeInTheDocument()
   })
@@ -24,7 +23,7 @@ describe('ConfirmationModalContent', () => {
         onDismiss={jest.fn()}
         topContent={() => <div>topContent</div>}
         bottomContent={() => <div>bottomContent</div>}
-      />
+      />,
     )
     expect(screen.queryByTestId('confirmation-modal-chain-icon')).not.toBeInTheDocument()
   })

@@ -1,16 +1,10 @@
-// eslint-disable-next-line no-restricted-imports
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { spacing } from 'ui/src/theme'
-
-export const DEFAULT_BOTTOM_INSET = spacing.spacing20
+import type { EdgeInsets } from 'react-native-safe-area-context'
 
 export const useDeviceInsets = (): EdgeInsets => {
-  const insets = useSafeAreaInsets()
-
-  if (insets.bottom === 0) {
-    // Add bottom padding on devices which don't have on-screen navigation bar
-    insets.bottom = DEFAULT_BOTTOM_INSET
+  return {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
-
-  return insets
 }

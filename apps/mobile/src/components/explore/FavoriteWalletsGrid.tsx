@@ -11,7 +11,8 @@ import {
   SortableGridChangeEvent,
   SortableGridRenderItem,
 } from 'src/components/sortableGrid'
-import { AnimatedFlex, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { setFavoriteWallets } from 'wallet/src/features/favorites/slice'
 import { useAppDispatch } from 'wallet/src/state'
@@ -24,10 +25,7 @@ type FavoriteWalletsGridProps = AutoScrollProps & {
 }
 
 /** Renders the favorite wallets section on the Explore tab */
-export function FavoriteWalletsGrid({
-  showLoading,
-  ...rest
-}: FavoriteWalletsGridProps): JSX.Element {
+export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGridProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
@@ -47,7 +45,7 @@ export function FavoriteWalletsGrid({
     ({ data }: SortableGridChangeEvent<string>) => {
       dispatch(setFavoriteWallets({ addresses: data }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const renderItem = useCallback<SortableGridRenderItem<string>>(
@@ -61,7 +59,7 @@ export function FavoriteWalletsGrid({
         setIsEditing={setIsEditing}
       />
     ),
-    [isEditing]
+    [isEditing],
   )
 
   const animatedStyle = useAnimatedStyle(() => ({

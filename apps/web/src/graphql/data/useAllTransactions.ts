@@ -7,29 +7,26 @@ import {
   useV2TransactionsQuery,
   useV3TransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum TransactionType {
   SWAP = 'Swap',
-  MINT = 'Add',
-  BURN = 'Remove',
+  ADD = 'Add',
+  REMOVE = 'Remove',
 }
 
 export const BETypeToTransactionType: { [key: string]: TransactionType } = {
   [PoolTransactionType.Swap]: TransactionType.SWAP,
-  [PoolTransactionType.Remove]: TransactionType.BURN,
-  [PoolTransactionType.Add]: TransactionType.MINT,
+  [PoolTransactionType.Remove]: TransactionType.REMOVE,
+  [PoolTransactionType.Add]: TransactionType.ADD,
 }
 
 const ALL_TX_DEFAULT_QUERY_SIZE = 20
 
 export function useAllTransactions(
   chain: Chain,
-  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
+  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE],
 ) {
   const isWindowVisible = useIsWindowVisible()
-  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
 
   const {
     data: dataV3,
@@ -47,7 +44,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV2,
   } = useV2TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: !isWindowVisible || (chain !== Chain.Ethereum && !v2ExploreEnabled),
+    skip: !isWindowVisible,
   })
 
   const loadingMoreV3 = useRef(false)
@@ -55,7 +52,7 @@ export function useAllTransactions(
   const querySizeRef = useRef(ALL_TX_DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || (loadingMoreV2.current && (chain === Chain.Ethereum || v2ExploreEnabled))) {
+      if (loadingMoreV3.current || loadingMoreV2.current) {
         return
       }
       loadingMoreV3.current = true
@@ -69,7 +66,7 @@ export function useAllTransactions(
           if (!fetchMoreResult) {
             return prev
           }
-          if (!loadingMoreV2.current || (chain !== Chain.Ethereum && !v2ExploreEnabled)) {
+          if (!loadingMoreV2.current) {
             onComplete?.()
           }
           const mergedData = {
@@ -79,36 +76,35 @@ export function useAllTransactions(
           return mergedData
         },
       })
-      if (chain === Chain.Ethereum || v2ExploreEnabled) {
-        fetchMoreV2({
-          variables: {
-            cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
-          },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult) {
-              return prev
-            }
-            !loadingMoreV3.current && onComplete?.()
-            const mergedData = {
-              v2Transactions: [...(prev.v2Transactions ?? []), ...(fetchMoreResult.v2Transactions ?? [])],
-            }
-            loadingMoreV2.current = false
-            return mergedData
-          },
-        })
-      }
+
+      fetchMoreV2({
+        variables: {
+          cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) {
+            return prev
+          }
+          !loadingMoreV3.current && onComplete?.()
+          const mergedData = {
+            v2Transactions: [...(prev.v2Transactions ?? []), ...(fetchMoreResult.v2Transactions ?? [])],
+          }
+          loadingMoreV2.current = false
+          return mergedData
+        },
+      })
     },
-    [chain, dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3, v2ExploreEnabled]
+    [dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3],
   )
 
   const transactions: PoolTransaction[] = useMemo(() => {
     const v3Transactions =
       dataV3?.v3Transactions?.filter(
-        (tx): tx is PoolTransaction => tx.type && filter.includes(BETypeToTransactionType[tx.type])
+        (tx): tx is PoolTransaction => tx.type && filter.includes(BETypeToTransactionType[tx.type]),
       ) ?? []
     const v2Transactions =
       dataV2?.v2Transactions?.filter(
-        (tx): tx is PoolTransaction => tx !== undefined && tx.type && filter.includes(BETypeToTransactionType[tx.type])
+        (tx): tx is PoolTransaction => tx !== undefined && tx.type && filter.includes(BETypeToTransactionType[tx.type]),
       ) ?? []
     return [...v3Transactions, ...v2Transactions]
       .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))

@@ -5,8 +5,7 @@ import { Trans } from 'i18n'
 import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
 import { css, useTheme } from 'styled-components'
-
-import { isMobile } from 'uniswap/src/utils/platform'
+import { isMobile } from 'utilities/src/platform'
 
 const StyledDropdownButton = css`
   border-radius: 20px;
@@ -25,7 +24,7 @@ interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
 }
 
 function getChartTypeSelectorOption<T extends ChartType | PriceChartType>(
-  option: ChartTypeSelectorOption<T> | T
+  option: ChartTypeSelectorOption<T> | T,
 ): ChartTypeSelectorOption<T> {
   if (typeof option === 'string') {
     return { value: option }

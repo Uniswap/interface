@@ -1,14 +1,14 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
+import { chainIdToBackendChain } from 'constants/chains'
+import { PoolState, usePool } from 'hooks/usePools'
 import ms from 'ms'
 import { useMemo } from 'react'
-
-import useFeeTierDistributionQuery from '../graphql/thegraph/FeeTierDistributionQuery'
-import { PoolState, usePool } from './usePools'
-
-// maximum number of blocks past which we consider the data stale
-const MAX_DATA_BLOCK_AGE = 20
+import {
+  useFeeTierDistributionQuery,
+  useIsV3SubgraphStaleQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { logger } from 'utilities/src/logger/logger'
 
 interface FeeTierDistribution {
   isLoading: boolean
@@ -21,7 +21,7 @@ interface FeeTierDistribution {
 
 export function useFeeTierDistribution(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
 ): FeeTierDistribution {
   const { isLoading, error, distributions } = usePoolTVL(currencyA?.wrapped, currencyB?.wrapped)
 
@@ -74,34 +74,47 @@ export function useFeeTierDistribution(
 }
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
-  const latestBlock = useBlockNumber()
-  const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address, ms(`30s`))
+  const chain = chainIdToBackendChain({ chainId: token0?.chainId, withFallback: true })
+  const { loading, error, data } = useFeeTierDistributionQuery({
+    variables: {
+      chain,
+      token0: token0?.address ?? '',
+      token1: token1?.address ?? '',
+    },
+    pollInterval: ms(`30s`),
+  })
 
-  const { asToken0, asToken1, _meta } = data ?? {}
+  const { data: isSubgraphStaleData, error: isSubgraphStaleError } = useIsV3SubgraphStaleQuery({
+    variables: { chain },
+    pollInterval: ms(`30s`),
+  })
+
+  const { v3PoolsForTokenPair } = data ?? {}
 
   return useMemo(() => {
-    if (!latestBlock || !_meta || !asToken0 || !asToken1) {
+    if (isSubgraphStaleError || !v3PoolsForTokenPair) {
       return {
-        isLoading,
-        error,
+        isLoading: loading,
+        error: error ?? isSubgraphStaleError,
       }
     }
 
-    if (latestBlock - (_meta?.block?.number ?? 0) > MAX_DATA_BLOCK_AGE) {
-      console.log(`Graph stale (latest block: ${latestBlock})`)
+    if (isSubgraphStaleData?.isV3SubgraphStale) {
+      logger.info('useFeeTierDistribution', 'usePoolTVL', `Subgraph stale`)
       return {
-        isLoading,
+        isLoading: loading,
         error,
       }
     }
-
-    const all = asToken0.concat(asToken1)
 
     // sum tvl for token0 and token1 by fee tier
-    const tvlByFeeTier = all.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
+    const tvlByFeeTier = v3PoolsForTokenPair.reduce<{ [feeAmount: number]: [number | undefined, number | undefined] }>(
       (acc, value) => {
-        acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.totalValueLockedToken0)
-        acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.totalValueLockedToken1)
+        if (!value.feeTier) {
+          return acc
+        }
+        acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.token0Supply)
+        acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.token1Supply)
         return acc
       },
       {
@@ -109,7 +122,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
-      } as Record<FeeAmount, [number | undefined, number | undefined]>
+      } as Record<FeeAmount, [number | undefined, number | undefined]>,
     )
 
     // sum total tvl for token0 and token1
@@ -119,7 +132,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         acc[1] += value[1] ?? 0
         return acc
       },
-      [0, 0]
+      [0, 0],
     )
 
     // returns undefined if both tvl0 and tvl1 are undefined (pool not created)
@@ -131,27 +144,27 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         tvlByFeeTier[FeeAmount.LOWEST][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.LOWEST][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
       [FeeAmount.LOW]: mean(tvlByFeeTier[FeeAmount.LOW][0], sumToken0Tvl, tvlByFeeTier[FeeAmount.LOW][1], sumToken1Tvl),
       [FeeAmount.MEDIUM]: mean(
         tvlByFeeTier[FeeAmount.MEDIUM][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.MEDIUM][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
       [FeeAmount.HIGH]: mean(
         tvlByFeeTier[FeeAmount.HIGH][0],
         sumToken0Tvl,
         tvlByFeeTier[FeeAmount.HIGH][1],
-        sumToken1Tvl
+        sumToken1Tvl,
       ),
     }
 
     return {
-      isLoading,
+      isLoading: loading,
       error,
       distributions,
     }
-  }, [_meta, asToken0, asToken1, isLoading, error, latestBlock])
+  }, [isSubgraphStaleError, v3PoolsForTokenPair, isSubgraphStaleData?.isV3SubgraphStale, loading, error])
 }

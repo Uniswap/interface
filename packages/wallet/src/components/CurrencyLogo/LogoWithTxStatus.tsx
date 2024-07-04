@@ -1,46 +1,37 @@
+/* eslint-disable complexity */
 import React, { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
 import { Flex, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
-import {
-  AlertTriangle,
-  Approve,
-  ArrowDownInCircle,
-  ArrowUpInCircle,
-  QuestionInCircle,
-} from 'ui/src/components/icons'
+import { AlertTriangle, Approve, ArrowDownInCircle, ArrowUpInCircle, QuestionInCircle } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
+import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { CurrencyLogo, STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { TransactionSummaryNetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AssetType } from 'wallet/src/entities/assets'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import {
-  NFTTradeType,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { NFTTradeType, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 
 interface LogoWithTxStatusBaseProps {
   assetType: AssetType
   txType: TransactionType
   txStatus: TransactionStatus
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
 }
 
 interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
   dappImageUrl: Maybe<string>
   dappName: string
 }
@@ -92,7 +83,8 @@ function getLogo(props: LogoWithTxStatusProps): JSX.Element {
       height={size}
       overflow="hidden"
       testID="nft-viewer"
-      width={size}>
+      width={size}
+    >
       {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
     </Flex>
   )
@@ -110,7 +102,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   const color = colors.surface2
 
   let icon: JSX.Element | undefined
-  if (chainId && chainId !== ChainId.Mainnet) {
+  if (chainId && chainId !== UniverseChainId.Mainnet) {
     icon = <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
   } else {
     let Icon: React.NamedExoticComponent<IconProps> | undefined
@@ -133,6 +125,8 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         break
       // Fiat purchases use the same icon as receive
       case TransactionType.FiatPurchase:
+      case TransactionType.OnRampPurchase:
+      case TransactionType.OnRampTransfer:
       case TransactionType.Receive:
       case TransactionType.NFTMint:
         Icon = ArrowDownInCircle
@@ -152,12 +146,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
 
   useEffect(() => {
     if (!icon) {
-      logger.warn(
-        'statusIcon',
-        'GenerateStatusIcon',
-        'Could not find icon for transaction type:',
-        txType
-      )
+      logger.warn('statusIcon', 'GenerateStatusIcon', 'Could not find icon for transaction type:', txType)
     }
   }, [icon, txType])
 
@@ -192,9 +181,7 @@ export function DappLogoWithTxStatus({
   const getStatusIcon = (): JSX.Element | undefined => {
     switch (event) {
       case WalletConnectEvent.NetworkChanged:
-        return chainId ? (
-          <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} />
-        ) : undefined
+        return chainId ? <TransactionSummaryNetworkLogo chainId={chainId} size={statusSize} /> : undefined
       case WalletConnectEvent.TransactionConfirmed:
         return <Approve color={green} fill={fill} size={statusSize} testID="icon-approve" />
       case WalletConnectEvent.TransactionFailed:
@@ -254,18 +241,22 @@ export function DappLogoWithWCBadge({
   dappName,
   size,
   chainId,
+  hideWCBadge = false,
+  circular = false,
 }: {
   dappImageUrl: Maybe<string>
   dappName: string
   size: number
-  chainId: ChainId | null
+  chainId: WalletChainId | null
+  hideWCBadge?: boolean
+  circular?: boolean
 }): JSX.Element {
   const dappImageSize = size
   const statusSize = dappImageSize * STATUS_RATIO
   const totalSize = dappImageSize + statusSize * (1 / 4)
   const dappImage = dappImageUrl ? (
     <RemoteImage
-      borderRadius={borderRadii.rounded4}
+      borderRadius={circular ? borderRadii.roundedFull : borderRadii.rounded4}
       height={dappImageSize}
       testID="dapp-image"
       uri={dappImageUrl}
@@ -276,15 +267,15 @@ export function DappLogoWithWCBadge({
   )
 
   return (
-    <Flex height={totalSize} width={totalSize}>
+    <Flex centered height={totalSize} width={totalSize}>
       <Flex left={2} top={0}>
         {dappImage}
       </Flex>
-      {chainId && chainId !== ChainId.Mainnet ? (
+      {chainId && chainId !== UniverseChainId.Mainnet ? (
         <Flex bottom={-2} position="absolute" right={-2}>
           <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
         </Flex>
-      ) : (
+      ) : !hideWCBadge ? (
         <Flex
           backgroundColor="$surface2"
           borderColor="$surface1"
@@ -292,10 +283,11 @@ export function DappLogoWithWCBadge({
           borderWidth={2}
           bottom={-2}
           position="absolute"
-          right={-2}>
+          right={-2}
+        >
           <WalletConnectLogo height={statusSize} testID="wallet-connect-logo" width={statusSize} />
         </Flex>
-      )}
+      ) : null}
     </Flex>
   )
 }

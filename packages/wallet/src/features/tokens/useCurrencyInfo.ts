@@ -1,11 +1,8 @@
 import { useMemo } from 'react'
 import { useTokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'uniswap/src/types/chains'
-import {
-  currencyIdToContractInput,
-  gqlTokenToCurrencyInfo,
-} from 'wallet/src/features/dataApi/utils'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function useCurrencyInfo(_currencyId?: string): Maybe<CurrencyInfo> {
@@ -24,12 +21,12 @@ export function useCurrencyInfo(_currencyId?: string): Maybe<CurrencyInfo> {
   }, [data, _currencyId])
 }
 
-export function useNativeCurrencyInfo(chainId: ChainId): Maybe<CurrencyInfo> {
+export function useNativeCurrencyInfo(chainId: WalletChainId): Maybe<CurrencyInfo> {
   const nativeCurrencyId = buildNativeCurrencyId(chainId)
   return useCurrencyInfo(nativeCurrencyId)
 }
 
-export function useWrappedNativeCurrencyInfo(chainId: ChainId): Maybe<CurrencyInfo> {
+export function useWrappedNativeCurrencyInfo(chainId: WalletChainId): Maybe<CurrencyInfo> {
   const wrappedCurrencyId = buildWrappedNativeCurrencyId(chainId)
   return useCurrencyInfo(wrappedCurrencyId)
 }

@@ -2,7 +2,6 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -18,11 +17,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'uniswap/src/utils/platform'
-import {
-  PendingAccountActions,
-  pendingAccountActions,
-} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import { isAndroid } from 'utilities/src/platform'
 import { openSettings } from 'wallet/src/utils/linking'
 
 interface ImportMethodOption {
@@ -62,7 +57,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
 
   useAddBackButton(navigation)
@@ -72,9 +66,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid
-          ? t('account.cloud.error.unavailable.title.android')
-          : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
         isAndroid
           ? t('account.cloud.error.unavailable.message.android')
           : t('account.cloud.error.unavailable.message.ios'),
@@ -85,7 +77,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             style: 'default',
           },
           { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-        ]
+        ],
       )
       return
     }
@@ -98,9 +90,6 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   }
 
   const handleOnPress = async (nav: OnboardingScreens, importType: ImportType): Promise<void> => {
-    // Delete any pending accounts before entering flow.
-    dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-
     if (importType === ImportType.Restore) {
       await handleOnPressRestoreBackup()
       return
@@ -125,7 +114,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         gap="$spacing12"
         mt="$spacing4"
         shadowColor="$surface3"
-        shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
+        shadowRadius={!isDarkMode ? '$spacing8' : undefined}
+      >
         {importOptions.map(({ title, blurb, icon, nav, importType, name }, i) => (
           <OptionCard
             key={'connection-option-' + name + i}
@@ -139,11 +129,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea
-          alignItems="center"
-          hitSlop={16}
-          mb="$spacing12"
-          testID={ElementName.WatchWallet}>
+        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={ElementName.WatchWallet}>
           <Flex row alignItems="center" gap="$spacing8">
             <EyeIcon
               color={colors.accent1.get()}
@@ -154,9 +140,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             <Text
               color="$accent1"
               variant="buttonLabel2"
-              onPress={(): Promise<void> =>
-                handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)
-              }>
+              onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
+            >
               {t('account.wallet.button.watch')}
             </Text>
           </Flex>

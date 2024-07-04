@@ -1,12 +1,11 @@
 import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
+import { useCurrency, useToken } from 'hooks/Tokens'
+import useENSName from 'hooks/useENSName'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-
-import { nativeOnChain } from '../../constants/tokens'
-import { useCurrency, useToken } from '../../hooks/Tokens'
-import useENSName from '../../hooks/useENSName'
-import { VoteOption } from '../../state/governance/types'
+import { VoteOption } from 'state/governance/types'
 import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
@@ -26,7 +25,7 @@ import {
   TransactionType,
   VoteTransactionInfo,
   WrapTransactionInfo,
-} from '../../state/transactions/types'
+} from 'state/transactions/types'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)

@@ -38,12 +38,7 @@ export function NetworkFeeWarning({
         backgroundIconColor: colors.surface2.get(),
         caption: text,
         closeText: t('common.button.close'),
-        icon: (
-          <Gas
-            color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'}
-            size="$icon.24"
-          />
-        ),
+        icon: <Gas color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'} size="$icon.24" />,
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: t('transaction.networkCost.label'),
@@ -53,7 +48,8 @@ export function NetworkFeeWarning({
         placement,
         icon: gasFeeHighRelativeToValue ? <Gas color="$statusCritical" size="$icon.16" /> : null,
       }}
-      trigger={tooltipTrigger}>
+      trigger={tooltipTrigger}
+    >
       {children}
     </WarningInfo>
   )

@@ -2,23 +2,20 @@ import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { isSameAddress } from 'utilities/src/addresses'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import { TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
-import {
-  useActiveAccountAddressWithThrow,
-  useDisplayName,
-  useSignerAccounts,
-} from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 interface TransferFormWarningProps {
   recipient?: string
-  chainId?: ChainId
+  chainId?: WalletChainId
   showSpeedbumpModal: boolean
   onNext: () => void
   setTransferSpeedbump: (w: TransferSpeedbump) => void
@@ -41,24 +38,32 @@ export function TransferFormSpeedbumps({
   const currentSignerAccounts = useSignerAccounts()
   const isSignerRecipient = useMemo(
     () => currentSignerAccounts.some((a) => a.address === recipient),
-    [currentSignerAccounts, recipient]
+    [currentSignerAccounts, recipient],
   )
 
   const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
     recipient,
-    chainId ?? ChainId.Mainnet
+    chainId ?? UniverseChainId.Mainnet,
   )
 
+  const shouldWarnSelfSend = isSameAddress(activeAddress, recipient)
   const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress
   const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract
-  const shouldWarnErc20 = useIsErc20Contract(recipient, chainId ?? ChainId.Mainnet)
+  const shouldWarnErc20 = useIsErc20Contract(recipient, chainId ?? UniverseChainId.Mainnet)
 
   useEffect(() => {
     setTransferSpeedbump({
-      hasWarning: shouldWarnSmartContract || shouldWarnNewAddress,
+      hasWarning: shouldWarnSmartContract || shouldWarnNewAddress || shouldWarnErc20 || shouldWarnSelfSend,
       loading: addressLoading,
     })
-  }, [setTransferSpeedbump, addressLoading, shouldWarnSmartContract, shouldWarnNewAddress])
+  }, [
+    setTransferSpeedbump,
+    addressLoading,
+    shouldWarnSmartContract,
+    shouldWarnNewAddress,
+    shouldWarnErc20,
+    shouldWarnSelfSend,
+  ])
 
   const onCloseWarning = (): void => {
     setShowSpeedbumpModal(false)
@@ -69,12 +74,26 @@ export function TransferFormSpeedbumps({
   if (!showSpeedbumpModal) {
     return null
   }
+  if (shouldWarnSelfSend) {
+    return (
+      <WarningModal
+        caption={t('send.warning.self.message')}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.understand')}
+        modalName={ModalName.SendWarning}
+        severity={WarningSeverity.High}
+        title={t('send.warning.self.title')}
+        onClose={onCloseWarning}
+        onConfirm={onNext}
+      />
+    )
+  }
   if (shouldWarnErc20) {
     return (
       <WarningModal
         caption={t('send.warning.erc20.message')}
         closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        confirmText={t('common.button.understand')}
         modalName={ModalName.SendWarning}
         severity={WarningSeverity.High}
         title={t('send.warning.erc20.title')}
@@ -88,7 +107,7 @@ export function TransferFormSpeedbumps({
       <WarningModal
         caption={t('send.warning.smartContract.message')}
         closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        confirmText={t('common.button.understand')}
         modalName={ModalName.SendWarning}
         severity={WarningSeverity.None}
         title={t('send.warning.smartContract.title')}
@@ -107,12 +126,9 @@ export function TransferFormSpeedbumps({
         severity={WarningSeverity.Medium}
         title={t('send.warning.newAddress.title')}
         onClose={onCloseWarning}
-        onConfirm={onNext}>
-        <TransferRecipient
-          address={recipient}
-          displayName={displayName?.name}
-          type={displayName?.type}
-        />
+        onConfirm={onNext}
+      >
+        <TransferRecipient address={recipient} displayName={displayName?.name} type={displayName?.type} />
       </WarningModal>
     )
   }
@@ -138,7 +154,8 @@ const TransferRecipient = ({
       gap="$spacing8"
       px="$spacing16"
       py="$spacing12"
-      width="100%">
+      width="100%"
+    >
       <Text color="$neutral1" textAlign="center" variant="subheading2">
         {type === DisplayNameType.ENS ? displayName : address}
       </Text>

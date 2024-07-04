@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap/src/types/chains'
+import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -75,7 +75,7 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
   txHash: faker.datatype.uuid(),
   txId: faker.datatype.uuid(),
-  chainId: randomEnumValue(ChainId),
+  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
 }))
 
 export const approveTxNotification = createFixture<ApproveTxNotification>()(() => ({
@@ -101,15 +101,13 @@ export const wrapTxNotification = createFixture<WrapTxNotification>()(() => ({
   unwrapped: faker.datatype.boolean(),
 }))
 
-const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(
-  () => ({
-    ...transactionNotificationBase(),
-    txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
-    assetType: AssetType.Currency,
-    tokenAddress: faker.finance.ethereumAddress(),
-    currencyAmountRaw: faker.datatype.number().toString(),
-  })
-)
+const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(() => ({
+  ...transactionNotificationBase(),
+  txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
+  assetType: AssetType.Currency,
+  tokenAddress: faker.finance.ethereumAddress(),
+  currencyAmountRaw: faker.datatype.number().toString(),
+}))
 
 export const sendCurrencyTxNotification = createFixture<SendCurrencyTxNotification>()(() => ({
   ...transferCurrencyTxNotificationBase(),
@@ -163,7 +161,7 @@ export const successNotification = createFixture<SuccessNotification>()(() => ({
 export const swapNetworkNotification = createFixture<NetworkChangedNotification>()(() => ({
   ...appNotificationBase(),
   type: AppNotificationType.NetworkChanged,
-  chainId: randomEnumValue(ChainId),
+  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
   flow: 'swap',
 }))
 
@@ -174,14 +172,12 @@ export const chooseCountryNotification = createFixture<ChooseCountryNotification
   countryCode: faker.address.countryCode(),
 }))
 
-export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.AssetVisibility,
-    visible: faker.datatype.boolean(),
-    assetName: faker.lorem.words(),
-  })
-)
+export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.AssetVisibility,
+  visible: faker.datatype.boolean(),
+  assetName: faker.lorem.words(),
+}))
 
 export const swapPendingNotification = createFixture<SwapPendingNotification>()(() => ({
   ...appNotificationBase(),
@@ -189,16 +185,13 @@ export const swapPendingNotification = createFixture<SwapPendingNotification>()(
   wrapType: randomEnumValue(WrapType),
 }))
 
-export const transferCurrencyPendingNotification =
-  createFixture<TransferCurrencyPendingNotification>()(() => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.TransferCurrencyPending,
-    currencyInfo: currencyInfo(),
-  }))
+export const transferCurrencyPendingNotification = createFixture<TransferCurrencyPendingNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.TransferCurrencyPending,
+  currencyInfo: currencyInfo(),
+}))
 
-export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.ScantasticComplete,
-  })
-)
+export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.ScantasticComplete,
+}))

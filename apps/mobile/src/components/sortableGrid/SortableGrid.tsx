@@ -1,9 +1,9 @@
 import { LayoutChangeEvent, MeasureLayoutOnSuccessCallback, StyleSheet } from 'react-native'
 import Animated, { LayoutAnimationConfig, useAnimatedStyle } from 'react-native-reanimated'
-import { SortableGridProvider } from './SortableGirdProvider'
-import SortableGridItem from './SortableGridItem'
-import { useAutoScrollContext, useLayoutContext } from './contexts'
-import { useItemOrderUpdater, useStableCallback } from './hooks'
+import { SortableGridProvider } from 'src/components/sortableGrid/SortableGirdProvider'
+import SortableGridItem from 'src/components/sortableGrid/SortableGridItem'
+import { useAutoScrollContext, useLayoutContext } from 'src/components/sortableGrid/contexts'
+import { useItemOrderUpdater, useStableCallback } from 'src/components/sortableGrid/hooks'
 import {
   ActiveItemDecorationSettings,
   AutoScrollProps,
@@ -11,8 +11,8 @@ import {
   SortableGridDragStartEvent,
   SortableGridDropEvent,
   SortableGridRenderItem,
-} from './types'
-import { defaultKeyExtractor } from './utils'
+} from 'src/components/sortableGrid/types'
+import { defaultKeyExtractor } from 'src/components/sortableGrid/utils'
 
 type SortableGridProps<I> = AutoScrollProps &
   Partial<ActiveItemDecorationSettings> & {
@@ -123,17 +123,12 @@ function SortableGridInner<I>({
       <Animated.View
         ref={gridContainerRef}
         style={[styles.gridContainer, animatedContainerStyle]}
-        onLayout={handleGridMeasurement}>
+        onLayout={handleGridMeasurement}
+      >
         {data.map((item, index) => {
           const key = keyExtractor(item, index)
           return (
-            <SortableGridItem
-              key={key}
-              item={item}
-              itemKey={key}
-              numColumns={numColumns}
-              renderItem={renderItem}
-            />
+            <SortableGridItem key={key} item={item} itemKey={key} numColumns={numColumns} renderItem={renderItem} />
           )
         })}
       </Animated.View>
@@ -142,10 +137,7 @@ function SortableGridInner<I>({
       from the animated style was applied. We can't use onLayout on the grid items wrapper component because it already has the same height as containerHeight
       value, thus the onLayout callback won't be called again, because the size
       of the component doesn't change. */}
-      <Animated.View
-        style={[styles.helperView, animatedContainerStyle]}
-        onLayout={handleHelperMeasurement}
-      />
+      <Animated.View style={[styles.helperView, animatedContainerStyle]} onLayout={handleHelperMeasurement} />
     </LayoutAnimationConfig>
   )
 }

@@ -1,10 +1,6 @@
+import { NFTSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTSummaryItem'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
-import {
-  NFTMintTransactionInfo,
-  TransactionDetails,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
-import { NFTSummaryItem } from './NFTSummaryItem'
+import { NFTMintTransactionInfo, TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 
 export function NFTMintSummaryItem({
   transaction,
@@ -13,10 +9,6 @@ export function NFTMintSummaryItem({
   transaction: TransactionDetails & { typeInfo: NFTMintTransactionInfo }
 }): JSX.Element {
   return (
-    <NFTSummaryItem
-      layoutElement={layoutElement}
-      transaction={transaction}
-      transactionType={TransactionType.NFTMint}
-    />
+    <NFTSummaryItem layoutElement={layoutElement} transaction={transaction} transactionType={TransactionType.NFTMint} />
   )
 }

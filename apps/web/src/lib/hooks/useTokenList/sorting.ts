@@ -1,7 +1,9 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { currencyKey } from 'utils/currencyKey'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 /** Sorts currency amounts (descending). */
@@ -20,8 +22,8 @@ export type TokenBalances = { [tokenAddress: string]: { usdValue: number; balanc
 
 /** Sorts tokens by currency amount (descending), then safety, then symbol (ascending). */
 function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
-  const aAddress = a.isNative ? 'ETH' : a.address?.toLowerCase()
-  const bAddress = b.isNative ? 'ETH' : b.address?.toLowerCase()
+  const aAddress = currencyKey(a)
+  const bAddress = currencyKey(b)
   // Sorts by balances
   const balanceComparison = balanceComparator(balances[aAddress]?.usdValue, balances[bAddress]?.usdValue)
   if (balanceComparison !== 0) {
@@ -40,8 +42,8 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 export function getSortedPortfolioTokens(
   portfolioTokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[] | undefined,
   balances: TokenBalances,
-  chainId: ChainId | undefined,
-  splitOptions?: SplitOptions
+  chainId: InterfaceChainId | undefined,
+  splitOptions?: SplitOptions,
 ): Token[] {
   const validVisiblePortfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [], splitOptions)
     .visibleTokens.map((tokenBalance) => {
@@ -50,7 +52,7 @@ export function getSortedPortfolioTokens(
         return undefined
       }
 
-      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET
+      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? UniverseChainId.Mainnet
       if (tokenChainId !== chainId) {
         return undefined
       }
@@ -64,7 +66,7 @@ export function getSortedPortfolioTokens(
         address,
         tokenBalance.token?.decimals,
         tokenBalance.token?.symbol,
-        tokenBalance.token?.project?.name ?? tokenBalance.token?.name
+        tokenBalance.token?.project?.name ?? tokenBalance.token?.name,
       )
 
       return portfolioToken

@@ -1,17 +1,19 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Web3Provider } from '@ethersproject/providers'
-import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 interface TransferInfo {
   provider?: Web3Provider
   account?: string
-  chainId?: ChainId
+  chainId?: InterfaceChainId
   currencyAmount?: CurrencyAmount<Currency>
   toAddress?: string
 }
@@ -19,7 +21,7 @@ interface TransferInfo {
 interface TransferCurrencyParams {
   provider: Web3Provider
   account: string
-  chainId: ChainId
+  chainId: InterfaceChainId
   toAddress: string
   tokenAddress: string
   amountInWei: string
@@ -65,7 +67,7 @@ function getNativeTransferRequest(params: TransferCurrencyParams): TransactionRe
 }
 
 async function getTokenTransferRequest(
-  transferParams: TransferCurrencyParams
+  transferParams: TransferCurrencyParams,
 ): Promise<TransactionRequest | undefined> {
   const { provider, account, chainId, toAddress, tokenAddress, amountInWei } = transferParams
   const tokenContract = getContract(tokenAddress, ERC20_ABI, provider, account) as Erc20
@@ -76,8 +78,14 @@ async function getTokenTransferRequest(
     })
 
     return { ...populatedTransaction, chainId }
-  } catch (_) {
-    console.error('could not populate transaction')
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'transfer',
+        function: 'getTokenTransferRequest',
+      },
+      extra: { transferParams },
+    })
   }
 
   return undefined

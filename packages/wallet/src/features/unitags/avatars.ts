@@ -1,9 +1,6 @@
 import axios from 'axios'
 import { Platform } from 'react-native'
-import {
-  UnitagAvatarUploadCredentials,
-  UnitagGetAvatarUploadUrlResponse,
-} from 'uniswap/src/features/unitags/types'
+import { UnitagAvatarUploadCredentials, UnitagGetAvatarUploadUrlResponse } from 'uniswap/src/features/unitags/types'
 import { logger } from 'utilities/src/logger/logger'
 import { getUnitagAvatarUploadUrl, updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -23,7 +20,7 @@ export function isLocalFileUri(imageUri: string): boolean {
 
 export async function uploadFileToS3(
   imageUri: string,
-  creds: UnitagAvatarUploadCredentials
+  creds: UnitagAvatarUploadCredentials,
 ): Promise<{ success: boolean }> {
   if (!creds.preSignedUrl || !creds.s3UploadFields) {
     return { success: false }
@@ -59,7 +56,7 @@ export async function uploadFileToS3(
         'Content-Type': 'multipart/form-data', // Important for S3 to process the file correctly
       },
     })
-    logger.info('unitags/utils.ts', 'uploadFileToS3', 'Avatar uploaded to S3 successfully')
+    logger.debug('unitags/utils.ts', 'uploadFileToS3', 'Avatar uploaded to S3 successfully')
     return { success: true }
   } catch (error) {
     logger.error(error, {
@@ -139,9 +136,7 @@ export const tryUploadAvatar = async ({
 }): Promise<{ success: boolean; skipped: boolean }> => {
   const needsAvatarUpload = !!avatarImageUri && isLocalFileUri(avatarImageUri)
   const isPreSignedUrlReady =
-    !avatarUploadUrlLoading &&
-    !!avatarUploadUrlResponse?.preSignedUrl &&
-    !!avatarUploadUrlResponse?.s3UploadFields
+    !avatarUploadUrlLoading && !!avatarUploadUrlResponse?.preSignedUrl && !!avatarUploadUrlResponse?.s3UploadFields
   const shouldTryAvatarUpload = needsAvatarUpload && isPreSignedUrlReady
 
   if (!shouldTryAvatarUpload) {

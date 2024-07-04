@@ -12,4 +12,15 @@
     "types": ["jest", "node", "@cloudflare/workers-types"],
   },
   "include": ["**/*.ts", "**/*.tsx"],
+  "references": [
+    {
+      "path": "../../../packages/ui"
+    },
+    {
+      "path": "../../../packages/utilities"
+    },
+    {
+      "path": "../../../packages/uniswap"
+    }
+  ]
 }

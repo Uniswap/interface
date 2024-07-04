@@ -8,7 +8,7 @@ import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -22,7 +22,7 @@ import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
-  chainId: ChainId
+  chainId: WalletChainId
   gasFee: GasFeeResult
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
@@ -76,7 +76,8 @@ export function TransactionDetails({
             borderRadius="$rounded16"
             gap="$spacing8"
             px="$spacing16"
-            py="$spacing8">
+            py="$spacing8"
+          >
             <AlertTriangle color={warningColor?.text} size="$icon.16" />
             <Flex fill py="$spacing2">
               <Text color={warningColor.text} variant="body3">
@@ -87,11 +88,7 @@ export function TransactionDetails({
         </TouchableArea>
       )}
       {gasFee.error && (
-        <Flex
-          backgroundColor="$DEP_accentCriticalSoft"
-          borderRadius="$rounded16"
-          mb="$spacing12"
-          p="$spacing12">
+        <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded16" mb="$spacing12" p="$spacing12">
           <Text color="$statusCritical">{t('swap.warning.expectedFailure')}</Text>
         </Flex>
       )}
@@ -105,22 +102,15 @@ export function TransactionDetails({
             justifyContent="center"
             pb="$spacing4"
             pt="$spacing8"
-            onPress={onPressToggleShowChildren}>
+            onPress={onPressToggleShowChildren}
+          >
             <Text color="$neutral3" variant="body3">
               {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
             </Text>
             {showChildren ? (
-              <AnglesMinimize
-                color={colors.neutral3.get()}
-                height={iconSizes.icon20}
-                width={iconSizes.icon20}
-              />
+              <AnglesMinimize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
             ) : (
-              <AnglesMaximize
-                color={colors.neutral3.get()}
-                height={iconSizes.icon20}
-                width={iconSizes.icon20}
-              />
+              <AnglesMaximize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
             )}
           </TouchableArea>
           <Separator />

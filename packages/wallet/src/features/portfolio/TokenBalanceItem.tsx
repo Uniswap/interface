@@ -1,13 +1,13 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**
@@ -37,10 +37,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   }
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
-  const balance = convertFiatAmountFormatted(
-    portfolioBalance.balanceUSD,
-    NumberType.FiatTokenQuantity
-  )
+  const balance = convertFiatAmountFormatted(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)
 
   return (
     <TouchableArea
@@ -55,7 +52,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
       onLongPress={disableOnPress}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <TokenLogo
           chainId={currency.chainId}

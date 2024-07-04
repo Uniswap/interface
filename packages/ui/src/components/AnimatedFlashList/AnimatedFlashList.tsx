@@ -1,7 +1,7 @@
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { FlashList, FlashListProps } from '@shopify/flash-list'
 import { forwardRef } from 'react'
-import { FlatListProps } from 'react-native'
+import type { FlatListProps } from 'react-native'
 import Animated from 'react-native-reanimated'
 
 // difficult to properly type
@@ -22,19 +22,18 @@ type AnimatedFlashListProps = FlatListProps<any> &
 export const AnimatedFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(
   function _AnimatedFlashList(props, ref) {
     return <ReanimatedFlashList ref={ref} sentry-label="ReanimatedFlashList" {...props} />
-  }
+  },
 )
 
-export const AnimatedBottomSheetFlashList = forwardRef<
-  typeof ReanimatedFlashList,
-  AnimatedFlashListProps
->(function _AnimatedBottomSheetFlashList(props, ref) {
-  return (
-    <ReanimatedFlashList
-      ref={ref}
-      {...props}
-      renderScrollComponent={BottomSheetScrollView}
-      sentry-label="AnimatedBottomSheetFlashList"
-    />
-  )
-})
+export const AnimatedBottomSheetFlashList = forwardRef<typeof ReanimatedFlashList, AnimatedFlashListProps>(
+  function _AnimatedBottomSheetFlashList(props, ref) {
+    return (
+      <ReanimatedFlashList
+        ref={ref}
+        {...props}
+        renderScrollComponent={BottomSheetScrollView}
+        sentry-label="AnimatedBottomSheetFlashList"
+      />
+    )
+  },
+)

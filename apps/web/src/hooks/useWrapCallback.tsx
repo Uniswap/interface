@@ -1,21 +1,21 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
-import { useAccount } from 'hooks/useAccount'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { usePoolContract, useWETHContract } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
+import { useCurrencyBalance } from 'state/connection/hooks'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/types/wrap'
-import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
-import { useCurrencyBalance } from '../state/connection/hooks'
-import { useTransactionAdder } from '../state/transactions/hooks'
-import { TransactionType } from '../state/transactions/types'
-import { usePoolContract, useWETHContract } from './useContract'
+import { logger } from 'utilities/src/logger/logger'
 
 const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
 
@@ -28,7 +28,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
@@ -56,19 +56,18 @@ export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputErr
 export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
-  typedValue: string | undefined
+  typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
-  const { chainId } = useWeb3React()
-  const wethContract = useWETHContract()
+  const { chainId } = useSwapAndLimitContext()
+  const wethContract = useWETHContract(true, chainId)
 
   const { address: smartPoolAddress } = useActiveSmartPool()
   const poolContract = usePoolContract(smartPoolAddress ?? undefined)
-
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
-    [inputCurrency, typedValue]
+    [inputCurrency, typedValue],
   )
   const addTransaction = useTransactionAdder()
 
@@ -125,7 +124,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     throw error
                   }
                   const txReceipt = await trace.child({ name: 'Deposit', op: 'wallet.send_transaction' }, () =>
-                    poolContract.wrapETH(`0x${inputAmount.quotient.toString(16)}`)
+                    poolContract.wrapETH(`0x${inputAmount.quotient.toString(16)}`),
                   )
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
@@ -143,8 +142,8 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-          ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
-          : WrapInputError.ENTER_NATIVE_AMOUNT,
+            ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+            : WrapInputError.ENTER_NATIVE_AMOUNT,
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -155,7 +154,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   try {
                     const txReceipt = await trace.child({ name: 'Withdraw', op: 'wallet.send_transaction' }, () =>
-                      poolContract.unwrapWETH9(`0x${inputAmount.quotient.toString(16)}`)
+                      poolContract.unwrapWETH9(`0x${inputAmount.quotient.toString(16)}`),
                     )
                     addTransaction(txReceipt, {
                       type: TransactionType.WRAP,
@@ -169,7 +168,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     return txReceipt.hash
                   } catch (error) {
-                    console.error('Could not withdraw', error)
+                    logger.warn('useWrapCallback', 'useWrapCallback', 'Failed to wrap', error)
                     throw error
                   }
                 })
@@ -177,8 +176,8 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-          ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
-          : WrapInputError.ENTER_WRAPPED_AMOUNT,
+            ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
+            : WrapInputError.ENTER_WRAPPED_AMOUNT,
       }
     } else {
       return NOT_APPLICABLE

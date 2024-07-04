@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import '@testing-library/jest-dom' // jest custom assertions
 import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'jest-styled-components' // adds style diffs to snapshot tests
@@ -82,7 +83,7 @@ jest.mock('@web3-react/core', () => {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
-        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions),
       ),
     useWeb3React: jest.fn(),
   }
@@ -126,6 +127,7 @@ jest.mock('state/routing/quickRouteSlice', () => {
  *   expect(console.error).toHaveBeenCalledWith(expect.any(Error))
  * })
  */
+
 failOnConsole({
   shouldFailOnAssert: true,
   shouldFailOnDebug: true,
@@ -133,6 +135,15 @@ failOnConsole({
   shouldFailOnInfo: true,
   shouldFailOnLog: true,
   shouldFailOnWarn: true,
+  allowMessage: (message, type) => {
+    if (type === 'error') {
+      // TODO(TAM-47): remove this allowed warning once Tamagui is upgraded >= 1.100
+      if (message.startsWith('[moti]: Invalid transform value.')) {
+        return true
+      }
+    }
+    return false
+  },
 })
 
 jest.mock('uniswap/src/features/gating/hooks')

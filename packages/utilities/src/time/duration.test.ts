@@ -1,5 +1,5 @@
+import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_DAY_MS, ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getDurationRemainingString } from './duration'
 
 describe('getDurationRemainingString', () => {
   it('should include h for durations > 1hr', () => {

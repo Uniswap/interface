@@ -3,10 +3,9 @@ import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall } from 'hooks/useContract'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-
-import useCurrentBlockTimestamp from './useCurrentBlockTimestamp'
 
 export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()

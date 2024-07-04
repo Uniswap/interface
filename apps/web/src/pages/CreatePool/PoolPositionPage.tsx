@@ -4,7 +4,6 @@
 //import { PageName } from '@uniswap/analytics-events'
 import { /*Currency,*/ CurrencyAmount /*, Fraction*/, Percent /*, Price, Token*/ } from '@uniswap/sdk-core'
 //import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { IconHoverText } from 'components/AccountDrawer/IconButton'
 //import { sendEvent } from 'components/analytics'
 //import Badge from 'components/Badge'
@@ -53,6 +52,7 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 //import { formatTickPrice } from 'utils/formatTickPrice'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { useAccount } from 'hooks/useAccount'
 //import { unwrappedToken } from 'utils/unwrappedToken'
 
 //import RangeBadge from '../../components/Badge/RangeBadge'
@@ -237,7 +237,7 @@ export default function PoolPositionPage() {
     poolOwnStake: string
     irr: string
   }>()
-  const { chainId, account } = useWeb3React()
+  const account = useAccount()
   //const theme = useTheme()
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -257,7 +257,7 @@ export default function PoolPositionPage() {
   //  id is stored in registry so we could save rpc call by using storing in state?
   const poolStorage = useSmartPoolFromAddress(poolAddressFromUrl ?? undefined)
   // TODO: user account also stores activation
-  const userAccount: UserAccount | undefined = useUserPoolBalance(poolAddressFromUrl, account)
+  const userAccount: UserAccount | undefined = useUserPoolBalance(poolAddressFromUrl, account.address)
 
   const { name, symbol, decimals, owner, baseToken } = poolStorage?.poolInitParams || {}
   const { minPeriod, spread, transactionFee } = poolStorage?.poolVariables || {}
@@ -265,7 +265,7 @@ export default function PoolPositionPage() {
 
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
   if (baseToken === ZERO_ADDRESS) {
-    base = nativeOnChain(chainId ?? 1)
+    base = nativeOnChain(account.chainId ?? 1)
   }
 
   const pool = useCurrency(poolAddressFromUrl ?? undefined)
@@ -292,7 +292,7 @@ export default function PoolPositionPage() {
   // TODO: pass recipient as optional parameter to check currency balance hook
   const poolInfo = {
     pool,
-    recipient: account,
+    recipient: account.address,
     owner,
     userPoolBalance,
     activation: Number(userAccount?.activation),
@@ -304,13 +304,13 @@ export default function PoolPositionPage() {
     irr: Number(irrFromUrl),
   } as PoolInfo
   const baseTokenBalances = useCurrencyBalancesMultipleAccounts(
-    [account ?? undefined, poolAddressFromUrl ?? undefined],
+    [account.address ?? undefined, poolAddressFromUrl ?? undefined],
     base ?? undefined
   )
 
   // TODO: check how improve efficiency as this method is called each time a pool is loaded
   const { poolId } = usePoolIdByAddress(poolAddressFromUrl ?? undefined)
-  const isPoolOperator = account === owner
+  const isPoolOperator = account.address === owner
   const unclaimedRewards = useUnclaimedRewards(isPoolOperator && poolId ? [poolId] : [])
   const freeStakeBalance = useFreeStakeBalance()
   const hasFreeStake = JSBI.greaterThan(freeStakeBalance ? freeStakeBalance.quotient : JSBI.BigInt(0), JSBI.BigInt(0))
@@ -356,20 +356,20 @@ export default function PoolPositionPage() {
         />
         {poolInfo && (
           <>
-            {account && (
+            {account.address && (
               <BuyModal
                 isOpen={showBuyModal}
                 onDismiss={() => setShowBuyModal(false)}
                 poolInfo={poolInfo}
-                userBaseTokenBalance={baseTokenBalances[account]}
+                userBaseTokenBalance={baseTokenBalances[account.address]}
               />
             )}
-            {account && poolAddressFromUrl && (
+            {account.address && poolAddressFromUrl && (
               <SellModal
                 isOpen={showSellModal}
                 onDismiss={() => setShowSellModal(false)}
                 poolInfo={poolInfo}
-                userBaseTokenBalance={baseTokenBalances[account]}
+                userBaseTokenBalance={baseTokenBalances[account.address]}
                 poolBaseTokenBalance={baseTokenBalances[poolAddressFromUrl]}
               />
             )}
@@ -536,7 +536,7 @@ export default function PoolPositionPage() {
                             </ThemedText.DeprecatedMain>
                           </RowFixed>
                           <RowFixed>
-                            {owner === account && JSBI.greaterThan(poolValue, JSBI.BigInt(0)) ? (
+                            {owner === account.address && JSBI.greaterThan(poolValue, JSBI.BigInt(0)) ? (
                               <ResponsiveButtonPrimary
                                 onClick={() => setShowSetValueModal(true)}
                                 height="1.1em"
@@ -618,7 +618,7 @@ export default function PoolPositionPage() {
                               </ThemedText.DeprecatedMain>
                             </RowFixed>
                             <RowFixed>
-                              {owner === account ? (
+                              {owner === account.address ? (
                                 <ResponsiveButtonPrimary
                                   onClick={() => setShowSetSpreadModal(true)}
                                   height="1.1em"
@@ -658,7 +658,7 @@ export default function PoolPositionPage() {
                               </ThemedText.DeprecatedMain>
                             </RowFixed>
                             <RowFixed>
-                              {owner === account ? (
+                              {owner === account.address ? (
                                 <ResponsiveButtonPrimary
                                   onClick={() => setShowSetLockupModal(true)}
                                   height="1.1em"
@@ -717,12 +717,12 @@ export default function PoolPositionPage() {
           </ResponsiveRow>
           <AutoColumn>
             <DarkCard>
-              <AddressCard address={poolAddressFromUrl} chainId={chainId} label="Smart Pool" />
+              <AddressCard address={poolAddressFromUrl} chainId={account.chainId} label="Smart Pool" />
             </DarkCard>
           </AutoColumn>
           <AutoColumn>
             <DarkCard>
-              <AddressCard address={owner} chainId={chainId} label="Pool Operator" />
+              <AddressCard address={owner} chainId={account.chainId} label="Pool Operator" />
             </DarkCard>
           </AutoColumn>
           <AutoColumn gap="sm" style={{ width: '100%', height: '100%', justifyContent: 'center' }}>
@@ -755,7 +755,7 @@ export default function PoolPositionPage() {
                 >
                   <Trans>Disable</Trans>
                 </ResponsiveButtonPrimary>
-                {owner === account && hasFreeStake && (
+                {owner === account.address && hasFreeStake && (
                   <ResponsiveButtonPrimary
                     style={{ marginRight: '8px' }}
                     width="fit-content"

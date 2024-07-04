@@ -1,6 +1,5 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
-import * as Sentry from '@sentry/react'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
@@ -20,8 +19,14 @@ import {
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { SignatureExpiredError, UniswapXv2HardQuoteError, UserRejectedRequestError } from 'utils/errors'
+import {
+  SignatureExpiredError,
+  UniswapXv2HardQuoteError,
+  UserRejectedRequestError,
+  WrongChainError,
+} from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
@@ -56,10 +61,11 @@ async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNum
     const { nonce } = await res.json()
     return BigNumber.from(nonce).add(1)
   } catch (e) {
-    Sentry.withScope(function (scope) {
-      scope.setTag('method', 'getUpdatedNonce')
-      scope.setLevel('warning')
-      Sentry.captureException(e)
+    logger.error(e, {
+      tags: {
+        file: 'useUniswapXSwapCallback',
+        function: 'getUpdatedNonce',
+      },
     })
     return null
   }
@@ -92,6 +98,10 @@ export function useUniswapXSwapCallback({
         }
         if (!trade) {
           throw new Error('missing trade')
+        }
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (account.chainId !== connectedChainId) {
+          throw new WrongChainError()
         }
 
         sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureRequested, {
@@ -191,6 +201,7 @@ export function useUniswapXSwapCallback({
               tokenInChainId: updatedOrder.chainId,
               tokenOutChainId: updatedOrder.chainId,
               requestId: trade.requestId,
+              quoteId: trade.quoteId,
               forceOpenOrder: trade.forceOpenOrder,
             }
           } else {
@@ -270,6 +281,7 @@ export function useUniswapXSwapCallback({
     [
       account.status,
       account.address,
+      account.chainId,
       provider,
       trade,
       allowedSlippage,
@@ -277,6 +289,6 @@ export function useUniswapXSwapCallback({
       portfolioBalanceUsd,
       analyticsContext,
       connectorName,
-    ]
+    ],
   )
 }

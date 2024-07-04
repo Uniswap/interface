@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
@@ -488,6 +489,22 @@ delete v63SchemaIntermediate.wallet.isUnlocked
 
 export const v63Schema = v63SchemaIntermediate
 
+const v64SchemaIntermediate = {
+  ...v63Schema,
+  behaviorHistory: {
+    ...v63Schema.behaviorHistory,
+    hasViewedUniconV2IntroModal: undefined,
+  },
+}
+
+delete v64SchemaIntermediate.behaviorHistory.hasViewedUniconV2IntroModal
+
+export const v64Schema = v64SchemaIntermediate
+
+export const v65Schema = { ...v64Schema }
+
+export const v66Schema = { ...v65Schema }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v63Schema => v63Schema
+export const getSchema = (): typeof v65Schema => v65Schema

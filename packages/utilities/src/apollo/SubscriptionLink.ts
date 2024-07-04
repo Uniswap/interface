@@ -79,7 +79,7 @@ export function createSubscriptionLink<T>(
     region = '', // left blank for a custom domain name (eg realtime.gateway.uniswap.org)
     token,
   }: SubscriptionLinkConfig,
-  client: ApolloClient<T>
+  client: ApolloClient<T>,
 ): SubscriptionLink {
   const auth: AuthOptions = { type: AUTH_TYPE.AWS_LAMBDA, token }
   // Order is intentional here - the header must be set before sending the subscription.

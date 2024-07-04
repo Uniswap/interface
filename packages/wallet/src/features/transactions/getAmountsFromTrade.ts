@@ -7,10 +7,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 export function getAmountsFromTrade(
-  typeInfo:
-    | ExactInputSwapTransactionInfo
-    | ExactOutputSwapTransactionInfo
-    | ConfirmedSwapTransactionInfo
+  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | ConfirmedSwapTransactionInfo,
 ): { inputCurrencyAmountRaw: string; outputCurrencyAmountRaw: string } {
   if (isConfirmedSwapTypeInfo(typeInfo)) {
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = typeInfo

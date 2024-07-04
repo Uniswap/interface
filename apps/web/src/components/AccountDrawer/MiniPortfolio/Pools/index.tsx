@@ -1,9 +1,19 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Position } from '@uniswap/v3-sdk'
-import { useWeb3React } from '@web3-react/core'
+import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
+import { useFeeValues } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
+import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { t } from 'i18n'
@@ -14,13 +24,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExpandoRow } from '../ExpandoRow'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useToggleAccountDrawer } from '../hooks'
-import { PositionInfo } from './cache'
-import { useFeeValues } from './hooks'
-import useMultiChainPositions from './useMultiChainPositions'
 
 /**
  * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
@@ -34,14 +37,14 @@ function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | unde
       positions
         ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
         : {},
-    [positions]
+    [positions],
   )
   const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
   const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
 
   return useMemo(
     () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
-    [filteredPositionDetails, tokenIdsToPositionInfo]
+    [filteredPositionDetails, tokenIdsToPositionInfo],
   )
 }
 
@@ -64,14 +67,14 @@ export default function Pools({ account }: { account: string }) {
     return [openPositions, closedPositions]
   }, [filteredPositions])
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const accountDrawer = useAccountDrawer()
 
   if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
 
   if (filteredPositions.length === 0) {
-    return <EmptyWalletModule type="pool" onNavigateClick={toggleWalletDrawer} />
+    return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
   }
 
   return (
@@ -128,16 +131,16 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   const liquidityValue = calculateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
-  const toggleWalletDrawer = useToggleAccountDrawer()
-  const { chainId: walletChainId } = useWeb3React()
+  const accountDrawer = useAccountDrawer()
+  const account = useAccount()
   const switchChain = useSwitchChain()
   const onClick = useCallback(async () => {
-    if (walletChainId !== chainId) {
+    if (account.chainId !== chainId) {
       await switchChain(chainId)
     }
-    toggleWalletDrawer()
+    accountDrawer.close()
     navigate('/pool/' + details.tokenId)
-  }, [walletChainId, chainId, switchChain, toggleWalletDrawer, navigate, details.tokenId])
+  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,
@@ -146,7 +149,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
       pool_token_0_address: pool.token0.address,
       pool_token_1_address: pool.token1.address,
     }),
-    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
+    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol],
   )
 
   return (

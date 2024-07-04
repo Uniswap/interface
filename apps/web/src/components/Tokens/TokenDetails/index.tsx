@@ -1,17 +1,26 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ChainId, Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
+import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
+import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
+import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
+import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import { LeftPanel, RightPanel, TokenDetailsLayout, TokenInfoContainer } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
+import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
+import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
+import { Hr } from 'components/Tokens/TokenDetails/shared'
+import { CHAIN_ID_TO_BACKEND_NAME, isSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
@@ -20,15 +29,11 @@ import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import styled from 'styled-components'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
-import { ActivitySection } from './ActivitySection'
-import BalanceSummary from './BalanceSummary'
-import MobileBalanceSummaryFooter from './MobileBalanceSummaryFooter'
-import { TokenDescription } from './TokenDescription'
-import { TokenDetailsHeader } from './TokenDetailsHeader'
-import { Hr } from './shared'
 
 const DividerLine = styled(Hr)`
   margin-top: 40px;
@@ -37,6 +42,9 @@ const DividerLine = styled(Hr)`
     opacity: 0;
     margin-bottom: 0;
   }
+`
+const BalanceSummaryContainer = styled.div`
+  margin-top: 40px;
 `
 
 function TDPBreadcrumb() {
@@ -78,8 +86,8 @@ function useSwapInitialInputCurrency() {
 }
 
 function TDPSwapComponent() {
-  const { address, currency, currencyChain, warning } = useTDPContext()
-  const appChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const { address, currency, currencyChainId, warning } = useTDPContext()
+  const account = useAccount()
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(
@@ -102,12 +110,15 @@ function TDPSwapComponent() {
       const preloadedLogoSrc = getInitialLogoUrl(
         newDefaultToken.wrapped.address,
         newDefaultToken.chainId,
-        newDefaultToken.isNative
+        newDefaultToken.isNative,
       )
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
-        chain: currencyChain,
+        chain:
+          CHAIN_ID_TO_BACKEND_NAME[
+            isSupportedChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId
+          ],
         inputAddress:
           // If only one token was selected before we navigate, then it was the default token and it's being replaced.
           // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
@@ -115,7 +126,7 @@ function TDPSwapComponent() {
       })
       navigate(url, { state: { preloadedLogoSrc } })
     },
-    [address, currencyChain, navigate]
+    [address, currencyChainId, navigate],
   )
 
   // Other token to prefill the swap form with
@@ -129,7 +140,7 @@ function TDPSwapComponent() {
       continueSwap?.resolve(value)
       setContinueSwap(undefined)
     },
-    [continueSwap, setContinueSwap]
+    [continueSwap, setContinueSwap],
   )
   const isBlockedToken = warning?.canProceed === false
 
@@ -145,7 +156,7 @@ function TDPSwapComponent() {
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={currency}
           onCurrencyChange={handleCurrencyChange}
-          disableTokenInputs={currency.chainId !== appChainId}
+          disableTokenInputs={currency.chainId !== account.chainId}
           compact
         />
       </div>
@@ -183,10 +194,12 @@ function TDPAnalytics({ children }: PropsWithChildren) {
 }
 
 export default function TokenDetails() {
-  const { address, currency, tokenQuery } = useTDPContext()
+  const { address, currency, tokenQuery, currencyChain, multiChainMap } = useTDPContext()
   const tokenQueryData = tokenQuery.data?.token
-
-  const { lg: isLargeScreenSize } = useScreenSize()
+  const pageChainBalance = multiChainMap[currencyChain]?.balance
+  const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
+  const { lg: showRightPanel } = useScreenSize()
+  const { direction: scrollDirection } = useScroll()
 
   return (
     <TDPAnalytics>
@@ -197,12 +210,17 @@ export default function TokenDetails() {
             <TokenDetailsHeader />
           </TokenInfoContainer>
           <ChartSection />
+          {!isLegacyNav && !showRightPanel && !!pageChainBalance && (
+            <BalanceSummaryContainer>
+              <PageChainBalanceSummary pageChainBalance={pageChainBalance} alignLeft />
+            </BalanceSummaryContainer>
+          )}
           <StatsSection chainId={currency.chainId} address={address} tokenQueryData={tokenQueryData} />
           <DividerLine />
           <ActivitySection />
         </LeftPanel>
         <RightPanel>
-          {isLargeScreenSize && (
+          {showRightPanel && (
             <>
               <TDPSwapComponent />
               <BalanceSummary />
@@ -210,7 +228,13 @@ export default function TokenDetails() {
           )}
           <TokenDescription />
         </RightPanel>
-        <MobileBalanceSummaryFooter />
+        {isLegacyNav ? (
+          <MobileBalanceSummaryFooter />
+        ) : (
+          <MobileBottomBar $hide={scrollDirection === ScrollDirection.DOWN}>
+            <TDPActionTabs />
+          </MobileBottomBar>
+        )}
       </TokenDetailsLayout>
     </TDPAnalytics>
   )

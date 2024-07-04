@@ -1,8 +1,7 @@
+import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-
-import { SettingsToggle } from './SettingsToggle'
 
 export const hideSpamAtom = atomWithStorage<boolean>('hideSmallBalances', true)
 

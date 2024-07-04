@@ -1,5 +1,4 @@
-import { isBetaEnv, isDevEnv, isProdEnv } from 'uniswap/src/utils/env'
-import { isTestEnv } from './env'
+import { isBetaEnv, isDevEnv, isProdEnv, isTestEnv } from 'utilities/src/environment'
 
 describe('env', () => {
   const ENV = process.env

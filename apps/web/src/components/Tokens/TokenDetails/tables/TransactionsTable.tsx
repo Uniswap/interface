@@ -16,8 +16,7 @@ import {
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
-import { unwrapToken } from 'graphql/data/util'
-import { OrderDirection, Swap_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { OrderDirection, unwrapToken } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
@@ -53,11 +52,6 @@ interface SwapLeg {
   token: GQLToken
 }
 
-type TokenTxTableSortState = {
-  sortBy: Swap_OrderBy
-  sortDirection: OrderDirection
-}
-
 export function TransactionsTable({
   chainId,
   referenceToken,
@@ -69,14 +63,10 @@ export function TransactionsTable({
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const [filter, setFilters] = useState<TokenTransactionType[]>([TokenTransactionType.BUY, TokenTransactionType.SELL])
-  const [sortState] = useState<TokenTxTableSortState>({
-    sortBy: Swap_OrderBy.Timestamp,
-    sortDirection: OrderDirection.Desc,
-  })
   const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
     referenceToken.address,
     chainId,
-    filter
+    filter,
   )
   const combinedError =
     errorV2 && errorV3
@@ -113,7 +103,7 @@ export function TransactionsTable({
           makerAddress: transaction.account,
         }
       }),
-    [transactions]
+    [transactions],
   )
 
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
@@ -126,8 +116,8 @@ export function TransactionsTable({
         header: () => (
           <Cell minWidth={120} justifyContent="flex-start" grow>
             <Row gap="xs">
-              {sortState.sortBy === Swap_OrderBy.Timestamp && <HeaderArrow direction={sortState.sortDirection} />}
-              <HeaderSortText $active={sortState.sortBy === Swap_OrderBy.Timestamp}>
+              <HeaderArrow direction={OrderDirection.Desc} />
+              <HeaderSortText $active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
@@ -192,7 +182,7 @@ export function TransactionsTable({
               </ThemedText.BodyPrimary>
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor(
         (row) => {
@@ -223,17 +213,14 @@ export function TransactionsTable({
               {swapOutput.getValue?.()}
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor((row) => row.usdValue, {
         id: 'fiat-value',
         header: () => (
           <Cell minWidth={125} justifyContent="flex-end">
             <Row gap="xs" justify="flex-end">
-              {sortState.sortBy === Swap_OrderBy.AmountUsd && <HeaderArrow direction={sortState.sortDirection} />}
-              <HeaderSortText $active={sortState.sortBy === Swap_OrderBy.AmountUsd}>
-                {activeLocalCurrency}
-              </HeaderSortText>
+              <HeaderSortText>{activeLocalCurrency}</HeaderSortText>
             </Row>
           </Cell>
         ),
@@ -262,8 +249,6 @@ export function TransactionsTable({
       }),
     ]
   }, [
-    sortState.sortBy,
-    sortState.sortDirection,
     showLoadingSkeleton,
     chainId,
     filterModalIsOpen,

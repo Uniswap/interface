@@ -1,4 +1,4 @@
-import { isWebAndroid } from 'uniswap/src/utils/platform'
+import { isWebAndroid } from 'utilities/src/platform'
 
 export function getCloudProviderName(): string {
   if (isWebAndroid) {

@@ -4,6 +4,9 @@ import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { RowBetween, RowFixed } from 'components/Row'
+import GasEstimateTooltip from 'components/swap/GasEstimateTooltip'
+import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
+import TradePrice from 'components/swap/TradePrice'
 import { Trans } from 'i18n'
 import { formatCommonPropertiesForTrade } from 'lib/utils/analytics'
 import { useState } from 'react'
@@ -15,9 +18,6 @@ import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
-import GasEstimateTooltip from './GasEstimateTooltip'
-import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
-import TradePrice from './TradePrice'
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 0;
@@ -110,6 +110,7 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
       <SwapDetailsWrapper gap="sm" data-testid="advanced-swap-details">
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />

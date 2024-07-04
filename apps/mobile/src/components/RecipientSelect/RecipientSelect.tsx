@@ -1,17 +1,16 @@
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
-import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
-import { filterRecipientByNameAndAddress } from 'wallet/src/components/RecipientSearch/filter'
-import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
-import { filterSections } from 'wallet/src/components/RecipientSearch/utils'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
+import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { SearchBar } from 'wallet/src/features/search/SearchBar'
 
 interface RecipientSelectProps {
@@ -25,11 +24,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
 
   return (
     <TouchableArea hapticFeedback testID={ElementName.SelectRecipient} onPress={onPress}>
-      <ScanQRIcon
-        color={colors.neutral2.get()}
-        height={iconSizes.icon20}
-        width={iconSizes.icon20}
-      />
+      <ScanQRIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
     </TouchableArea>
   )
 }
@@ -42,17 +37,9 @@ export function _RecipientSelect({
   const { t } = useTranslation()
   const { isSheetReady } = useBottomSheetContext()
 
+  const [pattern, setPattern] = useState('')
   const [showQRScanner, setShowQRScanner] = useState(false)
-  const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
-    useRecipients()
-
-  const filteredSections = useMemo(() => {
-    const filteredAddresses = filterRecipientByNameAndAddress(
-      pattern,
-      searchableRecipientOptions
-    ).map((item) => item.data.address)
-    return filterSections(sections, filteredAddresses)
-  }, [pattern, searchableRecipientOptions, sections])
+  const sections = useFilteredRecipientSections(pattern)
 
   const onPressQRScanner = useCallback(() => {
     Keyboard.dismiss()
@@ -63,17 +50,9 @@ export function _RecipientSelect({
     setShowQRScanner(false)
   }, [setShowQRScanner])
 
-  const noResults = pattern && pattern?.length > 0 && !loading && filteredSections.length === 0
-
   return (
     <>
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        flex={1}
-        gap="$spacing12"
-        mt="$spacing16"
-        px="$spacing24">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} flex={1} gap="$spacing12" mt="$spacing16" px="$spacing24">
         <Flex row>
           <Text variant="subheading1">{t('qrScanner.recipient.label.send')}</Text>
         </Flex>
@@ -84,9 +63,9 @@ export function _RecipientSelect({
           placeholder={t('qrScanner.recipient.input.placeholder')}
           value={pattern ?? ''}
           onBack={recipient ? onToggleShowRecipientSelector : undefined}
-          onChangeText={onChangePattern}
+          onChangeText={setPattern}
         />
-        {noResults ? (
+        {!sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
             <Text variant="buttonLabel2">{t('qrScanner.recipient.results.empty')}</Text>
             <Text color="$neutral3" textAlign="center" variant="body1">
@@ -95,18 +74,10 @@ export function _RecipientSelect({
           </Flex>
         ) : (
           // Show either suggested recipients or filtered sections based on query
-          isSheetReady && (
-            <RecipientList
-              renderedInModal
-              sections={filteredSections.length === 0 ? sections : filteredSections}
-              onPress={onSelectRecipient}
-            />
-          )
+          isSheetReady && <RecipientList renderedInModal sections={sections} onPress={onSelectRecipient} />
         )}
       </AnimatedFlex>
-      {showQRScanner && (
-        <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />
-      )}
+      {showQRScanner && <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelectRecipient} />}
     </>
   )
 }

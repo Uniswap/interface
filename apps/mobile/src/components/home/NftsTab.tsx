@@ -8,7 +8,7 @@ import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isAndroid } from 'utilities/src/platform'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
@@ -26,14 +26,14 @@ export const NftsTab = memo(
       headerHeight = 0,
       renderedInModal = false,
     },
-    ref
+    ref,
   ) {
     const colors = useSporeColors()
     const insets = useDeviceInsets()
     const navigation = useAppStackNavigation()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
-      containerProps?.contentContainerStyle
+      containerProps?.contentContainerStyle,
     )
 
     const renderNFTItem = useCallback(
@@ -50,15 +50,13 @@ export const NftsTab = memo(
 
         return <NftView item={item} owner={owner} onPress={onPressNft} />
       },
-      [owner, navigation]
+      [owner, navigation],
     )
 
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={
-            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
-          }
+          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
@@ -71,8 +69,8 @@ export const NftsTab = memo(
         <NftsList
           ref={ref}
           ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-          emptyStateStyle={containerProps?.emptyContainerStyle}
-          errorStateStyle={containerProps?.emptyContainerStyle}
+          emptyStateStyle={containerProps?.emptyComponentStyle}
+          errorStateStyle={containerProps?.emptyComponentStyle}
           footerHeight={footerHeight}
           isExternalProfile={isExternalProfile}
           owner={owner}
@@ -87,5 +85,5 @@ export const NftsTab = memo(
         />
       </Flex>
     )
-  })
+  }),
 )

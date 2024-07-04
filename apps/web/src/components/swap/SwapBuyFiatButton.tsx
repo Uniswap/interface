@@ -1,15 +1,15 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { SwapHeaderTabButton } from 'components/swap/styled'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
+import { useFiatOnrampAvailability, useOpenModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
-import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { SwapHeaderTabButton } from './styled'
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -23,8 +23,14 @@ enum BuyFiatFlowState {
   ACTIVE_NEEDS_ACCOUNT,
 }
 
-export default function SwapBuyFiatButton() {
-  const { account } = useWeb3React()
+export default function SwapBuyFiatButton({
+  triggerBuyFlow,
+  setTriggerBuyFlow,
+}: {
+  triggerBuyFlow?: boolean
+  setTriggerBuyFlow?: (value: boolean) => void
+}) {
+  const account = useAccount()
   const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
@@ -34,7 +40,7 @@ export default function SwapBuyFiatButton() {
     loading: fiatOnrampAvailabilityLoading,
   } = useFiatOnrampAvailability(checkFiatRegionAvailability)
   const [buyFiatFlowState, setBuyFiatFlowState] = useState(BuyFiatFlowState.INACTIVE)
-  const [walletDrawerOpen, toggleWalletDrawer] = useAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const setShowMoonpayTextInDrawer = useSetShowMoonpayText()
 
   // Depending on the current state of the buy fiat flow the user is in (buyFiatFlowState),
@@ -49,11 +55,11 @@ export default function SwapBuyFiatButton() {
     if (!fiatOnrampAvailabilityChecked) {
       setCheckFiatRegionAvailability(true)
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_CHECKING_REGION)
-    } else if (fiatOnrampAvailable && !account && !walletDrawerOpen) {
+    } else if (fiatOnrampAvailable && !account.isConnected && !accountDrawer.isOpen) {
       setShowMoonpayTextInDrawer(true)
-      toggleWalletDrawer()
+      accountDrawer.open()
       setBuyFiatFlowState(BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
-    } else if (fiatOnrampAvailable && account) {
+    } else if (fiatOnrampAvailable && account.isConnected) {
       openFiatOnRampModal()
       setBuyFiatFlowState(BuyFiatFlowState.INACTIVE)
     } else if (!fiatOnrampAvailable) {
@@ -62,28 +68,34 @@ export default function SwapBuyFiatButton() {
   }, [
     fiatOnrampAvailabilityChecked,
     fiatOnrampAvailable,
-    account,
-    walletDrawerOpen,
-    toggleWalletDrawer,
-    openFiatOnRampModal,
+    account.isConnected,
+    accountDrawer,
     setShowMoonpayTextInDrawer,
+    openFiatOnRampModal,
   ])
+
+  useEffect(() => {
+    if (triggerBuyFlow) {
+      handleBuyCrypto()
+      setTriggerBuyFlow?.(false)
+    }
+  }, [handleBuyCrypto, setTriggerBuyFlow, triggerBuyFlow])
 
   // Continue buy fiat flow automatically when requisite state changes have occured.
   useEffect(() => {
     if (
       (buyFiatFlowState === BuyFiatFlowState.ACTIVE_CHECKING_REGION && fiatOnrampAvailabilityChecked) ||
-      (account && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
+      (account.isConnected && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
     ) {
       handleBuyCrypto()
     }
-  }, [account, handleBuyCrypto, buyFiatFlowState, fiatOnrampAvailabilityChecked])
+  }, [account.isConnected, handleBuyCrypto, buyFiatFlowState, fiatOnrampAvailabilityChecked])
 
   const buyCryptoButtonDisabled =
     (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||
     fiatOnrampAvailabilityLoading ||
     // When wallet drawer is open AND user is in the connect wallet step of the buy fiat flow, disable buy fiat button.
-    (walletDrawerOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
+    (accountDrawer.isOpen && buyFiatFlowState === BuyFiatFlowState.ACTIVE_NEEDS_ACCOUNT)
 
   const fiatOnRampsUnavailableTooltipDisabled =
     !fiatOnrampAvailabilityChecked || (fiatOnrampAvailabilityChecked && fiatOnrampAvailable)
@@ -110,7 +122,7 @@ export default function SwapBuyFiatButton() {
       <Trace
         logPress
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
-        properties={{ account_connected: !!account }}
+        properties={{ account_connected: account.isConnected }}
       >
         <SwapHeaderTabButton
           $isActive={false}

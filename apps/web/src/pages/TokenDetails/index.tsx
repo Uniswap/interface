@@ -1,5 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
@@ -12,6 +10,8 @@ import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
+import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
+import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -20,12 +20,11 @@ import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useTheme } from 'styled-components'
 import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
-import { getTokenPageDescription, getTokenPageTitle } from './utils'
 
-function useOnChainToken(address: string | undefined, chainId: ChainId, skip: boolean) {
+function useOnChainToken(address: string | undefined, chainId: InterfaceChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)
 
   if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
@@ -39,11 +38,11 @@ function useOnChainToken(address: string | undefined, chainId: ChainId, skip: bo
 function useTDPCurrency(
   tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
-  currencyChainId: ChainId,
-  isNative: boolean
+  currencyChainId: InterfaceChainId,
+  isNative: boolean,
 ) {
   const { chainId } = useAccount()
-  const appChainId = chainId ?? ChainId.MAINNET
+  const appChainId = chainId ?? UniverseChainId.Mainnet
 
   const queryCurrency = useMemo(() => {
     if (isNative) {
@@ -111,7 +110,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     tokenQuery,
     tokenAddress,
     currencyChainInfo.id,
-    isNative
+    isNative,
   )
 
   const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
@@ -124,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     useSrcColor(
       extractedColorSrc,
       tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
-      theme.surface2
+      theme.surface2,
     ).tokenColor ?? undefined
 
   return useMemo(() => {
@@ -156,7 +155,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 }
 
 export default function TokenDetailsPage() {
-  const pageChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const account = useAccount()
+  const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
   const { tokenColor, address, currency, currencyChain, currencyChainId, tokenQuery } = contextValue
 

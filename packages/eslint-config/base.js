@@ -10,14 +10,6 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'prettier/prettier': [
-      'error',
-      {
-        semi: false,
-        singleQuote: true,
-        printWidth: 120,
-      },
-    ],
     'import/no-unused-modules': ['error', { unusedExports: true }],
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',
@@ -48,6 +40,13 @@ module.exports = {
       },
     },
     {
+      files: ['*.ts', '*.tsx'],
+      excludedFiles: ['*.test.ts', '*.test.tsx'],
+      rules: {
+        'no-console': 'error',
+      },
+    },
+    {
       files: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
       excludedFiles: '**/cypress/**',
       env: {
@@ -64,11 +63,6 @@ module.exports = {
       },
       extends: ['plugin:cypress/recommended'],
       plugins: ['cypress'],
-    },
-    {
-      files: ['*'],
-      plugins: ['prettier'],
-      extends: ['plugin:prettier/recommended'],
     },
   ],
 }

@@ -2,14 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ThemeNames, imageSizes, opacify } from 'ui/src/theme'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'wallet/src/components/icons/WarningIcon'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { useTokenSafetyLevelColors } from 'uniswap/src/features/tokens/safetyHooks'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
-import { useTokenSafetyLevelColors } from 'wallet/src/features/tokens/safetyHooks'
 import { getTokenSafetyHeaderText } from 'wallet/src/features/tokens/utils'
 
 function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction): string {
@@ -55,8 +55,7 @@ export default function TokenWarningModal({
 
   const closeButtonText = hideAcceptButton ? t('common.button.close') : t('common.button.back')
 
-  const showWarningIcon =
-    safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
+  const showWarningIcon = safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
 
   if (!isVisible) {
     return null
@@ -69,7 +68,8 @@ export default function TokenWarningModal({
         gap="$spacing16"
         pb={isWeb ? '$none' : '$spacing12'}
         pt="$spacing12"
-        px={isWeb ? '$none' : '$spacing24'}>
+        px={isWeb ? '$none' : '$spacing24'}
+      >
         {showWarningIcon ? (
           <Flex centered gap="$spacing16">
             <Flex
@@ -78,7 +78,8 @@ export default function TokenWarningModal({
               p="$spacing12"
               style={{
                 backgroundColor: opacify(12, colors[warningColor].val),
-              }}>
+              }}
+            >
               <WarningIcon safetyLevel={safetyLevel} size="$icon.24" />
             </Flex>
             <Text variant="subheading1">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
@@ -93,15 +94,17 @@ export default function TokenWarningModal({
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
         <Flex centered row gap="$spacing12" mt="$spacing16" width="100%">
-          <Button fill testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
+          <Button flex={1} flexBasis={1} testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
             {closeButtonText}
           </Button>
           {!hideAcceptButton && (
             <Button
-              fill
+              flex={1}
+              flexBasis={1}
               testID={ElementName.TokenWarningAccept}
               theme={getButtonTheme(safetyLevel)}
-              onPress={onAccept}>
+              onPress={onAccept}
+            >
               {showWarningIcon ? t('common.button.understand') : t('common.button.continue')}
             </Button>
           )}

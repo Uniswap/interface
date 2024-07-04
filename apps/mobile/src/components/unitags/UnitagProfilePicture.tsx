@@ -30,25 +30,15 @@ export function UnitagProfilePicture({
       shadowColor="$neutral3"
       shadowOpacity={0.4}
       shadowRadius="$spacing4"
-      width={size}>
+      width={size}
+    >
       {isSVGUri(unitagAvatarUri) ? (
-        <RemoteImage
-          backgroundColor={colors.surface1.val}
-          height={size}
-          uri={unitagAvatarUri}
-          width={size}
-        />
+        <RemoteImage backgroundColor={colors.surface1.val} height={size} uri={unitagAvatarUri} width={size} />
       ) : (
         <ImageUri resizeMode="cover" uri={unitagAvatarUri} />
       )}
     </Flex>
   ) : (
-    <AccountIcon
-      address={address}
-      avatarUri={ensAvatar}
-      showBackground={true}
-      showBorder={true}
-      size={size}
-    />
+    <AccountIcon address={address} avatarUri={ensAvatar} showBackground={true} showBorder={true} size={size} />
   )
 }

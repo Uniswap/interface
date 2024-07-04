@@ -4,22 +4,23 @@
 /* eslint-disable max-lines */
 
 import dayjs from 'dayjs'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import {
-  ChainIdToTxIdToDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { ChainIdToTxIdToDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { removeWalletIsUnlockedState } from 'wallet/src/state/sharedMigrations'
+import {
+  activatePendingAccounts,
+  addRoutingFieldToTransactions,
+  removeUniconV2BehaviorState,
+  removeWalletIsUnlockedState,
+} from 'wallet/src/state/sharedMigrations'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
@@ -46,7 +47,7 @@ export const migrations = {
     const addresses = Object.keys(oldTransactionState?.lastTxHistoryUpdate || [])
     for (const address of addresses) {
       newNotificationState.lastTxNotificationUpdate[address] = {
-        [ChainId.Mainnet]: oldTransactionState.lastTxHistoryUpdate[address],
+        [UniverseChainId.Mainnet]: oldTransactionState.lastTxHistoryUpdate[address],
       }
     }
 
@@ -248,11 +249,11 @@ export const migrations = {
 
     const chainState:
       | {
-          byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+          byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
         }
       | undefined = newState?.chains
     const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<{
-      byChainId: Partial<Record<ChainId, { isActive: boolean }>>
+      byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
     }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
@@ -268,7 +269,7 @@ export const migrations = {
         tempState.byChainId[chainId] = chainInfo
         return tempState
       },
-      { byChainId: {} }
+      { byChainId: {} },
     )
 
     const blockState: any | undefined = newState?.blocks
@@ -287,7 +288,7 @@ export const migrations = {
         tempState.byChainId[chainId] = blockInfo
         return tempState
       },
-      { byChainId: {} }
+      { byChainId: {} },
     )
 
     const transactionState: TransactionStateMap | undefined = newState?.transactions
@@ -298,28 +299,25 @@ export const migrations = {
           return tempState
         }
 
-        const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>(
-          (tempAddressState, chainIdString) => {
-            const chainId = toSupportedChainId(chainIdString)
-            if (!chainId) {
-              return tempAddressState
-            }
-
-            const txInfo = txs[chainId]
-            if (!txInfo) {
-              return tempAddressState
-            }
-
-            tempAddressState[chainId] = txInfo
+        const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>((tempAddressState, chainIdString) => {
+          const chainId = toSupportedChainId(chainIdString)
+          if (!chainId) {
             return tempAddressState
-          },
-          {}
-        )
+          }
+
+          const txInfo = txs[chainId]
+          if (!txInfo) {
+            return tempAddressState
+          }
+
+          tempAddressState[chainId] = txInfo
+          return tempAddressState
+        }, {})
 
         tempState[address] = newAddressTxState
         return tempState
       },
-      {}
+      {},
     )
 
     return {
@@ -554,8 +552,7 @@ export const migrations = {
           newTransactionState[address] ??= {}
           newTransactionState[address][chainId] ??= {}
           newTransactionState[address][chainId][txId] =
-            txDetails.typeInfo.type === TransactionType.FiatPurchase &&
-            txDetails.status === TransactionStatus.Failed
+            txDetails.typeInfo.type === TransactionType.FiatPurchase && txDetails.status === TransactionStatus.Failed
               ? {
                   ...txDetails,
                   typeInfo: {
@@ -610,10 +607,7 @@ export const migrations = {
 
     const accountAddresses = Object.keys(state.favorites?.hiddenNfts ?? {})
 
-    type AccountToNftData = Record<
-      Address,
-      Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>
-    >
+    type AccountToNftData = Record<Address, Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>>
 
     const nftsData: AccountToNftData = {}
     for (const accountAddress of accountAddresses) {
@@ -825,35 +819,34 @@ export const migrations = {
   61: function flattenTokenVisibility(state: any) {
     const newState = { ...state }
 
-    type AccountToNftData = Record<
-      Address,
-      Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>
-    >
+    type AccountToNftData = Record<Address, Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>>
     type NFTKeyToVisibility = Record<string, { isVisible: boolean }>
 
     type AccountToTokenVisibility = Record<Address, Record<string, { isVisible: boolean }>>
     type CurrencyIdToVisibility = Record<string, { isVisible: boolean }>
 
     const tokenVisibilityByAccount: AccountToTokenVisibility = state.favorites.tokensVisibility
-    const flattenedTokenVisibility: CurrencyIdToVisibility = Object.values(
-      tokenVisibilityByAccount
-    ).reduce((acc, currencyIdToVisibility) => ({ ...acc, ...currencyIdToVisibility }), {})
+    const flattenedTokenVisibility: CurrencyIdToVisibility = Object.values(tokenVisibilityByAccount).reduce(
+      (acc, currencyIdToVisibility) => ({ ...acc, ...currencyIdToVisibility }),
+      {},
+    )
 
     const nftDataByAccount: AccountToNftData = state.favorites.nftsData
     const flattenedNFTData = Object.values(nftDataByAccount).reduce(
       (acc, nftIdToVisibility) => ({ ...acc, ...nftIdToVisibility }),
-      {}
+      {},
     )
 
-    const flattenedTransformedNFTData: NFTKeyToVisibility = Object.keys(
-      flattenedNFTData
-    ).reduce<NFTKeyToVisibility>((acc, nftKey) => {
-      const { isHidden, isSpamIgnored } = flattenedNFTData[nftKey] ?? {}
-      return {
-        ...acc,
-        [nftKey]: { isVisible: isHidden === false || isSpamIgnored === true },
-      }
-    }, {})
+    const flattenedTransformedNFTData: NFTKeyToVisibility = Object.keys(flattenedNFTData).reduce<NFTKeyToVisibility>(
+      (acc, nftKey) => {
+        const { isHidden, isSpamIgnored } = flattenedNFTData[nftKey] ?? {}
+        return {
+          ...acc,
+          [nftKey]: { isVisible: isHidden === false || isSpamIgnored === true },
+        }
+      },
+      {},
+    )
 
     newState.favorites = {
       ...state.favorites,
@@ -878,6 +871,12 @@ export const migrations = {
   },
 
   63: removeWalletIsUnlockedState,
+
+  64: removeUniconV2BehaviorState,
+
+  65: addRoutingFieldToTransactions,
+
+  66: activatePendingAccounts,
 }
 
-export const MOBILE_STATE_VERSION = 63
+export const MOBILE_STATE_VERSION = 66

@@ -12,7 +12,7 @@ declare global {
         style: Record<string, unknown>[] | Record<string, unknown>,
         config?: {
           shouldMatchAllProps?: boolean
-        }
+        },
       ): R
     }
   }

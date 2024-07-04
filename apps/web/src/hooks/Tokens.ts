@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
@@ -15,26 +15,27 @@ import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
+import { useCombinedInactiveLists } from 'state/lists/hooks'
 import { TokenFromList } from 'state/lists/tokenFromList'
+import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import {
   Token as GqlToken,
   SafetyLevel,
   useSimpleTokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyId } from 'utils/currencyId'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-import { useCombinedInactiveLists } from '../state/lists/hooks'
-import { useUserAddedTokens } from '../state/user/userAddedTokens'
 
 type Maybe<T> = T | undefined
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
-export function useTokensFromMap(
+function useTokensFromMap(
   tokenMap: TokenAddressMap,
-  chainId: Maybe<ChainId>
+  chainId: Maybe<InterfaceChainId>,
 ): { [address: string]: TokenFromList } {
   return useMemo(() => {
     if (!chainId) {
@@ -50,7 +51,7 @@ export function useTokensFromMap(
 }
 
 /** Returns all tokens from local lists + user added tokens */
-export function useFallbackListTokens(chainId: Maybe<ChainId>): { [address: string]: Token } {
+export function useFallbackListTokens(chainId: Maybe<InterfaceChainId>): { [address: string]: Token } {
   const fallbackListTokens = useCombinedInactiveLists()
   const tokensFromMap = useTokensFromMap(fallbackListTokens, chainId)
   const userAddedTokens = useUserAddedTokens()
@@ -65,7 +66,7 @@ export function useFallbackListTokens(chainId: Maybe<ChainId>): { [address: stri
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { ...tokensFromMap }
+          { ...tokensFromMap },
         )
     )
   }, [tokensFromMap, userAddedTokens])
@@ -82,7 +83,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
   return !!userAddedTokens.find((token) => currency.equals(token))
 }
 
-export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean): Maybe<Currency> {
+export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
 }
@@ -91,11 +92,11 @@ export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean)
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
 export function useCurrencyInfo(currency?: Currency): Maybe<CurrencyInfo>
-export function useCurrencyInfo(address?: string, chainId?: ChainId, skip?: boolean): Maybe<CurrencyInfo>
+export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
-  chainId?: ChainId,
-  skip?: boolean
+  chainId?: InterfaceChainId,
+  skip?: boolean,
 ): Maybe<CurrencyInfo> {
   const { chainId: connectedChainId } = useAccount()
   const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId)
@@ -104,8 +105,8 @@ export function useCurrencyInfo(
     typeof addressOrCurrency === 'string'
       ? addressOrCurrency
       : addressOrCurrency?.isNative
-      ? NATIVE_CHAIN_ID
-      : addressOrCurrency?.address
+        ? NATIVE_CHAIN_ID
+        : addressOrCurrency?.address
   const chainIdWithFallback =
     (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
 
@@ -122,7 +123,7 @@ export function useCurrencyInfo(
     ? COMMON_BASES[chainIdWithFallback]?.find(
         (base) =>
           (base.currency.isNative && isNative) ||
-          (base.currency.isToken && isSameAddress(base.currency.address, address))
+          (base.currency.isToken && isSameAddress(base.currency.address, address)),
       )
     : undefined
 
@@ -164,16 +165,18 @@ export function useCurrencyInfo(
 }
 
 export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
+  const formattedAddress = isAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
-  const currency = useCurrency(tokenAddress, chainId ?? connectedChainId)
+  const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)
   // Some chains are not supported by the backend, so we need to fetch token
   // details directly from the blockchain.
   const networkToken = useTokenFromActiveNetwork(
-    tokenAddress,
-    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported
+    formattedAddress ? formattedAddress : undefined,
+    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported,
   )
+
   return useMemo(() => {
-    if (currency && currency instanceof Token) {
+    if (currency && currency.isToken) {
       return currency
     }
     return networkToken
@@ -187,9 +190,9 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : // need to check for proper bytes string and valid terminator
-    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
-    ? parseBytes32String(bytes32)
-    : defaultValue
+      bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
+      ? parseBytes32String(bytes32)
+      : defaultValue
 }
 
 const UNKNOWN_TOKEN_NAME = 'Unknown Token'
@@ -216,17 +219,17 @@ function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: bool
 
   const isLoading = useMemo(
     () => decimals.loading || symbol.loading || tokenName.loading,
-    [decimals.loading, symbol.loading, tokenName.loading]
+    [decimals.loading, symbol.loading, tokenName.loading],
   )
   const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
 
   const parsedSymbol = useMemo(
     () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], UNKNOWN_TOKEN_SYMBOL),
-    [symbol.result, symbolBytes32.result]
+    [symbol.result, symbolBytes32.result],
   )
   const parsedName = useMemo(
     () => parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], UNKNOWN_TOKEN_NAME),
-    [tokenName.result, tokenNameBytes32.result]
+    [tokenName.result, tokenNameBytes32.result],
   )
 
   return useMemo(() => {

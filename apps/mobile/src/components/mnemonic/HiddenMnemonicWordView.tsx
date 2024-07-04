@@ -1,44 +1,36 @@
 import React from 'react'
-import { Flex, Text } from 'ui/src'
+import { Flex } from 'ui/src'
 
-const LEFT_COLUMN_INDEXES = [1, 2, 3, 4, 5, 6]
-const RIGHT_COLUMN_INDEXES = [7, 8, 9, 10, 11, 12]
+const ROW_COUNT = 6
+
 export function HiddenMnemonicWordView(): JSX.Element {
   return (
     <Flex
       row
       alignItems="stretch"
-      backgroundColor="$surface1"
-      gap="$spacing24"
-      height="50%"
-      justifyContent="space-evenly"
+      backgroundColor="$surface2"
+      borderRadius="$rounded20"
+      gap="$spacing36"
+      height="40%"
       mt="$spacing16"
-      px="$spacing36">
+      px="$spacing32"
+      py="$spacing24"
+    >
       <Flex grow justifyContent="space-between">
-        <HiddenWordViewColumn indexes={LEFT_COLUMN_INDEXES} />
+        <HiddenWordViewColumn />
       </Flex>
       <Flex grow justifyContent="space-between">
-        <HiddenWordViewColumn indexes={RIGHT_COLUMN_INDEXES} />
+        <HiddenWordViewColumn />
       </Flex>
     </Flex>
   )
 }
 
-function HiddenWordViewColumn({ indexes }: { indexes: number[] }): JSX.Element {
+function HiddenWordViewColumn(): JSX.Element {
   return (
     <>
-      {indexes.map((value) => (
-        <Flex
-          key={value}
-          row
-          alignItems="center"
-          gap="$spacing16"
-          justifyContent="space-between"
-          px="$spacing12"
-          py="$spacing16">
-          <Text color="$neutral2">{value}</Text>
-          <Flex fill backgroundColor="$neutral3" borderRadius="$rounded20" height={9} />
-        </Flex>
+      {new Array(ROW_COUNT).fill(0).map((_, idx) => (
+        <Flex key={idx} backgroundColor="$surface3" borderRadius="$rounded20" height={10} />
       ))}
     </>
   )

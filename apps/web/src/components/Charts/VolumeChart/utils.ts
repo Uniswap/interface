@@ -1,7 +1,6 @@
 import { ChartHeaderProtocolInfo } from 'components/Charts/ChartHeader'
+import { CustomHistogramData, StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-import { CustomHistogramData, StackedHistogramData } from './renderer'
 
 export function isStackedHistogramData(data: CustomHistogramData): data is StackedHistogramData {
   return (data as StackedHistogramData).values !== undefined
@@ -19,7 +18,7 @@ export function getCumulativeVolume(data: CustomHistogramData[]) {
 
 export function getVolumeProtocolInfo(
   data: StackedHistogramData | undefined,
-  sources: PriceSource[]
+  sources: PriceSource[],
 ): ChartHeaderProtocolInfo[] {
   const info = new Array<ChartHeaderProtocolInfo>()
   for (const source of sources) {
@@ -132,7 +131,7 @@ export interface ColumnPosition {
 function calculateColumnPosition(
   xMedia: number,
   columnData: ColumnCommon,
-  previousPosition: ColumnPosition | undefined
+  previousPosition: ColumnPosition | undefined,
 ): ColumnPosition {
   const xBitmapUnRounded = xMedia * columnData.horizontalPixelRatio
   const xBitmap = Math.round(xBitmapUnRounded)
@@ -174,7 +173,7 @@ export function calculateColumnPositionsInPlace(
   barSpacingMedia: number,
   horizontalPixelRatio: number,
   startIndex: number,
-  endIndex: number
+  endIndex: number,
 ): void {
   const common = columnCommon(barSpacingMedia, horizontalPixelRatio)
   let previous: ColumnPositionItem | undefined = undefined
@@ -197,7 +196,7 @@ export function calculateColumnPositionsInPlace(
       const width = item.column.right - item.column.left + 1
       return Math.min(smallest, width)
     },
-    Math.ceil(barSpacingMedia * horizontalPixelRatio)
+    Math.ceil(barSpacingMedia * horizontalPixelRatio),
   )
   if (common.spacing > 0 && minColumnWidth < alignToMinimalWidthLimit) {
     ;(items as ColumnPositionItem[]).forEach((item: ColumnPositionItem, index: number) => {

@@ -1,83 +1,105 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+import {
+  InterfaceElementName,
+  InterfaceEventName,
+  LiquidityEventName,
+  LiquiditySource,
+} from '@uniswap/analytics-events'
 import { MulticallExtended, PaymentsExtended } from '@uniswap/router-sdk'
-import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
+import {
+  Currency,
+  CurrencyAmount,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  Percent,
+  V3_CORE_FACTORY_ADDRESSES,
+} from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from 'components/Button'
+import { BlueCard, OutlineCard, YellowCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import FeeSelector from 'components/FeeSelector'
+import HoverInlineText from 'components/HoverInlineText'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import { PositionPreview } from 'components/PositionPreview'
+import RangeSelector from 'components/RangeSelector'
+import PresetsButtons from 'components/RangeSelector/PresetsButtons'
+import RateToggle from 'components/RateToggle'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { CHAIN_INFO, isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
+import { isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
+import { ZERO_PERCENT } from 'constants/misc'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { useArgentWalletContract } from 'hooks/useArgentWalletContract'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
+import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
+import { PoolCache } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans, t } from 'i18n'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import { Review } from 'pages/AddLiquidity/Review'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
-import { BodyWrapper } from 'pages/AppBody'
+import {
+  DynamicSection,
+  MediumOnly,
+  ResponsiveTwoColumns,
+  ScrollablePage,
+  StyledInput,
+  Wrapper,
+} from 'pages/AddLiquidity/styled'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
+import { Dots } from 'pages/Pool/styled'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
+import { Bound, Field } from 'state/mint/v3/actions'
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
   useV3MintActionHandlers,
   useV3MintState,
 } from 'state/mint/v3/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionInfo, TransactionType } from 'state/transactions/types'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import approveAmountCalldata from 'utils/approveAmountCalldata'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
-import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import FeeSelector from '../../components/FeeSelector'
-import HoverInlineText from '../../components/HoverInlineText'
-import LiquidityChartRangeInput from '../../components/LiquidityChartRangeInput'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { PositionPreview } from '../../components/PositionPreview'
-import RangeSelector from '../../components/RangeSelector'
-import PresetsButtons from '../../components/RangeSelector/PresetsButtons'
-import RateToggle from '../../components/RateToggle'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { ZERO_PERCENT } from '../../constants/misc'
-import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
-import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
-import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
-import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
-import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
-import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
-import { Bound, Field } from '../../state/mint/v3/actions'
-import { useTransactionAdder } from '../../state/transactions/hooks'
-import { TransactionInfo, TransactionType } from '../../state/transactions/types'
-import { useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
-import approveAmountCalldata from '../../utils/approveAmountCalldata'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { currencyId } from '../../utils/currencyId'
-import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { Dots } from '../Pool/styled'
-import { Review } from './Review'
-import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 const blastRebasingAlertAtom = atomWithStorage<boolean>('shouldShowBlastRebasingAlert', true)
@@ -123,13 +145,13 @@ function AddLiquidity() {
 
   // we query pool address from application state
   const { address: smartPoolAddress } = useActiveSmartPool()
-  const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
+  const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
-    tokenId ? BigNumber.from(tokenId) : undefined
+    tokenId ? BigNumber.from(tokenId) : undefined,
   )
   const hasExistingPosition = !!existingPositionDetails && !positionLoading
   const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails)
@@ -176,7 +198,7 @@ function AddLiquidity() {
     quoteCurrency ?? undefined,
     feeAmount,
     baseCurrency ?? undefined,
-    existingPosition
+    existingPosition,
   )
 
   const { formatPrice } = useFormatter()
@@ -217,7 +239,7 @@ function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -227,7 +249,7 @@ function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const argentWalletContract = useArgentWalletContract()
@@ -239,18 +261,18 @@ function AddLiquidity() {
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
       : undefined,
-    isRbPool
+    isRbPool,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
       : undefined,
-    isRbPool
+    isRbPool,
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
-    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
+    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE,
   )
 
   async function onAdd() {
@@ -344,15 +366,27 @@ function AddLiquidity() {
               label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
               ...trace,
               ...transactionInfo,
+              type: LiquiditySource.V3,
+              transaction_hash: response.hash,
+              fee_tier: feeAmount,
+              pool_address:
+                feeAmount && account.chainId
+                  ? PoolCache.getPoolAddress(
+                      V3_CORE_FACTORY_ADDRESSES[account.chainId],
+                      baseCurrency.wrapped,
+                      quoteCurrency.wrapped,
+                      feeAmount,
+                      account.chainId,
+                    )
+                  : undefined,
             })
           })
         })
         .catch((error) => {
-          console.error('Failed to send transaction', error)
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {
-            console.error(error)
+            logger.warn('AddLiquidity', 'addLiquidity', 'Error completing add liquidity tx', error)
           }
         })
     } else {
@@ -388,7 +422,7 @@ function AddLiquidity() {
         }
       }
     },
-    [account.chainId, account.status]
+    [account.chainId, account.status],
   )
 
   const handleCurrencyASelect = useCallback(
@@ -400,7 +434,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdB, navigate]
+    [handleCurrencySelect, currencyIdB, navigate],
   )
 
   const handleCurrencyBSelect = useCallback(
@@ -412,7 +446,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdA, navigate]
+    [handleCurrencySelect, currencyIdA, navigate],
   )
 
   const handleFeePoolSelect = useCallback(
@@ -421,7 +455,7 @@ function AddLiquidity() {
       onRightRangeInput('')
       navigate(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput]
+    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -529,7 +563,7 @@ function AddLiquidity() {
         properties={{ received_swap_quote: false }}
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
-        <ButtonLight onClick={toggleWalletDrawer} $borderRadius="12px" padding="12px">
+        <ButtonLight onClick={accountDrawer.open} $borderRadius="12px" padding="12px">
           <Trans i18nKey="common.connectWallet.button" />
         </ButtonLight>
       </Trace>
@@ -608,14 +642,14 @@ function AddLiquidity() {
       data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyA]
+    [usdcValueCurrencyA],
   )
   const currencyBFiat = useMemo(
     () => ({
       data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyB]
+    [usdcValueCurrencyB],
   )
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
@@ -624,7 +658,7 @@ function AddLiquidity() {
     addressesAreEquivalent(existingPositionDetails?.operator, account.address)
   const showOwnershipWarning = Boolean(hasExistingPosition && account.address && !ownsNFT)
   const showBlastRebasingWarning = false
-  //  account.chainId === ChainId.BLAST &&
+  //  account.chainId === UniverseChainId.Blast &&
   //  ((!!currencyIdA && BLAST_REBASING_TOKENS.includes(currencyIdA)) ||
   //    (!!currencyIdB && BLAST_REBASING_TOKENS.includes(currencyIdB)))
 
@@ -645,7 +679,9 @@ function AddLiquidity() {
               quoteCurrency?.symbol && baseCurrency?.symbol
                 ? `${quoteCurrency.symbol}/${baseCurrency.symbol}`
                 : quoteCurrency?.symbol ?? baseCurrency?.symbol ?? 'pools',
-            chain: CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : ChainId.MAINNET].label,
+            chain:
+              UNIVERSE_CHAIN_INFO[isSupportedChainId(account.chainId) ? account.chainId : UniverseChainId.Mainnet]
+                .label,
           })}
         </title>
       </Helmet>
@@ -788,17 +824,17 @@ function AddLiquidity() {
                             handleRateToggle={() => {
                               if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
                                 onLeftRangeInput(
-                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onRightRangeInput(
-                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
                               }
                               navigate(
                                 `/add/${currencyIdB as string}/${currencyIdA as string}${
                                   feeAmount ? '/' + feeAmount : ''
-                                }`
+                                }`,
                               )
                             }}
                           />

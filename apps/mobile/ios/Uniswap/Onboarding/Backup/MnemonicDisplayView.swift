@@ -16,22 +16,42 @@ import SwiftUI
     set { vc.rootView.setMnemonicId(mnemonicId: newValue) }
     get { return vc.rootView.props.mnemonicId }
   }
-    
+  
+  var copyText: String {
+    set { vc.rootView.props.copyText = newValue }
+    get { return vc.rootView.props.copyText }
+  }
+  
+  var copiedText: String {
+    set { vc.rootView.props.copiedText = newValue }
+    get { return vc.rootView.props.copiedText }
+  }
+  
+  var onHeightMeasured: RCTDirectEventBlock? {
+    didSet {
+      vc.rootView.props.onHeightMeasured = { [weak self] height in
+        self?.onHeightMeasured?([ "height": height ])
+      }
+    }
+  }
+  
   var view: UIView {
     vc.view.backgroundColor = .clear
     return vc.view
   }
 }
 
-class MnemonicDisplayProps : ObservableObject {
+class MnemonicDisplayProps: ObservableObject {
   @Published var mnemonicId: String = ""
+  @Published var copyText: String = ""
+  @Published var copiedText: String = ""
   @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
+  var onHeightMeasured: ((CGFloat) -> Void)?
 }
 
-
 struct MnemonicDisplay: View {
-  
   @ObservedObject var props = MnemonicDisplayProps()
+  @State private var buttonPadding: CGFloat = 20
   
   let rnEthersRS = RNEthersRS()
   let interFont = UIFont(name: "Basel-Semibold", size: 20)
@@ -58,26 +78,64 @@ struct MnemonicDisplay: View {
     let end = props.mnemonicWords.count - 1
     let middle = end / 2
     
-    VStack(alignment: HorizontalAlignment.leading, spacing: 0) {
-        HStack(alignment: VerticalAlignment.center, spacing: 12) {
+    VStack(alignment: .leading, spacing: 0) {
+      ZStack {
+        HStack(alignment: .center, spacing: 24) {
           VStack(alignment: .leading, spacing: 12) {
-            ForEach((0...middle), id: \.self) {index in
+            ForEach((0...middle), id: \.self) { index in
               MnemonicTextField(index: index + 1,
-                                initialText: props.mnemonicWords[index]
+                                word: props.mnemonicWords[index]
               )
               .frame(maxWidth: .infinity, alignment: .leading)
             }
           }.frame(maxWidth: .infinity)
           VStack(alignment: .leading, spacing: 12) {
-            ForEach((middle + 1...end), id: \.self) {index in
+            ForEach((middle + 1...end), id: \.self) { index in
               MnemonicTextField(index: index + 1,
-                                initialText: props.mnemonicWords[index]
+                                word: props.mnemonicWords[index]
               )
               .frame(maxWidth: .infinity, alignment: .leading)
             }
           }.frame(maxWidth: .infinity)
-        }.frame(maxWidth: .infinity)
-    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-      .padding(EdgeInsets(top: 0, leading: 16, bottom: 32, trailing: 16))
+        }
+      }
+      .frame(maxWidth: .infinity)
+      .padding(EdgeInsets(top: 24, leading: 32, bottom: 24, trailing: 32))
+      .background(Colors.surface2)
+      .cornerRadius(20)
+      .overlay(
+        RoundedRectangle(cornerRadius: 20)
+          .stroke(Colors.surface3, lineWidth: 1)
+      )
+      .overlay(
+        HStack {
+          Spacer()
+          RelativeOffsetView(y: -0.5, onOffsetCalculated: { _, offsetY in
+            buttonPadding = abs(offsetY)
+          }) {
+            CopyButton(
+              copyButtonText: props.copyText,
+              copiedButtonText: props.copiedText,
+              textToCopy: props.mnemonicWords.joined(separator: " ")
+            )
+          }
+          Spacer()
+        },
+        alignment: .top
+      )
+    }
+    .frame(maxWidth: .infinity, alignment: .top)
+    .padding(.top, buttonPadding)
+    .overlay(
+      GeometryReader { geometry in
+        Color.clear
+          .onAppear {
+            props.onHeightMeasured?(geometry.size.height)
+          }
+          .onChange(of: geometry.size.height) { newValue in
+            props.onHeightMeasured?(newValue)
+          }
+      }
+    )
   }
 }

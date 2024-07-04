@@ -6,8 +6,11 @@ import {
   useLineChartPrice as useRNWagmiChartLineChartPrice,
 } from 'react-native-wagmi-charts'
 import { act } from 'react-test-renderer'
+import {
+  useLineChartPrice,
+  useLineChartRelativeChange,
+} from 'src/components/PriceExplorer/usePrice'
 import { renderHookWithProviders } from 'src/test/render'
-import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
 jest.mock('react-native-wagmi-charts')
 
@@ -112,8 +115,8 @@ describe(useLineChartPrice, () => {
 
     it('returns currentSpot if it is provided', async () => {
       const spotPrice = makeMutable(1)
-      const { result } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [spotPrice],
+      const { result } = renderHookWithProviders(() => useLineChartPrice(spotPrice), {
+        initialProps: spotPrice,
       })
 
       expect(result.current).toEqual({
@@ -149,7 +152,7 @@ describe(useLineChartPrice, () => {
     it('returns active cursor price even if currentSpot and data are provided', async () => {
       mockCursorPrice('3')
       const { result } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [makeMutable(4)],
+        initialProps: makeMutable(4),
       })
 
       expect(result.current).toEqual({
@@ -162,7 +165,7 @@ describe(useLineChartPrice, () => {
     it('updates returned active cursor price when it changes', async () => {
       mockCursorPrice('1')
       const { result } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [makeMutable(4)],
+        initialProps: makeMutable(4),
       })
 
       expect(result.current).toEqual(

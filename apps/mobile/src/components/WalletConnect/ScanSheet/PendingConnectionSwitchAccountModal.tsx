@@ -2,8 +2,8 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwitchAccountOption } from 'src/components/WalletConnect/ScanSheet/SwitchAccountOption'
 import { Flex, Text } from 'ui/src'
+import { ActionSheetModal } from 'uniswap/src/components/modals/ActionSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -13,11 +13,7 @@ type Props = {
   onClose: () => void
 }
 
-export const PendingConnectionSwitchAccountModal = ({
-  activeAccount,
-  onPressAccount,
-  onClose,
-}: Props): JSX.Element => {
+export const PendingConnectionSwitchAccountModal = ({ activeAccount, onPressAccount, onClose }: Props): JSX.Element => {
   const { t } = useTranslation()
   const signerAccounts = useSignerAccounts()
 
@@ -30,7 +26,7 @@ export const PendingConnectionSwitchAccountModal = ({
           render: () => <SwitchAccountOption account={account} activeAccount={activeAccount} />,
         }
       }),
-    [signerAccounts, activeAccount, onPressAccount]
+    [signerAccounts, activeAccount, onPressAccount],
   )
 
   return (

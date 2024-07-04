@@ -1,7 +1,8 @@
-import { ChainId, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCallback, useEffect, useRef } from 'react'
+import { OnActivityUpdate, TransactionUpdate } from 'state/activity/types'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { parseRemote as parseRemoteOrder } from 'state/signatures/parseRemote'
 import { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
@@ -13,7 +14,7 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { OnActivityUpdate, TransactionUpdate } from './types'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
   const onOrderActivity = useOnOrderActivity(onActivityUpdate)
@@ -26,7 +27,7 @@ export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
         onTransactionActivity(activity as TransactionActivity)
       }
     },
-    [onOrderActivity, onTransactionActivity]
+    [onOrderActivity, onTransactionActivity],
   )
 
   const result = useAssetActivitySubscription()
@@ -50,13 +51,13 @@ function useOnOrderActivity(onActivityUpdate: OnActivityUpdate) {
         update: updatedOrder,
       })
     },
-    [onActivityUpdate]
+    [onActivityUpdate],
   )
 }
 
 function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
   // Updates should only trigger from the AssetActivity subscription, so the pending transactions are behind a ref.
-  const pendingTransactions = useRef<[TransactionDetails, ChainId][]>()
+  const pendingTransactions = useRef<[TransactionDetails, InterfaceChainId][]>()
   pendingTransactions.current = useMultichainTransactions()
 
   return useCallback(
@@ -67,7 +68,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
       }
 
       const pendingTransaction = pendingTransactions.current?.find(
-        ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId
+        ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId,
       )?.[0]
       // TODO(WEB-4007): Add transactions which were submitted from a different client (and are not already tracked).
       if (!pendingTransaction) {
@@ -81,7 +82,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
       if (updatedTransaction.info.type === TransactionType.SWAP) {
         if (updatedTransaction.info.tradeType === TradeType.EXACT_INPUT) {
           const change = activity.details.assetChanges.find(
-            (change) => change?.__typename === 'TokenTransfer' && change?.direction === TransactionDirection.Out
+            (change) => change?.__typename === 'TokenTransfer' && change?.direction === TransactionDirection.Out,
           ) as TokenTransfer
           if (change.asset.decimals && change.quantity) {
             // The quantity is returned as a decimal string, but the state expects a BigInt-compatible string.
@@ -100,6 +101,6 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
         update: updatedTransaction,
       })
     },
-    [onActivityUpdate]
+    [onActivityUpdate],
   )
 }

@@ -1,4 +1,4 @@
-import { render, screen } from './render'
+import { render, screen } from 'test-utils/render'
 
 describe('matchers', () => {
   describe('toBeVisible', () => {
@@ -14,7 +14,7 @@ describe('matchers', () => {
       render(
         <div style={{ height: 0 }}>
           <div>test</div>
-        </div>
+        </div>,
       )
       expect(screen.getByText('test')).not.toBeVisible()
     })

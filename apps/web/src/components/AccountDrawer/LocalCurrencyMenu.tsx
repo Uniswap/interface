@@ -1,12 +1,11 @@
+import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
+import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { getLocalCurrencyIcon, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import styled from 'styled-components'
-
-import { MenuColumn, MenuItem } from './shared'
-import { SlideOutMenu } from './SlideOutMenu'
 
 const StyledLocalCurrencyIcon = styled.div`
   width: 20px;
@@ -44,19 +43,27 @@ function LocalCurrencyMenuItem({
   )
 }
 
-export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) {
+export function LocalCurrencyMenuItems() {
   const activeLocalCurrency = useActiveLocalCurrency()
 
   return (
+    <>
+      {SUPPORTED_LOCAL_CURRENCIES.map((localCurrency) => (
+        <LocalCurrencyMenuItem
+          localCurrency={localCurrency}
+          isActive={activeLocalCurrency === localCurrency}
+          key={localCurrency}
+        />
+      ))}
+    </>
+  )
+}
+
+export default function LocalCurrencyMenu({ onClose }: { onClose: () => void }) {
+  return (
     <SlideOutMenu title={<Trans i18nKey="common.currency" />} onClose={onClose}>
       <MenuColumn>
-        {SUPPORTED_LOCAL_CURRENCIES.map((localCurrency) => (
-          <LocalCurrencyMenuItem
-            localCurrency={localCurrency}
-            isActive={activeLocalCurrency === localCurrency}
-            key={localCurrency}
-          />
-        ))}
+        <LocalCurrencyMenuItems />
       </MenuColumn>
     </SlideOutMenu>
   )

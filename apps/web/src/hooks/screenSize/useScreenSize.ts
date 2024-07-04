@@ -16,6 +16,7 @@ export const navSearchInputVisibleSize = 1100
 const BREAKPOINTS_ADDITIONAL = {
   ...BREAKPOINTS,
   navSearchInputVisible: navSearchInputVisibleSize,
+  navDropdownMobileDrawer: 450,
 }
 
 function getScreenSize(): Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean> {
@@ -26,7 +27,7 @@ function getScreenSize(): Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean> {
           ? window.innerWidth > BREAKPOINTS_ADDITIONAL[key as keyof typeof BREAKPOINTS_ADDITIONAL]
           : false,
       }),
-    {} as Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean>
+    {} as Record<keyof typeof BREAKPOINTS_ADDITIONAL, boolean>,
   )
 }
 

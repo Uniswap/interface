@@ -1,9 +1,9 @@
+import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
+import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
-
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { useMemo } from 'react'
+import { logger } from 'utilities/src/logger/logger'
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
@@ -25,7 +25,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
       .reduce<{ [chainId: string]: true }>((memo, value) => {
         memo[value] = true
         return memo
-      }, {})
+      }, {}),
   ).map((id) => parseInt(id))
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
@@ -53,7 +53,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
       } catch (error) {
-        console.error('Could not show token list due to error', error)
+        logger.warn('lists/hooks', 'useCombinedTokenMapFromUrls', 'Failed to combine tokens', error)
         return allTokens
       }
     }, {})

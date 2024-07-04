@@ -1,6 +1,5 @@
+import { UnavailableCollectionPage } from 'nft/components/collection/UnavailableCollectionPage'
 import { render, screen } from 'test-utils/render'
-
-import { UnavailableCollectionPage } from './UnavailableCollectionPage'
 
 describe('Nonexistent Collection', () => {
   it('displays informative message', () => {
@@ -25,7 +24,7 @@ describe('Blocked Collection', () => {
     render(<UnavailableCollectionPage isBlocked />)
     expect(screen.getByText('Learn why')).toHaveAttribute(
       'href',
-      'https://support.uniswap.org/hc/en-us/articles/18783694078989-Unsupported-Token-Policy'
+      'https://support.uniswap.org/hc/en-us/articles/18783694078989-Unsupported-Token-Policy',
     )
     expect(screen.getByText('Return to NFT Explore')).toHaveAttribute('href', '/nfts')
   })

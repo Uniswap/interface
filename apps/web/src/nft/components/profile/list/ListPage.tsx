@@ -9,6 +9,10 @@ import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ListingButton } from 'nft/components/profile/list/ListingButton'
+import { ListModal } from 'nft/components/profile/list/Modal/ListModal'
+import { NFTListingsGrid } from 'nft/components/profile/list/NFTListingsGrid'
+import { SelectMarketplacesDropdown } from 'nft/components/profile/list/SelectMarketplacesDropdown'
+import { SetDurationModal } from 'nft/components/profile/list/SetDurationModal'
 import {
   approveCollectionRow,
   getTotalEthValue,
@@ -28,10 +32,6 @@ import { Z_INDEX } from 'theme/zIndex'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ListModal } from './Modal/ListModal'
-import { NFTListingsGrid } from './NFTListingsGrid'
-import { SelectMarketplacesDropdown } from './SelectMarketplacesDropdown'
-import { SetDurationModal } from './SetDurationModal'
 
 const ListingHeader = styled(Column)`
   gap: 16px;
@@ -123,7 +123,7 @@ const FloatingConfirmationBar = styled(Row)<{ issues: boolean }>`
   width: calc(100vw - ${LIST_PAGE_MARGIN * 2}px);
   left: 50%;
   transform: translateX(-50%);
-  max-width: ${({ theme }) => theme.maxWidth};
+  max-width: ${({ theme }) => `${theme.maxWidth}px`};
   z-index: ${Z_INDEX.under_dropdown};
   box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
 
@@ -195,14 +195,14 @@ export const ListPage = () => {
       setGlobalMarketplaces,
       sellAssets,
       issues,
-    })
+    }),
   )
   const { listings, collectionsRequiringApproval, setCollectionStatusAndCallback } = useNFTList(
     ({ listings, collectionsRequiringApproval, setCollectionStatusAndCallback }) => ({
       listings,
       collectionsRequiringApproval,
       setCollectionStatusAndCallback,
-    })
+    }),
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])

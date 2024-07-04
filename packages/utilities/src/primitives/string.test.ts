@@ -1,4 +1,9 @@
-import { concatStrings, escapeRegExp, normalizeTextInput, trimToLength } from './string'
+import {
+  concatStrings,
+  escapeRegExp,
+  normalizeTextInput,
+  trimToLength,
+} from 'utilities/src/primitives/string'
 
 describe(trimToLength, () => {
   it('handles empty string', () => {

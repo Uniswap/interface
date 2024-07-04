@@ -5,10 +5,10 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { TransferFlow } from 'src/features/transactions/transfer/TransferFlow'
 import { TransferFlow as TransferFlowRewrite } from 'src/features/transactions/transfer/transferRewrite/TransferFlow'
 import { useSporeColors } from 'ui/src'
+import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 
 export function TransferTokenModal(): JSX.Element {
   const colors = useSporeColors()
@@ -32,7 +32,8 @@ export function TransferTokenModal(): JSX.Element {
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.Send}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <TransferFlow prefilledState={modalState.initialState} onClose={onClose} />
     </BottomSheetModal>
   )

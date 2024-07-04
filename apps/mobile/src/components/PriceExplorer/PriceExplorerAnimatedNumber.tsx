@@ -16,7 +16,7 @@ import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistor
 import { useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,
@@ -34,7 +34,7 @@ const getEmphasizedNumberColor = (
   index: number,
   commaIndex: number,
   emphasizedColor: string,
-  deemphasizedColor: string
+  deemphasizedColor: string,
 ): string => {
   if (index >= commaIndex && commaIndex > DEEMPHASIZED_DECIMALS_THRESHOLD) {
     return deemphasizedColor
@@ -42,17 +42,9 @@ const getEmphasizedNumberColor = (
   return emphasizedColor
 }
 
-const shouldUseSeparator = (
-  index: number,
-  commaIndex: number,
-  decimalPlaceIndex: number
-): boolean => {
+const shouldUseSeparator = (index: number, commaIndex: number, decimalPlaceIndex: number): boolean => {
   'worklet'
-  return (
-    (index - commaIndex) % 4 === 0 &&
-    index - commaIndex < 0 &&
-    index > commaIndex - decimalPlaceIndex
-  )
+  return (index - commaIndex) % 4 === 0 && index - commaIndex < 0 && index > commaIndex - decimalPlaceIndex
 }
 
 const NumbersMain = ({
@@ -97,7 +89,8 @@ const NumbersMain = ({
           },
           animatedTextStyle,
         ]}
-        onLayout={onLayout}>
+        onLayout={onLayout}
+      >
         {NUMBER_ARRAY}
       </Animated.Text>
     )
@@ -126,12 +119,7 @@ const RollNumber = ({
   currency: FiatCurrencyInfo
 }): JSX.Element => {
   const colors = useSporeColors()
-  const numberColor = getEmphasizedNumberColor(
-    index,
-    commaIndex,
-    colors.neutral1.val,
-    colors.neutral3.val
-  )
+  const numberColor = getEmphasizedNumberColor(index, commaIndex, colors.neutral1.val, colors.neutral3.val)
 
   const animatedDigit = useDerivedValue(() => {
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
@@ -161,8 +149,7 @@ const RollNumber = ({
   }, [animatedDigit, shouldAnimate])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
-    const digitWidth =
-      animatedDigit.value !== undefined ? NUMBER_WIDTH_ARRAY[animatedDigit.value] ?? 0 : 0
+    const digitWidth = animatedDigit.value !== undefined ? NUMBER_WIDTH_ARRAY[animatedDigit.value] ?? 0 : 0
     const rowWidth = digitWidth + ADDITIONAL_WIDTH_FOR_ANIMATIONS - 7
 
     return {
@@ -184,8 +171,7 @@ const RollNumber = ({
       }
     }
 
-    const digitWidth =
-      chars.value[index - (commaIndex - decimalPlace.value)] === currency.groupingSeparator ? 8 : 0
+    const digitWidth = chars.value[index - (commaIndex - decimalPlace.value)] === currency.groupingSeparator ? 8 : 0
 
     const rowWidth = Math.max(digitWidth, 0)
 
@@ -207,7 +193,8 @@ const RollNumber = ({
           animatedFontStyle,
           AnimatedFontStyles.fontStyle,
           { height: DIGIT_HEIGHT, backgroundColor: colors.surface1.val },
-        ]}>
+        ]}
+      >
         {currency.decimalSeparator}
       </Animated.Text>
     )
@@ -222,7 +209,8 @@ const RollNumber = ({
             animatedFontStyle,
             AnimatedFontStyles.fontStyle,
             { height: DIGIT_HEIGHT, backgroundColor: colors.surface1.val },
-          ]}>
+          ]}
+        >
           {currency.groupingSeparator}
         </Animated.Text>
       </Animated.View>
@@ -236,12 +224,9 @@ const RollNumber = ({
         {
           marginRight: -ADDITIONAL_WIDTH_FOR_ANIMATIONS,
         },
-      ]}>
-      <MemoizedNumbers
-        backgroundColor={colors.surface1.val}
-        color={numberColor}
-        hidePlaceholder={hidePlaceholder}
-      />
+      ]}
+    >
+      <MemoizedNumbers backgroundColor={colors.surface1.val} color={numberColor} hidePlaceholder={hidePlaceholder} />
     </Animated.View>
   )
 }
@@ -272,7 +257,8 @@ const Numbers = ({
     (index) => (
       <Animated.View
         key={`$number_${index - commaIndex}`}
-        style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
+        style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}
+      >
         <RollNumber
           key={`$number_${index - commaIndex}`}
           chars={chars}
@@ -284,7 +270,7 @@ const Numbers = ({
           shouldAnimate={price.shouldAnimate}
         />
       </Animated.View>
-    )
+    ),
   )
 }
 
@@ -334,7 +320,7 @@ const PriceExplorerAnimatedNumber = ({
             return Number(accumulator) + Number(NUMBER_WIDTH_ARRAY[Number(currentValue)])
           }
           return accumulator
-        })
+        }),
       )
     },
     (priceWidth: number) => {
@@ -348,7 +334,7 @@ const PriceExplorerAnimatedNumber = ({
         scale.value = withTiming(1)
         offset.value = withTiming(0)
       }
-    }
+    },
   )
 
   const hidePlaceholder = (): void => {
@@ -358,7 +344,8 @@ const PriceExplorerAnimatedNumber = ({
   const currencySymbol = (
     <Text
       allowFontScaling={false}
-      style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: colors.neutral1.val }]}>
+      style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: colors.neutral1.val }]}
+    >
       {currency.fullSymbol}
     </Text>
   )
@@ -366,22 +353,15 @@ const PriceExplorerAnimatedNumber = ({
   const lessThanSymbol = (
     <Animated.Text
       allowFontScaling={false}
-      style={[
-        AnimatedFontStyles.fontStyle,
-        { height: DIGIT_HEIGHT, color: colors.neutral1.val },
-        lessThanStyle,
-      ]}>
+      style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: colors.neutral1.val }, lessThanStyle]}
+    >
       {'<'}
     </Animated.Text>
   )
 
   const scaleWraper = useAnimatedStyle(() => {
     return {
-      transform: [
-        { translateX: -SCREEN_WIDTH / 2 },
-        { scale: scale.value },
-        { translateX: SCREEN_WIDTH / 2 },
-      ],
+      transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
     }
   })
 

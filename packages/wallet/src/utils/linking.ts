@@ -1,13 +1,13 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
 import { colorsLight } from 'ui/src/theme'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ChainId } from 'uniswap/src/types/chains'
+import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
-import { toUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
-import { currencyIdToChain, currencyIdToGraphQLAddress } from 'wallet/src/utils/currencyId'
+import { FiatPurchaseTransactionInfo, ServiceProviderInfo } from 'wallet/src/features/transactions/types'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
@@ -26,7 +26,7 @@ export async function openUri(
   openExternalBrowser = false,
   isSafeUri = false,
   // NOTE: okay to use colors object directly as we want the same color for light/dark modes
-  controlsColor = colorsLight.accent1
+  controlsColor = colorsLight.accent1,
 ): Promise<void> {
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
@@ -70,10 +70,7 @@ export function dismissInAppBrowser(): void {
   WebBrowser.dismissBrowser()
 }
 
-export async function openTransactionLink(
-  hash: string | undefined,
-  chainId: ChainId
-): Promise<void> {
+export async function openTransactionLink(hash: string | undefined, chainId: WalletChainId): Promise<void> {
   if (!hash) {
     return
   }
@@ -82,15 +79,29 @@ export async function openTransactionLink(
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri(`${uniswapUrls.helpRequestUrl}`)
+  return openUri(uniswapUrls.helpRequestUrl)
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {
   return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
 }
 
-export async function openMoonpayHelpLink(): Promise<void> {
-  return openUri('https://support.moonpay.com/')
+const SERVICE_PROVIDER_SUPPORT_URLS: Record<string, string> = {
+  MOONPAY: 'https://www.moonpay.com/contact-us',
+  ROBINHOOD: 'https://robinhood.com/support/articles/how-to-contact-support/',
+  COINBASEPAY: 'https://help.coinbase.com/',
+  TRANSAK: 'https://support.transak.com/collections/3985810-customer-help-center',
+  BANXA: 'https://support.banxa.com/support/home',
+  STRIPE: 'https://support.stripe.com/',
+}
+
+export async function openLegacyFiatOnRampServiceProviderLink(serviceProvider: string): Promise<void> {
+  const helpUrl = SERVICE_PROVIDER_SUPPORT_URLS[serviceProvider] ?? 'https://www.moonpay.com/contact-us'
+  return openUri(helpUrl)
+}
+
+export async function openOnRampSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
+  return openUri(serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl)
 }
 
 export async function openSettings(): Promise<void> {
@@ -110,8 +121,8 @@ export enum ExplorerDataType {
  * @param data the data to return a link for
  * @param type the type of the data
  */
-export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDataType): string {
-  const prefix = CHAIN_INFO[chainId].explorer.url
+export function getExplorerLink(chainId: WalletChainId, data: string, type: ExplorerDataType): string {
+  const prefix = UNIVERSE_CHAIN_INFO[chainId].explorer.url
 
   switch (type) {
     case ExplorerDataType.TRANSACTION:
@@ -119,15 +130,15 @@ export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDa
 
     case ExplorerDataType.TOKEN:
       if (
-        data === CHAIN_INFO[chainId].nativeCurrency.address &&
-        CHAIN_INFO[chainId].nativeCurrency.explorerLink
+        data === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address &&
+        UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink
       ) {
-        return CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+        return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
       }
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:
-      if (chainId === ChainId.Optimism) {
+      if (chainId === UniverseChainId.Optimism) {
         return `${prefix}tx/${data}`
       }
       return `${prefix}block/${data}`
@@ -156,10 +167,7 @@ export function getProfileUrl(walletAddress: string): string {
 
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
-export function getTokenUrl(
-  currencyId: string,
-  addMobileUTMTags: boolean = false
-): string | undefined {
+export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return

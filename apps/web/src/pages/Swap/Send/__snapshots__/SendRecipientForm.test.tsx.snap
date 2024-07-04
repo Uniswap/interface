@@ -150,20 +150,20 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   justify-content: flex-start;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+.c7 {
+  height: 36px;
+  width: 36px;
 }
 
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+.c7 path {
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
+}
+
+.c8 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
 .c2 {
@@ -225,20 +225,20 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   gap: 4px;
 }
 
-.c7 {
-  height: 36px;
-  width: 36px;
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c7 path {
-  stroke: #CECECE;
-  background: #7D7D7D;
-  fill: #CECECE;
-}
-
-.c8 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c4 {
@@ -409,20 +409,20 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   justify-content: flex-start;
 }
 
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+.c7 {
+  height: 36px;
+  width: 36px;
 }
 
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+.c7 path {
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
+}
+
+.c8 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
 .c2 {
@@ -484,20 +484,20 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   gap: 4px;
 }
 
-.c7 {
-  height: 36px;
-  width: 36px;
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c7 path {
-  stroke: #CECECE;
-  background: #7D7D7D;
-  fill: #CECECE;
-}
-
-.c8 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c4 {

@@ -6,10 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import {
-  LocalizationContextState,
-  useLocalizationContext,
-} from 'wallet/src/features/language/LocalizationContext'
+import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
@@ -33,7 +30,7 @@ export function getSwapWarnings(
   t: TFunction,
   formatPercent: LocalizationContextState['formatPercent'],
   derivedSwapInfo: DerivedSwapInfo,
-  offline: boolean
+  offline: boolean,
 ): Warning[] {
   const warnings: Warning[] = []
 
@@ -47,6 +44,7 @@ export function getSwapWarnings(
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const swapBalanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
+
   if (swapBalanceInsufficient) {
     warnings.push({
       type: WarningLabel.InsufficientFunds,
@@ -141,10 +139,7 @@ export function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
   const offline = isOffline(networkStatus)
 
-  return useMemoCompare(
-    () => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline),
-    _.isEqual
-  )
+  return useMemoCompare(() => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline), _.isEqual)
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
@@ -163,7 +158,5 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
 }
 
 export function isPriceImpactWarning(warning: Warning): boolean {
-  return (
-    warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
-  )
+  return warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
 }

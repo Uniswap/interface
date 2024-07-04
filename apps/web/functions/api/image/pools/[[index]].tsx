@@ -93,7 +93,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
     const data = await getRequest(
       cacheUrl,
       () => getPool(networkName, poolAddress, cacheUrl),
-      (data): data is NonNullable<Awaited<ReturnType<typeof getPool>>> => Boolean(data.title)
+      (data): data is NonNullable<Awaited<ReturnType<typeof getPool>>> => Boolean(data.title),
     )
 
     if (!data) {
@@ -215,7 +215,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
             style: 'normal',
           },
         ],
-      }
+      },
     ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })

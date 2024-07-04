@@ -1,7 +1,7 @@
 import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { render } from 'test-utils/render'
-import { LimitPriceError } from './LimitPriceError'
 
 describe('LimitPriceError', () => {
   it.each([
@@ -17,7 +17,7 @@ describe('LimitPriceError', () => {
         priceInverted={inverted}
         priceAdjustmentPercentage={change}
         priceError={LimitPriceErrorType.BELOW_MARKET}
-      />
+      />,
     )
     expect(container.firstChild).toMatchSnapshot()
   })
@@ -30,7 +30,7 @@ describe('LimitPriceError', () => {
         priceInverted={false}
         priceAdjustmentPercentage={0}
         priceError={LimitPriceErrorType.CALCULATION_ERROR}
-      />
+      />,
     )
     expect(container.firstChild).toMatchSnapshot()
   })

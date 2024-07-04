@@ -4,6 +4,8 @@ import { NotImplementedError } from 'utilities/src/errors'
  * Provides the generation, storage, and signing logic for mnemonics and private keys.
  */
 export interface IKeyring {
+  removeAllMnemonicsAndPrivateKeys(): Promise<boolean>
+
   /** @returns true if the extension is unlocked (encryption key kept in session storage can unencrypt the mnemonic) */
   isUnlocked(): Promise<boolean>
 
@@ -35,10 +37,11 @@ export interface IKeyring {
    * mnemonic ID key as the public address.
 
    * @param mnemonic The mnemonic phrase to import
-   * @param password The password used to encrypt the mnemonic. Marked as optional depending on the platform.
+   * @param password The password used to encrypt the mnemonic. Implemented on web only.
+   * @param allowOverwrite Allows to overwrite previously imported mnemonic phrase. Implemented on web only.
    * @returns public address from the mnemonic's first derived private key
    */
-  importMnemonic(mnemonic: string, password?: string): Promise<string>
+  importMnemonic(mnemonic: string, password?: string, allowOverwrite?: boolean): Promise<string>
 
   /**
    * Removes the mnemonic from storage / keychain.
@@ -87,6 +90,8 @@ export interface IKeyring {
    */
   generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string>
 
+  removePrivateKey(address: string): Promise<boolean>
+
   signTransactionHashForAddress(address: string, hash: string, chainId: number): Promise<string>
 
   signMessageForAddress(address: string, message: string): Promise<string>
@@ -98,6 +103,10 @@ export interface IKeyring {
 
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
+  removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
+    throw new Error('Method not implemented.')
+  }
+
   isUnlocked(): Promise<boolean> {
     throw new NotImplementedError('isUnlocked')
   }
@@ -127,7 +136,7 @@ class NullKeyring implements IKeyring {
   }
 
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
-  importMnemonic(_mnemonic: string): Promise<string> {
+  importMnemonic(_mnemonic: string, _password?: string, _allowOverwrite?: boolean): Promise<string> {
     throw new NotImplementedError('importMnemonic')
   }
 
@@ -162,11 +171,7 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('removePrivateKey')
   }
 
-  signTransactionHashForAddress(
-    _address: string,
-    _hash: string,
-    _chainId: number
-  ): Promise<string> {
+  signTransactionHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
     throw new NotImplementedError('signTransactionHashForAddress')
   }
 

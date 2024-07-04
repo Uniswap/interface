@@ -13,8 +13,18 @@ exports.shared = {
       name: '@uniswap/analytics',
       message: 'This is for internal use only. Please use `packages/uniswap/src/features/telemetry`',
     },
+    {
+      name: 'expo-localization',
+      message:
+        'Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead',
+    },
   ],
-  patterns: [],
+  patterns: [
+    {
+      group: ['**/dist'],
+      message: 'Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.',
+    },
+  ],
 }
 
 exports.crossPlatform = {
@@ -30,14 +40,12 @@ exports.crossPlatform = {
     {
       group: [
         '*react-native*',
-        '!react-native-image-colors', // Allow importing react-native-image-colors, since it is cross platform.
+        // The following are allowed to be imported in cross-platform code.
+        '!react-native-reanimated',
+        '!react-native-image-colors',
       ],
       message:
         "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
-    },
-    {
-      group: ['**/dist'],
-      message: 'Do not import from dist/ - this is an implementation detail, and breaks tree-shaking.',
     },
   ],
 }

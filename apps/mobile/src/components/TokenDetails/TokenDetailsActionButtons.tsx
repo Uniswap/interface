@@ -30,7 +30,8 @@ function CTAButton({
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}
         size="large"
-        backgroundColor={validColor(tokenColor) ?? '$accent1'}>
+        backgroundColor={validColor(tokenColor) ?? '$accent1'}
+      >
         {title}
       </Button>
     </Trace>
@@ -41,10 +42,12 @@ export function TokenDetailsActionButtons({
   onPressBuy,
   onPressSell,
   tokenColor,
+  userHasBalance,
 }: {
   onPressBuy: () => void
   onPressSell: () => void
   tokenColor?: Maybe<string>
+  userHasBalance: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -57,19 +60,22 @@ export function TokenDetailsActionButtons({
       gap="$spacing8"
       pb="$spacing16"
       pt="$spacing12"
-      px="$spacing16">
+      px="$spacing16"
+    >
       <CTAButton
         element={ElementName.Buy}
         title={t('common.button.buy')}
         tokenColor={tokenColor}
         onPress={onPressBuy}
       />
-      <CTAButton
-        element={ElementName.Sell}
-        title={t('common.button.sell')}
-        tokenColor={tokenColor}
-        onPress={onPressSell}
-      />
+      {userHasBalance && (
+        <CTAButton
+          element={ElementName.Sell}
+          title={t('common.button.sell')}
+          tokenColor={tokenColor}
+          onPress={onPressSell}
+        />
+      )}
     </Flex>
   )
 }

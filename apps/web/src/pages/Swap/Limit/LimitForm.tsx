@@ -1,10 +1,9 @@
 import { InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
-import { useWeb3React } from '@web3-react/core'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
@@ -20,12 +19,14 @@ import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
-import { SupportArticleURL } from 'constants/supportArticles'
+import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import useSelectChain from 'hooks/useSelectChain'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
+import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
@@ -39,6 +40,7 @@ import { CurrencyState } from 'state/swap/types'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { AlertTriangle } from 'ui/src/components/icons'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -47,7 +49,6 @@ import {
   useFormatter,
 } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { LimitExpirySection } from './LimitExpirySection'
 
 const CustomHeightSwapSection = styled(SwapSection)`
   height: unset;
@@ -84,12 +85,14 @@ type LimitFormProps = {
 }
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
-  const { chainId, account } = useWeb3React()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const account = useAccount()
+  const selectChain = useSelectChain()
   const {
+    chainId,
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
+  const isSupportedChain = useIsSupportedChainId(chainId)
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
   const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice } = derivedLimitInfo
@@ -100,7 +103,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const theme = useTheme()
   const { onSwitchTokens } = useSwapActionHandlers()
   const { formatCurrencyAmount } = useFormatter()
-  const openAccountDrawer = useOpenAccountDrawer()
+  const accountDrawer = useAccountDrawer()
   const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
 
   const { currentPriceAdjustment, priceError } = useCurrentPriceAdjustment({
@@ -152,7 +155,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         isInputAmountFixed: type !== 'outputAmount',
       }))
     },
-    [setLimitState]
+    [setLimitState],
   )
 
   const switchTokens = useCallback(() => {
@@ -184,18 +187,22 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = currencyToBeReplaced
         }
       }
+      // If the user selects 2 currencies on different chains we should set the other field to undefined
+      if (newCurrency.chainId !== otherCurrency?.chainId) {
+        newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = undefined
+      }
       setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
       onCurrencyChange?.(newCurrencyState)
       setCurrencyState(newCurrencyState)
     },
-    [inputCurrency, onCurrencyChange, outputCurrency, setCurrencyState, setLimitState, switchTokens]
+    [inputCurrency, onCurrencyChange, outputCurrency, setCurrencyState, setLimitState, switchTokens],
   )
 
   useEffect(() => {
     if (!outputCurrency && isSupportedChain) {
       onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
     }
-  }, [chainId, onSelectCurrency, outputCurrency, isSupportedChain])
+  }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId])
 
   useEffect(() => {
     if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
@@ -211,7 +218,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
-    [currencyBalances]
+    [currencyBalances],
   )
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
@@ -225,7 +232,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const allowance = usePermit2Allowance(
     parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
     isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
-    TradeFillType.UniswapX
+    TradeFillType.UniswapX,
   )
 
   const fiatValueTradeInput = useUSDPrice(parsedAmounts.INPUT)
@@ -276,7 +283,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     limitOrderTrade,
     fiatValues,
     ZERO_PERCENT,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
+    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined,
   )
 
   const handleSubmit = useCallback(async () => {
@@ -343,7 +350,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       {parsedLimitPrice && <LimitExpirySection />}
       <SubmitOrderButton
         inputCurrency={inputCurrency}
-        handleContinueToReview={() => {
+        handleContinueToReview={async () => {
+          if (chainId && chainId !== account.chainId) {
+            const didSwitchChain = await selectChain(chainId)
+            if (!didSwitchChain) {
+              return
+            }
+          }
           setShowConfirm(true)
         }}
         trade={limitOrderTrade}
@@ -359,12 +372,12 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
-      {account && (
+      {account.address && (
         <OpenLimitOrdersButton
-          account={account}
+          account={account.address}
           openLimitsMenu={() => {
             setMenu(MenuState.LIMITS)
-            openAccountDrawer()
+            accountDrawer.open()
           }}
         />
       )}
@@ -373,13 +386,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <DisclaimerText>
           {!isUniswapXSupportedChain(chainId) ? (
             <Trans i18nKey="limits.onlyMainnet">
-              <ExternalLink href={SupportArticleURL.LIMITS_SUPPORTED_NETWORKS}>
+              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}>
                 <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>
           ) : (
             <Trans i18nKey="limits.priceWarning">
-              <ExternalLink href={SupportArticleURL.LIMIT_FAILURE}>
+              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsFailure}>
                 <Trans i18nKey="common.learnMore.link" />
               </ExternalLink>
             </Trans>
@@ -427,8 +440,9 @@ function SubmitOrderButton({
   hasInsufficientFunds: boolean
   limitPriceError?: LimitPriceErrorType
 }) {
-  const toggleWalletDrawer = useToggleAccountDrawer()
-  const { account, chainId } = useWeb3React()
+  const accountDrawer = useAccountDrawer()
+  const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
 
   if (!isUniswapXSupportedChain(chainId)) {
     return (
@@ -438,9 +452,9 @@ function SubmitOrderButton({
     )
   }
 
-  if (!account) {
+  if (!account.isConnected) {
     return (
-      <ButtonLight onClick={toggleWalletDrawer} fontWeight={535} $borderRadius="16px">
+      <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
         <Trans i18nKey="common.connectWallet.button" />
       </ButtonLight>
     )

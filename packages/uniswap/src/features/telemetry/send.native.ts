@@ -1,9 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
 import appsFlyer from 'react-native-appsflyer'
-import {
-  AppsFlyerEventProperties,
-  UniverseEventProperties,
-} from 'uniswap/src/features/telemetry/types'
+import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -23,12 +20,8 @@ export async function sendAppsFlyerEvent<EventName extends keyof AppsFlyerEventP
     : [EventName, AppsFlyerEventProperties[EventName]]
 ): Promise<void> {
   const [eventName, eventProperties] = args
-  if (__DEV__) {
-    logger.debug(
-      'telemetry/send.native.ts',
-      'sendWalletAppsFlyerEvent',
-      JSON.stringify({ eventName, eventProperties })
-    )
+  if (__DEV__ || isDevEnv() || isBetaEnv()) {
+    logger.debug('telemetry/send.native.ts', 'sendWalletAppsFlyerEvent', JSON.stringify({ eventName, eventProperties }))
   } else {
     await appsFlyer.logEvent(eventName, eventProperties ?? {})
   }

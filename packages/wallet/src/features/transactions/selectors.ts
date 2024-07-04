@@ -1,6 +1,7 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
-import { ChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
@@ -8,6 +9,7 @@ import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   SendTokenTransactionInfo,
   TransactionDetails,
@@ -16,7 +18,6 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { RootState, useAppSelector } from 'wallet/src/state'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
 
@@ -63,22 +64,22 @@ export const makeSelectAddressTransactions = (): Selector<
         const duplicate = self.find(
           (tx2) =>
             tx2.id !== tx.id &&
+            isClassic(tx) &&
+            isClassic(tx2) &&
             tx2.options.request.chainId &&
             tx2.options.request.chainId === tx.options.request.chainId &&
             tx.options.request.nonce &&
-            tx2.options.request.nonce === tx.options.request.nonce
+            tx2.options.request.nonce === tx.options.request.nonce,
         )
         if (duplicate) {
           return tx.addedTime > duplicate.addedTime
         }
         return true
       })
-    }
+    },
   )
 
-export function useSelectAddressTransactions(
-  address: Address | null
-): TransactionDetails[] | undefined {
+export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] | undefined {
   const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
   return useAppSelector((state) => selectAddressTransactions(state, address))
 }
@@ -87,14 +88,12 @@ export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
   const accounts = useAccounts()
   const addresses = Object.values(accounts).map((account) => account.address)
   const manuallySetTokenVisibility = useAppSelector(selectTokensVisibility)
-  const selectLocalTxCurrencyIds: (
-    state: RootState,
-    addresses: Address[]
-  ) => CurrencyIdToVisibility = useMemo(makeSelectTokenVisibilityFromLocalTxs, [])
-
-  const tokenVisibilityFromLocalTxs = useAppSelector((state) =>
-    selectLocalTxCurrencyIds(state, addresses)
+  const selectLocalTxCurrencyIds: (state: RootState, addresses: Address[]) => CurrencyIdToVisibility = useMemo(
+    makeSelectTokenVisibilityFromLocalTxs,
+    [],
   )
+
+  const tokenVisibilityFromLocalTxs = useAppSelector((state) => selectLocalTxCurrencyIds(state, addresses))
 
   return {
     ...tokenVisibilityFromLocalTxs,
@@ -103,11 +102,7 @@ export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
   }
 }
 
-const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
-  RootState,
-  CurrencyIdToVisibility,
-  [Address[]]
-> =>
+const makeSelectTokenVisibilityFromLocalTxs = (): Selector<RootState, CurrencyIdToVisibility, [Address[]]> =>
   createSelector(
     selectTransactions,
     (_: RootState, addresses: Address[]) => addresses,
@@ -130,20 +125,16 @@ const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
         })
 
         return acc
-      }, {})
+      }, {}),
   )
 
 interface MakeSelectParams {
   address: Address | undefined
-  chainId: ChainId | undefined
+  chainId: WalletChainId | undefined
   txId: string | undefined
 }
 
-export const makeSelectTransaction = (): Selector<
-  RootState,
-  TransactionDetails | undefined,
-  [MakeSelectParams]
-> =>
+export const makeSelectTransaction = (): Selector<RootState, TransactionDetails | undefined, [MakeSelectParams]> =>
   createSelector(
     selectTransactions,
     (_: RootState, { address, chainId, txId }: MakeSelectParams) => ({
@@ -162,22 +153,19 @@ export const makeSelectTransaction = (): Selector<
       }
 
       return Object.values(addressTxs).find((txDetails) => txDetails.id === txId)
-    }
+    },
   )
 
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
 export const selectRecipientsByRecency = (state: RootState): SearchableRecipient[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
-  const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>(
-    (accum, transactions) => {
-      const sendTransactionsWithRecipients = Object.values(transactions).filter(
-        (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient
-      )
-      return [...accum, ...sendTransactionsWithRecipients]
-    },
-    []
-  )
+  const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
+    const sendTransactionsWithRecipients = Object.values(transactions).filter(
+      (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient,
+    )
+    return [...accum, ...sendTransactionsWithRecipients]
+  }, [])
   const sortedRecipients = sendTransactions
     .sort((a, b) => (a.addedTime < b.addedTime ? 1 : -1))
     .map((transaction) => {
@@ -193,10 +181,7 @@ export const selectIncompleteTransactions = (state: RootState): TransactionDetai
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const pendingTxs = Object.values(transactions).filter(
-      (tx) =>
-        Boolean(!tx.receipt) &&
-        tx.status !== TransactionStatus.Failed &&
-        tx.status !== TransactionStatus.Success
+      (tx) => Boolean(!tx.receipt) && tx.status !== TransactionStatus.Failed && tx.status !== TransactionStatus.Success,
     )
     return [...accum, ...pendingTxs]
   }, [])

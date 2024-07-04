@@ -6,7 +6,7 @@ declare module 'react-native' {
 
 import { NativeModules } from 'react-native'
 import { NotImplementedError } from 'utilities/src/errors'
-import { IKeyring } from './Keyring'
+import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 const { RNEthersRS } = NativeModules
 
@@ -14,22 +14,20 @@ const { RNEthersRS } = NativeModules
  * Simple wrapper around RNEthersRS
  */
 class NativeKeyring implements IKeyring {
+  removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
+    throw new NotImplementedError('removeAllMnemonicsAndPrivateKeys')
+  }
+
   isUnlocked(): Promise<boolean> {
     throw new NotImplementedError('isUnlocked')
   }
 
-  removeMnemonic(_mnemonicId: string): Promise<boolean> {
-    // On mobile we don't currently handle this cleanup because it lives
-    // in secure enclave and is hard to handle when app is uninstalled
-    throw new NotImplementedError('removeMnemonic')
+  removeMnemonic(mnemonicId: string): Promise<boolean> {
+    return RNEthersRS.removeMnemonic(mnemonicId)
   }
 
-  removePrivateKey(_address: string): Promise<boolean> {
-    // On mobile we don't currently handle this cleanup because it lives
-    // in secure enclave and is hard to handle when app is uninstalled
-
-    // TODO (MOB-243): Cleanup account artifacts in native-land (i.e. keystore). Resolve to false for now
-    return Promise.resolve(false)
+  removePrivateKey(address: string): Promise<boolean> {
+    return RNEthersRS.removePrivateKey(address)
   }
 
   removePassword(): Promise<boolean> {

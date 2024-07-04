@@ -1,33 +1,33 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
-import { assert, Equals } from 'tsafe'
-
-import { ApplicationModal, ApplicationState, PopupList, PopupType } from './application/reducer'
-import { Field as BurnField } from './burn/actions'
-import { BurnState } from './burn/reducer'
-import { BurnV3State } from './burn/v3/reducer'
-import { PoolsListsState } from './lists/poolsList/reducer'
-import { ListsState } from './lists/types'
-import { LogsState } from './logs/slice'
-import { Log } from './logs/utils'
-import { Field } from './mint/actions'
-import { MintState } from './mint/reducer'
-import { Field as FieldV3 } from './mint/v3/actions'
-import { FullRange, MintState as MintV3State } from './mint/v3/reducer'
-import { AppState } from './reducer'
-import { quickRouteApi } from './routing/quickRouteSlice'
-import { routingApi } from './routing/slice'
-import { RouterPreference } from './routing/types'
-import { SignatureState } from './signatures/reducer'
-import { TransactionState } from './transactions/reducer'
-import { TransactionDetails } from './transactions/types'
-import { UserState } from './user/reducer'
-import { SerializedPair, SerializedToken, SlippageTolerance } from './user/types'
-import { WalletState } from './wallets/reducer'
-import { Wallet } from './wallets/types'
+import { ApplicationModal, ApplicationState, PopupList, PopupType } from 'state/application/reducer'
+import { Field as BurnField } from 'state/burn/actions'
+import { BurnState } from 'state/burn/reducer'
+import { BurnV3State } from 'state/burn/v3/reducer'
+import { ListsState } from 'state/lists/types'
+import { PoolsListsState } from 'state/lists/poolsList/reducer'
+import { LogsState } from 'state/logs/slice'
+import { Log } from 'state/logs/utils'
+import { Field } from 'state/mint/actions'
+import { MintState } from 'state/mint/reducer'
+import { Field as FieldV3 } from 'state/mint/v3/actions'
+import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
+import { AppState } from 'state/reducer'
+import { quickRouteApi } from 'state/routing/quickRouteSlice'
+import { routingApi } from 'state/routing/slice'
+import { RouterPreference } from 'state/routing/types'
+import { SignatureState } from 'state/signatures/reducer'
+import { TransactionState } from 'state/transactions/reducer'
+import { TransactionDetails } from 'state/transactions/types'
+import { UserState } from 'state/user/reducer'
+import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+import { WalletState } from 'state/wallets/reducer'
+import { Wallet } from 'state/wallets/types'
+import { Equals, assert } from 'tsafe'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 /**
  * WARNING:
@@ -64,6 +64,7 @@ type ExpectedAppState = CombinedState<{
   logs: LogsState
   [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
+  [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
 }>
 
 assert<Equals<AppState, ExpectedAppState>>()
@@ -128,7 +129,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
-  switchingChain: ChainId | false
+  switchingChain: InterfaceChainId | false
 }
 
 assert<Equals<WalletState, ExpectedWalletState>>()

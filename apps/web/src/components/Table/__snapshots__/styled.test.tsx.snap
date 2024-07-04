@@ -149,36 +149,14 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
             <div
               class="c6"
             >
-              <svg
+              <img
+                alt="Polygon logo"
                 aria-labelledby="titleID"
                 height="100%"
-                style="width: 100%; height: 100%;"
+                src="polygon-logo.png"
+                style="border-radius: 2px;"
                 width="100%"
-              >
-                <title
-                  id="titleID"
-                >
-                  Polygon logo
-                </title>
-                <rect
-                  fill="#F9F9F9"
-                  height="100%"
-                  rx="2"
-                  width="100%"
-                />
-                <rect
-                  fill="#9558FF33"
-                  height="100%"
-                  rx="2"
-                  width="100%"
-                />
-                <svg
-                  height="100%"
-                  width="100%"
-                >
-                  polygon.svg
-                </svg>
-              </svg>
+              />
             </div>
           </div>
           <div

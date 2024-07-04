@@ -1,9 +1,14 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
+import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
+import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
 import AnimatedDropdown from 'components/AnimatedDropdown'
+import { ButtonError, SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import SpinningLoader from 'components/Loader/SpinningLoader'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
+import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from 'components/swap/SwapLineItem'
+import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { Trans, t } from 'i18n'
@@ -17,16 +22,11 @@ import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
+import { SpinningLoader } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
-import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
-import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
-import { ButtonError, SmallButtonPrimary } from '../Button'
-import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
-import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 
 const DetailsContainer = styled(Column)`
   padding: 0px 12px 8px;
@@ -210,7 +210,7 @@ export function SwapDetails({
               {isLoading ? (
                 <ThemedText.HeadlineSmall color="neutral2">
                   <Row>
-                    <SpinningLoader />
+                    <SpinningLoader size={14} />
                     <Trans i18nKey="swap.finalizingQuote" />
                   </Row>
                 </ThemedText.HeadlineSmall>

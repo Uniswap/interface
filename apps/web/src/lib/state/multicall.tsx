@@ -1,10 +1,11 @@
 import { createMulticall, ListenerOptions } from '@uniswap/redux-multicall'
-import { ChainId } from '@uniswap/sdk-core'
-import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
+import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall, useMainnetInterfaceMulticall } from 'hooks/useContract'
 import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const multicall = createMulticall()
 
@@ -18,8 +19,8 @@ export function MulticallUpdater() {
   const latestBlockNumber = useBlockNumber()
   const contract = useInterfaceMulticall()
   const listenerOptions: ListenerOptions = useMemo(
-    () => ({ blocksPerFetch: supportedChain ? CHAIN_INFO[supportedChain].blockPerMainnetEpochForChainId : 1 }),
-    [supportedChain]
+    () => ({ blocksPerFetch: supportedChain ? UNIVERSE_CHAIN_INFO[supportedChain].blockPerMainnetEpochForChainId : 1 }),
+    [supportedChain],
   )
 
   const latestMainnetBlockNumber = useMainnetBlockNumber()
@@ -28,12 +29,12 @@ export function MulticallUpdater() {
   return (
     <>
       <multicall.Updater
-        chainId={ChainId.MAINNET}
+        chainId={UniverseChainId.Mainnet}
         latestBlockNumber={latestMainnetBlockNumber}
         contract={mainnetContract}
         listenerOptions={MAINNET_LISTENER_OPTIONS}
       />
-      {chainId !== ChainId.MAINNET && (
+      {chainId !== UniverseChainId.Mainnet && (
         <multicall.Updater
           chainId={chainId}
           latestBlockNumber={latestBlockNumber}

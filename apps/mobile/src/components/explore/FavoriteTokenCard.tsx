@@ -9,22 +9,23 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedFlex, AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, imageSizes } from 'ui/src/theme'
+import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { ChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
@@ -60,12 +61,9 @@ function FavoriteTokenCard({
   const token = data?.token
 
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
-  const chainId = fromGraphQLChain(token?.chain) ?? ChainId.Mainnet
+  const chainId = fromGraphQLChain(token?.chain) ?? UniverseChainId.Mainnet
 
-  const price = convertFiatAmountFormatted(
-    token?.project?.markets?.[0]?.price?.value,
-    NumberType.FiatTokenPrice
-  )
+  const price = convertFiatAmountFormatted(token?.project?.markets?.[0]?.price?.value, NumberType.FiatTokenPrice)
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(() => {
@@ -106,7 +104,8 @@ function FavoriteTokenCard({
         disabled={isEditing}
         style={{ borderRadius: borderRadii.rounded16 }}
         onPress={onContextMenuPress}
-        {...rest}>
+        {...rest}
+      >
         <AnimatedTouchableArea
           activeOpacity={isEditing ? 1 : undefined}
           backgroundColor="$surface2"
@@ -117,7 +116,8 @@ function FavoriteTokenCard({
           m="$spacing4"
           testID={`token-box-${token?.symbol}`}
           onLongPress={disableOnPress}
-          onPress={onPress}>
+          onPress={onPress}
+        >
           <BaseCard.Shadow>
             <Flex alignItems="flex-start" gap="$spacing8">
               <Flex row gap="$spacing4" justifyContent="space-between">

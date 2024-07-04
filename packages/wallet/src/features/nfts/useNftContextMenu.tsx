@@ -68,7 +68,7 @@ export function useNFTContextMenu({
           visible: !hidden,
           hideDelay: 2 * ONE_SECOND_MS,
           assetName: 'NFT',
-        })
+        }),
       )
     }
   }, [nftKey, dispatch, hidden, showNotification, isSpam])
@@ -88,9 +88,7 @@ export function useNFTContextMenu({
               : []),
             ...((isLocalAccount && [
               {
-                title: hidden
-                  ? t('tokens.nfts.hidden.action.unhide')
-                  : t('tokens.nfts.hidden.action.hide'),
+                title: hidden ? t('tokens.nfts.hidden.action.unhide') : t('tokens.nfts.hidden.action.hide'),
                 ...(isWeb
                   ? {
                       Icon: hidden ? Eye : EyeOff,
@@ -105,14 +103,14 @@ export function useNFTContextMenu({
               []),
           ]
         : [],
-    [nftKey, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus]
+    [nftKey, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus],
   )
 
   const onContextMenuPress = useCallback(
     async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
       await menuActions[e.nativeEvent.index]?.onPress?.()
     },
-    [menuActions]
+    [menuActions],
   )
 
   return { menuActions, onContextMenuPress, onlyShare: !!nftKey && !isLocalAccount }

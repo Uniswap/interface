@@ -10,6 +10,7 @@ import { NetworkChangedNotification } from 'wallet/src/features/notifications/co
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
 import { SwapPendingNotification } from 'wallet/src/features/notifications/components/SwapPendingNotification'
+import { TransactionPendingNotification } from 'wallet/src/features/notifications/components/TransactionPendingNotification'
 import { TransferCurrencyNotification } from 'wallet/src/features/notifications/components/TransferCurrencyNotification'
 import { TransferCurrencyPendingNotification } from 'wallet/src/features/notifications/components/TransferCurrencyPendingNotification'
 import { TransferNFTNotification } from 'wallet/src/features/notifications/components/TransferNFTNotification'
@@ -18,11 +19,7 @@ import { WrapNotification } from 'wallet/src/features/notifications/components/W
 import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 
-export function SharedNotificationToastRouter({
-  notification,
-}: {
-  notification: AppNotification
-}): JSX.Element | null {
+export function SharedNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />
@@ -43,7 +40,9 @@ export function SharedNotificationToastRouter({
     case AppNotificationType.SwapPending:
       return <SwapPendingNotification notification={notification} />
     case AppNotificationType.TransferCurrencyPending:
-      return <TransferCurrencyPendingNotification notification={notification} />
+      return <TransferCurrencyPendingNotification />
+    case AppNotificationType.TransactionPending:
+      return <TransactionPendingNotification />
     case AppNotificationType.Transaction:
       switch (notification.txType) {
         case TransactionType.Approve:

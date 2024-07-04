@@ -2,9 +2,7 @@
 
 const ENS_DOMAIN_REGEX = /^[a-zA-Z0-9-.]+\.eth$/
 
-export function parseENSAddress(
-  ensAddress: string
-): { ensName: string; ensPath: string | undefined } | undefined {
+export function parseENSAddress(ensAddress: string): { ensName: string; ensPath: string | undefined } | undefined {
   // Note: this was refactored from a regex into a function as the regex in question
   // contained a sequence of rules that result in O(n^2) complexity, thus potentially opening up
   // the mobile client to a DoS attack.

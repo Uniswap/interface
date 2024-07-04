@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import {
-  Keyboard,
-  LayoutChangeEvent,
-  LayoutRectangle,
-  TextInput as NativeTextInput,
-  StyleSheet,
-} from 'react-native'
+import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
@@ -51,7 +45,6 @@ export function GenericImportForm({
   shouldUseMinHeight = true,
 }: Props): JSX.Element {
   const [focused, setFocused] = useState(false)
-  const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
   const isKeyboardVisibleRef = useRef(false)
   const media = useMedia()
@@ -97,9 +90,7 @@ export function GenericImportForm({
   const INPUT_MIN_HEIGHT = 120
   const INPUT_MIN_HEIGHT_SHORT = 90
 
-  // Absolutely positioned paste button needs top padding to be vertically centered on bottom border of Flex
-  const PASTE_BUTTON_TOP_PADDING = INPUT_MIN_HEIGHT / 2 + 4
-  const SHORT_PASTE_BUTTON_TOP_PADDING = INPUT_MIN_HEIGHT_SHORT / 2 - 12
+  const showError = errorMessage && value && (liveCheck || !focused)
 
   return (
     <Trace section={SectionName.ImportAccountForm}>
@@ -110,7 +101,8 @@ export function GenericImportForm({
           // when this component is pressed while the keyboard is visible)
           return focused
         }}
-        onTouchEnd={handleFocus}>
+        onTouchEnd={handleFocus}
+      >
         <Flex
           shrink
           $short={{
@@ -119,13 +111,14 @@ export function GenericImportForm({
             minHeight: shouldUseMinHeight ? INPUT_MIN_HEIGHT_SHORT : undefined,
           }}
           backgroundColor="$surface1"
-          borderColor="$surface3"
+          borderColor={showError ? '$statusCritical' : '$surface3'}
           borderRadius="$rounded20"
           borderWidth={1}
           minHeight={shouldUseMinHeight ? INPUT_MIN_HEIGHT : undefined}
           px="$spacing24"
           py="$spacing16"
-          width="100%">
+          width="100%"
+        >
           {/* TODO: [MOB-225] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
           <InputWithSuffix
             autoCorrect={Boolean(autoCorrect)}
@@ -134,7 +127,6 @@ export function GenericImportForm({
             inputFontSize={INPUT_FONT_SIZE}
             inputMaxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
             inputSuffix={inputSuffix}
-            layout={layout}
             textAlign={textAlign}
             textInputRef={textInputRef}
             value={value}
@@ -143,39 +135,22 @@ export function GenericImportForm({
             onFocus={handleFocus}
             onSubmitEditing={handleSubmit}
           />
-          {!value && (
+          {!value && placeholderLabel && (
             <Flex
-              grow
-              row
-              alignItems="center"
-              gap="$spacing8"
+              centered
+              bottom={shouldUseMinHeight ? undefined : 0}
+              left="$spacing24"
               position="absolute"
-              pt="$spacing16"
-              px="$spacing24"
-              width="100%"
-              onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
-              <Text
-                adjustsFontSizeToFit
-                $short={{ variant: 'body3' }}
-                color="$neutral2"
-                maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
-                numberOfLines={1}
-                style={styles.placeholderLabelStyle}
-                variant="subheading2">
+              py="$spacing16"
+              top={0}
+            >
+              <Text color="$neutral2" fontSize={INPUT_FONT_SIZE} pointerEvents="none">
                 {placeholderLabel}
               </Text>
             </Flex>
           )}
           {!value && !shouldUseMinHeight && (
-            <Flex
-              row
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              position="absolute"
-              pr="$spacing12"
-              pt="$spacing12"
-              right={0}
-              width="100%">
+            <Flex bottom={0} justifyContent="center" position="absolute" right="$spacing12" top={0}>
               <PasteButton
                 afterClipboardReceived={afterPasteButtonPress}
                 beforePress={beforePasteButtonPress}
@@ -184,12 +159,8 @@ export function GenericImportForm({
             </Flex>
           )}
           {!value && shouldUseMinHeight && (
-            <Flex centered width="100%">
-              <Flex
-                $short={{ pt: SHORT_PASTE_BUTTON_TOP_PADDING }}
-                position="absolute"
-                pt={PASTE_BUTTON_TOP_PADDING}
-                top={0}>
+            <Flex centered bottom={0} height={0} left={0} position="absolute" right={0}>
+              <Flex position="absolute">
                 <PasteButton
                   afterClipboardReceived={afterPasteButtonPress}
                   beforePress={beforePasteButtonPress}
@@ -200,7 +171,7 @@ export function GenericImportForm({
           )}
         </Flex>
         <Flex>
-          {errorMessage && value && (liveCheck || !focused) && (
+          {showError && (
             <Flex centered row gap="$spacing12">
               <Text color="$statusCritical" variant="body3">
                 {errorMessage}
@@ -212,9 +183,3 @@ export function GenericImportForm({
     </Trace>
   )
 }
-
-const styles = StyleSheet.create({
-  placeholderLabelStyle: {
-    flexShrink: 1,
-  },
-})
