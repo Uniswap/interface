@@ -5,6 +5,7 @@
   "scriptSrc": [
     "'self'",
     "data:",
+    "'wasm-unsafe-eval'",
     "https://translate.googleapis.com/",
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com"

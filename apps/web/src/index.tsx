@@ -10,6 +10,7 @@ import 'tracing'
 // ensure translations load before things
 // prettier-ignore
 import 'i18n'
+// prettier-ignore
 import 'setupRive'
 
 import { getDeviceId } from '@amplitude/analytics-browser'

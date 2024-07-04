@@ -8082,21 +8082,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rive-app/canvas@npm:2.8.3":
-  version: 2.8.3
-  resolution: "@rive-app/canvas@npm:2.8.3"
-  checksum: 1318aecc3256279b806828c53ddd4d18e3967a61a19563af2d9d86e251b5dc105d8a4839ed191da7cd4eb42f5f2f4456d85c91df35bfbf1d49c75da58a064c87
+"@rive-app/canvas@npm:2.19.0":
+  version: 2.19.0
+  resolution: "@rive-app/canvas@npm:2.19.0"
+  checksum: 27c9df0a0c32639aee6f48209c13ccd05f16d71b379e0ee36aa0434826a1f4b3bc6d880b8d7e996eb4350b78e194ebc0cae24c3978c8cfda4a0361f4282cba22
   languageName: node
   linkType: hard
 
-"@rive-app/react-canvas@npm:4.6.2":
-  version: 4.6.2
-  resolution: "@rive-app/react-canvas@npm:4.6.2"
+"@rive-app/react-canvas@npm:4.13.0":
+  version: 4.13.0
+  resolution: "@rive-app/react-canvas@npm:4.13.0"
   dependencies:
-    "@rive-app/canvas": 2.8.3
+    "@rive-app/canvas": 2.19.0
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 61180635fe7ca6bd60ee99a176fefcdca7a5c3475fd9dd7d263a809c062b1ea1168fec6902326272107afe70eae62917bf65d2e5d5073c40dbaad3baed295598
+  checksum: 50f049daf52392d5f86bbac5c93aa49d26bf8e7656b1682947f95623e74d4fa06c55fcc552dd3a95f2e9538dfc3d9e643f488ef42c472027420fe3f0faa992fa
   languageName: node
   linkType: hard
 
@@ -13186,8 +13186,8 @@ __metadata:
     "@reach/dialog": 0.10.5
     "@reach/portal": 0.10.5
     "@reduxjs/toolkit": 1.9.3
-    "@rive-app/canvas": 2.8.3
-    "@rive-app/react-canvas": 4.6.2
+    "@rive-app/canvas": 2.19.0
+    "@rive-app/react-canvas": 4.13.0
     "@sentry/browser": 7.80.0
     "@sentry/core": 7.80.0
     "@sentry/react": 7.80.0
