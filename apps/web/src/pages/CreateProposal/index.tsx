@@ -42,7 +42,7 @@ import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { GRG } from '../../constants/tokens'
+import { GRG } from 'constants/tokens'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

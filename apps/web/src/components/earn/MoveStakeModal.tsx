@@ -12,13 +12,13 @@ import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { TextButton } from '../../components/vote/DelegateModal'
-import { GRG } from '../../constants/tokens'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useENS from '../../hooks/useENS'
-import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
+import { TextButton } from 'components/vote/DelegateModal'
+import { GRG } from 'constants/tokens'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import useENS from 'hooks/useENS'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
+import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import {
   StakeData,
   useDeactivateStakeCallback,
@@ -26,18 +26,18 @@ import {
   usePoolExtendedContract,
   usePoolIdByAddress,
   useStakeBalance,
-} from '../../state/governance/hooks'
-import { useFreeStakeBalance } from '../../state/stake/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import AddressInputPanel from '../AddressInputPanel'
-import { /*ButtonConfirmed,*/ ButtonPrimary } from '../Button'
+} from 'state/governance/hooks'
+import { useFreeStakeBalance } from 'state/stake/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import AddressInputPanel from 'components/AddressInputPanel'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button'
 //import { ButtonError } from '../Button'
-import { LightCard } from '../Card'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import { AutoRow, RowBetween } from '../Row'
-import Slider from '../Slider'
+import { LightCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { AutoRow, RowBetween } from 'components/Row'
+import Slider from 'components/Slider'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

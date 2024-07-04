@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { RowBetween, RowFixed } from 'components/Row'
 import SettingsTab from 'components/Settings'
 import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'

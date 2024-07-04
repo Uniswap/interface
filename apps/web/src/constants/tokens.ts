@@ -2,7 +2,7 @@ import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/
 import invariant from 'tiny-invariant'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
-import { GRG_ADDRESS } from './addresses'
+import { GRG_ADDRESS } from 'constants/addresses'
 
 // eslint-disable-next-line no-restricted-syntax
 export const NATIVE_CHAIN_ID = 'NATIVE'

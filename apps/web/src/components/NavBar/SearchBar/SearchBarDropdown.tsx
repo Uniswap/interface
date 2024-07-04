@@ -2,7 +2,6 @@ import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-even
 import Badge from 'components/Badge'
 import Column from 'components/Column'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { useRecentlySearchedAssets } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
 import Row from 'components/Row'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'

@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
-import Column from 'components/Column'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'

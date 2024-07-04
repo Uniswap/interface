@@ -1,6 +1,5 @@
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
-import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import Row from 'components/Row'
 import { Trans } from 'i18n'

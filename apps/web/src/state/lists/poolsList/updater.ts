@@ -1,16 +1,16 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { POOLS_LIST } from 'constants/lists'
+import { useFetchPoolListCallback } from 'hooks/useFetchPoolListCallback'
+import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useStateRehydrated } from 'hooks/useStateRehydrated'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
+import { acceptListUpdate } from 'state/lists/poolsList/actions'
 import { usePoolsList } from 'state/lists/poolsList/hooks'
-
-import { useFetchPoolListCallback } from '../../../hooks/useFetchPoolListCallback'
-import useIsWindowVisible from '../../../hooks/useIsWindowVisible'
-import { acceptListUpdate } from './actions'
+import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {
   const { provider } = useWeb3React()
@@ -29,7 +29,9 @@ export default function Updater(): null {
     POOLS_LIST.forEach((url) => {
       // Skip validation on unsupported lists
       const isUnsupportedList = false
-      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+      fetchList(url, isUnsupportedList).catch((error) =>
+        logger.debug('lists/poolsList/updater', 'Updater', 'interval list fetching error', error),
+      )
     })
   }, [fetchList, isWindowVisible])
 
@@ -45,14 +47,16 @@ export default function Updater(): null {
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+        fetchList(listUrl).catch((error) =>
+          logger.debug('lists/poolsList/updater', 'Updater', 'interval list fetching error', error),
+        )
       }
     })
     POOLS_LIST.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
         fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
-          console.debug('list added fetching error', error)
+          logger.debug('lists/poolsList/updater', 'Updater', 'interval list fetching error', error),
         )
       }
     })

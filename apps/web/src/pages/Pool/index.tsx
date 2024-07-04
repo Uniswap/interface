@@ -12,7 +12,6 @@ import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMali
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
-import CTACards from 'pages/Pool/CTACards'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { LoadingRows } from 'pages/Pool/styled'
 import { useMemo } from 'react'

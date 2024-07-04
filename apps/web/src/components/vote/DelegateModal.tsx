@@ -29,14 +29,14 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { ResponsiveHeaderText, SmallMaxButton } from '../../pages/RemoveLiquidity/styled'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
-import { useBurnV3ActionHandlers, useBurnV3State } from '../../state/burn/v3/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { LightCard } from '../Card'
-import Slider from '../Slider'
+import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { LightCard } from 'components/Card'
+import Slider from 'components/Slider'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

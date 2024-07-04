@@ -8,14 +8,14 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-import { useSetLockupCallback } from '../../state/pool/hooks'
-import { useIsTransactionConfirmed, useTransaction } from '../../state/transactions/hooks'
-import { ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
-import { LoadingView, SubmittedView } from '../ModalViews'
-import NameInputPanel from '../NameInputPanel'
-import { RowBetween } from '../Row'
+import { useSetLockupCallback } from 'state/pool/hooks'
+import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { ButtonError } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
+import NameInputPanel from 'components/NameInputPanel'
+import { RowBetween } from 'components/Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

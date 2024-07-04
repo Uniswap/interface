@@ -2,6 +2,7 @@ import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/u
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
+import { logger } from 'utilities/src/logger/logger'
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
@@ -50,7 +51,7 @@ export function usePoolMapFromUrl(urls: string[] | undefined): TokenAddressMap {
       try {
         return combineMaps(allTokens, tokensToChainTokenMap(current))
       } catch (error) {
-        console.error('Could not show token list due to error', error)
+        logger.warn('lists/poolsList/hooks', 'usePoolMapFromUrl', 'Failed to combine pools', error)
         return allTokens
       }
     }, {})

@@ -579,7 +579,8 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
 }
 
 export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
@@ -588,8 +589,8 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
     (stakeData: StakeData | undefined) => {
       if (
         !provider ||
-        !chainId ||
-        !account ||
+        !account.chainId ||
+        !account.address ||
         !stakeData ||
         !stakeData.fromPoolId ||
         !isAddress(stakeData.pool ?? '')
@@ -642,19 +643,20 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 
 export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined) => undefined | Promise<string> {
-  const { account, chainId, provider } = useWeb3React()
+  const account = useAccount()
+  const { provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
   const stakingContract = useStakingContract()
   const stakingProxy = useStakingProxyContract()
 
   return useCallback(
     (stakeData: StakeData | undefined) => {
-      if (!provider || !chainId || !account || !stakeData || !isAddress(stakeData.pool ?? '')) {
+      if (!provider || !account.chainId || !account.address || !stakeData || !isAddress(stakeData.pool ?? '')) {
         return undefined
       }
       const deactivateFromInfo: StakeInfo = { status: StakeStatus.DELEGATED, poolId: stakeData.poolId }
@@ -706,7 +708,7 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
           })
       })
     },
-    [account, addTransaction, chainId, provider, stakingContract, stakingProxy]
+    [account.address, addTransaction, account.chainId, provider, stakingContract, stakingProxy]
   )
 }
 

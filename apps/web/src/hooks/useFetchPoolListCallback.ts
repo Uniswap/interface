@@ -7,7 +7,7 @@ import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 
-import { fetchTokenList } from '../state/lists/poolsList/actions'
+import { fetchTokenList } from 'state/lists/poolsList/actions'
 
 export function useFetchPoolListCallback(): (listUrl: string, skipValidation?: boolean) => Promise<TokenList> {
   const dispatch = useAppDispatch()

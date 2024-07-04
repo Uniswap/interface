@@ -4,8 +4,8 @@ import styled, { useTheme } from 'styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 
 import { ThemedText } from 'theme/components/text'
-import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
+import { AutoColumn } from 'components/Column'
+import { RowBetween } from 'components/Row'
 
 const InputPanel = styled.div`
   ${flexColumnNoWrap};

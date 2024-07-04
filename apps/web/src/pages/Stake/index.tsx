@@ -2,35 +2,26 @@ import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@un
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { ButtonPrimary } from 'components/Button'
+import { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import HarvestYieldModal from 'components/earn/HarvestYieldModal'
+import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
+import UnstakeModal from 'components/earn/UnstakeModal'
 import Loader from 'components/Icons/LoadingSpinner'
+import PoolPositionList from 'components/PoolPositionList'
+import { RowBetween, RowFixed } from 'components/Row'
 import { GRG } from 'constants/tokens'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import { Center } from 'nft/components/Flex'
 import { useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from 'state/pool/hooks'
+import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from 'state/stake/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-
-import { ButtonPrimary } from '../../components/Button'
-import { OutlineCard } from '../../components/Card'
-import { AutoColumn } from '../../components/Column'
-import HarvestYieldModal from '../../components/earn/HarvestYieldModal'
-//import PoolCard from '../../components/earn/PoolCard'
-import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import UnstakeModal from '../../components/earn/UnstakeModal'
-import PoolPositionList from '../../components/PoolPositionList'
-import { RowBetween, RowFixed } from '../../components/Row'
-//import { LoadingSparkle } from '../../nft/components/common/Loading/LoadingSparkle'
-import { Center } from '../../nft/components/Flex'
-import { PoolRegisteredLog, useAllPoolsData, useStakingPools } from '../../state/pool/hooks'
-import { useFreeStakeBalance, useUnclaimedRewards, useUserStakeBalances } from '../../state/stake/hooks'
-//import { PoolPositionDetails } from '../../types/position'
-
-//export interface PoolEventResponse {
-//  events: PoolRegisteredLog[]
-//  cursor?: string
-//}
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

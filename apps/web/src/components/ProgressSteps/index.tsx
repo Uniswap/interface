@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'styled-components'
 
 import { ThemedText } from 'theme/components/text'
-import { AutoColumn } from '../Column'
+import { AutoColumn } from 'components/Column'
 
 const Wrapper = styled(AutoColumn)`
   margin-right: 8px;

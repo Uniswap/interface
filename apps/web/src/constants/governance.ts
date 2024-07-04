@@ -7,7 +7,7 @@ import {
 } from '@uniswap/sdk-core'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
-import { GOVERNANCE_PROXY_ADDRESSES } from './addresses'
+import { GOVERNANCE_PROXY_ADDRESSES } from 'constants/addresses'
 // TODO: remove deprecated governances
 
 export const COMMON_CONTRACT_NAMES: Record<number, { [address: string]: string }> = {
