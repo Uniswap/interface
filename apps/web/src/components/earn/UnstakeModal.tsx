@@ -108,7 +108,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={360}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
@@ -121,7 +121,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
             </RowBetween>
             <RowBetween>
               <ResponsiveHeaderText>
-                <Trans>{percentForSlider}%</Trans>
+                <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
                 <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">

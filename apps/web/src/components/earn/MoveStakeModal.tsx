@@ -196,7 +196,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
             )}
             <RowBetween>
               <ResponsiveHeaderText>
-                <Trans>{percentForSlider}%</Trans>
+                <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
                 <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">

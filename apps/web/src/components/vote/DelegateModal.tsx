@@ -230,7 +230,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
             {!poolInfo && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <RowBetween>
               <ResponsiveHeaderText>
-                <Trans>{percentForSlider}%</Trans>
+                <Trans>{{percentForSlider}}%</Trans>
               </ResponsiveHeaderText>
               <AutoRow gap="4px" justify="flex-end">
                 <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">

@@ -10,7 +10,7 @@ import PoolPositionList from 'components/PoolPositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { Trans } from 'i18n'
 import { useAccount } from 'hooks/useAccount'
-import { useModalIsOpen, useToggleCreateModal } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen, useToggleCreateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useAllPoolsData } from 'state/pool/hooks'
 import styled from 'styled-components'
@@ -73,9 +73,9 @@ export default function CreatePool() {
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
 
-  const showDelegateModal = useModalIsOpen(ApplicationModal.CREATE)
+  const open = useModalIsOpen(ApplicationModal.CREATE)
+  const closeModal = useCloseModal()
   const toggleCreateModal = useToggleCreateModal()
-
   const { data: allPools, loading: loadingPools } = useAllPoolsData()
 
   return (
@@ -106,13 +106,13 @@ export default function CreatePool() {
 
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <CreateModal isOpen={showDelegateModal} onDismiss={toggleCreateModal} title={<Trans>Create Pool</Trans>} />
+            <CreateModal isOpen={open} onDismiss={closeModal} title={<Trans>Create Pool</Trans>} />
             <WrapSmall>
               <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
                 <Trans>Pools</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <RowFixed gap="8px" style={{ marginRight: '4px' }}>
-                {account.address ? (
+                {account.isConnected ? (
                   <ButtonPrimary
                     style={{ width: 'fit-content', height: '40px' }}
                     padding="8px"
