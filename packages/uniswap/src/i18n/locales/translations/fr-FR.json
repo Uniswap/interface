@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "J'ai sauvegardé ma phrase de récupération et je comprends qu'Uniswap Labs ne peut pas m'aider à récupérer mes portefeuilles si je ne parviens pas à le faire.",
+        "check": "J'ai sauvegardé ma phrase de récupération et je comprends qu'Ubeswap ne peut pas m'aider à récupérer mes portefeuilles si je ne parviens pas à le faire.",
         "title": "Supprimer {{name}}",
         "viewOnly": "Vous pouvez toujours rajouter des wallets en \"lecture seule\" en saisissant l'adresse du wallet."
       },
@@ -756,7 +756,7 @@
         "new": "Choisissez une méthode de sauvegarde"
       },
       "view": {
-        "disclaimer": "Je comprends que si je perds ma phrase de récupération, Uniswap Labs ne peut pas m'aider à la restaurer.",
+        "disclaimer": "Je comprends que si je perds ma phrase de récupération, Ubeswap ne peut pas m'aider à la restaurer.",
         "subtitle": {
           "write": "Lisez attentivement ce qui suit avant de continuer"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Supprimer la phrase de récupération",
         "confirm": {
-          "subtitle": "Je comprends qu'Uniswap Labs ne peut pas m'aider à récupérer mon portefeuille si je ne parviens pas à le faire.",
+          "subtitle": "Je comprends qu'Ubeswap ne peut pas m'aider à récupérer mon portefeuille si je ne parviens pas à le faire.",
           "title": "J'ai enregistré ma phrase de récupération"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Étant donné que ces portefeuilles partagent une phrase de récupération, les sauvegardes de ces portefeuilles ci-dessous seront également supprimées.",
             "title": "Êtes-vous sûr ?"
           },
-          "warning": "Si vous supprimez votre sauvegarde {{cloudProviderName}}, vous ne pourrez récupérer votre wallet qu'avec une sauvegarde manuelle de votre phrase de récupération. Uniswap Labs ne peut pas récupérer vos actifs si vous perdez votre phrase de récupération."
+          "warning": "Si vous supprimez votre sauvegarde {{cloudProviderName}}, vous ne pourrez récupérer votre wallet qu'avec une sauvegarde manuelle de votre phrase de récupération. Ubeswap ne peut pas récupérer vos actifs si vous perdez votre phrase de récupération."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Sauvegarder la phrase de récupération sur {{cloudProviderName}} ?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs ne stocke pas votre mot de passe et ne peut pas le récupérer, il est donc crucial que vous vous en souveniez.",
+          "disclaimer": "Ubeswap ne stocke pas votre mot de passe et ne peut pas le récupérer, il est donc crucial que vous vous en souveniez.",
           "error": {
             "mismatch": "Les mots de passe ne correspondent pas",
             "weak": "Mot de passe faible"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Nous utilisons des données d'utilisation anonymes pour améliorer votre expérience sur les produits Uniswap Labs. Lorsqu'il est désactivé, nous suivons uniquement les erreurs et l'utilisation essentielle.",
+          "description": "Nous utilisons des données d'utilisation anonymes pour améliorer votre expérience sur les produits Ubeswap. Lorsqu'il est désactivé, nous suivons uniquement les erreurs et l'utilisation essentielle.",
           "title": "Autoriser l'analyse"
         },
         "title": "Confidentialité"

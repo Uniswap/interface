@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Saya menyandarkan frasa pemulihan saya dan memahami bahawa Uniswap Labs tidak dapat membantu saya memulihkan dompet saya jika saya gagal berbuat demikian.",
+        "check": "Saya menyandarkan frasa pemulihan saya dan memahami bahawa Ubeswap tidak dapat membantu saya memulihkan dompet saya jika saya gagal berbuat demikian.",
         "title": "Alih keluar {{name}}",
         "viewOnly": "Anda sentiasa boleh menambah kembali dompet lihat sahaja dengan memasukkan alamat dompet."
       },
@@ -756,7 +756,7 @@
         "new": "Pilih kaedah sandaran"
       },
       "view": {
-        "disclaimer": "Saya faham bahawa jika saya kehilangan frasa pemulihan saya, Uniswap Labs tidak dapat membantu saya memulihkannya",
+        "disclaimer": "Saya faham bahawa jika saya kehilangan frasa pemulihan saya, Ubeswap tidak dapat membantu saya memulihkannya",
         "subtitle": {
           "write": "Baca perkara berikut dengan teliti sebelum meneruskan"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Alih keluar frasa pemulihan",
         "confirm": {
-          "subtitle": "Saya faham bahawa Uniswap Labs tidak dapat membantu saya mendapatkan semula dompet saya jika saya gagal berbuat demikian",
+          "subtitle": "Saya faham bahawa Ubeswap tidak dapat membantu saya mendapatkan semula dompet saya jika saya gagal berbuat demikian",
           "title": "Saya menyimpan frasa pemulihan saya"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Oleh kerana dompet ini berkongsi frasa pemulihan, ia juga akan memadamkan sandaran untuk dompet ini di bawah",
             "title": "Adakah anda pasti?"
           },
-          "warning": "Jika anda memadamkan sandaran {{cloudProviderName}} anda, anda hanya akan dapat memulihkan dompet anda dengan sandaran manual frasa pemulihan anda. Uniswap Labs tidak dapat memulihkan aset anda jika anda kehilangan frasa pemulihan anda."
+          "warning": "Jika anda memadamkan sandaran {{cloudProviderName}} anda, anda hanya akan dapat memulihkan dompet anda dengan sandaran manual frasa pemulihan anda. Ubeswap tidak dapat memulihkan aset anda jika anda kehilangan frasa pemulihan anda."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Sandarkan frasa pemulihan ke {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs tidak menyimpan kata laluan anda dan tidak dapat memulihkannya, jadi penting untuk anda mengingatinya.",
+          "disclaimer": "Ubeswap tidak menyimpan kata laluan anda dan tidak dapat memulihkannya, jadi penting untuk anda mengingatinya.",
           "error": {
             "mismatch": "Kata laluan tidak sepadan",
             "weak": "Kata laluan yang lemah"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Kami menggunakan data penggunaan tanpa nama untuk meningkatkan pengalaman anda merentas produk Uniswap Labs. Apabila dilumpuhkan, kami hanya menjejaki ralat dan penggunaan penting.",
+          "description": "Kami menggunakan data penggunaan tanpa nama untuk meningkatkan pengalaman anda merentas produk Ubeswap. Apabila dilumpuhkan, kami hanya menjejaki ralat dan penggunaan penting.",
           "title": "Benarkan analisis"
         },
         "title": "Privasi"

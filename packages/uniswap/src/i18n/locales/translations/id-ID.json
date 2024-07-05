@@ -150,7 +150,7 @@
         }
       },
       "remove": {
-        "check": "Saya mencadangkan frase pemulihan saya dan memahami bahwa Uniswap Labs tidak dapat membantu saya memulihkan dompet saya jika saya gagal melakukannya.",
+        "check": "Saya mencadangkan frase pemulihan saya dan memahami bahwa Ubeswap tidak dapat membantu saya memulihkan dompet saya jika saya gagal melakukannya.",
         "title": "Hapus {{name}}",
         "viewOnly": "Anda selalu dapat menambahkan dompet hanya lihat kembali dengan memasukkan alamat dompet."
       },
@@ -756,7 +756,7 @@
         "new": "Pilih metode pencadangan"
       },
       "view": {
-        "disclaimer": "Saya memahami bahwa jika saya kehilangan frase pemulihan, Uniswap Labs tidak dapat membantu saya memulihkannya",
+        "disclaimer": "Saya memahami bahwa jika saya kehilangan frase pemulihan, Ubeswap tidak dapat membantu saya memulihkannya",
         "subtitle": {
           "write": "Bacalah yang berikut ini dengan seksama sebelum melanjutkan"
         },
@@ -1210,7 +1210,7 @@
       "remove": {
         "button": "Hapus frase pemulihan",
         "confirm": {
-          "subtitle": "Saya memahami bahwa Uniswap Labs tidak dapat membantu memulihkan dompet saya jika saya gagal melakukannya",
+          "subtitle": "Saya memahami bahwa Ubeswap tidak dapat membantu memulihkan dompet saya jika saya gagal melakukannya",
           "title": "Saya menyimpan frase pemulihan saya"
         },
         "initial": {
@@ -1310,7 +1310,7 @@
             "message": "Karena dompet ini berbagi frase pemulihan, cadangan untuk dompet di bawah ini juga akan dihapus",
             "title": "Apa kamu yakin?"
           },
-          "warning": "Jika Anda menghapus cadangan {{cloudProviderName}} , Anda hanya dapat memulihkan dompet Anda dengan cadangan manual dari frase pemulihan Anda. Uniswap Labs tidak dapat memulihkan aset Anda jika Anda kehilangan frase pemulihan."
+          "warning": "Jika Anda menghapus cadangan {{cloudProviderName}} , Anda hanya dapat memulihkan dompet Anda dengan cadangan manual dari frase pemulihan Anda. Ubeswap tidak dapat memulihkan aset Anda jika Anda kehilangan frase pemulihan."
         },
         "error": {
           "message": {
@@ -1324,7 +1324,7 @@
           "title": "Cadangkan frasa pemulihan ke {{cloudProviderName}}?"
         },
         "password": {
-          "disclaimer": "Uniswap Labs tidak menyimpan kata sandi Anda dan tidak dapat memulihkannya, jadi Anda harus mengingatnya.",
+          "disclaimer": "Ubeswap tidak menyimpan kata sandi Anda dan tidak dapat memulihkannya, jadi Anda harus mengingatnya.",
           "error": {
             "mismatch": "Sandi tidak cocok",
             "weak": "kata kunci lemah"
@@ -1424,7 +1424,7 @@
       },
       "privacy": {
         "analytics": {
-          "description": "Kami menggunakan data penggunaan anonim untuk meningkatkan pengalaman Anda di seluruh produk Uniswap Labs. Saat dinonaktifkan, kami hanya melacak kesalahan dan penggunaan penting.",
+          "description": "Kami menggunakan data penggunaan anonim untuk meningkatkan pengalaman Anda di seluruh produk Ubeswap. Saat dinonaktifkan, kami hanya melacak kesalahan dan penggunaan penting.",
           "title": "Izinkan analitik"
         },
         "title": "Pribadi"

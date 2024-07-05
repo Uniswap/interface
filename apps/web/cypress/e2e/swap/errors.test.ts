@@ -115,7 +115,7 @@ describe('Swap errors', () => {
 
   it('insufficient liquidity', () => {
     // The API response is too variable so stubbing a 404.
-    cy.intercept('POST', 'https://interface.gateway.uniswap.org/v2/quote', {
+    cy.intercept('POST', 'https://interface-gateway.ubeswap.org/v2/quote', {
       statusCode: 404,
       fixture: 'insufficientLiquidity.json',
     })

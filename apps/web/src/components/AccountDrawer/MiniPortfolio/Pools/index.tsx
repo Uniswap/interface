@@ -24,7 +24,7 @@ import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
 
 /**
- * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
+ * Takes an array of PositionInfo objects (format used by the Ubeswap gql API).
  * The hook access PositionInfo.details (format used by the NFT position contract),
  * filters the PositionDetails data for malicious content,
  * and then returns the original data in its original format.

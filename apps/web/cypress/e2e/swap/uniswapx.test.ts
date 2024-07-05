@@ -8,10 +8,10 @@ const QuoteWithEthInput = 'uniswapx/quote2.json'
 const PricingQuoteUSDC = 'uniswapx/pricingQuoteUSDC.json'
 const PricingQuoteDAI = 'uniswapx/pricingQuoteDAI.json'
 
-const QuoteEndpoint = 'https://interface.gateway.uniswap.org/v2/quote'
-const OrderSubmissionEndpoint = 'https://interface.gateway.uniswap.org/v2/order'
+const QuoteEndpoint = 'https://interface-gateway.ubeswap.org/v2/quote'
+const OrderSubmissionEndpoint = 'https://interface-gateway.ubeswap.org/v2/order'
 const OrderStatusEndpoint =
-  'https://interface.gateway.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
+  'https://interface-gateway.ubeswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
 
 /**
  * Stubs quote to return a quote for non-price requests

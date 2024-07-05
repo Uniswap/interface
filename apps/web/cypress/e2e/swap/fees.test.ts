@@ -9,7 +9,7 @@ describe('Swap with fees', () => {
       cy.visit('/swap')
 
       // Store trade quote into alias
-      cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
+      cy.intercept({ url: 'https://interface-gateway.ubeswap.org/v2/quote' }, (req) => {
         // Avoid tracking stablecoin pricing fetches
         if (JSON.parse(req.body).intent !== 'pricing') req.alias = 'quoteFetch'
       })
@@ -122,7 +122,7 @@ describe('Swap with fees', () => {
 
       cy.fixture('uniswapx/feeQuote.json').then((fixture: URADutchOrderQuoteResponse) => {
         // Intercept the trade quote
-        cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
+        cy.intercept({ url: 'https://interface-gateway.ubeswap.org/v2/quote' }, (req) => {
           // Avoid intercepting stablecoin pricing fetches
           if (JSON.parse(req.body).intent !== 'pricing') {
             req.reply(fixture)
