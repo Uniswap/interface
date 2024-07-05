@@ -102,7 +102,7 @@ export default function SetLockupModal({ isOpen, currentLockup, onDismiss, title
   const isLockupTooBig: boolean = JSBI.greaterThan(JSBI.BigInt(parsedLockup), JSBI.BigInt(2592000))
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={360}>
+    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={480}>
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">

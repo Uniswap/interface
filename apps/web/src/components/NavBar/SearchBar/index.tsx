@@ -145,7 +145,7 @@ const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: b
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
   max-height: 100%;
-  overflow-y: scroll;
+  overflow-y: hidden;
   ${({ $isOpen }) => $isOpen && OpenSearchDropdown}
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchDropdown}
   @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {

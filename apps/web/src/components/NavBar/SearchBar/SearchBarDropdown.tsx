@@ -28,7 +28,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 const SearchBarDropdownContainer = styled(Column)<{ $loading: boolean }>`
   width: 100%;
   backdrop-filter: blur(60px);
-  overflow-y: scroll;
+  overflow-y: hidden;
   transition: 125;
   opacity: ${({ $loading }) => ($loading ? '0.3' : '1')};
 `
@@ -172,6 +172,8 @@ function SearchBarDropdownContents({
   const isTokenPage = pathname.includes('/explore')
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const account = useAccount()
+  // TODO: set true when looking to display tokens
+  const displayTokens = false
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
@@ -268,7 +270,7 @@ function SearchBarDropdownContents({
       </NotFoundContainer>
     )
 
-  const tokenSearchResults =
+  const tokenSearchResults = displayTokens ? (
     tokens.length > 0 ? (
       <SearchBarDropdownSection
         hoveredIndex={hoveredIndex}
@@ -287,8 +289,9 @@ function SearchBarDropdownContents({
         <Trans i18nKey="tokens.noneFound" />
       </NotFoundContainer>
     )
+  ) : null
 
-  const collectionSearchResults =
+  const collectionSearchResults = !shouldDisableNFTRoutes ? (
     collections.length > 0 ? (
       <SearchBarDropdownSection
         hoveredIndex={hoveredIndex}
@@ -307,6 +310,7 @@ function SearchBarDropdownContents({
         <Trans i18nKey="nft.noneFound" />
       </NotFoundContainer>
     )
+  ) : null
 
   return hasInput ? (
     // Empty or Up to 8 combined tokens and nfts

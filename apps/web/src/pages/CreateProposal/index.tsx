@@ -349,7 +349,7 @@ ${bodyValue}
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans i18nKey="vote.create.prompt" />
+                  <Trans i18nKey="vote.create.prompt" />{' '}
                   <ExternalLink
                     key="create-proposal-prompt-link"
                     href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose"
