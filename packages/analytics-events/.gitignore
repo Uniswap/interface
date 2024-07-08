@@ -11,7 +11,6 @@ package-lock.json
 /dts
 /lib
 *.tgz
-package*
 
 # IDE metadata
 .idea/

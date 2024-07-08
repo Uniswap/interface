@@ -1,0 +1,36 @@
+{
+  "name": "@ubeswap/sdk-core",
+  "description": "Ubeswap SDK Core for V3",
+  "version": "0.0.0",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "check:deps:usage": "depcheck",
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "jest",
+    "typecheck": "tsc -b"
+  },
+  "dependencies": {
+    "@ethersproject/address": "^5.0.2",
+    "@uniswap/sdk-core": "^4.2.0",
+    "big.js": "^5.2.2",
+    "decimal.js-light": "^2.5.0",
+    "jsbi": "3.2.5",
+    "tiny-invariant": "1.3.1",
+    "toformat": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/jest": "29.5.0",
+    "@ubeswap/eslint-config": "workspace:^",
+    "eslint": "8.44.0",
+    "jest": "29.7.0",
+    "tsdx": "^0.14.1",
+    "typescript": "5.3.3"
+  }
+}
