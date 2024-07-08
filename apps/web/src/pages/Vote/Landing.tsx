@@ -17,7 +17,7 @@ import { darken } from 'polished'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
-import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -104,6 +104,7 @@ export default function Landing() {
 
   // toggle for showing delegation modal
   const showDelegateModal = useModalIsOpen(ApplicationModal.DELEGATE)
+  const closeModal = useCloseModal()
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
@@ -120,7 +121,7 @@ export default function Landing() {
         <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
-            onDismiss={toggleDelegateModal}
+            onDismiss={closeModal}
             title={
               showUnlockVoting ? (
                 <Trans i18nKey="vote.votePage.unlockVotes" />
@@ -178,17 +179,19 @@ export default function Landing() {
                     $borderRadius="8px"
                     onClick={toggleDelegateModal}
                   >
-                    <Trans i18nKey="vote.landing.unlockVoting" />
+                    {showUnlockVoting ? (
+                      <Trans i18nKey="vote.landing.unlockVoting" />
+                    ) : availableVotes ? (
+                      <Trans
+                        i18nKey="vote.landing.voteAmount"
+                        values={{
+                          amount: <FormattedCurrencyAmount currencyAmount={availableVotes} />,
+                        }}
+                      />
+                    ) : (
+                      ''
+                    )}
                   </ButtonPrimary>
-                ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-                  <ThemedText.DeprecatedBody fontWeight={535} mr="6px">
-                    <Trans
-                      i18nKey="vote.landing.voteAmount"
-                      values={{
-                        amount: <FormattedCurrencyAmount currencyAmount={availableVotes} />,
-                      }}
-                    />
-                  </ThemedText.DeprecatedBody>
                 ) : (
                   ''
                 )}
