@@ -1090,7 +1090,7 @@
   "vote.votePage.details": "Details",
   "vote.votePage.execute": "Execute",
   "vote.votePage.mayBeExecutedAfter": "This proposal may be executed after {{ eta }}.",
-  "vote.votePage.onlyUniVotesBeforeBlockEligible": "Only UNI votes that were self delegated or delegated to another address before block {{ startBlock }} are eligible for voting.",
+  "vote.votePage.onlyGrgVotesBeforeDateEligible": "Only GRG votes that were atively staked before block {{ startDate }} are eligible for voting.",
   "vote.votePage.proposer": "Proposer",
   "vote.votePage.unlockVotes": "Unlock votes",
   "vote.votePage.unlockVotingLink": "{{ link }} to prepare for the next proposal.",

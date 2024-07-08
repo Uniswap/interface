@@ -1,3 +1,4 @@
+import { GRG } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { Plural, Trans, t } from 'i18n'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -97,6 +98,12 @@ export const BlockedWarning: Warning = {
 
 export function useTokenWarning(tokenAddress?: string, chainId?: InterfaceChainId | number): Warning | undefined {
   const currencyInfo = useCurrencyInfo(tokenAddress, chainId)
+
+  // early return if GRG (bridged GRG may result in warning)
+  if (chainId && GRG[chainId].address === tokenAddress ) {
+    return undefined
+  }
+
   switch (currencyInfo?.safetyLevel) {
     case SafetyLevel.MediumWarning:
       return MediumWarning

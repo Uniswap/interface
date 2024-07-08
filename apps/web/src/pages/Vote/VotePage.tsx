@@ -344,7 +344,7 @@ export default function VotePage() {
                 <GrayCard>
                   <ThemedText.DeprecatedBlack>
                     <Trans
-                      i18nKey="vote.votePage.onlyUniVotesBeforeBlockEligible"
+                      i18nKey="vote.votePage.onlyGrgVotesBeforeDateEligible"
                       values={{
                         startDate: startDate?.toLocaleString(locale, dateFormat),
                       }}
