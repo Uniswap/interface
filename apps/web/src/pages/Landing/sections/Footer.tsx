@@ -1,6 +1,7 @@
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
@@ -69,8 +70,24 @@ const ModalItem = styled.div`
   user-select: none;
 `
 export function Socials({ iconSize }: { iconSize?: string }) {
+  const [counter, setCounter] = useState(0)
+  const [lastClickTime, setLastClickTime] = useState(0)
+  const navigate = useNavigate()
+  const onClickBox = function () {
+    const passedTime = Date.now() - lastClickTime
+    if (passedTime > 1000) {
+      setCounter(0)
+    } else {
+      setCounter(counter + 1)
+      if (counter === 4) {
+        navigate('/debug')
+      }
+    }
+    setLastClickTime(Date.now())
+  }
+
   return (
-    <Box gap="24px">
+    <Box gap="24px" onClick={onClickBox}>
       <SocialIcon $hoverColor="#00C32B">
         <StyledExternalLink href="https://github.com/Ubeswap">
           <Github size={iconSize} fill="inherit" />
