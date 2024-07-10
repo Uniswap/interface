@@ -7,7 +7,7 @@ import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, us
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -290,7 +290,7 @@ export const CurrencyInputPanel = memo(
                     py="$none"
                     returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
                     showSoftInputOnFocus={showSoftInputOnFocus}
-                    testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
+                    testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
                     value={isLoading ? loadingTextValue : value}
                     onChangeText={onSetExactAmount}
                     onPressIn={onPressIn}
@@ -309,9 +309,7 @@ export const CurrencyInputPanel = memo(
             <Flex row alignItems="center">
               <SelectTokenButton
                 selectedCurrencyInfo={currencyInfo}
-                testID={
-                  currencyField === CurrencyField.INPUT ? ElementName.ChooseInputToken : ElementName.ChooseOutputToken
-                }
+                testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
                 onPress={onShowTokenSelector}
               />
             </Flex>

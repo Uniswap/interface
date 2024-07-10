@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
+import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
 import { useRef } from 'react'
 import {
   Chain,
@@ -11,6 +11,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
@@ -19,7 +20,6 @@ import {
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 type BuildCurrencyParams = {
   chainId?: Nullable<WalletChainId>

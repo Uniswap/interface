@@ -1,7 +1,8 @@
 import { waitFor } from '@testing-library/react-native'
-import { useSearchTokens } from 'wallet/src/features/dataApi/searchTokens'
-import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
-import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
+import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+// TODO: https://linear.app/uniswap/issue/WEB-4376/move-universepackageswalletsrcfeaturesdataapi-tests-to-uniswap-pkg
 import { token } from 'wallet/src/test/fixtures'
 import { createArray, renderHook } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'

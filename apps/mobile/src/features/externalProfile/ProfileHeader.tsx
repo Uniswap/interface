@@ -26,14 +26,15 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { openUri } from 'uniswap/src/utils/linking'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { openUri } from 'wallet/src/utils/linking'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
@@ -217,7 +218,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               p="$spacing12"
               shadowColor="$neutral1"
               style={styles.buttonShadow}
-              testID={ElementName.Favorite}
+              testID={TestID.Favorite}
               onPress={onPressFavorite}
             >
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
@@ -234,7 +235,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               px="$spacing12"
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               style={styles.buttonShadow}
-              testID={ElementName.Send}
+              testID={TestID.Send}
               onPress={onPressSend}
             >
               <Flex row alignItems="center" gap="$spacing8">

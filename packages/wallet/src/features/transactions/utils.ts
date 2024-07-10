@@ -7,6 +7,7 @@ import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
+  TransactionReceipt,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
@@ -100,4 +101,22 @@ export function getIsCancelable(tx: TransactionDetails): boolean {
     return true
   }
   return false
+}
+
+export function receiptFromEthersReceipt(
+  ethersReceipt: providers.TransactionReceipt | undefined,
+): TransactionReceipt | undefined {
+  if (!ethersReceipt) {
+    return undefined
+  }
+
+  return {
+    blockHash: ethersReceipt.blockHash,
+    blockNumber: ethersReceipt.blockNumber,
+    transactionIndex: ethersReceipt.transactionIndex,
+    confirmations: ethersReceipt.confirmations,
+    confirmedTime: Date.now(),
+    gasUsed: ethersReceipt.gasUsed?.toNumber(),
+    effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
+  }
 }

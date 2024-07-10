@@ -1,9 +1,11 @@
+/* eslint-disable max-lines */
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
 import { ImportType } from 'uniswap/src/types/onboarding'
+import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
@@ -32,7 +34,15 @@ export interface OnboardingContext {
   hasBackup: (address: string, backupType?: BackupType) => boolean | undefined
   enableNotifications: () => void
   selectImportedAccounts: (accountAddresses: string[]) => Promise<SignerMnemonicAccount[]>
-  finishOnboarding: (importType: ImportType, accounts?: SignerMnemonicAccount[]) => Promise<void>
+  finishOnboarding: ({
+    importType,
+    accounts,
+    extensionOnboardingFlow,
+  }: {
+    importType: ImportType
+    accounts?: SignerMnemonicAccount[]
+    extensionOnboardingFlow?: ExtensionOnboardingFlow
+  }) => Promise<void>
   getAllOnboardingAccounts: () => SignerMnemonicAccount[]
   getOnboardingAccount: () => SignerMnemonicAccount | undefined
   getOnboardingAccountAddress: () => string | undefined
@@ -57,7 +67,11 @@ const initialOnboardingContext: OnboardingContext = {
   hasBackup: () => undefined,
   enableNotifications: () => undefined,
   selectImportedAccounts: async () => [],
-  finishOnboarding: async (_importType: ImportType, _accounts?: SignerMnemonicAccount[]) => undefined,
+  finishOnboarding: async (_params: {
+    importType: ImportType
+    accounts?: SignerMnemonicAccount[]
+    extensionOnboardingFlow?: ExtensionOnboardingFlow
+  }) => undefined,
   getAllOnboardingAccounts: () => [],
   getOnboardingAccount: () => undefined,
   getOnboardingAccountAddress: () => undefined,
@@ -279,7 +293,15 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    * @param importType Type of onboarding flow
    * @param accounts optional list of accounts to import directly, only used for device recovery
    */
-  const finishOnboarding = async (importType: ImportType, accounts?: SignerMnemonicAccount[]): Promise<void> => {
+  const finishOnboarding = async ({
+    importType,
+    accounts,
+    extensionOnboardingFlow,
+  }: {
+    importType: ImportType
+    accounts?: SignerMnemonicAccount[]
+    extensionOnboardingFlow?: ExtensionOnboardingFlow
+  }): Promise<void> => {
     const isWatchFlow = importType === ImportType.Watch
     const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
     const onboardingAddresses = onboardingAccounts.map((a) => a.address)
@@ -335,15 +357,19 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       dispatch(setHasSkippedUnitagPrompt(true))
     }
 
-    // Send analytics events
-    sendAnalyticsEvent(MobileEventName.OnboardingCompleted, {
-      wallet_type: importType,
-      accounts_imported_count: onboardingAddresses.length,
-      wallets_imported: onboardingAddresses,
-      cloud_backup_used: Object.values(onboardingAccounts).some((acc: Account) =>
-        acc.backups?.includes(BackupType.Cloud),
-      ),
-    })
+    const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension
+    if (!isExtensionNoAccounts) {
+      // Send analytics events
+      sendAnalyticsEvent(MobileEventName.OnboardingCompleted, {
+        wallet_type: importType,
+        flow: extensionOnboardingFlow,
+        accounts_imported_count: onboardingAddresses.length,
+        wallets_imported: onboardingAddresses,
+        cloud_backup_used: Object.values(onboardingAccounts).some((acc: Account) =>
+          acc.backups?.includes(BackupType.Cloud),
+        ),
+      })
+    }
 
     // Reset data caused production ios app crashes and it is not necessary on mobile
     if (isExtension) {
@@ -459,20 +485,20 @@ export function useCreateOnboardingAccountIfNone(): void {
  * Triggers onboarding finish on screen mount
  * Extracted into hook for reusability.
  */
-export function useFinishOnboarding(callback?: () => void): void {
+export function useFinishOnboarding(callback?: () => void, extensionOnboardingFlow?: ExtensionOnboardingFlow): void {
   const { finishOnboarding, getOnboardingAccountAddress } = useOnboardingContext()
   const onboardingAccountAddress = getOnboardingAccountAddress()
   const importType = onboardingAccountAddress ? ImportType.CreateNew : ImportType.RestoreMnemonic
 
   useEffect(() => {
-    finishOnboarding(importType)
+    finishOnboarding({ importType, extensionOnboardingFlow })
       .then(callback)
       .catch((e) => {
         logger.error(e, {
           tags: { file: 'useFinishOnboarding', function: 'finishOnboarding' },
         })
       })
-  }, [finishOnboarding, importType, callback])
+  }, [finishOnboarding, importType, callback, extensionOnboardingFlow])
 }
 
 // Checks if context function is used on the proper platform

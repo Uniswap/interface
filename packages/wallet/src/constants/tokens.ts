@@ -1,8 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
 import { Token } from '@uniswap/sdk-core'
-import { UNI_ADDRESS } from 'uniswap/src/constants/addresses'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const DAI = new Token(
   UniverseChainId.Mainnet,
@@ -112,31 +110,3 @@ export const WBTC = new Token(
   'WBTC',
   'Wrapped BTC',
 )
-
-export const UNI = {
-  [UniverseChainId.Mainnet]: new Token(
-    UniverseChainId.Mainnet,
-    UNI_ADDRESS[UniverseChainId.Mainnet],
-    18,
-    'UNI',
-    'Uniswap',
-  ),
-  [UniverseChainId.Goerli]: new Token(
-    UniverseChainId.Goerli,
-    UNI_ADDRESS[UniverseChainId.Goerli],
-    18,
-    'UNI',
-    'Uniswap',
-  ),
-}
-
-export function wrappedNativeCurrency(chainId: WalletChainId): Token {
-  const wrappedCurrencyInfo = UNIVERSE_CHAIN_INFO[chainId].wrappedNativeCurrency
-  return new Token(
-    chainId,
-    wrappedCurrencyInfo.address,
-    wrappedCurrencyInfo.decimals,
-    wrappedCurrencyInfo.symbol,
-    wrappedCurrencyInfo.name,
-  )
-}

@@ -90,20 +90,28 @@ export const formSwapNotificationTitle = (
   const inputCurrencyAmountWithSymbol = `${inputAmount}${inputCurrencySymbol}`
   const outputCurrencyAmountWithSymbol = `${outputAmount}${outputCurrencySymbol}`
 
-  return txStatus === TransactionStatus.Success
-    ? i18n.t('notification.transaction.swap.success', {
+  switch (txStatus) {
+    case TransactionStatus.Success:
+      return i18n.t('notification.transaction.swap.success', {
         inputCurrencyAmountWithSymbol,
         outputCurrencyAmountWithSymbol,
       })
-    : txStatus === TransactionStatus.Canceled
-      ? i18n.t('notification.transaction.swap.canceled', {
-          inputCurrencySymbol,
-          outputCurrencySymbol,
-        })
-      : i18n.t('notification.transaction.swap.fail', {
-          inputCurrencyAmountWithSymbol,
-          outputCurrencyAmountWithSymbol,
-        })
+    case TransactionStatus.Canceled:
+      return i18n.t('notification.transaction.swap.canceled', {
+        inputCurrencySymbol,
+        outputCurrencySymbol,
+      })
+    case TransactionStatus.Expired:
+      return i18n.t('notification.transaction.swap.expired', {
+        inputCurrencySymbol,
+        outputCurrencySymbol,
+      })
+    default:
+      return i18n.t('notification.transaction.swap.fail', {
+        inputCurrencyAmountWithSymbol,
+        outputCurrencyAmountWithSymbol,
+      })
+  }
 }
 
 export const formWrapNotificationTitle = (

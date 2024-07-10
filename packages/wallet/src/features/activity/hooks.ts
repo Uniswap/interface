@@ -5,9 +5,9 @@ import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
-import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
   formatTransactionsByDate,

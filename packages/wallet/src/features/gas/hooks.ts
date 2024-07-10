@@ -1,19 +1,21 @@
 import { BigNumber, providers } from 'ethers'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { useGasFeeQuery } from 'wallet/src/features/gas/api'
 import { FeeType, GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
-type CancelationGasFeeDetails = {
+export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
   cancelationGasFee: string
 }
@@ -66,7 +68,7 @@ export function useUSDValue(chainId?: WalletChainId, ethValueInWei?: string): st
  * then use it to compute new gas info.
  */
 export function useCancelationGasFeeInfo(transaction: TransactionDetails): CancelationGasFeeDetails | undefined {
-  const cancelationRequest = useMemo(() => {
+  const classicCancelRequest = useMemo(() => {
     return {
       chainId: transaction.chainId,
       from: transaction.from,
@@ -75,14 +77,21 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
     }
   }, [transaction])
 
-  const baseTxGasFee = useTransactionGasFee(cancelationRequest, GasSpeed.Urgent)
+  const isUniswapXTx = isUniswapX(transaction)
+
+  const uniswapXCancelRequest = useUniswapXCancelRequest(transaction)
+  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, GasSpeed.Urgent, !isUniswapXTx)
+
+  const baseTxGasFee = useTransactionGasFee(classicCancelRequest, GasSpeed.Urgent, /* skip = */ isUniswapXTx)
   return useMemo(() => {
-    if (!baseTxGasFee.params) {
-      return
+    if (isUniswapXTx) {
+      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
+        return
+      }
+      return { cancelRequest: uniswapXCancelRequest.data, cancelationGasFee: uniswapXGasFee.value }
     }
 
-    // TODO(WEB-4295): handle uniswapx cancels
-    if (isUniswapX(transaction)) {
+    if (!baseTxGasFee.params) {
       return
     }
 
@@ -102,7 +111,7 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
     }
 
     const cancelRequest = {
-      ...cancelationRequest,
+      ...classicCancelRequest,
       ...adjustedFeeDetails.params,
       gasLimit: baseTxGasFee.params.gasLimit,
     }
@@ -111,7 +120,14 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
       cancelRequest,
       cancelationGasFee: getCancelationGasFee(adjustedFeeDetails, baseTxGasFee.params.gasLimit),
     }
-  }, [baseTxGasFee.params, cancelationRequest, transaction])
+  }, [
+    isUniswapXTx,
+    baseTxGasFee.params,
+    classicCancelRequest,
+    transaction,
+    uniswapXCancelRequest.data,
+    uniswapXGasFee.value,
+  ])
 }
 
 function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
@@ -121,4 +137,19 @@ function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string):
   }
 
   return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit).toString()
+}
+
+function useUniswapXCancelRequest(transaction: TransactionDetails): {
+  isLoading: boolean
+  data: providers.TransactionRequest | undefined
+  error?: Error
+} {
+  const cancelRequestFetcher = useCallback(() => {
+    if (!isUniswapX(transaction)) {
+      return undefined
+    }
+    return getCancelOrderTxRequest(transaction)
+  }, [transaction])
+
+  return useAsyncData(cancelRequestFetcher)
 }

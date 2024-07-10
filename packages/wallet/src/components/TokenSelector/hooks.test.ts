@@ -6,6 +6,7 @@ import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/u
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import {
@@ -19,7 +20,6 @@ import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
 } from 'wallet/src/components/TokenSelector/hooks'
-import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { SharedState } from 'wallet/src/state/reducer'
 import {

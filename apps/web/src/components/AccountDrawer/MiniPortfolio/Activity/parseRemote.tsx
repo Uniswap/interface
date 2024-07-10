@@ -24,6 +24,8 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
+  OnRampTransactionDetailsPartsFragment,
+  OnRampTransferPartsFragment,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -356,6 +358,7 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
+type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -503,6 +506,83 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 }
 
+function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampActivity): Activity {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
+    const error = new Error('Invalid activity from unsupported chain received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseRemote',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+  if (activity.details.__typename === 'OnRampTransactionDetails') {
+    const onRampTransfer = activity.details.onRampTransfer
+    return {
+      from: activity.details.receiverAddress,
+      hash: activity.id,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else if (activity.details.__typename === 'TransactionDetails') {
+    const assetChange = activity.details.assetChanges[0]
+    if (assetChange?.__typename !== 'OnRampTransfer') {
+      logger.error('Unexpected asset change type, expected OnRampTransfer', {
+        tags: {
+          file: 'parseRemote',
+          function: 'parseRemote',
+        },
+      })
+    }
+    const onRampTransfer = assetChange as OnRampTransferPartsFragment
+    return {
+      from: activity.details.from,
+      hash: activity.details.hash,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else {
+    const error = new Error('Invalid Fiat On Ramp activity type received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseFiatOnRampTransaction',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+}
+
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
@@ -518,8 +598,12 @@ function parseRemoteActivity(
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    if (assetActivity.details.__typename === 'OnRampTransactionDetails') {
-      return undefined // TODO(WEB-4187): support onramp transactions
+    if (
+      assetActivity.details.__typename === 'OnRampTransactionDetails' ||
+      (assetActivity.details.__typename === 'TransactionDetails' &&
+        assetActivity.details.type === TransactionType.OnRamp)
+    ) {
+      return parseFiatOnRampTransaction(assetActivity as TransactionActivity)
     }
 
     const changes = assetActivity.details.assetChanges.reduce(

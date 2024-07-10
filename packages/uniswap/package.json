@@ -32,6 +32,7 @@
     "apollo-link-rest": "0.9.0",
     "ethers": "5.7.2",
     "expo-blur": "12.9.2",
+    "expo-web-browser": "12.8.2",
     "fuse.js": "6.5.3",
     "i18next": "23.10.0",
     "lodash": "4.17.21",
@@ -48,7 +49,8 @@
     "statsig-react-native": "4.11.0",
     "ui": "workspace:^",
     "utilities": "workspace:^",
-    "wagmi": "2.8.4"
+    "wagmi": "2.8.4",
+    "wcag-contrast": "3.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^3.3.1",

@@ -1,7 +1,7 @@
 import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { Flex } from 'ui/src'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export default function InputWithSuffix({
   alwaysShowInputSuffix = false,
@@ -39,7 +39,7 @@ export default function InputWithSuffix({
         returnKeyType="done"
         scrollEnabled={false}
         spellCheck={false}
-        testID={ElementName.ImportAccountInput}
+        testID={TestID.ImportAccountInput}
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
         textAlignVertical="bottom"
         value={value}

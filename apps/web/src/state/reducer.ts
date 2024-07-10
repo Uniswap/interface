@@ -5,6 +5,7 @@ import { PersistConfig, persistReducer } from 'redux-persist'
 import application from 'state/application/reducer'
 import burn from 'state/burn/reducer'
 import burnV3 from 'state/burn/v3/reducer'
+import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
 import lists from 'state/lists/reducer'
 import logs from 'state/logs/slice'
 import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from 'state/migrations'
@@ -24,6 +25,7 @@ const persistedReducers = {
   transactions,
   signatures,
   lists,
+  fiatOnRampTransactions,
 }
 
 const appReducer = combineReducers({

@@ -25,6 +25,7 @@ import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/typ
 import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
+import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
 import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
@@ -37,17 +38,18 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'wallet/src/features/transactions/slice'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   BaseSwapTransactionInfo,
-  ClassicTransactionDetails,
+  FinalizedTransactionDetails,
+  QueuedOrderStatus,
   SendTokenTransactionInfo,
   TransactionDetails,
-  TransactionReceipt,
   TransactionStatus,
   TransactionType,
+  isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
-import { getFinalizedTransactionStatus } from 'wallet/src/features/transactions/utils'
+import { getFinalizedTransactionStatus, receiptFromEthersReceipt } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { appSelect } from 'wallet/src/state'
@@ -56,15 +58,23 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
   yield* fork(watchForFinalizedTransactions)
 
+  // Start the order watcher to allow off-chain order updates to propagate to watchTransaction
+  yield* fork(OrderWatcher.initialize)
+
   // First, fork off watchers for any incomplete txs that are already in store
   // This allows us to detect completions if a user closed the app before a tx finished
   const incompleteTransactions = yield* appSelect(selectIncompleteTransactions)
   for (const transaction of incompleteTransactions) {
     if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
       yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
-    } else if (isUniswapX(transaction)) {
-      // TODO(WEB-4296): Add watcher for UniswapX transactions
     } else {
+      // If the transaction was a queued UniswapX order that never became submitted, update UI to show failure
+      if (isUniswapX(transaction) && transaction.queueStatus === QueuedOrderStatus.Waiting) {
+        const updatedOrder = { ...transaction, queueStatus: QueuedOrderStatus.AppClosed }
+        yield* put(transactionActions.updateTransaction(updatedOrder))
+        continue
+      }
+
       yield* fork(watchTransaction, { transaction, apolloClient })
     }
   }
@@ -78,8 +88,6 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
     try {
       if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
         yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
-      } else if (isUniswapX(transaction)) {
-        // TODO(WEB-4296): Add watcher for UniswapX transactions
       } else {
         yield* fork(watchTransaction, { transaction, apolloClient })
       }
@@ -226,37 +234,45 @@ export function* watchTransaction({
   transaction,
   apolloClient,
 }: {
-  transaction: ClassicTransactionDetails
+  transaction: TransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
 }): Generator<unknown> {
-  const { chainId, id, hash, options } = transaction
+  const { chainId, id, hash } = transaction
 
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
 
-  if (!hash) {
-    logger.error(new Error('Watching for tx with no hash'), {
-      tags: {
-        file: 'transactionWatcherSaga',
-        function: 'watchTransaction',
-      },
-      extra: { transaction },
-    })
-    return
-  }
-
-  const { receipt, cancel, replace, invalidated } = yield* race({
-    receipt: call(waitForReceipt, hash, provider),
+  const nonce = isUniswapX(transaction) ? undefined : transaction.options.request.nonce
+  const { updatedTransaction, cancel, replace, invalidated } = yield* race({
+    updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancel: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, chainId, id, options.request.nonce),
+    invalidated: call(waitForTxnInvalidated, chainId, id, nonce),
   })
 
+  // `cancel` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
   if (cancel) {
     // reset watcher for the current txn, as it can still be mined (or invalidated by the new txn)
     yield* fork(watchTransaction, { transaction, apolloClient })
     // Cancel the current txn, which submits a new txn on chain and monitored in state
-    yield* call(attemptCancelTransaction, transaction)
+    yield* call(attemptCancelTransaction, transaction, cancel)
+    return
+  }
+
+  if (updatedTransaction) {
+    if (isFinalizedTx(updatedTransaction)) {
+      // Update the store with tx receipt details
+      yield* call(finalizeTransaction, { transaction: updatedTransaction, apolloClient })
+      return
+    } else {
+      yield* put(transactionActions.updateTransaction(updatedTransaction))
+      // reset watcher for the current txn, as new statuses can be received for the pending order
+      yield* fork(watchTransaction, { transaction: updatedTransaction, apolloClient })
+    }
+  }
+
+  // `replace` and `invalidated` conditions do not apply to UniswapX orders
+  if (isUniswapX(transaction)) {
     return
   }
 
@@ -281,9 +297,6 @@ export function* watchTransaction({
     }
     return
   }
-
-  // Update the store with tx receipt details
-  yield* call(finalizeTransaction, { transaction, ethersReceipt: receipt, apolloClient })
 }
 
 export async function waitForReceipt(
@@ -297,11 +310,49 @@ export async function waitForReceipt(
   return txReceipt
 }
 
+function* waitForRemoteUpdate(transaction: TransactionDetails, provider: providers.Provider) {
+  let hash = transaction.hash
+  let status = transaction.status
+
+  // For UniswapX orders, we need to wait for the order to be filled before we can get the hash
+  if (isUniswapX(transaction) && transaction.orderHash && transaction.queueStatus) {
+    const updatedOrder = yield* call(OrderWatcher.waitForOrderStatus, transaction.orderHash, transaction.queueStatus)
+    hash = updatedOrder.hash
+    status = updatedOrder.status
+
+    // Return early if a new status is received, but no hash is provided (meaning the order is not filled)
+    if (!updatedOrder.hash) {
+      return updatedOrder
+    }
+  }
+
+  // At this point, the tx should either be a classic tx or a filled order, both of which have hashes
+  if (!hash) {
+    logger.error(new Error('Watching for tx with no hash'), {
+      tags: {
+        file: 'transactionWatcherSaga',
+        function: 'watchTransaction',
+      },
+      extra: { transaction },
+    })
+    return
+  }
+
+  const ethersReceipt = yield* call(waitForReceipt, hash, provider)
+  const receipt = receiptFromEthersReceipt(ethersReceipt)
+
+  // Classic transaction status is based on receipt, while UniswapX status is based backend response.
+  if (isClassic(transaction)) {
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+  }
+  return { ...transaction, status, receipt, hash }
+}
+
 function* waitForCancellation(chainId: WalletChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
-      return true
+      return payload.cancelRequest
     }
   }
 }
@@ -357,13 +408,10 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       protocol,
       transactedUSDValue,
     } = typeInfo as BaseSwapTransactionInfo
-    const eventName =
-      status === TransactionStatus.Success
-        ? SwapEventName.SWAP_TRANSACTION_COMPLETED
-        : SwapEventName.SWAP_TRANSACTION_FAILED
-    sendAnalyticsEvent(eventName, {
-      address: from,
+
+    const baseProperties = {
       hash,
+      address: from,
       chain_id: chainId,
       added_time: addedTime,
       confirmed_time: confirmedTime,
@@ -379,7 +427,48 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       protocol,
       transactedUSDValue,
-    })
+    }
+
+    if (isUniswapX(payload)) {
+      const { orderHash, routing } = payload
+      // All local uniswapx swaps should be tracked in redux with an orderHash .
+      if (!orderHash) {
+        logger.error(new Error('Attempting to log uniswapx swap event without a orderHash'), {
+          tags: {
+            file: 'transactionWatcherSaga',
+            function: 'logTransactionEvent',
+          },
+          extra: { payload },
+        })
+        return
+      }
+      if (status === TransactionStatus.Success) {
+        const properties = { ...baseProperties, routing, order_hash: orderHash, hash }
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, properties)
+      } else {
+        const properties = { ...baseProperties, routing, order_hash: orderHash }
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
+      }
+    } else {
+      const { routing } = payload
+      // All classic swaps should be tracked in redux with a tx hash.
+      if (!hash) {
+        logger.error(new Error('Attempting to log swap event without a hash'), {
+          tags: {
+            file: 'transactionWatcherSaga',
+            function: 'logTransactionEvent',
+          },
+          extra: { payload },
+        })
+        return
+      }
+      const properties = { ...baseProperties, routing, hash }
+      if (status === TransactionStatus.Success) {
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, properties)
+      } else {
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
+      }
+    }
   }
 
   // Log metrics for confirmed transfers
@@ -424,54 +513,14 @@ function* maybeLaunchFeedbackModal(actionData: ReturnType<typeof transactionActi
   }
 }
 
-type StatusOverride = TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Canceled
-
-function* finalizeTransaction({
+export function* finalizeTransaction({
   apolloClient,
-  ethersReceipt,
-  statusOverride,
   transaction,
 }: {
   apolloClient: ApolloClient<NormalizedCacheObject>
-  ethersReceipt?: providers.TransactionReceipt | null
-  statusOverride?: StatusOverride
-  transaction: TransactionDetails
+  transaction: FinalizedTransactionDetails
 }) {
-  const status = statusOverride ?? getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
-
-  const receipt: TransactionReceipt | undefined = ethersReceipt
-    ? {
-        blockHash: ethersReceipt.blockHash,
-        blockNumber: ethersReceipt.blockNumber,
-        transactionIndex: ethersReceipt.transactionIndex,
-        confirmations: ethersReceipt.confirmations,
-        confirmedTime: Date.now(),
-        gasUsed: ethersReceipt.gasUsed?.toNumber(),
-        effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
-      }
-    : undefined
-
-  const hash = transaction.hash
-
-  if (!hash) {
-    logger.error(new Error('Attempting to finalize tx without a hash'), {
-      tags: {
-        file: 'transactionWatcherSaga',
-        function: 'finalizeTransaction',
-      },
-      extra: { transaction },
-    })
-    return
-  }
-
-  yield* put(
-    transactionActions.finalizeTransaction({
-      ...transaction,
-      hash,
-      status,
-      receipt,
-    }),
-  )
+  yield* put(transactionActions.finalizeTransaction(transaction))
 
   // Flip status to true so we can render Notification badge on home
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
@@ -501,4 +550,9 @@ export function* deleteTransaction(transaction: TransactionDetails) {
       chainId: transaction.chainId,
     }),
   )
+}
+
+export function* watchTransactionEvents() {
+  // Watch for finalized transactions to send analytics events
+  yield* takeEvery(transactionActions.finalizeTransaction.type, logTransactionEvent)
 }

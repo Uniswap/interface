@@ -98,7 +98,6 @@ export function Swap({
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
-  const { isConnected } = useAccount()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
 
   return (
@@ -122,9 +121,7 @@ export function Swap({
                 {currentTab === SwapTab.Send && (
                   <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
                 )}
-                {currentTab === SwapTab.Buy && forAggregatorEnabled && (
-                  <BuyForm disabled={disableTokenInputs || !isConnected} />
-                )}
+                {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
               </SwapWrapper>
               <NetworkAlert />
             </Flex>

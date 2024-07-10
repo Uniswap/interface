@@ -5,14 +5,13 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 
 interface OptionProps {
   option: TokenOption
@@ -20,6 +19,8 @@ interface OptionProps {
   showWarnings: boolean
   onPress: () => void
   showTokenAddress?: boolean
+  tokenWarningDismissed: boolean
+  dismissWarningCallback: () => void
 }
 
 function _TokenOptionItem({
@@ -28,12 +29,13 @@ function _TokenOptionItem({
   showWarnings,
   onPress,
   showTokenAddress,
+  tokenWarningDismissed,
+  dismissWarningCallback,
 }: OptionProps): JSX.Element {
   const { currencyInfo, quantity, balanceUSD } = option
   const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyId)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const balance = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)

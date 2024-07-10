@@ -128,6 +128,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly explorer: {
     name: string
     url: string
+    apiURL?: string
   }
   readonly helpCenterUrl: string | undefined
   readonly infoLink: string

@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 

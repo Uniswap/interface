@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Loader, Text, TouchableArea, UniversalImage, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -12,13 +13,16 @@ function LogoLoader(): JSX.Element {
 export function FORQuoteItem({
   serviceProvider,
   onPress,
+  hoverIcon,
 }: {
   serviceProvider: FORServiceProvider | undefined
   onPress: () => void
+  hoverIcon?: JSX.Element
 }): JSX.Element | null {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const logoUrl = getOptionalServiceProviderLogo(serviceProvider?.logos, isDarkMode)
+  const [hovered, setHovered] = useState(false)
 
   if (!serviceProvider) {
     return null
@@ -36,44 +40,57 @@ export function FORQuoteItem({
       : serviceProvider.paymentMethods.join(', ')
 
   return (
-    <TouchableArea onPress={onPress}>
+    <TouchableArea onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onPress={onPress}>
       <Flex
+        $theme-dark={{
+          shadowOpacity: 0.12,
+          shadowRadius: '$spacing4',
+        }}
+        $theme-light={{
+          shadowOpacity: 0.02,
+          shadowRadius: '$spacing8',
+        }}
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth="$spacing1"
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
         pl="$spacing16"
         pr="$spacing8"
         py="$spacing16"
-        shadowColor="$neutral3"
-        shadowOpacity={0.4}
-        shadowRadius={!isDarkMode ? '$spacing4' : undefined}
+        // TODO(MOB-3699): replace with shadow preset once available.
+        shadowColor="$black"
+        shadowOffset={{ height: 1, width: 0 }}
+        style={{ transition: 'background-color 0.2s ease-in-out' }}
       >
-        <Flex row alignItems="center" gap="$spacing12">
-          <Flex>
-            {logoUrl ? (
-              <UniversalImage
-                fallback={<LogoLoader />}
-                size={{
-                  height: iconSizes.icon40,
-                  width: iconSizes.icon40,
-                }}
-                uri={logoUrl}
-              />
-            ) : (
-              <LogoLoader />
-            )}
-          </Flex>
-          <Flex shrink gap="$spacing4">
-            <Text color="$neutral1" variant="subheading2">
-              {serviceProvider.name}
-            </Text>
-            {paymentMethods && (
-              <Text color="$neutral2" variant="body4">
-                {paymentMethods}
+        <Flex row alignItems="center" justifyContent="space-between">
+          <Flex row alignItems="center" gap="$spacing12" maxWidth="calc(100% - 48px)">
+            <Flex>
+              {logoUrl ? (
+                <UniversalImage
+                  fallback={<LogoLoader />}
+                  size={{
+                    height: iconSizes.icon40,
+                    width: iconSizes.icon40,
+                  }}
+                  uri={logoUrl}
+                />
+              ) : (
+                <LogoLoader />
+              )}
+            </Flex>
+            <Flex shrink gap="$spacing4">
+              <Text color="$neutral1" variant="subheading2">
+                {serviceProvider.name}
               </Text>
-            )}
+              {paymentMethods && (
+                <Text color="$neutral2" variant="body4">
+                  {paymentMethods}
+                </Text>
+              )}
+            </Flex>
           </Flex>
+          {hovered && hoverIcon}
         </Flex>
       </Flex>
     </TouchableArea>

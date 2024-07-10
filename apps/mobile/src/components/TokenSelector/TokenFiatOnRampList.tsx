@@ -9,6 +9,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
@@ -34,6 +35,7 @@ function TokenOptionItemWrapper({
     [currencyInfo],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
+  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyInfo?.currencyId)
 
   if (!option) {
     return null
@@ -41,9 +43,11 @@ function TokenOptionItemWrapper({
 
   return (
     <TokenOptionItem
+      dismissWarningCallback={dismissWarningCallback}
       option={option}
       showNetworkPill={currencyInfo?.currency.chainId !== UniverseChainId.Mainnet}
       showWarnings={true}
+      tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />
   )

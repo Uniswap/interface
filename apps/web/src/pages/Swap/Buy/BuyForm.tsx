@@ -29,13 +29,13 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const InputWrapper = styled(Column)`
   position: relative;
   background-color: ${({ theme }) => theme.surface2};
-  padding: 0 16px 40px 16px;
+  padding: 0 16px 52px 16px;
   height: 342px;
   align-items: center;
   border-radius: 20px;
   justify-content: flex-end;
   overflow: hidden;
-  gap: 16px;
+  gap: 8px;
 `
 
 const HeaderRow = styled(Row)`
@@ -121,8 +121,9 @@ function BuyFormInner({ disabled }: BuyFormProps) {
             iconSize={18}
             chevronDirection="down"
             backgroundColor="$surface1"
+            amountReady={Boolean(amountOut)}
           />
-          <Row gap="md" justify="center">
+          <Row gap="md" justify="center" marginTop="8px">
             {PREDEFINED_AMOUNTS.map((amount: number) => (
               <PredefinedAmount
                 onClick={() => {
@@ -136,7 +137,14 @@ function BuyFormInner({ disabled }: BuyFormProps) {
             ))}
           </Row>
           {notAvailableInThisRegion && (
-            <Text variant="body3" userSelect="none" color="$neutral2" textAlign="center">
+            <Text
+              variant="body3"
+              userSelect="none"
+              color="$neutral2"
+              textAlign="center"
+              position="absolute"
+              bottom="20px"
+            >
               <Trans i18nKey="fiatOnRamp.notAvailable.error" />
             </Text>
           )}

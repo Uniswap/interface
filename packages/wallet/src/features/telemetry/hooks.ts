@@ -1,9 +1,10 @@
 import { useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { areSameDays } from 'utilities/src/time/date'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useInterval } from 'utilities/src/time/timing'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import {
   selectAllowAnalytics,
@@ -20,8 +21,9 @@ import {
 } from 'wallet/src/features/telemetry/slice'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
-export function useLastBalancesReporter(): () => void {
+export function useLastBalancesReporter(): void {
   const dispatch = useAppDispatch()
 
   const accounts = useAccounts()
@@ -79,12 +81,12 @@ export function useLastBalancesReporter(): () => void {
     }
   }
 
-  return reporter
+  useInterval(reporter, ONE_SECOND_MS * 15, true)
 }
 
 // Returns a function that checks if the app needs to send a heartbeat action to record anonymous DAU
 // Only logs when the user has allowing product analytics off and a heartbeat has not been sent for the user's local day
-export function useHeartbeatReporter(): () => void {
+export function useHeartbeatReporter(): void {
   const dispatch = useAppDispatch()
   const allowAnalytics = useAppSelector(selectAllowAnalytics)
   const lastHeartbeat = useAppSelector(selectLastHeartbeat)
@@ -100,5 +102,5 @@ export function useHeartbeatReporter(): () => void {
     }
   }
 
-  return reporter
+  useInterval(reporter, ONE_SECOND_MS * 15, true)
 }

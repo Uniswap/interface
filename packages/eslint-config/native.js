@@ -220,25 +220,25 @@ module.exports = {
         selector:
           "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='tabs'][callee.object.object.name='chrome']",
         message:
-          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.tabs.sendMessage.',
+          'Please use a message channel from apps/extension/src/background/messagePassing/messageChannels.ts instead of chrome.tabs.sendMessage.',
       },
       {
         selector:
           "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='runtime'][callee.object.object.name='chrome']",
         message:
-          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.sendMessage.',
+          'Please use a message channel from apps/extension/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.sendMessage.',
       },
       {
         selector:
           "CallExpression[callee.property.name='addListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.addListener.',
+          'Please use a message channel from apps/extension/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.addListener.',
       },
       {
         selector:
           "CallExpression[callee.property.name='removeListener'][callee.object.property.name='onMessage'][callee.object.object.property.name='runtime'][callee.object.object.object.name='chrome']",
         message:
-          'Please use a message channel from apps/stretch/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.removeListener.',
+          'Please use a message channel from apps/extension/src/background/messagePassing/messageChannels.ts instead of chrome.runtime.onMessage.removeListener.',
       },
       {
         selector: "CallExpression[callee.object.name='z'][callee.property.name='any']",
@@ -462,7 +462,7 @@ module.exports = {
       },
     },
     {
-      files: ['apps/stretch/src/contentScript/injected.ts'],
+      files: ['apps/extension/src/contentScript/injected.ts'],
       rules: {
         'no-restricted-syntax': [
           'error',

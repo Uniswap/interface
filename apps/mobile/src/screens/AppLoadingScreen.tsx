@@ -96,7 +96,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
         })
       } else {
-        await finishOnboarding(ImportType.OnDeviceRecovery)
+        await finishOnboarding({ importType: ImportType.OnDeviceRecovery })
         dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
       }
     },

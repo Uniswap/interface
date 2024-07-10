@@ -124,6 +124,8 @@ function getTransactionTypeVerbs(
   failed?: string
   canceling?: string
   canceled?: string
+  expired?: string
+  insufficientFunds?: string
 } {
   const externalDappName = typeInfo.externalDappInfo?.name
 
@@ -137,6 +139,8 @@ function getTransactionTypeVerbs(
         failed: t('transaction.status.swap.failed'),
         canceling: t('transaction.status.swap.canceling'),
         canceled: t('transaction.status.swap.canceled'),
+        expired: t('transaction.status.swap.expired'),
+        insufficientFunds: t('transaction.status.swap.insufficientFunds'),
       }
     case TransactionType.Receive:
       return {
@@ -298,13 +302,20 @@ function getTransactionTypeVerbs(
 }
 
 export function getTransactionSummaryTitle(tx: TransactionDetails, t: AppTFunction): string | undefined {
-  const { success, pending, failed, canceling, canceled } = getTransactionTypeVerbs(tx.typeInfo, t)
+  const { success, pending, failed, canceling, canceled, expired, insufficientFunds } = getTransactionTypeVerbs(
+    tx.typeInfo,
+    t,
+  )
 
   switch (tx.status) {
     case TransactionStatus.Pending:
       return pending
     case TransactionStatus.Cancelling:
       return canceling
+    case TransactionStatus.Expired:
+      return expired
+    case TransactionStatus.InsufficientFunds:
+      return insufficientFunds
     case TransactionStatus.Canceled:
       return canceled
     case TransactionStatus.Failed:

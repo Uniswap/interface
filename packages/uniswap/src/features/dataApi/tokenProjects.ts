@@ -2,8 +2,8 @@ import { useCallback, useMemo } from 'react'
 import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { currencyIdToContractInput, tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 
 /**
  * Fetches token information as CurrencyInfo from currencyIds. When used, wrap component

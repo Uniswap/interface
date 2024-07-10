@@ -17,7 +17,7 @@ import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheetModalProps'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 
@@ -183,10 +183,10 @@ function ModalFooter({
         pt="$spacing12"
         px="$spacing24"
       >
-        <Button fill size="medium" testID={ElementName.Cancel} theme="tertiary" onPress={onReject}>
+        <Button fill size="medium" testID={TestID.Cancel} theme="tertiary" onPress={onReject}>
           {t('common.button.cancel')}
         </Button>
-        <Button fill disabled={!confirmationEnabled} size="medium" testID={ElementName.Confirm} onPress={onConfirm}>
+        <Button fill disabled={!confirmationEnabled} size="medium" testID={TestID.Confirm} onPress={onConfirm}>
           {confirmationButtonText ?? t('common.button.accept')}
         </Button>
       </Flex>

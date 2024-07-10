@@ -7,6 +7,8 @@ import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/ga
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import i18n from 'uniswap/src/i18n/i18n'
+import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -15,7 +17,6 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
-import { openUri } from 'wallet/src/utils/linking'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
@@ -136,14 +137,14 @@ function* maybeRequestAppRating() {
  */
 async function openRatingOptionsAlert() {
   return new Promise((resolve) => {
-    Alert.alert('Enjoying Uniswap Wallet?', "Let us know if you're having a good experience with this app", [
+    Alert.alert(i18n.t('mobile.appRating.title'), i18n.t('mobile.appRating.description'), [
       {
-        text: 'Not really',
+        text: i18n.t('mobile.appRating.button.decline'),
         onPress: () => resolve(false),
         style: 'cancel',
       },
       {
-        text: 'Yes',
+        text: i18n.t('common.button.yes'),
         onPress: () => {
           openNativeReviewModal().catch((e) =>
             logger.error(e, {
@@ -161,9 +162,9 @@ async function openRatingOptionsAlert() {
 /** Opens feedback request modal which will redirect to our feedback form. */
 async function openFeedbackRequestAlert() {
   return new Promise((resolve) => {
-    Alert.alert("We're sorry to hear that.", 'Let us know how we can improve your experience', [
+    Alert.alert(i18n.t('mobile.appRating.feedback.title'), i18n.t('mobile.appRating.feedback.description'), [
       {
-        text: 'Send feedback',
+        text: i18n.t('mobile.appRating.feedback.button.send'),
         onPress: () => {
           openUri(APP_FEEDBACK_LINK).catch((e) =>
             logger.error(e, { tags: { file: 'appRating/saga', function: 'openFeedbackAlert' } }),
@@ -172,7 +173,11 @@ async function openFeedbackRequestAlert() {
         },
         isPreferred: true,
       },
-      { text: 'Maybe later', onPress: () => resolve(false), style: 'cancel' },
+      {
+        text: i18n.t('mobile.appRating.feedback.button.cancel'),
+        onPress: () => resolve(false),
+        style: 'cancel',
+      },
     ])
   })
 }

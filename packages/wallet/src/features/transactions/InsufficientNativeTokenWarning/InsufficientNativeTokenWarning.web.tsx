@@ -1,6 +1,6 @@
 import { Flex, Text, Tooltip } from 'ui/src'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { InsufficientNativeTokenBaseComponent } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenBaseComponent'
 import type { InsufficientNativeTokenWarningProps } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'

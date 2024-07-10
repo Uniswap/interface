@@ -1,14 +1,17 @@
-import { Flex, Image, Text } from 'ui/src'
+import { Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { USDC_LOGO } from 'ui/src/assets'
 import { colors, imageSizes, opacify } from 'ui/src/theme'
 
 export const ReceiveUSDCElement = (): JSX.Element => {
+  const isDarkMode = useIsDarkMode()
+
   return (
     <Flex
       centered
       row
       borderRadius="$roundedFull"
       gap="$spacing8"
+      opacity={isDarkMode ? 0.8 : 1}
       px="$spacing12"
       py="$spacing8"
       style={{ backgroundColor: opacify(20, colors.blue300) }}

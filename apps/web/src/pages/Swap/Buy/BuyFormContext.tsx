@@ -71,7 +71,7 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   providerModalOpen: false,
 }
 
-const BuyFormContext = createContext<BuyFormContextType>({
+export const BuyFormContext = createContext<BuyFormContextType>({
   buyFormState: DEFAULT_BUY_FORM_STATE,
   setBuyFormState: () => undefined,
   derivedBuyFormInfo: {

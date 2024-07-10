@@ -215,14 +215,16 @@ const updatedMobileMigrationsTestFile = danger.git.modified_files.find((file) =>
   file.includes('mobile/src/app/migrations.test.ts'),
 )
 
-const updatedExtensionSchemaFile = danger.git.modified_files.find((file) => file.includes('stretch/src/app/schema.ts'))
+const updatedExtensionSchemaFile = danger.git.modified_files.find((file) =>
+  file.includes('extension/src/app/schema.ts'),
+)
 
 const updatedExtensionMigrationsFile = danger.git.modified_files.find((file) =>
-  file.includes('stretch/src/store/migrations.ts'),
+  file.includes('extension/src/store/migrations.ts'),
 )
 
 const updatedExtensionMigrationsTestFile = danger.git.modified_files.find((file) =>
-  file.includes('stretch/src/store/migrations.test.ts'),
+  file.includes('extension/src/store/migrations.test.ts'),
 )
 
 const createdSliceFile = danger.git.created_files.find((file) => file.toLowerCase().includes('slice'))

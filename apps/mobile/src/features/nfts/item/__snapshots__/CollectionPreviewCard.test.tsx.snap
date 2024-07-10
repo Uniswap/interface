@@ -76,10 +76,14 @@ exports[`renders collection preview card 1`] = `
               "alignItems": "center",
               "aspectRatio": 1,
               "backgroundColor": "#F9F9F9",
+              "flex": 1,
               "flexDirection": "column",
               "justifyContent": "center",
               "maxHeight": 60,
-              "width": "100%",
+              "paddingBottom": 8,
+              "paddingLeft": 8,
+              "paddingRight": 8,
+              "paddingTop": 8,
             }
           }
         >
@@ -89,10 +93,10 @@ exports[`renders collection preview card 1`] = `
             style={
               {
                 "color": "#7D7D7D",
-                "flex": 0,
                 "fontFamily": "Basel-Book",
                 "fontSize": 17,
                 "lineHeight": 24,
+                "textAlign": "center",
               }
             }
             suppressHighlighting={true}

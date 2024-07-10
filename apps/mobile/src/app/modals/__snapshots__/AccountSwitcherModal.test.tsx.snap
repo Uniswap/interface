@@ -339,7 +339,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "paddingTop": 8,
           }
         }
-        testID="WalletSettings"
+        testID="wallet-settings"
       >
         <Text
           maxFontSizeMultiplier={1.2}

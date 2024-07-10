@@ -10,7 +10,8 @@ import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -81,7 +82,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           p="$spacing16"
           paddingEnd="$spacing24"
           style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
-          testID={ElementName.QRCodeModalToggle}
+          testID={TestID.QRCodeModalToggle}
           onPress={onPressBottomToggle}
         >
           <Flex row alignItems="center" gap="$spacing12">

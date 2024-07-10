@@ -19,7 +19,8 @@ import { iconSizes } from 'ui/src/theme'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
@@ -214,7 +215,7 @@ export function OnDeviceRecoveryScreen({
               <Text color="$neutral3" variant="body3" onPress={onPressOtherWallet}>
                 {t('onboarding.import.onDeviceRecovery.other_options.label')}
               </Text>
-              <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={ElementName.WatchWallet}>
+              <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
                 <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
                   {t('onboarding.import.onDeviceRecovery.other_options')}
                 </Text>

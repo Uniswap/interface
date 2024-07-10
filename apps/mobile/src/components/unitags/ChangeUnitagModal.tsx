@@ -8,10 +8,11 @@ import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -268,7 +269,7 @@ export function ChangeUnitagModal({
             <Button
               fill
               disabled={isSubmitButtonDisabled}
-              testID={ElementName.Confirm}
+              testID={TestID.Confirm}
               theme="primary"
               onPress={onPressSaveChanges}
             >
@@ -315,10 +316,10 @@ function ChangeUnitagConfirmModal({
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
-          <Button fill testID={ElementName.Remove} theme="secondary" onPress={onClose}>
+          <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
             {t('common.button.back')}
           </Button>
-          <Button fill testID={ElementName.Remove} theme="detrimental" onPress={onChangeSubmit}>
+          <Button fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
           </Button>
         </Flex>

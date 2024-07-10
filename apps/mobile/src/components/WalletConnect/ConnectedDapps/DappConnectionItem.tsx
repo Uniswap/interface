@@ -12,7 +12,7 @@ import { WalletConnectSession, removeSession } from 'src/features/walletConnect/
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -124,7 +124,7 @@ export function DappConnectionItem({
         <TouchableArea
           hapticFeedback
           hapticStyle={ImpactFeedbackStyle.Medium}
-          testID={ElementName.WCDappNetworks}
+          testID={TestID.WCDappNetworks}
           onLongPress={disableOnPress}
           onPress={(): void => onPressChangeNetwork(session)}
         >

@@ -10,14 +10,17 @@ interface PredefinedAmountProps {
   onClick: () => void
 }
 
-const ClickablePill = styled(Pill)<{ disabled: boolean }>`
-  ${({ disabled }) =>
-    !disabled &&
+const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
+  background-color: ${({ $disabled, $active, theme }) =>
+    $disabled ? theme.surface2 : $active ? theme.surface3 : theme.surface1};
+  user-select: none;
+  ${({ $disabled, $active }) =>
+    !$disabled &&
     css`
       cursor: pointer;
       &:hover {
-        background-color: ${({ theme }) => theme.surface2};
-        border-color: ${({ theme }) => theme.surface3};
+        background-color: ${({ theme }) => ($active ? theme.surface3Hovered : theme.surface1Hovered)};
+        border-color: ${({ theme }) => theme.surface3Hovered};
       }
     `}
 `
@@ -26,14 +29,15 @@ export function PredefinedAmount({ currentAmount, amount, disabled = false, onCl
   const colors = useSporeColors()
   const { formatFiatPrice } = useFormatter()
 
-  const highlighted = currentAmount === amount.toString()
+  const active = currentAmount === amount.toString()
   return (
     <ClickablePill
       disabled={disabled}
       onPress={onClick}
-      backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
-      customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}
-      foregroundColor={colors[disabled ? 'neutral3' : highlighted ? 'neutral1' : 'neutral2'].val}
+      $disabled={disabled}
+      $active={active}
+      customBorderColor={colors.surface3.val}
+      foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
       label={formatFiatPrice({
         price: amount,
         type: [

@@ -1,7 +1,10 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AssetType } from 'wallet/src/entities/assets'
@@ -70,6 +73,11 @@ export function CurrencyTransferContent({
 
   const onPressToken = (): void => {
     if (currencyInfo) {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.TokenItem,
+        modal: ModalName.TransactionDetails,
+      })
+
       navigateToTokenDetails(currencyInfo.currencyId)
       if (!isWeb) {
         onClose()

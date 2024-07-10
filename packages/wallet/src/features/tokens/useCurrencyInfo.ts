@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useTokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
+import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function useCurrencyInfo(_currencyId?: string): Maybe<CurrencyInfo> {
   const { data } = useTokenQuery({

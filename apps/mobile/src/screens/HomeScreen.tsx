@@ -43,7 +43,6 @@ import {
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { useHeartbeatReporter, useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
@@ -68,8 +67,7 @@ import {
   SectionNameType,
 } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useInterval, useTimeout } from 'utilities/src/time/timing'
+import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
@@ -77,6 +75,7 @@ import { useSelectAddressHasNotifications } from 'wallet/src/features/notificati
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
+import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useCanActiveAddressClaimUnitag, useShowExtensionPromoBanner } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -107,12 +106,9 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useWalletRestore({ openModalImmediately: true })
 
   // Record a heartbeat for anonymous user DAU
-  const heartbeatReporter = useHeartbeatReporter()
-  useInterval(heartbeatReporter, ONE_SECOND_MS * 15, true)
-
+  useHeartbeatReporter()
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
-  const lastBalancesReporter = useLastBalancesReporter()
-  useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
+  useLastBalancesReporter()
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
