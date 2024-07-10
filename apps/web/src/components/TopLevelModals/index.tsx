@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { OffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import UniwalletModal from 'components/AccountDrawer/UniwalletModal'
+import ValoraWalletModal from 'components/AccountDrawer/ValoraWalletModal'
 import { Banners } from 'components/Banner/shared/Banners'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
@@ -31,7 +31,7 @@ export default function TopLevelModals() {
       <AddressClaimModal isOpen={addressClaimOpen} onDismiss={addressClaimToggle} />
       <ConnectedAccountBlocked account={account} isOpen={accountBlocked} />
       <Bag />
-      <UniwalletModal />
+      <ValoraWalletModal />
 
       <Banners />
 

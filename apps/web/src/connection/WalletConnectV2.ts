@@ -104,58 +104,35 @@ export class UniwalletConnect extends WalletConnectV2 {
 }
 
 // Custom class for Valora specific functionality
-export class ValoraConnect extends WalletConnect {
-  ANALYTICS_EVENT = 'Valora QR Scan'
-  constructor({
-    actions,
-    qrcode = true,
-    onError,
-  }: Omit<WalletConnectConstructorArgs, 'options'> & { qrcode?: boolean }) {
-    const darkmode = Boolean(window.matchMedia('(prefers-color-scheme: dark)'))
-    super({
-      actions,
-      options: {
-        projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
-        chains: [42220],
-        metadata: {
-          name: 'Ubeswap',
-          description:
-            'The interface for Ubeswap, a decentralized exchange and automated market maker protocol for Celo assets.',
-          url: 'https://app.ubeswap.org',
-          icons: ['https://app.ubeswap.org/favicon.png'],
-        },
-        optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
-        showQrModal: qrcode,
-        rpcMap: WC_RPC_URLS,
-        // as of 6/16/2023 there are no docs for `optionalMethods`
-        // this set of optional methods fixes a bug we encountered where permit2 signatures were never received from the connected wallet
-        // source: https://uniswapteam.slack.com/archives/C03R5G8T8BH/p1686858618164089?thread_ts=1686778867.145689&cid=C03R5G8T8BH
-        optionalMethods: ['eth_signTypedData', 'eth_signTypedData_v4', 'eth_sign'],
-        qrModalOptions: {
-          desktopWallets: undefined,
-          enableExplorer: false,
-          explorerExcludedWalletIds: undefined,
-          explorerRecommendedWalletIds: [
-            // Valora Wallet ID https://walletconnect.com/explorer/valora
-            'd01c7758d741b363e637a817a09bcf579feae4db9f5bb16f599fdd1f66e2f974',
-          ],
-          mobileWallets: undefined,
-          privacyPolicyUrl: undefined,
-          termsOfServiceUrl: undefined,
-          themeMode: darkmode ? 'dark' : 'light',
-          themeVariables: {
-            '--wcm-font-family': '"Inter custom", sans-serif',
-            '--wcm-z-index': Z_INDEX.modal.toString(),
-          },
-          walletImages: undefined,
-        },
-      },
-      onError,
+export class ValoraConnect extends WalletConnectV2 {
+  ANALYTICS_EVENT = 'Valora WC'
+  static VALORA_URI_AVAILABLE = 'valora_uri_available'
+
+  constructor({ actions, onError }: Omit<WalletConnectConstructorArgs, 'options'>) {
+    // disables walletconnect's proprietary qr code modal; instead UniwalletModal will listen for events to trigger our custom modal
+    super({ actions, defaultChainId: ChainId.CELO, qrcode: false, onError })
+
+    this.events.once(URI_AVAILABLE, () => {
+      this.provider?.events.on('disconnect', this.deactivate)
+    })
+
+    this.events.on(URI_AVAILABLE, (uri) => {
+      if (!uri) return
+
+      // Emits custom wallet connect code, parseable by the Uniswap Wallet
+      this.events.emit(ValoraConnect.VALORA_URI_AVAILABLE, uri)
+
+      // Opens deeplink to Uniswap Wallet if on iOS
+      if (isWebIOS || isWebAndroid) {
+        // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
+        // avoiding potential popup blockers or inconsistent behavior associated with window.open
+        window.location.href = `celo://wallet/wc?uri=${encodeURIComponent(uri)}`
+      }
     })
   }
 
-  activate(chainId?: number) {
-    sendAnalyticsEvent(this.ANALYTICS_EVENT)
-    return super.activate(chainId)
+  deactivate() {
+    this.events.emit(URI_AVAILABLE)
+    return super.deactivate()
   }
 }
