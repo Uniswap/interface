@@ -1,0 +1,32 @@
+{
+  "tokens": [
+    {
+      "chainId": 841,
+      "address": "0x5d0fa4c5668e5809c83c95a7cef3a9dd7c68d4fe",
+      "name": "Wrapped TARA",
+      "symbol": "WTARA",
+      "decimals": 18,
+      "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43"
+    },
+    {
+      "chainId": 842,
+      "address": "0x063F255689b00A877F6be55109b3ECA24e266809",
+      "name": "HerbSwap Token",
+      "symbol": "HERB",
+      "decimals": 18,
+      "logoURI": "https://iili.io/gFyZjs.png"
+    }
+  ],
+  "taraxaMainnetTokenList": {
+    "name": "Taraxa Mainnet Token List",
+    "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43",
+    "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
+    "timestamp": "new Date().toISOString()",
+    "tokens": "chainData",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    }
+  }
+}
