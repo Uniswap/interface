@@ -3,94 +3,117 @@ import {
   InterfaceEventName,
   InterfaceSectionName,
   SwapEventName,
-} from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@taraswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@taraswap/universal-router-sdk'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { GrayCard } from 'components/Card'
-import Column, { AutoColumn } from 'components/Column'
-import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
-import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import ErrorIcon from 'components/Icons/Error'
-import Row from 'components/Row'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import PriceImpactModal from 'components/swap/PriceImpactModal'
-import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
-import { Field } from 'components/swap/constants'
-import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
-import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
-import { useCurrencyInfo } from 'hooks/Tokens'
-import { useAccount } from 'hooks/useAccount'
-import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
-import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
-import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import usePrevious from 'hooks/usePrevious'
-import useSelectChain from 'hooks/useSelectChain'
-import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
-import { useUSDPrice } from 'hooks/useUSDPrice'
-import useWrapCallback, { WrapErrorText } from 'hooks/useWrapCallback'
-import { Trans } from 'i18n'
-import JSBI from 'jsbi'
-import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
-import { Text } from 'rebass'
-import { useAppSelector } from 'state/hooks'
-import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
-import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
-import { CurrencyState } from 'state/swap/types'
-import { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WrapType } from 'uniswap/src/types/wrap'
-import { logger } from 'utilities/src/logger/logger'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { largerPercentValue } from 'utils/percent'
-import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
-import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { getIsReviewableQuote } from '.'
-import { OutputTaxTooltipBody } from './TaxTooltipBody'
+} from "@uniswap/analytics-events";
+import { Currency, CurrencyAmount, Token } from "@taraswap/sdk-core";
+import { UNIVERSAL_ROUTER_ADDRESS } from "@taraswap/universal-router-sdk";
+import { useAccountDrawer } from "components/AccountDrawer/MiniPortfolio/hooks";
+import { ButtonError, ButtonLight, ButtonPrimary } from "components/Button";
+import { GrayCard } from "components/Card";
+import Column, { AutoColumn } from "components/Column";
+import { ConfirmSwapModal } from "components/ConfirmSwapModal";
+import SwapCurrencyInputPanel from "components/CurrencyInputPanel/SwapCurrencyInputPanel";
+import ErrorIcon from "components/Icons/Error";
+import Row from "components/Row";
+import TokenSafetyModal from "components/TokenSafety/TokenSafetyModal";
+import PriceImpactModal from "components/swap/PriceImpactModal";
+import PriceImpactWarning from "components/swap/PriceImpactWarning";
+import SwapDetailsDropdown from "components/swap/SwapDetailsDropdown";
+import confirmPriceImpactWithoutFee from "components/swap/confirmPriceImpactWithoutFee";
+import { Field } from "components/swap/constants";
+import {
+  ArrowContainer,
+  ArrowWrapper,
+  OutputSwapSection,
+  SwapSection,
+} from "components/swap/styled";
+import { CHAIN_INFO, useIsSupportedChainId } from "constants/chains";
+import { useCurrencyInfo } from "hooks/Tokens";
+import { useAccount } from "hooks/useAccount";
+import { useIsSwapUnsupported } from "hooks/useIsSwapUnsupported";
+import { useMaxAmountIn } from "hooks/useMaxAmountIn";
+import usePermit2Allowance, { AllowanceState } from "hooks/usePermit2Allowance";
+import usePrevious from "hooks/usePrevious";
+import useSelectChain from "hooks/useSelectChain";
+import { SwapResult, useSwapCallback } from "hooks/useSwapCallback";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import useWrapCallback, { WrapErrorText } from "hooks/useWrapCallback";
+import { Trans } from "i18n";
+import JSBI from "jsbi";
+import { formatSwapQuoteReceivedEventProperties } from "lib/utils/analytics";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowDown } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import { Text } from "rebass";
+import { useAppSelector } from "state/hooks";
+import {
+  InterfaceTrade,
+  RouterPreference,
+  TradeState,
+} from "state/routing/types";
+import { isClassicTrade } from "state/routing/utils";
+import {
+  useSwapActionHandlers,
+  useSwapAndLimitContext,
+  useSwapContext,
+} from "state/swap/hooks";
+import { CurrencyState } from "state/swap/types";
+import { useTheme } from "styled-components";
+import { ExternalLink, ThemedText } from "theme/components";
+import { maybeLogFirstSwapAction } from "tracing/swapFlowLoggers";
+import { SafetyLevel } from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
+import { CurrencyInfo } from "uniswap/src/features/dataApi/types";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
+import { WrapType } from "uniswap/src/types/wrap";
+import { logger } from "utilities/src/logger/logger";
+import { useTrace } from "utilities/src/telemetry/trace/TraceContext";
+import { computeFiatValuePriceImpact } from "utils/computeFiatValuePriceImpact";
+import { NumberType, useFormatter } from "utils/formatNumbers";
+import { maxAmountSpend } from "utils/maxAmountSpend";
+import { largerPercentValue } from "utils/percent";
+import { computeRealizedPriceImpact, warningSeverity } from "utils/prices";
+import { didUserReject } from "utils/swapErrorToUserReadableMessage";
+import { getIsReviewableQuote } from ".";
+import { OutputTaxTooltipBody } from "./TaxTooltipBody";
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,
-}
+};
 
 interface SwapFormProps {
-  disableTokenInputs?: boolean
-  onCurrencyChange?: (selected: CurrencyState) => void
+  disableTokenInputs?: boolean;
+  onCurrencyChange?: (selected: CurrencyState) => void;
 }
 
-export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapFormProps) {
-  const { isDisconnected, chainId: connectedChainId } = useAccount()
+export function SwapForm({
+  disableTokenInputs = false,
+  onCurrencyChange,
+}: SwapFormProps) {
+  const { isDisconnected, chainId: connectedChainId } = useAccount();
 
-  const trace = useTrace()
+  const trace = useTrace();
 
-  const { chainId, prefilledState, currencyState, multichainUXEnabled } = useSwapAndLimitContext()
-  const isSupportedChain = useIsSupportedChainId(chainId)
-  const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
-  const { typedValue, independentField } = swapState
+  const { chainId, prefilledState, currencyState, multichainUXEnabled } =
+    useSwapAndLimitContext();
+  const isSupportedChain = useIsSupportedChainId(chainId);
+  const { swapState, setSwapState, derivedSwapInfo } = useSwapContext();
+  const { typedValue, independentField } = swapState;
 
   // token warning stuff
-  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledState.inputCurrency)
-  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledState.outputCurrency)
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
+  const prefilledInputCurrencyInfo = useCurrencyInfo(
+    prefilledState.inputCurrency
+  );
+  const prefilledOutputCurrencyInfo = useCurrencyInfo(
+    prefilledState.outputCurrency
+  );
+  const [dismissTokenWarning, setDismissTokenWarning] =
+    useState<boolean>(false);
+  const [showPriceImpactModal, setShowPriceImpactModal] =
+    useState<boolean>(false);
 
   const handleConfirmTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
+    setDismissTokenWarning(true);
+  }, []);
 
   // dismiss warning if all imported tokens are in active lists
   const urlTokensNotInDefault = useMemo(
@@ -98,17 +121,20 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       prefilledInputCurrencyInfo && prefilledOutputCurrencyInfo
         ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
             .filter((token: CurrencyInfo) => {
-              return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
+              return (
+                token.currency.isToken &&
+                token.safetyLevel !== SafetyLevel.Verified
+              );
             })
             .map((token: CurrencyInfo) => token.currency as Token)
         : [],
     [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
-  )
+  );
 
-  const theme = useTheme()
+  const theme = useTheme();
 
   // toggle wallet when disconnected
-  const accountDrawer = useAccountDrawer()
+  const accountDrawer = useAccountDrawer();
 
   const {
     trade: { state: tradeState, trade, swapQuoteLatency },
@@ -120,12 +146,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     outputFeeFiatValue,
     inputTax,
     outputTax,
-  } = derivedSwapInfo
+  } = derivedSwapInfo;
 
   const [inputTokenHasTax, outputTokenHasTax] = useMemo(
     () => [!inputTax.equalTo(0), !outputTax.equalTo(0)],
     [inputTax, outputTax]
-  )
+  );
 
   useEffect(() => {
     // Force exact input if the user switches to an output token with tax
@@ -133,17 +159,22 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       setSwapState((state) => ({
         ...state,
         independentField: Field.INPUT,
-        typedValue: '',
-      }))
+        typedValue: "",
+      }));
     }
-  }, [independentField, outputTokenHasTax, setSwapState, trade?.outputAmount])
+  }, [independentField, outputTokenHasTax, setSwapState, trade?.outputAmount]);
 
   const {
     wrapType,
     execute: onWrap,
     inputError: wrapInputError,
-  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
-  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  } = useWrapCallback(
+    currencies[Field.INPUT],
+    currencies[Field.OUTPUT],
+    typedValue
+  );
+
+  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE;
 
   const parsedAmounts = useMemo(
     () =>
@@ -153,29 +184,39 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             [Field.OUTPUT]: parsedAmount,
           }
         : {
-            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
+            [Field.INPUT]:
+              independentField === Field.INPUT
+                ? parsedAmount
+                : trade?.inputAmount,
+            [Field.OUTPUT]:
+              independentField === Field.OUTPUT
+                ? parsedAmount
+                : trade?.outputAmount,
           },
     [independentField, parsedAmount, showWrap, trade]
-  )
+  );
 
-  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT])
-  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT])
+  const showFiatValueInput = Boolean(parsedAmounts[Field.INPUT]);
+  const showFiatValueOutput = Boolean(parsedAmounts[Field.OUTPUT]);
   const getSingleUnitAmount = (currency?: Currency) => {
     if (!currency) {
-      return
+      return;
     }
-    return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(10 ** currency.decimals))
-  }
+    return CurrencyAmount.fromRawAmount(
+      currency,
+      JSBI.BigInt(10 ** currency.decimals)
+    );
+  };
 
   const fiatValueInput = useUSDPrice(
     parsedAmounts[Field.INPUT] ?? getSingleUnitAmount(currencies[Field.INPUT]),
     currencies[Field.INPUT]
-  )
+  );
   const fiatValueOutput = useUSDPrice(
-    parsedAmounts[Field.OUTPUT] ?? getSingleUnitAmount(currencies[Field.OUTPUT]),
+    parsedAmounts[Field.OUTPUT] ??
+      getSingleUnitAmount(currencies[Field.OUTPUT]),
     currencies[Field.OUTPUT]
-  )
+  );
 
   const [routeNotFound, routeIsLoading, routeIsSyncing] = useMemo(
     () => [
@@ -184,72 +225,98 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       tradeState === TradeState.LOADING && Boolean(trade),
     ],
     [trade, tradeState]
-  )
+  );
 
-  const fiatValueTradeInput = useUSDPrice(trade?.inputAmount)
-  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
-  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount)
+  const fiatValueTradeInput = useUSDPrice(trade?.inputAmount);
+  const fiatValueTradeOutput = useUSDPrice(trade?.outputAmount);
+  const preTaxFiatValueTradeOutput = useUSDPrice(trade?.outputAmount);
   const [stablecoinPriceImpact, preTaxStablecoinPriceImpact] = useMemo(
     () =>
       routeIsSyncing || !isClassicTrade(trade) || showWrap
         ? [undefined, undefined]
         : [
-            computeFiatValuePriceImpact(fiatValueTradeInput.data, fiatValueTradeOutput.data),
-            computeFiatValuePriceImpact(fiatValueTradeInput.data, preTaxFiatValueTradeOutput.data),
+            computeFiatValuePriceImpact(
+              fiatValueTradeInput.data,
+              fiatValueTradeOutput.data
+            ),
+            computeFiatValuePriceImpact(
+              fiatValueTradeInput.data,
+              preTaxFiatValueTradeOutput.data
+            ),
           ],
-    [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade, showWrap]
-  )
+    [
+      fiatValueTradeInput,
+      fiatValueTradeOutput,
+      preTaxFiatValueTradeOutput,
+      routeIsSyncing,
+      trade,
+      showWrap,
+    ]
+  );
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
-  const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+  const { onSwitchTokens, onCurrencySelection, onUserInput } =
+    useSwapActionHandlers();
+  const dependentField: Field =
+    independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT;
 
   const handleTypeInput = useCallback(
     (value: string) => {
-      onUserInput(Field.INPUT, value)
-      maybeLogFirstSwapAction(trace)
+      onUserInput(Field.INPUT, value);
+      maybeLogFirstSwapAction(trace);
     },
     [onUserInput, trace]
-  )
+  );
   const handleTypeOutput = useCallback(
     (value: string) => {
-      onUserInput(Field.OUTPUT, value)
-      maybeLogFirstSwapAction(trace)
+      onUserInput(Field.OUTPUT, value);
+      maybeLogFirstSwapAction(trace);
     },
     [onUserInput, trace]
-  )
+  );
 
-  const navigate = useNavigate()
-  const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
+  const navigate = useNavigate();
+  const swapIsUnsupported = useIsSwapUnsupported(
+    currencies[Field.INPUT],
+    currencies[Field.OUTPUT]
+  );
 
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-    navigate('/swap/')
-  }, [navigate])
+    setDismissTokenWarning(true);
+    navigate("/swap/");
+  }, [navigate]);
 
   // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapError, swapResult }, setSwapFormState] = useState<{
-    showConfirm: boolean
-    tradeToConfirm?: InterfaceTrade
-    swapError?: Error
-    swapResult?: SwapResult
+  const [
+    { showConfirm, tradeToConfirm, swapError, swapResult },
+    setSwapFormState,
+  ] = useState<{
+    showConfirm: boolean;
+    tradeToConfirm?: InterfaceTrade;
+    swapError?: Error;
+    swapResult?: SwapResult;
   }>({
     showConfirm: false,
     tradeToConfirm: undefined,
     swapError: undefined,
     swapResult: undefined,
-  })
+  });
 
-  const previousConnectedChainId = usePrevious(connectedChainId)
-  const previousPrefilledState = usePrevious(prefilledState)
+  const previousConnectedChainId = usePrevious(connectedChainId);
+  const previousPrefilledState = usePrevious(prefilledState);
   useEffect(() => {
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const chainChanged =
+      previousConnectedChainId && previousConnectedChainId !== connectedChainId;
     const prefilledInputChanged =
       previousPrefilledState?.inputCurrency &&
-      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+      !prefilledState.inputCurrency?.equals(
+        previousPrefilledState.inputCurrency
+      );
     const prefilledOutputChanged =
       previousPrefilledState?.outputCurrency &&
-      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+      !prefilledState?.outputCurrency?.equals(
+        previousPrefilledState.outputCurrency
+      );
 
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       // reset local state
@@ -258,7 +325,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         swapError: undefined,
         showConfirm: false,
         swapResult: undefined,
-      })
+      });
     }
   }, [
     connectedChainId,
@@ -266,28 +333,37 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     prefilledState?.outputCurrency,
     previousConnectedChainId,
     previousPrefilledState,
-  ])
+  ]);
 
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount } = useFormatter();
   const formattedAmounts = useMemo(
     () => ({
       [independentField]: typedValue,
       [dependentField]: showWrap
-        ? parsedAmounts[independentField]?.toExact() ?? ''
+        ? parsedAmounts[independentField]?.toExact() ?? ""
         : formatCurrencyAmount({
             amount: parsedAmounts[dependentField],
             type: NumberType.SwapTradeAmount,
-            placeholder: '',
+            placeholder: "",
           }),
     }),
-    [dependentField, formatCurrencyAmount, independentField, parsedAmounts, showWrap, typedValue]
-  )
+    [
+      dependentField,
+      formatCurrencyAmount,
+      independentField,
+      parsedAmounts,
+      showWrap,
+      typedValue,
+    ]
+  );
 
   const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
-  )
+    currencies[Field.INPUT] &&
+      currencies[Field.OUTPUT] &&
+      parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
+  );
 
-  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage);
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
@@ -295,24 +371,33 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         : undefined),
     isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
     trade?.fillType
-  )
+  );
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
     () => maxAmountSpend(currencyBalances[Field.INPUT]),
     [currencyBalances]
-  )
-  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
+  );
+  const showMaxButton = Boolean(
+    maxInputAmount?.greaterThan(0) &&
+      !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount)
+  );
   const swapFiatValues = useMemo(() => {
-    return { amountIn: fiatValueTradeInput.data, amountOut: fiatValueTradeOutput.data, feeUsd: outputFeeFiatValue }
-  }, [fiatValueTradeInput.data, fiatValueTradeOutput.data, outputFeeFiatValue])
+    return {
+      amountIn: fiatValueTradeInput.data,
+      amountOut: fiatValueTradeOutput.data,
+      feeUsd: outputFeeFiatValue,
+    };
+  }, [fiatValueTradeInput.data, fiatValueTradeOutput.data, outputFeeFiatValue]);
 
   // the callback to execute the swap
   const swapCallback = useSwapCallback(
     trade,
     swapFiatValues,
     allowedSlippage,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
-  )
+    allowance.state === AllowanceState.ALLOWED
+      ? allowance.permitSignature
+      : undefined
+  );
 
   const handleContinueToReview = useCallback(() => {
     setSwapFormState({
@@ -320,23 +405,26 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       swapError: undefined,
       showConfirm: true,
       swapResult: undefined,
-    })
-  }, [trade])
+    });
+  }, [trade]);
 
   const clearSwapState = useCallback(() => {
     setSwapFormState((currentState) => ({
       ...currentState,
       swapError: undefined,
       swapResult: undefined,
-    }))
-  }, [])
+    }));
+  }, []);
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {
-      return
+      return;
     }
-    if (preTaxStablecoinPriceImpact && !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)) {
-      return
+    if (
+      preTaxStablecoinPriceImpact &&
+      !confirmPriceImpactWithoutFee(preTaxStablecoinPriceImpact)
+    ) {
+      return;
     }
     swapCallback()
       .then((result) => {
@@ -344,127 +432,161 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           ...currentState,
           swapError: undefined,
           swapResult: result,
-        }))
+        }));
       })
       .catch((error) => {
         setSwapFormState((currentState) => ({
           ...currentState,
           swapError: error,
           swapResult: undefined,
-        }))
-      })
-  }, [swapCallback, preTaxStablecoinPriceImpact])
+        }));
+      });
+  }, [swapCallback, preTaxStablecoinPriceImpact]);
 
   const handleOnWrap = useCallback(async () => {
     if (!onWrap) {
-      return
+      return;
     }
     try {
-      const txHash = await onWrap()
+      const txHash = await onWrap();
       setSwapFormState((currentState) => ({
         ...currentState,
         swapError: undefined,
         txHash,
-      }))
-      onUserInput(Field.INPUT, '')
+      }));
+      onUserInput(Field.INPUT, "");
     } catch (error) {
       if (!didUserReject(error)) {
         sendAnalyticsEvent(SwapEventName.SWAP_ERROR, {
           wrapType,
           input: currencies[Field.INPUT],
           output: currencies[Field.OUTPUT],
-        })
+        });
       } else {
-        logger.debug('SwapForm', 'handleOnWrap', 'rejected wrap/unwrap')
+        logger.debug("SwapForm", "handleOnWrap", "rejected wrap/unwrap");
       }
       setSwapFormState((currentState) => ({
         ...currentState,
         swapError: error,
         txHash: undefined,
-      }))
+      }));
     }
-  }, [currencies, onUserInput, onWrap, wrapType])
+  }, [currencies, onUserInput, onWrap, wrapType]);
 
   // warnings on the greater of fiat value price impact and execution price impact
   const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
     if (!isClassicTrade(trade)) {
-      return { priceImpactSeverity: 0, largerPriceImpact: undefined }
+      return { priceImpactSeverity: 0, largerPriceImpact: undefined };
     }
 
-    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
-    const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
-    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
-  }, [preTaxStablecoinPriceImpact, trade])
+    const marketPriceImpact = trade?.priceImpact
+      ? computeRealizedPriceImpact(trade)
+      : undefined;
+    const largerPriceImpact = largerPercentValue(
+      marketPriceImpact,
+      preTaxStablecoinPriceImpact
+    );
+    return {
+      priceImpactSeverity: warningSeverity(largerPriceImpact),
+      largerPriceImpact,
+    };
+  }, [preTaxStablecoinPriceImpact, trade]);
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapFormState((currentState) => ({ ...currentState, showConfirm: false }))
+    setSwapFormState((currentState) => ({
+      ...currentState,
+      showConfirm: false,
+    }));
     // If swap had a temporary router preference override, we want to reset it
-    setSwapState((state) => ({ ...state, routerPreferenceOverride: undefined }))
+    setSwapState((state) => ({
+      ...state,
+      routerPreferenceOverride: undefined,
+    }));
     // If there was a swap, we want to clear the input
     if (swapResult) {
-      onUserInput(Field.INPUT, '')
+      onUserInput(Field.INPUT, "");
     }
-  }, [onUserInput, setSwapState, swapResult])
+  }, [onUserInput, setSwapState, swapResult]);
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapFormState((currentState) => ({ ...currentState, tradeToConfirm: trade }))
-  }, [trade])
+    setSwapFormState((currentState) => ({
+      ...currentState,
+      tradeToConfirm: trade,
+    }));
+  }, [trade]);
 
   const handleInputSelect = useCallback(
     (inputCurrency: Currency) => {
-      onCurrencySelection(Field.INPUT, inputCurrency)
+      onCurrencySelection(Field.INPUT, inputCurrency);
       onCurrencyChange?.({
         inputCurrency,
         outputCurrency: currencyState.outputCurrency,
-      })
-      maybeLogFirstSwapAction(trace)
+      });
+      maybeLogFirstSwapAction(trace);
     },
     [onCurrencyChange, onCurrencySelection, currencyState, trace]
-  )
-  const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null)
+  );
+  const inputCurrencyNumericalInputRef = useRef<HTMLInputElement>(null);
 
   const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-    maybeLogFirstSwapAction(trace)
-  }, [maxInputAmount, onUserInput, trace])
+    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact());
+    maybeLogFirstSwapAction(trace);
+  }, [maxInputAmount, onUserInput, trace]);
 
   const handleOutputSelect = useCallback(
     (outputCurrency: Currency) => {
-      onCurrencySelection(Field.OUTPUT, outputCurrency)
+      onCurrencySelection(Field.OUTPUT, outputCurrency);
       onCurrencyChange?.({
         inputCurrency: currencyState.inputCurrency,
         outputCurrency,
-      })
-      maybeLogFirstSwapAction(trace)
+      });
+      maybeLogFirstSwapAction(trace);
     },
     [onCurrencyChange, onCurrencySelection, currencyState, trace]
-  )
+  );
 
-  const showPriceImpactWarning = isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3
+  const showPriceImpactWarning =
+    isClassicTrade(trade) && largerPriceImpact && priceImpactSeverity > 3;
 
-  const prevTrade = usePrevious(trade)
+  const prevTrade = usePrevious(trade);
   useEffect(() => {
     if (!trade || prevTrade === trade) {
-      return
+      return;
     } // no new swap quote to log
 
     sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, {
-      ...formatSwapQuoteReceivedEventProperties(trade, allowedSlippage, swapQuoteLatency, outputFeeFiatValue),
+      ...formatSwapQuoteReceivedEventProperties(
+        trade,
+        allowedSlippage,
+        swapQuoteLatency,
+        outputFeeFiatValue
+      ),
       ...trace,
-    })
-  }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, outputFeeFiatValue])
+    });
+  }, [
+    prevTrade,
+    trade,
+    trace,
+    allowedSlippage,
+    swapQuoteLatency,
+    outputFeeFiatValue,
+  ]);
 
   const showDetailsDropdown = Boolean(
-    !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing)
-  )
+    !showWrap &&
+      userHasSpecifiedInputOutput &&
+      (trade || routeIsLoading || routeIsSyncing)
+  );
 
-  const inputCurrency = currencies[Field.INPUT] ?? undefined
-  const selectChain = useSelectChain()
-  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const targetChain = switchingChain ? switchingChain : undefined
-  const switchingChainIsSupported = useIsSupportedChainId(targetChain)
+  const inputCurrency = currencies[Field.INPUT] ?? undefined;
+  const selectChain = useSelectChain();
+  const switchingChain = useAppSelector(
+    (state) => state.wallets.switchingChain
+  );
+  const targetChain = switchingChain ? switchingChain : undefined;
+  const switchingChainIsSupported = useIsSupportedChainId(targetChain);
   // @ts-ignore
-  const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
+  const isUsingBlockedExtension = window.ethereum?.["isPocketUniverseZ"];
 
   return (
     <>
@@ -496,8 +618,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             setSwapState((state) => ({
               ...state,
               routerPreferenceOverride: RouterPreference.API,
-            }))
-            handleContinueToReview()
+            }));
+            handleContinueToReview();
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
@@ -508,12 +630,12 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           priceImpact={largerPriceImpact}
           onDismiss={() => setShowPriceImpactModal(false)}
           onContinue={() => {
-            setShowPriceImpactModal(false)
-            handleContinueToReview()
+            setShowPriceImpactModal(false);
+            handleContinueToReview();
           }}
         />
       )}
-      <div style={{ display: 'relative' }}>
+      <div style={{ display: "relative" }}>
         <SwapSection>
           <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
             <SwapCurrencyInputPanel
@@ -544,13 +666,13 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               data-testid="swap-currency-button"
               onClick={() => {
                 if (disableTokenInputs) {
-                  return
+                  return;
                 }
                 onSwitchTokens({
                   newOutputHasTax: inputTokenHasTax,
                   previouslyEstimatedOutput: formattedAmounts[dependentField],
-                })
-                maybeLogFirstSwapAction(trace)
+                });
+                maybeLogFirstSwapAction(trace);
               }}
               color={theme.neutral1}
             >
@@ -582,10 +704,15 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                   // We disable numerical input here if the selected token has tax, since we cannot guarantee exact_outputs for FOT tokens
                   disabled: inputTokenHasTax || outputTokenHasTax,
                   // Focus the input currency panel if the user tries to type into the disabled output currency panel
-                  onDisabledClick: () => inputCurrencyNumericalInputRef.current?.focus(),
+                  onDisabledClick: () =>
+                    inputCurrencyNumericalInputRef.current?.focus(),
                   disabledTooltipBody: (
                     <OutputTaxTooltipBody
-                      currencySymbol={currencies[inputTokenHasTax ? Field.INPUT : Field.OUTPUT]?.symbol}
+                      currencySymbol={
+                        currencies[
+                          inputTokenHasTax ? Field.INPUT : Field.OUTPUT
+                        ]?.symbol
+                      }
                     />
                   ),
                 }}
@@ -594,7 +721,9 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           </OutputSwapSection>
         </div>
 
-        {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
+        {showPriceImpactWarning && (
+          <PriceImpactWarning priceImpact={largerPriceImpact} />
+        )}
         <div>
           {swapIsUnsupported ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
@@ -607,7 +736,9 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               <Trans
                 i18nKey="common.connectingToChain"
                 values={{
-                  chainName: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '',
+                  chainName: switchingChainIsSupported
+                    ? CHAIN_INFO[targetChain]?.label
+                    : "",
                 }}
               />
             </ButtonPrimary>
@@ -615,32 +746,46 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             <Trace
               logPress
               eventOnTrigger={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
-              properties={{ received_swap_quote: getIsReviewableQuote(trade, tradeState, swapInputError) }}
+              properties={{
+                received_swap_quote: getIsReviewableQuote(
+                  trade,
+                  tradeState,
+                  swapInputError
+                ),
+              }}
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
-              <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
+              <ButtonLight
+                onClick={accountDrawer.open}
+                fontWeight={535}
+                $borderRadius="16px"
+              >
                 <Trans i18nKey="common.connectWallet.button" />
               </ButtonLight>
             </Trace>
-          ) : !multichainUXEnabled && chainId && chainId !== connectedChainId ? (
+          ) : !multichainUXEnabled &&
+            chainId &&
+            chainId !== connectedChainId ? (
             <ButtonPrimary
               $borderRadius="16px"
               onClick={async () => {
                 try {
-                  await selectChain(chainId)
+                  await selectChain(chainId);
                 } catch (error) {
                   if (didUserReject(error)) {
                     // Ignore error, which keeps the user on the previous chain.
                   } else {
                     // TODO(WEB-3306): This UX could be improved to show an error state.
-                    throw error
+                    throw error;
                   }
                 }
               }}
             >
               <Trans
                 i18nKey="common.connectToChain.button"
-                values={{ chainName: isSupportedChain ? CHAIN_INFO[chainId].label : '' }}
+                values={{
+                  chainName: isSupportedChain ? CHAIN_INFO[chainId].label : "",
+                }}
               />
             </ButtonPrimary>
           ) : showWrap ? (
@@ -659,8 +804,11 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 <Trans i18nKey="common.unwrap.button" />
               ) : null}
             </ButtonPrimary>
-          ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
-            <GrayCard style={{ textAlign: 'center' }}>
+          ) : routeNotFound &&
+            userHasSpecifiedInputOutput &&
+            !routeIsLoading &&
+            !routeIsSyncing ? (
+            <GrayCard style={{ textAlign: "center" }}>
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans i18nKey="swap.form.insufficientLiquidity" />
               </ThemedText.DeprecatedMain>
@@ -669,16 +817,25 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             <Trace logPress element={InterfaceElementName.SWAP_BUTTON}>
               <ButtonError
                 onClick={async () => {
-                  const inputChainId = trade?.inputAmount?.currency?.chainId
+                  const inputChainId = trade?.inputAmount?.currency?.chainId;
                   if (inputChainId && inputChainId !== connectedChainId) {
-                    await selectChain(inputChainId)
+                    await selectChain(inputChainId);
                   }
-                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
+                  showPriceImpactWarning
+                    ? setShowPriceImpactModal(true)
+                    : handleContinueToReview();
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
-                error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
+                disabled={
+                  isUsingBlockedExtension ||
+                  !getIsReviewableQuote(trade, tradeState, swapInputError)
+                }
+                error={
+                  !swapInputError &&
+                  priceImpactSeverity > 2 &&
+                  allowance.state === AllowanceState.ALLOWED
+                }
               >
                 <Text fontSize={20}>
                   {swapInputError ? (
@@ -707,11 +864,11 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
         </div>
       </AutoColumn>
     </>
-  )
+  );
 }
 
 function SwapNotice() {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
     <Row
       align="flex-start"
@@ -721,7 +878,12 @@ function SwapNotice() {
       borderRadius="12px"
       padding="16px"
     >
-      <Row width="auto" borderRadius="16px" backgroundColor={theme.critical2} padding="8px">
+      <Row
+        width="auto"
+        borderRadius="16px"
+        backgroundColor={theme.critical2}
+        padding="8px"
+      >
         <ErrorIcon />
       </Row>
 
@@ -741,5 +903,5 @@ function SwapNotice() {
         </ThemedText.BodySecondary>
       </Column>
     </Row>
-  )
+  );
 }
