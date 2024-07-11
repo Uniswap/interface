@@ -11326,22 +11326,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@taraswap/router-sdk@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@taraswap/router-sdk@npm:1.1.2"
+"@taraswap/router-sdk@npm:1.1.6":
+  version: 1.1.6
+  resolution: "@taraswap/router-sdk@npm:1.1.6"
   dependencies:
     "@ethersproject/abi": ^5.5.0
-    "@taraswap/sdk-core": ^1.4.0
-    "@taraswap/v2-sdk": ^1.1.1
-    "@taraswap/v3-sdk": ^1.1.1
+    "@taraswap/sdk-core": ^1.4.2
+    "@taraswap/v2-sdk": ^1.1.3
+    "@taraswap/v3-sdk": ^1.1.3
     "@uniswap/swap-router-contracts": ^1.3.0
-  checksum: a62d9b50dc5c720145d8d1b30046f258a7c6d911d88bc6671f1e8d80b697a3af39ca7ba28523fccfa5572f521ee29db036a8ea72fcbd9e42fb30e2fa051d11df
+  checksum: 290860e2671d4b5f7f09ed8229c87d2b891bb97e627cf32fa274943303ceeb9cc9a833ce4092fd546313a8136f7d5847753ab58913d97a309cb8da497a62933d
   languageName: node
   linkType: hard
 
-"@taraswap/sdk-core@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@taraswap/sdk-core@npm:1.4.0"
+"@taraswap/sdk-core@npm:1.4.2":
+  version: 1.4.2
+  resolution: "@taraswap/sdk-core@npm:1.4.2"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/bytes": ^5.7.0
@@ -11352,7 +11352,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: 5ba5e43f8e11c8eed344afc0907e67c19af6fc0b8a5573027724c09084227f7e25f3f16f4eac26ca17595a44a02e1f829feff97e6e47e29354f81346eed78708
+  checksum: 43ae7a10546f2dde41ef95f718c599866a00b35ffa8594cf8fffcdbdeda17c36b6ca2983c91a39acdec7942dfcbbc625c36a85dc8e44d830fe21426485a6156e
   languageName: node
   linkType: hard
 
@@ -11420,32 +11420,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@taraswap/v2-sdk@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@taraswap/v2-sdk@npm:1.1.1"
+"@taraswap/v2-sdk@npm:1.1.3":
+  version: 1.1.3
+  resolution: "@taraswap/v2-sdk@npm:1.1.3"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/solidity": ^5.0.9
-    "@taraswap/sdk-core": ^1.4.0
+    "@taraswap/sdk-core": ^1.4.2
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: d7fc8aa5f951f4e196d6f650fcf85e7ccb01fa6d06ffe5c27581d3ac824bdd15ac682543d04749c69bd71ab62940cb6e150b426a11a349f101069f4ddbd4db89
+  checksum: 9074b37cef2928c759473dfbfa3b26f0183f6f37acc018d1c6a798b3f395249b60e063244d46b11749251600660c9bb5ab3d2177d104eea5c15b61fdce0be6ef
   languageName: node
   linkType: hard
 
-"@taraswap/v3-sdk@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@taraswap/v3-sdk@npm:1.1.1"
+"@taraswap/v3-sdk@npm:1.1.3":
+  version: 1.1.3
+  resolution: "@taraswap/v3-sdk@npm:1.1.3"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@ethersproject/solidity": ^5.0.9
-    "@taraswap/sdk-core": ^1.4.0
+    "@taraswap/sdk-core": ^1.4.2
     "@uniswap/swap-router-contracts": ^1.3.0
     "@uniswap/v3-periphery": ^1.1.1
     "@uniswap/v3-staker": 1.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: bbd668c29a19265f2fcea04a9d402a91f8b1c354f934d863d7cd4924c9d8e92197687673a41ae9930352dcda6d75bd97b39686075bdaabab44b26fbf99ebfe16
+  checksum: 20af6fee3e78f70c3a3048979885833e1ec8d6a3bc7e7a4dcdb9d4751bcaeddf0f7569a18902dbe2800944e9820cc7cf71f7d759ca46d3f29ff5f5fbc9691af5
   languageName: node
   linkType: hard
 
@@ -13525,13 +13525,13 @@ __metadata:
     "@tanstack/react-query": 5.28.14
     "@tanstack/react-table": 8.10.7
     "@taraswap/permit2-sdk": 1.1.0
-    "@taraswap/router-sdk": 1.1.2
-    "@taraswap/sdk-core": 1.4.0
+    "@taraswap/router-sdk": 1.1.6
+    "@taraswap/sdk-core": 1.4.2
     "@taraswap/smart-order-router": 4.0.3
     "@taraswap/uniswapx-sdk": 1.1.7
     "@taraswap/universal-router-sdk": 1.1.4
-    "@taraswap/v2-sdk": 1.1.1
-    "@taraswap/v3-sdk": 1.1.1
+    "@taraswap/v2-sdk": 1.1.3
+    "@taraswap/v3-sdk": 1.1.3
     "@testing-library/jest-dom": 5.17.0
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
@@ -13778,8 +13778,8 @@ __metadata:
     "@shopify/react-native-skia": 1.2.0
     "@storybook/react": 7.0.2
     "@tamagui/babel-plugin": 1.95.1
-    "@taraswap/sdk-core": 1.4.0
-    "@taraswap/v3-sdk": 1.1.1
+    "@taraswap/sdk-core": 1.4.2
+    "@taraswap/v3-sdk": 1.1.3
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
     "@types/redux-mock-store": 1.0.6
@@ -42200,8 +42200,8 @@ __metadata:
     "@graphql-codegen/typescript-resolvers": ^3.2.1
     "@react-native-async-storage/async-storage": 1.17.10
     "@reduxjs/toolkit": 1.9.3
-    "@taraswap/router-sdk": 1.1.2
-    "@taraswap/sdk-core": 1.4.0
+    "@taraswap/router-sdk": 1.1.6
+    "@taraswap/sdk-core": 1.4.2
     "@testing-library/react-native": 11.5.0
     "@typechain/ethers-v5": 7.2.0
     "@types/chrome": 0.0.254
@@ -42688,7 +42688,7 @@ __metadata:
     "@sentry/react": 7.80.0
     "@sentry/react-native": 5.5.0
     "@sentry/types": 7.80.0
-    "@taraswap/sdk-core": 1.4.0
+    "@taraswap/sdk-core": 1.4.2
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
     "@types/chrome": 0.0.254
@@ -43222,11 +43222,11 @@ __metadata:
     "@sentry/types": 7.80.0
     "@shopify/flash-list": 1.6.3
     "@taraswap/permit2-sdk": 1.1.0
-    "@taraswap/router-sdk": 1.1.2
-    "@taraswap/sdk-core": 1.4.0
+    "@taraswap/router-sdk": 1.1.6
+    "@taraswap/sdk-core": 1.4.2
     "@taraswap/universal-router-sdk": 1.1.4
-    "@taraswap/v2-sdk": 1.1.1
-    "@taraswap/v3-sdk": 1.1.1
+    "@taraswap/v2-sdk": 1.1.3
+    "@taraswap/v3-sdk": 1.1.3
     "@testing-library/jest-native": 5.4.2
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0

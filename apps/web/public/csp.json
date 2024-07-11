@@ -1,7 +1,5 @@
 {
-  "defaultSrc": [
-    "'self'"
-  ],
+  "defaultSrc": ["'self'"],
   "scriptSrc": [
     "'self'",
     "'wasm-unsafe-eval'",
@@ -10,15 +8,8 @@
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com"
   ],
-  "styleSrc": [
-    "'self'",
-    "'unsafe-inline'"
-  ],
-  "imgSrc": [
-    "*",
-    "blob:",
-    "data:"
-  ],
+  "styleSrc": ["'self'", "'unsafe-inline'"],
+  "imgSrc": ["*", "blob:", "data:"],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
@@ -29,9 +20,10 @@
     "'self'",
     "blob:",
     "data:",
+    "http://localhost:8545",
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
-    "https://6gffx958h3.execute-api.eu-central-1.amazonaws.com/prod/quote",
+    "https://p7oxollac7.execute-api.us-east-1.amazonaws.com/prod/",
     "https://*.alchemy.com",
     "https://*.arbitrum.io",
     "https://*.base.org/",
@@ -106,8 +98,5 @@
     "wss://ws-us3.pusher.com/",
     "wss://www.walletlink.org"
   ],
-  "workerSrc": [
-    "'self'",
-    "blob:"
-  ]
+  "workerSrc": ["'self'", "blob:"]
 }

@@ -178,13 +178,13 @@
     "@tanstack/react-query": "5.28.14",
     "@tanstack/react-table": "8.10.7",
     "@taraswap/permit2-sdk": "1.1.0",
-    "@taraswap/router-sdk": "1.1.2",
-    "@taraswap/sdk-core": "1.4.0",
+    "@taraswap/router-sdk": "1.1.6",
+    "@taraswap/sdk-core": "1.4.2",
     "@taraswap/smart-order-router": "4.0.3",
     "@taraswap/uniswapx-sdk": "1.1.7",
     "@taraswap/universal-router-sdk": "1.1.4",
-    "@taraswap/v2-sdk": "1.1.1",
-    "@taraswap/v3-sdk": "1.1.1",
+    "@taraswap/v2-sdk": "1.1.3",
+    "@taraswap/v3-sdk": "1.1.3",
     "@types/poisson-disk-sampling": "2.2.4",
     "@types/react-scroll-sync": "0.8.7",
     "@types/react-window-infinite-loader": "1.0.6",
@@ -285,10 +285,10 @@
     "zustand": "4.4.6"
   },
   "resolutions": {
-    "@taraswap/router-sdk": "1.0.11",
-    "@taraswap/v2-sdk": "1.0.5",
-    "@taraswap/sdk-core": "1.1.2",
-    "@taraswap/v3-sdk": "1.0.5"
+    "@taraswap/router-sdk": "1.1.6",
+    "@taraswap/v2-sdk": "1.1.3",
+    "@taraswap/sdk-core": "1.4.2",
+    "@taraswap/v3-sdk": "1.1.3"
   },
   "engines": {
     "npm": "please-use-yarn",
