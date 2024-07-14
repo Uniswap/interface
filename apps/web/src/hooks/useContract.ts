@@ -5,7 +5,6 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
 } from '@uniswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
@@ -14,6 +13,7 @@ import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/cont
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { RPC_PROVIDERS } from 'constants/providers'
+import { V2_ROUTER_ADDRESSES } from 'constants/sdk-core/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'

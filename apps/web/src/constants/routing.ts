@@ -95,6 +95,13 @@ export const COMMON_BASES: ChainCurrencyList = {
   ].map(buildCurrencyInfo),
   [UniverseChainId.Sepolia]: [
     nativeOnChain(UniverseChainId.Sepolia),
+    new Token(
+      UniverseChainId.Sepolia,
+      '0x01d76aC8D036400596Fed9A797A989fa0a8cE79d',
+      9,
+      'PXA',
+      'Project X Alpha'
+    ),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
   ].map(buildCurrencyInfo),
   [UniverseChainId.ArbitrumOne]: [

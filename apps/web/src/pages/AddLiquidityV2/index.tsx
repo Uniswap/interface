@@ -6,7 +6,7 @@ import {
   LiquidityEventName,
   LiquiditySource,
 } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -22,6 +22,7 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from 'componen
 import { V2Unsupported } from 'components/V2Unsupported'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { ZERO_PERCENT } from 'constants/misc'
+import { V2_FACTORY_ADDRESSES } from 'constants/sdk-core/addresses'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'

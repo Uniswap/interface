@@ -1,5 +1,6 @@
 /* eslint-disable rulesdir/no-undefined-or */
-import { Currency, V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
+import { V2_ROUTER_ADDRESSES } from 'constants/sdk-core/addresses'
 import ms from 'ms'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
