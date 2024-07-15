@@ -67,7 +67,7 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
         }
       }
       suppressHighlighting={true}
-      testID="favorite-header-row/done-button"
+      testID="done"
     >
       Done
     </Text>
@@ -128,7 +128,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
         ],
       }
     }
-    testID="favorite-header-row/favorite-button"
+    testID="edit"
   >
     <RNSVGSvgView
       align="xMidYMid"

@@ -7,7 +7,7 @@ import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { FavoritesState } from 'wallet/src/features/favorites/slice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures/constants'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { cleanup } from 'wallet/src/test/test-utils'
 
 const tokenId = SAMPLE_SEED_ADDRESS_1

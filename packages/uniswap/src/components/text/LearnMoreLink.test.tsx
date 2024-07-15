@@ -1,10 +1,10 @@
 import { fireEvent } from '@testing-library/react-native'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
-import { renderWithProviders } from 'wallet/src/test/render'
-import { openUri } from 'wallet/src/utils/linking'
+import { renderWithProviders } from 'uniswap/src/test/render'
+import { openUri } from 'uniswap/src/utils/linking'
 
-jest.mock('wallet/src/utils/linking', () => ({
+jest.mock('uniswap/src/utils/linking', () => ({
   openUri: jest.fn(),
 }))
 

@@ -29,11 +29,12 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { WidgetType } from 'uniswap/src/types/widgets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
+import { UNISWAP_APP_NATIVE_TOKEN } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
   url: string

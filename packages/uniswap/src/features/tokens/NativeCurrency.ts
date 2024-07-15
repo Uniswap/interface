@@ -4,7 +4,7 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { wrappedNativeCurrency } from 'wallet/src/constants/tokens'
+import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {

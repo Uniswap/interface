@@ -73,7 +73,6 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   type: AppNotificationType.Transaction,
   txType: randomEnumValue(TransactionType),
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
-  txHash: faker.datatype.uuid(),
   txId: faker.datatype.uuid(),
   chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
 }))

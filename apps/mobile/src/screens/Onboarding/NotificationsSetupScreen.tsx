@@ -1,9 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, Image, Platform, StyleSheet } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
@@ -14,7 +13,8 @@ import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'u
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
-import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -45,29 +45,6 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
-  const renderBackButton = useCallback(
-    (nav: OnboardingScreens): JSX.Element => (
-      <BackButton onPressBack={(): void => navigation.navigate({ name: nav, params, merge: true })} />
-    ),
-    [navigation, params],
-  )
-
-  /* For some screens, we want to override the back button to go to a different screen.
-   * This helps avoid re-visiting loading states or confirmation views.
-   */
-  useEffect(() => {
-    const shouldOverrideBackButton = [ImportType.SeedPhrase, ImportType.Restore, ImportType.CreateNew].includes(
-      params.importType,
-    )
-    if (shouldOverrideBackButton) {
-      const nextScreen =
-        params.importType === ImportType.Restore ? OnboardingScreens.RestoreCloudBackup : OnboardingScreens.Backup
-      navigation.setOptions({
-        headerLeft: () => renderBackButton(nextScreen),
-      })
-    }
-  }, [navigation, params, renderBackButton])
-
   const navigateToNextScreen = useCallback(async () => {
     // Skip security setup if already enabled or already imported seed phrase
     if (
@@ -90,13 +67,17 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   }, [enableNotifications, navigateToNextScreen])
 
   return (
-    <OnboardingScreen subtitle={t('onboarding.notification.subtitle')} title={t('onboarding.notification.title')}>
+    <OnboardingScreen
+      disableGoBack
+      subtitle={t('onboarding.notification.subtitle')}
+      title={t('onboarding.notification.title')}
+    >
       <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
       <Flex gap="$spacing24">
         <Trace logPress element={ElementName.Skip}>
-          <TouchableArea testID={ElementName.Skip} onPress={navigateToNextScreen}>
+          <TouchableArea testID={TestID.Skip} onPress={navigateToNextScreen}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {t('common.button.later')}
             </Text>

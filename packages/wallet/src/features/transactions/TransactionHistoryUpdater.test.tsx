@@ -213,7 +213,6 @@ describe(getReceiveNotificationFromData, () => {
       receiveCurrencyTxNotification({
         address: account1.address,
         txStatus: TransactionStatus.Success,
-        txHash: receiveAssetActivity.details.hash,
         txId: receiveAssetActivity.details.hash,
         sender: assetChange.sender,
         tokenAddress: assetChange.asset.address,

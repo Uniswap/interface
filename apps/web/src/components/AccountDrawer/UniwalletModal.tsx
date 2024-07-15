@@ -69,8 +69,6 @@ export default function UniwalletModal() {
   useEffect(() => {
     if (open) {
       sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
-    } else {
-      setUri(undefined)
     }
   }, [open])
 

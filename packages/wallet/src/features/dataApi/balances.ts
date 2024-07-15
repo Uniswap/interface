@@ -12,10 +12,11 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { logger } from 'utilities/src/logger/logger'
-import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
@@ -102,6 +103,12 @@ export function usePortfolioBalances({
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const valueModifiers = usePortfolioValueModifiers(address)
+
+  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
+    fetchPolicy,
+    pollInterval,
+  })
+
   const {
     data: balancesData,
     loading,
@@ -109,10 +116,10 @@ export function usePortfolioBalances({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    fetchPolicy,
+    fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval,
+    pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers } : undefined,
     skip: !address,
   })
@@ -208,6 +215,12 @@ export function usePortfolioTotalValue({
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<PortfolioTotalValue> & { networkStatus: NetworkStatus } {
   const valueModifiers = usePortfolioValueModifiers(address)
+
+  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
+    fetchPolicy,
+    pollInterval,
+  })
+
   const {
     data: balancesData,
     loading,
@@ -215,10 +228,10 @@ export function usePortfolioTotalValue({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    fetchPolicy,
+    fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval,
+    pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers } : undefined,
     skip: !address,
   })

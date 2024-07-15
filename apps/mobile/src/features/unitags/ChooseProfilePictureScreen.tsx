@@ -11,8 +11,8 @@ import { UnitagName } from 'src/features/unitags/UnitagName'
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -129,7 +129,7 @@ export function ChooseProfilePictureScreen({
             p="$spacing4"
             position="absolute"
             right={-spacing.spacing2}
-            testID={ElementName.Edit}
+            testID={TestID.Edit}
           >
             <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={8}>
               <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
@@ -148,7 +148,7 @@ export function ChooseProfilePictureScreen({
       <Button
         disabled={!!claimError || isClaiming}
         size="medium"
-        testID={ElementName.Continue}
+        testID={TestID.Continue}
         theme="primary"
         onPress={onPressContinue}
       >

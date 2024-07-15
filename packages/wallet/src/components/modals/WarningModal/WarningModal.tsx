@@ -4,7 +4,8 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
@@ -100,13 +101,7 @@ export function WarningModal({
             </Button>
           )}
           {confirmText && (
-            <Button
-              flex={1}
-              flexBasis={1}
-              testID={ElementName.Confirm}
-              theme={alertColor.buttonTheme}
-              onPress={onConfirm}
-            >
+            <Button flex={1} flexBasis={1} testID={TestID.Confirm} theme={alertColor.buttonTheme} onPress={onConfirm}>
               {confirmText}
             </Button>
           )}

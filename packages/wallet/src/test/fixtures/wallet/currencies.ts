@@ -1,8 +1,8 @@
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture } from 'wallet/src/test/utils'
 

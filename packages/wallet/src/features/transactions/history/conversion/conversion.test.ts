@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
+import { DAI } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -10,7 +11,6 @@ import {
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI } from 'wallet/src/constants/tokens'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'

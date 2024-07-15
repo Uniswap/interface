@@ -6,7 +6,7 @@ import {
   getColorDiffScore,
   hexToRGB,
   opacify,
-} from 'wallet/src/utils/colors'
+} from 'uniswap/src/utils/colors'
 
 it('returns an hex color with opacity', () => {
   expect(opacify(10, '#000000')).toEqual('#0000001a')

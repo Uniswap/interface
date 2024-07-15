@@ -16,6 +16,7 @@ import { OSDynamicCloudIcon, QuestionInCircleFilled } from 'ui/src/components/ic
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -116,7 +117,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const showSkipOption =
-    !hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
   const hasCloudBackup = hasBackup(address, BackupType.Cloud)
   const hasManualBackup = hasBackup(address, BackupType.Manual)
@@ -131,6 +132,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
       icon={<OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
+      testID={TestID.AddCloudBackup}
       title={t('onboarding.backup.option.cloud.title', {
         cloudProviderName: getCloudProviderName(),
       })}
@@ -145,6 +147,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
+        testID={TestID.AddManualBackup}
         title={t('onboarding.backup.option.manual.title')}
         onPress={onPressManualBackup}
       />,
@@ -165,7 +168,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           {isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
-              <Button testID={ElementName.Next} theme="tertiary" onPress={onPressNext}>
+              <Button testID={TestID.Next} theme="tertiary" onPress={onPressNext}>
                 {t('common.button.later')}
               </Button>
             </Trace>

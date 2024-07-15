@@ -1,8 +1,6 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import {
   CUSD,
   USDB,
@@ -16,7 +14,9 @@ import {
   USDC_ZKSYNC,
   USDT_BNB,
   USDzC,
-} from 'wallet/src/constants/tokens'
+} from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 

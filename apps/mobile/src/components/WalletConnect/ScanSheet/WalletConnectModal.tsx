@@ -29,6 +29,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { EthMethod, UwULinkMethod, UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
@@ -337,7 +338,7 @@ export function WalletConnectModal({
             p="$spacing16"
             paddingEnd="$spacing24"
             style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
-            testID={ElementName.QRCodeModalToggle}
+            testID={TestID.QRCodeModalToggle}
             onPress={onPressBottomToggle}
           >
             <Flex row alignItems="center" gap="$spacing12">

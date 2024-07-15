@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { DAI, DAI_ARBITRUM_ONE } from 'wallet/src/constants/tokens'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 

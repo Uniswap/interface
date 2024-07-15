@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { DAI } from 'wallet/src/constants/tokens'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { noOpFunction } from 'wallet/src/test/mocks'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 

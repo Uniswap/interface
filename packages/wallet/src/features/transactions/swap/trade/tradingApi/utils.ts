@@ -4,6 +4,7 @@ import { UnsignedV2DutchOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -11,6 +12,7 @@ import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   ClassicQuote,
   DutchOrderInfoV2,
+  OrderStatus,
   Quote,
   QuoteResponse,
   Routing,
@@ -21,7 +23,6 @@ import {
   V3PoolInRoute as TradingApiV3PoolInRoute,
 } from 'wallet/src/data/tradingApi/__generated__/index'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {
   ClassicTrade,
@@ -31,6 +32,7 @@ import {
   UniswapXTrade,
 } from 'wallet/src/features/transactions/swap/trade/types'
 import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -384,4 +386,14 @@ export function getRoutingPreferenceForSwapRequest(
     default:
       return RoutingPreference.CLASSIC
   }
+}
+
+export const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
+  [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
+  [OrderStatus.ERROR]: TransactionStatus.Failed,
+  [OrderStatus.EXPIRED]: TransactionStatus.Expired,
+  [OrderStatus.FILLED]: TransactionStatus.Success,
+  [OrderStatus.INSUFFICIENT_FUNDS]: TransactionStatus.InsufficientFunds,
+  [OrderStatus.OPEN]: TransactionStatus.Pending,
+  [OrderStatus.UNVERIFIED]: TransactionStatus.Unknown,
 }

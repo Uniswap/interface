@@ -23,10 +23,11 @@ import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import { borderRadii, imageSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { opacify } from 'uniswap/src/utils/colors'
 import { isIOS } from 'utilities/src/platform'
-import { opacify } from 'wallet/src/utils/colors'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
@@ -140,7 +141,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         </Flex>
         <Flex gap="$spacing24">
           <Trace logPress element={ElementName.Skip}>
-            <TouchableArea testID={ElementName.Skip} onPress={onMaybeLaterPressed}>
+            <TouchableArea testID={TestID.Skip} onPress={onMaybeLaterPressed}>
               <Text color="$accent1" textAlign="center" variant="buttonLabel2">
                 {t('common.button.later')}
               </Text>

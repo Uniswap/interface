@@ -55,7 +55,6 @@ export interface TransactionNotificationBase extends AppNotificationBase {
   type: AppNotificationType.Transaction
   txType: TransactionType
   txStatus: FinalizedTransactionStatus
-  txHash: string
   txId: string
   chainId: WalletChainId
   tokenAddress?: string

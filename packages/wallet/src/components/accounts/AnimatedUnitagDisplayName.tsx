@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { SharedEventName } from '@uniswap/analytics-events'
+import { BaseSyntheticEvent, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { AnimatePresence, Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { isExtension, isMobile } from 'utilities/src/platform'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
@@ -35,11 +41,12 @@ export function AnimatedUnitagDisplayName({
     setShowUnitagSuffix(!showUnitagSuffix)
   }
 
-  const onPressCopyAddress = async (): Promise<void> => {
+  const onPressCopyAddress = async (e: BaseSyntheticEvent): Promise<void> => {
     if (!address) {
       return
     }
 
+    e.stopPropagation()
     await HapticFeedback.impact()
     await setClipboard(address)
     dispatch(
@@ -48,6 +55,10 @@ export function AnimatedUnitagDisplayName({
         copyType: CopyNotificationType.Address,
       }),
     )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+      screen: isExtension ? ExtensionScreens.Home : isMobile ? MobileScreens.Home : undefined,
+    })
   }
 
   const isLayoutReady = textWidth > 0

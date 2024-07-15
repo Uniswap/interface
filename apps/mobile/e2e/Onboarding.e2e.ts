@@ -1,5 +1,4 @@
 import { CreateNewWallet } from 'e2e/usecases/onboarding/CreateNewWallet'
-import { ImportWallet } from 'e2e/usecases/onboarding/ImportWallet'
 import { WatchWallet } from 'e2e/usecases/onboarding/WatchWallet'
 
 describe('Onboarding', () => {
@@ -14,5 +13,7 @@ describe('Onboarding', () => {
 
   it('creates a new wallet', CreateNewWallet)
   it('watches wallet', WatchWallet)
-  it('imports a testing wallet using recovery phrase', ImportWallet)
+  // TODO: find the way to test native input
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // it('imports a testing wallet using recovery phrase', ImportWallet)
 })

@@ -12,7 +12,8 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
@@ -119,7 +120,7 @@ export function SettingsCloudBackupStatus({
           </Flex>
         </Flex>
         <Button
-          testID={ElementName.Remove}
+          testID={TestID.Remove}
           theme="detrimental"
           onPress={(): void => {
             setShowBackupDeleteWarning(true)

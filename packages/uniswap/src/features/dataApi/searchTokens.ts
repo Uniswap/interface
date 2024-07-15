@@ -3,8 +3,8 @@ import { Chain, useSearchTokensQuery } from 'uniswap/src/data/graphql/uniswap-da
 import { GqlResult } from 'uniswap/src/data/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
 
 export const ALL_GQL_CHAINS = Object.values(Chain)
 

@@ -21,8 +21,9 @@ import {
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, RotatableChevron, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
@@ -137,7 +138,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   }, [setModalState])
 
   return (
-    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={ElementName.WCDappSwitchAccount} onPress={onPress}>
+    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
       <Flex row justifyContent="space-between">
         <AddressFooter activeAccountAddress={activeAddress} />
         {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}

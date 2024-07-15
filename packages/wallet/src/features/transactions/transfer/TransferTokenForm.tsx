@@ -12,7 +12,8 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
@@ -29,7 +30,7 @@ import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
-import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
+import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
 import {
   DerivedTransferInfo,
@@ -105,7 +106,11 @@ export function TransferTokenForm({
 
   const { onShowTokenSelector } = useTokenSelectorActionHandlers(dispatch, TokenSelectorFlow.Transfer)
   const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
-  const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
+  const onSetShowRecipientSelector = useSetShowRecipientSelector(dispatch)
+
+  const onShowRecipientSelector = useCallback(() => {
+    onSetShowRecipientSelector(true)
+  }, [onSetShowRecipientSelector])
 
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
@@ -297,10 +302,7 @@ export function TransferTokenForm({
               justifyContent="center"
             >
               {recipient && (
-                <RecipientInputPanel
-                  recipientAddress={recipient}
-                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-                />
+                <RecipientInputPanel recipientAddress={recipient} onShowRecipientSelector={onShowRecipientSelector} />
               )}
               {walletNeedsRestore && (
                 <TouchableArea disabled={!openWalletRestoreModal} onPress={onRestorePress}>
@@ -404,7 +406,7 @@ export function TransferTokenForm({
             // Override opacity only for view-only wallets
             opacity={isViewOnlyWallet ? 0.4 : undefined}
             size="large"
-            testID={ElementName.ReviewTransfer}
+            testID={TestID.ReviewTransfer}
             onPress={onPressReview}
           >
             {t('send.button.review')}

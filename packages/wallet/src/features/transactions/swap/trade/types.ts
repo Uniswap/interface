@@ -27,11 +27,9 @@ export type ClassicQuoteResponse = QuoteResponse & {
 
 export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
   readonly routing = Routing.DUTCH_V2
-  quote: DutchQuoteResponse
-  // TODO(WEB-4299): Update trade to include classicGasUseEstimateUSD once trading API supports it.
-  // classicGasUseEstimateUSD?: number
-  slippageTolerance: number
-  swapFee?: SwapFee
+  readonly quote: DutchQuoteResponse
+  readonly slippageTolerance: number
+  readonly swapFee?: SwapFee
 
   constructor({
     quote,
@@ -49,6 +47,10 @@ export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeTy
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
+  }
+
+  public get needsWrap(): boolean {
+    return this.inputAmount.currency.isNative
   }
 
   public get deadline(): number {

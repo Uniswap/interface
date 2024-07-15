@@ -8,7 +8,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { useTransactionActionsCancelModals } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActionsCancelModals'
+import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
@@ -55,7 +55,7 @@ function TransactionSummaryLayout({
   // Monitor latest nonce to identify queued transactions.
   const queued = useIsQueuedTransaction(transaction)
 
-  const { openActionsModal, renderModals } = useTransactionActionsCancelModals({
+  const { openActionsModal, renderModals } = useTransactionActions({
     authTrigger,
     transaction,
   })

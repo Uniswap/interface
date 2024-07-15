@@ -24,7 +24,7 @@ import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
+import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
@@ -72,9 +72,13 @@ export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionI
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
+  // UniswapX trades wrap native input before swapping
+  const inputCurrency = isUniswapX(trade) ? trade.inputAmount.currency.wrapped : trade.inputAmount.currency
+  const outputCurrency = trade.outputAmount.currency
+
   const baseTransactionInfo = {
-    inputCurrencyId: currencyId(trade.inputAmount.currency),
-    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    inputCurrencyId: currencyId(inputCurrency),
+    outputCurrencyId: currencyId(outputCurrency),
     slippageTolerance,
     quoteId,
     gasUseEstimate,

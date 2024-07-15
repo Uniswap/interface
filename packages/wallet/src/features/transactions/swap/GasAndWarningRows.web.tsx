@@ -8,6 +8,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
+import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
@@ -20,10 +21,13 @@ import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarn
 import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { PriceImpactWarning } from 'wallet/src/features/transactions/swap/modals/PriceImpactWarning'
+import { UniswapXInfo } from 'wallet/src/features/transactions/swap/modals/UniswapXInfo'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
+// eslint-disable-next-line complexity
 export function GasAndWarningRows({
   renderEmptyRows: _renderEmptyRows, // Web does not need to render empty rows for layout calculations
 }: GasAndWarningRowsProps): JSX.Element {
@@ -48,7 +52,13 @@ export function GasAndWarningRows({
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
-  const showGasFee = Boolean(gasFeeUSD)
+  const showUniswapXFee = Boolean(gasFeeUSD && trade.trade && isUniswapX(trade.trade))
+  const preSavingsGasFeeFormatted =
+    trade.trade && isUniswapX(trade.trade)
+      ? convertFiatAmountFormatted(trade.trade.quote.quote.classicGasUseEstimateUSD, NumberType.FiatGasPrice)
+      : undefined
+
+  const showGasFee = Boolean(gasFeeUSD && !showUniswapXFee)
 
   const onSwapWarningClick = useCallback(() => {
     if (!formScreenWarning?.warning.message) {
@@ -94,6 +104,17 @@ export function GasAndWarningRows({
               <Flex fill>
                 <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
               </Flex>
+            )}
+
+            {showUniswapXFee && (
+              <UniswapXInfo
+                placement="bottom"
+                tooltipTrigger={
+                  <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
+                    <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={preSavingsGasFeeFormatted} />
+                  </AnimatedFlex>
+                }
+              />
             )}
 
             {showGasFee && (

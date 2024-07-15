@@ -11,6 +11,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -116,7 +117,7 @@ export function TransactionReview({
                 px="$spacing16"
                 py="$none"
                 showSoftInputOnFocus={false}
-                testID="amount-input-in"
+                testID={TestID.AmountInputOut}
                 textAlign="center"
                 value={formattedAmountIn}
               />

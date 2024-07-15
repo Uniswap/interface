@@ -123,10 +123,10 @@ describe(watchTransaction, () => {
     })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(attemptCancelTransaction, txDetailsPending), true],
+        [call(attemptCancelTransaction, txDetailsPending, cancelRequest), true],
       ])
       .dispatch(cancelTransaction({ chainId, id, address: from, cancelRequest }))
-      .call(attemptCancelTransaction, txDetailsPending)
+      .call(attemptCancelTransaction, txDetailsPending, cancelRequest)
       .silentRun()
   })
 
@@ -166,7 +166,7 @@ describe(watchFiatOnRampTransaction, () => {
             address: staleTx.from,
             id: staleTx.id,
             chainId: staleTx.chainId,
-          })
+          }),
         )
         // watcher should stop tracking
         .not.call.fn(sleep)

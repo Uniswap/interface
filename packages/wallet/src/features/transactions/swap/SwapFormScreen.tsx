@@ -9,6 +9,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
@@ -659,7 +660,7 @@ const SwitchCurrenciesButton = ({ onSwitchCurrencies }: { onSwitchCurrencies: ()
             <SwapArrowButton
               backgroundColor="$surface1"
               size={SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular]}
-              testID={ElementName.SwitchCurrenciesButton}
+              testID={TestID.SwitchCurrenciesButton}
               onPress={onSwitchCurrencies}
             />
           </Trace>

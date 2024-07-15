@@ -35,10 +35,11 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   :hover {
     background-color: ${({ theme }) => theme.surface2};
     transition: ${({
-      theme: {
-        transition: { duration, timing },
-      },
-    }) => `${duration.fast} background-color ${timing.in}, ${getWidthTransition}`};
+        theme: {
+          transition: { duration, timing },
+        },
+      }) => `${duration.fast} background-color ${timing.in},`}
+      ${getWidthTransition};
 
     ${IconHoverText} {
       opacity: 1;

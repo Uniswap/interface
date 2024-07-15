@@ -83,6 +83,8 @@ export const uniswapUrls = {
     quote: '/v1/quote',
     approval: '/v1/check_approval',
     swap: '/v1/swap',
+    order: '/v1/order',
+    orders: '/v1/orders',
   },
 
   // App and Redirect URL's

@@ -191,7 +191,7 @@ function DropdownContent({
       {...containerProps}
     >
       <BaseCard.Shadow backgroundColor="$surface2" overflow="hidden" p="$none" {...rest}>
-        <Flex row>
+        <Flex row maxHeight={maxHeight}>
           <Animated.ScrollView
             contentContainerStyle={{
               padding: spacing.spacing8,

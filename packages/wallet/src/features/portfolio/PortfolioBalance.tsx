@@ -23,6 +23,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
   })
+
   const currency = useAppFiatCurrency()
   const currencyComponents = useAppFiatCurrencyInfo()
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()

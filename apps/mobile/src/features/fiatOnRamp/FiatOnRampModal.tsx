@@ -24,6 +24,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
@@ -31,7 +32,6 @@ import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hoo
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { openUri } from 'wallet/src/utils/linking'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'

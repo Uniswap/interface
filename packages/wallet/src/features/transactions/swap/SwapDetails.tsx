@@ -15,6 +15,7 @@ import { TransactionDetails } from 'wallet/src/features/transactions/Transaction
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
@@ -122,6 +123,8 @@ export function SwapDetails({
     ],
   )
 
+  const preUniswapXGasFeeUSD = isUniswapX(trade) ? trade.quote.quote.classicGasUseEstimateUSD : undefined
+
   return (
     <TransactionDetails
       isSwap
@@ -137,6 +140,7 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
+      preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}

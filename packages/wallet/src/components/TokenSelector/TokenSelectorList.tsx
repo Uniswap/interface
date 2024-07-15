@@ -23,6 +23,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
@@ -53,13 +54,18 @@ function TokenOptionItemWrapper({
     () => onSelectCurrency(tokenOption.currencyInfo, section, index),
     [index, onSelectCurrency, section, tokenOption.currencyInfo],
   )
+  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(
+    tokenOption.currencyInfo.currencyId,
+  )
 
   return (
     <TokenOptionItem
+      dismissWarningCallback={dismissWarningCallback}
       option={tokenOption}
       showNetworkPill={!chainFilter && tokenOption.currencyInfo.currency.chainId !== UniverseChainId.Mainnet}
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
+      tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />
   )

@@ -35,6 +35,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { MIN_COLOR_CONTRAST_THRESHOLD, useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -44,7 +45,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setClipboardImage } from 'wallet/src/utils/clipboard'
-import { MIN_COLOR_CONTRAST_THRESHOLD, useNearestThemeColorFromImageUri } from 'wallet/src/utils/colors'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 

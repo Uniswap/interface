@@ -25,6 +25,7 @@ export interface ModalsState {
   [ModalName.FiatOnRampAggregator]: AppModalState<undefined>
   [ModalName.ReceiveCryptoModal]: AppModalState<ReceiveCryptoModalState>
   [ModalName.LanguageSelector]: AppModalState<undefined>
+  [ModalName.QueuedOrderModal]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Scantastic]: AppModalState<ScantasticModalState>
