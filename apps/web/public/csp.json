@@ -21,6 +21,7 @@
     "blob:",
     "data:",
     "http://localhost:8545",
+    "https://uniswap-proxy.netlify.app",
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
     "https://p7oxollac7.execute-api.us-east-1.amazonaws.com/prod/",
