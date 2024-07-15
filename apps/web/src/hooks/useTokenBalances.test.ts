@@ -4,7 +4,10 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  useQuickTokenBalancesWebQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(() => ({ account: '0x123', chainId: 1 })),
@@ -15,9 +18,16 @@ jest.mock('graphql/data/apollo/TokenBalancesProvider', () => ({
   useTokenBalancesQuery: jest.fn(() => ({ data: {}, loading: false })),
 }))
 
+jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks', () => ({
+  ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'),
+  useQuickTokenBalancesWebQuery: jest.fn(() => ({ data: {}, loading: false })),
+}))
+
 describe('useTokenBalances', () => {
   it('should return empty balances when loading', () => {
     mocked(useTokenBalancesQuery).mockReturnValueOnce({ data: undefined, loading: true } as any)
+    mocked(useQuickTokenBalancesWebQuery).mockReturnValueOnce({ data: undefined, loading: true } as any)
+
     const { loading, balanceList, balanceMap } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({})
     expect(loading).toEqual(true)
@@ -26,6 +36,7 @@ describe('useTokenBalances', () => {
   it('should return empty balances when user is not connected', () => {
     mocked(useWeb3React).mockReturnValueOnce({ account: undefined, chainId: undefined } as any)
     mocked(useTokenBalancesQuery).mockReturnValueOnce({ data: undefined, loading: false } as any)
+    mocked(useQuickTokenBalancesWebQuery).mockReturnValueOnce({ data: undefined, loading: false } as any)
     const { loading, balanceList, balanceMap } = renderHook(() => useTokenBalances()).result.current
     expect(balanceMap).toEqual({})
     expect(loading).toEqual(false)

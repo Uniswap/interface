@@ -26,7 +26,8 @@ export default function PlusMinusButton({
       height={iconSizes.icon28}
       justifyContent="center"
       width={iconSizes.icon28}
-      onPress={(): void => onPress(type)}>
+      onPress={(): void => onPress(type)}
+    >
       {type === PlusMinusButtonType.Plus ? (
         <PlusIcon color="$surface1" size="$icon.12" strokeWidth={2.5} />
       ) : (

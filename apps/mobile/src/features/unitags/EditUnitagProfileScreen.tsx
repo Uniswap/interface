@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -12,16 +13,7 @@ import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptio
 import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
-import {
-  Button,
-  Flex,
-  LinearGradient,
-  ScrollView,
-  Text,
-  getUniconColors,
-  useIsDarkMode,
-  useSporeColors,
-} from 'ui/src'
+import { Button, Flex, LinearGradient, ScrollView, Text, getUniconColors, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen, TripleDots } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
@@ -33,6 +25,7 @@ import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
@@ -46,15 +39,13 @@ import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hoo
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
-import { shortenAddress } from 'wallet/src/utils/addresses'
 
 const BIO_TEXT_INPUT_LINES = 6
 
 const isProfileMetadataEdited = (
   loading: boolean,
   updatedMetadata: ProfileMetadata,
-  initialMetadata?: ProfileMetadata
+  initialMetadata?: ProfileMetadata,
 ): boolean => {
   return (
     !loading &&
@@ -75,14 +66,12 @@ function isFieldEdited(a: string | undefined, b: string | undefined): boolean {
   }
 }
 
-export function EditUnitagProfileScreen({
-  route,
-}: UnitagStackScreenProp<UnitagScreens.EditProfile>): JSX.Element {
+export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagScreens.EditProfile>): JSX.Element {
   const { address, unitag, entryPoint } = route.params
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 
@@ -115,11 +104,7 @@ export function EditUnitagProfileScreen({
     twitter: twitterInput,
   }
 
-  const profileMetadataEdited = isProfileMetadataEdited(
-    updateResponseLoading,
-    updatedMetadata,
-    unitagMetadata
-  )
+  const profileMetadataEdited = isProfileMetadataEdited(updateResponseLoading, updatedMetadata, unitagMetadata)
 
   useEffect(() => {
     // Only want to set values on first time unitag loads, when we have not yet made the PUT request
@@ -195,9 +180,7 @@ export function EditUnitagProfileScreen({
       ? {
           ...updatedMetadata,
           // Add Date.now() to the end to ensure the resulting URL is not cached by devices
-          avatar: avatarUploadUrlResponse?.avatarUrl
-            ? avatarUploadUrlResponse.avatarUrl + `?${Date.now()}`
-            : undefined,
+          avatar: avatarUploadUrlResponse?.avatarUrl ? avatarUploadUrlResponse.avatarUrl + `?${Date.now()}` : undefined,
         }
       : updatedMetadata
 
@@ -226,7 +209,7 @@ export function EditUnitagProfileScreen({
       pushNotification({
         type: AppNotificationType.Success,
         title: t('unitags.notification.profile.title'),
-      })
+      }),
     )
     triggerRefetchUnitags()
     if (uploadedNewAvatar) {
@@ -245,7 +228,7 @@ export function EditUnitagProfileScreen({
       pushNotification({
         type: AppNotificationType.Error,
         errorMessage: t('unitags.notification.profile.error'),
-      })
+      }),
     )
   }
 
@@ -263,7 +246,8 @@ export function EditUnitagProfileScreen({
         contentContainerStyle={styles.expand}
         // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
         enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
-        style={styles.base}>
+        style={styles.base}
+      >
         <BackHeader
           alignment="center"
           endAdornment={
@@ -283,7 +267,8 @@ export function EditUnitagProfileScreen({
                   if (e.nativeEvent.index === 1) {
                     setShowDeleteUnitagModal(true)
                   }
-                }}>
+                }}
+              >
                 <Flex pr="$spacing8">
                   <TripleDots color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
@@ -293,17 +278,17 @@ export function EditUnitagProfileScreen({
           p="$spacing16"
           onPressBack={
             // If entering from confirmation screen, back btn navigates to home
-            entryPoint === UnitagScreens.UnitagConfirmation
-              ? (): void => navigate(MobileScreens.Home)
-              : undefined
-          }>
+            entryPoint === UnitagScreens.UnitagConfirmation ? (): void => navigate(MobileScreens.Home) : undefined
+          }
+        >
           <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
         </BackHeader>
         <ScrollView
           contentContainerStyle={{ pb: '$spacing24' }}
           keyboardShouldPersistTaps="handled"
           px="$spacing24"
-          showsVerticalScrollIndicator={false}>
+          showsVerticalScrollIndicator={false}
+        >
           <Flex grow gap="$spacing36">
             <Flex fill justifyContent="space-between">
               <Flex pb="$spacing48">
@@ -324,24 +309,12 @@ export function EditUnitagProfileScreen({
                     style={styles.headerGradient}
                   />
                   {avatarImageUri && avatarColors?.primary ? (
-                    <HeaderRadial
-                      borderRadius={spacing.spacing20}
-                      color={avatarColors.primary}
-                      {...solidHeaderProps}
-                    />
+                    <HeaderRadial borderRadius={spacing.spacing20} color={avatarColors.primary} {...solidHeaderProps} />
                   ) : null}
                 </Flex>
-                <Flex
-                  bottom={spacing.spacing16}
-                  mx="$spacing16"
-                  position="absolute"
-                  onPress={avatarSelectionHandler}>
+                <Flex bottom={spacing.spacing16} mx="$spacing16" position="absolute" onPress={avatarSelectionHandler}>
                   <Flex backgroundColor="$surface1" borderRadius="$roundedFull">
-                    <UnitagProfilePicture
-                      address={address}
-                      size={iconSizes.icon70}
-                      unitagAvatarUri={avatarImageUri}
-                    />
+                    <UnitagProfilePicture address={address} size={iconSizes.icon70} unitagAvatarUri={avatarImageUri} />
                   </Flex>
                   <Flex
                     backgroundColor="$surface1"
@@ -349,11 +322,9 @@ export function EditUnitagProfileScreen({
                     bottom={-spacing.spacing2}
                     p="$spacing2"
                     position="absolute"
-                    right={-spacing.spacing2}>
-                    <Flex
-                      backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
-                      borderRadius="$roundedFull"
-                      p={6}>
+                    right={-spacing.spacing2}
+                  >
+                    <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={6}>
                       <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
                     </Flex>
                   </Flex>
@@ -440,7 +411,8 @@ export function EditUnitagProfileScreen({
           mx="$spacing24"
           size="medium"
           theme="primary"
-          onPress={onPressSaveChanges}>
+          onPress={onPressSaveChanges}
+        >
           {t('common.button.save')}
         </Button>
         {showAvatarModal && (
@@ -454,18 +426,10 @@ export function EditUnitagProfileScreen({
         )}
       </KeyboardAvoidingView>
       {showDeleteUnitagModal && (
-        <DeleteUnitagModal
-          address={address}
-          unitag={unitag}
-          onClose={(): void => setShowDeleteUnitagModal(false)}
-        />
+        <DeleteUnitagModal address={address} unitag={unitag} onClose={(): void => setShowDeleteUnitagModal(false)} />
       )}
       {showChangeUnitagModal && (
-        <ChangeUnitagModal
-          address={address}
-          unitag={unitag}
-          onClose={(): void => setShowChangeUnitagModal(false)}
-        />
+        <ChangeUnitagModal address={address} unitag={unitag} onClose={(): void => setShowChangeUnitagModal(false)} />
       )}
     </Screen>
   )

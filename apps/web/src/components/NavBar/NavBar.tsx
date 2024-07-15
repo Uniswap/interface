@@ -15,9 +15,9 @@ import { useIsLimitPage } from 'hooks/useIsLimitPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsSendPage } from 'hooks/useIsSendPage'
 import { useIsSwapPage } from 'hooks/useIsSwapPage'
+import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -33,7 +33,6 @@ const Nav = styled.nav`
   justify-content: center;
 `
 const NavContents = styled.div`
-  max-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`};
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -100,7 +99,7 @@ export const RefreshedNavbar = () => {
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {isLandingPage && !isSmallScreen && <GetTheAppButton showIcons={false} />}
-          {!account.isConnected && <PreferenceMenu />}
+          {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           <Web3Status />
         </Right>

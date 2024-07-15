@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -8,6 +9,7 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
@@ -19,10 +21,8 @@ import {
 import { SlippageSettingsRow } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRow'
 import { SlippageSettingsScreen } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsScreen'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { useAppDispatch } from 'wallet/src/state'
 
 enum SwapSettingsModalView {
   Options,
@@ -52,9 +52,7 @@ export function SwapSettingsModal({
   const [view, setView] = useState(SwapSettingsModalView.Options)
 
   const { customSlippageTolerance } = derivedSwapInfo
-  const [customSlippageInput, setCustomSlippageInput] = useState<number | undefined>(
-    customSlippageTolerance
-  )
+  const [customSlippageInput, setCustomSlippageInput] = useState<number | undefined>(customSlippageTolerance)
 
   const getTitle = (): string => {
     switch (view) {
@@ -91,10 +89,7 @@ export function SwapSettingsModal({
         )
       case SwapSettingsModalView.Slippage:
         return (
-          <SlippageSettingsScreen
-            derivedSwapInfo={derivedSwapInfo}
-            onSlippageChange={setCustomSlippageTolerance}
-          />
+          <SlippageSettingsScreen derivedSwapInfo={derivedSwapInfo} onSlippageChange={setCustomSlippageTolerance} />
         )
       case SwapSettingsModalView.RoutePreference:
         return (
@@ -121,11 +116,9 @@ export function SwapSettingsModal({
       backgroundColor={colors.surface1.get()}
       isModalOpen={isOpen}
       name={ModalName.SwapSettings}
-      onClose={onSettingsClose}>
-      <Flex
-        gap="$spacing16"
-        px={isWeb ? '$spacing4' : '$spacing24'}
-        py={isWeb ? '$spacing4' : '$spacing12'}>
+      onClose={onSettingsClose}
+    >
+      <Flex gap="$spacing16" px={isWeb ? '$spacing4' : '$spacing24'} py={isWeb ? '$spacing4' : '$spacing12'}>
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <RotatableChevron
@@ -141,12 +134,7 @@ export function SwapSettingsModal({
         </Flex>
         {innerContent}
         <Flex centered row>
-          <Button
-            fill
-            color={showSaveButton ? '$accent1' : undefined}
-            testID="swap-settings-close"
-            theme="secondary"
-            onPress={onSettingsClose}>
+          <Button fill testID="swap-settings-close" theme="secondary" onPress={onSettingsClose}>
             {showSaveButton ? t('common.button.save') : t('common.button.close')}
           </Button>
         </Flex>
@@ -190,9 +178,7 @@ function SwapSettingsOptions({
             <Text color="$neutral1" flexShrink={1} variant="subheading2">
               {t('swap.settings.routingPreference.title')}
             </Text>
-            <TouchableArea
-              flexShrink={1}
-              onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
+            <TouchableArea flexShrink={1} onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
               <Flex row alignItems="center" gap="$spacing4" justifyContent="flex-end">
                 <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
                   {tradeProtocolPreferenceTitle}
@@ -209,7 +195,7 @@ function SwapSettingsOptions({
 
 function SwapProtectionSettingsRow({ chainId }: { chainId: WalletChainId }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const swapProtectionSetting = useSwapProtectionSetting()
 
   const toggleSwapProtectionSetting = useCallback(() => {

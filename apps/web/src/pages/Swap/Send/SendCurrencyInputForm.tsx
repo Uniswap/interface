@@ -14,6 +14,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -26,7 +27,6 @@ import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -208,7 +208,7 @@ export default function SendCurrencyInputForm({
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
     () => getChain({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
-    [supportedChain]
+    [supportedChain],
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 
@@ -230,7 +230,7 @@ export default function SendCurrencyInputForm({
         [inputInFiat ? 'exactAmountFiat' : 'exactAmountToken']: newValue,
       }))
     },
-    [inputInFiat, setSendState]
+    [inputInFiat, setSendState],
   )
 
   const handleSelectCurrency = useCallback(
@@ -260,7 +260,7 @@ export default function SendCurrencyInputForm({
         inputCurrency: currency,
       }))
     },
-    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState]
+    [exactAmountFiat, exactAmountToken, fiatCurrency, inputInFiat, onCurrencyChange, setSendState],
   )
 
   const toggleFiatInputAmountEnabled = useCallback(() => {
@@ -296,7 +296,7 @@ export default function SendCurrencyInputForm({
     () => ({
       onlyShowCurrenciesWithBalance: account.isConnected,
     }),
-    [account.isConnected]
+    [account.isConnected],
   )
 
   return (

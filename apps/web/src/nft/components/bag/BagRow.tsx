@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import clsx from 'clsx'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/bag/BagRow.css'
@@ -22,7 +23,6 @@ import { GenieAsset, UpdatedGenieAsset } from 'nft/types'
 import { getAssetHref } from 'nft/utils'
 import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const RemoveButton = styled(ThemeButton)`
@@ -112,7 +112,7 @@ export const BagRow = ({ asset, usdPrice, removeAsset, showRemove, grayscale, is
       e.stopPropagation()
       removeAsset([asset])
     },
-    [asset, removeAsset]
+    [asset, removeAsset],
   )
 
   return (
@@ -185,7 +185,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
       const toKeep = false
       markAssetAsReviewed(asset, toKeep)
     },
-    [asset, markAssetAsReviewed]
+    [asset, markAssetAsReviewed],
   )
   const handleKeep = useCallback(
     (e: MouseEvent<HTMLButtonElement>) => {
@@ -194,7 +194,7 @@ export const PriceChangeBagRow = ({ asset, usdPrice, markAssetAsReviewed, top, i
       const toKeep = true
       markAssetAsReviewed(asset, toKeep)
     },
-    [asset, markAssetAsReviewed]
+    [asset, markAssetAsReviewed],
   )
   return (
     <Column className={styles.priceChangeColumn} borderTopColor={top ? 'surface3' : 'transparent'}>

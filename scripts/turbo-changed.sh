@@ -4,8 +4,8 @@ command=$1
 # remove first argument so we pass along options to turbo
 shift
 # Validate command input
-if [[ ! $command =~ ^(lint|test|typecheck)$ ]]; then
-    echo "Invalid command: $command. Must be one of: lint, test, typecheck."
+if [[ ! $command =~ ^(lint|test|typecheck|format)$ ]]; then
+    echo "Invalid command: $command. Must be one of: format, lint, test, typecheck."
     exit 1
 fi
 

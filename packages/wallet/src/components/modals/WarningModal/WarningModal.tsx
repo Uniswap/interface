@@ -4,7 +4,8 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
@@ -57,14 +58,16 @@ export function WarningModal({
       isDismissible={isDismissible}
       maxWidth={maxWidth}
       name={modalName}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <Flex
         centered
         gap="$spacing12"
         maxWidth={maxWidth}
         pb={isWeb ? '$none' : '$spacing12'}
         pt={hideHandlebar ? '$spacing24' : '$spacing12'}
-        px={isWeb ? '$none' : '$spacing24'}>
+        px={isWeb ? '$none' : '$spacing24'}
+      >
         {!hideIcon && (
           <Flex
             centered
@@ -75,10 +78,10 @@ export function WarningModal({
               backgroundIconColor === false
                 ? undefined
                 : {
-                    backgroundColor:
-                      backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
+                    backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
                   }
-            }>
+            }
+          >
             {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
@@ -91,24 +94,14 @@ export function WarningModal({
           </Text>
         )}
         {children}
-        <Flex
-          centered
-          row
-          gap="$spacing12"
-          pt={children ? '$spacing12' : '$spacing24'}
-          width="100%">
+        <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
           {closeText && (
             <Button flex={1} flexBasis={1} theme="secondary" onPress={onCancel ?? onClose}>
               {closeText}
             </Button>
           )}
           {confirmText && (
-            <Button
-              flex={1}
-              flexBasis={1}
-              testID={ElementName.Confirm}
-              theme={alertColor.buttonTheme}
-              onPress={onConfirm}>
+            <Button flex={1} flexBasis={1} testID={TestID.Confirm} theme={alertColor.buttonTheme} onPress={onConfirm}>
               {confirmText}
             </Button>
           )}

@@ -1,6 +1,7 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { BigNumber, providers } from 'ethers'
 import { merge } from 'lodash'
+import { faker } from 'uniswap/src/test/shared'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ClassicTransactionDetails,
@@ -18,7 +19,6 @@ import {
   transactionDetails,
   transactionReceipt,
 } from 'wallet/src/test/fixtures/wallet/transactions/fixtures'
-import { faker } from 'wallet/src/test/shared'
 
 type TxFixtures<T extends ClassicTransactionDetails> = {
   txDetailsPending: T
@@ -32,9 +32,7 @@ type TxFixtures<T extends ClassicTransactionDetails> = {
   finalizedTxAction: ReturnType<typeof finalizeTransaction>
 }
 
-export const getTxFixtures = <T extends ClassicTransactionDetails>(
-  transaction?: T
-): TxFixtures<T> => {
+export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?: T): TxFixtures<T> => {
   const txBase = merge(
     {},
     transactionDetails({
@@ -43,7 +41,7 @@ export const getTxFixtures = <T extends ClassicTransactionDetails>(
         request: ethersTransactionRequest(),
       },
     }),
-    transaction
+    transaction,
   )
 
   // Transaction flow

@@ -1,14 +1,14 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { useTrade } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
 import { BaseDerivedInfo } from 'wallet/src/features/transactions/transfer/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
 
 export type DerivedSwapInfo<
   TInput = CurrencyInfo,
-  TOutput extends CurrencyInfo = CurrencyInfo
+  TOutput extends CurrencyInfo = CurrencyInfo,
 > = BaseDerivedInfo<TInput> & {
   chainId: WalletChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
@@ -25,7 +25,7 @@ export type DerivedSwapInfo<
     [CurrencyField.OUTPUT]: Maybe<CurrencyAmount<Currency>>
   }
   focusOnCurrencyField: CurrencyField | null
-  trade: ReturnType<typeof useTradingApiTrade>
+  trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   selectingCurrencyField?: CurrencyField
   txId?: string

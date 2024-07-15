@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'typed-redux-saga'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { AssetType } from 'wallet/src/entities/assets'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -16,23 +16,17 @@ export function* notificationWatcher() {
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  const { chainId, status, typeInfo, hash, id, from, addedTime } = action.payload
+  const { chainId, status, typeInfo, id, from, addedTime } = action.payload
 
   const baseNotificationData = {
     txStatus: status,
     chainId,
-    txHash: hash,
     address: from,
     txId: id,
   }
 
   if (typeInfo.type === TransactionType.Approve) {
-    const shouldSuppressNotification = yield* call(
-      suppressApproveNotification,
-      from,
-      chainId,
-      addedTime
-    )
+    const shouldSuppressNotification = yield* call(suppressApproveNotification, from, chainId, addedTime)
     if (!shouldSuppressNotification) {
       yield* put(
         pushNotification({
@@ -41,7 +35,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           txType: TransactionType.Approve,
           tokenAddress: typeInfo.tokenAddress,
           spender: typeInfo.spender,
-        })
+        }),
       )
     }
   } else if (typeInfo.type === TransactionType.Swap) {
@@ -56,7 +50,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         inputCurrencyAmountRaw,
         outputCurrencyAmountRaw,
         tradeType: typeInfo.tradeType,
-      })
+      }),
     )
   } else if (typeInfo.type === TransactionType.Wrap) {
     yield* put(
@@ -66,7 +60,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         txType: TransactionType.Wrap,
         currencyAmountRaw: typeInfo.currencyAmountRaw,
         unwrapped: typeInfo.unwrapped,
-      })
+      }),
     )
   } else if (typeInfo.type === TransactionType.Send) {
     if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw) {
@@ -79,7 +73,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           tokenAddress: typeInfo.tokenAddress,
           currencyAmountRaw: typeInfo.currencyAmountRaw,
           recipient: typeInfo.recipient,
-        })
+        }),
       )
     } else if (
       (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
@@ -94,7 +88,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
           tokenAddress: typeInfo.tokenAddress,
           tokenId: typeInfo.tokenId,
           recipient: typeInfo.recipient,
-        })
+        }),
       )
     }
   } else if (typeInfo.type === TransactionType.Receive) {
@@ -110,7 +104,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         dappName: typeInfo.dapp.name,
         imageUrl: typeInfo.dapp.icon ?? null,
         chainId,
-      })
+      }),
     )
   } else if (typeInfo.type === TransactionType.Unknown) {
     yield* put(
@@ -119,18 +113,14 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         type: AppNotificationType.Transaction,
         txType: TransactionType.Unknown,
         tokenAddress: typeInfo?.tokenAddress,
-      })
+      }),
     )
   }
 }
 
 // If an approve tx is submitted with a swap tx (i.e, swap tx is added within 3 seconds of an approve tx),
 // then suppress the approve notification
-function* suppressApproveNotification(
-  address: Address,
-  chainId: WalletChainId,
-  approveAddedTime: number
-) {
+function* suppressApproveNotification(address: Address, chainId: WalletChainId, approveAddedTime: number) {
   const transactions = (yield* appSelect(selectTransactions))?.[address]?.[chainId]
   const transactionDetails = Object.values(transactions ?? {})
   const foundSwapTx = transactionDetails.find((tx) => {

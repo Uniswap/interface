@@ -4,7 +4,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {
@@ -17,6 +16,7 @@ interface SelectTokenButtonProps {
   iconSize?: number
   backgroundColor?: ComponentProps<typeof TouchableArea>['backgroundColor']
   chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
+  testID?: string
 }
 
 export function SelectTokenButton({
@@ -28,29 +28,24 @@ export function SelectTokenButton({
   loading,
   iconSize = iconSizes.icon24,
   chevronDirection = 'end',
-  backgroundColor,
+  testID,
 }: SelectTokenButtonProps): JSX.Element {
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor={backgroundColor ?? 'unset'}
       borderRadius="$roundedFull"
       disabled={disabled}
-      px="$spacing8"
-      py="$spacing4"
-      testID={ElementName.TokenSelectorToggle}
-      onPress={onPress}>
-      <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
+      p="$spacing4"
+      testID={testID}
+      onPress={onPress}
+    >
+      <Flex centered row flexDirection="row" gap="$none" pr="$spacing4">
         {loading ? (
           <SpinningLoader />
         ) : (
-          <CurrencyLogo
-            currencyInfo={selectedCurrencyInfo}
-            networkLogoBorderWidth={spacing.spacing1}
-            size={iconSize}
-          />
+          <CurrencyLogo currencyInfo={selectedCurrencyInfo} networkLogoBorderWidth={spacing.spacing1} size={iconSize} />
         )}
         <Text color={textColor} pl="$spacing8" variant="body1">
           {formattedAmount}
@@ -58,11 +53,7 @@ export function SelectTokenButton({
         <Text color={textColor} pl="$spacing4" variant="body1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
-        <RotatableChevron
-          color={textColor}
-          direction={chevronDirection}
-          height={iconSizes.icon16}
-        />
+        <RotatableChevron color={textColor} direction={chevronDirection} height={iconSizes.icon16} />
       </Flex>
     </TouchableArea>
   )

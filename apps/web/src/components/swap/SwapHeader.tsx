@@ -3,10 +3,10 @@ import SettingsTab from 'components/Settings'
 import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'
 import { SwapHeaderTabButton } from 'components/swap/styled'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
-import styled from 'styled-components'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -36,7 +36,7 @@ const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
+  const { initialChainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()
@@ -48,6 +48,10 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   useEffect(() => {
     if (pathname === '/buy') {
       setCurrentTab(forAggregatorEnabled ? SwapTab.Buy : SwapTab.Swap)
+    } else if (pathname === '/send' && isIFramed()) {
+      // Redirect to swap if send tab is iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
+      // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
+      setCurrentTab(SwapTab.Swap)
     } else {
       setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
     }
@@ -65,7 +69,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         setCurrentTab(tab)
       }
     },
-    [navigate, setCurrentTab, syncTabToUrl]
+    [navigate, setCurrentTab, syncTabToUrl],
   )
 
   return (
@@ -115,7 +119,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>
-          <SettingsTab autoSlippage={autoSlippage} chainId={chainId} compact={compact} trade={trade.trade} />
+          <SettingsTab autoSlippage={autoSlippage} chainId={initialChainId} compact={compact} trade={trade.trade} />
         </RowFixed>
       )}
     </StyledSwapHeader>

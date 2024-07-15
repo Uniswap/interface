@@ -1,0 +1,227 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProviderConnectedView should render the component and call callbacks 1`] = `
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 16px;
+}
+
+.c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  color: #7D7D7D;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c7:hover {
+  opacity: 0.6;
+}
+
+.c7:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c1 {
+  position: relative;
+}
+
+.c2 {
+  position: absolute;
+  z-index: 0;
+}
+
+.c3 {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(70% 50% at center,transparent 0%,#FFFFFF 100%);
+}
+
+.c8 {
+  margin: 40px 0 0 0;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
+}
+
+.c6 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  z-index: 2;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+.c10 {
+  font-weight: 535;
+  color: #CECECE;
+}
+
+<span
+  class="t_light is_inversed _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1"
+    >
+      <svg
+        class="c2"
+        color="#7D7D7D"
+      >
+        for-connecting-v2.svg
+      </svg>
+      <div
+        class="c3"
+      />
+      <div
+        class="c4 c5 c6"
+      >
+        <svg
+          class="c7"
+          data-testid="ConnectingViewWrapper-close"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="18"
+            x2="6"
+            y1="6"
+            y2="18"
+          />
+          <line
+            x1="6"
+            x2="18"
+            y1="6"
+            y2="18"
+          />
+        </svg>
+      </div>
+      <div
+        class="c8"
+      >
+        <div
+          class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _gap-1316330207"
+        >
+          <div
+            class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _gap-1481558152"
+          >
+            <img
+              height="120"
+              src="test-provider-logo-light"
+              style="background-color: rgb(255, 239, 248); border-radius: 20px; height: 90px; width: 90px;"
+              width="120"
+            />
+            <div
+              class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _gap-1481558276"
+            >
+              <span
+                class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-18px _lineHeight-24px _fontWeight-400"
+                data-disable-theme="true"
+              >
+                Complete transaction with Test Provider
+              </span>
+              <span
+                class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-16px _lineHeight-24px _fontWeight-400 _textAlign-center"
+                data-disable-theme="true"
+              >
+                Go to the Test Provider tab to continue. It’s safe to close this modal now.
+              </span>
+            </div>
+          </div>
+          <span
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135036 _fontSize-12px _lineHeight-16px _fontWeight-400 _textAlign-center"
+            data-disable-theme="true"
+          >
+            By continuing, you acknowledge that you’ll be subject to the 
+            <a
+              class="c9 c10"
+              color="#CECECE"
+              href="https://uniswap.org/terms-of-service/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Terms of Service
+            </a>
+             and 
+            <a
+              class="c9 c10"
+              color="#CECECE"
+              href="https://uniswap.org/privacy-policy"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Privacy Policy
+            </a>
+             with Test Provider, as applicable.
+          </span>
+        </div>
+      </div>
+    </div>
+  </span>
+</span>
+`;

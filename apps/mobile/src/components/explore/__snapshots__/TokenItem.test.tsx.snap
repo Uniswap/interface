@@ -234,6 +234,7 @@ exports[`TokenItem renders without error 1`] = `
                     }
                   }
                   suppressHighlighting={true}
+                  testID="portfolio-relative-change"
                 >
                   -
                 </Text>

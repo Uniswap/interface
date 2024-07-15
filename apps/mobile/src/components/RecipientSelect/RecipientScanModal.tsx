@@ -4,13 +4,14 @@ import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
-import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
+import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -24,9 +25,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const { t } = useTranslation()
   const colors = useSporeColors()
   const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(
-    ScannerModalState.ScanQr
-  )
+  const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
 
   const onScanCode = async (uri: string): Promise<void> => {
@@ -68,13 +67,12 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       fullScreen
       backgroundColor={colors.surface1.get()}
       name={ModalName.WalletConnectScan}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       {currentScreenState === ScannerModalState.ScanQr && (
         <QRCodeScanner shouldFreezeCamera={shouldFreezeCamera} onScanCode={onScanCode} />
       )}
-      {currentScreenState === ScannerModalState.WalletQr && activeAddress && (
-        <WalletQRCode address={activeAddress} />
-      )}
+      {currentScreenState === ScannerModalState.WalletQr && activeAddress && <WalletQRCode address={activeAddress} />}
       <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
         <TouchableArea
           hapticFeedback
@@ -84,21 +82,14 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           p="$spacing16"
           paddingEnd="$spacing24"
           style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
-          testID={ElementName.QRCodeModalToggle}
-          onPress={onPressBottomToggle}>
+          testID={TestID.QRCodeModalToggle}
+          onPress={onPressBottomToggle}
+        >
           <Flex row alignItems="center" gap="$spacing12">
             {currentScreenState === ScannerModalState.ScanQr ? (
-              <Scan
-                color={colors.neutral1.get()}
-                height={iconSizes.icon24}
-                width={iconSizes.icon24}
-              />
+              <Scan color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
             ) : (
-              <ScanQRIcon
-                color={colors.neutral1.get()}
-                height={iconSizes.icon24}
-                width={iconSizes.icon24}
-              />
+              <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
             )}
             <Text color="$neutral1" variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr

@@ -35,7 +35,7 @@ describe('NewAddressSpeedBumpModal', () => {
     render(
       <SendContext.Provider value={mockSendContext}>
         <NewAddressSpeedBumpModal onCancel={mockOnCancel} onConfirm={mockOnConfirm} />
-      </SendContext.Provider>
+      </SendContext.Provider>,
     )
 
     expect(document.body).toMatchSnapshot()

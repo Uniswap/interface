@@ -51,7 +51,7 @@ export function SwapSettingsMessage({
         {getSymbolDisplayText(
           trade.tradeType === TradeType.EXACT_INPUT
             ? trade.outputAmount.currency.symbol
-            : trade.inputAmount.currency.symbol
+            : trade.inputAmount.currency.symbol,
         )}
       </Text>
       {showSlippageWarning ? (

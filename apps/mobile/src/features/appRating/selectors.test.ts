@@ -1,11 +1,7 @@
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { RootState } from 'wallet/src/state'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { preloadedWalletState } from 'wallet/src/test/fixtures/wallet/redux'

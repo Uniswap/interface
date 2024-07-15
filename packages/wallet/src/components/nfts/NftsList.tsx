@@ -5,10 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, StyleProp, ViewStyle } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import { Flex, Loader } from 'ui/src'
-import {
-  AnimatedBottomSheetFlashList,
-  AnimatedFlashList,
-} from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { NoNfts } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
@@ -44,7 +41,7 @@ type NftsListProps = Omit<
       footerHeight?: SharedValue<number>
       isExternalProfile?: boolean
       renderedInModal?: boolean
-      renderNFTItem: (item: NFTItem) => JSX.Element
+      renderNFTItem: (item: NFTItem, index: number) => JSX.Element
       onPressEmptyState?: () => void
       loadingStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
       errorStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
@@ -74,7 +71,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     onRefresh,
     ...rest
   },
-  ref
+  ref,
 ) {
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
@@ -127,9 +124,9 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   }, [hiddenNftsExpanded, numHidden])
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<string | NFTItem>) => {
+    ({ item, index }: ListRenderItemInfo<string | NFTItem>) => {
       if (typeof item !== 'string') {
-        return renderNFTItem(item)
+        return renderNFTItem(item, index)
       }
       switch (item) {
         case LOADING_ITEM:
@@ -145,7 +142,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           return null
       }
     },
-    [hiddenNftsExpanded, numHidden, onHiddenRowPressed, renderNFTItem]
+    [hiddenNftsExpanded, numHidden, onHiddenRowPressed, renderNFTItem],
   )
 
   const onRetry = useCallback(() => refetch(), [refetch])
@@ -174,11 +171,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           // empty view
           <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
             <BaseCard.EmptyState
-              buttonLabel={
-                isExternalProfile || !onPressEmptyState
-                  ? undefined
-                  : t('tokens.nfts.list.none.button')
-              }
+              buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('tokens.nfts.list.none.button')}
               description={
                 isExternalProfile
                   ? t('tokens.nfts.list.none.description.external')
@@ -198,9 +191,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
       ListFooterComponent={
         <>
-          {nfts.length > 0 && networkStatus === NetworkStatus.fetchMore && (
-            <Loader.NFT repeat={6} />
-          )}
+          {nfts.length > 0 && networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
           {ListFooterComponent}
         </>
       }

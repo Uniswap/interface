@@ -1,6 +1,7 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
@@ -26,7 +27,6 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { getTimeDifference } from 'nft/utils/date'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import {
   NftActivityType,
@@ -116,7 +116,7 @@ export const BuyCell = ({
 }: BuyCellProps) => {
   const asset = useMemo(
     () => buildActivityAsset(event, collectionName, ethPriceInUSD),
-    [event, collectionName, ethPriceInUSD]
+    [event, collectionName, ethPriceInUSD],
   )
   const isSelected = useMemo(() => {
     return itemsInBag.some((item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address)
@@ -193,7 +193,7 @@ export const PriceCell = ({ marketplace, price }: { marketplace?: Markets | stri
   const { formatNumberOrString } = useFormatter()
   const formattedPrice = useMemo(
     () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
-    [formatNumberOrString, price]
+    [formatNumberOrString, price],
   )
 
   return (
@@ -269,7 +269,7 @@ export const EventCell = ({
   const { formatNumberOrString } = useFormatter()
   const formattedPrice = useMemo(
     () => (price ? formatNumberOrString({ input: parseFloat(price?.toString()), type: NumberType.NFTToken }) : null),
-    [formatNumberOrString, price]
+    [formatNumberOrString, price],
   )
   return (
     <Column height="full" justifyContent="center" gap="4">

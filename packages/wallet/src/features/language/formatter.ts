@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
+import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 // eslint-disable-next-line no-restricted-imports
 import {
   addFiatSymbolToNumber,
@@ -10,12 +11,6 @@ import {
 import { NumberType } from 'utilities/src/format/types'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
-type FormatNumberOrStringInput = {
-  value: Maybe<number | string>
-  type?: NumberType
-  currencyCode?: string
-  placeholder?: string
-}
 type FormatCurrencyAmountInput = {
   value: CurrencyAmount<Currency> | null | undefined
   type?: NumberType
@@ -43,29 +38,24 @@ export function useLocalizedFormatter(): LocalizedFormatter {
   const locale = useCurrentLocale()
 
   const formatNumberOrStringInner = useCallback(
-    ({
-      value,
-      type = NumberType.TokenNonTx,
-      currencyCode,
-      placeholder,
-    }: FormatNumberOrStringInput): string =>
+    ({ value, type = NumberType.TokenNonTx, currencyCode, placeholder }: FormatNumberOrStringInput): string =>
       formatNumberOrString({ price: value, locale, currencyCode, type, placeholder }),
-    [locale]
+    [locale],
   )
   const formatCurrencyAmountInner = useCallback(
     ({ value, type, placeholder }: FormatCurrencyAmountInput): string =>
       formatCurrencyAmount({ amount: value, locale, type, placeholder }),
-    [locale]
+    [locale],
   )
   const formatPercentInner = useCallback(
     (value: Maybe<number | string>): string => formatPercent(value, locale),
-    [locale]
+    [locale],
   )
 
   const addFiatSymbolToNumberInner = useCallback(
     ({ value, currencyCode, currencySymbol }: AddFiatSymbolToNumberInput): string =>
       addFiatSymbolToNumber({ value, currencyCode, currencySymbol, locale }),
-    [locale]
+    [locale],
   )
 
   return useMemo(
@@ -75,11 +65,6 @@ export function useLocalizedFormatter(): LocalizedFormatter {
       formatPercent: formatPercentInner,
       addFiatSymbolToNumber: addFiatSymbolToNumberInner,
     }),
-    [
-      formatNumberOrStringInner,
-      formatCurrencyAmountInner,
-      formatPercentInner,
-      addFiatSymbolToNumberInner,
-    ]
+    [formatNumberOrStringInner, formatCurrencyAmountInner, formatPercentInner, addFiatSymbolToNumberInner],
   )
 }

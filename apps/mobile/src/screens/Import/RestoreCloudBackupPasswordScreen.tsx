@@ -3,7 +3,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -18,7 +19,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -26,10 +27,7 @@ import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.RestoreCloudBackupPassword
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupPassword>
 
 /**
  * If the attempt count does not correspond to a lockout then returns undefined. Otherwise returns the lockout time based on attempts. The lockout time logic is as follows:
@@ -69,13 +67,10 @@ function useLockoutTimeMessage(remainingLockoutTime: number): string {
   return t('account.cloud.lockout.time.minutes', { count: Math.floor(minutes) })
 }
 
-export function RestoreCloudBackupPasswordScreen({
-  navigation,
-  route: { params },
-}: Props): JSX.Element {
+export function RestoreCloudBackupPasswordScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { generateImportedAccounts } = useOnboardingContext()
 
   const passwordAttemptCount = useAppSelector(selectPasswordAttempts)
@@ -103,7 +98,7 @@ export function RestoreCloudBackupPasswordScreen({
 
         return () => clearTimeout(timer)
       }
-    }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch])
+    }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch]),
   )
 
   useAddBackButton(navigation)
@@ -148,7 +143,8 @@ export function RestoreCloudBackupPasswordScreen({
   return (
     <OnboardingScreen
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
-      title={t('account.cloud.password.title')}>
+      title={t('account.cloud.password.title')}
+    >
       <Flex>
         <PasswordInput
           ref={inputRef}
@@ -174,10 +170,7 @@ export function RestoreCloudBackupPasswordScreen({
             </Text>
           </TouchableArea>
         )}
-        <Button
-          disabled={!enteredPassword || isLockedOut}
-          testID={ElementName.Submit}
-          onPress={onPasswordSubmit}>
+        <Button disabled={!enteredPassword || isLockedOut} testID={TestID.Continue} onPress={onPasswordSubmit}>
           {t('common.button.continue')}
         </Button>
       </Flex>

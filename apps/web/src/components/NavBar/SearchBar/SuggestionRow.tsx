@@ -11,10 +11,10 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Verified } from 'ui/src/components/icons'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -106,7 +106,7 @@ export function SuggestionRow({
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
   const warning = useTokenWarning(
     isToken ? suggestion.address : undefined,
-    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet
+    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet,
   )
 
   const handleClick = useCallback(() => {

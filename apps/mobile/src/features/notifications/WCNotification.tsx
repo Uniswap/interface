@@ -1,24 +1,20 @@
 import React from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
 import { iconSizes } from 'ui/src/theme'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { DappLogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { formWCNotificationTitle } from 'wallet/src/features/notifications/utils'
 
-export function WCNotification({
-  notification,
-}: {
-  notification: WalletConnectNotification
-}): JSX.Element {
+export function WCNotification({ notification }: { notification: WalletConnectNotification }): JSX.Element {
   const { imageUrl, chainId, address, event, hideDelay, dappName } = notification
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
 
@@ -44,7 +40,7 @@ export function WCNotification({
       openModal({
         name: ModalName.WalletConnectScan,
         initialState: ScannerModalState.ConnectedDapps,
-      })
+      }),
     )
   }
 

@@ -33,6 +33,7 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { PairState } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ConfirmAddModalBottom } from 'pages/AddLiquidityV2/ConfirmAddModalBottom'
 import { PoolPriceBar } from 'pages/AddLiquidityV2/PoolPriceBar'
 import AppBody from 'pages/App/AppBody'
@@ -45,7 +46,6 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/m
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -82,7 +82,8 @@ export default function AddLiquidity() {
   const oneCurrencyIsWETH = Boolean(
     account.chainId &&
       wrappedNativeCurrency &&
-      ((currencyA && currencyA.equals(wrappedNativeCurrency)) || (currencyB && currencyB.equals(wrappedNativeCurrency)))
+      ((currencyA && currencyA.equals(wrappedNativeCurrency)) ||
+        (currencyB && currencyB.equals(wrappedNativeCurrency))),
   )
 
   const accountDrawer = useAccountDrawer() // toggle wallet when disconnected
@@ -130,7 +131,7 @@ export default function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -140,7 +141,7 @@ export default function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const router = useV2RouterContract()
@@ -235,7 +236,7 @@ export default function AddLiquidity() {
               tokenB: currencyB.wrapped,
             }),
           })
-        })
+        }),
       )
       .catch((error) => {
         setAttemptingTxn(false)
@@ -319,7 +320,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdB, navigate, currencyIdA]
+    [currencyIdB, navigate, currencyIdA],
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -334,7 +335,7 @@ export default function AddLiquidity() {
         navigate(`/add/v2/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, navigate, currencyIdB]
+    [currencyIdA, navigate, currencyIdB],
   )
 
   const handleDismissConfirmation = useCallback(() => {

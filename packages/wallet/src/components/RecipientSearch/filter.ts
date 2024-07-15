@@ -25,7 +25,7 @@ const searchNameOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipien
 
 export function filterRecipientsByName(
   searchPattern: string | null,
-  list: AutocompleteOption<SearchableRecipient>[]
+  list: AutocompleteOption<SearchableRecipient>[],
 ): AutocompleteOption<SearchableRecipient>[] {
   if (!searchPattern) {
     return []
@@ -40,7 +40,7 @@ export function filterRecipientsByName(
 
 export function filterRecipientsByAddress(
   searchPattern: string | null,
-  list: AutocompleteOption<SearchableRecipient>[]
+  list: AutocompleteOption<SearchableRecipient>[],
 ): AutocompleteOption<SearchableRecipient>[] {
   if (!searchPattern) {
     return []
@@ -55,7 +55,7 @@ export function filterRecipientsByAddress(
 
 export function filterRecipientByNameAndAddress(
   searchPattern: string | null,
-  list: AutocompleteOption<SearchableRecipient>[]
+  list: AutocompleteOption<SearchableRecipient>[],
 ): AutocompleteOption<SearchableRecipient>[] {
   if (!searchPattern) {
     return []
@@ -63,10 +63,7 @@ export function filterRecipientByNameAndAddress(
 
   // run both fuses and remove dupes
   return unique(
-    [
-      ...filterRecipientsByAddress(searchPattern, list),
-      ...filterRecipientsByName(searchPattern, list),
-    ],
-    (v, i, a) => a.findIndex((v2) => v2.data.address === v.data.address) === i
+    [...filterRecipientsByAddress(searchPattern, list), ...filterRecipientsByName(searchPattern, list)],
+    (v, i, a) => a.findIndex((v2) => v2.data.address === v.data.address) === i,
   )
 }

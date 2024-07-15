@@ -4,12 +4,9 @@ import {
   formatTokenSearchResults,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
-import {
-  Chain,
-  ExploreSearchQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { SearchResultType } from 'wallet/src/features/search/SearchResult'
+import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import {
   amount,
   ethToken,
@@ -99,9 +96,7 @@ describe(formatTokenSearchResults, () => {
 
     it('returns null if required data is missing', () => {
       expect(gqlNFTToNFTCollectionSearchResult({ ...collection, name: undefined })).toEqual(null)
-      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: undefined })).toEqual(
-        null
-      )
+      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: undefined })).toEqual(null)
       expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: [] })).toEqual(null)
     })
 
@@ -125,10 +120,7 @@ describe(formatTokenSearchResults, () => {
     it('filters out nfts that cannot be formatted', () => {
       const topNFTCollections = createArray(2, nftCollection)
       const nftSearchResult = {
-        edges: [
-          ...topNFTCollections.map((nft) => ({ node: nft })),
-          { node: nftCollection({ name: undefined }) },
-        ],
+        edges: [...topNFTCollections.map((nft) => ({ node: nft })), { node: nftCollection({ name: undefined }) }],
       }
 
       const result = formatNFTCollectionSearchResults(nftSearchResult)

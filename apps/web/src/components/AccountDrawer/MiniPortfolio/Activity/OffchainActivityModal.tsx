@@ -25,11 +25,11 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { ArrowDown, X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import styled, { useTheme } from 'styled-components'
 import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -61,7 +61,7 @@ export function useOpenOffchainActivityModal() {
       })
       setSelectedOrder({ order, logos, modalOpen: true })
     },
-    [setSelectedOrder]
+    [setSelectedOrder],
   )
 }
 
@@ -136,7 +136,7 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
       inputAmount: CurrencyAmount.fromRawAmount(inputCurrency, swapInfo.inputCurrencyAmountRaw),
       outputAmount: CurrencyAmount.fromRawAmount(
         outputCurrency,
-        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw
+        swapInfo.settledOutputCurrencyAmountRaw ?? swapInfo.expectedOutputCurrencyAmountRaw,
       ),
     }
   } else {
@@ -214,7 +214,7 @@ export function OrderContent({
 
   const currencies = useMemo(
     () => [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
-    [amounts?.inputAmount.currency, amounts?.outputAmount.currency]
+    [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
   )
 
   if (!amounts?.inputAmount || !amounts?.outputAmount) {
@@ -343,7 +343,7 @@ export function OffchainActivityModal() {
   }, [setSelectedOrder])
 
   const cancelOrder = useCancelMultipleOrdersCallback(
-    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder])
+    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder]),
   )
 
   return (

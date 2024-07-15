@@ -19,8 +19,8 @@ import { OrderDirection, getSupportedGraphQlChain, gqlToCurrency, unwrapToken } 
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -153,7 +153,7 @@ export function TopPoolTable() {
 
   const { topPools, loading, errorV3, errorV2 } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
-    chain.id
+    chain.id,
   )
   const combinedError =
     errorV2 && errorV3
@@ -239,7 +239,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [chainId, filterString, pools]
+    [chainId, filterString, pools],
   )
 
   const showLoadingSkeleton = loading || !!error

@@ -27,7 +27,7 @@ export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
         onTransactionActivity(activity as TransactionActivity)
       }
     },
-    [onOrderActivity, onTransactionActivity]
+    [onOrderActivity, onTransactionActivity],
   )
 
   const result = useAssetActivitySubscription()
@@ -51,7 +51,7 @@ function useOnOrderActivity(onActivityUpdate: OnActivityUpdate) {
         update: updatedOrder,
       })
     },
-    [onActivityUpdate]
+    [onActivityUpdate],
   )
 }
 
@@ -68,7 +68,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
       }
 
       const pendingTransaction = pendingTransactions.current?.find(
-        ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId
+        ([tx, txChainId]) => tx.hash === activity.details.hash && txChainId === chainId,
       )?.[0]
       // TODO(WEB-4007): Add transactions which were submitted from a different client (and are not already tracked).
       if (!pendingTransaction) {
@@ -82,7 +82,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
       if (updatedTransaction.info.type === TransactionType.SWAP) {
         if (updatedTransaction.info.tradeType === TradeType.EXACT_INPUT) {
           const change = activity.details.assetChanges.find(
-            (change) => change?.__typename === 'TokenTransfer' && change?.direction === TransactionDirection.Out
+            (change) => change?.__typename === 'TokenTransfer' && change?.direction === TransactionDirection.Out,
           ) as TokenTransfer
           if (change.asset.decimals && change.quantity) {
             // The quantity is returned as a decimal string, but the state expects a BigInt-compatible string.
@@ -101,6 +101,6 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
         update: updatedTransaction,
       })
     },
-    [onActivityUpdate]
+    [onActivityUpdate],
   )
 }

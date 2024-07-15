@@ -4,6 +4,7 @@ import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useIsMobile, useWindowSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
+import styled, { useTheme } from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { ColumnHeaders } from 'nft/components/explore/CollectionTable'
 import * as styles from 'nft/components/explore/Explore.css'
@@ -11,7 +12,6 @@ import { CollectionTableColumn } from 'nft/types'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Column, ColumnInstance, HeaderGroup, IdType, useSortBy, useTable } from 'react-table'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
@@ -120,7 +120,7 @@ export function Table<D extends Record<string, unknown>>({
         },
         ...props,
       },
-      useSortBy
+      useSortBy,
     )
 
   const navigate = useNavigate()

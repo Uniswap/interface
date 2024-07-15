@@ -54,6 +54,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans, t } from 'i18n'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import styled, { useTheme } from 'lib/styled-components'
 import { Review } from 'pages/AddLiquidity/Review'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
 import {
@@ -81,7 +82,6 @@ import {
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
@@ -146,7 +146,7 @@ function AddLiquidity() {
 
   // check for existing position if tokenId in url
   const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
-    tokenId ? BigNumber.from(tokenId) : undefined
+    tokenId ? BigNumber.from(tokenId) : undefined,
   )
   const hasExistingPosition = !!existingPositionDetails && !positionLoading
   const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails)
@@ -193,7 +193,7 @@ function AddLiquidity() {
     quoteCurrency ?? undefined,
     feeAmount,
     baseCurrency ?? undefined,
-    existingPosition
+    existingPosition,
   )
 
   const { formatPrice } = useFormatter()
@@ -234,7 +234,7 @@ function AddLiquidity() {
         [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
-    {}
+    {},
   )
 
   const atMaxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -244,7 +244,7 @@ function AddLiquidity() {
         [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
-    {}
+    {},
   )
 
   const argentWalletContract = useArgentWalletContract()
@@ -254,17 +254,17 @@ function AddLiquidity() {
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
-      : undefined
+      : undefined,
   )
   const [approvalB, approveBCallback] = useApproveCallback(
     argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
     account.status === 'connected' && account.chainId
       ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId]
-      : undefined
+      : undefined,
   )
 
   const allowedSlippage = useUserSlippageToleranceWithDefault(
-    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
+    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE,
   )
 
   async function onAdd() {
@@ -368,7 +368,7 @@ function AddLiquidity() {
                       baseCurrency.wrapped,
                       quoteCurrency.wrapped,
                       feeAmount,
-                      account.chainId
+                      account.chainId,
                     )
                   : undefined,
             })
@@ -414,7 +414,7 @@ function AddLiquidity() {
         }
       }
     },
-    [account.chainId, account.status]
+    [account.chainId, account.status],
   )
 
   const handleCurrencyASelect = useCallback(
@@ -426,7 +426,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdB, navigate]
+    [handleCurrencySelect, currencyIdB, navigate],
   )
 
   const handleCurrencyBSelect = useCallback(
@@ -438,7 +438,7 @@ function AddLiquidity() {
         navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdA, navigate]
+    [handleCurrencySelect, currencyIdA, navigate],
   )
 
   const handleFeePoolSelect = useCallback(
@@ -447,7 +447,7 @@ function AddLiquidity() {
       onRightRangeInput('')
       navigate(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput]
+    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput],
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -634,14 +634,14 @@ function AddLiquidity() {
       data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyA]
+    [usdcValueCurrencyA],
   )
   const currencyBFiat = useMemo(
     () => ({
       data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
       isLoading: false,
     }),
-    [usdcValueCurrencyB]
+    [usdcValueCurrencyB],
   )
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
@@ -816,17 +816,17 @@ function AddLiquidity() {
                             handleRateToggle={() => {
                               if (!ticksAtLimit[Bound.LOWER] && !ticksAtLimit[Bound.UPPER]) {
                                 onLeftRangeInput(
-                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceLower : priceUpper?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onRightRangeInput(
-                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? ''
+                                  (invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '',
                                 )
                                 onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
                               }
                               navigate(
                                 `/add/${currencyIdB as string}/${currencyIdA as string}${
                                   feeAmount ? '/' + feeAmount : ''
-                                }`
+                                }`,
                               )
                             }}
                           />

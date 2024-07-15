@@ -1,9 +1,9 @@
 import { loadingAnimation } from 'components/Loader/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
+import styled from 'lib/styled-components'
 import { UniswapMagentaIcon, VerifiedIcon } from 'nft/components/icons'
 import { Markets, TrendingCollection } from 'nft/types'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -270,7 +270,7 @@ export const CarouselCard = ({ collection, onClick }: CarouselCardProps) => {
             </TableElement>
             {MARKETS_TO_CHECK.map((market) => {
               const marketplace = gqlCollection.marketplaceCount?.find(
-                (marketplace) => marketplace.marketplace === market
+                (marketplace) => marketplace.marketplace === market,
               )
               if (!marketplace) {
                 return null

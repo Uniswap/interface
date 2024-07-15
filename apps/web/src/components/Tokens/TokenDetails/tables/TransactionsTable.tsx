@@ -19,8 +19,8 @@ import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useToke
 import { OrderDirection, unwrapToken } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useMemo, useReducer, useState } from 'react'
-import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -66,7 +66,7 @@ export function TransactionsTable({
   const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
     referenceToken.address,
     chainId,
-    filter
+    filter,
   )
   const combinedError =
     errorV2 && errorV3
@@ -103,7 +103,7 @@ export function TransactionsTable({
           makerAddress: transaction.account,
         }
       }),
-    [transactions]
+    [transactions],
   )
 
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
@@ -182,7 +182,7 @@ export function TransactionsTable({
               </ThemedText.BodyPrimary>
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor(
         (row) => {
@@ -213,7 +213,7 @@ export function TransactionsTable({
               {swapOutput.getValue?.()}
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor((row) => row.usdValue, {
         id: 'fiat-value',

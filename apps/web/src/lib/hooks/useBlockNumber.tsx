@@ -102,7 +102,7 @@ export function BlockNumberProvider({ children }: PropsWithChildren) {
       block: activeBlock,
       mainnetBlock,
     }),
-    [activeBlock, account.chainId, mainnetBlock, onChainBlock]
+    [activeBlock, account.chainId, mainnetBlock, onChainBlock],
   )
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }

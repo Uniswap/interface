@@ -7,10 +7,7 @@ import { useSlippageSettings } from 'wallet/src/features/transactions/swap/modal
 
 const INPUT_MIN_WIDTH = 44
 
-export function SlippageSettingsRow({
-  derivedSwapInfo,
-  onSlippageChange,
-}: SlippageSettingsRowProps): JSX.Element {
+export function SlippageSettingsRow({ derivedSwapInfo, onSlippageChange }: SlippageSettingsRowProps): JSX.Element {
   const { t } = useTranslation()
 
   const [inputWidth, setInputWidth] = useState(0)
@@ -31,9 +28,7 @@ export function SlippageSettingsRow({
   }
 
   const backgroundColor = isEditingSlippage ? '$surface2' : '$surface1'
-  const inputValue = autoSlippageEnabled
-    ? autoSlippageTolerance.toFixed(2).toString()
-    : inputSlippageTolerance
+  const inputValue = autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance
 
   return (
     <Flex gap="$spacing4">
@@ -49,13 +44,15 @@ export function SlippageSettingsRow({
           borderWidth={1}
           gap="$spacing8"
           p="$spacing4"
-          style={inputAnimatedStyle}>
+          style={inputAnimatedStyle}
+        >
           <Flex
             centered
             backgroundColor="$accent2"
             borderRadius="$roundedFull"
             px="$spacing8"
-            onPress={onPressAutoSlippage}>
+            onPress={onPressAutoSlippage}
+          >
             <Text color="$accent1" variant="buttonLabel4">
               {t('swap.settings.slippage.control.auto')}
             </Text>
@@ -85,7 +82,8 @@ export function SlippageSettingsRow({
                 style={{ position: 'absolute' }}
                 variant="subheading2"
                 zIndex={-1}
-                onLayout={onInputTextLayout}>
+                onLayout={onInputTextLayout}
+              >
                 {inputValue}
               </Text>
             </Flex>

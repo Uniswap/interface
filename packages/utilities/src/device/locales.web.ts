@@ -1,8 +1,4 @@
-import {
-  DEFAULT_LANGUAGE_CODE,
-  DEFAULT_LANGUAGE_TAG,
-  DeviceLocale,
-} from 'utilities/src/device/constants'
+import { DEFAULT_LANGUAGE_CODE, DEFAULT_LANGUAGE_TAG, DeviceLocale } from 'utilities/src/device/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 export function getDeviceLocales(): DeviceLocale[] {

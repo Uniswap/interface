@@ -102,7 +102,7 @@ export default function RecentTransactions() {
                 {transaction.getValue?.().type === PoolTransactionType.Swap ? (
                   <Trans i18nKey="common.for" />
                 ) : (
-                  <Trans i18nKey="common.and" />
+                  <Trans i18nKey="common.endAdornment" />
                 )}
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token1} />

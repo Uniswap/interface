@@ -14,13 +14,13 @@ import { useColor } from 'hooks/useColor'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
-import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -102,7 +102,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <AutoColumn gap="4px">
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans i18nKey="share.label" />
+                  <Trans i18nKey="pool.share.label" />
                 </Text>
                 <Text fontSize={16} fontWeight={535}>
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}

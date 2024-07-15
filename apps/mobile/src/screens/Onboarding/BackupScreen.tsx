@@ -4,11 +4,7 @@ import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import {
-  AppStackParamList,
-  OnboardingStackParamList,
-  useOnboardingStackNavigation,
-} from 'src/app/navigation/types'
+import { AppStackParamList, OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -20,6 +16,7 @@ import { OSDynamicCloudIcon, QuestionInCircleFilled } from 'ui/src/components/ic
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -42,8 +39,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
-  const { getImportedAccountsAddresses, getOnboardingAccountAddress, hasBackup } =
-    useOnboardingContext()
+  const { getImportedAccountsAddresses, getOnboardingAccountAddress, hasBackup } = useOnboardingContext()
   const onboardingAccountAddress = getOnboardingAccountAddress()
   const importedAccountsAddresses = getImportedAccountsAddresses()
 
@@ -61,7 +57,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         }}
       />
     ),
-    [navigation]
+    [navigation],
   )
 
   useEffect(() => {
@@ -93,9 +89,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const onPressCloudBackup = (): void => {
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid
-          ? t('account.cloud.error.unavailable.title.android')
-          : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid ? t('account.cloud.error.unavailable.title.android') : t('account.cloud.error.unavailable.title.ios'),
         isAndroid
           ? t('account.cloud.error.unavailable.message.android')
           : t('account.cloud.error.unavailable.message.ios'),
@@ -106,7 +100,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
             style: 'default',
           },
           { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
-        ]
+        ],
       )
       return
     }
@@ -123,16 +117,13 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const showSkipOption =
-    hasBackup(address) &&
-    (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
+    hasBackup(address) && (params?.importType === ImportType.SeedPhrase || params?.importType === ImportType.Restore)
 
   const hasCloudBackup = hasBackup(address, BackupType.Cloud)
   const hasManualBackup = hasBackup(address, BackupType.Manual)
 
   const isCreatingNew = params?.importType === ImportType.CreateNew
-  const screenTitle = isCreatingNew
-    ? t('onboarding.backup.title.new')
-    : t('onboarding.backup.title.existing')
+  const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const options = []
   options.push(
     <OptionCard
@@ -141,11 +132,12 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
       icon={<OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
+      testID={TestID.AddCloudBackup}
       title={t('onboarding.backup.option.cloud.title', {
         cloudProviderName: getCloudProviderName(),
       })}
       onPress={onPressCloudBackup}
-    />
+    />,
   )
   if (isCreatingNew) {
     options.push(
@@ -155,9 +147,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
+        testID={TestID.AddManualBackup}
         title={t('onboarding.backup.option.manual.title')}
         onPress={onPressManualBackup}
-      />
+      />,
     )
   }
 
@@ -165,24 +158,17 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     <OnboardingScreen subtitle={t('onboarding.backup.subtitle')} title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing24">
-          <Flex
-            gap="$spacing12"
-            shadowColor="$surface3"
-            shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
+          <Flex gap="$spacing12" shadowColor="$surface3" shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
             {options}
           </Flex>
-          {!isCreatingNew && (
-            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
-          )}
+          {!isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end">
-          {isCreatingNew && (
-            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
-          )}
+          {isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
-              <Button testID={ElementName.Next} theme="tertiary" onPress={onPressNext}>
+              <Button testID={TestID.Next} theme="tertiary" onPress={onPressNext}>
                 {t('common.button.later')}
               </Button>
             </Trace>
@@ -193,11 +179,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   )
 }
 
-function RecoveryPhraseTooltip({
-  onPressEducationButton,
-}: {
-  onPressEducationButton: () => void
-}): JSX.Element {
+function RecoveryPhraseTooltip({ onPressEducationButton }: { onPressEducationButton: () => void }): JSX.Element {
   const { t } = useTranslation()
   return (
     <TouchableArea
@@ -206,7 +188,8 @@ function RecoveryPhraseTooltip({
       flexDirection="row"
       gap="$spacing8"
       py="$spacing8"
-      onPress={onPressEducationButton}>
+      onPress={onPressEducationButton}
+    >
       <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
         {t('onboarding.tooltip.recoveryPhrase.trigger')}

@@ -1,11 +1,17 @@
-/* eslint-disable prettier/prettier */
 // Ordering is intentional and must be preserved: styling, polyfilling, tracing, and then functionality.
+// prettier-ignore
 import '@reach/dialog/styles.css'
+// prettier-ignore
 import 'inter-ui'
+// prettier-ignore
 import 'polyfills'
+// prettier-ignore
 import 'tracing'
-import 'i18n' // ensure translations load before things
-/* eslint-enable prettier/prettier */
+// ensure translations load before things
+// prettier-ignore
+import 'i18n'
+// prettier-ignore
+import 'setupRive'
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
@@ -28,6 +34,7 @@ import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
 import { ActivityStateUpdater } from 'state/activity/updater'
 import ApplicationUpdater from 'state/application/updater'
+import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
 import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
@@ -37,7 +44,8 @@ import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/Them
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
+import { getEnvName } from 'utilities/src/environment'
+import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 
@@ -61,6 +69,7 @@ function Updaters() {
       <ActivityStateUpdater />
       <MulticallUpdater />
       <LogsUpdater />
+      <FiatOnRampTransactionsUpdater />
     </>
   )
 }
@@ -81,7 +90,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
       userID: getDeviceId(),
       customIDs: { address: account.address ?? '' },
     }),
-    [account.address]
+    [account.address],
   )
   return (
     <BaseStatsigProvider
@@ -143,7 +152,7 @@ createRoot(container).render(
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>
-  </OptionalStrictMode>
+  </OptionalStrictMode>,
 )
 
 // TODO(EXT-1229): We had to remove `React.StrictMode` because it's not

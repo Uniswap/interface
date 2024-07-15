@@ -1,6 +1,9 @@
+import { AssetType } from 'uniswap/src/entities/assets'
+import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { AssetType } from 'wallet/src/entities/assets'
 import {
   AppErrorNotification,
   AppNotificationBase,
@@ -33,9 +36,7 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import { currencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
-import { faker } from 'wallet/src/test/shared'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 export const FINALIZED_TRANSACTION_STATUSES: FinalizedTransactionStatus[] = [
   TransactionStatus.Success,
@@ -73,7 +74,6 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   type: AppNotificationType.Transaction,
   txType: randomEnumValue(TransactionType),
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
-  txHash: faker.datatype.uuid(),
   txId: faker.datatype.uuid(),
   chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
 }))
@@ -101,15 +101,13 @@ export const wrapTxNotification = createFixture<WrapTxNotification>()(() => ({
   unwrapped: faker.datatype.boolean(),
 }))
 
-const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(
-  () => ({
-    ...transactionNotificationBase(),
-    txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
-    assetType: AssetType.Currency,
-    tokenAddress: faker.finance.ethereumAddress(),
-    currencyAmountRaw: faker.datatype.number().toString(),
-  })
-)
+const transferCurrencyTxNotificationBase = createFixture<TransferCurrencyTxNotificationBase>()(() => ({
+  ...transactionNotificationBase(),
+  txType: randomChoice([TransactionType.Send, TransactionType.Receive]),
+  assetType: AssetType.Currency,
+  tokenAddress: faker.finance.ethereumAddress(),
+  currencyAmountRaw: faker.datatype.number().toString(),
+}))
 
 export const sendCurrencyTxNotification = createFixture<SendCurrencyTxNotification>()(() => ({
   ...transferCurrencyTxNotificationBase(),
@@ -174,14 +172,12 @@ export const chooseCountryNotification = createFixture<ChooseCountryNotification
   countryCode: faker.address.countryCode(),
 }))
 
-export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.AssetVisibility,
-    visible: faker.datatype.boolean(),
-    assetName: faker.lorem.words(),
-  })
-)
+export const changeAssetVisibilityNotifiation = createFixture<ChangeAssetVisibilityNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.AssetVisibility,
+  visible: faker.datatype.boolean(),
+  assetName: faker.lorem.words(),
+}))
 
 export const swapPendingNotification = createFixture<SwapPendingNotification>()(() => ({
   ...appNotificationBase(),
@@ -189,16 +185,13 @@ export const swapPendingNotification = createFixture<SwapPendingNotification>()(
   wrapType: randomEnumValue(WrapType),
 }))
 
-export const transferCurrencyPendingNotification =
-  createFixture<TransferCurrencyPendingNotification>()(() => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.TransferCurrencyPending,
-    currencyInfo: currencyInfo(),
-  }))
+export const transferCurrencyPendingNotification = createFixture<TransferCurrencyPendingNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.TransferCurrencyPending,
+  currencyInfo: currencyInfo(),
+}))
 
-export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(
-  () => ({
-    ...appNotificationBase(),
-    type: AppNotificationType.ScantasticComplete,
-  })
-)
+export const scantasticCompleteNotification = createFixture<ScantasticCompleteNotification>()(() => ({
+  ...appNotificationBase(),
+  type: AppNotificationType.ScantasticComplete,
+}))

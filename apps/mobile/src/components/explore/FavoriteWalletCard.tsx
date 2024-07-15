@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { SharedValue } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle } from 'src/components/explore/hooks'
@@ -35,7 +35,7 @@ function FavoriteWalletCard({
   ...rest
 }: FavoriteWalletCardProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)
@@ -76,7 +76,8 @@ function FavoriteWalletCard({
             setIsEditing(true)
           }
         }}
-        {...rest}>
+        {...rest}
+      >
         <TouchableArea
           hapticFeedback
           activeOpacity={isEditing ? 1 : undefined}
@@ -92,7 +93,8 @@ function FavoriteWalletCard({
           }}
           onPressIn={async (): Promise<void> => {
             await preload(address)
-          }}>
+          }}
+        >
           <BaseCard.Shadow>
             <Flex row gap="$spacing4" justifyContent="space-between">
               <Flex row shrink alignItems="center" gap="$spacing8">

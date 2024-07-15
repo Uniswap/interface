@@ -14,8 +14,8 @@ import {
 import { OrderDirection, getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useMemo, useReducer, useState } from 'react'
-import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -84,7 +84,7 @@ export function PoolDetailsTransactionsTable({
     chain.id,
     filter,
     token0,
-    protocolVersion
+    protocolVersion,
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -173,7 +173,7 @@ export function PoolDetailsTransactionsTable({
               {PoolTransactionTableType.getValue?.()}
             </Cell>
           ),
-        }
+        },
       ),
       columnHelper.accessor((row) => row.amountUSD, {
         id: 'fiat-value',

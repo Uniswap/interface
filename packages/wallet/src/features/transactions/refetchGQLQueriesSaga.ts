@@ -1,22 +1,19 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { call, delay } from 'typed-redux-saga'
+import { call, delay, select } from 'typed-redux-saga'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import {
-  buildCurrencyId,
-  buildNativeCurrencyId,
-  buildWrappedNativeCurrencyId,
-} from 'wallet/src/utils/currencyId'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 
@@ -38,7 +35,13 @@ export function* refetchGQLQueries({
     apolloClient,
   })
 
-  // when there is a new local tx wait 1s then proactively refresh portfolio and activity queries
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  if (owner !== activeAddress) {
+    // We can ignore if the transaction does not belong to the active account.
+    return
+  }
+
+  // when there is a new local tx wait REFETCH_INTERVAL then proactively refresh portfolio and activity queries
   yield* delay(REFETCH_INTERVAL)
 
   yield* call([apolloClient, apolloClient.refetchQueries], {
@@ -50,7 +53,7 @@ export function* refetchGQLQueries({
   }
 
   let freshnessLag = REFETCH_INTERVAL
-  // poll every second until the cache has updated balances for the relevant currencies
+  // poll every REFETCH_INTERVAL until the cache has updated balances for the relevant currencies
   for (let i = 0; i < MAX_REFETCH_ATTEMPTS; i += 1) {
     const currencyIdToUpdatedBalance = readBalancesFromCache({
       owner,
@@ -63,6 +66,13 @@ export function* refetchGQLQueries({
     }
 
     yield* delay(REFETCH_INTERVAL)
+
+    const currentActiveAddress = yield* select(selectActiveAccountAddress)
+    if (owner !== currentActiveAddress) {
+      // We stop polling if the user has switched accounts.
+      // A call to `refetchQueries` wouldn't be useful in this case because no query with the transaction's owner is currently being watched.
+      break
+    }
 
     yield* call([apolloClient, apolloClient.refetchQueries], {
       include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
@@ -78,9 +88,7 @@ export function* refetchGQLQueries({
 }
 
 // based on transaction data, determine which currencies we expect to see a balance update on
-function getCurrenciesWithExpectedUpdates(
-  transaction: TransactionDetails
-): Set<CurrencyId> | undefined {
+function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<CurrencyId> | undefined {
   const currenciesWithBalToUpdate: Set<CurrencyId> = new Set()
   const txChainId = transaction.chainId
 
@@ -97,9 +105,7 @@ function getCurrenciesWithExpectedUpdates(
       currenciesWithBalToUpdate.add(transaction.typeInfo.outputCurrencyId.toLowerCase())
       break
     case TransactionType.Send:
-      currenciesWithBalToUpdate.add(
-        buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase()
-      )
+      currenciesWithBalToUpdate.add(buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase())
       break
     case TransactionType.Wrap:
       currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
@@ -125,7 +131,7 @@ function readBalancesFromCache({
 
   const currencyIdToBalance: CurrencyIdToBalance = Array.from(currencyIdsToUpdate).reduce(
     (currIdToBal, currencyId) => ({ ...currIdToBal, [currencyId]: 0 }), // assume 0 balance and update later if found in cache
-    {}
+    {},
   )
 
   const cachedBalancesData = apolloClient.readQuery<PortfolioBalancesQuery>({
@@ -157,10 +163,7 @@ function readBalancesFromCache({
   return currencyIdToBalance
 }
 
-function checkIfBalancesUpdated(
-  balance1: CurrencyIdToBalance,
-  balance2: Maybe<CurrencyIdToBalance>
-) {
+function checkIfBalancesUpdated(balance1: CurrencyIdToBalance, balance2: Maybe<CurrencyIdToBalance>) {
   if (!balance2) {
     return true
   } // if no currencies to check, then assume balances are updated

@@ -35,9 +35,9 @@ function getFeeOnTransferAddress(chainId?: InterfaceChainId) {
   }
 }
 
-function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
+function useFeeOnTransferDetectorContract(chainId?: InterfaceChainId): FeeOnTransferDetector | null {
   const account = useAccount()
-  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(account.chainId), FOT_DETECTOR_ABI)
+  const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(chainId), FOT_DETECTOR_ABI, true, chainId)
 
   useEffect(() => {
     if (contract && account.address) {
@@ -45,11 +45,11 @@ function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
         source: 'useFeeOnTransferDetectorContract',
         contract: {
           name: 'FeeOnTransferDetector',
-          address: getFeeOnTransferAddress(account.chainId),
+          address: getFeeOnTransferAddress(chainId),
         },
       })
     }
-  }, [account.address, account.chainId, contract])
+  }, [account.address, chainId, contract])
   return contract
 }
 
@@ -61,7 +61,7 @@ async function getSwapTaxes(
   fotDetector: FeeOnTransferDetector,
   inputTokenAddress: string | undefined,
   outputTokenAddress: string | undefined,
-  chainId: InterfaceChainId
+  chainId: InterfaceChainId,
 ) {
   const addresses = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
@@ -94,10 +94,11 @@ async function getSwapTaxes(
   return { inputTax, outputTax }
 }
 
-export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string) {
-  const fotDetector = useFeeOnTransferDetectorContract()
+export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: InterfaceChainId) {
+  const account = useAccount()
+  const chainId = tokenChainId ?? account.chainId
+  const fotDetector = useFeeOnTransferDetectorContract(chainId)
   const [{ inputTax, outputTax }, setTaxes] = useState({ inputTax: ZERO_PERCENT, outputTax: ZERO_PERCENT })
-  const { chainId } = useAccount()
 
   useEffect(() => {
     if (!fotDetector || !chainId) {

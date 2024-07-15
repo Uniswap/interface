@@ -1,6 +1,7 @@
 import { ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useIsMobile } from 'hooks/screenSize'
+import styled from 'lib/styled-components'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
@@ -28,7 +29,6 @@ import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import noop from 'utilities/src/react/noop'
@@ -102,7 +102,7 @@ export const FilterSidebar = ({
 
   const hideSearch = useMemo(
     () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
-    [walletCollections, isFetchingNextPage]
+    [walletCollections, isFetchingNextPage],
   )
 
   return (
@@ -172,7 +172,7 @@ const CollectionSelect = ({
   useEffect(() => {
     if (collectionSearchText) {
       const filtered = collections.filter((collection) =>
-        collection.name?.toLowerCase().includes(collectionSearchText.toLowerCase())
+        collection.name?.toLowerCase().includes(collectionSearchText.toLowerCase()),
       )
       setDisplayCollections(filtered)
     } else {
@@ -198,7 +198,7 @@ const CollectionSelect = ({
   // Every row is loaded except for our loading indicator row.
   const isItemLoaded = useCallback(
     (index: number) => !hasNextPage || index < displayCollections.length,
-    [displayCollections.length, hasNextPage]
+    [displayCollections.length, hasNextPage],
   )
 
   const CollectionFilterRow = useCallback(
@@ -217,7 +217,7 @@ const CollectionSelect = ({
         />
       )
     },
-    [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters]
+    [displayCollections, isFetchingNextPage, itemKey, collectionFilters, setCollectionFilters],
   )
 
   return (
@@ -306,7 +306,7 @@ const CollectionItem = ({
     (address: string) => {
       return collectionFilters.some((collection) => collection === address)
     },
-    [collectionFilters]
+    [collectionFilters],
   )
   const handleCheckbox = () => {
     setCheckboxSelected(!isCheckboxSelected)

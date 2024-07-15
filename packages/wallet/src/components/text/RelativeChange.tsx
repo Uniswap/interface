@@ -1,6 +1,7 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { Caret } from 'ui/src/components/icons'
 import { IconSizeTokens, fonts } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -50,18 +51,17 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       alignItems="center"
       gap="$spacing2"
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}
-      testID="relative-change">
-      {change !== undefined && (
-        <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
-      )}
+      testID="relative-change"
+    >
+      {change !== undefined && <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />}
       <Flex>
         <Text
-          color={
-            semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'
-          }
+          color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'}
           loading={loading}
           loadingPlaceholderText="▲ 00.00 (0.00)%"
-          variant={variant}>
+          testID={TestID.PortfolioRelativeChange}
+          variant={variant}
+        >
           {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}
         </Text>
       </Flex>

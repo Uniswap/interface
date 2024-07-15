@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -14,13 +15,9 @@ import { TransactionReview } from 'wallet/src/features/transactions/TransactionR
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  useActiveAccountAddressWithThrow,
-  useActiveAccountWithThrow,
-} from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
@@ -70,11 +67,7 @@ export function TransferReview({
   const { blockingWarning } = warnings
 
   const actionButtonDisabled =
-    !!blockingWarning ||
-    !gasFee.value ||
-    !!gasFee.error ||
-    !txRequest ||
-    account.type === AccountType.Readonly
+    !!blockingWarning || !gasFee.value || !!gasFee.error || !txRequest || account.type === AccountType.Readonly
 
   const actionButtonProps = {
     disabled: actionButtonDisabled,
@@ -83,9 +76,7 @@ export function TransferReview({
     onPress: onReviewSubmit,
   }
 
-  const transferWarning = warnings.warnings.find(
-    (warning) => warning.severity >= WarningSeverity.Medium
-  )
+  const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   const formattedCurrencyAmount = formatCurrencyAmount({
     value: currencyAmounts[CurrencyField.INPUT],

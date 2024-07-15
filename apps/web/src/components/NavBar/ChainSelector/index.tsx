@@ -6,29 +6,27 @@ import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
+  ALL_CHAIN_IDS,
+  CHAIN_IDS_TO_NAMES,
   TESTNET_CHAIN_IDS,
   getChainPriority,
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { css, useTheme } from 'styled-components'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
-
-const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
 const StyledDropdownButton = css`
   display: flex;
@@ -70,16 +68,14 @@ function useWalletSupportedChains(): InterfaceChainId[] {
       // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
       return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
         ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
-        : NETWORK_SELECTOR_CHAINS
+        : ALL_CHAIN_IDS
     default:
-      return NETWORK_SELECTOR_CHAINS
+      return ALL_CHAIN_IDS
   }
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const account = useAccount()
-  const { chainId: swapChainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
   const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
@@ -92,11 +88,10 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const navRefreshEnabled = useFeatureFlag(FeatureFlags.NavRefresh)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const selectChain = useSelectChain()
-  const chainIdRef = useRef<number | undefined>(undefined)
-  useSyncChainQuery(chainIdRef)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
-    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
+    const { supported, unsupported } = ALL_CHAIN_IDS.filter((chain: number) => {
       return isSupportedChain(chain) && (showTestnets || !TESTNET_CHAIN_IDS.includes(chain))
     })
       .sort((a, b) => getChainPriority(a) - getChainPriority(b))
@@ -109,7 +104,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
           }
           return acc
         },
-        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>
+        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>,
       )
     return [supported, unsupported]
   }, [isSupportedChain, showTestnets, walletSupportsChain])
@@ -125,10 +120,15 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
         await selectChain(targetChainId)
         setPendingChainId(undefined)
       }
+      searchParams.delete('inputCurrency')
+      searchParams.delete('outputCurrency')
+      targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
+      setSearchParams(searchParams)
+
       setIsOpen(false)
       popoverRef.current?.close()
     },
-    [popoverRef, selectChain, setIsOpen, setSelectedChainId, multichainUXEnabled]
+    [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
   )
 
   const styledMenuCss = css`

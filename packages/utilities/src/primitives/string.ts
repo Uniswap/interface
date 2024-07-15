@@ -37,9 +37,7 @@ export function containsNonPrintableChars(msg: string): boolean {
   const regex = /[\p{C}\p{Z}]/gu
 
   if (regex.test(msg)) {
-    return ![...msg].every(
-      (char) => char === '\n' || char === '\r' || char === '\t' || !/\p{C}/u.test(char)
-    )
+    return ![...msg].every((char) => char === '\n' || char === '\r' || char === '\t' || !/\p{C}/u.test(char))
   }
 
   return false

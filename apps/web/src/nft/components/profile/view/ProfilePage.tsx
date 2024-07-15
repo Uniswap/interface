@@ -2,6 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsMobile } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
+import styled from 'lib/styled-components'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
@@ -22,7 +23,6 @@ import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { easings, useSpring } from 'react-spring'
-import styled from 'styled-components'
 
 const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
@@ -74,7 +74,7 @@ export const ProfilePage = () => {
 
   const ownerCollections = useMemo(
     () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),
-    [isSuccess, ownerCollectionsData]
+    [isSuccess, ownerCollectionsData],
   )
 
   useEffect(() => {
@@ -176,7 +176,11 @@ const ProfilePageNfts = ({
     loading,
     hasNext,
     loadMore,
-  } = useNftBalance(account.address ?? '', collectionFilters, [], DEFAULT_WALLET_ASSET_QUERY_AMOUNT)
+  } = useNftBalance({
+    ownerAddress: account.address ?? '',
+    collectionFilters,
+    first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
+  })
 
   const { gridX } = useSpring({
     gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
@@ -202,7 +206,7 @@ const ProfilePageNfts = ({
           position={isMobile && isBagExpanded ? 'fixed' : 'static'}
           style={{
             transform: gridX.to(
-              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`
+              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`,
             ),
           }}
           paddingY="20"

@@ -10,13 +10,13 @@ export enum NotificationPermission {
 }
 
 export function useNotificationOSPermissionsEnabled(): NotificationPermission {
-  const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] =
-    useState<NotificationPermission>(NotificationPermission.Loading)
+  const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] = useState<NotificationPermission>(
+    NotificationPermission.Loading,
+  )
 
   const checkNotificationPermissions = async (): Promise<void> => {
     const { status } = await checkNotifications()
-    const permission =
-      status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
+    const permission = status === 'granted' ? NotificationPermission.Enabled : NotificationPermission.Disabled
     setNotificationPermissionsEnabled(permission)
   }
 

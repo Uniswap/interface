@@ -16,11 +16,11 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
+import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
@@ -41,7 +41,7 @@ const computeSushiPairAddress = ({ tokenA, tokenB }: { tokenA: Token; tokenB: To
   return getCreate2Address(
     '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
     keccak256(['bytes'], [pack(['address', 'address'], [token0.address, token1.address])]),
-    '0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303'
+    '0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303',
   )
 }
 
@@ -75,7 +75,7 @@ export default function MigrateV2() {
           tokens,
         }
       }),
-    [trackedTokenPairs, account.chainId, v2FactoryAddress]
+    [trackedTokenPairs, account.chainId, v2FactoryAddress],
   )
 
   //  get pair liquidity token addresses for balance-fetching purposes
@@ -91,7 +91,7 @@ export default function MigrateV2() {
   // fetch pair balances
   const [pairBalances, fetchingPairBalances] = useRpcTokenBalancesWithLoadingIndicator(
     account.address,
-    allLiquidityTokens
+    allLiquidityTokens,
   )
 
   // filter for v2 liquidity tokens that the user has a balance in
@@ -112,7 +112,7 @@ export default function MigrateV2() {
     }
 
     return tokenPairsWithLiquidityTokens.filter(
-      ({ sushiLiquidityToken }) => !!sushiLiquidityToken && pairBalances[sushiLiquidityToken.address]?.greaterThan(0)
+      ({ sushiLiquidityToken }) => !!sushiLiquidityToken && pairBalances[sushiLiquidityToken.address]?.greaterThan(0),
     )
   }, [fetchingPairBalances, tokenPairsWithLiquidityTokens, pairBalances])
 

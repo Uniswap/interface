@@ -1,7 +1,7 @@
 import { loadingOpacityMixin } from 'components/Loader/styled'
 import { SupportedLocale } from 'constants/locales'
+import styled from 'lib/styled-components'
 import React, { forwardRef } from 'react'
-import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 import { useFormatterLocales } from 'utils/formatNumbers'
 
@@ -119,7 +119,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         spellCheck="false"
       />
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

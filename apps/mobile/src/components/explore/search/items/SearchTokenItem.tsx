@@ -1,20 +1,22 @@
 import { default as React } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import WarningIcon from 'wallet/src/components/icons/WarningIcon'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { shortenAddress } from 'wallet/src/utils/addresses'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult
@@ -23,7 +25,7 @@ type SearchTokenItemProps = {
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
@@ -55,7 +57,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           logoUrl,
           safetyLevel,
         },
-      })
+      }),
     )
   }
 
@@ -70,10 +72,11 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        testID={ElementName.SearchTokenItem}
+        testID={TestID.SearchTokenItem}
         onLongPress={disableOnPress}
-        onPress={onPress}>
-        <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
+        onPress={onPress}
+      >
+        <Flex row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing12">
           <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl ?? undefined} />
           <Flex shrink alignItems="flex-start">
             <Flex centered row gap="$spacing8">
@@ -82,13 +85,8 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
                   {name}
                 </Text>
               </Flex>
-              {(safetyLevel === SafetyLevel.Blocked ||
-                safetyLevel === SafetyLevel.StrongWarning) && (
-                <WarningIcon
-                  safetyLevel={safetyLevel}
-                  size="$icon.16"
-                  strokeColorOverride="neutral3"
-                />
+              {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+                <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
               )}
             </Flex>
             <Flex centered row gap="$spacing8">
@@ -97,10 +95,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               </Text>
               {address && (
                 <Flex shrink>
-                  <Text
-                    color={isDarkMode ? '$neutral3' : '$neutral2'}
-                    numberOfLines={1}
-                    variant="subheading2">
+                  <Text color={isDarkMode ? '$neutral3' : '$neutral2'} numberOfLines={1} variant="subheading2">
                     {shortenAddress(address)}
                   </Text>
                 </Flex>

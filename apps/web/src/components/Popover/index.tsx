@@ -1,9 +1,9 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
+import styled from 'lib/styled-components'
 import React, { CSSProperties, useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
@@ -11,7 +11,9 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition: visibility 150ms linear, opacity 150ms linear;
+  transition:
+    visibility 150ms linear,
+    opacity 150ms linear;
   color: ${({ theme }) => theme.neutral2};
 `
 
@@ -109,7 +111,7 @@ export default function Popover({
         { name: 'preventOverflow', options: { padding: 8 } },
       ],
     }),
-    [placement, offsetX, offsetY, arrowElement]
+    [placement, offsetX, offsetY, arrowElement],
   )
 
   const { styles, update, attributes } = usePopper(referenceElement, show ? popperElement : null, options)

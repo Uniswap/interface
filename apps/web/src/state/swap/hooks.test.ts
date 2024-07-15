@@ -24,9 +24,9 @@ describe('hooks', () => {
         queryParametersToCurrencyState(
           parse(
             '?inputCurrency=ETH&outputCurrency=0x6b175474e89094c44da98b954eedeac495271d0f&exactAmount=20.5&exactField=output',
-            { parseArrays: false, ignoreQueryPrefix: true }
-          )
-        )
+            { parseArrays: false, ignoreQueryPrefix: true },
+          ),
+        ),
       ).toEqual({
         outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
         inputCurrencyId: 'ETH',
@@ -38,9 +38,9 @@ describe('hooks', () => {
         queryParametersToCurrencyState(
           parse(
             '?inputCurrency=ETH&outputCurrency=0x6fd9d7ad17242c41f7131d257212c54a0e816691&exactAmount=20.5&exactField=output&chain=optimism',
-            { parseArrays: false, ignoreQueryPrefix: true }
-          )
-        )
+            { parseArrays: false, ignoreQueryPrefix: true },
+          ),
+        ),
       ).toEqual({
         outputCurrencyId: '0x6fd9d7AD17242c41f7131d257212c54A0e816691',
         inputCurrencyId: 'ETH',
@@ -51,8 +51,8 @@ describe('hooks', () => {
     test('does not duplicate eth for invalid output token', () => {
       expect(
         queryParametersToCurrencyState(
-          parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true })
-        )
+          parse('?outputCurrency=invalid', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
       ).toEqual({
         inputCurrencyId: undefined,
         outputCurrencyId: undefined,
@@ -62,8 +62,8 @@ describe('hooks', () => {
     test('output ETH only', () => {
       expect(
         queryParametersToCurrencyState(
-          parse('?outputCurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true })
-        )
+          parse('?outputCurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
       ).toEqual({
         outputCurrencyId: 'ETH',
         inputCurrencyId: undefined,
@@ -73,8 +73,8 @@ describe('hooks', () => {
     test('output ETH only, lowercase', () => {
       expect(
         queryParametersToCurrencyState(
-          parse('?outputcurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true })
-        )
+          parse('?outputcurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
       ).toEqual({
         outputCurrencyId: 'ETH',
         inputCurrencyId: undefined,
@@ -86,8 +86,8 @@ describe('hooks', () => {
     test('currency amounts', () => {
       expect(
         queryParametersToSwapState(
-          parse('?exactAmount=20.5&exactField=output', { parseArrays: false, ignoreQueryPrefix: true })
-        )
+          parse('?exactAmount=20.5&exactField=output', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
       ).toEqual({
         typedValue: '20.5',
         independentField: Field.OUTPUT,
@@ -110,14 +110,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -132,14 +132,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -154,14 +154,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
     })
@@ -209,14 +209,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency).toEqual(undefined)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -231,14 +231,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(1)
+          expect(initialChainId).toEqual(1)
         })
       })
 
@@ -253,14 +253,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
-          expect(chainId).toEqual(10)
+          expect(initialChainId).toEqual(10)
         })
       })
 
@@ -275,14 +275,14 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, chainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency).not.toBeDefined()
-          expect(chainId).toEqual(137)
+          expect(initialChainId).toEqual(137)
         })
       })
     })

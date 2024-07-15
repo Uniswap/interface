@@ -5,12 +5,12 @@ import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type TransferAmountInputProps = {
@@ -51,14 +51,14 @@ export function TransferAmountInput({
         selection: { start, end },
       },
     }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-    [selectionChange]
+    [selectionChange],
   )
 
   const onChangeText = useCallback(
     (newValue: string) => {
       onSetExactAmount(CurrencyField.INPUT, newValue, isFiatInput)
     },
-    [onSetExactAmount, isFiatInput]
+    [onSetExactAmount, isFiatInput],
   )
 
   // Display the fiat equivalent amount if the input is in fiat mode, otherwise display the token amount if fiat mode
@@ -77,7 +77,7 @@ export function TransferAmountInput({
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE
+    MIN_INPUT_FONT_SIZE,
   )
   const [containerWidth, setContainerWidth] = useState(0)
 
@@ -102,11 +102,11 @@ export function TransferAmountInput({
   const subTextValue = warning
     ? warning.warning.title
     : !tokenOrFiatEquivalentAmount
-    ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
-      isFiatInput
-      ? '0'
-      : '$0'
-    : tokenOrFiatEquivalentAmount
+      ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
+        isFiatInput
+        ? '0'
+        : '$0'
+      : tokenOrFiatEquivalentAmount
 
   const subTextValueColor = warning ? '$statusCritical' : '$neutral2'
   const inputColor = !value ? '$neutral3' : '$neutral1'
@@ -121,20 +121,11 @@ export function TransferAmountInput({
         // Avoid case where onSetFontSize is called before onLayout, resulting in incorrect sizing if view is re-mounted
         onSetFontSize(value || '0')
       }}
-      {...rest}>
-      <Flex
-        row
-        alignItems="center"
-        height={MAX_INPUT_FONT_SIZE}
-        justifyContent="center"
-        overflow="hidden">
+      {...rest}
+    >
+      <Flex row alignItems="center" height={MAX_INPUT_FONT_SIZE} justifyContent="center" overflow="hidden">
         {isFiatInput && (
-          <Text
-            allowFontScaling
-            color={inputColor}
-            fontSize={fontSize}
-            height={fontSize}
-            lineHeight={fontSize}>
+          <Text allowFontScaling color={inputColor} fontSize={fontSize} height={fontSize} lineHeight={fontSize}>
             {symbol}
           </Text>
         )}

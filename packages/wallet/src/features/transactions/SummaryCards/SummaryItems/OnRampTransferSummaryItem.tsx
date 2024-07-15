@@ -1,14 +1,12 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'wallet/src/entities/assets'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  SummaryItemProps,
-  TransactionSummaryLayoutProps,
-} from 'wallet/src/features/transactions/SummaryCards/types'
+import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   OnRampPurchaseInfo,
@@ -16,7 +14,6 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function OnRampTransferSummaryItem({
   transaction,
@@ -32,8 +29,7 @@ export function OnRampTransferSummaryItem({
 
   const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(chainId, destinationTokenAddress))
 
-  const cryptoPurchaseAmount =
-    formatNumberOrString({ value: destinationTokenAmount }) + ' ' + destinationTokenSymbol
+  const cryptoPurchaseAmount = formatNumberOrString({ value: destinationTokenAmount }) + ' ' + destinationTokenSymbol
 
   const formatFiatTokenPrice = (purchaseInfo: OnRampPurchaseInfo): string => {
     return formatNumberOrString({

@@ -1,7 +1,4 @@
-import {
-  AppsFlyerEventProperties,
-  UniverseEventProperties,
-} from 'uniswap/src/features/telemetry/types'
+import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { logger } from 'utilities/src/logger/logger'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'

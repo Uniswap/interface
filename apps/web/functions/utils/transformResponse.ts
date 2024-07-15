@@ -6,7 +6,7 @@ import { getRequest } from './getRequest'
 export async function transformResponse(
   request: Request,
   response: Response,
-  data: (() => Promise<Data | undefined>) | Data | undefined
+  data: (() => Promise<Data | undefined>) | Data | undefined,
 ) {
   try {
     if (typeof data === 'function') {

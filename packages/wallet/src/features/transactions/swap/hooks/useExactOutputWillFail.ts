@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 
 export function hasTokenFee(currencyInfo: Maybe<CurrencyInfo>): {
   hasBuyTax: boolean
@@ -29,10 +29,10 @@ export function useExactOutputWillFail({
   exactOutputWouldFailIfCurrenciesSwitched: boolean
 } {
   const { hasBuyTax: inputTokenHasBuyTax, hasSellTax: inputTokenHasSellTax } = hasTokenFee(
-    currencies[CurrencyField.INPUT]
+    currencies[CurrencyField.INPUT],
   )
   const { hasBuyTax: outputTokenHasBuyTax, hasSellTax: outputTokenHasSellTax } = hasTokenFee(
-    currencies[CurrencyField.OUTPUT]
+    currencies[CurrencyField.OUTPUT],
   )
   const exactOutputWillFail = inputTokenHasSellTax || outputTokenHasBuyTax
   const exactOutputWouldFailIfCurrenciesSwitched = inputTokenHasBuyTax || outputTokenHasSellTax

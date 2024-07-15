@@ -3,10 +3,10 @@ import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Row from 'components/Row'
 import { Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { ButtonText, ExternalLink, ThemedText } from 'theme/components'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`

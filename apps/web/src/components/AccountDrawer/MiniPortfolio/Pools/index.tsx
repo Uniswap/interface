@@ -17,10 +17,10 @@ import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { t } from 'i18n'
+import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -31,20 +31,20 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
  * filters the PositionDetails data for malicious content,
  * and then returns the original data in its original format.
  */
-function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
+export function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>
       positions
         ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
         : {},
-    [positions]
+    [positions],
   )
   const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
   const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
 
   return useMemo(
     () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
-    [filteredPositionDetails, tokenIdsToPositionInfo]
+    [filteredPositionDetails, tokenIdsToPositionInfo],
   )
 }
 
@@ -149,7 +149,7 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
       pool_token_0_address: pool.token0.address,
       pool_token_1_address: pool.token1.address,
     }),
-    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
+    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol],
   )
 
   return (

@@ -1,21 +1,18 @@
 import { useMemo } from 'react'
-import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
-import {
-  MAX_AUTO_SLIPPAGE_TOLERANCE,
-  MIN_AUTO_SLIPPAGE_TOLERANCE,
-} from 'wallet/src/constants/transactions'
-import { isL2Chain, toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { isMainnetChainId, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, SlippageConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE, MIN_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   getClassicQuoteFromResponse,
   transformTradingApiResponseToTrade,
-} from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+} from 'wallet/src/features/transactions/swap/trade/api/utils'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { Trade, TradeWithStatus } from 'wallet/src/features/transactions/swap/trade/types'
 
 export function useSetTradeSlippage(
   trade: TradeWithStatus,
-  userSetSlippage?: number
+  userSetSlippage?: number,
 ): { trade: TradeWithStatus; autoSlippageTolerance: number } {
   // Always calculate and return autoSlippageTolerance so the UI can warn user when custom slippage is set higher than auto slippage
   const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
@@ -66,14 +63,12 @@ export function useSetTradeSlippage(
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
-  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(
-    SlippageConfigName.MinAutoSlippageToleranceL2
-  )
+  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(SlippageConfigKey.MinAutoSlippageToleranceL2)
 
   return useMemo<number>(() => {
     const quote = getClassicQuoteFromResponse(trade?.quote)
     const chainId = toSupportedChainId(quote?.chainId) ?? undefined
-    const onL2 = isL2Chain(chainId)
+    const onL2 = !isMainnetChainId(chainId)
     const gasCostUSD = quote?.gasFeeUSD
     return calculateAutoSlippage({
       onL2,
@@ -116,20 +111,8 @@ function calculateAutoSlippage({
   return Number(suggestedSlippageTolerance.toFixed(2))
 }
 
-enum SlippageConfigName {
-  MinAutoSlippageToleranceL2,
-}
-
-// Allows us to type the values stored in the JSON dynamic config object for slippage params.
-// Names in mapping should exatcly match the JSON object in statsig.
-export const SLIPPAGE_CONFIG_NAMES = new Map<SlippageConfigName, string>([
-  [SlippageConfigName.MinAutoSlippageToleranceL2, 'minAutoSlippageToleranceL2'],
-])
-
-function useSlippageValueFromDynamicConfig(configName: SlippageConfigName): number {
-  const slippageConfig = useDynamicConfig(DynamicConfigs.Slippage)
-
-  const slippageValue = slippageConfig.getValue(SLIPPAGE_CONFIG_NAMES.get(configName)) as string
+function useSlippageValueFromDynamicConfig(configName: SlippageConfigKey): number {
+  const slippageValue = useDynamicConfigValue(DynamicConfigs.Slippage, configName, '')
 
   // Format as % number
   return parseInt(slippageValue, 10)

@@ -1,6 +1,6 @@
 import { ScaleLinear } from 'd3'
+import styled from 'lib/styled-components'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 
 const StyledLine = styled.line`
   opacity: 0.5;
@@ -20,5 +20,5 @@ export const Line = ({
 }) =>
   useMemo(
     () => <StyledLine x1={xScale(value)} y1="0" x2={xScale(value)} y2={innerHeight} />,
-    [value, xScale, innerHeight]
+    [value, xScale, innerHeight],
   )

@@ -16,7 +16,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 24px;
 }
 
-.c12 {
+.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -31,7 +31,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 16px;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -46,7 +46,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 8px;
 }
 
-.c19 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -68,40 +68,13 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   align-items: center;
 }
 
-.c5 {
+.c8 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  width: 100%;
-  padding: 4px 0px;
 }
 
 .c9 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c6 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: end;
-  -ms-flex-pack: end;
-  justify-content: end;
-  padding: 4px 0px;
-  gap: 10px;
-}
-
-.c10 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -116,6 +89,24 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  gap: 4px;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   gap: 4px;
 }
 
@@ -134,28 +125,10 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  gap: 4px;
-}
-
-.c22 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -163,7 +136,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -171,7 +144,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   letter-spacing: -0.01em;
 }
 
-.c11 {
+.c10 {
   color: #222222;
   cursor: pointer;
   -webkit-text-decoration: none;
@@ -181,15 +154,15 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   transition-duration: 125ms;
 }
 
-.c11:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c11:active {
+.c10:active {
   opacity: 0.4;
 }
 
-.c7 {
+.c6 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -200,15 +173,15 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   font-weight: 500;
 }
 
-.c7:hover {
+.c6:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c6:active {
   opacity: 0.4;
 }
 
-.c26 {
+.c25 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -222,7 +195,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   width: 100%;
 }
 
-.c23 {
+.c22 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -257,51 +230,27 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   user-select: none;
 }
 
-.c23:active .c25 {
+.c22:active .c24 {
   background-color: #B8C0DC3d;
 }
 
-.c23:focus .c25 {
+.c22:focus .c24 {
   background-color: #B8C0DC3d;
 }
 
-.c23:hover .c25 {
+.c22:hover .c24 {
   background-color: #98A1C014;
 }
 
-.c23:disabled {
+.c22:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c23:disabled:active .c25,
-.c23:disabled:focus .c25,
-.c23:disabled:hover .c25 {
+.c22:disabled:active .c24,
+.c22:disabled:focus .c24,
+.c22:disabled:hover .c24 {
   background-color: transparent;
-}
-
-.c8 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  border-radius: 16px;
-  padding: 4px 8px;
-  font-size: 14px;
-  font-weight: 485;
-  line-height: 20px;
-  background: #F9F9F9;
-  color: #7D7D7D;
-  stroke: none;
-}
-
-.c8:hover {
-  background: #22222212;
-  color: #222222;
-  opacity: unset;
-}
-
-.c8:hover path {
-  fill: #222222;
 }
 
 .c0 {
@@ -347,6 +296,30 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   border-radius: 20px;
 }
 
+.c7 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 8px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c7:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c7:hover path {
+  fill: #222222;
+}
+
 .c4 {
   background-color: #FFFFFF;
   outline: 1px solid #22222212;
@@ -355,7 +328,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -374,14 +347,14 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -392,7 +365,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   text-align: center;
 }
 
-.c24 {
+.c23 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -405,7 +378,11 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   border-radius: 12px;
 }
 
-.c20 {
+.c5 {
+  padding: 4px 0px;
+}
+
+.c19 {
   padding: 20px 16px;
   border: 1px solid #22222212;
   gap: 8px;
@@ -482,68 +459,71 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
               class="c2 c3 c4"
             >
               <div
-                class="c5 c6"
-                width="100%"
+                class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
               >
-                <a
-                  class="c7 c8"
-                  href="https://support.uniswap.org/hc/en-us"
-                  rel="noopener noreferrer"
-                  target="_blank"
+                <div
+                  class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                 >
-                  <div
-                    class="c9 c10"
+                  <a
+                    class="c6 c7"
+                    href="https://support.uniswap.org/hc/en-us"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    <svg
-                      fill="none"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      width="16"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class="c8 c9"
                     >
-                      <path
-                        d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                        fill="#9B9B9B"
-                      />
-                    </svg>
-                    Get help
-                  </div>
-                </a>
-                <svg
-                  class="c11"
-                  data-testid="Dialog-closeButton"
-                  fill="none"
-                  height="24"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="18"
-                    x2="6"
-                    y1="6"
-                    y2="18"
-                  />
-                  <line
-                    x1="6"
-                    x2="18"
-                    y1="6"
-                    y2="18"
-                  />
-                </svg>
+                      <svg
+                        fill="none"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+                          fill="#9B9B9B"
+                        />
+                      </svg>
+                      Get help
+                    </div>
+                  </a>
+                  <svg
+                    class="c10"
+                    data-testid="Dialog-closeButton"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="18"
+                      x2="6"
+                      y1="6"
+                      y2="18"
+                    />
+                    <line
+                      x1="6"
+                      x2="18"
+                      y1="6"
+                      y2="18"
+                    />
+                  </svg>
+                </div>
               </div>
               <div
                 class="c2 c3"
               >
                 <div
-                  class="c12 c3"
+                  class="c11 c3"
                 >
                   <div
-                    class="c13"
+                    class="c12"
                   >
                     <svg
                       fill="none"
@@ -559,26 +539,26 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
                     </svg>
                   </div>
                   <div
-                    class="c14 c3"
+                    class="c13 c3"
                   >
                     <div
-                      class="c15 c16 css-4kpdx7"
+                      class="c14 c15 css-4kpdx7"
                     >
                       New address
                     </div>
                     <div
-                      class="c17 c18 css-1urox24"
+                      class="c16 c17 css-1urox24"
                     >
                       You haven’t transacted with this address before. Make sure it’s the correct address before continuing.
                     </div>
                     <div
-                      class="c19 c3 c20"
+                      class="c18 c3 c19"
                     >
                       <div
-                        class="c9 c21"
+                        class="c8 c20"
                       >
                         <div
-                          class="c15 css-n8z49y"
+                          class="c14 css-n8z49y"
                         >
                           0x9984b4b4E408e8D618A879e5315BD30952c89103
                         </div>
@@ -587,21 +567,21 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
                   </div>
                 </div>
                 <div
-                  class="c9 c22"
+                  class="c8 c21"
                 >
                   <button
-                    class="c23 c24"
+                    class="c22 c23"
                   >
                     <div
-                      class="c25 c26"
+                      class="c24 c25"
                     />
                     Cancel
                   </button>
                   <button
-                    class="c23 c24"
+                    class="c22 c23"
                   >
                     <div
-                      class="c25 c26"
+                      class="c24 c25"
                     />
                     Continue
                   </button>

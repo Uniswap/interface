@@ -6,18 +6,10 @@ import { V2DutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
-import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  ClassicQuote,
-  DutchQuoteV2,
-  QuoteResponse,
-  Routing,
-} from 'wallet/src/data/tradingApi/__generated__/index'
-import {
-  getSwapFee,
-  transformToDutchOrderInfo,
-} from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { PollingInterval } from 'uniswap/src/constants/misc'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
+import { ClassicQuote, DutchQuoteV2, QuoteResponse, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { getSwapFee, transformToDutchOrderInfo } from 'wallet/src/features/transactions/swap/trade/api/utils'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
@@ -35,11 +27,9 @@ export type ClassicQuoteResponse = QuoteResponse & {
 
 export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
   readonly routing = Routing.DUTCH_V2
-  quote: DutchQuoteResponse
-  // TODO(WEB-4299): Update trade to include classicGasUseEstimateUSD once trading API supports it.
-  // classicGasUseEstimateUSD?: number
-  slippageTolerance: number
-  swapFee?: SwapFee
+  readonly quote: DutchQuoteResponse
+  readonly slippageTolerance: number
+  readonly swapFee?: SwapFee
 
   constructor({
     quote,
@@ -57,6 +47,10 @@ export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeTy
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
+  }
+
+  public get needsWrap(): boolean {
+    return this.inputAmount.currency.isNative
   }
 
   public get deadline(): number {
@@ -80,7 +74,7 @@ export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeTy
 export class ClassicTrade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
-  TTradeType extends TradeType = TradeType
+  TTradeType extends TradeType = TradeType,
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
   readonly quote?: ClassicQuoteResponse
   readonly routing = Routing.CLASSIC
@@ -125,7 +119,7 @@ export class ClassicTrade<
 export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
-  TTradeType extends TradeType = TradeType
+  TTradeType extends TradeType = TradeType,
 > = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade
 
 export interface TradeWithStatus<T extends Trade = Trade> {

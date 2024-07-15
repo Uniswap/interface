@@ -1,7 +1,8 @@
 import { AnyAction } from '@reduxjs/toolkit'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
   INITIAL_TRANSACTION_STATE,
   selectCurrency,
@@ -10,10 +11,6 @@ import {
   updateExactAmountFiat,
   updateExactAmountToken,
 } from 'wallet/src/features/transactions/transactionState/transactionState'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
 
 const chainId = UniverseChainId.Goerli
 const ethAddress = getNativeAddress(UniverseChainId.Goerli)
@@ -45,8 +42,8 @@ describe(selectCurrency, () => {
         selectCurrency({
           field: CurrencyField.INPUT,
           tradeableAsset: ethTradeableAsset,
-        })
-      )
+        }),
+      ),
     ).toEqual({
       ...previousState,
       [CurrencyField.INPUT]: ethTradeableAsset,
@@ -61,8 +58,8 @@ describe(selectCurrency, () => {
         selectCurrency({
           field: CurrencyField.OUTPUT,
           tradeableAsset: daiTradeableAsset,
-        })
-      )
+        }),
+      ),
     ).toEqual({
       ...previousState,
       [CurrencyField.OUTPUT]: daiTradeableAsset,
@@ -80,8 +77,8 @@ describe(selectCurrency, () => {
         selectCurrency({
           field: CurrencyField.OUTPUT,
           tradeableAsset: ethTradeableAsset,
-        })
-      )
+        }),
+      ),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
@@ -102,8 +99,8 @@ describe(selectCurrency, () => {
         selectCurrency({
           field: CurrencyField.OUTPUT,
           tradeableAsset: ethTradeableAsset,
-        })
-      )
+        }),
+      ),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
@@ -129,8 +126,8 @@ describe(selectCurrency, () => {
             chainId: otherChainId,
             type: AssetType.Currency,
           },
-        })
-      )
+        }),
+      ),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,
@@ -171,10 +168,7 @@ describe(updateExactAmountToken, () => {
     const previousState = { ...testInitialState }
 
     expect(
-      transactionStateReducer(
-        previousState,
-        updateExactAmountToken({ field: CurrencyField.INPUT, amount: '1' })
-      )
+      transactionStateReducer(previousState, updateExactAmountToken({ field: CurrencyField.INPUT, amount: '1' })),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.INPUT,
@@ -186,10 +180,7 @@ describe(updateExactAmountToken, () => {
     const previousState = { ...testInitialState }
 
     expect(
-      transactionStateReducer(
-        previousState,
-        updateExactAmountFiat({ field: CurrencyField.INPUT, amount: '1' })
-      )
+      transactionStateReducer(previousState, updateExactAmountFiat({ field: CurrencyField.INPUT, amount: '1' })),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.INPUT,
@@ -201,10 +192,7 @@ describe(updateExactAmountToken, () => {
     const previousState = { ...testInitialState }
 
     expect(
-      transactionStateReducer(
-        previousState,
-        updateExactAmountToken({ field: CurrencyField.OUTPUT, amount: '5' })
-      )
+      transactionStateReducer(previousState, updateExactAmountToken({ field: CurrencyField.OUTPUT, amount: '5' })),
     ).toEqual({
       ...previousState,
       exactCurrencyField: CurrencyField.OUTPUT,

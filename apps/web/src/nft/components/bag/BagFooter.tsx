@@ -22,6 +22,7 @@ import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans, t } from 'i18n'
 import JSBI from 'jsbi'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
+import styled, { useTheme } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from 'nft/components/bag/ButtonStates'
 import { useBag } from 'nft/hooks/useBag'
@@ -36,7 +37,6 @@ import { BagStatus } from 'nft/types'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -288,7 +288,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const defaultCurrency = useCurrency('ETH')
   const inputCurrencyBalance = useTokenBalance(
     account.address,
-    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined
+    !!inputCurrency && inputCurrency.isToken ? inputCurrency : undefined,
   )
   const {
     isLocked: bagIsLocked,
@@ -322,7 +322,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const allowance = usePermit2Allowance(
     maximumAmountIn,
     getURAddress(isSupportedChain ? account.chainId : undefined, universalRouterAddress),
-    TradeFillType.Classic
+    TradeFillType.Classic,
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
@@ -451,7 +451,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         theme,
         fetchAssets,
         usingPayWithAnyToken,
-        priceImpact
+        priceImpact,
       )
     }
 

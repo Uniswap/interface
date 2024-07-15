@@ -3,9 +3,10 @@ import {
   SwapOrderType,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { deriveCurrencyAmountFromAssetResponse } from 'wallet/src/features/transactions/history/utils'
 import {
   ConfirmedSwapTransactionInfo,
@@ -15,20 +16,14 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
-export function extractUniswapXOrderDetails(
-  transaction: TransactionListQueryResponse
-): TransactionDetails | null {
+export function extractUniswapXOrderDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
   if (transaction?.details.__typename !== TransactionDetailsType.UniswapXOrder) {
     return null
   }
 
   const typeInfo = parseUniswapXOrderTransaction(transaction)
-  const routing =
-    transaction.details.swapOrderType === SwapOrderType.Limit
-      ? Routing.DUTCH_LIMIT
-      : Routing.DUTCH_V2
+  const routing = transaction.details.swapOrderType === SwapOrderType.Limit ? Routing.DUTCH_LIMIT : Routing.DUTCH_V2
 
   // TODO (MOB-3609): Parse and show pending limit orders in Activity feed
   if (!typeInfo || transaction.details.swapOrderType === SwapOrderType.Limit) {
@@ -42,6 +37,7 @@ export function extractUniswapXOrderDetails(
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteOrderStatusToLocalTxStatus(transaction.details.orderStatus),
     from: transaction.details.offerer, // This transaction is not on-chain, so use the offerer address as the from address
+    orderHash: transaction.details.hash,
     typeInfo,
   }
 }
@@ -64,7 +60,7 @@ function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): Transac
 }
 
 export default function parseUniswapXOrderTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): ConfirmedSwapTransactionInfo | null {
   if (transaction?.details?.__typename !== TransactionDetailsType.UniswapXOrder) {
     return null
@@ -88,7 +84,7 @@ export default function parseUniswapXOrderTransaction(
     transaction.chain,
     transaction.details.inputToken.address,
     transaction.details.inputToken.decimals,
-    transaction.details.inputTokenQuantity
+    transaction.details.inputTokenQuantity,
   )
 
   const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
@@ -96,7 +92,7 @@ export default function parseUniswapXOrderTransaction(
     transaction.chain,
     transaction.details.outputToken.address,
     transaction.details.outputToken.decimals,
-    transaction.details.outputTokenQuantity
+    transaction.details.outputTokenQuantity,
   )
 
   if (!inputCurrencyId || !outputCurrencyId) {

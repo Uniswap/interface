@@ -13,11 +13,7 @@ const generateRandomEthereumAddresses = (numberOfAddresses: number): string[] =>
 
 export const UniconSampleSheet = ({ onClose }: { onClose: () => void }): JSX.Element => {
   return (
-    <BottomSheetModal
-      blurredBackground
-      backgroundColor="$surface1"
-      name={ModalName.UniconsDevModal}
-      onClose={onClose}>
+    <BottomSheetModal blurredBackground backgroundColor="$surface1" name={ModalName.UniconsDevModal} onClose={onClose}>
       <Flex centered height="100%" width="100%">
         <Flex row alignItems="center" flexWrap="wrap" justifyContent="center" width="100%">
           {generateRandomEthereumAddresses(80).map((address) => {

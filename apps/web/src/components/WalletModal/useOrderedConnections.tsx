@@ -11,13 +11,13 @@ const SHOULD_THROW = { shouldThrow: true } as const
 function getConnectorWithId(
   connectors: readonly Connector[],
   id: ConnectorID,
-  options: { shouldThrow: true }
+  options: { shouldThrow: true },
 ): Connector
 function getConnectorWithId(connectors: readonly Connector[], id: ConnectorID): Connector | undefined
 function getConnectorWithId(
   connectors: readonly Connector[],
   id: ConnectorID,
-  options?: { shouldThrow: true }
+  options?: { shouldThrow: true },
 ): Connector | undefined {
   const connector = connectors.find((c) => c.id === id)
   if (!connector && options?.shouldThrow) {
@@ -33,7 +33,7 @@ export function useConnectorWithId(id: ConnectorID, options?: { shouldThrow: tru
   const { connectors } = useConnect()
   return useMemo(
     () => (options?.shouldThrow ? getConnectorWithId(connectors, id, options) : getConnectorWithId(connectors, id)),
-    [connectors, id, options]
+    [connectors, id, options],
   )
 }
 
@@ -79,7 +79,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
         return 0
       }
     },
-    [recentConnectorId]
+    [recentConnectorId],
   )
 
   return useMemo(() => {
@@ -90,7 +90,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
     const uniswapWalletConnectConnector = getConnectorWithId(
       connectors,
       CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-      SHOULD_THROW
+      SHOULD_THROW,
     )
     if (!coinbaseSdkConnector || !walletConnectConnector || !uniswapWalletConnectConnector) {
       throw new Error('Expected connector(s) missing from wagmi context.')
@@ -125,4 +125,42 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
     orderedConnectors.sort(sortByRecent)
     return orderedConnectors
   }, [connectors, excludeUniswapConnections, sortByRecent])
+}
+
+export enum ExtensionRequestMethods {
+  OPEN_SIDEBAR = 'uniswap_openSidebar',
+}
+
+const ExtensionRequestArguments = {
+  [ExtensionRequestMethods.OPEN_SIDEBAR]: ['Tokens', 'Activity'],
+} as const
+
+export function useUniswapExtensionConnector() {
+  const connector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const extensionRequest = useCallback(
+    async <
+      Type extends keyof typeof ExtensionRequestArguments,
+      Key extends (typeof ExtensionRequestArguments)[Type][number],
+    >(
+      method: Type,
+      arg: Key,
+    ) => {
+      const provider = (await connector?.getProvider()) as {
+        request?: (params: { method: Type; params: Key[] }) => Promise<void>
+      }
+      if (!provider.request) {
+        return
+      }
+
+      await provider.request({
+        method,
+        params: [arg],
+      })
+    },
+    [connector],
+  )
+
+  return useMemo(() => {
+    return connector ? { ...connector, extensionRequest } : undefined
+  }, [connector, extensionRequest])
 }

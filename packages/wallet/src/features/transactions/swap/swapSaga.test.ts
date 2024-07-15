@@ -5,23 +5,21 @@ import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { DAI } from 'uniswap/src/constants/tokens'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI } from 'wallet/src/constants/tokens'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
+import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SwapParams, approveAndSwap } from 'wallet/src/features/transactions/swap/swapSaga'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import {
-  ExactInputSwapTransactionInfo,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
+import { ExactInputSwapTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
-import { currencyId } from 'wallet/src/utils/currencyId'
 
 const account = signerMnemonicAccount()
 
@@ -44,7 +42,7 @@ const transactionTypeInfo: ExactInputSwapTransactionInfo = {
 const mockTrade = {
   inputAmount: { currency: new NativeCurrency(CHAIN_ID) },
   quote: { amount: MaxUint256 },
-} as unknown as Trade
+} as unknown as ClassicTrade
 
 const mockApproveTxRequest = {
   chainId: 1,
@@ -62,22 +60,29 @@ const swapParams: SwapParams = {
   txId: '1',
   account,
   analytics: {} as ReturnType<typeof getBaseTradeAnalyticsProperties>,
-  approveTxRequest: mockApproveTxRequest,
-  swapTxRequest: mockSwapTxRequest,
-  swapTypeInfo: transactionTypeInfo,
+  swapTxContext: {
+    routing: Routing.CLASSIC,
+    approveTxRequest: mockApproveTxRequest,
+    txRequest: mockSwapTxRequest,
+    trade: mockTrade,
+    gasFee: { value: '5', loading: false, error: undefined },
+    approvalError: false,
+  },
+  onSubmit: jest.fn(),
+  onFailure: jest.fn(),
 }
 
 const swapParamsWithoutApprove: SwapParams = {
-  txId: '1',
-  account,
-  analytics: {} as ReturnType<typeof getBaseTradeAnalyticsProperties>,
-  approveTxRequest: undefined,
-  swapTxRequest: mockSwapTxRequest,
-  swapTypeInfo: transactionTypeInfo,
+  ...swapParams,
+  swapTxContext: {
+    ...swapParams.swapTxContext,
+    approveTxRequest: undefined,
+  },
 }
 
 const nonce = 1
 
+// TODO(WEB-4294): The saga runs in these tests are not actually finishing as `getNonceForApproveAndSwap` fails; update to work correctly
 describe(approveAndSwap, () => {
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],

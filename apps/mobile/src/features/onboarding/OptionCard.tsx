@@ -3,6 +3,7 @@ import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export function OptionCard({
   title,
@@ -14,12 +15,14 @@ export function OptionCard({
   opacity,
   badgeText,
   hapticFeedback,
+  testID,
 }: {
   title: string
   blurb: string
   icon: React.ReactNode
   onPress: () => void
   elementName: ElementNameType
+  testID: TestIDType
   disabled?: boolean
   opacity?: number
   badgeText?: string | undefined
@@ -38,8 +41,9 @@ export function OptionCard({
         hapticFeedback={hapticFeedback}
         opacity={disabled ? 0.5 : opacity}
         p="$spacing16"
-        testID={elementName}
-        onPress={onPress}>
+        testID={testID}
+        onPress={onPress}
+      >
         <Flex row alignContent="center" alignItems="flex-start" gap="$spacing16">
           <Flex
             alignItems="center"
@@ -48,7 +52,8 @@ export function OptionCard({
             height={iconSizes.icon24}
             justifyContent="center"
             p="$spacing16"
-            width={iconSizes.icon24}>
+            width={iconSizes.icon24}
+          >
             {icon}
           </Flex>
           <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
@@ -58,11 +63,7 @@ export function OptionCard({
                   {title}
                 </Text>
                 {badgeText && (
-                  <Flex
-                    centered
-                    backgroundColor="$DEP_magentaDark"
-                    borderRadius="$rounded8"
-                    px="$spacing8">
+                  <Flex centered backgroundColor="$DEP_magentaDark" borderRadius="$rounded8" px="$spacing8">
                     <Text color="$accent1" variant="buttonLabel4">
                       {badgeText}
                     </Text>

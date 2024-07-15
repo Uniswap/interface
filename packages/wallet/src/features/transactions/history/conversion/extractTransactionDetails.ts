@@ -1,9 +1,9 @@
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { SpamCode } from 'wallet/src/data/types'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
 import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'
 import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
@@ -27,7 +27,7 @@ import {
  * @returns Formatted TransactionDetails object.
  */
 export default function extractTransactionDetails(
-  transaction: TransactionListQueryResponse
+  transaction: TransactionListQueryResponse,
 ): TransactionDetails | null {
   if (transaction?.details.__typename !== TransactionDetailsType.Transaction) {
     return null
@@ -70,19 +70,26 @@ export default function extractTransactionDetails(
             return false
         }
       }) ?? true
+
+    const dappInfo = transaction.details.application?.address
+      ? {
+          name: transaction.details.application?.name,
+          address: transaction.details.application?.address,
+          icon: transaction.details.application?.icon?.url,
+        }
+      : undefined
     typeInfo = {
       type: TransactionType.Unknown,
       tokenAddress: transaction.details.to,
       isSpam,
+      dappInfo,
     }
   }
 
   const chainId = fromGraphQLChain(transaction.chain)
 
   const networkFee =
-    chainId &&
-    transaction.details.networkFee?.quantity &&
-    transaction.details.networkFee?.tokenSymbol
+    chainId && transaction.details.networkFee?.quantity && transaction.details.networkFee?.tokenSymbol
       ? {
           quantity: transaction.details.networkFee.quantity,
           tokenSymbol: transaction.details.networkFee.tokenSymbol,
@@ -93,10 +100,7 @@ export default function extractTransactionDetails(
       : undefined
 
   return {
-    routing:
-      transaction.details.type === RemoteTransactionType.SwapOrder
-        ? Routing.DUTCH_V2
-        : Routing.CLASSIC,
+    routing: transaction.details.type === RemoteTransactionType.SwapOrder ? Routing.DUTCH_V2 : Routing.CLASSIC,
     id: transaction.details.hash,
     // fallback to mainnet, although this should never happen
     chainId: chainId ?? UniverseChainId.Mainnet,

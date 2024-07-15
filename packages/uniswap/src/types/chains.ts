@@ -101,7 +101,7 @@ export type InterfaceGqlChain = Exclude<BackendChainId, BackendChainId.UnknownCh
 export interface BackendChain {
   chain: InterfaceGqlChain
   /**
-   * Set to true if the chain is not available on Explore.
+   * Set to false if the chain is not available on Explore.
    */
   backendSupported: boolean
   /**
@@ -128,6 +128,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly explorer: {
     name: string
     url: string
+    apiURL?: string
   }
   readonly helpCenterUrl: string | undefined
   readonly infoLink: string

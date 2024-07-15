@@ -4,11 +4,11 @@ import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
@@ -20,9 +20,7 @@ export enum WrapType {
   Unwrap,
 }
 
-export type ChainIdToTxIdToDetails = Partial<
-  Record<WalletChainId, { [txId: string]: TransactionDetails }>
->
+export type ChainIdToTxIdToDetails = Partial<Record<WalletChainId, { [txId: string]: TransactionDetails }>>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
@@ -49,12 +47,14 @@ interface BaseTransactionDetails extends TransactionId {
   // It may also become optional for classic if we start tracking txs before they're actually sent
   hash?: string
 
+  // TODO(MOB-3679): receipt does not need to be persisted; remove from state
   receipt?: TransactionReceipt
 
   // cancelRequest is the txRequest object to be submitted
   // in attempt to cancel the current transaction
   // it should contain all the appropriate gas details in order
-  // to get submitted first
+  // to be mined first
+  // TODO(MOB-3679): cancelRequest does not need to be persisted; remove from state
   cancelRequest?: providers.TransactionRequest
 
   networkFee?: TransactionNetworkFee
@@ -72,8 +72,14 @@ export interface UniswapXOrderDetails extends BaseTransactionDetails {
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
-  // `orderHash` will be undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
+  // `orderHash` will be an undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
   orderHash?: string
+
+  // Used to track status of the order before it is submitted
+  queueStatus?: QueuedOrderStatus
+
+  // The txHash of the wrap transaction submitted before the order
+  wrapTxHash?: string
 }
 
 export interface ClassicTransactionDetails extends BaseTransactionDetails {
@@ -99,17 +105,36 @@ export enum TransactionStatus {
   // May want more granular options here later like InMemPool
 }
 
-// Transaction confirmed on chain
-export type FinalizedTransactionStatus =
-  | TransactionStatus.Success
-  | TransactionStatus.Failed
-  | TransactionStatus.Canceled
-  | TransactionStatus.FailedCancel
-
-export type FinalizedTransactionDetails = TransactionDetails & {
-  status: FinalizedTransactionStatus
-  hash: string
+export enum QueuedOrderStatus {
+  Waiting = 'waiting',
+  ApprovalFailed = 'approvalFailed',
+  WrapFailed = 'wrapFailed',
+  AppClosed = 'appClosed',
+  Stale = 'stale',
+  SubmissionFailed = 'submissionFailed',
+  Submitted = 'submitted',
 }
+
+const FINAL_STATUSES = [
+  TransactionStatus.Success,
+  TransactionStatus.Failed,
+  TransactionStatus.Canceled,
+  TransactionStatus.FailedCancel,
+  TransactionStatus.Expired,
+] as const
+export type FinalizedTransactionStatus = (typeof FINAL_STATUSES)[number]
+
+export type FinalizedTransactionDetails = TransactionDetails &
+  (
+    | {
+        status: TransactionStatus.Success
+        hash: string
+      }
+    | {
+        status: Exclude<FinalizedTransactionStatus, TransactionStatus.Success>
+        hash?: string // Hash may be undefined for non-successful transactions, as the uniswapx backend does not provide hashes for cancelled, failed, or expired orders.
+      }
+  )
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
@@ -132,6 +157,7 @@ export interface NFTSummaryInfo {
   name: string
   collectionName: string
   imageURL: string
+  address: string
 }
 
 export enum NFTTradeType {
@@ -180,6 +206,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   spender: string
   approvalAmount?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -300,6 +327,7 @@ export interface NFTMintTransactionInfo extends BaseTransactionInfo {
   nftSummaryInfo: NFTSummaryInfo
   purchaseCurrencyId?: string
   purchaseCurrencyAmountRaw?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface NFTTradeTransactionInfo extends BaseTransactionInfo {
@@ -314,6 +342,7 @@ export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTApprove
   nftSummaryInfo: NFTSummaryInfo
   spender: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface WCConfirmInfo extends BaseTransactionInfo {
@@ -321,9 +350,16 @@ export interface WCConfirmInfo extends BaseTransactionInfo {
   dapp: DappInfo
 }
 
+export interface DappInfoTransactionDetails {
+  name?: string
+  address: string
+  icon?: string
+}
+
 export interface UnknownTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Unknown
   tokenAddress?: string
+  dappInfo?: DappInfoTransactionDetails
 }
 
 export type TransactionTypeInfo =
@@ -343,24 +379,33 @@ export type TransactionTypeInfo =
   | OnRampPurchaseInfo
   | OnRampTransferInfo
 
-export function isConfirmedSwapTypeInfo(
-  typeInfo: TransactionTypeInfo
-): typeInfo is ConfirmedSwapTransactionInfo {
+export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
-      (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw
+      (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
   )
 }
 
-export function isFinalizedTx(
-  tx: TransactionDetails | FinalizedTransactionDetails
-): tx is FinalizedTransactionDetails {
-  return (
-    tx.status === TransactionStatus.Success ||
-    tx.status === TransactionStatus.Failed ||
-    tx.status === TransactionStatus.Canceled ||
-    tx.status === TransactionStatus.FailedCancel
-  )
+export function isFinalizedTxStatus(status: TransactionStatus): status is FinalizedTransactionStatus {
+  return FINAL_STATUSES.some((finalStatus) => finalStatus === status)
+}
+
+export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
+  const validateFinalizedTx = (): FinalizedTransactionDetails | undefined => {
+    const { status, hash } = tx
+    if (status === TransactionStatus.Success) {
+      if (!hash) {
+        return undefined
+      }
+      return { ...tx, status, hash }
+    } else if (isFinalizedTxStatus(status)) {
+      return { ...tx, status }
+    }
+    return undefined
+  }
+
+  // Validation fn prevents & future-proofs the typeguard from illicit casting
+  return Boolean(validateFinalizedTx())
 }
 
 export enum TransactionStep {

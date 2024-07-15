@@ -1,6 +1,6 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
@@ -26,6 +26,7 @@ import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
@@ -39,7 +40,7 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
     (newLocale: SupportedLocale) => {
       dispatch(updateUserLocale({ userLocale: newLocale }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [locale, setLocale]
@@ -54,7 +55,7 @@ export function useRouterPreference(): [RouterPreference, (routerPreference: Rou
     (newRouterPreference: RouterPreference) => {
       dispatch(updateUserRouterPreference({ userRouterPreference: newRouterPreference }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [routerPreference, setRouterPreference]
@@ -65,7 +66,7 @@ export function useRouterPreference(): [RouterPreference, (routerPreference: Rou
  */
 export function useUserSlippageTolerance(): [
   Percent | SlippageTolerance.Auto,
-  (slippageTolerance: Percent | SlippageTolerance.Auto) => void
+  (slippageTolerance: Percent | SlippageTolerance.Auto) => void,
 ] {
   const userSlippageToleranceRaw = useAppSelector((state) => {
     return state.user.userSlippageTolerance
@@ -77,7 +78,7 @@ export function useUserSlippageTolerance(): [
       userSlippageToleranceRaw === SlippageTolerance.Auto
         ? SlippageTolerance.Auto
         : new Percent(userSlippageToleranceRaw, 10_000),
-    [userSlippageToleranceRaw]
+    [userSlippageToleranceRaw],
   )
 
   const dispatch = useAppDispatch()
@@ -95,10 +96,10 @@ export function useUserSlippageTolerance(): [
       dispatch(
         updateUserSlippageTolerance({
           userSlippageTolerance: value,
-        })
+        }),
       )
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [userSlippageTolerance, setUserSlippageTolerance]
@@ -122,7 +123,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
     (newHideClosedPositions: boolean) => {
       dispatch(updateHideClosedPositions({ userHideClosedPositions: newHideClosedPositions }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [hideClosedPositions, setHideClosedPositions]
@@ -132,14 +133,14 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const { chainId } = useAccount()
   const dispatch = useAppDispatch()
   const userDeadline = useAppSelector((state) => state.user.userDeadline)
-  const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
+  const onL2 = isL2ChainId(chainId)
   const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
 
   const setUserDeadline = useCallback(
     (userDeadline: number) => {
       dispatch(updateUserDeadline({ userDeadline }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return [deadline, setUserDeadline]
@@ -151,7 +152,7 @@ export function useAddUserToken(): (token: Token) => void {
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -169,7 +170,7 @@ export function usePairAdder(): (pair: Pair) => void {
     (pair: Pair) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -194,7 +195,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
     computePairAddress({ factoryAddress: V2_FACTORY_ADDRESSES[tokenA.chainId], tokenA, tokenB }),
     18,
     'UNI-V2',
-    'Uniswap V2'
+    'Uniswap V2',
   )
 }
 
@@ -243,7 +244,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             )
           })
         : [],
-    [popularTokens, chainId]
+    [popularTokens, chainId],
   )
 
   // pairs saved by users
@@ -265,7 +266,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
   const combinedList = useMemo(
     () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [pinnedPairs, userPairs, generatedPairs]
+    [pinnedPairs, userPairs, generatedPairs],
   )
 
   return useMemo(() => {

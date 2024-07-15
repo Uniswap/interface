@@ -4,10 +4,7 @@ import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  SwapFormContextProvider,
-  SwapFormState,
-} from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   SwapScreen,
   SwapScreenContextProvider,
@@ -22,7 +19,7 @@ import {
   TransactionModalFooterContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { TransactionModalProps } from 'wallet/src/features/transactions/swap/TransactionModalProps'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
+import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
 
 export function SwapFlow({
   prefilledState,
@@ -103,7 +100,8 @@ function CurrentScreen({
             <BottomSheetModal
               alignment="top"
               isModalOpen={screen === SwapScreen.SwapReview}
-              name={ModalName.SwapReview}>
+              name={ModalName.SwapReview}
+            >
               <Trace logImpression section={SectionName.SwapReview}>
                 <SwapReviewScreen hideContent={false} />
               </Trace>

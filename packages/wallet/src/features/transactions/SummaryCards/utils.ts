@@ -5,12 +5,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import {
-  LoadingItem,
-  SectionHeader,
-  isLoadingItem,
-  isSectionHeader,
-} from 'wallet/src/features/activity/utils'
+import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import {
   FORMAT_DATE_MONTH_DAY,
   FORMAT_TIME_SHORT,
@@ -44,25 +39,23 @@ export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
-export type ActivityItemRenderer = ({ item }: { item: ActivityItem }) => JSX.Element
+export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
 
 export function generateActivityItemRenderer(
   layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>,
   loadingItem: JSX.Element,
-  sectionHeaderElement: React.FunctionComponent<{ title: string }>,
+  sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>,
   swapCallbacks: SwapSummaryCallbacks | undefined,
-  authTrigger:
-    | ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>)
-    | undefined
+  authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined,
 ): ActivityItemRenderer {
-  return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
+  return function ActivityItemComponent({ item, index }: { item: ActivityItem; index: number }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
       return loadingItem
     }
     // if it's a section header, render it differently
     if (isSectionHeader(item)) {
-      return createElement(sectionHeaderElement, { title: item.title, key: item.title })
+      return createElement(sectionHeaderElement, { title: item.title, key: item.title, index })
     }
     // item is a transaction
     let SummaryItem
@@ -111,6 +104,7 @@ export function generateActivityItemRenderer(
       transaction: item,
       layoutElement,
       swapCallbacks,
+      index,
     })
   }
 }
@@ -124,13 +118,15 @@ export function generateActivityItemRenderer(
  */
 function getTransactionTypeVerbs(
   typeInfo: TransactionDetails['typeInfo'],
-  t: AppTFunction
+  t: AppTFunction,
 ): {
   success: string
   pending?: string
   failed?: string
   canceling?: string
   canceled?: string
+  expired?: string
+  insufficientFunds?: string
 } {
   const externalDappName = typeInfo.externalDappInfo?.name
 
@@ -144,6 +140,8 @@ function getTransactionTypeVerbs(
         failed: t('transaction.status.swap.failed'),
         canceling: t('transaction.status.swap.canceling'),
         canceled: t('transaction.status.swap.canceled'),
+        expired: t('transaction.status.swap.expired'),
+        insufficientFunds: t('transaction.status.swap.insufficientFunds'),
       }
     case TransactionType.Receive:
       return {
@@ -304,17 +302,21 @@ function getTransactionTypeVerbs(
   }
 }
 
-export function getTransactionSummaryTitle(
-  tx: TransactionDetails,
-  t: AppTFunction
-): string | undefined {
-  const { success, pending, failed, canceling, canceled } = getTransactionTypeVerbs(tx.typeInfo, t)
+export function getTransactionSummaryTitle(tx: TransactionDetails, t: AppTFunction): string | undefined {
+  const { success, pending, failed, canceling, canceled, expired, insufficientFunds } = getTransactionTypeVerbs(
+    tx.typeInfo,
+    t,
+  )
 
   switch (tx.status) {
     case TransactionStatus.Pending:
       return pending
     case TransactionStatus.Cancelling:
       return canceling
+    case TransactionStatus.Expired:
+      return expired
+    case TransactionStatus.InsufficientFunds:
+      return insufficientFunds
     case TransactionStatus.Canceled:
       return canceled
     case TransactionStatus.Failed:
@@ -346,8 +348,8 @@ export function useFormattedTime(time: number): string {
         // so for the first 30s it would show 0 minutes
         `${Math.ceil(localizedDayjs().diff(wrappedAddedTime) / ONE_MINUTE_MS)}m` // within an hour
       : localizedDayjs().isBefore(wrappedAddedTime.add(24, 'hour'))
-      ? wrappedAddedTime.format(FORMAT_TIME_SHORT) // within last 24 hours
-      : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
+        ? wrappedAddedTime.format(FORMAT_TIME_SHORT) // within last 24 hours
+        : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, unixTime, localizedDayjs])
 }

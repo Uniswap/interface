@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { Screen } from 'src/components/layout/Screen'
@@ -14,26 +15,23 @@ import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCo
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import {
   useFiatOnRampQuotes,
+  useFiatOnRampSupportedTokens,
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
-} from 'src/features/fiatOnRamp/aggregatorHooks'
-import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
+} from 'src/features/fiatOnRamp/hooks'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
-import {
-  useFiatOnRampAggregatorGetCountryQuery,
-  useFiatOnRampAggregatorServiceProvidersQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import {
   FORQuote,
   FORServiceProvider,
-  FORTransaction,
   FiatOnRampCurrency,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -42,27 +40,23 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
-import { useFiatOnRampAggregatorTransactionQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
-function selectInitialQuote(
-  quotes: FORQuote[] | undefined,
-  lastTransaction: FORTransaction | undefined
-): { quote: FORQuote | undefined; type: InitialQuoteSelection | undefined } {
-  const lastUsedServiceProvider = lastTransaction?.serviceProvider
-  if (lastUsedServiceProvider) {
-    const quote = quotes?.filter((q) => q.serviceProvider === lastUsedServiceProvider)[0]
-    if (quote) {
-      return {
-        quote,
-        type: InitialQuoteSelection.MostRecent,
-      }
+function selectInitialQuote(quotes: FORQuote[] | undefined): {
+  quote: FORQuote | undefined
+  type: InitialQuoteSelection | undefined
+} {
+  const quoteFromLastUsedProvider = quotes?.find((q) => q.isMostRecentlyUsedProvider)
+  if (quoteFromLastUsedProvider) {
+    return {
+      quote: quoteFromLastUsedProvider,
+      type: InitialQuoteSelection.MostRecent,
     }
   }
+
   const bestQuote = quotes && quotes.length && quotes[0]
   if (bestQuote) {
     return {
@@ -75,14 +69,9 @@ function selectInitialQuote(
   return { quote: undefined, type: undefined }
 }
 
-function preloadServiceProviderLogos(
-  serviceProviders: FORServiceProvider[],
-  isDarkMode: boolean
-): void {
+function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
   FastImage.preload(
-    serviceProviders
-      .map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) }))
-      .filter((sp) => !!sp.uri)
+    serviceProviders.map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) })).filter((sp) => !!sp.uri),
   )
 }
 
@@ -90,7 +79,7 @@ const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'ca
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
   const [selection, setSelection] = useState<TextInputProps['selection']>()
   const [value, setValue] = useState('')
@@ -111,7 +100,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     amount,
     setAmount,
     setBaseCurrencyInfo,
-    setServiceProviders,
     quoteCurrency,
     setQuoteCurrency,
   } = useFiatOnRampContext()
@@ -120,8 +108,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setSelection({ start, end: end ?? start })
   }
 
-  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
-    useShouldShowNativeKeyboard()
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } = useShouldShowNativeKeyboard()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
     useMeldFiatCurrencySupportInfo(countryCode)
@@ -150,69 +137,47 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }, [ipCountryData, setCountryCode, setCountryState])
 
-  const {
-    currentData: serviceProvidersResponse,
-    isFetching: serviceProvidersLoading,
-    error: serviceProvidersError,
-  } = useFiatOnRampAggregatorServiceProvidersQuery({ countryCode })
-
   // preload service provider logos for given quotes for the next screen
   useEffect(() => {
-    if (serviceProvidersResponse?.serviceProviders && quotes) {
-      const quotesServiceProviderNames = quotes.map((q) => q.serviceProvider)
-      const serviceProviders = serviceProvidersResponse.serviceProviders.filter(
-        (sp) => quotesServiceProviderNames.indexOf(sp.serviceProvider) !== -1
+    if (quotes) {
+      preloadServiceProviderLogos(
+        quotes.map((q) => q.serviceProviderDetails),
+        isDarkMode,
       )
-      preloadServiceProviderLogos(serviceProviders, isDarkMode)
     }
-  }, [serviceProvidersResponse, quotes, isDarkMode])
-
-  const { currentData: transactionResponse } = useFiatOnRampAggregatorTransactionQuery({})
+  }, [quotes, isDarkMode])
 
   const prevQuotes = usePrevious(quotes)
   useEffect(() => {
     if (quotes && (!selectedQuote || prevQuotes !== quotes)) {
-      const { quote, type } = selectInitialQuote(quotes, transactionResponse?.transaction)
+      const { quote, type } = selectInitialQuote(quotes)
       if (!quote) {
         return
       }
       if (type === InitialQuoteSelection.MostRecent) {
         const otherQuotes = quotes.filter((item) => item !== quote)
-        setQuotesSections([
-          { data: [quote], type },
-          ...(otherQuotes.length ? [{ data: otherQuotes }] : []),
-        ])
+        setQuotesSections([{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])])
       } else {
         setQuotesSections([{ data: quotes, type }])
       }
       setSelectedQuote(quote)
     }
-  }, [
-    prevQuotes,
-    quotes,
-    selectedQuote,
-    setQuotesSections,
-    setSelectedQuote,
-    t,
-    transactionResponse,
-  ])
+  }, [prevQuotes, quotes, selectedQuote, setQuotesSections, setSelectedQuote, t])
 
   useEffect(() => {
-    if (!quotes && (quotesError || serviceProvidersError || !amount)) {
+    if (!quotes && (quotesError || !amount)) {
       setQuotesSections(undefined)
       setSelectedQuote(undefined)
     }
-  }, [amount, quotesError, serviceProvidersError, quotes, setQuotesSections, setSelectedQuote])
+  }, [amount, quotesError, quotes, setQuotesSections, setSelectedQuote])
 
-  const onSelectCountry: ComponentProps<typeof FiatOnRampCountryListModal>['onSelectCountry'] = (
-    country
-  ): void => {
+  const onSelectCountry: ComponentProps<typeof FiatOnRampCountryListModal>['onSelectCountry'] = (country): void => {
     dispatch(
       pushNotification({
         type: AppNotificationType.ChooseCountry,
         countryName: country.displayName,
         countryCode: country.countryCode,
-      })
+      }),
     )
     setSelectingCountry(false)
     // UI does not allow to set the state
@@ -243,22 +208,11 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }, [showNativeKeyboard, showTokenSelector])
 
   // we only show loading when there are no errors and quote value is not empty
-  const buttonDisabled =
-    serviceProvidersLoading ||
-    !!serviceProvidersError ||
-    selectTokenLoading ||
-    !!quotesError ||
-    !selectedQuote?.destinationAmount
+  const buttonDisabled = selectTokenLoading || !!quotesError || !selectedQuote?.destinationAmount
 
   const onContinue = (): void => {
-    if (
-      quotes &&
-      serviceProvidersResponse?.serviceProviders &&
-      serviceProvidersResponse?.serviceProviders.length > 0 &&
-      quoteCurrency?.currencyInfo?.currency
-    ) {
+    if (quotes && quoteCurrency?.currencyInfo?.currency) {
       setBaseCurrencyInfo(meldSupportedFiatCurrency)
-      setServiceProviders(serviceProvidersResponse.serviceProviders)
       navigation.navigate(FiatOnRampScreens.ServiceProviders)
     }
   }
@@ -285,14 +239,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   // We only support predefined amounts for certain currencies.
   const predefinedAmountsSupported = PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES.includes(
-    meldSupportedFiatCurrency.code.toLowerCase()
+    meldSupportedFiatCurrency.code.toLowerCase(),
   )
 
   const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
 
   const { errorText, errorColor } = useParseFiatOnRampError(
-    !notAvailableInThisRegion && (quotesError || serviceProvidersError),
-    meldSupportedFiatCurrency.code
+    !notAvailableInThisRegion && quotesError,
+    meldSupportedFiatCurrency.code,
   )
 
   return (
@@ -300,12 +254,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       <HandleBar backgroundColor="none" />
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
-          <AnimatedFlex
-            entering={FadeIn}
-            exiting={FadeOut}
-            gap="$spacing16"
-            px="$spacing24"
-            width="100%">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
             <Flex row alignItems="center" justifyContent="space-between">
               <Text variant="subheading1">{t('common.button.buy')}</Text>
               <FiatOnRampCountryPicker
@@ -348,7 +297,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               position="absolute"
               px="$spacing24"
               right={0}
-              onLayout={onDecimalPadLayout}>
+              onLayout={onDecimalPadLayout}
+            >
               {!showNativeKeyboard && (
                 <DecimalPadLegacy
                   hasCurrencyPrefix

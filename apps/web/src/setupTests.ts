@@ -3,6 +3,7 @@ import '@testing-library/jest-dom' // jest custom assertions
 import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
+import 'utilities/src/logger/mocks'
 
 import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
@@ -83,7 +84,7 @@ jest.mock('@web3-react/core', () => {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
-        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions),
       ),
     useWeb3React: jest.fn(),
   }

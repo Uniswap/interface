@@ -1,6 +1,7 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { WarningType } from 'nft/components/profile/list/shared'
@@ -10,7 +11,6 @@ import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -117,10 +117,10 @@ export const PriceTextInput = ({
     (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20)
       ? colors.red400
       : warningType === WarningType.BELOW_FLOOR
-      ? theme.deprecated_accentWarning
-      : isGlobalPrice || !!listPrice
-      ? theme.accent1
-      : theme.neutral2
+        ? theme.deprecated_accentWarning
+        : isGlobalPrice || !!listPrice
+          ? theme.accent1
+          : theme.neutral2
 
   const setPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!listPrice && event.target.value.includes('.') && parseFloat(event.target.value) === 0) {

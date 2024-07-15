@@ -1,0 +1,48 @@
+__generated__
+__mocks__
+.detoxrc.js
+.eslintrc
+.eslintrc.js
+.prettierrc
+.tamagui
+.turbo
+.turbo
+.yarn
+@types
+*.graphql
+*.html
+*.inc
+*.json
+*.md
+*.yml
+babel.config.js
+build
+craco.config.cjs
+cypress
+dist
+jest-setup.js
+jest.config.js
+jest.config.js
+metro.config.js
+node_modules
+tsconfig.json
+types
+
+# app/package specific
+
+# mobile
+
+apps/mobile/ios
+apps/mobile/android
+
+# extension
+
+apps/extension/dev
+
+# packages
+
+packages/uniswap/codegen.ts
+
+packages/eslint-config/react.js
+packages/eslint-config/restrictedImports.js
+packages/eslint-config/native.js

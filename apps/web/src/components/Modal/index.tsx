@@ -1,9 +1,9 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled from 'lib/styled-components'
 import React, { KeyboardEvent, useCallback, useRef } from 'react'
 import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
-import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'utilities/src/platform'
 
@@ -119,7 +119,7 @@ export default function Modal({
         onDismiss()
       }
     },
-    [isOpen, onDismiss]
+    [isOpen, onDismiss],
   )
 
   const fadeTransition = useTransition(isOpen, {
@@ -171,8 +171,8 @@ export default function Modal({
                             style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                           }
                         : slideIn
-                        ? { style: styles }
-                        : {})}
+                          ? { style: styles }
+                          : {})}
                       aria-label="dialog"
                       $height={height}
                       $minHeight={minHeight}
@@ -185,10 +185,10 @@ export default function Modal({
                       {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
                       {children}
                     </StyledDialogContent>
-                  )
+                  ),
               )}
             </StyledDialogOverlay>
-          )
+          ),
       )}
     </div>
   )

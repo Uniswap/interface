@@ -10,9 +10,7 @@ export function isDevEnv(): boolean {
   if (isInterface) {
     return process.env.NODE_ENV === 'development'
   } else if (isExtension) {
-    return (
-      __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
-    )
+    return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
   } else {
     throw createAndLogError('isProdEnv')
   }

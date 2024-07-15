@@ -8,11 +8,7 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import {
-  TAB_BAR_HEIGHT,
-  TAB_VIEW_SCROLL_THROTTLE,
-  TabProps,
-} from 'src/components/layout/TabHelpers'
+import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
@@ -39,15 +35,9 @@ type TokenBalanceListProps = TabProps & {
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
 
 export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
-  function _TokenBalanceList(
-    { owner, onPressToken, isExternalProfile = false, ...rest },
-    ref
-  ): JSX.Element {
+  function _TokenBalanceList({ owner, onPressToken, isExternalProfile = false, ...rest }, ref): JSX.Element {
     return (
-      <TokenBalanceListContextProvider
-        isExternalProfile={isExternalProfile}
-        owner={owner}
-        onPressToken={onPressToken}>
+      <TokenBalanceListContextProvider isExternalProfile={isExternalProfile} owner={owner} onPressToken={onPressToken}>
         <TokenBalanceListInner
           ref={ref}
           isExternalProfile={isExternalProfile}
@@ -57,194 +47,191 @@ export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenB
         />
       </TokenBalanceListContextProvider>
     )
-  }
+  },
 )
 
-export const TokenBalanceListInner = forwardRef<
-  FlatList<TokenBalanceListRow>,
-  TokenBalanceListProps
->(function _TokenBalanceListInner(
-  {
-    empty,
-    containerProps,
-    scrollHandler,
-    isExternalProfile = false,
-    renderedInModal = false,
-    refreshing,
-    headerHeight = 0,
-    onRefresh,
-  },
-  ref
-) {
-  const { t } = useTranslation()
-  const colors = useSporeColors()
-  const insets = useDeviceInsets()
+export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
+  function _TokenBalanceListInner(
+    {
+      empty,
+      containerProps,
+      scrollHandler,
+      isExternalProfile = false,
+      renderedInModal = false,
+      refreshing,
+      headerHeight = 0,
+      onRefresh,
+      testID,
+    },
+    ref,
+  ) {
+    const { t } = useTranslation()
+    const colors = useSporeColors()
+    const insets = useDeviceInsets()
 
-  const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
-  const hasError = isError(networkStatus, !!balancesById)
+    const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
+    const hasError = isError(networkStatus, !!balancesById)
 
-  const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
-    containerProps?.contentContainerStyle
-  )
+    const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
-  // The following logic is meant to speed up the screen transition from the token details screen back to the home screen.
-  // When we call `navigation.goBack()`, a re-render is triggered *before* the animation begins.
-  // In order for that first re-render to be fast, we use `cachedData` so that it renders a memoized `FlatList` of tokens,
-  // (this `FlatList` is the most expensive component on this screen).
-  // After the transition ends, we set focus to `true` to trigger a re-render using the latest `data`.
+    // The following logic is meant to speed up the screen transition from the token details screen back to the home screen.
+    // When we call `navigation.goBack()`, a re-render is triggered *before* the animation begins.
+    // In order for that first re-render to be fast, we use `cachedData` so that it renders a memoized `FlatList` of tokens,
+    // (this `FlatList` is the most expensive component on this screen).
+    // After the transition ends, we set focus to `true` to trigger a re-render using the latest `data`.
 
-  const [isFocused, setIsFocused] = useState<boolean>(true)
-  const [cachedRows, setCachedRows] = useState<TokenBalanceListRow[] | null>(null)
+    const [isFocused, setIsFocused] = useState<boolean>(true)
+    const [cachedRows, setCachedRows] = useState<TokenBalanceListRow[] | null>(null)
 
-  const rowsRef = useRef(rows)
-  rowsRef.current = rows
+    const rowsRef = useRef(rows)
+    rowsRef.current = rows
 
-  useFocusEffect(
-    useCallback(() => {
-      return (): void => {
-        // We save the cached data to avoid a re-render when the user navigates back to it.
-        // This speeds up the animation while preserving the scroll position.
-        setCachedRows(rowsRef.current)
-        setIsFocused(false)
-      }
-    }, [])
-  )
-
-  const navigation = useAppStackNavigation()
-
-  useEffect(() => {
-    // We use this instead of relying on react-navigation's `useIsFocused` because we want to speed up the screen transition
-    // when the user goes from the token details screen back to the home screen, so we want this state to change *after* the animation is done instead of *before*.
-    const unsubscribeTransitionEnd = navigation.addListener('transitionEnd', (e) => {
-      if (!e.data.closing) {
-        setIsFocused(true)
-      }
-    })
-
-    return (): void => unsubscribeTransitionEnd()
-  }, [navigation])
-
-  const refreshControl = useMemo(() => {
-    return (
-      <RefreshControl
-        progressViewOffset={
-          insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+    useFocusEffect(
+      useCallback(() => {
+        return (): void => {
+          // We save the cached data to avoid a re-render when the user navigates back to it.
+          // This speeds up the animation while preserving the scroll position.
+          setCachedRows(rowsRef.current)
+          setIsFocused(false)
         }
-        refreshing={refreshing ?? false}
-        tintColor={colors.neutral3.get()}
-        onRefresh={onRefresh}
-      />
+      }, []),
     )
-  }, [insets.top, headerHeight, refreshing, colors.neutral3, onRefresh])
 
-  // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
-  // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
-  const renderItem = useCallback(
-    ({ item }: { item: TokenBalanceListRow }): JSX.Element => <TokenBalanceItemRow item={item} />,
-    []
-  )
+    const navigation = useAppStackNavigation()
 
-  const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
+    useEffect(() => {
+      // We use this instead of relying on react-navigation's `useIsFocused` because we want to speed up the screen transition
+      // when the user goes from the token details screen back to the home screen, so we want this state to change *after* the animation is done instead of *before*.
+      const unsubscribeTransitionEnd = navigation.addListener('transitionEnd', (e) => {
+        if (!e.data.closing) {
+          setIsFocused(true)
+        }
+      })
 
-  const ListEmptyComponent = useMemo(() => {
-    if (hasError) {
+      return (): void => unsubscribeTransitionEnd()
+    }, [navigation])
+
+    const refreshControl = useMemo(() => {
       return (
-        <Flex pt="$spacing24">
-          <BaseCard.ErrorState
-            retryButtonLabel={t('common.button.retry')}
-            title={t('home.tokens.error.load')}
-            onRetry={(): void | undefined => refetch?.()}
-          />
+        <RefreshControl
+          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
+          refreshing={refreshing ?? false}
+          tintColor={colors.neutral3.get()}
+          onRefresh={onRefresh}
+        />
+      )
+    }, [insets.top, headerHeight, refreshing, colors.neutral3, onRefresh])
+
+    // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
+    // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
+    const renderItem = useCallback(
+      ({ item, index }: { item: TokenBalanceListRow; index: number }): JSX.Element => (
+        <TokenBalanceItemRow index={index} item={item} />
+      ),
+      [],
+    )
+
+    const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
+
+    const ListEmptyComponent = useMemo(() => {
+      if (hasError) {
+        return (
+          <Flex pt="$spacing24">
+            <BaseCard.ErrorState
+              retryButtonLabel={t('common.button.retry')}
+              title={t('home.tokens.error.load')}
+              onRetry={(): void | undefined => refetch?.()}
+            />
+          </Flex>
+        )
+      }
+
+      if (isNonPollingRequestInFlight(networkStatus)) {
+        return (
+          <Flex px="$spacing24">
+            <Loader.Token withPrice repeat={6} />
+          </Flex>
+        )
+      }
+
+      return (
+        <Flex grow px="$spacing24">
+          {empty}
         </Flex>
       )
-    }
+    }, [hasError, empty, t, networkStatus, refetch])
 
-    if (isNonPollingRequestInFlight(networkStatus)) {
-      return (
-        <Flex px="$spacing24">
-          <Loader.Token withPrice repeat={6} />
-        </Flex>
-      )
-    }
+    const ListHeaderComponent = useMemo(() => {
+      return hasError ? (
+        <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
+          <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
+        </AnimatedFlex>
+      ) : null
+    }, [hasError, refetch, t])
 
+    // add negative z index to prevent footer from covering hidden tokens row when minimized
+    const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndices.negative }), [])
+
+    const List = renderedInModal ? BottomSheetFlatList<TokenBalanceListRow> : Animated.FlatList<TokenBalanceListRow>
+
+    const getItemLayout = useCallback(
+      (_: Maybe<ArrayLike<string>>, index: number): { length: number; offset: number; index: number } => ({
+        length: ESTIMATED_TOKEN_ITEM_HEIGHT,
+        offset: ESTIMATED_TOKEN_ITEM_HEIGHT * index,
+        index,
+      }),
+      [],
+    )
+
+    const data = balancesById ? (isFocused ? rows : cachedRows) : undefined
+
+    // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
     return (
-      <Flex grow px="$spacing24">
-        {empty}
-      </Flex>
+      <ReactNavigationPerformanceView
+        interactive={balancesById !== undefined}
+        screenName={
+          // Marks the home screen as interactive when balances are defined
+          MobileScreens.Home
+        }
+      >
+        <List
+          ref={ref as never}
+          ListEmptyComponent={ListEmptyComponent}
+          // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
+          ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+          ListFooterComponentStyle={ListFooterComponentStyle}
+          ListHeaderComponent={ListHeaderComponent}
+          contentContainerStyle={containerProps?.contentContainerStyle}
+          data={data}
+          getItemLayout={getItemLayout}
+          initialNumToRender={20}
+          keyExtractor={keyExtractor}
+          maxToRenderPerBatch={20}
+          refreshControl={refreshControl}
+          refreshing={refreshing}
+          renderItem={renderItem}
+          scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
+          showsVerticalScrollIndicator={false}
+          testID={testID}
+          updateCellsBatchingPeriod={10}
+          windowSize={isFocused ? 10 : 3}
+          onContentSizeChange={onContentSizeChange}
+          onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
+          onRefresh={onRefresh}
+          onScroll={scrollHandler}
+          onScrollEndDrag={containerProps?.onScrollEndDrag}
+        />
+      </ReactNavigationPerformanceView>
     )
-  }, [hasError, empty, t, networkStatus, refetch])
-
-  const ListHeaderComponent = useMemo(() => {
-    return hasError ? (
-      <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
-        <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
-      </AnimatedFlex>
-    ) : null
-  }, [hasError, refetch, t])
-
-  // add negative z index to prevent footer from covering hidden tokens row when minimized
-  const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndices.negative }), [])
-
-  const List = renderedInModal
-    ? BottomSheetFlatList<TokenBalanceListRow>
-    : Animated.FlatList<TokenBalanceListRow>
-
-  const getItemLayout = useCallback(
-    (
-      _: Maybe<ArrayLike<string>>,
-      index: number
-    ): { length: number; offset: number; index: number } => ({
-      length: ESTIMATED_TOKEN_ITEM_HEIGHT,
-      offset: ESTIMATED_TOKEN_ITEM_HEIGHT * index,
-      index,
-    }),
-    []
-  )
-
-  const data = balancesById ? (isFocused ? rows : cachedRows) : undefined
-
-  // Note: `PerformanceView` must wrap the entire return statement to properly track interactive states.
-  return (
-    <ReactNavigationPerformanceView
-      interactive={balancesById !== undefined}
-      screenName={
-        // Marks the home screen as interactive when balances are defined
-        MobileScreens.Home
-      }>
-      <List
-        ref={ref as never}
-        ListEmptyComponent={ListEmptyComponent}
-        // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-        ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
-        ListFooterComponentStyle={ListFooterComponentStyle}
-        ListHeaderComponent={ListHeaderComponent}
-        contentContainerStyle={containerProps?.contentContainerStyle}
-        data={data}
-        getItemLayout={getItemLayout}
-        initialNumToRender={20}
-        keyExtractor={keyExtractor}
-        maxToRenderPerBatch={20}
-        refreshControl={refreshControl}
-        refreshing={refreshing}
-        renderItem={renderItem}
-        scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
-        showsVerticalScrollIndicator={false}
-        updateCellsBatchingPeriod={10}
-        windowSize={isFocused ? 10 : 3}
-        onContentSizeChange={onContentSizeChange}
-        onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
-        onRefresh={onRefresh}
-        onScroll={scrollHandler}
-        onScrollEndDrag={containerProps?.onScrollEndDrag}
-      />
-    </ReactNavigationPerformanceView>
-  )
-})
+  },
+)
 
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   item,
+  index,
 }: {
   item: TokenBalanceListRow
+  index?: number
 }) {
   const {
     balancesById,
@@ -285,6 +272,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     <TokenBalanceItemContextMenu portfolioBalance={portfolioBalance}>
       <TokenBalanceItem
         padded
+        index={index}
         isLoading={isWarmLoading}
         portfolioBalance={portfolioBalance}
         onPressToken={onPressToken}

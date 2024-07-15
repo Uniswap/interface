@@ -14,10 +14,10 @@ import {
   isSupportedChainId,
 } from 'constants/chains'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
+import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
-import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
@@ -42,7 +42,7 @@ export enum PollingInterval {
 // Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
 export function usePollQueryWhileMounted<T, K extends OperationVariables>(
   queryResult: QueryResult<T, K>,
-  interval: PollingInterval
+  interval: PollingInterval,
 ) {
   const { startPolling, stopPolling } = queryResult
 
@@ -111,7 +111,7 @@ export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefine
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.project?.name ?? token.name ?? undefined
+      token.project?.name ?? token.name ?? undefined,
     )
   }
 }
@@ -132,15 +132,15 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
 
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
-  options?: undefined
+  options?: undefined,
 ): UniverseChainInfo | undefined
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
-  options: { fallbackToEthereum: true }
+  options: { fallbackToEthereum: true },
 ): UniverseChainInfo
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
-  options?: { fallbackToEthereum?: boolean }
+  options?: { fallbackToEthereum?: boolean },
 ): UniverseChainInfo | undefined {
   const fallbackChain = options?.fallbackToEthereum ? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet] : undefined
   return chain?.backendChain.backendSupported ? chain : fallbackChain
@@ -192,7 +192,7 @@ export function unwrapToken<
         address?: string | null
         project?: { name?: string | null }
       }
-    | undefined
+    | undefined,
 >(chainId: number, token: T): T {
   if (!token?.address) {
     return token
@@ -247,9 +247,9 @@ export function apolloQueryOptions<
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
-  TQueryKey extends QueryKey = QueryKey
+  TQueryKey extends QueryKey = QueryKey,
 >(
-  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>
+  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>,
 ): Pick<
   UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
     queryKey: DataTag<TQueryKey, TQueryFnData>

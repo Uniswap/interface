@@ -2,11 +2,11 @@ import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb, useSporeColors } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export function NetworkFeeWarning({
@@ -38,12 +38,7 @@ export function NetworkFeeWarning({
         backgroundIconColor: colors.surface2.get(),
         caption: text,
         closeText: t('common.button.close'),
-        icon: (
-          <Gas
-            color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'}
-            size="$icon.24"
-          />
-        ),
+        icon: <Gas color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'} size="$icon.24" />,
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: t('transaction.networkCost.label'),
@@ -53,7 +48,8 @@ export function NetworkFeeWarning({
         placement,
         icon: gasFeeHighRelativeToValue ? <Gas color="$statusCritical" size="$icon.16" /> : null,
       }}
-      trigger={tooltipTrigger}>
+      trigger={tooltipTrigger}
+    >
       {children}
     </WarningInfo>
   )

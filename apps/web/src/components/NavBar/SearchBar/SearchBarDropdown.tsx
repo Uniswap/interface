@@ -15,11 +15,11 @@ import { useAccount } from 'hooks/useAccount'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
 import { useLocation } from 'react-router-dom'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
@@ -96,7 +96,7 @@ function SearchBarDropdownSection({
                 selected_search_result_address: suggestion.address,
               }}
             />
-          )
+          ),
         )}
       </Column>
     </Column>
@@ -173,7 +173,7 @@ function SearchBarDropdownContents({
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     3,
-    HistoryDuration.Day
+    HistoryDuration.Day,
   )
 
   const formattedTrendingCollections = useMemo(() => {
@@ -198,7 +198,7 @@ function SearchBarDropdownContents({
   const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
     () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
-    [trendingTokenData, trendingTokensLength]
+    [trendingTokenData, trendingTokensLength],
   )
 
   const totalSuggestions = hasInput

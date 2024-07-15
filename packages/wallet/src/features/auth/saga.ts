@@ -1,11 +1,8 @@
 import { call } from 'typed-redux-saga'
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  AuthActionType,
-  AuthBaseParams,
-  AuthSagaError,
-  UnlockParams,
-} from 'wallet/src/features/auth/types'
+import { AuthActionType, AuthBaseParams, AuthSagaError, UnlockParams } from 'wallet/src/features/auth/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -25,11 +22,19 @@ function* unlock({ password }: UnlockParams) {
   if (!success) {
     throw new Error(AuthSagaError.InvalidPassword)
   }
+  yield* call(sendAnalyticsEvent, ExtensionEventName.ChangeLockedState, {
+    locked: false,
+    location: 'sidebar',
+  })
 }
 
 function* lock() {
   logger.debug('authSaga', 'lock', `Locking wallet`)
   yield* call(Keyring.lock)
+  yield* call(sendAnalyticsEvent, ExtensionEventName.ChangeLockedState, {
+    locked: true,
+    location: 'sidebar',
+  })
 }
 
 export const {

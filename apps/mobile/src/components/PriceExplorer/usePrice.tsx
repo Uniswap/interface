@@ -1,14 +1,6 @@
 import { useMemo } from 'react'
-import {
-  SharedValue,
-  useAnimatedReaction,
-  useDerivedValue,
-  useSharedValue,
-} from 'react-native-reanimated'
-import {
-  useLineChart,
-  useLineChartPrice as useRNWagmiChartLineChartPrice,
-} from 'react-native-wagmi-charts'
+import { SharedValue, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import { useLineChart, useLineChartPrice as useRNWagmiChartLineChartPrice } from 'react-native-wagmi-charts'
 import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/reanimated'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
@@ -26,9 +18,7 @@ export type ValueAndFormattedWithAnimation = ValueAndFormatted & {
  * Wrapper around react-native-wagmi-chart#useLineChartPrice
  * @returns latest price when not scrubbing and active price when scrubbing
  */
-export function useLineChartPrice(
-  currentSpot?: SharedValue<number>
-): ValueAndFormattedWithAnimation {
+export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFormattedWithAnimation {
   const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
     // do not round
     precision: 18,
@@ -44,7 +34,7 @@ export function useLineChartPrice(
       if (previousValue && currentValue && shouldAnimate.value) {
         shouldAnimate.value = false
       }
-    }
+    },
   )
   const currencyInfo = useAppFiatCurrencyInfo()
   const locale = useCurrentLocale()
@@ -68,7 +58,7 @@ export function useLineChartPrice(
         style: 'currency',
         currency: code,
       },
-      symbol
+      symbol,
     )
   })
 
@@ -78,7 +68,7 @@ export function useLineChartPrice(
       formatted: priceFormatted,
       shouldAnimate,
     }),
-    [price, priceFormatted, shouldAnimate]
+    [price, priceFormatted, shouldAnimate],
   )
 }
 
@@ -99,9 +89,7 @@ export function useLineChartRelativeChange(): ValueAndFormatted {
 
     // scrubbing: close price is active price
     // not scrubbing: close price is period end price
-    const closePrice = isActive.value
-      ? data[currentIndex.value]?.value
-      : data[data.length - 1]?.value
+    const closePrice = isActive.value ? data[currentIndex.value]?.value : data[data.length - 1]?.value
 
     if (openPrice === undefined || closePrice === undefined || openPrice === 0) {
       return 0

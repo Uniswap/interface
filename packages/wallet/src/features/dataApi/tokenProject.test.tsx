@@ -1,6 +1,7 @@
 import { waitFor } from '@testing-library/react-native'
-import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
-import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
+// TODO: https://linear.app/uniswap/issue/WEB-4376/move-universepackageswalletsrcfeaturesdataapi-tests-to-uniswap-pkg
 import { SAMPLE_CURRENCY_ID_1, usdcTokenProject } from 'wallet/src/test/fixtures'
 import { renderHook } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'

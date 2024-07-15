@@ -37,8 +37,8 @@ export const MobileHoverBag = () => {
                     index === 0
                       ? 'translate(-50%, -50%) rotate(-4.42deg)'
                       : index === 1
-                      ? 'translate(-50%, -50%) rotate(-14.01deg)'
-                      : 'translate(-50%, -50%) rotate(10.24deg)',
+                        ? 'translate(-50%, -50%) rotate(-14.01deg)'
+                        : 'translate(-50%, -50%) rotate(10.24deg)',
                   zIndex: index,
                 }}
               />

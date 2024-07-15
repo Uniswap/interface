@@ -14,38 +14,39 @@ type UndefinedToNull<T> = T extends undefined ? null : T
 type ResolverReturnType<T> = T extends (...args: any[]) => infer TResult
   ? TResult
   : T extends { resolve: (...args: any[]) => infer TResult }
-  ? TResult
-  : never
+    ? TResult
+    : never
 
-type ResolverParameters<T extends Resolver<any, any, any, any>> = T extends ResolverWithResolve<
-  infer TResult, // only result type is needed to filter selected fields
-  any,
-  any,
-  any
->
-  ? Parameters<ResolverFn<TResult, any, any, any>>
-  : T extends ResolverFn<infer TResult, any, any, any>
-  ? Parameters<ResolverFn<TResult, any, any, any>>
-  : never
+type ResolverParameters<T extends Resolver<any, any, any, any>> =
+  T extends ResolverWithResolve<
+    infer TResult, // only result type is needed to filter selected fields
+    any,
+    any,
+    any
+  >
+    ? Parameters<ResolverFn<TResult, any, any, any>>
+    : T extends ResolverFn<infer TResult, any, any, any>
+      ? Parameters<ResolverFn<TResult, any, any, any>>
+      : never
 
 type ResolverResponses<T extends QueryResolvers> = {
   [K in keyof T]: Promise<ResolverReturnType<T[K]>>
 }
 
 function isResolverWithResolve<T extends Resolver<any, any, any, any>>(
-  resolver: T
+  resolver: T,
 ): resolver is Extract<T, ResolverWithResolve<any, any, any, any>> {
   return typeof resolver === 'object' && resolver !== null && 'resolve' in resolver
 }
 
 function isResolverFunction<T extends Resolver<any, any, any, any>>(
-  resolver: T
+  resolver: T,
 ): resolver is Extract<T, ResolverFn<any, any, any, any>> {
   return typeof resolver === 'function'
 }
 
 export function queryResolvers<T extends QueryResolvers>(
-  resolvers: T
+  resolvers: T,
 ): {
   resolved: ResolverResponses<T>
   resolvers: { Query: T }
@@ -53,10 +54,7 @@ export function queryResolvers<T extends QueryResolvers>(
   // Create a response object with functions to create and resolve promises
   const promiseResolvers = {} as Record<keyof T, (value: any) => void>
   const resolved = Object.fromEntries(
-    Object.keys(resolvers).map((key) => [
-      key,
-      new Promise((resolve) => (promiseResolvers[key as keyof T] = resolve)),
-    ])
+    Object.keys(resolvers).map((key) => [key, new Promise((resolve) => (promiseResolvers[key as keyof T] = resolve))]),
   ) as ResolverResponses<T>
 
   return {
@@ -67,21 +65,16 @@ export function queryResolvers<T extends QueryResolvers>(
           const key = k as keyof T
           type R = typeof resolver
 
-          const resolve = async (
-            ...params: ResolverParameters<R>
-          ): Promise<ResolverReturnType<R>> => {
+          const resolve = async (...params: ResolverParameters<R>): Promise<ResolverReturnType<R>> => {
             const [parent, args, context, info] = params
 
             const resolvedValue = isResolverWithResolve(resolver)
               ? resolver.resolve(parent, args, context, info)
               : isResolverFunction(resolver)
-              ? resolver(parent, args, context, info)
-              : null
+                ? resolver(parent, args, context, info)
+                : null
 
-            const updatedValue = await filterObjectFields(
-              info.fieldNodes[0]?.selectionSet,
-              resolvedValue
-            )
+            const updatedValue = await filterObjectFields(info.fieldNodes[0]?.selectionSet, resolvedValue)
             // cloneDeepWith returns any type so we need to cast it manually
             const resultObj = cloneDeepWith(updatedValue, undefinedToNull) as ResolverReturnType<R>
 
@@ -94,7 +87,7 @@ export function queryResolvers<T extends QueryResolvers>(
           }
 
           return [key, resolve]
-        })
+        }),
       ) as unknown as T,
     },
   }
@@ -108,7 +101,7 @@ function isObject<T extends object | Scalar>(value: T): value is Exclude<T, Scal
 
 async function filterObjectFields<T extends object | Scalar>(
   selectionSet: SelectionSetNode | undefined,
-  sourceValue: T | Promise<Maybe<ResolverTypeWrapper<T>>> | null
+  sourceValue: T | Promise<Maybe<ResolverTypeWrapper<T>>> | null,
 ): Promise<T | null> {
   // resolved source value can be a Promise or a plain value
   const source = await sourceValue

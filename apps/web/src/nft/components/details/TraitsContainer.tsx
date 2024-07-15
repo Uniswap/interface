@@ -1,9 +1,9 @@
 import { OpacityHoverState } from 'components/Common'
+import styled from 'lib/styled-components'
 import { GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 
 const Grid = styled.div`
   display: grid;
@@ -60,7 +60,7 @@ const GridItem = ({ trait, collectionAddress }: { trait: Trait; collectionAddres
     { traits: [`("${trait_type}","${trait_value}")`] },
     {
       arrayFormat: 'comma',
-    }
+    },
   )
 
   return (

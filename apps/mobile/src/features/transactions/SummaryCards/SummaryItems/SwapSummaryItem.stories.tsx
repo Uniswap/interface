@@ -3,6 +3,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
@@ -13,7 +14,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 const meta: Meta<typeof SwapSummaryItem> = {
   title: 'WIP/Activity Items',
@@ -103,10 +103,7 @@ const baseSwapTx: Omit<ClassicTransactionDetails, 'status'> & {
     expectedInputCurrencyAmountRaw: '50000000000000000',
     maximumInputCurrencyAmountRaw: '50000000000000000',
     inputCurrencyId: buildNativeCurrencyId(UniverseChainId.Mainnet),
-    outputCurrencyId: buildCurrencyId(
-      UniverseChainId.Mainnet,
-      '0x6b175474e89094c44da98b954eedeac495271d0f'
-    ),
+    outputCurrencyId: buildCurrencyId(UniverseChainId.Mainnet, '0x6b175474e89094c44da98b954eedeac495271d0f'),
     transactedUSDValue: 105.21800000000002,
   },
 }

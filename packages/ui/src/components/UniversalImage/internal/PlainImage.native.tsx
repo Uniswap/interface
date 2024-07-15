@@ -2,14 +2,7 @@ import { useState } from 'react'
 import { Image } from 'react-native'
 import { PlainImageProps } from 'ui/src/components/UniversalImage/types'
 
-export function PlainImage({
-  uri,
-  size,
-  fallback,
-  resizeMode,
-  style,
-  testID,
-}: PlainImageProps): JSX.Element {
+export function PlainImage({ uri, size, fallback, resizeMode, style, testID }: PlainImageProps): JSX.Element {
   const [hasError, setHasError] = useState(false)
 
   if (hasError && fallback) {

@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import {
   startFetchingCloudStorageBackups,
@@ -23,21 +23,15 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.RestoreCloudBackupLoading
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupLoading>
 
 const MIN_LOADING_UI_MS = ONE_SECOND_MS
 // 10s timeout time for query for backups, since we don't know when the query completes
 const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 
-export function RestoreCloudBackupLoadingScreen({
-  navigation,
-  route: { params },
-}: Props): JSX.Element {
+export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType
 
@@ -84,14 +78,14 @@ export function RestoreCloudBackupLoadingScreen({
           logger.debug(
             'RestoreCloudBackupLoadingScreen',
             'fetchCloudStorageBackups',
-            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
+            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`,
           )
         }
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         stopFetchingCloudStorageBackups()
         setIsLoading(false)
       },
-      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS
+      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS,
     )
 
     return () => {
@@ -111,7 +105,7 @@ export function RestoreCloudBackupLoadingScreen({
         dispatch(clearCloudBackups())
         fetchCloudStorageBackups()
       })
-    }, [dispatch, fetchCloudStorageBackups, navigation])
+    }, [dispatch, fetchCloudStorageBackups, navigation]),
   )
 
   /**

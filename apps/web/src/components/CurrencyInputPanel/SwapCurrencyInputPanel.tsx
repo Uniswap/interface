@@ -18,13 +18,13 @@ import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
@@ -265,13 +265,13 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       label,
       ...rest
     },
-    ref
+    ref,
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
     const { chainId } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
-    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined, chainId)
+    const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
 
@@ -435,7 +435,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
       </InputPanel>
     )
-  }
+  },
 )
 SwapCurrencyInputPanel.displayName = 'SwapCurrencyInputPanel'
 

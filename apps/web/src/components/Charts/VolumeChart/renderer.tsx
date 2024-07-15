@@ -99,7 +99,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       this._data.barSpacing,
       renderingScope.horizontalPixelRatio,
       this._data.visibleRange.from,
-      this._data.visibleRange.to
+      this._data.visibleRange.to,
     )
     const zeroY = priceToCoordinate(0) ?? 0
     for (let i = this._data.visibleRange.from; i < this._data.visibleRange.to; i++) {
@@ -111,7 +111,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       let previousY = zeroY
       const width = Math.min(
         Math.max(renderingScope.horizontalPixelRatio, column.right - column.left),
-        this._data.barSpacing * renderingScope.horizontalPixelRatio
+        this._data.barSpacing * renderingScope.horizontalPixelRatio,
       )
 
       // Modification: increase space between bars

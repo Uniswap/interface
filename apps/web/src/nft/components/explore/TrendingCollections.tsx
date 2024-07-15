@@ -1,10 +1,10 @@
 import { OpacityHoverState } from 'components/Common'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
+import styled from 'lib/styled-components'
 import CollectionTable from 'nft/components/explore/CollectionTable'
 import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatterLocales } from 'utils/formatNumbers'
@@ -91,7 +91,7 @@ const TrendingCollections = () => {
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     100,
-    convertTimePeriodToHistoryDuration(timePeriod)
+    convertTimePeriodToHistoryDuration(timePeriod),
   )
 
   const ethUsdPrice = useNativeUsdPrice()

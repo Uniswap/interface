@@ -1,16 +1,16 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
-import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
@@ -41,7 +41,7 @@ export const formApproveNotificationTitle = (
   txStatus: TransactionStatus,
   currency: Maybe<Currency>,
   tokenAddress: Address,
-  spender: Address
+  spender: Address,
 ): string => {
   const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
   const address = shortenAddress(spender)
@@ -51,13 +51,13 @@ export const formApproveNotificationTitle = (
         address,
       })
     : txStatus === TransactionStatus.Canceled
-    ? i18n.t('notification.transaction.approve.canceled', {
-        currencySymbol: currencyDisplayText,
-      })
-    : i18n.t('notification.transaction.approve.fail', {
-        currencySymbol: currencyDisplayText,
-        address,
-      })
+      ? i18n.t('notification.transaction.approve.canceled', {
+          currencySymbol: currencyDisplayText,
+        })
+      : i18n.t('notification.transaction.approve.fail', {
+          currencySymbol: currencyDisplayText,
+          address,
+        })
 }
 
 export const formSwapNotificationTitle = (
@@ -69,47 +69,49 @@ export const formSwapNotificationTitle = (
   outputCurrencyId: string,
   inputCurrencyAmountRaw: string,
   outputCurrencyAmountRaw: string,
-  tradeType?: TradeType
+  tradeType?: TradeType,
 ): string => {
-  const inputCurrencySymbol = getCurrencyDisplayText(
-    inputCurrency,
-    currencyIdToAddress(inputCurrencyId)
-  )
-  const outputCurrencySymbol = getCurrencyDisplayText(
-    outputCurrency,
-    currencyIdToAddress(outputCurrencyId)
-  )
+  const inputCurrencySymbol = getCurrencyDisplayText(inputCurrency, currencyIdToAddress(inputCurrencyId))
+  const outputCurrencySymbol = getCurrencyDisplayText(outputCurrency, currencyIdToAddress(outputCurrencyId))
 
   const inputAmount = getFormattedCurrencyAmount(
     inputCurrency,
     inputCurrencyAmountRaw,
     formatter,
-    tradeType === TradeType.EXACT_OUTPUT
+    tradeType === TradeType.EXACT_OUTPUT,
   )
   const outputAmount = getFormattedCurrencyAmount(
     outputCurrency,
     outputCurrencyAmountRaw,
     formatter,
-    tradeType === TradeType.EXACT_INPUT
+    tradeType === TradeType.EXACT_INPUT,
   )
 
   const inputCurrencyAmountWithSymbol = `${inputAmount}${inputCurrencySymbol}`
   const outputCurrencyAmountWithSymbol = `${outputAmount}${outputCurrencySymbol}`
 
-  return txStatus === TransactionStatus.Success
-    ? i18n.t('notification.transaction.swap.success', {
+  switch (txStatus) {
+    case TransactionStatus.Success:
+      return i18n.t('notification.transaction.swap.success', {
         inputCurrencyAmountWithSymbol,
         outputCurrencyAmountWithSymbol,
       })
-    : txStatus === TransactionStatus.Canceled
-    ? i18n.t('notification.transaction.swap.canceled', {
+    case TransactionStatus.Canceled:
+      return i18n.t('notification.transaction.swap.canceled', {
         inputCurrencySymbol,
         outputCurrencySymbol,
       })
-    : i18n.t('notification.transaction.swap.fail', {
+    case TransactionStatus.Expired:
+      return i18n.t('notification.transaction.swap.expired', {
+        inputCurrencySymbol,
+        outputCurrencySymbol,
+      })
+    default:
+      return i18n.t('notification.transaction.swap.fail', {
         inputCurrencyAmountWithSymbol,
         outputCurrencyAmountWithSymbol,
       })
+  }
 }
 
 export const formWrapNotificationTitle = (
@@ -118,7 +120,7 @@ export const formWrapNotificationTitle = (
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
   currencyAmountRaw: string,
-  unwrapped: boolean
+  unwrapped: boolean,
 ): string => {
   const inputCurrencySymbol = getSymbolDisplayText(inputCurrency?.symbol)
   const outputCurrencySymbol = getSymbolDisplayText(outputCurrency?.symbol)
@@ -136,12 +138,12 @@ export const formWrapNotificationTitle = (
           outputCurrencyAmountWithSymbol,
         })
       : txStatus === TransactionStatus.Canceled
-      ? i18n.t('notification.transaction.unwrap.canceled', {
-          inputCurrencySymbol,
-        })
-      : i18n.t('notification.transaction.unwrap.fail', {
-          inputCurrencyAmountWithSymbol,
-        })
+        ? i18n.t('notification.transaction.unwrap.canceled', {
+            inputCurrencySymbol,
+          })
+        : i18n.t('notification.transaction.unwrap.fail', {
+            inputCurrencyAmountWithSymbol,
+          })
   }
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.wrap.success', {
@@ -149,12 +151,12 @@ export const formWrapNotificationTitle = (
         outputCurrencyAmountWithSymbol,
       })
     : txStatus === TransactionStatus.Canceled
-    ? i18n.t('notification.transaction.wrap.canceled', {
-        inputCurrencySymbol,
-      })
-    : i18n.t('notification.transaction.wrap.fail', {
-        inputCurrencyAmountWithSymbol,
-      })
+      ? i18n.t('notification.transaction.wrap.canceled', {
+          inputCurrencySymbol,
+        })
+      : i18n.t('notification.transaction.wrap.fail', {
+          inputCurrencyAmountWithSymbol,
+        })
 }
 
 export const formTransferCurrencyNotificationTitle = (
@@ -164,7 +166,7 @@ export const formTransferCurrencyNotificationTitle = (
   currency: Maybe<Currency>,
   tokenAddress: string,
   currencyAmountRaw: string,
-  senderOrRecipient: string
+  senderOrRecipient: string,
 ): string => {
   const currencySymbol = getCurrencyDisplayText(currency, tokenAddress)
   const amount = getFormattedCurrencyAmount(currency, currencyAmountRaw, formatter)
@@ -178,7 +180,7 @@ export const formTransferNFTNotificationTitle = (
   nft: GQLNftAsset | undefined,
   tokenAddress: Address,
   tokenId: string,
-  senderOrRecipient: string
+  senderOrRecipient: string,
 ): string => {
   const nftName = nft?.name ?? `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
@@ -188,7 +190,7 @@ export const formTransferNFTNotificationTitle = (
 export const formUnknownTxTitle = (
   txStatus: TransactionStatus,
   tokenAddress: Address | undefined,
-  ensName: string | null
+  ensName: string | null,
 ): string => {
   const address = tokenAddress && shortenAddress(tokenAddress)
   const target = ensName ?? address
@@ -210,7 +212,7 @@ const formTransferTxTitle = (
   txType: TransactionType,
   txStatus: TransactionStatus,
   tokenNameOrAddress: string,
-  walletNameOrAddress: string
+  walletNameOrAddress: string,
 ): string => {
   if (txType === TransactionType.Send) {
     return txStatus === TransactionStatus.Success
@@ -219,13 +221,13 @@ const formTransferTxTitle = (
           walletNameOrAddress,
         })
       : txStatus === TransactionStatus.Canceled
-      ? i18n.t('notification.transaction.transfer.canceled', {
-          tokenNameOrAddress,
-        })
-      : i18n.t('notification.transaction.transfer.fail', {
-          tokenNameOrAddress,
-          walletNameOrAddress,
-        })
+        ? i18n.t('notification.transaction.transfer.canceled', {
+            tokenNameOrAddress,
+          })
+        : i18n.t('notification.transaction.transfer.fail', {
+            tokenNameOrAddress,
+            walletNameOrAddress,
+          })
   }
 
   return i18n.t('notification.transaction.transfer.received', {

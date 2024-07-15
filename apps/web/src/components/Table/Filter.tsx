@@ -3,10 +3,10 @@ import Row from 'components/Row'
 import { DropdownIcon } from 'components/Table/icons'
 import { useScreenSize } from 'hooks/screenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { Fragment, useCallback, useRef, useState } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -76,7 +76,7 @@ export function Filter<T extends string>({
         setFilters([...activeFilter, filter])
       }
     },
-    [activeFilter, setFilters]
+    [activeFilter, setFilters],
   )
   // Need to put the modal in a Portal when on mobile to show over promo banner
   const Wrapper = isMobile ? Portal : Fragment

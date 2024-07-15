@@ -1,7 +1,7 @@
 import Row from 'components/Row'
 import { motion } from 'framer-motion'
+import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
-import styled, { keyframes, useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
 
 const Mask = motion(styled.div`
@@ -173,10 +173,10 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
         const charset = numeric.includes(char)
           ? numeric
           : delineators.includes(char)
-          ? delineators
-          : currency.includes(char)
-          ? currency
-          : suffixes
+            ? delineators
+            : currency.includes(char)
+              ? currency
+              : suffixes
 
         return <NumberSprite char={char} key={index} charset={charset} color={live ? theme.success : theme.neutral1} />
       })}

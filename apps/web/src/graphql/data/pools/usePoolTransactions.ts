@@ -53,7 +53,7 @@ export function usePoolTransactions(
   ],
   token0?: Token,
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
-  first = PoolTransactionDefaultQuerySize
+  first = PoolTransactionDefaultQuerySize,
 ) {
   const {
     loading: loadingV3,
@@ -119,7 +119,7 @@ export function usePoolTransactions(
         },
       })
     },
-    [fetchMore, transactions, protocolVersion]
+    [fetchMore, transactions, protocolVersion],
   )
 
   const filteredTransactions = useMemo(() => {
@@ -140,8 +140,8 @@ export function usePoolTransactions(
               ? PoolTableTransactionType.SELL
               : PoolTableTransactionType.BUY
             : tx.type === PoolTransactionType.Remove
-            ? PoolTableTransactionType.REMOVE
-            : PoolTableTransactionType.ADD
+              ? PoolTableTransactionType.REMOVE
+              : PoolTableTransactionType.ADD
         if (!filter.includes(type)) {
           return undefined
         }

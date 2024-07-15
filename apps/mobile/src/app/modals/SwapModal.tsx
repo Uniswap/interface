@@ -1,11 +1,8 @@
 import React, { useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
-import {
-  useBiometricAppSettings,
-  useBiometricPrompt,
-  useOsBiometricAuthEnabled,
-} from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'
@@ -15,7 +12,7 @@ import { SwapFlow } from 'wallet/src/features/transactions/swap/SwapFlow'
 import { useSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 
 export function SwapModal(): JSX.Element {
-  const appDispatch = useAppDispatch()
+  const appDispatch = useDispatch()
   const { initialState } = useAppSelector(selectModalState(ModalName.Swap))
 
   const onClose = useCallback((): void => {

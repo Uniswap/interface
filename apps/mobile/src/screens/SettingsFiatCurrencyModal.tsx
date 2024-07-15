@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
-import { useAppDispatch } from 'src/app/hooks'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -13,14 +13,15 @@ import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fia
 import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   return (
     <BottomSheetModal
       fullScreen
       name={ModalName.FiatCurrencySelector}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}>
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}
+    >
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
@@ -41,11 +42,7 @@ function FiatCurrencySelection({ onClose }: { onClose: () => void }): JSX.Elemen
   return (
     <Flex pb="$spacing32" px="$spacing16">
       {ORDERED_CURRENCIES.map((currency) => (
-        <FiatCurrencyOption
-          active={selectedCurrency === currency}
-          currency={currency}
-          onPress={onClose}
-        />
+        <FiatCurrencyOption active={selectedCurrency === currency} currency={currency} onPress={onClose} />
       ))}
     </Flex>
   )
@@ -58,7 +55,7 @@ interface FiatCurrencyOptionProps {
 }
 
 function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionProps): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
   const { name, code } = useFiatCurrencyInfo(currency)
 
@@ -68,12 +65,7 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
   }, [dispatch, onPress, currency])
 
   return (
-    <TouchableArea
-      alignItems="center"
-      flexDirection="row"
-      px="$spacing12"
-      py="$spacing12"
-      onPress={changeCurrency}>
+    <TouchableArea alignItems="center" flexDirection="row" px="$spacing12" py="$spacing12" onPress={changeCurrency}>
       <Flex row gap="$spacing12">
         <Flex grow row gap="$spacing12">
           <Text variant="subheading1">{name}</Text>

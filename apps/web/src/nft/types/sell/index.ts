@@ -1,5 +1,6 @@
 import { GenieCollection, PriceInfo } from 'nft/types/common'
 import {
+  Chain,
   NftMarketplace,
   NftStandard,
   OrderStatus,
@@ -70,6 +71,7 @@ export interface WalletAsset {
   marketAgnosticPrice?: number
   newListings?: Listing[]
   marketplaces?: ListingMarket[]
+  chain?: Chain
 }
 
 export interface WalletCollection {

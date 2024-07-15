@@ -33,13 +33,7 @@ export function OfflineBanner(): JSX.Element | null {
   return showBanner ? (
     <BottomBanner
       backgroundColor="$surface2"
-      icon={
-        <InfoCircle
-          color={colors.neutral1.get()}
-          height={iconSizes.icon24}
-          width={iconSizes.icon24}
-        />
-      }
+      icon={<InfoCircle color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
       text={t('home.banner.offline')}
       translateY={BANNER_HEIGHT - EXTRA_MARGIN}
     />

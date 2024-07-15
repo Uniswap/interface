@@ -2,9 +2,9 @@ import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
+import { css, useTheme } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
-import { css, useTheme } from 'styled-components'
 import { isMobile } from 'utilities/src/platform'
 
 const StyledDropdownButton = css`
@@ -24,7 +24,7 @@ interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
 }
 
 function getChartTypeSelectorOption<T extends ChartType | PriceChartType>(
-  option: ChartTypeSelectorOption<T> | T
+  option: ChartTypeSelectorOption<T> | T,
 ): ChartTypeSelectorOption<T> {
   if (typeof option === 'string') {
     return { value: option }

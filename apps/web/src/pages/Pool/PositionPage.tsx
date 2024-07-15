@@ -39,6 +39,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/Pool/styled'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -46,7 +47,6 @@ import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -253,7 +253,7 @@ function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Cur
 function getRatio(
   lower: Price<Currency, Currency>,
   current: Price<Currency, Currency>,
-  upper: Price<Currency, Currency>
+  upper: Price<Currency, Currency>,
 ) {
   try {
     if (!current.greaterThan(lower)) {
@@ -478,7 +478,7 @@ function PositionPageContent() {
       ? getRatio(
           inverted ? priceUpper.invert() : priceLower,
           pool.token0Price,
-          inverted ? priceLower.invert() : priceUpper
+          inverted ? priceLower.invert() : priceUpper,
         )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
@@ -496,8 +496,8 @@ function PositionPageContent() {
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const price0 = useStablecoinPrice(token0 ?? undefined)
-  const price1 = useStablecoinPrice(token1 ?? undefined)
+  const { price: price0 } = useStablecoinPrice(token0 ?? undefined)
+  const { price: price1 } = useStablecoinPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) {
@@ -670,7 +670,7 @@ function PositionPageContent() {
       currency0 &&
       currency1 &&
       (currency0.isNative || currency1.isNative) &&
-      !collectMigrationHash
+      !collectMigrationHash,
   )
 
   if (!positionDetails && !loading) {
@@ -737,7 +737,7 @@ function PositionPageContent() {
                       poolAddress
                         ? getPoolDetailsURL(
                             poolAddress,
-                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true }),
                           )
                         : ''
                     }

@@ -7,7 +7,8 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex } from 'ui/src'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
@@ -17,18 +18,12 @@ type Props = {
   walletNeedsRestore?: boolean
 }
 
-export function SeedPhraseDisplay({
-  mnemonicId,
-  onDismiss,
-  walletNeedsRestore,
-}: Props): JSX.Element {
+export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }: Props): JSX.Element {
   const { t } = useTranslation()
   const { isModalOpen: isWalletRestoreModalOpen } = useWalletRestore({ openModalImmediately: true })
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
-  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(
-    !walletNeedsRestore
-  )
+  const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(!walletNeedsRestore)
 
   const prevIsWalletRestoreModalOpen = usePrevious(isWalletRestoreModalOpen)
 
@@ -70,17 +65,14 @@ export function SeedPhraseDisplay({
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
         ) : (
-          <HiddenMnemonicWordView />
+          <Flex grow px="$spacing16">
+            <HiddenMnemonicWordView />
+          </Flex>
         )}
       </Flex>
       <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
-        <Button
-          testID={ElementName.Next}
-          theme="secondary"
-          onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
-          {showSeedPhrase
-            ? t('setting.recoveryPhrase.action.hide')
-            : t('setting.recoveryPhrase.account.show')}
+        <Button testID={TestID.Next} theme="secondary" onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
+          {showSeedPhrase ? t('setting.recoveryPhrase.action.hide') : t('setting.recoveryPhrase.account.show')}
         </Button>
       </Flex>
 

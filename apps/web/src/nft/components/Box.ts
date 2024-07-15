@@ -15,6 +15,7 @@ type Props = Atoms &
     className?: ClassValue
   }
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const Box = React.forwardRef<HTMLElement, Props>(({ as = 'div', className, ...props }: Props, ref) => {
   const atomProps: Record<string, unknown> = {}
   const nativeProps: Record<string, unknown> = {}

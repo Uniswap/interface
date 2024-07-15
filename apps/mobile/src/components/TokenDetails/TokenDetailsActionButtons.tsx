@@ -4,7 +4,7 @@ import { Button, Flex, useSporeColors } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
+import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 
 function CTAButton({
   title,
@@ -30,7 +30,8 @@ function CTAButton({
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}
         size="large"
-        backgroundColor={validColor(tokenColor) ?? '$accent1'}>
+        backgroundColor={validColor(tokenColor) ?? '$accent1'}
+      >
         {title}
       </Button>
     </Trace>
@@ -59,7 +60,8 @@ export function TokenDetailsActionButtons({
       gap="$spacing8"
       pb="$spacing16"
       pt="$spacing12"
-      px="$spacing16">
+      px="$spacing16"
+    >
       <CTAButton
         element={ElementName.Buy}
         title={t('common.button.buy')}

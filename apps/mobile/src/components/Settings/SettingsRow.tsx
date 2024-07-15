@@ -1,6 +1,7 @@
 import { NavigatorScreenParams } from '@react-navigation/core'
 import React from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
+import { useDispatch } from 'react-redux'
 import {
   OnboardingStackNavigationProp,
   OnboardingStackParamList,
@@ -13,10 +14,9 @@ import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { openUri } from 'uniswap/src/utils/linking'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { useAppDispatch } from 'wallet/src/state'
-import { openUri } from 'wallet/src/utils/linking'
 
 export interface SettingsSection {
   subTitle: string
@@ -67,7 +67,7 @@ export function SettingsRow({
   navigation,
 }: SettingsRowProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const handleRow = async (): Promise<void> => {
     if (onToggle) {
@@ -88,12 +88,7 @@ export function SettingsRow({
   return (
     <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
       <Flex grow row alignItems="center" gap="$spacing16" minHeight={40}>
-        <Flex
-          grow
-          row
-          alignItems={subText ? 'flex-start' : 'center'}
-          flexBasis={0}
-          gap="$spacing12">
+        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="$spacing12">
           <Flex centered height={32} width={32}>
             {icon}
           </Flex>
@@ -114,22 +109,12 @@ export function SettingsRow({
           <Flex centered row>
             {currentSetting ? (
               <Flex row shrink alignItems="flex-end" flexBasis="30%" justifyContent="flex-end">
-                <Text
-                  adjustsFontSizeToFit
-                  color="$neutral2"
-                  mr="$spacing8"
-                  numberOfLines={1}
-                  variant="body3">
+                <Text adjustsFontSizeToFit color="$neutral2" mr="$spacing8" numberOfLines={1} variant="body3">
                   {currentSetting}
                 </Text>
               </Flex>
             ) : null}
-            <RotatableChevron
-              color="$neutral3"
-              direction="end"
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
+            <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
           </Flex>
         ) : externalLink ? (
           <Arrow color={colors.neutral3.val} direction="ne" size={iconSizes.icon24} />

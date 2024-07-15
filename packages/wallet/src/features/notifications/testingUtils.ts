@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export const exampleDisconnectedNotification = {
   type: 2,
@@ -21,7 +21,6 @@ export const exampleSwapConfirmation = {
 export const exampleSwapSuccess = {
   txStatus: 'failed',
   chainId: 42161,
-  txHash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   // address: '0x...',
   // txId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   type: 3,
@@ -37,7 +36,7 @@ export const exampleSwapSuccess = {
 // easiest to use inside NotificationToastWrapper before any returns
 export const useMockNotification = (ms?: number): void => {
   const [sent, setSent] = useState(false)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAddress = useActiveAccountAddressWithThrow()
 
   useEffect(() => {
@@ -51,7 +50,7 @@ export const useMockNotification = (ms?: number): void => {
           ...exampleSwapSuccess,
           hideDelay: ms ?? exampleSwapSuccess.hideDelay,
           address: activeAddress,
-        })
+        }),
       )
       setSent(true)
     }

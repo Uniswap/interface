@@ -5,6 +5,7 @@ import { OpacityHoverState } from 'components/Common'
 import { UniIcon } from 'components/Logo/UniIcon'
 import { useIsMobile } from 'hooks/screenSize'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/TransactionCompleteModal.css'
@@ -17,7 +18,6 @@ import { TxResponse, TxStateType } from 'nft/types'
 import { generateTweetForPurchase, getSuccessfulImageSize, parseTransactionResponse } from 'nft/utils'
 import { formatAssetEventProperties } from 'nft/utils/formatEventProperties'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -88,7 +88,7 @@ const TxCompleteModal = () => {
       'newwindow',
       `left=${(window.screen.width - TWITTER_WIDTH) / 2}, top=${
         (window.screen.height - TWITTER_HEIGHT) / 2
-      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+      }, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`,
     )
   }
 
@@ -135,7 +135,7 @@ const TxCompleteModal = () => {
                       <img
                         className={clsx(
                           styles.successAssetImage,
-                          nftsPurchased.length > 1 && styles.successAssetImageGrid
+                          nftsPurchased.length > 1 && styles.successAssetImageGrid,
                         )}
                         style={{
                           maxHeight: `${getSuccessfulImageSize(nftsPurchased.length, isMobile)}px`,

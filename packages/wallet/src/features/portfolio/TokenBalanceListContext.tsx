@@ -1,22 +1,19 @@
 import { NetworkStatus } from '@apollo/client'
 import { isEqual } from 'lodash'
 import {
-  createContext,
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  createContext,
   useContext,
   useMemo,
   useRef,
   useState,
 } from 'react'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import {
-  usePortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'wallet/src/features/dataApi/balances'
+import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'wallet/src/features/dataApi/balances'
 
 type CurrencyId = string
 export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW' as const
@@ -34,9 +31,7 @@ type TokenBalanceListContextState = {
   onPressToken: (currencyId: CurrencyId) => void
 }
 
-export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(
-  undefined
-)
+export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(undefined)
 
 export function TokenBalanceListContextProvider({
   owner,
@@ -113,21 +108,17 @@ export function TokenBalanceListContextProvider({
       onPressToken,
       refetch,
       rows,
-    ]
+    ],
   )
 
-  return (
-    <TokenBalanceListContext.Provider value={state}>{children}</TokenBalanceListContext.Provider>
-  )
+  return <TokenBalanceListContext.Provider value={state}>{children}</TokenBalanceListContext.Provider>
 }
 
 export const useTokenBalanceListContext = (): TokenBalanceListContextState => {
   const context = useContext(TokenBalanceListContext)
 
   if (context === undefined) {
-    throw new Error(
-      '`useTokenBalanceListContext` must be used inside of `TokenBalanceListContextProvider`'
-    )
+    throw new Error('`useTokenBalanceListContext` must be used inside of `TokenBalanceListContextProvider`')
   }
 
   return context

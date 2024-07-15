@@ -10,6 +10,7 @@ import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
+import { useTheme } from 'lib/styled-components'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from 'pages/TokenDetails/TDPContext'
 import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
@@ -17,7 +18,6 @@ import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
-import { useTheme } from 'styled-components'
 import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
@@ -39,7 +39,7 @@ function useTDPCurrency(
   tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
   currencyChainId: InterfaceChainId,
-  isNative: boolean
+  isNative: boolean,
 ) {
   const { chainId } = useAccount()
   const appChainId = chainId ?? UniverseChainId.Mainnet
@@ -110,7 +110,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     tokenQuery,
     tokenAddress,
     currencyChainInfo.id,
-    isNative
+    isNative,
   )
 
   const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
@@ -123,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     useSrcColor(
       extractedColorSrc,
       tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
-      theme.surface2
+      theme.surface2,
     ).tokenColor ?? undefined
 
   return useMemo(() => {

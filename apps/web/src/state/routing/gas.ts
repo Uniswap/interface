@@ -18,7 +18,7 @@ export async function getApproveInfo(
   account: string | undefined,
   currency: Currency,
   amount: string,
-  usdCostPerGas?: number
+  usdCostPerGas?: number,
 ): Promise<ApproveInfo> {
   // native currencies do not need token approvals
   if (currency.isNative) {
@@ -66,7 +66,7 @@ export async function getWrapInfo(
   account: string | undefined,
   chainId: SupportedInterfaceChainId,
   amount: string,
-  usdCostPerGas?: number
+  usdCostPerGas?: number,
 ): Promise<WrapInfo> {
   if (!needsWrap) {
     return { needsWrap: false }

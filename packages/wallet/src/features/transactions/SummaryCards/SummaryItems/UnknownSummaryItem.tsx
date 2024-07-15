@@ -1,16 +1,16 @@
 import { createElement, useMemo } from 'react'
 import { useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
-import {
-  SummaryItemProps,
-  TransactionSummaryLayoutProps,
-} from 'wallet/src/features/transactions/SummaryCards/types'
+import { iconSizes } from 'ui/src/theme'
+import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
+import { DappLogoWithWCBadge } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TransactionDetails, UnknownTransactionInfo } from 'wallet/src/features/transactions/types'
-import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 
 export function UnknownSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: UnknownTransactionInfo }
 }): JSX.Element {
@@ -24,7 +24,18 @@ export function UnknownSummaryItem({
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,
-    icon: <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />,
+    icon: transaction.typeInfo.dappInfo?.icon ? (
+      <DappLogoWithWCBadge
+        hideWCBadge
+        chainId={transaction.chainId}
+        dappImageUrl={transaction.typeInfo.dappInfo.icon}
+        dappName={transaction.typeInfo.dappInfo.name ?? ''}
+        size={iconSizes.icon40}
+      />
+    ) : (
+      <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
+    ),
     transaction,
+    index,
   })
 }

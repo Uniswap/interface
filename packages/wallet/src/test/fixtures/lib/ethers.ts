@@ -1,11 +1,7 @@
-import {
-  TransactionReceipt,
-  TransactionRequest,
-  TransactionResponse,
-} from '@ethersproject/providers'
+import { TransactionReceipt, TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { BigNumber, Transaction } from 'ethers'
-import { faker } from 'wallet/src/test/shared'
-import { createFixture } from 'wallet/src/test/utils'
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 
 export const ethersTransaction = createFixture<Transaction>()(() => ({
   chainId: faker.datatype.number(),

@@ -34,7 +34,7 @@ describe('transaction reducer', () => {
             spender: 'def',
             amount: '10000',
           },
-        })
+        }),
       )
       const txs = store.getState()
       expect(txs[1]).toBeTruthy()
@@ -60,7 +60,7 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           status: TransactionStatus.Failed,
-        })
+        }),
       )
       expect(store.getState()).toEqual({})
     })
@@ -77,7 +77,7 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: '0x0',
-        })
+        }),
       )
       const beforeTime = new Date().getTime()
       store.dispatch(
@@ -85,7 +85,7 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           status: TransactionStatus.Confirmed,
-        })
+        }),
       )
       const tx = store.getState()[UniverseChainId.Mainnet]?.['0x0'] as ConfirmedTransactionDetails
       expect(tx.status).toBe(TransactionStatus.Confirmed)
@@ -100,7 +100,7 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           blockNumber: 1,
-        })
+        }),
       )
       expect(store.getState()).toEqual({})
     })
@@ -117,14 +117,14 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: '0x0',
-        })
+        }),
       )
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           blockNumber: 1,
-        })
+        }),
       )
       const tx = store.getState()[UniverseChainId.Mainnet]?.['0x0'] as PendingTransactionDetails
       expect(tx.lastCheckedBlockNumber).toEqual(1)
@@ -142,21 +142,21 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: '0x0',
-        })
+        }),
       )
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           blockNumber: 3,
-        })
+        }),
       )
       store.dispatch(
         checkedTransaction({
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           blockNumber: 1,
-        })
+        }),
       )
       const tx = store.getState()[UniverseChainId.Mainnet]?.['0x0'] as PendingTransactionDetails
       expect(tx.lastCheckedBlockNumber).toEqual(3)
@@ -177,7 +177,7 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: 'abc',
-        })
+        }),
       )
       store.dispatch(
         addTransaction({
@@ -191,7 +191,7 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: 'abc',
-        })
+        }),
       )
       expect(Object.keys(store.getState())).toHaveLength(2)
       expect(Object.keys(store.getState())).toEqual([String(UniverseChainId.Mainnet), String(UniverseChainId.Optimism)])
@@ -219,7 +219,7 @@ describe('transaction reducer', () => {
             amount: '10000',
           },
           from: 'abc',
-        })
+        }),
       )
       const originalTx = store.getState()[UniverseChainId.Mainnet]?.['0x0']
       store.dispatch(
@@ -227,7 +227,7 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           cancelHash: '0x1',
-        })
+        }),
       )
       expect(Object.keys(store.getState())).toHaveLength(1)
       expect(Object.keys(store.getState())).toEqual([String(UniverseChainId.Mainnet)])
@@ -243,7 +243,7 @@ describe('transaction reducer', () => {
           chainId: UniverseChainId.Mainnet,
           hash: '0x0',
           cancelHash: '0x1',
-        })
+        }),
       )
       expect(Object.keys(store.getState())).toHaveLength(0)
       expect(Object.keys(store.getState())).toEqual([])

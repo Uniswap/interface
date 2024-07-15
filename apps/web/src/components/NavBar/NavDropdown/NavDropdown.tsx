@@ -2,8 +2,8 @@ import { RemoveScroll } from '@tamagui/remove-scroll'
 import { ScrollBarStyles } from 'components/Common'
 import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import Row from 'components/Row'
+import styled from 'lib/styled-components'
 import { ReactNode, RefObject } from 'react'
-import styled from 'styled-components'
 import { Popover } from 'ui/src'
 
 const NavDropdownContent = styled.div<{ $width?: number }>`
@@ -73,7 +73,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen }: NavDropdow
               backgroundColor="$scrim"
               style={{ backdropFilter: 'blur(4px)' }}
             />
-            <Popover.Sheet.Frame style={{ borderRadius: `16px 16px 0 0` }}>
+            <Popover.Sheet.Frame borderTopLeftRadius="$rounded16" borderTopRightRadius="$rounded16">
               <Popover.Sheet.ScrollView>
                 <Row width="full" justify="center" mt={2}>
                   <Popover.Sheet.Handle width={32} height={4} backgroundColor="$surface3" />

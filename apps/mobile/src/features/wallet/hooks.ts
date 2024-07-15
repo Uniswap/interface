@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -8,14 +9,13 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
   walletNeedsRestore: undefined | boolean
   openWalletRestoreModal: () => void
   isModalOpen: boolean
 } {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const openModalImmediately = params?.openModalImmediately
   // Means that no private key found for mnemonic wallets
   const [walletNeedsRestore, setWalletNeedsRestore] = useState<boolean>(false)
@@ -36,7 +36,7 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
       setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
     }
     openRestoreWalletModalIfNeeded().catch((error) =>
-      logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } })
+      logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } }),
     )
   }, [dispatch, hasImportedSeedPhrase, isRestoreWalletEnabled])
 

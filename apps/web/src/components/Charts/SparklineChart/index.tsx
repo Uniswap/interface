@@ -4,8 +4,8 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
+import styled, { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
-import styled, { useTheme } from 'styled-components'
 
 const LoadingContainer = styled.div`
   height: 100%;
@@ -49,11 +49,11 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
   const widthScale = scaleLinear()
     .domain(
       // the range of possible input values
-      [startingPrice.timestamp, endingPrice.timestamp]
+      [startingPrice.timestamp, endingPrice.timestamp],
     )
     .range(
       // the range of possible output values that the inputs should be transformed to (see https://www.d3indepth.com/scales/ for details)
-      [0, 110]
+      [0, 110],
     )
 
   const { min, max } = getPriceBounds(pricePoints)

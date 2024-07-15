@@ -2,7 +2,7 @@ import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { FadeIn, SharedValue } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
@@ -14,16 +14,16 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, imageSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
@@ -45,7 +45,7 @@ function FavoriteTokenCard({
   setIsEditing,
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
@@ -63,10 +63,7 @@ function FavoriteTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain) ?? UniverseChainId.Mainnet
 
-  const price = convertFiatAmountFormatted(
-    token?.project?.markets?.[0]?.price?.value,
-    NumberType.FiatTokenPrice
-  )
+  const price = convertFiatAmountFormatted(token?.project?.markets?.[0]?.price?.value, NumberType.FiatTokenPrice)
   const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
 
   const onRemove = useCallback(() => {
@@ -107,7 +104,8 @@ function FavoriteTokenCard({
         disabled={isEditing}
         style={{ borderRadius: borderRadii.rounded16 }}
         onPress={onContextMenuPress}
-        {...rest}>
+        {...rest}
+      >
         <AnimatedTouchableArea
           activeOpacity={isEditing ? 1 : undefined}
           backgroundColor="$surface2"
@@ -118,7 +116,8 @@ function FavoriteTokenCard({
           m="$spacing4"
           testID={`token-box-${token?.symbol}`}
           onLongPress={disableOnPress}
-          onPress={onPress}>
+          onPress={onPress}
+        >
           <BaseCard.Shadow>
             <Flex alignItems="flex-start" gap="$spacing8">
               <Flex row gap="$spacing4" justifyContent="space-between">

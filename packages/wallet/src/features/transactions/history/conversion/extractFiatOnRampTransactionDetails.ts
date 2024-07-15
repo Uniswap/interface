@@ -1,9 +1,9 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { fromGraphQLChain, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
@@ -17,7 +17,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 function parseFiatPurchaseTransaction(
-  transaction: FORTransaction
+  transaction: FORTransaction,
 ): FiatPurchaseTransactionInfo & { chainId: WalletChainId } {
   const {
     sourceAmount: inputCurrencyAmount,
@@ -61,7 +61,7 @@ function statusToTransactionInfoStatus(status: FORTransaction['status']): Transa
 }
 
 export function extractFiatOnRampTransactionDetails(
-  transaction: FORTransaction
+  transaction: FORTransaction,
 ): FiatOnRampTransactionDetails | undefined {
   try {
     const { chainId, ...typeInfo } = parseFiatPurchaseTransaction(transaction) ?? {
@@ -90,9 +90,7 @@ export function extractFiatOnRampTransactionDetails(
   }
 }
 
-export function extractOnRampTransactionDetails(
-  transaction: TransactionListQueryResponse
-): TransactionDetails | null {
+export function extractOnRampTransactionDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
   if (transaction?.details.__typename !== TransactionDetailsType.OnRamp) {
     return null
   }

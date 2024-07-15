@@ -10,10 +10,7 @@ import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<
-  OnboardingStackParamList,
-  OnboardingScreens.OnDeviceRecoveryViewSeedPhrase
->
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.OnDeviceRecoveryViewSeedPhrase>
 
 export function OnDeviceRecoveryViewSeedPhraseScreen({
   navigation,

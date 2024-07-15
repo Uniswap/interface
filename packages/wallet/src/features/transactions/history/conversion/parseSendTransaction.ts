@@ -1,5 +1,5 @@
+import { AssetType } from 'uniswap/src/entities/assets'
 import { SpamCode } from 'wallet/src/data/types'
-import { AssetType } from 'wallet/src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
@@ -13,13 +13,22 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 export default function parseSendTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>
+  transaction: NonNullable<TransactionListQueryResponse>,
 ): SendTokenTransactionInfo | undefined {
   if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
-  const change = transaction.details.assetChanges?.[0]
+  let change = transaction.details.assetChanges?.[0]
+
+  // For some NFT transfers, the first assetChange is an NftApproval followed by an NftTransfer
+  if (
+    change?.__typename === 'NftApproval' &&
+    transaction.details.assetChanges?.length &&
+    transaction.details.assetChanges.length > 1
+  ) {
+    change = transaction.details.assetChanges[1]
+  }
 
   if (!change) {
     return undefined
@@ -50,6 +59,7 @@ export default function parseSendTransaction(
           collectionName,
           imageURL,
           tokenId,
+          address: tokenAddress,
         },
       }
     }
@@ -68,15 +78,13 @@ export default function parseSendTransaction(
       change.asset.chain,
       change.asset.address,
       change.asset.decimals,
-      change.quantity
+      change.quantity,
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
     // Filter out send transactions with tokens that are either marked `isSpam` or with spam code 2 (token with URL name)
     // because send txs can be spoofed with spam tokens
-    const isSpam = Boolean(
-      change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
-    )
+    const isSpam = Boolean(change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH)
 
     if (!(recipient && tokenAddress)) {
       return undefined

@@ -18,6 +18,6 @@ export const useTransactionResponse = create<TransactionResponseState>()(
           transactionResponse: txResponse,
         })),
     }),
-    { name: 'useTransactionResponse' }
-  )
+    { name: 'useTransactionResponse' },
+  ),
 )

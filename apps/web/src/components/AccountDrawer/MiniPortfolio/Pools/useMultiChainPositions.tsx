@@ -13,7 +13,7 @@ import {
   usePoolPriceMap,
   useV3ManagerContracts,
 } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
+import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -32,7 +32,7 @@ function createPositionInfo(
   details: PositionDetails,
   slot0: any,
   tokenA: Token,
-  tokenB: Token
+  tokenB: Token,
 ): PositionInfo {
   /* Instantiates a Pool with a hardcoded 0 liqudity value since the sdk only uses this value for swap state and this avoids an RPC fetch */
   const pool = new Pool(tokenA, tokenB, details.fee, slot0.sqrtPriceX96.toString(), 0, slot0.tick)
@@ -51,10 +51,6 @@ type FeeAmounts = [BigNumber, BigNumber]
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
-const DEFAULT_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((chain: number) => {
-  return !TESTNET_CHAIN_IDS.includes(chain)
-})
-
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
 /**
@@ -66,7 +62,10 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(account: string, chains = DEFAULT_CHAINS): UseMultiChainPositionsData {
+export default function useMultiChainPositions(
+  account: string,
+  chains = PRODUCTION_CHAIN_IDS,
+): UseMultiChainPositionsData {
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
 
@@ -87,27 +86,30 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
       const callData = positionIds.map((id) =>
         pm.interface.encodeFunctionData('collect', [
           { tokenId: id, recipient: account, amount0Max: MAX_UINT128, amount1Max: MAX_UINT128 },
-        ])
+        ]),
       )
-      const fees = (await pm.callStatic.multicall(callData)).reduce((acc, feeBytes, index) => {
-        const key = chainId.toString() + positionIds[index]
-        acc[key] = pm.interface.decodeFunctionResult('collect', feeBytes) as FeeAmounts
-        return acc
-      }, {} as { [key: string]: FeeAmounts })
+      const fees = (await pm.callStatic.multicall(callData)).reduce(
+        (acc, feeBytes, index) => {
+          const key = chainId.toString() + positionIds[index]
+          acc[key] = pm.interface.decodeFunctionResult('collect', feeBytes) as FeeAmounts
+          return acc
+        },
+        {} as { [key: string]: FeeAmounts },
+      )
 
       setFeeMap((prev) => ({ ...prev, ...fees }))
     },
-    [account]
+    [account],
   )
 
   const fetchPositionIds = useCallback(
     async (pm: NonfungiblePositionManager, balance: BigNumber) => {
       const callData = Array.from({ length: balance.toNumber() }, (_, i) =>
-        pm.interface.encodeFunctionData('tokenOfOwnerByIndex', [account, i])
+        pm.interface.encodeFunctionData('tokenOfOwnerByIndex', [account, i]),
       )
       return (await pm.callStatic.multicall(callData)).map((idByte) => BigNumber.from(idByte))
     },
-    [account]
+    [account],
   )
 
   const fetchPositionDetails = useCallback(async (pm: NonfungiblePositionManager, positionIds: BigNumber[]) => {
@@ -117,7 +119,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         ({
           ...pm.interface.decodeFunctionResult('positions', positionBytes),
           tokenId: positionIds[index],
-        } as unknown as PositionDetails)
+        }) as unknown as PositionDetails,
     )
   }, [])
 
@@ -127,7 +129,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
       const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as UniswapV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
-        chainId
+        chainId,
       )
 
       const calls: Call[] = []
@@ -166,7 +168,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         return acc
       }, [])
     },
-    [account, poolAddressCache, getTokens]
+    [account, poolAddressCache, getTokens],
   )
 
   const fetchPositionsForChain = useCallback(
@@ -197,7 +199,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         return []
       }
     },
-    [account, fetchPositionDetails, fetchPositionFees, fetchPositionIds, fetchPositionInfo, pms, multicalls]
+    [account, fetchPositionDetails, fetchPositionFees, fetchPositionIds, fetchPositionInfo, pms, multicalls],
   )
 
   const fetchAllPositions = useCallback(async () => {
@@ -241,7 +243,7 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
         const prices = [priceMap[currencyKey(position.pool.token0)], priceMap[currencyKey(position.pool.token1)]]
         return { ...position, fees, prices } as PositionInfo
       }),
-    [feeMap, positions, priceMap]
+    [feeMap, positions, priceMap],
   )
 
   return { positions: positionsWithFeesAndPrices, loading: pricesLoading || positionsLoading }

@@ -4,6 +4,7 @@ import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
@@ -15,7 +16,6 @@ import { useNFTList, useSellAsset } from 'nft/hooks'
 import { ListingStatus } from 'nft/types'
 import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -67,13 +67,13 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
         getLooksRareNonce,
         collectionsRequiringApproval,
         listings,
-      })
+      }),
     )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
-    Section.APPROVE
+    Section.APPROVE,
   )
   const nativeCurrency = useNativeCurrency(account.chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
@@ -85,12 +85,12 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
-    [collectionsRequiringApproval]
+    [collectionsRequiringApproval],
   )
 
   const allListingsApproved = useMemo(
     () => listings.every((listing) => listing.status === ListingStatus.APPROVED),
-    [listings]
+    [listings],
   )
 
   const signListings = async () => {

@@ -6,10 +6,9 @@ import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, ReducerNames, mobileReducer } from 'src/app/reducer'
 import { mobileSaga } from 'src/app/saga'
-import { fiatOnRampAggregatorApi as sharedFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isNonJestDev } from 'utilities/src/environment'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { isNonJestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
@@ -82,18 +81,14 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   },
 })
 
-const middlewares: Middleware[] = [
-  fiatOnRampApi.middleware,
-  fiatOnRampAggregatorApi.middleware,
-  sharedFiatOnRampAggregatorApi.middleware,
-]
+const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
 if (isNonJestDev) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
 }
 
 export const setupStore = (
-  preloadedState?: PreloadedState<MobileState>
+  preloadedState?: PreloadedState<MobileState>,
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   return createStore({
@@ -107,6 +102,3 @@ export const setupStore = (
 export const store = setupStore()
 
 export const persistor = persistStore(store)
-
-export type AppDispatch = typeof store.dispatch
-export type AppStore = typeof store

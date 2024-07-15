@@ -1,16 +1,9 @@
 import { useState } from 'react'
 import { PlainImageProps, UniversalImageResizeMode } from 'ui/src/components/UniversalImage/types'
 import { Flex } from 'ui/src/components/layout/Flex'
-import { isJestRun } from 'utilities/src/environment'
+import { isTestEnv } from 'utilities/src/environment'
 
-export function PlainImage({
-  uri,
-  size,
-  fallback,
-  resizeMode,
-  style,
-  testID,
-}: PlainImageProps): JSX.Element {
+export function PlainImage({ uri, size, fallback, resizeMode, style, testID }: PlainImageProps): JSX.Element {
   const [hasError, setHasError] = useState(false)
 
   // TODO cover all cases better
@@ -36,7 +29,7 @@ export function PlainImage({
   }
 
   // TODO(MOB-3485): remove test run special casing
-  if (isJestRun) {
+  if (isTestEnv()) {
     return <Flex testID={testID}>{imgElement}</Flex>
   } else {
     return imgElement

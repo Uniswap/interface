@@ -17,24 +17,17 @@ export function BlockedAddressWarning({
 
   return (
     <>
-      {showBlockedAddressModal && (
-        <BlockedAddressModal onClose={(): void => setShowBlockedAddressModal(false)} />
-      )}
+      {showBlockedAddressModal && <BlockedAddressModal onClose={(): void => setShowBlockedAddressModal(false)} />}
       <TouchableArea
         onPress={(): void => {
           Keyboard.dismiss()
           setShowBlockedAddressModal(true)
-        }}>
+        }}
+      >
         <Flex gap="$spacing8" {...props}>
-          <InfoCircle
-            color={colors.neutral2.get()}
-            height={iconSizes.icon16}
-            width={iconSizes.icon16}
-          />
+          <InfoCircle color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
           <Text color="$neutral2" variant="subheading2">
-            {isRecipientBlocked
-              ? t('send.warning.blocked.recipient')
-              : t('send.warning.blocked.default')}
+            {isRecipientBlocked ? t('send.warning.blocked.recipient') : t('send.warning.blocked.default')}
           </Text>
         </Flex>
       </TouchableArea>

@@ -1,7 +1,7 @@
 import { ButtonOutlined } from 'components/Button'
 import { AutoRow } from 'components/Row'
 import { Trans } from 'i18n'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 
 const Button = styled(ButtonOutlined).attrs(() => ({

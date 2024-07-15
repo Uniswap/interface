@@ -9,9 +9,7 @@ import { iconSizes } from 'ui/src/theme'
  * By default react-navigation will only show the back button if the screen is not the first one in the stack.
  */
 export function useAddBackButton(
-  navigation:
-    | NativeStackNavigationProp<OnboardingStackParamList>
-    | NativeStackNavigationProp<UnitagStackParamList>
+  navigation: NativeStackNavigationProp<OnboardingStackParamList> | NativeStackNavigationProp<UnitagStackParamList>,
 ): void {
   useEffect((): void => {
     const shouldRenderBackButton = navigation.getState().index === 0

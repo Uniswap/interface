@@ -22,8 +22,8 @@ import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDurat
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { Trans, t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -98,7 +98,7 @@ function usePDPChartState(
   tokenB: Token | undefined,
   isReversed: boolean,
   chain: Chain,
-  protocolVersion: ProtocolVersion
+  protocolVersion: ProtocolVersion,
 ): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
@@ -147,7 +147,7 @@ export default function ChartSection(props: ChartSectionProps) {
     currencyB?.wrapped,
     props.isReversed,
     props.chain ?? Chain.Ethereum,
-    props.poolData?.protocolVersion ?? ProtocolVersion.V3
+    props.poolData?.protocolVersion ?? ProtocolVersion.V3,
   )
 
   const refitChartContent = useAtomValue(refitChartContentAtom)
@@ -271,7 +271,7 @@ function PriceChart({
 
   const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
 
-  const stablecoinPrice = useStablecoinPrice(primaryToken)
+  const { price: stablecoinPrice } = useStablecoinPrice(primaryToken)
 
   const lastPrice = data[data.length - 1]
   return (
@@ -279,7 +279,7 @@ function PriceChart({
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const currencyBAmountRaw = Math.floor(
-          (displayValue.value ?? displayValue.close) * 10 ** referenceToken.decimals
+          (displayValue.value ?? displayValue.close) * 10 ** referenceToken.decimals,
         )
         const priceDisplay = (
           <PriceDisplayContainer>

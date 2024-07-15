@@ -5,9 +5,10 @@ import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { ACCOUNT, preloadedSharedState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 const preloadedState = preloadedSharedState({ account: ACCOUNT })
 const address = ACCOUNT.address
@@ -34,7 +35,7 @@ describe(AccountHeader, () => {
     it('renders shortened address within section address without name section', () => {
       render(<AccountHeader />, { preloadedState: stateWithoutName })
 
-      const addressSection = screen.getByTestId('account-header/address-only')
+      const addressSection = screen.getByTestId(TestID.AccountHeaderCopyAddress)
       const addressText = within(addressSection).queryByText(shortenedAddress)
 
       expect(addressText).toBeTruthy()
@@ -45,7 +46,7 @@ describe(AccountHeader, () => {
       jest.spyOn(ExpoClipboard, 'setStringAsync').mockImplementation(setStringAsync)
       render(<AccountHeader />, { preloadedState: stateWithoutName })
 
-      const addressSection = screen.getByTestId('account-header/address-only')
+      const addressSection = screen.getByTestId(TestID.AccountHeaderCopyAddress)
       fireEvent.press(addressSection, ON_PRESS_EVENT_PAYLOAD)
 
       await waitFor(() => {
@@ -70,9 +71,7 @@ describe(AccountHeader, () => {
     it('opens account switcher modal when account name is pressed', () => {
       const { store } = render(<AccountHeader />, { preloadedState })
 
-      const displayNameText = within(screen.getByTestId('account-header/display-name')).getByText(
-        ACCOUNT.name
-      )
+      const displayNameText = within(screen.getByTestId('account-header/display-name')).getByText(ACCOUNT.name)
 
       expect(isModalOpen(store.getState())).toBe(false)
 

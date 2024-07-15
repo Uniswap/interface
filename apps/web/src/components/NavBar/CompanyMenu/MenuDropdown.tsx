@@ -5,10 +5,10 @@ import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { t } from 'i18next'
+import styled, { css } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 
 const Container = styled.div`

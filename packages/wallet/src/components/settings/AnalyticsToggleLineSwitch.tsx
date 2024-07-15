@@ -1,13 +1,14 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Flex, Text, isWeb } from 'ui/src'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { setAllowAnalytics } from 'wallet/src/features/telemetry/slice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 export function AnalyticsToggleLineSwitch(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const analyticsAllowed = useAppSelector(selectAllowAnalytics)
 
   const onChangeAllowAnalytics = (enabled: boolean): void => {

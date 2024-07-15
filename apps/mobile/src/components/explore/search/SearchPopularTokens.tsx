@@ -2,9 +2,10 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
-import { Inset, Loader } from 'ui/src'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import { Flex, Loader } from 'ui/src'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
@@ -33,18 +34,15 @@ function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult 
 export function SearchPopularTokens(): JSX.Element {
   const { popularTokens, loading } = usePopularTokens()
   const tokens = useMemo(
-    () =>
-      popularTokens
-        ?.map(gqlTokenToTokenSearchResult)
-        .filter((t): t is TokenSearchResult => Boolean(t)),
-    [popularTokens]
+    () => popularTokens?.map(gqlTokenToTokenSearchResult).filter((t): t is TokenSearchResult => Boolean(t)),
+    [popularTokens],
   )
 
   if (loading) {
     return (
-      <Inset all="$spacing8">
+      <Flex px="$spacing24" py="$spacing8">
         <Loader.Token repeat={2} />
-      </Inset>
+      </Flex>
     )
   }
 

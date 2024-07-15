@@ -9,10 +9,10 @@ import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { t, Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -79,7 +79,7 @@ export function TokenDescription() {
   const explorerUrl = getExplorerLink(
     currency.chainId,
     address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
   )
 
   const [isCopied, setCopied] = useCopyClipboard()
@@ -91,7 +91,7 @@ export function TokenDescription() {
   const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
   const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address, currency.chainId)
   const { formatPercent } = useFormatter()
   const { sellFeeString, buyFeeString } = {
     sellFeeString: formatPercent(sellFee),

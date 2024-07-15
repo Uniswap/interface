@@ -93,11 +93,11 @@ describe('Pending - classic trade titles', () => {
           revocationPending={revocationPending}
           wrapTxHash={wrapTxHash}
           swapResult={swapResult}
-        />
+        />,
       )
       expect(asFragment()).toMatchSnapshot()
       expect(screen.getByText(expectedTitle)).toBeInTheDocument()
-    }
+    },
   )
 })
 
@@ -117,10 +117,10 @@ describe('Pending - uniswapX trade titles', () => {
           revocationPending={revocationPending}
           wrapTxHash={wrapTxHash}
           swapResult={swapResult}
-        />
+        />,
       )
       expect(asFragment()).toMatchSnapshot()
       expect(screen.getByText(expectedTitle)).toBeInTheDocument()
-    }
+    },
   )
 })

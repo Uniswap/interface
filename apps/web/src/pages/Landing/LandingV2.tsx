@@ -1,6 +1,6 @@
+import styled from 'lib/styled-components'
 import { Hero } from 'pages/Landing/sections/Hero'
 import { Suspense, lazy, memo, useRef } from 'react'
-import styled from 'styled-components'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.

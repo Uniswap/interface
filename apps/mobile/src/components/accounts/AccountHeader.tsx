@@ -1,31 +1,32 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { isDevEnv } from 'uniswap/src/utils/env'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { isDevEnv } from 'utilities/src/environment'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import {
-  selectActiveAccount,
-  selectActiveAccountAddress,
-} from 'wallet/src/features/wallet/selectors'
+import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 export function AccountHeader(): JSX.Element {
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const account = useAppSelector(selectActiveAccount)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
@@ -60,8 +61,12 @@ export function AccountHeader(): JSX.Element {
         pushNotification({
           type: AppNotificationType.Copied,
           copyType: CopyNotificationType.Address,
-        })
+        }),
       )
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.CopyAddress,
+        screen: MobileScreens.Home,
+      })
     }
   }
 
@@ -69,13 +74,7 @@ export function AccountHeader(): JSX.Element {
   const iconSize = 52
 
   return (
-    <Flex
-      gap="$spacing12"
-      overflow="scroll"
-      pt="$spacing8"
-      px="$spacing12"
-      testID="account-header"
-      width="100%">
+    <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" px="$spacing12" testID="account-header" width="100%">
       {activeAddress && (
         <Flex alignItems="flex-start" gap="$spacing12" width="100%">
           <Flex row justifyContent="space-between" width="100%">
@@ -85,14 +84,15 @@ export function AccountHeader(): JSX.Element {
               flexDirection="row"
               hapticStyle={ImpactFeedbackStyle.Medium}
               hitSlop={20}
-              testID={ElementName.Manage}
+              testID={TestID.AccountHeaderAvatar}
               onLongPress={async (): Promise<void> => {
                 if (isDevEnv()) {
                   await HapticFeedback.selection()
                   dispatch(openModal({ name: ModalName.Experiments }))
                 }
               }}
-              onPress={onPressAccountHeader}>
+              onPress={onPressAccountHeader}
+            >
               <AccountIcon
                 address={activeAddress}
                 avatarUri={avatar}
@@ -105,7 +105,8 @@ export function AccountHeader(): JSX.Element {
               hapticFeedback
               hitSlop={20}
               testID="account-header/settings-button"
-              onPress={onPressSettings}>
+              onPress={onPressSettings}
+            >
               <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
             </TouchableArea>
           </Flex>
@@ -115,12 +116,9 @@ export function AccountHeader(): JSX.Element {
               alignItems="center"
               gap="$spacing8"
               justifyContent="space-between"
-              testID="account-header/display-name">
-              <TouchableArea
-                hapticFeedback
-                flexShrink={1}
-                hitSlop={20}
-                onPress={onPressAccountHeader}>
+              testID="account-header/display-name"
+            >
+              <TouchableArea hapticFeedback flexShrink={1} hitSlop={20} onPress={onPressAccountHeader}>
                 <AnimatedUnitagDisplayName address={activeAddress} displayName={displayName} />
               </TouchableArea>
             </Flex>
@@ -128,14 +126,11 @@ export function AccountHeader(): JSX.Element {
             <TouchableArea
               hapticFeedback
               hitSlop={20}
-              testID="account-header/address-only"
-              onPress={onPressCopyAddress}>
+              testID={TestID.AccountHeaderCopyAddress}
+              onPress={onPressCopyAddress}
+            >
               <Flex centered row shrink gap="$spacing4">
-                <Text
-                  adjustsFontSizeToFit
-                  color="$neutral1"
-                  numberOfLines={1}
-                  variant="subheading2">
+                <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading2">
                   {sanitizeAddressText(shortenAddress(activeAddress))}
                 </Text>
                 <CopyAlt color="$neutral1" size="$icon.16" />

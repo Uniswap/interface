@@ -2,7 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppSelector } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
@@ -11,25 +11,22 @@ import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySec
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { useReduxModalBackHandler } from 'src/features/modals/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDebounce } from 'utilities/src/time/timing'
-import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
   const navigation = useExploreStackNavigation()
 
   const { isSheetReady } = useBottomSheetContext()
-
-  useReduxModalBackHandler(ModalName.Explore)
 
   // The ExploreStack is not directly accessible from outside
   // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.
@@ -86,12 +83,13 @@ export function ExploreScreen(): JSX.Element {
           showShadow={!isSearchMode}
           onCancel={onSearchCancel}
           onChangeText={onSearchChangeText}
+          onDismiss={() => Keyboard.dismiss()}
           onFocus={onSearchFocus}
         />
       </Flex>
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
-          <Flex grow mx="$spacing16">
+          <Flex grow>
             <VirtualizedList onScroll={onScroll}>
               <Flex p="$spacing4" />
               {debouncedSearchQuery.length === 0 ? (

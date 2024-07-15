@@ -6,13 +6,13 @@ import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
+import styled from 'lib/styled-components'
 import { Box } from 'pages/Landing/components/Generics'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -62,7 +62,9 @@ const TokenRow = styled.div`
     padding: 12px;
     border-radius: 16px;
   }
-  transition: background-color 125ms ease-in, transform 125ms ease-in;
+  transition:
+    background-color 125ms ease-in,
+    transform 125ms ease-in;
   &:hover {
     background-color: ${({ theme }) => theme.surface2};
     transform: scale(1.03);
@@ -209,10 +211,10 @@ function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; addre
         getTokenDetailsURL({
           address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
           chain: chainIdToBackendChain({ chainId }),
-        })
+        }),
       )
     },
-    [address, chainId, navigate]
+    [address, chainId, navigate],
   )
   return (
     <TokenRow onClick={handleClick}>

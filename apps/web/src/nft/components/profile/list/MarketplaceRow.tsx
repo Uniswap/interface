@@ -1,8 +1,10 @@
 import Column from 'components/Column'
+import { CollapsedIcon } from 'components/Icons/Collapse'
+import { ExpandIcon } from 'components/Icons/Expand'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { t } from 'i18n'
-import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
+import styled from 'lib/styled-components'
 import { PriceTextInput } from 'nft/components/profile/list/PriceTextInput'
 import { RoyaltyTooltip } from 'nft/components/profile/list/RoyaltyTooltip'
 import { RemoveIconWrap, SetPriceMethod } from 'nft/components/profile/list/shared'
@@ -12,7 +14,6 @@ import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
-import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -133,8 +134,8 @@ export const MarketplaceRow = ({
   const [listPrice, setListPrice] = useState<number | undefined>(
     () =>
       asset.newListings?.find((listing) =>
-        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
-      )?.price
+        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price,
+      )?.price,
   )
   const [globalOverride, setGlobalOverride] = useState(false)
 
@@ -147,7 +148,7 @@ export const MarketplaceRow = ({
         setAssetListPrice(asset, price, marketplace)
       }
     },
-    [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
+    [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice],
   )
 
   const fees = useMemo(() => {
@@ -171,7 +172,7 @@ export const MarketplaceRow = ({
     setGlobalOverride,
     listPrice,
     globalPrice,
-    globalPriceMethod
+    globalPriceMethod,
   )
 
   // When in Same Price Mode and not overriding, update local price when global price changes
@@ -230,7 +231,7 @@ export const MarketplaceRow = ({
         />
         {rowHovered && ((expandMarketplaceRows && marketRowHovered) || selectedMarkets.length > 1) && (
           <ExpandMarketIconWrapper onClick={toggleExpandMarketplaceRows}>
-            {expandMarketplaceRows ? <RowsExpandedIcon /> : <RowsCollpsedIcon />}
+            {expandMarketplaceRows ? <ExpandIcon /> : <CollapsedIcon />}
           </ExpandMarketIconWrapper>
         )}
       </Row>

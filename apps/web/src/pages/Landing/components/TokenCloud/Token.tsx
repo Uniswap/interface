@@ -1,12 +1,12 @@
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { motion } from 'framer-motion'
 import { getTokenDetailsURL } from 'graphql/data/util'
+import styled, { keyframes } from 'lib/styled-components'
 import { TokenStandard } from 'pages/Landing/assets/approvedTokens'
 import { Ticker } from 'pages/Landing/components/TokenCloud/Ticker'
 import { randomChoice } from 'pages/Landing/components/TokenCloud/utils'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components'
 import {
   useCollectionPromoQuery,
   useTokenPromoQuery,
@@ -162,9 +162,9 @@ export function Token(props: {
               address,
               chain,
             })
-          : `/nfts/collection/${address}`
+          : `/nfts/collection/${address}`,
       ),
-    [address, chain, navigate, standard]
+    [address, chain, navigate, standard],
   )
 
   const borderRadius = size / 8

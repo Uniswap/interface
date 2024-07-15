@@ -14,7 +14,7 @@ describe('matchers', () => {
       render(
         <div style={{ height: 0 }}>
           <div>test</div>
-        </div>
+        </div>,
       )
       expect(screen.getByText('test')).not.toBeVisible()
     })

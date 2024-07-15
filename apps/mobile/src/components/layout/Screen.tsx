@@ -5,7 +5,7 @@ import { Flex, FlexProps, useDeviceInsets } from 'ui/src'
 // Used to determine amount of top padding for short screens
 export const SHORT_SCREEN_HEADER_HEIGHT_RATIO = 0.88
 
-type ScreenProps = FlexProps &
+export type ScreenProps = FlexProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it
@@ -60,11 +60,7 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   )
 }
 
-export function Screen({
-  backgroundColor = '$surface1',
-  children,
-  ...rest
-}: ScreenProps): JSX.Element {
+export function Screen({ backgroundColor = '$surface1', children, ...rest }: ScreenProps): JSX.Element {
   return (
     <SafeAreaWithInsets fill backgroundColor={backgroundColor} sentry-label="Screen" {...rest}>
       {children}

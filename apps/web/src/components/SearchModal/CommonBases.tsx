@@ -4,9 +4,9 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import styled from 'lib/styled-components'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
-import styled from 'styled-components'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -36,7 +36,7 @@ const formatAnalyticsEventProperties = (
   currency: Currency,
   searchQuery: string,
   isAddressSearch: string | false,
-  portfolioBalanceUsd: number | undefined
+  portfolioBalanceUsd: number | undefined,
 ) => ({
   token_symbol: currency?.symbol,
   token_chain_id: currency?.chainId,

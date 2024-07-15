@@ -1,9 +1,68 @@
-Expanded network support — we now support ZKsync!
+IPFS hash of the deployment:
+- CIDv0: `QmSGQkPLXbvRMGegFzdGhSLALt5cd9pZyEaSDUZ1snJHnY`
+- CIDv1: `bafybeib2lcrzr7jlhypszmgucmxiavixeikdk5ejknv6s4sovb7nft65je`
 
-Better multi-network warnings — provides clear warnings when a user doesn’t have enough base asset on a network to pay gas and complete a transaction.
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes:
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Onboarding improvements
-- Better handling of larger numbers
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeib2lcrzr7jlhypszmgucmxiavixeikdk5ejknv6s4sovb7nft65je.ipfs.dweb.link/
+- https://bafybeib2lcrzr7jlhypszmgucmxiavixeikdk5ejknv6s4sovb7nft65je.ipfs.cf-ipfs.com/
+- [ipfs://QmSGQkPLXbvRMGegFzdGhSLALt5cd9pZyEaSDUZ1snJHnY/](ipfs://QmSGQkPLXbvRMGegFzdGhSLALt5cd9pZyEaSDUZ1snJHnY/)
+
+## 5.40.0 (2024-07-15)
+
+
+### Features
+
+* **web:** [ext-gtm] Add analytics events (#10000) 0866b3e
+* **web:** [ext-gtm] add custom extension download connector (#9766) f0d477c
+* **web:** [ext-gtm] expand/collapse other wallets if uni extension is available (#9752) d1d2ce1
+* **web:** [ext-gtm] Extension Promo Modal (#9853) ff0080d
+* **web:** [ext-gtm] Hide 'Detected' text for uni connector on xs screens (#9869) 96f1f0d
+* **web:** [ext-gtm] update Getting Started modal (#9866) cf4697b
+* **web:** [staging] push ext gtm changes to staging (#10140) f096063
+* **web:** add address QR code page (#9726) 023442d
+* **web:** add initial receive crypto modal (#9565) f4afa73
+* **web:** add logging for meld flow (#9943) 411ea91
+* **web:** display service provider options (#9566) 9da9ac7
+* **web:** dynamic modal that adapts to bottom sheet on small screens (#9552) 5f5900d
+* **web:** error state view and connected view to receive crypto modal (#9920) ca0bc7c
+* **web:** extension limits (#9855) 9d3a053
+* **web:** extension pools view (#9849) 04d76e4
+* **web:** fix background image in FOR modal (incl. large SVG file) (#10043) b1f26fe
+* **web:** FOR show recently used provider (#9933) 3dc6356
+* **web:** loading state for FOR provider rows (#9932) f6f7dea
+* **web:** loading state in Buy form for currency conversion (#9985) c0f75e2
+* **web:** remove abandoned FOR transactions after 10m (#9929) f28c0e4
+
+
+### Bug Fixes
+
+* **web:** fiat formatting of non-USD in Buy flow (#9944) cb1f6cc
+* **web:** memoize useFiatOnRampTransactions (#9901) 044680f
+* **web:** mobile modal bottom sheet overlay (#9983) ee4d8bf
+* **web:** prevent uniwallet displaying beneath wallet connect modal (#9799) 686d411
+* **web:** remove max-width on nav (#10186) 4661a16
+* **web:** remove opacity effect on loading provider row for FOR modal (#10046) 75dbd8f
+* **web:** Show chart error state if priceHistory is an empty array (#9924) 1e89865
+* **web:** show deadline settings (#10153) 7b2046c
+* **web:** Update responsive behavior of TDPActionTabs  (#9964) 98de10f
+* **web:** USD//C token name display (#10008) 4d7fbd4
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 2bd0a4e
+
+
+### Code Refactoring
+
+* **web:** AddressDisplay component with optional Copy Helper (#9687) cef2428
+* **web:** common GetHelpHeader component (#9669) 3dc95fd
+
+

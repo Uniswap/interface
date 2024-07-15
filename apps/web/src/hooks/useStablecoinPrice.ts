@@ -3,24 +3,27 @@ import { getChain, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
-import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE } from 'state/routing/types'
+import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export default function useStablecoinPrice(currency?: Currency): Price<Currency, Token> | undefined {
+export default function useStablecoinPrice(currency?: Currency): {
+  price?: Price<Currency, Token>
+  state: TradeState
+} {
   const chainId = useSupportedChainId(currency?.chainId)
   const amountOut = chainId ? getChain({ chainId }).spotPriceStablecoinAmount : undefined
   const stablecoin = amountOut?.currency
 
-  const { trade } = useRoutingAPITrade(
+  const { trade, state } = useRoutingAPITrade(
     false /* skip */,
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE
+    INTERNAL_ROUTER_PREFERENCE_PRICE,
   )
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
@@ -50,11 +53,11 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   ) {
     lastPrice.current = price
   }
-  return lastPrice.current
+  return { price: lastPrice.current, state }
 }
 
 export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
-  const price = useStablecoinPrice(currencyAmount?.currency)
+  const { price } = useStablecoinPrice(currencyAmount?.currency)
 
   return useMemo(() => {
     if (!price || !currencyAmount) {

@@ -25,6 +25,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
+import styled from 'lib/styled-components'
 import ms from 'ms'
 import { ProposalStatus } from 'pages/Vote/styled'
 import { useState } from 'react'
@@ -49,7 +50,6 @@ import {
   useUserVotesAsOfBlock,
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
-import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isAddress } from 'utilities/src/addresses'
@@ -147,14 +147,14 @@ function getDateFromBlock(
   targetBlock: number | undefined,
   currentBlock: number | undefined,
   averageBlockTimeInSeconds: number | undefined,
-  currentTimestamp: BigNumber | undefined
+  currentTimestamp: BigNumber | undefined,
 ): Date | undefined {
   if (targetBlock && currentBlock && averageBlockTimeInSeconds && currentTimestamp) {
     const date = new Date()
     date.setTime(
       currentTimestamp
         .add(BigNumber.from(averageBlockTimeInSeconds).mul(BigNumber.from(targetBlock - currentBlock)))
-        .toNumber() * ms(`1s`)
+        .toNumber() * ms(`1s`),
     )
     return date
   }
@@ -199,13 +199,13 @@ export default function VotePage() {
     proposalData?.startBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
   )
   const endDate = getDateFromBlock(
     proposalData?.endBlock,
     currentBlock,
     (account.chainId && AVERAGE_BLOCK_TIME_IN_SECS[account.chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
-    currentTimestamp
+    currentTimestamp,
   )
   const now = new Date()
   const locale = useActiveLocale()
@@ -245,13 +245,13 @@ export default function VotePage() {
 
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account.address,
-    account.chainId ? UNI[account.chainId] : undefined
+    account.chainId ? UNI[account.chainId] : undefined,
   )
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
   )
 
   // show links in propsoal details if content is an address

@@ -6,7 +6,7 @@ import { createIcon } from '../factories/createIcon'
 export const [LinkHorizontalAlt, AnimatedLinkHorizontalAlt] = createIcon({
   name: 'LinkHorizontalAlt',
   getIcon: (props) => (
-    <Svg fill="currentColor" viewBox="0 0 24 25" {...props}>
+    <Svg viewBox="0 0 24 25" fill="currentColor" {...props}>
       <Path
         d="M10 17.5H7C5.676 17.5 4.42202 16.982 3.46802 16.042C2.51802 15.078 2 13.824 2 12.5C2 9.743 4.243 7.5 7 7.5H8C8.553 7.5 9 7.948 9 8.5C9 9.052 8.553 9.5 8 9.5H7C5.346 9.5 4 10.846 4 12.5C4 13.295 4.31308 14.051 4.88208 14.628C5.44908 15.187 6.205 15.5 7 15.5H10C11.654 15.5 13 14.154 13 12.5C13 11.948 13.447 11.5 14 11.5C14.553 11.5 15 11.948 15 12.5C15 15.257 12.757 17.5 10 17.5Z"
         fill={'currentColor' ?? '#7D7D7D'}

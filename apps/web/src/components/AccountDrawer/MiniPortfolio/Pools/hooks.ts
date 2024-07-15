@@ -30,7 +30,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
-  chainIds?: InterfaceChainId[]
+  chainIds?: InterfaceChainId[],
 ): ContractMap<T> {
   const account = useAccount()
   const { provider: walletProvider } = useWeb3React()
@@ -48,8 +48,8 @@ export function useContractMultichain<T extends BaseContract>(
         walletProvider && account.chainId === chainId
           ? walletProvider
           : isSupportedChain(chainId)
-          ? RPC_PROVIDERS[chainId]
-          : undefined
+            ? RPC_PROVIDERS[chainId]
+            : undefined
       if (provider) {
         acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
       }
@@ -91,14 +91,14 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
         }
         return acc
       }, {}) ?? {},
-    [data?.tokens]
+    [data?.tokens],
   )
 
   return { priceMap, pricesLoading: loading && !data }
 }
 
 function useFeeValue(token: Token, fee: number | undefined, queriedPrice: number | undefined) {
-  const stablecoinPrice = useStablecoinPrice(!queriedPrice ? token : undefined)
+  const { price: stablecoinPrice } = useStablecoinPrice(!queriedPrice ? token : undefined)
   return useMemo(() => {
     // Prefers gql price, as fetching stablecoinPrice will trigger multiple infura calls for each pool position
     const price = queriedPrice ?? (stablecoinPrice ? parseFloat(stablecoinPrice.toSignificant()) : undefined)

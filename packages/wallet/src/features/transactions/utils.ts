@@ -7,6 +7,7 @@ import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
+  TransactionReceipt,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
@@ -15,7 +16,7 @@ export const MAX_FIAT_INPUT_DECIMALS = 2
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
-  chainId?: WalletChainId
+  chainId?: WalletChainId,
 ): providers.TransactionRequest {
   // prettier-ignore
   const { to, from, nonce, gasLimit, gasPrice, data, value, maxPriorityFeePerGas, maxFeePerGas, type } = request
@@ -38,7 +39,7 @@ export function getSerializableTransactionRequest(
 function getNativeCurrencyTotalSpend(
   value?: CurrencyAmount<NativeCurrency>,
   gasFee?: string,
-  nativeCurrency?: NativeCurrency
+  nativeCurrency?: NativeCurrency,
 ): Maybe<CurrencyAmount<NativeCurrency>> {
   if (!gasFee || !nativeCurrency) {
     return value
@@ -59,11 +60,7 @@ export function hasSufficientFundsIncludingGas(params: {
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
 }): boolean {
   const { transactionAmount, gasFee, nativeCurrencyBalance } = params
-  const totalSpend = getNativeCurrencyTotalSpend(
-    transactionAmount,
-    gasFee,
-    nativeCurrencyBalance?.currency
-  )
+  const totalSpend = getNativeCurrencyTotalSpend(transactionAmount, gasFee, nativeCurrencyBalance?.currency)
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
 }
 
@@ -88,7 +85,7 @@ export function isOffline(networkStatus: NetInfoState): boolean {
 // Based on the current status of the transaction, we determine the new status.
 export function getFinalizedTransactionStatus(
   currentStatus: TransactionStatus,
-  receiptStatus?: number
+  receiptStatus?: number,
 ): FinalizedTransactionStatus {
   if (!receiptStatus) {
     return TransactionStatus.Failed
@@ -100,11 +97,26 @@ export function getFinalizedTransactionStatus(
 }
 
 export function getIsCancelable(tx: TransactionDetails): boolean {
-  if (
-    tx.status === TransactionStatus.Pending &&
-    (isUniswapX(tx) || Object.keys(tx.options?.request).length > 0)
-  ) {
+  if (tx.status === TransactionStatus.Pending && (isUniswapX(tx) || Object.keys(tx.options?.request).length > 0)) {
     return true
   }
   return false
+}
+
+export function receiptFromEthersReceipt(
+  ethersReceipt: providers.TransactionReceipt | undefined,
+): TransactionReceipt | undefined {
+  if (!ethersReceipt) {
+    return undefined
+  }
+
+  return {
+    blockHash: ethersReceipt.blockHash,
+    blockNumber: ethersReceipt.blockNumber,
+    transactionIndex: ethersReceipt.transactionIndex,
+    confirmations: ethersReceipt.confirmations,
+    confirmedTime: Date.now(),
+    gasUsed: ethersReceipt.gasUsed?.toNumber(),
+    effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
+  }
 }

@@ -1,22 +1,19 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Screen } from 'src/components/layout/Screen'
-import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
+import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
+import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
-type Props = NativeStackScreenProps<
-  SettingsStackParamList,
-  MobileScreens.SettingsCloudBackupPasswordCreate
->
+type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupPasswordCreate>
 
 // This screen is visited when no iCloud backup exists (checked from settings)
 export function SettingsCloudBackupPasswordCreateScreen({
@@ -30,23 +27,32 @@ export function SettingsCloudBackupPasswordCreateScreen({
 
   const [showCloudBackupInfoModal, setShowCloudBackupInfoModal] = useState(true)
 
-  const navigateToNextScreen = ({ password }: { password: string }): void => {
-    navigation.navigate({
-      name: MobileScreens.SettingsCloudBackupPasswordConfirm,
-      params: {
-        password,
-        address,
-      },
-      merge: true,
-    })
-  }
+  const navigateToNextScreen = useCallback(
+    ({ password }: { password: string }): void => {
+      navigation.navigate({
+        name: MobileScreens.SettingsCloudBackupPasswordConfirm,
+        params: {
+          password,
+          address,
+        },
+        merge: true,
+      })
+    },
+    [navigation, address],
+  )
 
   return (
-    <Screen mx="$spacing16" my="$spacing16">
-      <BackHeader mb="$spacing16" />
-      <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
-        <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
-          <Text variant="heading3">
+    <CloudBackupPassword.FormProvider navigateToNextScreen={navigateToNextScreen}>
+      <SafeKeyboardScreen
+        footer={
+          <Flex mx="$spacing16" my="$spacing12">
+            <CloudBackupPassword.ContinueButton />
+          </Flex>
+        }
+        header={<BackHeader mx="$spacing16" my="$spacing16" />}
+      >
+        <Flex gap="$spacing12" mb="$spacing24" mx="$spacing12">
+          <Text textAlign="center" variant="heading3">
             {t('settings.setting.backup.create.title', {
               cloudProviderName: getCloudProviderName(),
             })}
@@ -57,11 +63,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
             })}
           </Text>
         </Flex>
-        <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
+        <CloudBackupPassword.PasswordInput />
         {showCloudBackupInfoModal && (
-          <BottomSheetModal
-            backgroundColor={colors.surface2.get()}
-            name={ModalName.CloudBackupInfo}>
+          <BottomSheetModal backgroundColor={colors.surface2.get()} name={ModalName.CloudBackupInfo}>
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex backgroundColor="$accentSoft" borderRadius="$rounded12" p="$spacing12">
@@ -82,17 +86,14 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 <Button fill theme="tertiary" onPress={(): void => navigation.goBack()}>
                   {t('common.button.cancel')}
                 </Button>
-                <Button
-                  fill
-                  testID={ElementName.Confirm}
-                  onPress={(): void => setShowCloudBackupInfoModal(false)}>
+                <Button fill testID={TestID.Confirm} onPress={(): void => setShowCloudBackupInfoModal(false)}>
                   {t('common.button.continue')}
                 </Button>
               </Flex>
             </Flex>
           </BottomSheetModal>
         )}
-      </ScrollView>
-    </Screen>
+      </SafeKeyboardScreen>
+    </CloudBackupPassword.FormProvider>
   )
 }

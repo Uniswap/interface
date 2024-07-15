@@ -16,7 +16,7 @@ type FiatOnRampCurrencyInfo = {
   notAvailableInThisRegion: boolean
 }
 
-const fallbackCurrencyInfo: FiatCurrencyInfo = {
+export const fallbackCurrencyInfo: FiatCurrencyInfo = {
   ...getFiatCurrencyComponents('en-US', 'USD'),
   symbol: '$',
   name: 'United States Dollar',
@@ -40,7 +40,7 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
   const appFiatCurrencySupported =
     supportedFiatCurrencies &&
     supportedFiatCurrencies.fiatCurrencies.some(
-      (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase()
+      (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase(),
     )
   const meldSupportedFiatCurrency: FiatCurrencyInfo = useMemo(() => {
     const activeLocalCurrencyComponents = getFiatCurrencyComponents(activeLocale, activeLocalCurrency)
@@ -62,7 +62,7 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
 
 export function useFiatOnRampSupportedTokens(
   fiatCurrency: FiatCurrencyInfo,
-  countryCode?: string
+  countryCode?: string,
 ): FiatOnRampCurrency[] {
   const { data: quoteCurrencyOptions } = useFiatOnRampAggregatorSupportedTokensQuery({
     fiatCurrency: fiatCurrency.code,

@@ -4,9 +4,9 @@ import { TimePeriod } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
+import { css, useTheme } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'
-import { css, useTheme } from 'styled-components'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',

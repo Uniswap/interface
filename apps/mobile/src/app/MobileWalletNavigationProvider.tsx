@@ -1,6 +1,6 @@
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { exploreNavigationRef } from 'src/app/navigation/navigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -14,6 +14,7 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
+  NavigateToNftCollectionArgs,
   NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
@@ -23,7 +24,6 @@ import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
@@ -32,6 +32,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
+  const navigateToNftCollection = useNavigateToNftCollection()
   const navigateToNftDetails = useNavigateToNftDetails()
   const navigateToReceive = useNavigateToReceive()
   const navigateToSend = useNavigateToSend()
@@ -45,11 +46,13 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToReceive={navigateToReceive}
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
-      navigateToTokenDetails={navigateToTokenDetails}>
+      navigateToTokenDetails={navigateToTokenDetails}
+    >
       {children}
     </WalletNavigationProvider>
   )
@@ -110,29 +113,27 @@ function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
 }
 
 function useNavigateToReceive(): () => void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   return useCallback((): void => {
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-    )
+    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
   }, [dispatch])
 }
 
 function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   return useCallback(
     (args: NavigateToSendFlowArgs) => {
       const initialSendState = getNavigateToSendFlowArgsInitialState(args)
       dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
@@ -140,7 +141,7 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
-    [dispatch]
+    [dispatch],
   )
 }
 
@@ -155,7 +156,7 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
         appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
       }
     },
-    [appNavigation]
+    [appNavigation],
   )
 }
 
@@ -172,15 +173,26 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
         fallbackData,
       })
     },
-    [navigation]
+    [navigation],
+  )
+}
+
+function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => void {
+  const navigation = useAppStackNavigation()
+
+  return useCallback(
+    ({ collectionAddress }: NavigateToNftCollectionArgs): void => {
+      navigation.navigate(MobileScreens.NFTCollection, {
+        collectionAddress,
+      })
+    },
+    [navigation],
   )
 }
 
 function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
-  const dispatch = useAppDispatch()
-
-  const { data } = useFiatOnRampIpAddressQuery()
-  const moonpayFiatOnRampEligible = Boolean(data?.isBuyAllowed)
+  const dispatch = useDispatch()
+  // This flag is enabled only for supported countries.
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return useCallback((): void => {
@@ -188,15 +200,13 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
 
     if (forAggregatorEnabled) {
       dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
-    } else if (moonpayFiatOnRampEligible) {
-      dispatch(openModal({ name: ModalName.FiatOnRamp }))
     } else {
       dispatch(
         openModal({
           name: ModalName.WalletConnectScan,
           initialState: ScannerModalState.WalletQr,
-        })
+        }),
       )
     }
-  }, [dispatch, forAggregatorEnabled, moonpayFiatOnRampEligible])
+  }, [dispatch, forAggregatorEnabled])
 }

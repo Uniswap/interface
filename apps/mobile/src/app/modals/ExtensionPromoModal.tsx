@@ -19,9 +19,7 @@ export function ExtensionPromoModal({ onClose }: { onClose: () => void }): JSX.E
   const isDarkMode = useIsDarkMode()
   const isExtensionGAPromotionEnabled = useFeatureFlag(FeatureFlags.ExtensionPromotionGA)
 
-  const bannerImageGA = isDarkMode
-    ? EXTENSION_PROMO_BANNER_DARK_GA
-    : EXTENSION_PROMO_BANNER_LIGHT_GA
+  const bannerImageGA = isDarkMode ? EXTENSION_PROMO_BANNER_DARK_GA : EXTENSION_PROMO_BANNER_LIGHT_GA
 
   const bannerImageBeta = isDarkMode ? EXTENSION_PROMO_BANNER_DARK : EXTENSION_PROMO_BANNER_LIGHT
 

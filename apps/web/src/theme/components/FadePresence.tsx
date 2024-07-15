@@ -1,6 +1,6 @@
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
+import styled, { css, keyframes } from 'lib/styled-components'
 import { useRef } from 'react'
-import styled, { css, keyframes } from 'styled-components'
 
 const fadeIn = keyframes`
   from { opacity: 0;}
@@ -119,7 +119,8 @@ const FadeWrapper = styled.div<{
   $animationDelay?: string
   $zIndex?: number
 }>`
-  transition: display
+  transition:
+    display
       ${({ theme, $transitionDuration }) =>
         `${$transitionDuration ?? theme.transition.duration.medium} ${theme.transition.timing.inOut}`},
     transform

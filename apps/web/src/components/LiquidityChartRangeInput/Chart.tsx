@@ -30,7 +30,7 @@ export function Chart({
 
   const [innerHeight, innerWidth] = useMemo(
     () => [height - margins.top - margins.bottom, width - margins.left - margins.right],
-    [width, height, margins]
+    [width, height, margins],
   )
 
   const { xScale, yScale } = useMemo(() => {
@@ -76,7 +76,7 @@ export function Chart({
         resetBrush={() => {
           onBrushDomainChange(
             [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
-            'reset'
+            'reset',
           )
         }}
         showResetButton={Boolean(ticksAtLimit[Bound.LOWER] || ticksAtLimit[Bound.UPPER])}

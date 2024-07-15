@@ -1,15 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleProp, ViewStyle } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import {
-  Flex,
-  Image,
-  Text,
-  TouchableArea,
-  useIsDarkMode,
-  useIsShortMobileDevice,
-  useSporeColors,
-} from 'ui/src'
+import { useDispatch } from 'react-redux'
+import { Flex, Image, Text, TouchableArea, useIsDarkMode, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { EXTENSION_PROMO_BANNER_DARK, EXTENSION_PROMO_BANNER_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
@@ -17,10 +9,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import {
-  ExtensionOnboardingState,
-  setExtensionOnboardingState,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { ExtensionOnboardingState, setExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 
 const IMAGE_ASPECT_RATIO = 0.69
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.3
@@ -30,7 +19,7 @@ export function ExtensionPromoBanner({
 }: {
   onShowExtensionPromoModal: () => void
 }): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const colors = useSporeColors()
@@ -79,7 +68,8 @@ export function ExtensionPromoBanner({
       pl="$spacing16"
       shadowColor="$neutral3"
       shadowOpacity={0.4}
-      shadowRadius="$spacing4">
+      shadowRadius="$spacing4"
+    >
       <Flex fill gap="$spacing16" justifyContent="space-between" mr="$spacing12" py="$spacing16">
         <Flex gap="$spacing4">
           <Text color="$neutral1" variant="subheading1">
@@ -87,9 +77,7 @@ export function ExtensionPromoBanner({
           </Text>
           {!isShortDevice && (
             <Text color="$neutral2" variant="body3">
-              {isGAEnabled
-                ? t('home.banner.extension.message.default')
-                : t('home.banner.extension.message.beta')}
+              {isGAEnabled ? t('home.banner.extension.message.default') : t('home.banner.extension.message.beta')}
             </Text>
           )}
         </Flex>
@@ -100,11 +88,10 @@ export function ExtensionPromoBanner({
               ...baseButtonStyle,
               backgroundColor: colors.neutral1.get(),
             }}
-            onPress={onPressJoin}>
+            onPress={onPressJoin}
+          >
             <Text color={isDarkMode ? 'black' : 'white'} textAlign="center" variant="buttonLabel4">
-              {isGAEnabled
-                ? t('home.banner.extension.confirm.default')
-                : t('home.banner.extension.confirm.beta')}
+              {isGAEnabled ? t('home.banner.extension.confirm.default') : t('home.banner.extension.confirm.beta')}
             </Text>
           </TouchableArea>
           <TouchableArea
@@ -113,7 +100,8 @@ export function ExtensionPromoBanner({
               ...baseButtonStyle,
               backgroundColor: colors.transparent.get(),
             }}
-            onPress={onPressMaybeLater}>
+            onPress={onPressMaybeLater}
+          >
             <Text color="$neutral2" textAlign="center" variant="buttonLabel4">
               {t('common.button.later')}
             </Text>

@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 export const NavDropdownDefaultWrapper = styled(Column)`
   width: 100%;

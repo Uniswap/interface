@@ -1,5 +1,6 @@
 import { SMALL_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled from 'lib/styled-components'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { Checkbox } from 'nft/components/layout/Checkbox'
@@ -9,7 +10,6 @@ import { ListingMarket } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
 import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -141,7 +141,7 @@ export const SelectMarketplacesDropdown = ({
   const [isOpen, toggleIsOpen] = useReducer((s) => !s, false)
   const dropdownDisplayText = useMemo(
     () => (selectedMarkets.length === 1 ? selectedMarkets[0].name : 'Multiple'),
-    [selectedMarkets]
+    [selectedMarkets],
   )
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, () => isOpen && toggleIsOpen())

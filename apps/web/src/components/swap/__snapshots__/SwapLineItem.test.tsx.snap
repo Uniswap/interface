@@ -152,8 +152,8 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -854,8 +854,8 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -1570,8 +1570,8 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -2557,8 +2557,8 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -3544,8 +3544,8 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -4572,8 +4572,8 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -5613,8 +5613,8 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 
@@ -6591,8 +6591,8 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
-  -webkit-transition: visibility 150ms linear,opacity 150ms linear;
-  transition: visibility 150ms linear,opacity 150ms linear;
+  -webkit-transition: visibility 150ms linear, opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: #7D7D7D;
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
@@ -22,7 +22,7 @@ import { useAppSelector } from 'wallet/src/state'
 
 export function DevScreen(): JSX.Element {
   const insets = useDeviceInsets()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
   const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
@@ -35,7 +35,7 @@ export function DevScreen(): JSX.Element {
     dispatch(
       createAccountsActions.trigger({
         accounts: [await createOnboardingAccount(sortedMnemonicAccounts)],
-      })
+      }),
     )
   }
 
@@ -46,11 +46,7 @@ export function DevScreen(): JSX.Element {
   const onPressShowError = (): void => {
     const address = activeAccount?.address
     if (!address) {
-      logger.debug(
-        'DevScreen',
-        'onPressShowError',
-        'Cannot show error if activeAccount is undefined'
-      )
+      logger.debug('DevScreen', 'onPressShowError', 'Cannot show error if activeAccount is undefined')
       return
     }
 
@@ -59,7 +55,7 @@ export function DevScreen(): JSX.Element {
         type: AppNotificationType.Error,
         address,
         errorMessage: 'A scary new error has happened. Be afraid!!',
-      })
+      }),
     )
   }
 
@@ -92,11 +88,7 @@ export function DevScreen(): JSX.Element {
           </Text>
           <Flex centered row flexWrap="wrap">
             {Object.values(MobileScreens).map((s) => (
-              <TouchableArea
-                key={s}
-                m="$spacing8"
-                testID={`dev_screen/${s}`}
-                onPress={(): void => activateWormhole(s)}>
+              <TouchableArea key={s} m="$spacing8" testID={`dev_screen/${s}`} onPress={(): void => activateWormhole(s)}>
                 <Text color="$neutral1">{s}</Text>
               </TouchableArea>
             ))}

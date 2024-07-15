@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { AssetType } from 'wallet/src/entities/assets'
 import { ReceiveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
@@ -118,6 +118,7 @@ const baseNFTReceiveTx: Omit<ClassicTransactionDetails, 'status'> & {
         'https://lh3.googleusercontent.com/9LokgAuB0Xqkio273GE0pY0WSJwOExFtFI1SkJT2jK-USvqFc-5if7ZP5PQ1h8s5YPimyJG5cSOdGGR2UaD3gTYMKAhj6yikYaw=s250',
       name: 'Froggy Friend #1777',
       tokenId: '1777',
+      address: '0x7ad05c1b87e93be306a9eadf80ea60d7648f1b6f',
     },
   },
 }

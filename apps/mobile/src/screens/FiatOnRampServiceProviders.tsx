@@ -12,15 +12,14 @@ import { ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src
 import { TimePast } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
 import { FORQuote, InitialQuoteSelection } from 'uniswap/src/features/fiatOnRamp/types'
-import { getServiceProviderForQuote } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
-import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
-const key = (item: FORQuote): string => item.serviceProvider
+const key = (item: FORQuote): string => item.serviceProviderDetails.serviceProvider
 
 function SectionHeader({
   Icon,
@@ -55,12 +54,11 @@ function Footer(): JSX.Element {
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { setSelectedQuote, quotesSections, baseCurrencyInfo, serviceProviders } =
-    useFiatOnRampContext()
+  const { setSelectedQuote, quotesSections, baseCurrencyInfo } = useFiatOnRampContext()
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     const onPress = (): void => {
-      const serviceProvider = getServiceProviderForQuote(item, serviceProviders)
+      const serviceProvider = item.serviceProviderDetails
       if (serviceProvider) {
         setSelectedQuote(item)
         navigation.navigate(FiatOnRampScreens.Connecting)
@@ -68,12 +66,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     }
     return (
       <Flex px="$spacing12" py="$spacing8">
-        {baseCurrencyInfo && (
-          <FORQuoteItem
-            serviceProvider={getServiceProviderForQuote(item, serviceProviders)}
-            onPress={onPress}
-          />
-        )}
+        {baseCurrencyInfo && <FORQuoteItem serviceProvider={item.serviceProviderDetails} onPress={onPress} />}
       </Flex>
     )
   }
@@ -85,11 +78,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }): JSX.Element => (
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? null : type === InitialQuoteSelection.MostRecent ? (
-        <SectionHeader
-          Icon={TimePast}
-          iconColor="$neutral3"
-          title={t('fiatOnRamp.quote.type.recent')}
-        />
+        <SectionHeader Icon={TimePast} iconColor="$neutral3" title={t('fiatOnRamp.quote.type.recent')} />
       ) : (
         <Flex centered row gap="$spacing12" my="$spacing12">
           <Separator />
@@ -106,13 +95,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex height="100%">
-        <Flex
-          row
-          alignItems="center"
-          justifyContent="space-between"
-          pb="$spacing16"
-          pt="$spacing12"
-          px="$spacing16">
+        <Flex row alignItems="center" justifyContent="space-between" pb="$spacing16" pt="$spacing12" px="$spacing16">
           <BackButton />
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
             {t('fiatOnRamp.checkout.title')}

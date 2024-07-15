@@ -6,11 +6,7 @@ import { isAndroid } from 'utilities/src/platform'
 const HANDLEBAR_HEIGHT = spacing.spacing4
 const HANDLEBAR_WIDTH = spacing.spacing36
 
-export const HandleBar = ({
-  backgroundColor,
-  hidden = false,
-  containerFlexStyles,
-}: HandleBarProps): JSX.Element => {
+export const HandleBar = ({ backgroundColor, hidden = false, containerFlexStyles }: HandleBarProps): JSX.Element => {
   const colors = useSporeColors()
   const bg = hidden ? 'transparent' : backgroundColor ?? colors.surface1.get()
 
@@ -24,7 +20,8 @@ export const HandleBar = ({
         style={{
           ...containerFlexStyles,
           backgroundColor: bg,
-        }}>
+        }}
+      >
         <Flex
           alignSelf="center"
           backgroundColor={hidden ? '$transparent' : '$surface3'}

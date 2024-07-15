@@ -3,15 +3,17 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, EmitterSubscription, Keyboard } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -23,7 +25,6 @@ import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/feat
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function ChangeUnitagModal({
   unitag,
@@ -37,7 +38,7 @@ export function ChangeUnitagModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const navigation = useNavigation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
   const signerManager = useWalletSigners()
@@ -49,16 +50,16 @@ export function ChangeUnitagModal({
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState(unitag)
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } =
-    useCanClaimUnitagName(address, unitagToCheck)
+  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(
+    address,
+    unitagToCheck,
+  )
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const { triggerRefetchUnitags } = useUnitagUpdater()
 
   const isUnitagEdited = unitag !== newUnitag
-  const isUnitagInvalid =
-    newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
-  const isUnitagValid =
-    isUnitagEdited && !canClaimUnitagNameError && !loadingUnitagErrorCheck && !!newUnitag
+  const isUnitagInvalid = newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
+  const isUnitagValid = isUnitagEdited && !canClaimUnitagNameError && !loadingUnitagErrorCheck && !!newUnitag
   const hasReachedAddressLimit = errorCode === UnitagErrorCodes.AddressLimitReached
   const isSubmitButtonDisabled =
     isCheckingUnitag ||
@@ -116,7 +117,7 @@ export function ChangeUnitagModal({
           pushNotification({
             type: AppNotificationType.Error,
             errorMessage: parseUnitagErrorCode(t, unitagToCheck, changeResponse.errorCode),
-          })
+          }),
         )
         return
       }
@@ -129,7 +130,7 @@ export function ChangeUnitagModal({
           pushNotification({
             type: AppNotificationType.Success,
             title: t('unitags.notification.username.title'),
-          })
+          }),
         )
         navigation.goBack()
         onClose()
@@ -143,7 +144,7 @@ export function ChangeUnitagModal({
         pushNotification({
           type: AppNotificationType.Error,
           errorMessage: t('unitags.notification.username.error'),
-        })
+        }),
       )
       onClose()
       setIsChangeResponseLoading(false)
@@ -194,9 +195,7 @@ export function ChangeUnitagModal({
 
   return (
     <>
-      {showConfirmModal && (
-        <ChangeUnitagConfirmModal onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />
-      )}
+      {showConfirmModal && <ChangeUnitagConfirmModal onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />}
       <BottomSheetModal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
         <Flex
           centered
@@ -204,7 +203,8 @@ export function ChangeUnitagModal({
           // Since BottomSheetTextInput doesnt work, dynamically set bottom padding based on keyboard height to get a keyboard avoiding view
           pb={keyboardHeight > 0 ? keyboardHeight - spacing.spacing20 : '$spacing12'}
           pt="$spacing12"
-          px="$spacing24">
+          px="$spacing24"
+        >
           <Text textAlign="center" variant="subheading1">
             {t('unitags.editUsername.title')}
           </Text>
@@ -214,7 +214,8 @@ export function ChangeUnitagModal({
             borderColor="$surface3"
             borderRadius="$rounded16"
             borderWidth="$spacing1"
-            px="$spacing24">
+            px="$spacing24"
+          >
             <TextInput
               autoFocus
               autoCapitalize="none"
@@ -244,18 +245,14 @@ export function ChangeUnitagModal({
               borderRadius="$rounded16"
               px="$spacing16"
               py="$spacing12"
-              width="100%">
+              width="100%"
+            >
               <Text color="$statusCritical" variant="body3">
                 {t('unitags.editUsername.warning.max')}
               </Text>
             </Flex>
           ) : (
-            <Flex
-              backgroundColor="$surface2"
-              borderRadius="$rounded16"
-              px="$spacing16"
-              py="$spacing12"
-              width="100%">
+            <Flex backgroundColor="$surface2" borderRadius="$rounded16" px="$spacing16" py="$spacing12" width="100%">
               <Text color="$neutral2" variant="body3">
                 {t('unitags.editUsername.warning.default')}
               </Text>
@@ -272,9 +269,10 @@ export function ChangeUnitagModal({
             <Button
               fill
               disabled={isSubmitButtonDisabled}
-              testID={ElementName.Confirm}
+              testID={TestID.Confirm}
               theme="primary"
-              onPress={onPressSaveChanges}>
+              onPress={onPressSaveChanges}
+            >
               {isCheckingUnitag || isChangeResponseLoading ? (
                 <Flex height={fonts.buttonLabel1.lineHeight}>
                   <ActivityIndicator color={colors.sporeWhite.val} />
@@ -307,7 +305,8 @@ function ChangeUnitagConfirmModal({
           borderRadius="$rounded12"
           height="$spacing48"
           mb="$spacing8"
-          minWidth="$spacing48">
+          minWidth="$spacing48"
+        >
           <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
@@ -317,10 +316,10 @@ function ChangeUnitagConfirmModal({
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
-          <Button fill testID={ElementName.Remove} theme="secondary" onPress={onClose}>
+          <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
             {t('common.button.back')}
           </Button>
-          <Button fill testID={ElementName.Remove} theme="detrimental" onPress={onChangeSubmit}>
+          <Button fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
           </Button>
         </Flex>

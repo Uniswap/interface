@@ -7,12 +7,12 @@ import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { ZoomLevels } from 'components/LiquidityChartRangeInput/types'
 import { useColor } from 'hooks/useColor'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { saturate } from 'polished'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -127,7 +127,7 @@ export default function LiquidityChartRangeInput({
         }
       })
     },
-    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
+    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
   )
 
   interactive = interactive && Boolean(formattedData?.length)
@@ -159,7 +159,7 @@ export default function LiquidityChartRangeInput({
 
       return price ? `${(Math.sign(percent) < 0 ? '-' : '') + formatDelta(percent)}` : ''
     },
-    [formatDelta, isSorted, price, ticksAtLimit]
+    [formatDelta, isSorted, price, ticksAtLimit],
   )
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)

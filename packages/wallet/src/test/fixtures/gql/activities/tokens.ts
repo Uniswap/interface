@@ -5,10 +5,11 @@ import {
   TokenTransfer,
   TransactionDirection,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 import { amount } from 'wallet/src/test/fixtures/gql/amounts'
 import { daiToken, ethToken } from 'wallet/src/test/fixtures/gql/assets'
-import { faker } from 'wallet/src/test/shared'
-import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
+import { randomEnumValue } from 'wallet/src/test/utils'
 
 /**
  * Base fixtures
@@ -39,7 +40,7 @@ export const tokenTransfer = createFixture<TokenTransfer>()(() => ({
  */
 
 export const erc20ApproveAssetChange = createFixture<TokenApproval>()(() =>
-  tokenApproval({ asset: daiToken(), tokenStandard: TokenStandard.Erc20 })
+  tokenApproval({ asset: daiToken(), tokenStandard: TokenStandard.Erc20 }),
 )
 
 export const erc20TokenTransferOut = createFixture<TokenTransfer>()(() =>
@@ -48,9 +49,9 @@ export const erc20TokenTransferOut = createFixture<TokenTransfer>()(() =>
     tokenStandard: TokenStandard.Erc20,
     direction: TransactionDirection.Out,
     transactedValue: amount({ value: 1, currency: Currency.Usd }),
-  })
+  }),
 )
 
 export const erc20TransferIn = createFixture<TokenTransfer>()(() =>
-  erc20TokenTransferOut({ direction: TransactionDirection.In })
+  erc20TokenTransferOut({ direction: TransactionDirection.In }),
 )

@@ -21,7 +21,12 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { SignatureExpiredError, UniswapXv2HardQuoteError, UserRejectedRequestError } from 'utils/errors'
+import {
+  SignatureExpiredError,
+  UniswapXv2HardQuoteError,
+  UserRejectedRequestError,
+  WrongChainError,
+} from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
@@ -93,6 +98,10 @@ export function useUniswapXSwapCallback({
         }
         if (!trade) {
           throw new Error('missing trade')
+        }
+        const connectedChainId = await provider.getSigner().getChainId()
+        if (account.chainId !== connectedChainId) {
+          throw new WrongChainError()
         }
 
         sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureRequested, {
@@ -272,6 +281,7 @@ export function useUniswapXSwapCallback({
     [
       account.status,
       account.address,
+      account.chainId,
       provider,
       trade,
       allowedSlippage,
@@ -279,6 +289,6 @@ export function useUniswapXSwapCallback({
       portfolioBalanceUsd,
       analyticsContext,
       connectorName,
-    ]
+    ],
   )
 }

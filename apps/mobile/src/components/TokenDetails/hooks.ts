@@ -5,21 +5,17 @@ import {
   Chain,
   useTokenDetailsScreenLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import {
-  buildCurrencyId,
-  buildNativeCurrencyId,
-  currencyIdToChain,
-} from 'wallet/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 /** Helper hook to retrieve balances across chains for a given currency, for the active account. */
 export function useCrossChainBalances(
   currencyId: string,
-  bridgeInfo: Maybe<{ chain: Chain; address?: Maybe<string> }[]>
+  bridgeInfo: Maybe<{ chain: Chain; address?: Maybe<string> }[]>,
 ): {
   currentChainBalance: PortfolioBalance | null
   otherChainBalances: PortfolioBalance[] | null
@@ -42,7 +38,7 @@ export function useCrossChainBalances(
         })
         .filter((b): b is string => !!b),
 
-    [bridgeInfo, currentChainId]
+    [bridgeInfo, currentChainId],
   )
   const otherChainBalances = useBalances(bridgedCurrencyIds)
 
@@ -67,7 +63,7 @@ export function useTokenDetailsNavigation(): {
         variables: currencyIdToContractInput(currencyId),
       })
     },
-    [load]
+    [load],
   )
 
   // the desired behavior is to push the new token details screen onto the stack instead of replacing it
@@ -82,18 +78,15 @@ export function useTokenDetailsNavigation(): {
       }
       navigation.push(MobileScreens.TokenDetails, { currencyId })
     },
-    [navigation]
+    [navigation],
   )
 
   const navigate = useCallback(
     (currencyId: CurrencyId): void => {
       navigation.navigate(MobileScreens.TokenDetails, { currencyId })
     },
-    [navigation]
+    [navigation],
   )
 
-  return useMemo(
-    () => ({ preload, navigate, navigateWithPop }),
-    [navigate, navigateWithPop, preload]
-  )
+  return useMemo(() => ({ preload, navigate, navigateWithPop }), [navigate, navigateWithPop, preload])
 }

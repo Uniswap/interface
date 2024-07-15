@@ -3,7 +3,7 @@ import { LayoutChangeEvent } from 'react-native'
 import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { Flex } from 'ui/src'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isIOS } from 'utilities/src/platform'
 
 const EPS = 1
@@ -38,7 +38,7 @@ export default function InputWithSuffix({
         setShouldWrapLine(contentWidth + EPS >= maxContentWidth)
       }
     },
-    [multiline]
+    [multiline],
   )
 
   const isInputEmpty = !value?.length
@@ -96,7 +96,7 @@ export default function InputWithSuffix({
         returnKeyType="done"
         scrollEnabled={false}
         spellCheck={false}
-        testID={ElementName.ImportAccountInput}
+        testID={TestID.ImportAccountInput}
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
         textAlignVertical={isInputEmpty ? 'center' : 'bottom'}
         value={value}

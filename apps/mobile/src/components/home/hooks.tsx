@@ -46,7 +46,7 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
 
       footerHeight.value = Math.max(0, calculatedFooterHeight)
     },
-    [footerHeight, contentContainerStyle, maxContentHeight]
+    [footerHeight, contentContainerStyle, maxContentHeight],
   )
 
   useEffect(() => {

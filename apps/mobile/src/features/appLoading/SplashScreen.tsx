@@ -22,7 +22,8 @@ export function SplashScreen(): JSX.Element {
         height: dimensions.fullHeight,
         width: dimensions.fullWidth,
         paddingBottom: insets.bottom,
-      }}>
+      }}
+    >
       {/* Android has a different implementation, which is not set in stone yet, so skipping it for now */}
       {isAndroid ? (
         <Image source={UNISWAP_LOGO_LARGE} style={fixedStyle.logoStyle} />

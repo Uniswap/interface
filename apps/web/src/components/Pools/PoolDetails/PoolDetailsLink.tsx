@@ -10,10 +10,10 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -103,7 +103,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   const navigate = useNavigate()
@@ -127,7 +127,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     // This callback must run after it sets truncateAddress to 'start' to see if it needs to 'both'.
     // It checks if the textRef has overflow, and sets truncateAddress accordingly to avoid it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [truncateAddress]
+    [truncateAddress],
   )
 
   if (loading || !address || !chainId) {

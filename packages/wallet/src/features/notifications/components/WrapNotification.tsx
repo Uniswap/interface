@@ -1,15 +1,12 @@
 import { useTranslation } from 'react-i18next'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { WrapTxNotification } from 'wallet/src/features/notifications/types'
 import { formWrapNotificationTitle } from 'wallet/src/features/notifications/utils'
-import {
-  useNativeCurrencyInfo,
-  useWrappedNativeCurrencyInfo,
-} from 'wallet/src/features/tokens/useCurrencyInfo'
+import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useCreateWrapFormState } from 'wallet/src/features/transactions/hooks'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 
@@ -32,7 +29,7 @@ export function WrapNotification({
     inputCurrencyInfo?.currency,
     outputCurrencyInfo?.currency,
     currencyAmountRaw,
-    unwrapped
+    unwrapped,
   )
 
   const wrapFormState = useCreateWrapFormState(
@@ -40,7 +37,7 @@ export function WrapNotification({
     chainId,
     txId,
     inputCurrencyInfo?.currency,
-    outputCurrencyInfo?.currency
+    outputCurrencyInfo?.currency,
   )
 
   const { navigateToAccountActivityList, navigateToSwapFlow } = useWalletNavigation()

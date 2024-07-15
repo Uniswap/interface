@@ -1,7 +1,8 @@
 import { AlertTriangle, CheckmarkCircle } from 'ui/src/components/icons'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
@@ -9,7 +10,6 @@ import { TransactionNotificationBase } from 'wallet/src/features/notifications/t
 import { formUnknownTxTitle } from 'wallet/src/features/notifications/utils'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function UnknownTxNotification({
   notification: { address, chainId, tokenAddress, txStatus, txType, hideDelay },
@@ -17,9 +17,7 @@ export function UnknownTxNotification({
   notification: TransactionNotificationBase
 }): JSX.Element {
   const { name: ensName } = useENS(chainId, tokenAddress)
-  const currencyInfo = useCurrencyInfo(
-    tokenAddress ? buildCurrencyId(chainId, tokenAddress) : undefined
-  )
+  const currencyInfo = useCurrencyInfo(tokenAddress ? buildCurrencyId(chainId, tokenAddress) : undefined)
   const title = formUnknownTxTitle(txStatus, tokenAddress, ensName)
   const icon = currencyInfo ? (
     <LogoWithTxStatus

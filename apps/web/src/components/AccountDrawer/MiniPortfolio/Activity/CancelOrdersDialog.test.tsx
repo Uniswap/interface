@@ -52,15 +52,15 @@ describe('CancelOrdersDialog', () => {
         isVisible={true}
         orders={[mockOrderDetails]}
         cancelState={CancellationState.REVIEWING_CANCELLATION}
-      />
+      />,
     )
 
     expect(document.body).toMatchSnapshot()
     expect(screen.getByText('Cancel order')).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?'
-      )
+        'Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?',
+      ),
     ).toBeInTheDocument()
   })
   it('should render limit order text', async () => {
@@ -73,15 +73,15 @@ describe('CancelOrdersDialog', () => {
         isVisible={true}
         orders={[{ ...mockOrderDetails, type: SignatureType.SIGN_LIMIT }]}
         cancelState={CancellationState.REVIEWING_CANCELLATION}
-      />
+      />,
     )
 
     expect(document.body).toMatchSnapshot()
     expect(screen.getByText('Cancel limit')).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?'
-      )
+        'Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?',
+      ),
     ).toBeInTheDocument()
   })
 })

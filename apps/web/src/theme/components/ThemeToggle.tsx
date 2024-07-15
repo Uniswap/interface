@@ -3,10 +3,10 @@ import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components/text'
 import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
@@ -36,7 +36,7 @@ const CompactOptionPill = styled.div`
 
 // Tracks the device theme
 const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
-  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
+  DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT,
 )
 
 // Tracks the user's selected theme mode
@@ -49,7 +49,7 @@ export function SystemThemeUpdater() {
     (event: MediaQueryListEvent) => {
       setSystemTheme(event.matches ? ThemeMode.DARK : ThemeMode.LIGHT)
     },
-    [setSystemTheme]
+    [setSystemTheme],
   )
 
   useEffect(() => {
@@ -162,7 +162,7 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
       // Switch feels less jittery with short delay
       !disabled && setTimeout(() => setMode(mode as ThemeMode), THEME_UPDATE_DELAY)
     },
-    [disabled, setMode]
+    [disabled, setMode],
   )
 
   return (

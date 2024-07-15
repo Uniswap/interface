@@ -1,0 +1,1657 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable is false 1`] = `
+<DocumentFragment>
+  .c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c14 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c9 > * {
+  margin: !important;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c24 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c25 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c25:hover {
+  opacity: 0.6;
+}
+
+.c25:active {
+  opacity: 0.4;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c11 {
+  background-color: #FFFFFF;
+  -webkit-transition: width ease-in-out 125ms;
+  transition: width ease-in-out 125ms;
+  border-radius: 12px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  height: 32px;
+  width: 32px;
+  color: #7D7D7D;
+  border: none;
+  outline: none;
+}
+
+.c11:hover {
+  background-color: #F9F9F9;
+  -webkit-transition: 125ms background-color ease-in, width ease-in-out 125ms;
+  transition: 125ms background-color ease-in, width ease-in-out 125ms;
+}
+
+.c11:active {
+  background-color: #FFFFFF;
+  -webkit-transition: background-color 125ms linear, width ease-in-out 125ms;
+  transition: background-color 125ms linear, width ease-in-out 125ms;
+}
+
+.c12 {
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c19 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c18 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  opacity: 1;
+  padding: 18px;
+  -webkit-transition: 125ms;
+  transition: 125ms;
+}
+
+.c21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 535;
+  padding: 0 8px;
+}
+
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c20 img {
+  border: 1px solid #22222212;
+  border-radius: 12px;
+}
+
+.c20 > img,
+.c20 span {
+  height: 40px;
+  width: 40px;
+}
+
+.c17 {
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  background-color: #F9F9F9;
+}
+
+.c17:hover {
+  cursor: pointer;
+  background-color: #22222212;
+}
+
+.c17:focus {
+  background-color: #22222212;
+}
+
+.c26 {
+  font-weight: 535;
+  color: #7D7D7D;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  background-color: #FFFFFF;
+  width: 100%;
+  padding: 14px 16px 16px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  gap: 16px;
+}
+
+.c16 {
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  grid-gap: 2px;
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 1;
+  max-height: 100vh;
+  -webkit-transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+  transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+}
+
+.c23 {
+  padding: 0 4px;
+}
+
+.c5 {
+  width: 100%;
+  height: 100%;
+}
+
+.c1 {
+  z-index: 1040;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.60);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.c3 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+  -webkit-scrollbar-gutter: stable;
+  -moz-scrollbar-gutter: stable;
+  -ms-scrollbar-gutter: stable;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  border-radius: 12px;
+}
+
+.c3::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c3::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  height: calc(100% - 2 * 8px);
+  overflow: hidden;
+  position: fixed;
+  right: 8px;
+  top: 8px;
+  z-index: 1030;
+}
+
+.c2 {
+  margin-right: -320px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  width: 320px;
+  max-width: 320px;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #22222212;
+  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
+  -webkit-transition: margin-right 250ms;
+  transition: margin-right 250ms;
+}
+
+@media (max-width:960px) {
+  .c20 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width:960px) {
+  .c16 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c1 {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    height: 100%;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c2 {
+    z-index: 1060;
+    position: absolute;
+    margin-right: 0;
+    top: 0;
+    height: calc(100% - 72px);
+    width: 100%;
+    max-width: 100%;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: unset;
+    -webkit-transition: top 250ms;
+    transition: top 250ms;
+  }
+}
+
+@media screen and (min-width:1440px) {
+  .c2 {
+    margin-right: -390px;
+    width: 390px;
+    max-width: 390px;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        />
+        <div
+          class="c2"
+          data-testid="account-drawer"
+        >
+          <div
+            class="c3"
+            id="wallet-dropdown-scroll-wrapper"
+          >
+            <div
+              class="c4 c5"
+            >
+              <div
+                class="c6"
+                data-testid="wallet-modal"
+              >
+                <div
+                  tabindex="0"
+                />
+                <div
+                  class="c7 c8 c9"
+                  width="100%"
+                >
+                  <div
+                    class="c10 css-n8z49y"
+                  >
+                    Connect a wallet
+                  </div>
+                  <button
+                    class="c11"
+                    data-testid="wallet-settings"
+                  >
+                    <span
+                      class="c12"
+                    >
+                      <svg
+                        fill="none"
+                        height="24"
+                        size="24"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div
+                  class="c13"
+                >
+                  <div
+                    class="c14 c15"
+                  >
+                    <div
+                      class="c16"
+                      data-testid="option-grid"
+                    >
+                      <div
+                        class="c17"
+                      >
+                        <button
+                          class="c18"
+                          data-testid="wallet-option-uniswapWalletConnect"
+                        >
+                          <div
+                            class="c19"
+                          >
+                            <div
+                              class="c20"
+                            >
+                              <img
+                                alt="Uniswap Wallet"
+                                src="uniswap-wallet-icon.png"
+                              />
+                            </div>
+                            <div
+                              class="c21"
+                            >
+                              Uniswap Wallet
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                      <div
+                        class="c17"
+                      >
+                        <button
+                          class="c18"
+                          data-testid="wallet-option-walletConnect"
+                        >
+                          <div
+                            class="c19"
+                          >
+                            <div
+                              class="c20"
+                            >
+                              <img
+                                alt="WalletConnect"
+                                src="walletconnect-icon.svg"
+                              />
+                            </div>
+                            <div
+                              class="c21"
+                            >
+                              WalletConnect
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                      <div
+                        class="c17"
+                      >
+                        <button
+                          class="c18"
+                          data-testid="wallet-option-coinbaseWallet"
+                        >
+                          <div
+                            class="c19"
+                          >
+                            <div
+                              class="c20"
+                            >
+                              <img
+                                alt="Coinbase Wallet"
+                                src="coinbase-icon.svg"
+                              />
+                            </div>
+                            <div
+                              class="c21"
+                            >
+                              Coinbase Wallet
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c22"
+                  >
+                    <div
+                      class="c23"
+                    >
+                      <div
+                        class="c24 css-142zc9n"
+                      >
+                        By connecting a wallet, you agree to Uniswap Labs’ 
+                        <a
+                          class="c25 c26"
+                          href="https://uniswap.org/terms-of-service/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Terms of Service 
+                        </a>
+                        and consent to its 
+                        <a
+                          class="c25 c26"
+                          href="https://uniswap.org/privacy-policy"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Privacy Policy.
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable is true 1`] = `
+<DocumentFragment>
+  .c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c15 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c19 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 8px 0px;
+}
+
+.c23 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.c27 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c16 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 8px 0px;
+}
+
+.c24 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c28 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c9 > * {
+  margin: !important;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c36 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c37 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c37:hover {
+  opacity: 0.6;
+}
+
+.c37:active {
+  opacity: 0.4;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c26 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c11 {
+  background-color: #FFFFFF;
+  -webkit-transition: width ease-in-out 125ms;
+  transition: width ease-in-out 125ms;
+  border-radius: 12px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  height: 32px;
+  width: 32px;
+  color: #7D7D7D;
+  border: none;
+  outline: none;
+}
+
+.c11:hover {
+  background-color: #F9F9F9;
+  -webkit-transition: 125ms background-color ease-in, width ease-in-out 125ms;
+  transition: 125ms background-color ease-in, width ease-in-out 125ms;
+}
+
+.c11:active {
+  background-color: #FFFFFF;
+  -webkit-transition: background-color 125ms linear, width ease-in-out 125ms;
+  transition: background-color 125ms linear, width ease-in-out 125ms;
+}
+
+.c12 {
+  width: 24px;
+  height: 24px;
+  margin: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c32 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c31 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  opacity: 1;
+  padding: 18px;
+  -webkit-transition: 125ms;
+  transition: 125ms;
+}
+
+.c34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 535;
+  padding: 0 8px;
+}
+
+.c33 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c33 img {
+  border: 1px solid #22222212;
+  border-radius: 12px;
+}
+
+.c33 > img,
+.c33 span {
+  height: 40px;
+  width: 40px;
+}
+
+.c30 {
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  background-color: #F9F9F9;
+}
+
+.c30:hover {
+  cursor: pointer;
+  background-color: #22222212;
+}
+
+.c30:focus {
+  background-color: #22222212;
+}
+
+.c38 {
+  font-weight: 535;
+  color: #7D7D7D;
+}
+
+.c17 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c17:hover {
+  background: #22222212;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  background-color: #FFFFFF;
+  width: 100%;
+  padding: 0px 16px 16px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  gap: 16px;
+}
+
+.c29 {
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  grid-gap: 2px;
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 1;
+  max-height: 100vh;
+  -webkit-transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+  transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+}
+
+.c35 {
+  padding: 0 4px;
+}
+
+.c21 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c21:hover {
+  opacity: 0.6;
+}
+
+.c21:active {
+  opacity: 0.4;
+}
+
+.c22 {
+  height: 1px;
+  width: 100%;
+  background: #22222212;
+}
+
+.c25 {
+  height: 20px;
+  width: 20px;
+  fill: #7D7D7D;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c5 {
+  width: 100%;
+  height: 100%;
+}
+
+.c1 {
+  z-index: 1040;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.60);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.c3 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+  -webkit-scrollbar-gutter: stable;
+  -moz-scrollbar-gutter: stable;
+  -ms-scrollbar-gutter: stable;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  border-radius: 12px;
+}
+
+.c3::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c3::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  height: calc(100% - 2 * 8px);
+  overflow: hidden;
+  position: fixed;
+  right: 8px;
+  top: 8px;
+  z-index: 1030;
+  height: auto;
+  max-height: calc(100% - 88px);
+  right: 24px;
+  top: 72px;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c0::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c0::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c2 {
+  margin-right: -368px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  width: 320px;
+  max-width: 320px;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #22222212;
+  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
+  -webkit-transition: margin-right 250ms;
+  transition: margin-right 250ms;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+  max-height: 100%;
+  width: 368px;
+  max-width: 368px;
+  border-radius: 20px;
+  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
+  -webkit-transform: scale(0.96);
+  -ms-transform: scale(0.96);
+  transform: scale(0.96);
+  -webkit-transform-origin: top right;
+  -ms-transform-origin: top right;
+  transform-origin: top right;
+  opacity: 0;
+  overflow-y: scroll;
+  -webkit-transition: -webkit-transform 125ms ease-in-out, opacity 125ms ease-in-out;
+  -webkit-transition: transform 125ms ease-in-out, opacity 125ms ease-in-out;
+  transition: transform 125ms ease-in-out, opacity 125ms ease-in-out;
+}
+
+@media (max-width:960px) {
+  .c33 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width:960px) {
+  .c29 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c1 {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    height: 100%;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c2 {
+    z-index: 1060;
+    position: absolute;
+    margin-right: 0;
+    top: 0;
+    height: calc(100% - 72px);
+    width: 100%;
+    max-width: 100%;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: unset;
+    -webkit-transition: top 250ms;
+    transition: top 250ms;
+  }
+}
+
+@media screen and (min-width:1440px) {
+  .c2 {
+    margin-right: -390px;
+    width: 390px;
+    max-width: 390px;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        />
+        <div
+          class="c2"
+          data-testid="account-drawer"
+        >
+          <div
+            class="c3"
+            id="wallet-dropdown-scroll-wrapper"
+          >
+            <div
+              class="c4 c5"
+            >
+              <div
+                class="c6"
+                data-testid="wallet-modal"
+              >
+                <div
+                  tabindex="0"
+                />
+                <div
+                  class="c7 c8 c9"
+                  width="100%"
+                >
+                  <div
+                    class="c10 css-n8z49y"
+                  >
+                    Connect a wallet
+                  </div>
+                  <button
+                    class="c11"
+                    data-testid="wallet-settings"
+                  >
+                    <span
+                      class="c12"
+                    >
+                      <svg
+                        fill="none"
+                        height="24"
+                        size="24"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div
+                  class="c13"
+                >
+                  <div
+                    class="c14"
+                  >
+                    <div
+                      class="c15 c16 c17"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+                        viewBox="0 0 22 22"
+                      >
+                        <path
+                          d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.75"
+                        />
+                      </svg>
+                      <div
+                        class="c15 c18"
+                      >
+                        <div
+                          class="c4"
+                        >
+                          <span
+                            class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                            data-disable-theme="true"
+                          >
+                            Uniswap Mobile
+                          </span>
+                          <span
+                            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                            data-disable-theme="true"
+                          >
+                            Scan QR code to connect
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c19 c20 c21"
+                >
+                  <div
+                    class="c22"
+                  />
+                  <div
+                    class="c23 c24"
+                  >
+                    <span
+                      class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _whiteSpace-nowrap"
+                      data-disable-theme="true"
+                    >
+                      Other wallets
+                    </span>
+                    <svg
+                      class="c25"
+                      fill="none"
+                      height="28"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                        fill="#70757A"
+                      />
+                      <path
+                        d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                        fill="#70757A"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="c22"
+                  />
+                </div>
+                <div
+                  class="c26"
+                >
+                  <div
+                    class="c27 c28"
+                  >
+                    <div
+                      class="c29"
+                      data-testid="option-grid"
+                    >
+                      <div
+                        class="c30"
+                      >
+                        <button
+                          class="c31"
+                          data-testid="wallet-option-walletConnect"
+                        >
+                          <div
+                            class="c32"
+                          >
+                            <div
+                              class="c33"
+                            >
+                              <img
+                                alt="WalletConnect"
+                                src="walletconnect-icon.svg"
+                              />
+                            </div>
+                            <div
+                              class="c34"
+                            >
+                              WalletConnect
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                      <div
+                        class="c30"
+                      >
+                        <button
+                          class="c31"
+                          data-testid="wallet-option-coinbaseWallet"
+                        >
+                          <div
+                            class="c32"
+                          >
+                            <div
+                              class="c33"
+                            >
+                              <img
+                                alt="Coinbase Wallet"
+                                src="coinbase-icon.svg"
+                              />
+                            </div>
+                            <div
+                              class="c34"
+                            >
+                              Coinbase Wallet
+                            </div>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c14"
+                  >
+                    <div
+                      class="c35"
+                    >
+                      <div
+                        class="c36 css-142zc9n"
+                      >
+                        By connecting a wallet, you agree to Uniswap Labs’ 
+                        <a
+                          class="c37 c38"
+                          href="https://uniswap.org/terms-of-service/"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Terms of Service 
+                        </a>
+                        and consent to its 
+                        <a
+                          class="c37 c38"
+                          href="https://uniswap.org/privacy-policy"
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          Privacy Policy.
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

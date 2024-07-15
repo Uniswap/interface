@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { useCallback } from 'react'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 /** Set of handlers wrapping actions involving user input */
 export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>): {
@@ -16,13 +16,13 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
   const onUpdateExactTokenAmount = useCallback(
     (field: CurrencyField, amount: string) =>
       dispatch(transactionStateActions.updateExactAmountToken({ field, amount })),
-    [dispatch]
+    [dispatch],
   )
 
   const onUpdateExactUSDAmount = useCallback(
     (field: CurrencyField, amount: string) =>
       dispatch(transactionStateActions.updateExactAmountFiat({ field, amount })),
-    [dispatch]
+    [dispatch],
   )
 
   const onSetExactAmount = useCallback(
@@ -30,7 +30,7 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
       const updater = isFiatInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
       updater(field, value)
     },
-    [onUpdateExactUSDAmount, onUpdateExactTokenAmount]
+    [onUpdateExactUSDAmount, onUpdateExactTokenAmount],
   )
 
   const onSetMax = useCallback(
@@ -38,13 +38,11 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
       // when setting max amount, always switch to token mode because
       // our token/usd updater doesnt handle this case yet
       dispatch(transactionStateActions.toggleFiatInput(false))
-      dispatch(
-        transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount })
-      )
+      dispatch(transactionStateActions.updateExactAmountToken({ field: CurrencyField.INPUT, amount }))
       // Unfocus the CurrencyInputField by setting focusOnCurrencyField to null
       dispatch(transactionStateActions.onFocus(null))
     },
-    [dispatch]
+    [dispatch],
   )
 
   const onSwitchCurrencies = useCallback(() => {
@@ -53,22 +51,13 @@ export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>):
 
   const onToggleFiatInput = useCallback(
     (isFiatInput: boolean) => dispatch(transactionStateActions.toggleFiatInput(isFiatInput)),
-    [dispatch]
+    [dispatch],
   )
 
-  const onCreateTxId = useCallback(
-    (txId: string) => dispatch(transactionStateActions.setTxId(txId)),
-    [dispatch]
-  )
+  const onCreateTxId = useCallback((txId: string) => dispatch(transactionStateActions.setTxId(txId)), [dispatch])
 
-  const onFocusInput = useCallback(
-    () => dispatch(transactionStateActions.onFocus(CurrencyField.INPUT)),
-    [dispatch]
-  )
-  const onFocusOutput = useCallback(
-    () => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)),
-    [dispatch]
-  )
+  const onFocusInput = useCallback(() => dispatch(transactionStateActions.onFocus(CurrencyField.INPUT)), [dispatch])
+  const onFocusOutput = useCallback(() => dispatch(transactionStateActions.onFocus(CurrencyField.OUTPUT)), [dispatch])
   return {
     onCreateTxId,
     onFocusInput,

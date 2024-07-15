@@ -1,11 +1,10 @@
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'
-import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Check } from 'react-feather'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { useTheme } from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -63,9 +62,7 @@ interface ChainSelectorRowProps {
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const theme = useTheme()
-  const account = useAccount()
-  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const chainId = multichainUXEnabled ? swapChainId : account.chainId
+  const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(targetChain)
   const active = chainId === targetChain
 

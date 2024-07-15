@@ -13,10 +13,10 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import { Trans } from 'i18n'
+import styled, { keyframes } from 'lib/styled-components'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
-import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -92,9 +92,9 @@ export default function FeeSelector({
           [FeeAmount.LOW]: PoolState.NOT_EXISTS,
           [FeeAmount.MEDIUM]: PoolState.NOT_EXISTS,
           [FeeAmount.HIGH]: PoolState.NOT_EXISTS,
-        }
+        },
       ),
-    [pools]
+    [pools],
   )
 
   const [showOptions, setShowOptions] = useState(false)
@@ -112,7 +112,7 @@ export default function FeeSelector({
       })
       handleFeePoolSelect(fee)
     },
-    [handleFeePoolSelect, trace]
+    [handleFeePoolSelect, trace],
   )
 
   useEffect(() => {

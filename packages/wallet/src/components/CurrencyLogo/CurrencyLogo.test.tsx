@@ -1,9 +1,5 @@
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import {
-  ARBITRUM_DAI_CURRENCY_INFO,
-  UNI_CURRENCY_INFO,
-  arbitrumDaiCurrencyInfo,
-} from 'wallet/src/test/fixtures'
+import { ARBITRUM_DAI_CURRENCY_INFO, UNI_CURRENCY_INFO, arbitrumDaiCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
 describe(CurrencyLogo, () => {
@@ -30,7 +26,7 @@ describe(CurrencyLogo, () => {
 
     it('is rendered if hideNetworkLogo is false', () => {
       const { queryByTestId } = render(
-        <CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} hideNetworkLogo={false} />
+        <CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} hideNetworkLogo={false} />,
       )
 
       const networkLogo = queryByTestId('network-logo')
@@ -39,9 +35,7 @@ describe(CurrencyLogo, () => {
     })
 
     it('is not rendered if hideNetworkLogo is true', () => {
-      const { queryByTestId } = render(
-        <CurrencyLogo hideNetworkLogo currencyInfo={arbitrumDaiCurrencyInfo()} />
-      )
+      const { queryByTestId } = render(<CurrencyLogo hideNetworkLogo currencyInfo={arbitrumDaiCurrencyInfo()} />)
 
       const networkLogo = queryByTestId('network-logo')
 

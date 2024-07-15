@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapTransactionDetails Component renders SwapTransactionDetails without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "gap": 16,
+      "paddingBottom": 12,
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 12,
+    }
+  }
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 24,
+              "lineHeight": 32,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+           
+        </Text>
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+        </Text>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <svg
+      color="#CECECE"
+      data-file-name="SvgArrowDown"
+      height={20}
+      strokeWidth={2}
+      style={
+        {
+          "transform": [
+            {
+              "rotate": "0deg",
+            },
+          ],
+        }
+      }
+      width={20}
+    />
+  </View>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "justifyContent": "space-between",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "flexDirection": "column",
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 24,
+              "lineHeight": 32,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+           
+        </Text>
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          -
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

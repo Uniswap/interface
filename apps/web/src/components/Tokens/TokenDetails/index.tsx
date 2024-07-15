@@ -13,6 +13,7 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { Hr } from 'components/Tokens/TokenDetails/shared'
+import { CHAIN_ID_TO_BACKEND_NAME, isSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -21,17 +22,16 @@ import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
-import styled from 'styled-components'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
@@ -86,9 +86,8 @@ function useSwapInitialInputCurrency() {
 }
 
 function TDPSwapComponent() {
-  const { address, currency, currencyChain, warning } = useTDPContext()
+  const { address, currency, currencyChainId, warning } = useTDPContext()
   const account = useAccount()
-  const appChainId = account.chainId ?? UniverseChainId.Mainnet
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(
@@ -111,12 +110,15 @@ function TDPSwapComponent() {
       const preloadedLogoSrc = getInitialLogoUrl(
         newDefaultToken.wrapped.address,
         newDefaultToken.chainId,
-        newDefaultToken.isNative
+        newDefaultToken.isNative,
       )
       const url = getTokenDetailsURL({
         // The function falls back to "NATIVE" if the address is null
         address: newDefaultToken.isNative ? null : newDefaultToken.address,
-        chain: currencyChain,
+        chain:
+          CHAIN_ID_TO_BACKEND_NAME[
+            isSupportedChainId(newDefaultToken.chainId) ? newDefaultToken.chainId : currencyChainId
+          ],
         inputAddress:
           // If only one token was selected before we navigate, then it was the default token and it's being replaced.
           // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
@@ -124,7 +126,7 @@ function TDPSwapComponent() {
       })
       navigate(url, { state: { preloadedLogoSrc } })
     },
-    [address, currencyChain, navigate]
+    [address, currencyChainId, navigate],
   )
 
   // Other token to prefill the swap form with
@@ -138,7 +140,7 @@ function TDPSwapComponent() {
       continueSwap?.resolve(value)
       setContinueSwap(undefined)
     },
-    [continueSwap, setContinueSwap]
+    [continueSwap, setContinueSwap],
   )
   const isBlockedToken = warning?.canProceed === false
 
@@ -154,7 +156,7 @@ function TDPSwapComponent() {
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={currency}
           onCurrencyChange={handleCurrencyChange}
-          disableTokenInputs={currency.chainId !== appChainId}
+          disableTokenInputs={currency.chainId !== account.chainId}
           compact
         />
       </div>

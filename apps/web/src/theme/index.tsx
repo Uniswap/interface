@@ -1,10 +1,10 @@
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
+import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import { navDimensions } from 'nft/css/sprinkles.css'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
-import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'styled-components'
 import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
@@ -20,7 +20,7 @@ export const MEDIA_WIDTHS = {
 const MAX_CONTENT_WIDTH_PX = 1200
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
-  MEDIA_WIDTHS
+  MEDIA_WIDTHS,
 ).reduce((acc, size) => {
   acc[size] = (a: any, b: any, c: any) => css`
     @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {

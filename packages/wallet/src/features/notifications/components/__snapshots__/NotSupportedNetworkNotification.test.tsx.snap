@@ -209,6 +209,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
               }
             }
             suppressHighlighting={true}
+            testID="notification-toast-title"
           >
             Unsupported network
           </Text>

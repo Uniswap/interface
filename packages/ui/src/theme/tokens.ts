@@ -98,7 +98,7 @@ export const validColor = (value: DynamicColor | string | undefined | null): Col
         !value.startsWith('var(')
       ) {
         throw new Error(
-          `Invalid color value: ${value} this helper just does a rough check so if this error is wrong you can update this check!`
+          `Invalid color value: ${value} this helper just does a rough check so if this error is wrong you can update this check!`,
         )
       }
     }

@@ -16,6 +16,7 @@ import { Flex, Shine, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
@@ -26,7 +27,7 @@ export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 
 // TODO: remove need to manually define width of each character
 const NUMBER_WIDTH_ARRAY_SCALED = NUMBER_WIDTH_ARRAY.map(
-  (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize)
+  (width) => width * (fonts.heading2.fontSize / fonts.heading1.fontSize),
 )
 
 const isRTL = I18nManager.isRTL
@@ -54,18 +55,16 @@ const RollNumber = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const fontColor = useSharedValue(
-    nextColor ||
-      (shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val)
+    nextColor || (shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val),
   )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor =
-      shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
+    const finishColor = shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
-        withDelay(50, withTiming(finishColor, { duration: 310 }))
+        withDelay(50, withTiming(finishColor, { duration: 310 })),
       )
     } else {
       fontColor.value = finishColor
@@ -93,7 +92,8 @@ const RollNumber = ({
       <Animated.Text
         key={idx}
         allowFontScaling={false}
-        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}>
+        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+      >
         {char}
       </Animated.Text>
     )
@@ -117,11 +117,11 @@ const RollNumber = ({
         style={[
           animatedWrapperStyle,
           {
-            width:
-              (NUMBER_WIDTH_ARRAY_SCALED[Number(digit)] || 0) + ADDITIONAL_WIDTH_FOR_ANIMATIONS,
+            width: (NUMBER_WIDTH_ARRAY_SCALED[Number(digit)] || 0) + ADDITIONAL_WIDTH_FOR_ANIMATIONS,
             ...margin,
           },
-        ]}>
+        ]}
+      >
         {numbers}
       </Animated.View>
     )
@@ -129,7 +129,8 @@ const RollNumber = ({
     return (
       <Animated.Text
         allowFontScaling={false}
-        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}>
+        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+      >
         {digit}
       </Animated.Text>
     )
@@ -154,7 +155,8 @@ const Char = ({
       entering={nextColor ? FadeIn : undefined}
       exiting={FadeOut}
       layout={Layout}
-      style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
+      style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}
+    >
       <RollNumber
         chars={chars}
         commonPrefixLength={commonPrefixLength}
@@ -226,12 +228,15 @@ const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
             {
               color: colors.neutral1.val,
             },
-          ]}>
+          ]}
+          testID={TestID.PortfolioBalance}
+        >
           {amountOfCurrency[0]}
           <Text
             style={{
               color: colors.neutral3.val,
-            }}>
+            }}
+          >
             {currency.decimalSeparator}
             {amountOfCurrency[1]}
           </Text>
@@ -262,11 +267,7 @@ const ReanimatedNumber = ({
 
   const scaleWraper = useAnimatedStyle(() => {
     return {
-      transform: [
-        { translateX: -SCREEN_WIDTH / 2 },
-        { scale: scale.value },
-        { translateX: SCREEN_WIDTH / 2 },
-      ],
+      transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
     }
   })
 
@@ -309,11 +310,7 @@ const ReanimatedNumber = ({
         <Flex alignItems="flex-start" borderRadius="$rounded4" flexDirection="row" opacity={0}>
           {placeholderChars.map((_, index) => (
             <Char
-              key={
-                index === 0
-                  ? `$_sign_${colors.neutral1.val}`
-                  : `$_number_${placeholderChars.length - index}`
-              }
+              key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${placeholderChars.length - index}`}
               chars={placeholderChars}
               commonPrefixLength={commonPrefixLength}
               index={index}
@@ -327,21 +324,14 @@ const ReanimatedNumber = ({
   }
 
   return (
-    <Animated.View style={scaleWraper}>
-      <Flex
-        row
-        alignItems="flex-start"
-        backgroundColor="$surface1"
-        borderRadius="$rounded4"
-        width={MAX_DEVICE_WIDTH}>
+    <Animated.View style={scaleWraper} testID={TestID.PortfolioBalance}>
+      <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4" width={MAX_DEVICE_WIDTH}>
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>
           <AnimatedFlex row entering={FadeIn} width={MAX_DEVICE_WIDTH}>
             {chars?.map((_, index) => (
               <Char
-                key={
-                  index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`
-                }
+                key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
                 chars={chars}
                 commonPrefixLength={commonPrefixLength}
                 index={index}
@@ -354,7 +344,8 @@ const ReanimatedNumber = ({
         <Animated.Text
           allowFontScaling={false}
           style={[AnimatedFontStyles.invisible, AnimatedFontStyles.fontStyle]}
-          onLayout={fitBalanceOnLayout}>
+          onLayout={fitBalanceOnLayout}
+        >
           {value}
         </Animated.Text>
       </Flex>

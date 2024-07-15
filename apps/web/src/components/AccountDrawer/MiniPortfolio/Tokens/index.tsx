@@ -14,10 +14,10 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -37,7 +37,7 @@ export default function Tokens() {
 
   const { visibleTokens, hiddenTokens } = useMemo(
     () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
-    [hideSmallBalances, tokenBalances, hideSpam]
+    [hideSmallBalances, tokenBalances, hideSpam],
   )
 
   if (!data) {
@@ -55,12 +55,12 @@ export default function Tokens() {
     <PortfolioTabWrapper>
       {visibleTokens.map(
         (tokenBalance) =>
-          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />,
       )}
       <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
         {hiddenTokens.map(
           (tokenBalance) =>
-            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />,
         )}
       </ExpandoRow>
     </PortfolioTabWrapper>

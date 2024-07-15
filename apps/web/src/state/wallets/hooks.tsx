@@ -10,7 +10,7 @@ export function useConnectedWallets(): [Wallet[], (wallet: Wallet) => void] {
     (wallet: Wallet) => {
       dispatch(addConnectedWallet(wallet))
     },
-    [dispatch]
+    [dispatch],
   )
   return [connectedWallets, addWallet]
 }

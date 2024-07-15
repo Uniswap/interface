@@ -1,25 +1,25 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
+import { Keyboard, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading'
-import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
 import { Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
-import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 
@@ -32,10 +32,7 @@ function key(item: FORCountry): string {
   return item.countryCode
 }
 
-function CountrySelectorContent({
-  onSelectCountry,
-  countryCode,
-}: CountrySelectorProps): JSX.Element {
+function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelectorProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useDeviceInsets()
   const colors = useSporeColors()
@@ -51,9 +48,7 @@ function CountrySelectorContent({
       return []
     }
     return bubbleToTop(data.supportedCountries, (c) => c.countryCode === countryCode).filter(
-      (item) =>
-        !debouncedSearchText ||
-        item.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase())
+      (item) => !debouncedSearchText || item.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase()),
     )
   }, [countryCode, data, debouncedSearchText])
 
@@ -64,28 +59,20 @@ function CountrySelectorContent({
       return (
         <TouchableArea onPress={(): void => onSelectCountry(item)}>
           <Flex row alignItems="center" gap="$spacing12" p="$spacing12">
-            <Flex
-              borderRadius="$roundedFull"
-              height={ICON_SIZE}
-              overflow="hidden"
-              width={ICON_SIZE}>
+            <Flex borderRadius="$roundedFull" height={ICON_SIZE} overflow="hidden" width={ICON_SIZE}>
               <SvgUri height={ICON_SIZE} uri={countryFlagUrl} width={ICON_SIZE} />
             </Flex>
             <Text>{item.displayName}</Text>
             {item.countryCode === countryCode && (
               <Flex grow alignItems="flex-end" justifyContent="center">
-                <Check
-                  color={colors.accent1.get()}
-                  height={iconSizes.icon20}
-                  width={iconSizes.icon20}
-                />
+                <Check color={colors.accent1.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
               </Flex>
             )}
           </Flex>
         </TouchableArea>
       )
     },
-    [colors.accent1, countryCode, onSelectCountry]
+    [colors.accent1, countryCode, onSelectCountry],
   )
 
   return (
@@ -99,6 +86,7 @@ function CountrySelectorContent({
         py="$spacing8"
         value={searchText}
         onChangeText={setSearchText}
+        onDismiss={() => Keyboard.dismiss()}
       />
       <Flex grow>
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
@@ -162,7 +150,8 @@ export function FiatOnRampCountryListModal({
       backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <CountrySelectorContent countryCode={countryCode} onSelectCountry={onSelectCountry} />
     </BottomSheetModal>
   )

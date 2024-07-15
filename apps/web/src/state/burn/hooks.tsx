@@ -18,7 +18,7 @@ export function useBurnState(): AppState['burn'] {
 
 export function useDerivedBurnInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
 ): {
   pair?: Pair | null
   parsedAmounts: {
@@ -107,7 +107,7 @@ export function useDerivedBurnInfo(
       userLiquidity && percentToRemove && percentToRemove.greaterThan('0')
         ? CurrencyAmount.fromRawAmount(
             userLiquidity.currency,
-            percentToRemove.multiply(userLiquidity.quotient).quotient
+            percentToRemove.multiply(userLiquidity.quotient).quotient,
           )
         : undefined,
     [Field.CURRENCY_A]:
@@ -141,7 +141,7 @@ export function useBurnActionHandlers(): {
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
     },
-    [dispatch]
+    [dispatch],
   )
 
   return {

@@ -2,7 +2,7 @@ import { Action } from '@reduxjs/toolkit'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -12,10 +12,7 @@ import MoonIcon from 'ui/src/assets/icons/moon.svg'
 import SunIcon from 'ui/src/assets/icons/sun.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import {
-  AppearanceSettingType,
-  setSelectedAppearanceSettings,
-} from 'wallet/src/features/appearance/slice'
+import { AppearanceSettingType, setSelectedAppearanceSettings } from 'wallet/src/features/appearance/slice'
 
 export function SettingsAppearanceScreen(): JSX.Element {
   const { t } = useTranslation()
@@ -61,15 +58,9 @@ interface AppearanceOptionProps {
   Icon: React.FC<SvgProps>
 }
 
-function AppearanceOption({
-  active,
-  title,
-  subtitle,
-  Icon,
-  option,
-}: AppearanceOptionProps): JSX.Element {
+function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceOptionProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const showCheckMark = active ? 1 : 0
 
@@ -79,13 +70,9 @@ function AppearanceOption({
       flexDirection="row"
       justifyContent="space-between"
       py="$spacing12"
-      onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
-      <Icon
-        color={colors.neutral2.get()}
-        height={iconSizes.icon24}
-        strokeWidth={1.5}
-        width={iconSizes.icon24}
-      />
+      onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}
+    >
+      <Icon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
       <Flex row shrink>
         <Flex shrink ml="$spacing16">
           <Text variant="body1">{title}</Text>

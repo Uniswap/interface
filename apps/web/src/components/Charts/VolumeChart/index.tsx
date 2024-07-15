@@ -10,8 +10,8 @@ import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { BIPS_BASE } from 'constants/misc'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { t } from 'i18n'
+import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
-import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -140,7 +140,7 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale }: Volume
 
   const params = useMemo(
     () => ({ data, colors: [theme.accent1], headerHeight: 75, stale }),
-    [data, stale, theme.accent1]
+    [data, stale, theme.accent1],
   )
 
   return (

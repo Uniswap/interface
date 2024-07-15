@@ -3,10 +3,7 @@ import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import noop from 'utilities/src/react/noop'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import {
-  ESTIMATED_NFT_LIST_ITEM_SIZE,
-  MAX_NFT_IMAGE_SIZE,
-} from 'wallet/src/features/nfts/constants'
+import { ESTIMATED_NFT_LIST_ITEM_SIZE, MAX_NFT_IMAGE_SIZE } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 
@@ -14,9 +11,11 @@ export function NftView({
   owner,
   item,
   onPress,
+  index,
 }: {
   owner: Address
   item: NFTItem
+  index?: number
   onPress: () => void
 }): JSX.Element {
   const { menuActions, onContextMenuPress } = useNFTContextMenu({
@@ -32,21 +31,25 @@ export function NftView({
         actions={menuActions}
         disabled={menuActions.length === 0}
         style={{ borderRadius: borderRadii.rounded16 }}
-        onPress={onContextMenuPress}>
+        onPress={onContextMenuPress}
+      >
         <TouchableArea
           hapticFeedback
           activeOpacity={1}
           hapticStyle={ImpactFeedbackStyle.Light}
+          testID={`nfts-list-item-${index ?? 0}`}
           // Needed to fix long press issue with context menu on Android
           onLongPress={noop}
-          onPress={onPress}>
+          onPress={onPress}
+        >
           <Flex
             alignItems="center"
             aspectRatio={1}
             backgroundColor="$surface3"
             borderRadius="$rounded12"
             overflow="hidden"
-            width="100%">
+            width="100%"
+          >
             <NFTViewer
               autoplay
               showSvgPreview

@@ -15,7 +15,7 @@ const listCache = new Map<string, TokenList>()
 export default async function fetchTokenList(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>,
-  skipValidation?: boolean
+  skipValidation?: boolean,
 ): Promise<TokenList> {
   const cached = listCache?.get(listUrl) // avoid spurious re-fetches
   if (cached) {
@@ -78,7 +78,7 @@ export default async function fetchTokenList(
         'fetchTokenList',
         'fetchTokenList',
         `failed to parse and validate list response: ${listUrl} (${url})`,
-        error
+        error,
       )
       continue
     }

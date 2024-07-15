@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { FiatOnRampStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
@@ -9,7 +9,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export function FiatOnRampAggregatorModal(): JSX.Element {
   const colors = useSporeColors()
 
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const onClose = useCallback((): void => {
     dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
   }, [dispatch])
@@ -21,11 +21,9 @@ export function FiatOnRampAggregatorModal(): JSX.Element {
       hideKeyboardOnDismiss
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
-      // Don't dismiss on back press, as this modal is used for the FiatOnRampStack navigation.
-      // (the modal should be dismissed only when the user navigates to the initial FiatOnRamp screen)
-      dismissOnBackPress={false}
       name={ModalName.FiatOnRampAggregator}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <FiatOnRampStackNavigator />
     </BottomSheetModal>
   )

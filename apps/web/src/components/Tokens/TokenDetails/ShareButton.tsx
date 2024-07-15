@@ -7,12 +7,12 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { useRef } from 'react'
 import { Link } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
@@ -44,7 +44,7 @@ export function openShareTweetWindow(name: string) {
   window.open(
     `https://twitter.com/intent/tweet?text=Check%20out%20${name}%20${currentLocation}%20via%20@Uniswap`,
     'newwindow',
-    `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
+    `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`,
   )
 }
 

@@ -20,8 +20,8 @@ export async function approveCollectionRow(
   setCollectionStatusAndCallback: (
     collection: CollectionRow,
     status: ListingStatus,
-    callback?: () => Promise<void>
-  ) => void
+    callback?: () => Promise<void>,
+  ) => void,
 ) {
   const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
@@ -31,21 +31,21 @@ export async function approveCollectionRow(
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT
       : marketplace.name === 'LooksRare'
-      ? collectionRow.nftStandard === NftStandard.Erc721
-        ? LOOKSRARE_MARKETPLACE_CONTRACT_721
-        : LOOKSRARE_MARKETPLACE_CONTRACT_1155
-      : marketplace.name === 'X2Y2'
-      ? collectionRow.nftStandard === NftStandard.Erc721
-        ? X2Y2_TRANSFER_CONTRACT_721
-        : X2Y2_TRANSFER_CONTRACT_1155
-      : addresses.TRANSFER_MANAGER_ERC721
+        ? collectionRow.nftStandard === NftStandard.Erc721
+          ? LOOKSRARE_MARKETPLACE_CONTRACT_721
+          : LOOKSRARE_MARKETPLACE_CONTRACT_1155
+        : marketplace.name === 'X2Y2'
+          ? collectionRow.nftStandard === NftStandard.Erc721
+            ? X2Y2_TRANSFER_CONTRACT_721
+            : X2Y2_TRANSFER_CONTRACT_1155
+          : addresses.TRANSFER_MANAGER_ERC721
   !!collectionAddress &&
     (await approveCollection(
       spender,
       collectionAddress,
       signer,
       (newStatus: ListingStatus) => setCollectionStatusAndCallback(collectionRow, newStatus, callback),
-      nftStandard
+      nftStandard,
     ))
 }
 
@@ -55,7 +55,7 @@ export async function signListingRow(
   provider: Web3Provider,
   getLooksRareNonce: () => number,
   setLooksRareNonce: (nonce: number) => void,
-  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void
+  setListingStatusAndCallback: (listing: ListingRow, status: ListingStatus, callback?: () => Promise<void>) => void,
 ) {
   const looksRareNonce = getLooksRareNonce()
   const callback = () => {
@@ -64,7 +64,7 @@ export async function signListingRow(
   setListingStatusAndCallback(listing, ListingStatus.SIGNING, callback)
   const { asset, marketplace } = listing
   const res = await signListing(marketplace, asset, signer, provider, looksRareNonce, (newStatus: ListingStatus) =>
-    setListingStatusAndCallback(listing, newStatus, callback)
+    setListingStatusAndCallback(listing, newStatus, callback),
   )
   res && listing.marketplace.name === 'LooksRare' && setLooksRareNonce(looksRareNonce + 1)
 }
@@ -103,7 +103,7 @@ const getListings = (sellAssets: WalletAsset[]): [CollectionRow[], ListingRow[]]
         !newCollectionsToApprove.some(
           (collectionRow: CollectionRow) =>
             collectionRow.collectionAddress === asset.asset_contract.address &&
-            collectionRow.marketplace.name === marketplace.name
+            collectionRow.marketplace.name === marketplace.name,
         )
       ) {
         const newCollectionRow = {
@@ -132,7 +132,7 @@ export function useSubscribeListingState() {
     ({ setListings, setCollectionsRequiringApproval }) => ({
       setListings,
       setCollectionsRequiringApproval,
-    })
+    }),
   )
   useEffect(() => {
     const [newCollectionsToApprove, newListings] = getListings(sellAssets)
@@ -146,7 +146,7 @@ export function useHandleGlobalPriceToggle(
   setListPrice: Dispatch<number | undefined>,
   setPrice: (price?: number) => void,
   listPrice?: number,
-  globalPrice?: number
+  globalPrice?: number,
 ) {
   useEffect(() => {
     let price: number | undefined
@@ -170,7 +170,7 @@ export function useSyncPriceWithGlobalMethod(
   setGlobalOverride: Dispatch<boolean>,
   listPrice?: number,
   globalPrice?: number,
-  globalPriceMethod?: SetPriceMethod
+  globalPriceMethod?: SetPriceMethod,
 ) {
   useEffect(() => {
     if (globalPriceMethod === SetPriceMethod.FLOOR_PRICE) {
@@ -192,7 +192,7 @@ export function useUpdateInputAndWarnings(
   setWarningType: Dispatch<WarningType>,
   inputRef: React.MutableRefObject<HTMLInputElement>,
   asset: WalletAsset,
-  listPrice?: number
+  listPrice?: number,
 ) {
   useEffect(() => {
     setWarningType(WarningType.NONE)

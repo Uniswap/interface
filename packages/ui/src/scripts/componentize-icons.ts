@@ -3,7 +3,6 @@
 /* eslint-disable no-useless-escape */
 import camelcase from 'camelcase'
 import { load } from 'cheerio'
-import { ESLint } from 'eslint'
 import { ensureDirSync, existsSync, readFileSync, readdirSync, writeFileSync } from 'fs-extra'
 import path, { join } from 'path'
 
@@ -73,14 +72,14 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
 
   // Format and write index file
   console.log('Writing index file...')
-  const formattedIndex = await eslintFormat(indexFile, 'exported.ts')
+  const formattedIndex = await prettierFormat(indexFile)
   writeFileSync(join(dirs.output, 'exported.ts'), formattedIndex, 'utf-8')
 }
 
 async function generateSVGComponent(svg: string, fileName: string): Promise<string | undefined> {
   try {
     const element = generateSVGComponentString(svg, fileName)
-    return await eslintFormat(element, fileName)
+    return await prettierFormat(element)
   } catch (err) {
     console.log(`Error converting icon: ${fileName}: ${(err as any).message}`)
   }
@@ -104,17 +103,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   const attribsOfInterest: Record<string, any> = {}
 
   Object.keys(svgAttribs).forEach((key) => {
-    if (
-      ![
-        'height',
-        'width',
-        'viewBox',
-        'fill',
-        'stroke-width',
-        'stroke-linecap',
-        'stroke-linejoin',
-      ].includes(key)
-    ) {
+    if (!['height', 'width', 'viewBox', 'fill', 'stroke-width', 'stroke-linecap', 'stroke-linejoin'].includes(key)) {
       attribsOfInterest[key] = svgAttribs[key]
     }
   })
@@ -192,7 +181,6 @@ import PropTypes from 'prop-types'
 import {
 Svg,
 SvgProps,
-Circle as _Circle,
 Ellipse,
 G,
 LinearGradient,
@@ -203,11 +191,12 @@ Polygon,
 Polyline,
 Rect,
 Symbol,
-Text as _Text,
 Use,
 Defs,
 Stop,
 ClipPath
+Text as _Text,
+Circle as _Circle,
 } from 'react-native-svg'
 
 // eslint-disable-next-line no-relative-import-paths/no-relative-import-paths
@@ -232,24 +221,29 @@ function generateClassName(fileName: string): string {
   return uppercamelcase(path.basename(fileName, '.svg')) as string
 }
 
-// Linting
+// Formatting
 
-const eslint = new ESLint({ fix: true })
+import fs from 'fs'
+import { format } from 'prettier'
 
-async function eslintFormat(source: string, name: string): Promise<string> {
-  const out = await eslint.lintText(source, {
-    // eslint wants a file to use for determining format and it actually has to exist 🙄
-    filePath: './src/scripts/componentize-icons-eslint-dummy-file.tsx',
+const configPath = path.resolve(__dirname, '../../../../.prettierrc')
+// eslint-disable-next-line security/detect-non-literal-fs-filename
+const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+
+// it was removing needed imports for some reason
+
+async function prettierFormat(source: string): Promise<string> {
+  // lol for some reason it removes imports it shouldnt it you run it in one pass
+  // running this in two passes with the second organizing imports fixes it...
+  const formattedOnce = await format(source, {
+    ...config,
+    organizeImportsSkipDestructiveCodeActions: true,
+    parser: 'typescript',
   })
-
-  const lintedFile = out?.[0]?.output
-
-  if (lintedFile) {
-    return lintedFile
-  } else {
-    console.warn(`not linted ${name}`)
-    return source
-  }
+  return await format(formattedOnce, {
+    ...config,
+    parser: 'typescript',
+  })
 }
 
 // This must be at the end to run all code

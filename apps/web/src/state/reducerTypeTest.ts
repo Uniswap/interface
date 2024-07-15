@@ -6,6 +6,7 @@ import { ApplicationModal, ApplicationState, PopupList, PopupType } from 'state/
 import { Field as BurnField } from 'state/burn/actions'
 import { BurnState } from 'state/burn/reducer'
 import { BurnV3State } from 'state/burn/v3/reducer'
+import { FiatOnRampTransactionsState } from 'state/fiatOnRampTransactions/reducer'
 import { ListsState } from 'state/lists/types'
 import { LogsState } from 'state/logs/slice'
 import { Log } from 'state/logs/utils'
@@ -51,6 +52,7 @@ type ExpectedAppState = CombinedState<{
   user: UserState
   transactions: TransactionState
   signatures: SignatureState
+  fiatOnRampTransactions: FiatOnRampTransactionsState
   lists: ListsState
   application: ApplicationState
   wallets: WalletState

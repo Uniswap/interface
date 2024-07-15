@@ -1,4 +1,4 @@
-import { AssetType } from 'wallet/src/entities/assets'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { ApproveNotification } from 'wallet/src/features/notifications/components/ApproveNotification'
 import { ChangeAssetVisibilityNotification } from 'wallet/src/features/notifications/components/ChangeAssetVisibilityNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'
@@ -19,11 +19,7 @@ import { WrapNotification } from 'wallet/src/features/notifications/components/W
 import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 
-export function SharedNotificationToastRouter({
-  notification,
-}: {
-  notification: AppNotification
-}): JSX.Element | null {
+export function SharedNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />

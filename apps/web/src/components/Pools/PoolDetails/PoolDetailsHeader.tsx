@@ -20,10 +20,10 @@ import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans, t } from 'i18n'
+import styled, { css, useTheme } from 'lib/styled-components'
 import React, { useMemo, useReducer, useRef } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -184,7 +184,7 @@ const ContractsDropdownRow = ({
     getExplorerLink(
       chainId,
       address,
-      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN,
     )
 
   if (!chainId || !explorerUrl) {
@@ -304,7 +304,7 @@ export function PoolDetailsHeader({
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
   const currencies = useMemo(
     () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
-    [token0, token1]
+    [token0, token1],
   )
 
   if (loading) {

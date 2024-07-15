@@ -1,11 +1,11 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
+import { useDispatch } from 'react-redux'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { AssetType } from 'wallet/src/entities/assets'
 import { transferTokenActions } from 'wallet/src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 /** Helper transfer callback for ERC20s */
 export function useTransferERC20Callback(
@@ -15,7 +15,7 @@ export function useTransferERC20Callback(
   tokenAddress?: Address,
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -32,7 +32,7 @@ export function useTransferERC20Callback(
         }
       : undefined,
     transferTxWithGasSettings,
-    onSubmit
+    onSubmit,
   )
 }
 
@@ -44,7 +44,7 @@ export function useTransferNFTCallback(
   tokenAddress?: Address,
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -61,7 +61,7 @@ export function useTransferNFTCallback(
         }
       : undefined,
     txRequest,
-    onSubmit
+    onSubmit,
   )
 }
 
@@ -69,9 +69,9 @@ export function useTransferNFTCallback(
 function useTransferCallback(
   transferTokenParams?: TransferTokenParams,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void
+  onSubmit?: () => void,
 ): null | (() => void) {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   return useMemo(() => {
     if (!transferTokenParams || !txRequest) {

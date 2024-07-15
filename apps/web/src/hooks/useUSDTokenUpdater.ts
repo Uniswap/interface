@@ -3,20 +3,28 @@ import { getChain, useSupportedChainId } from 'constants/chains'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
+import { TradeState } from 'state/routing/types'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
 
-export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, exactCurrency?: Currency) {
-  const price = useStablecoinPrice(exactCurrency)
+export function useUSDTokenUpdater(
+  isFiatInput: boolean,
+  exactAmount: string,
+  exactCurrency?: Currency,
+): {
+  formattedAmount?: string
+  loading: boolean
+} {
+  const { price, state } = useStablecoinPrice(exactCurrency)
   const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
   const conversionRate = convertToFiatAmount().amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {
     if (!exactCurrency || !price) {
-      return
+      return { formattedAmount: undefined, loading: state === TradeState.LOADING }
     }
 
     if (isFiatInput) {
@@ -24,7 +32,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
       const stablecoinAmount = supportedChainId
         ? tryParseCurrencyAmount(
             exactAmountUSD,
-            getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
+            getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency,
           )
         : undefined
 
@@ -35,7 +43,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
         placeholder: '',
       })
 
-      return formattedCurrencyAmount
+      return { formattedAmount: formattedCurrencyAmount, loading: state === TradeState.LOADING }
     }
 
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
@@ -44,7 +52,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
     const fiatPrice = convertToFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 
-    return formattedFiatPrice
+    return { formattedAmount: formattedFiatPrice, loading: state === TradeState.LOADING }
   }, [
     conversionRate,
     convertToFiatAmount,
@@ -53,6 +61,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
     formatCurrencyAmount,
     isFiatInput,
     price,
+    state,
     supportedChainId,
   ])
 }

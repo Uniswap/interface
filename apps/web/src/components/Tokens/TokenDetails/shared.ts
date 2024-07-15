@@ -1,5 +1,5 @@
+import styled, { css } from 'lib/styled-components'
 import { darken } from 'polished'
-import styled, { css } from 'styled-components'
 import { ClickableStyle } from 'theme/components'
 import { opacify } from 'theme/utils'
 
@@ -61,7 +61,7 @@ export const truncateDescription = (desc: string, maxCharacterCount = TRUNCATE_C
   //re-trim if we are in the middle of a word
   tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
     0,
-    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' ')),
   )}...`
   return tokenDescriptionTruncated
 }

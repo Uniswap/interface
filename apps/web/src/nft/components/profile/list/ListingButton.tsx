@@ -1,11 +1,11 @@
 import { BaseButton } from 'components/Button'
 import { useIsMobile } from 'hooks/screenSize'
 import { Plural, Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { findListingIssues } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
@@ -36,7 +36,7 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
       toggleShowResolveIssues,
       issues,
       setIssues,
-    })
+    }),
   )
   const [showWarning, setShowWarning] = useState(false)
   const isMobile = useIsMobile()

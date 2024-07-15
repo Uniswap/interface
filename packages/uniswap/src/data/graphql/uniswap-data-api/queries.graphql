@@ -716,6 +716,13 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
           hash
           from
           status
+          application {
+            name
+            address
+            icon {
+              url
+            }
+          }
           assetChanges {
             __typename
             ... on TokenTransfer {

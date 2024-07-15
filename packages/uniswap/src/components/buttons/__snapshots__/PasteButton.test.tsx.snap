@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SplitLogo inline renders inline button 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "paddingBottom": 8,
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="16"
+      bbWidth="16"
+      fill="none"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={8}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "#9B9B9B",
+            "height": 16,
+            "width": 16,
+          },
+          {
+            "flex": 0,
+            "height": 16,
+            "width": 16,
+          },
+        ]
+      }
+      tintColor="#9B9B9B"
+      vbHeight={16}
+      vbWidth={16}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth="8"
+      >
+        <RNSVGPath
+          d="M13.3332 5.33333V12C13.3332 13.3333 12.6665 14 11.3332 14H4.6665C3.33317 14 2.6665 13.3333 2.6665 12V5.33333C2.6665 4.172 3.16777 3.518 4.17643 3.37134C4.2571 3.35934 4.33317 3.42599 4.33317 3.50732V3.66602C4.33317 4.87935 5.11984 5.66602 6.33317 5.66602H9.66651C10.8798 5.66602 11.6665 4.87935 11.6665 3.66602V3.50732C11.6665 3.42599 11.7432 3.35934 11.8232 3.37134C12.8319 3.518 13.3332 4.172 13.3332 5.33333ZM6.33317 4.66667H9.66651C10.3332 4.66667 10.6665 4.33333 10.6665 3.66667V3C10.6665 2.33333 10.3332 2 9.66651 2H6.33317C5.6665 2 5.33317 2.33333 5.33317 3V3.66667C5.33317 4.33333 5.6665 4.66667 6.33317 4.66667Z"
+          fill={
+            {
+              "type": 2,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.2}
+      style={
+        {
+          "color": "#9B9B9B",
+          "fontFamily": "Basel-Medium",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "lineHeight": 16,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      Paste
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`SplitLogo renders without error 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "backgroundColor": "#311C31",
+      "borderBottomLeftRadius": 12,
+      "borderBottomRightRadius": 12,
+      "borderTopLeftRadius": 12,
+      "borderTopRightRadius": 12,
+      "flexDirection": "column",
+      "opacity": 1,
+      "paddingBottom": 8,
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.2}
+      style={
+        {
+          "color": "#FC72FF",
+          "fontFamily": "Basel-Medium",
+          "fontSize": 14,
+          "fontWeight": "500",
+          "lineHeight": 16,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      Paste
+    </Text>
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="16"
+      bbWidth="16"
+      fill="currentColor"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={8}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "#FC72FF",
+            "height": 16,
+            "width": 16,
+          },
+          {
+            "flex": 0,
+            "height": 16,
+            "width": 16,
+          },
+        ]
+      }
+      tintColor="#FC72FF"
+      vbHeight={16}
+      vbWidth={16}
+    >
+      <RNSVGGroup
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth="8"
+      >
+        <RNSVGPath
+          d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
+          fill={
+            {
+              "type": 2,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;

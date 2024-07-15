@@ -49,7 +49,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
                 details.amounts?.inputAmount.currency,
                 details.amounts?.outputAmount.currency,
                 details.amounts?.inputAmount.quotient,
-                details.amounts?.outputAmount.quotient
+                details.amounts?.outputAmount.quotient,
               )
             }
           />

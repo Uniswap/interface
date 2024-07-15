@@ -3,9 +3,6 @@
 declare module 'react-native-dotenv' {
   export const APPSFLYER_API_KEY: string
   export const APPSFLYER_APP_ID: string
-  export const MOONPAY_API_KEY: string
-  export const MOONPAY_API_URL: string
-  export const MOONPAY_WIDGET_API_URL: string
   export const UNISWAP_API_KEY: string
   export const INFURA_KEY: string
   export const INFURA_PROJECT_ID: string

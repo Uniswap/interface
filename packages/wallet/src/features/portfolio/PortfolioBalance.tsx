@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import { Flex, Shine, Text, isWeb } from 'ui/src'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
@@ -16,15 +16,14 @@ interface PortfolioBalanceProps {
   owner: Address
 }
 
-export const PortfolioBalance = memo(function _PortfolioBalance({
-  owner,
-}: PortfolioBalanceProps): JSX.Element {
+export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioTotalValue({
     address: owner,
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
   })
+
   const currency = useAppFiatCurrency()
   const currencyComponents = useAppFiatCurrencyInfo()
   const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
@@ -35,11 +34,10 @@ export const PortfolioBalance = memo(function _PortfolioBalance({
   const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
 
   const totalBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
-  const { amount: absoluteChange } = convertFiatAmount(absoluteChangeUSD)
+  const absoluteChange = absoluteChangeUSD && convertFiatAmount(absoluteChangeUSD).amount
   // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
   const shouldFadePortfolioDecimals =
-    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
-    currencyComponents.symbolAtFront
+    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
   return (
     <Flex gap="$spacing4">
@@ -83,7 +81,8 @@ const WebBalanceWithFadedDecimals = ({ value }: { value: string }): JSX.Element 
         style={{
           fontWeight: WEB_BALANCE_FONT_WEIGHT,
         }}
-        variant="heading2">
+        variant="heading2"
+      >
         {amountOfCurrency[0]}
         {amountOfCurrency.length > 1 && (
           <Text color="$neutral3" variant="heading2">

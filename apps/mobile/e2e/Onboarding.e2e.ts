@@ -8,6 +8,7 @@ describe('Onboarding', () => {
   })
 
   afterEach(async () => {
+    await device.clearKeychain()
     await device.uninstallApp()
     await device.installApp()
   })

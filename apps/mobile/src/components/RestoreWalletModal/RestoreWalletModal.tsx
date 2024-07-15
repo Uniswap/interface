@@ -1,20 +1,21 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const onDismiss = (): void => {
     dispatch(closeModal({ name: ModalName.RestoreWallet }))
@@ -32,10 +33,7 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface2.get()}
-      isDismissible={false}
-      name={ModalName.RestoreWallet}>
+    <BottomSheetModal backgroundColor={colors.surface2.get()} isDismissible={false} name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex
           centered
@@ -43,12 +41,9 @@ export function RestoreWalletModal(): JSX.Element | null {
           p="$spacing12"
           style={{
             backgroundColor: opacify(12, colors.neutral1.val),
-          }}>
-          <LockIcon
-            color={colors.neutral1.get()}
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
+          }}
+        >
+          <LockIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('account.wallet.button.restore')}
@@ -60,7 +55,7 @@ export function RestoreWalletModal(): JSX.Element | null {
           <Button fill theme="tertiary" onPress={onDismiss}>
             {t('common.button.dismiss')}
           </Button>
-          <Button fill testID={ElementName.RestoreWallet} theme="primary" onPress={onRestore}>
+          <Button fill testID={TestID.RestoreWallet} theme="primary" onPress={onRestore}>
             {t('common.button.restore')}
           </Button>
         </Flex>

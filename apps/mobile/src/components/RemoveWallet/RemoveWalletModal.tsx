@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAccountsList'
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
@@ -11,19 +12,17 @@ import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, ColorTokens, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -31,7 +30,7 @@ import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 export function RemoveWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const addressToAccount = useAccounts()
   const associatedAccounts = useAppSelector(selectSignerMnemonicAccounts)
@@ -48,12 +47,11 @@ export function RemoveWalletModal(): JSX.Element | null {
   const isRemovingLastMnemonic = isRemovingMnemonic && associatedAccounts.length === 1
   const isRemovingRecoveryPhrase = isReplacing || isRemovingLastMnemonic
 
-  const hasAccountsLeft =
-    Object.keys(addressToAccount).length > (isReplacing ? associatedAccounts.length : 1)
+  const hasAccountsLeft = Object.keys(addressToAccount).length > (isReplacing ? associatedAccounts.length : 1)
 
   const [inProgress, setInProgress] = useState(false)
   const [currentStep, setCurrentStep] = useState<RemoveWalletStep>(
-    isRemovingRecoveryPhrase ? RemoveWalletStep.Warning : RemoveWalletStep.Final
+    isRemovingRecoveryPhrase ? RemoveWalletStep.Warning : RemoveWalletStep.Final,
   )
 
   const onClose = useCallback((): void => {
@@ -87,7 +85,7 @@ export function RemoveWalletModal(): JSX.Element | null {
               editAccountActions.trigger({
                 type: EditAccountAction.Remove,
                 accounts: accountsToRemove,
-              })
+              }),
             )
           })
           .catch((error) => {
@@ -101,9 +99,13 @@ export function RemoveWalletModal(): JSX.Element | null {
         editAccountActions.trigger({
           type: EditAccountAction.Remove,
           accounts: accountsToRemove,
-        })
+        }),
       )
     }
+
+    sendAnalyticsEvent(WalletEventName.WalletRemoved, {
+      wallets_removed: accountsToRemove.map((a) => a.address),
+    })
 
     onClose()
     setInProgress(false)
@@ -115,7 +117,7 @@ export function RemoveWalletModal(): JSX.Element | null {
     },
     () => {
       setInProgress(false)
-    }
+    },
   )
 
   const {
@@ -163,17 +165,16 @@ export function RemoveWalletModal(): JSX.Element | null {
     return null
   }
 
-  const { title, description, Icon, iconColorLabel, actionButtonTheme, actionButtonLabel } =
-    modalContent
+  const { title, description, Icon, iconColorLabel, actionButtonTheme, actionButtonLabel } = modalContent
 
-  // TODO(MOB-1420): clean up types
   const labelColor: ThemeKeys = iconColorLabel
 
   return (
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
       name={ModalName.RemoveSeedPhraseWarningModal}
-      onClose={onClose}>
+      onClose={onClose}
+    >
       <Flex gap="$spacing24" px="$spacing24" py="$spacing24">
         <Flex centered gap="$spacing16">
           <Flex
@@ -182,12 +183,9 @@ export function RemoveWalletModal(): JSX.Element | null {
             p="$spacing12"
             style={{
               backgroundColor: opacify(12, colors[labelColor].val),
-            }}>
-            <Icon
-              color={colors[labelColor].val}
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
+            }}
+          >
+            <Icon color={colors[labelColor].val} height={iconSizes.icon24} width={iconSizes.icon24} />
           </Flex>
           <Flex gap="$spacing8">
             <Text textAlign="center" variant="body1">
@@ -215,18 +213,12 @@ export function RemoveWalletModal(): JSX.Element | null {
               )}
               <Button
                 fill
-                icon={
-                  inProgress ? (
-                    <SpinningLoader
-                      // TODO(MOB-1420): clean up types (as ColorTokens)
-                      color={`$${labelColor}` as ColorTokens}
-                    />
-                  ) : undefined
-                }
+                icon={inProgress ? <SpinningLoader color={`$${labelColor}`} /> : undefined}
                 testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
                 theme={actionButtonTheme}
                 width="100%"
-                onPress={onPress}>
+                onPress={onPress}
+              >
                 {inProgress ? undefined : actionButtonLabel}
               </Button>
             </Flex>

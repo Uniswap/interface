@@ -9,6 +9,6 @@ export default function useTrendingTokens(chainId?: SupportedInterfaceChainId) {
 
   return useMemo(
     () => ({ data: data?.topTokens?.map((token) => unwrapToken(chainId ?? 1, token)), loading }),
-    [chainId, data?.topTokens, loading]
+    [chainId, data?.topTokens, loading],
   )
 }

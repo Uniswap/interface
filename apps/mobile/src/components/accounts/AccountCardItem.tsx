@@ -1,22 +1,24 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountCardItemProps = {
   address: Address
@@ -71,7 +73,7 @@ export function AccountCardItem({
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
 
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const onPressCopyAddress = async (): Promise<void> => {
     await HapticFeedback.impact()
@@ -80,8 +82,12 @@ export function AccountCardItem({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      })
+      }),
     )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+      modal: ModalName.AccountSwitcher,
+    })
   }
 
   const onPressWalletSettings = (): void => {
@@ -122,14 +128,16 @@ export function AccountCardItem({
         if (e.nativeEvent.index === 2) {
           onPressRemoveWallet()
         }
-      }}>
+      }}
+    >
       <TouchableArea
         hapticFeedback
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
         onLongPress={disableOnPress}
-        onPress={(): void => onPress(address)}>
+        onPress={(): void => onPress(address)}
+      >
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
           <Flex fill>
             <AddressDisplay

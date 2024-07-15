@@ -19,12 +19,13 @@ import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { openUri } from 'uniswap/src/utils/linking'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
@@ -60,11 +61,10 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
         navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
       }
     },
-    [generateImportedAccounts, isRestoringMnemonic, navigation, params]
+    [generateImportedAccounts, isRestoringMnemonic, navigation, params],
   )
 
-  const onPressRecoveryHelpButton = (): Promise<void> =>
-    openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
+  const onPressRecoveryHelpButton = (): Promise<void> => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
 
   const onPressTryAgainButton = (): void => {
     navigation.replace(OnboardingScreens.RestoreCloudBackupLoading, params)
@@ -72,31 +72,31 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
 
   return (
     <SafeKeyboardOnboardingScreen
-      minHeightWhenKeyboardExpanded={false}
-      screenFooter={
+      footer={
         <Trace logPress element={ElementName.Next}>
           <Button
             disabled={!submitEnabled}
             mx="$spacing16"
             my="$spacing12"
-            testID="seed-input-submit"
+            testID={TestID.Continue}
             onPress={(): void => {
               handleSubmit(seedPhraseInputRef)
-            }}>
+            }}
+          >
             {t('common.button.continue')}
           </Button>
         </Trace>
       }
+      minHeightWhenKeyboardExpanded={false}
       subtitle={
         isRestoringMnemonic
           ? t('account.recoveryPhrase.subtitle.restoring')
           : t('account.recoveryPhrase.subtitle.import')
       }
       title={
-        isRestoringMnemonic
-          ? t('account.recoveryPhrase.title.restoring')
-          : t('account.recoveryPhrase.title.import')
-      }>
+        isRestoringMnemonic ? t('account.recoveryPhrase.title.restoring') : t('account.recoveryPhrase.title.import')
+      }
+    >
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         navigation={navigation}
@@ -110,6 +110,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
         }}
         targetMnemonicId={targetMnemonicId}
+        testID={TestID.ImportAccountInput}
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
           setSubmitEnabled(e.nativeEvent.canSubmit)
         }
@@ -125,8 +126,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
       />
 
       <Flex row justifyContent="center" pt="$spacing24">
-        <TouchableArea
-          onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
+        <TouchableArea onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
           <Flex row alignItems="center" gap="$spacing4">
             <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
             <Text color="$neutral3" variant="body2">

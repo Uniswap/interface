@@ -1,14 +1,9 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  TextInput as NativeTextInput,
-  StyleSheet,
-} from 'react-native'
+import { Keyboard, KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -21,10 +16,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
-import {
-  EditAccountAction,
-  editAccountActions,
-} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -37,7 +29,7 @@ export function SettingsWalletEdit({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccount = useAccounts()[address]
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
@@ -68,7 +60,7 @@ export function SettingsWalletEdit({
         type: EditAccountAction.Rename,
         address,
         newName: nickname?.trim() ?? '',
-      })
+      }),
     )
   }
 
@@ -81,17 +73,12 @@ export function SettingsWalletEdit({
           enabled
           behavior={isIOS ? 'padding' : undefined}
           contentContainerStyle={styles.expand}
-          style={styles.base}>
+          style={styles.base}
+        >
           <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
             <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
           </BackHeader>
-          <Flex
-            grow
-            gap="$spacing36"
-            justifyContent="space-between"
-            pb="$spacing16"
-            pt="$spacing24"
-            px="$spacing24">
+          <Flex grow gap="$spacing36" justifyContent="space-between" pb="$spacing16" pt="$spacing24" px="$spacing24">
             <Flex>
               <Flex
                 grow
@@ -102,7 +89,8 @@ export function SettingsWalletEdit({
                 borderWidth="$spacing1"
                 justifyContent="space-between"
                 px="$spacing24"
-                py="$spacing12">
+                py="$spacing12"
+              >
                 <TextInput
                   ref={inputRef}
                   autoCapitalize="none"
@@ -136,21 +124,18 @@ export function SettingsWalletEdit({
               </Flex>
               {accountNameIsEditable && (
                 <Flex px="$spacing8" py="$spacing12">
-                  <Text color="$neutral3">
-                    {t('settings.setting.wallet.editLabel.description')}
-                  </Text>
+                  <Text color="$neutral3">{t('settings.setting.wallet.editLabel.description')}</Text>
                 </Flex>
               )}
-              {showUnitagBanner && (
-                <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />
-              )}
+              {showUnitagBanner && <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />}
             </Flex>
             <Button
               hapticFeedback
               disabled={nickname === displayName?.name}
               size="medium"
               theme="primary"
-              onPress={onPressSaveChanges}>
+              onPress={onPressSaveChanges}
+            >
               {t('settings.setting.wallet.editLabel.save')}
             </Button>
           </Flex>

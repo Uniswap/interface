@@ -7,6 +7,14 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
+  ARBITRUM_CURRENCY,
+  BASE_CURRENCY,
+  MAINNET_CURRENCY,
+  OPTIMISM_CURRENCY,
+  POLYGON_CURRENCY,
+  currencyInfo,
+} from 'uniswap/src/test/fixtures'
+import {
   sortPortfolioBalances,
   useHighestBalanceNativeCurrencyId,
   usePortfolioBalances,
@@ -22,16 +30,10 @@ import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slic
 import {
   ACCOUNT,
   ACCOUNT2,
-  ARBITRUM_CURRENCY,
-  BASE_CURRENCY,
-  MAINNET_CURRENCY,
-  OPTIMISM_CURRENCY,
-  POLYGON_CURRENCY,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
-  currencyInfo,
   daiToken,
   ethToken,
   portfolio,
@@ -69,9 +71,7 @@ describe(usePortfolioValueModifiers, () => {
     },
   })
 
-  const mockFavoritesState = (
-    overrideTokensVisibility?: FavoritesState['tokensVisibility']
-  ): FavoritesState => ({
+  const mockFavoritesState = (overrideTokensVisibility?: FavoritesState['tokensVisibility']): FavoritesState => ({
     ...initialFavoritesState,
     tokensVisibility: {
       ...initialFavoritesState.tokensVisibility,
@@ -92,9 +92,7 @@ describe(usePortfolioValueModifiers, () => {
   })
 
   it('returns multiple modifiers if multiple addresses are passed', () => {
-    const { result } = renderHook(() =>
-      usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2])
-    )
+    const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]))
 
     expect(result.current).toEqual([
       { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1 },
@@ -104,10 +102,9 @@ describe(usePortfolioValueModifiers, () => {
 
   describe('includeSmallBalances', () => {
     it('returns modifiers with includeSmallBalances set to true if hideSmallBalances settings is false', () => {
-      const { result } = renderHook(
-        () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
-        { preloadedState: { wallet: mockWalletState({ hideSmallBalances: false }) } }
-      )
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: { wallet: mockWalletState({ hideSmallBalances: false }) },
+      })
 
       expect(result.current).toEqual([
         { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSmallBalances: true },
@@ -116,10 +113,9 @@ describe(usePortfolioValueModifiers, () => {
     })
 
     it('returns modifiers with includeSmallBalances set to false if hideSmallBalances settings is true', () => {
-      const { result } = renderHook(
-        () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
-        { preloadedState: { wallet: mockWalletState({ hideSmallBalances: true }) } }
-      )
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: { wallet: mockWalletState({ hideSmallBalances: true }) },
+      })
 
       expect(result.current).toEqual([
         { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSmallBalances: false },
@@ -130,10 +126,9 @@ describe(usePortfolioValueModifiers, () => {
 
   describe('includeSpamTokens', () => {
     it('returns modifiers with includeSpamTokens set to true if hideSpamTokens settings is false', () => {
-      const { result } = renderHook(
-        () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
-        { preloadedState: { wallet: mockWalletState({ hideSpamTokens: false }) } }
-      )
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: { wallet: mockWalletState({ hideSpamTokens: false }) },
+      })
 
       expect(result.current).toEqual([
         { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSpamTokens: true },
@@ -142,10 +137,9 @@ describe(usePortfolioValueModifiers, () => {
     })
 
     it('returns modifiers with includeSpamTokens set to false if hideSpamTokens settings is true', () => {
-      const { result } = renderHook(
-        () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
-        { preloadedState: { wallet: mockWalletState({ hideSpamTokens: true }) } }
-      )
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: { wallet: mockWalletState({ hideSpamTokens: true }) },
+      })
 
       expect(result.current).toEqual([
         { ...sharedModifier, ownerAddress: SAMPLE_SEED_ADDRESS_1, includeSpamTokens: false },
@@ -171,21 +165,18 @@ describe(usePortfolioValueModifiers, () => {
     })
 
     it('includes token overrides in the result if tokensVisibility contains addresses visibility settings', () => {
-      const { result } = renderHook(
-        () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
-        {
-          preloadedState: {
-            wallet: {
-              ...initialWalletState,
-              accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
-            },
-            favorites: mockFavoritesState({
-              [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
-              [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
-            }),
+      const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
+        preloadedState: {
+          wallet: {
+            ...initialWalletState,
+            accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
           },
-        }
-      )
+          favorites: mockFavoritesState({
+            [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
+            [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
+          }),
+        },
+      })
 
       expect(result.current).toEqual([
         {
@@ -319,10 +310,9 @@ describe(usePortfolioBalances, () => {
 
   it('calls onCompleted callback when query completes', async () => {
     const onCompleted = jest.fn()
-    const { result } = renderHook(
-      () => usePortfolioBalances({ address: daiCurrencyId, onCompleted }),
-      { resolvers: portfolioResolvers }
-    )
+    const { result } = renderHook(() => usePortfolioBalances({ address: daiCurrencyId, onCompleted }), {
+      resolvers: portfolioResolvers,
+    })
 
     expect(result.current.loading).toEqual(true)
     expect(onCompleted).not.toHaveBeenCalled()
@@ -348,10 +338,9 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns loading set to true when data is being fetched', async () => {
-    const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
-      { resolvers: portfolioResolvers }
-    )
+    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
 
     expect(result.current).toEqual({
       data: undefined,
@@ -372,10 +361,7 @@ describe(usePortfolioTotalValue, () => {
         throw new Error('test')
       },
     })
-    const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
-      { resolvers }
-    )
+    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), { resolvers })
 
     await waitFor(() => {
       expect(result.current).toEqual({
@@ -392,10 +378,7 @@ describe(usePortfolioTotalValue, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [],
     })
-    const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
-      { resolvers }
-    )
+    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), { resolvers })
 
     expect(result.current.loading).toEqual(true)
 
@@ -411,12 +394,9 @@ describe(usePortfolioTotalValue, () => {
   })
 
   it('returns total value of all balances for the specified address', async () => {
-    const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
-      {
-        resolvers: portfolioResolvers,
-      }
-    )
+    const { result } = renderHook(() => usePortfolioTotalValue({ address: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
 
     await waitFor(() => {
       expect(result.current).toEqual({
@@ -481,7 +461,7 @@ describe(useTokenBalancesGroupedByVisibility, () => {
           [daiPortfolioBalance.cacheId]: daiPortfolioBalance,
           [ethPortfolioBalance.cacheId]: ethPortfolioBalance,
         },
-      })
+      }),
     )
 
     expect(result.current).toEqual({
@@ -493,9 +473,7 @@ describe(useTokenBalancesGroupedByVisibility, () => {
 
 describe(useSortedPortfolioBalances, () => {
   it('returns loading set to true when data is being fetched', () => {
-    const { result } = renderHook(() =>
-      useSortedPortfolioBalances({ address: Portfolio.ownerAddress })
-    )
+    const { result } = renderHook(() => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }))
 
     expect(result.current).toEqual({
       data: {
@@ -509,12 +487,9 @@ describe(useSortedPortfolioBalances, () => {
   })
 
   it('returns balances grouped by visibility when data is fetched', async () => {
-    const { result } = renderHook(
-      () => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }),
-      {
-        resolvers: portfolioResolvers,
-      }
-    )
+    const { result } = renderHook(() => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }), {
+      resolvers: portfolioResolvers,
+    })
 
     await waitFor(() => {
       expect(result.current).toEqual({
@@ -556,12 +531,8 @@ describe(sortPortfolioBalances, () => {
     const result = sortPortfolioBalances([...balancesWithoutUSD, ...balancesWithUSD])
 
     expect(result).toEqual([
-      ...createArray(balancesWithUSD.length, () =>
-        expect.objectContaining({ balanceUSD: expect.any(Number) })
-      ),
-      ...createArray(balancesWithoutUSD.length, () =>
-        expect.objectContaining({ balanceUSD: null })
-      ),
+      ...createArray(balancesWithUSD.length, () => expect.objectContaining({ balanceUSD: expect.any(Number) })),
+      ...createArray(balancesWithoutUSD.length, () => expect.objectContaining({ balanceUSD: null })),
     ])
   })
 
@@ -629,7 +600,7 @@ describe(usePortfolioCacheUpdater, () => {
         fields: {
           tokensTotalDenominatedValue: expect.any(Function),
         },
-      })
+      }),
     )
   })
 })

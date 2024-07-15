@@ -98,7 +98,7 @@ export function useNftAssets(params: AssetFetcherParams) {
           after: data?.nftAssets?.pageInfo?.endCursor,
         },
       }),
-    [data, fetchMore]
+    [data, fetchMore],
   )
 
   // TODO: setup polling while handling pagination
@@ -109,7 +109,7 @@ export function useNftAssets(params: AssetFetcherParams) {
       data?.nftAssets?.edges?.map((queryAsset) => {
         return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
-    [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
+    [data?.nftAssets?.edges, data?.nftAssets?.totalCount],
   )
 
   return useMemo(() => {
@@ -146,7 +146,7 @@ function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepF
       marketplaces:
         markets && markets.length > 0 ? markets?.map((market) => market.toUpperCase() as NftMarketplace) : undefined,
     }),
-    [markets, price?.high, price?.low, traits]
+    [markets, price?.high, price?.low, traits],
   )
   return useMemo(
     () => ({
@@ -156,7 +156,7 @@ function useSweepFetcherVars({ contractAddress, markets, price, traits }: SweepF
       first: DEFAULT_SWEEP_AMOUNT,
       filter,
     }),
-    [contractAddress, filter]
+    [contractAddress, filter],
   )
 }
 
@@ -172,7 +172,7 @@ export function useSweepNftAssets(params: SweepFetcherParams) {
       data?.nftAssets?.edges?.map((queryAsset) => {
         return formatAssetQueryData(queryAsset as NonNullable<NftAssetEdge>, data.nftAssets?.totalCount)
       }),
-    [data?.nftAssets?.edges, data?.nftAssets?.totalCount]
+    [data?.nftAssets?.edges, data?.nftAssets?.totalCount],
   )
   return useMemo(() => ({ data: assets, loading }), [assets, loading])
 }

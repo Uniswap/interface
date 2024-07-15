@@ -4,12 +4,10 @@ import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import {
-  LocalizationContextState,
-  useLocalizationContext,
-} from 'wallet/src/features/language/LocalizationContext'
+import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
@@ -21,9 +19,8 @@ import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
   SWAP_QUOTE_ERROR,
-} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
+} from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -33,7 +30,7 @@ export function getSwapWarnings(
   t: TFunction,
   formatPercent: LocalizationContextState['formatPercent'],
   derivedSwapInfo: DerivedSwapInfo,
-  offline: boolean
+  offline: boolean,
 ): Warning[] {
   const warnings: Warning[] = []
 
@@ -142,10 +139,7 @@ export function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
   const offline = isOffline(networkStatus)
 
-  return useMemoCompare(
-    () => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline),
-    _.isEqual
-  )
+  return useMemoCompare(() => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline), _.isEqual)
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
@@ -164,7 +158,5 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
 }
 
 export function isPriceImpactWarning(warning: Warning): boolean {
-  return (
-    warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
-  )
+  return warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
 }

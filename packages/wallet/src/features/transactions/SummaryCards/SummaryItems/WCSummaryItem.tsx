@@ -1,15 +1,13 @@
 import { createElement } from 'react'
 import { DappLogoWithWCBadge } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import {
-  SummaryItemProps,
-  TransactionSummaryLayoutProps,
-} from 'wallet/src/features/transactions/SummaryCards/types'
+import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionDetails, WCConfirmInfo } from 'wallet/src/features/transactions/types'
 
 export function WCSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WCConfirmInfo }
 }): JSX.Element {
@@ -24,5 +22,6 @@ export function WCSummaryItem({
       />
     ),
     transaction,
+    index,
   })
 }

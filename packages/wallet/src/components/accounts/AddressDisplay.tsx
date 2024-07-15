@@ -1,27 +1,22 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
-import {
-  ColorTokens,
-  Flex,
-  HapticFeedback,
-  SpaceTokens,
-  Text,
-  TextProps,
-  TouchableArea,
-} from 'ui/src'
+import { useDispatch } from 'react-redux'
+import { ColorTokens, Flex, HapticFeedback, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AddressDisplayProps = {
   address: string
@@ -43,13 +38,7 @@ type AddressDisplayProps = {
   includeUnitagSuffix?: boolean
   textAlign?: FlexAlignType
   horizontalGap?: SpaceTokens
-  notificationsBadgeContainer?: ({
-    children,
-    address,
-  }: {
-    children: JSX.Element
-    address: string
-  }) => JSX.Element
+  notificationsBadgeContainer?: ({ children, address }: { children: JSX.Element; address: string }) => JSX.Element
   gapBetweenLines?: SpaceTokens
   showViewOnlyLabel?: boolean
   showViewOnlyBadge?: boolean
@@ -60,13 +49,10 @@ type CopyButtonWrapperProps = {
   backgroundColor?: string
 }
 
-function CopyButtonWrapper({
-  children,
-  onPress,
-}: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
+function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
   if (onPress) {
     return (
-      <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Copy} onPress={onPress}>
+      <TouchableArea hapticFeedback hitSlop={16} testID={TestID.Copy} onPress={onPress}>
         {children}
       </TouchableArea>
     )
@@ -112,12 +98,11 @@ export function AddressDisplay({
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
 
-  const showAddressAsSubtitle =
-    !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
+  const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
 
   const onPressCopyAddress = async (): Promise<void> => {
     if (!address) {
@@ -129,15 +114,17 @@ export function AddressDisplay({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      })
+      }),
     )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+    })
   }
 
   // Extract sizes so copy icon can match font variants
   const mainSize = fonts[variant].fontSize
   const captionSize = fonts[captionVariant].fontSize
-  const itemAlignment =
-    textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
+  const itemAlignment = textAlign || (!showAccountIcon || direction === 'column' ? 'center' : 'flex-start')
 
   const icon = useMemo(() => {
     return (
@@ -169,12 +156,9 @@ export function AddressDisplay({
   return (
     <Flex shrink alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
       {showAccountIcon &&
-        (notificationsBadgeContainer
-          ? notificationsBadgeContainer({ children: icon, address })
-          : icon)}
+        (notificationsBadgeContainer ? notificationsBadgeContainer({ children: icon, address }) : icon)}
       <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
-        <CopyButtonWrapper
-          onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
+        <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
             <DisplayNameText
               displayName={displayName}
@@ -243,7 +227,8 @@ const AddressSubtitle = ({
       gap="$spacing4"
       mt={showCopyWrapperButton ? '$spacing8' : '$none'}
       px={showCopyWrapperButton ? '$spacing8' : '$none'}
-      py={showCopyWrapperButton ? '$spacing4' : '$none'}>
+      py={showCopyWrapperButton ? '$spacing4' : '$none'}
+    >
       <Text color={captionTextColor} variant={captionVariant}>
         {sanitizeAddressText(shortenAddress(address))}
       </Text>

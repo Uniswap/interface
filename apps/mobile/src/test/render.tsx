@@ -13,12 +13,13 @@ import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import type { MobileState } from 'src/app/reducer'
-import type { AppStore } from 'src/app/store'
-import { persistedReducer } from 'src/app/store'
+import { store as appStore, persistedReducer } from 'src/app/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/gql/provider'
+
+type AppStore = typeof appStore
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -47,7 +48,7 @@ export function renderWithProviders(
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
     ...renderOptions
-  }: ExtendedRenderOptions = {}
+  }: ExtendedRenderOptions = {},
 ): RenderResult & {
   store: EnhancedStore
 } {
@@ -85,13 +86,13 @@ type RenderHookWithProvidersResult<R, P = undefined> = Omit<RenderHookResult<R, 
 // Don't require hookOptions if hook doesn't take any arguments
 export function renderHookWithProviders<R>(
   hook: () => R,
-  hookOptions?: ExtendedRenderHookOptions<undefined>
+  hookOptions?: ExtendedRenderHookOptions<undefined>,
 ): RenderHookWithProvidersResult<R>
 
 // Require hookOptions if hook takes arguments
 export function renderHookWithProviders<R, P>(
   hook: (args: P) => R,
-  hookOptions: ExtendedRenderHookOptions<P>
+  hookOptions: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P>
 
 /**
@@ -103,7 +104,7 @@ export function renderHookWithProviders<R, P>(
  */
 export function renderHookWithProviders<P, R>(
   hook: (args: P) => R,
-  hookOptions?: ExtendedRenderHookOptions<P>
+  hookOptions?: ExtendedRenderHookOptions<P>,
 ): RenderHookWithProvidersResult<R, P> {
   const {
     resolvers,

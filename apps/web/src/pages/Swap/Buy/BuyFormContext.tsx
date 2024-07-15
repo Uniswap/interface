@@ -2,7 +2,9 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { buildCurrencyInfo } from 'constants/routing'
 import { nativeOnChain } from 'constants/tokens'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
+import { t } from 'i18next'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
+import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import {
   useFiatOnRampAggregatorCountryListQuery,
@@ -15,8 +17,20 @@ import {
   FiatCurrencyInfo,
   FiatOnRampCurrency,
 } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  InvalidRequestAmountTooLow,
+  isFiatOnRampApiError,
+  isInvalidRequestAmountTooHigh,
+  isInvalidRequestAmountTooLow,
+} from 'uniswap/src/features/fiatOnRamp/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAccount } from 'wagmi'
+
+class BuyFormError extends Error {
+  constructor(public readonly message: string) {
+    super(message)
+  }
+}
 
 type BuyFormState = {
   readonly inputAmount: string
@@ -32,9 +46,11 @@ type BuyInfo = {
   readonly notAvailableInThisRegion: boolean
   readonly countryOptionsResult?: FORSupportedCountriesResponse
   readonly supportedTokens?: FiatOnRampCurrency[]
-  readonly amountOutFiat?: string
+  readonly amountOut?: string
+  readonly amountOutLoading?: boolean
   readonly quotes?: FORQuoteResponse
   readonly fetchingQuotes: boolean
+  readonly error?: BuyFormError
 }
 
 type BuyFormContextType = {
@@ -56,7 +72,7 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   providerModalOpen: false,
 }
 
-const BuyFormContext = createContext<BuyFormContextType>({
+export const BuyFormContext = createContext<BuyFormContextType>({
   buyFormState: DEFAULT_BUY_FORM_STATE,
   setBuyFormState: () => undefined,
   derivedBuyFormInfo: {
@@ -64,9 +80,11 @@ const BuyFormContext = createContext<BuyFormContextType>({
     notAvailableInThisRegion: false,
     countryOptionsResult: undefined,
     supportedTokens: [],
-    amountOutFiat: undefined,
+    amountOut: undefined,
+    amountOutLoading: false,
     quotes: undefined,
     fetchingQuotes: false,
+    error: undefined,
   },
 })
 
@@ -76,17 +94,22 @@ export function useBuyFormContext() {
 
 function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
   const account = useAccount()
-  const amountOutFiat = useUSDTokenUpdater(
+  const { formattedAmount: amountOut, loading: amountOutLoading } = useUSDTokenUpdater(
     true /* inputInFiat */,
     state.inputAmount,
-    state.quoteCurrency?.currencyInfo?.currency
+    state.quoteCurrency?.currencyInfo?.currency,
   )
 
   const { meldSupportedFiatCurrency, notAvailableInThisRegion } = useMeldFiatCurrencyInfo(state.selectedCountry)
+
   const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery()
   const supportedTokens = useFiatOnRampSupportedTokens(meldSupportedFiatCurrency, state.selectedCountry?.countryCode)
 
-  const { data: quotes, isFetching: fetchingQuotes } = useFiatOnRampAggregatorCryptoQuoteQuery(
+  const {
+    data: quotes,
+    isFetching: fetchingQuotes,
+    error: quotesError,
+  } = useFiatOnRampAggregatorCryptoQuoteQuery(
     state.inputAmount &&
       state.inputAmount !== '' &&
       account.address &&
@@ -104,28 +127,53 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       : skipToken,
     {
       refetchOnMountOrArgChange: true,
-    }
+    },
   )
+
+  const error = useMemo(() => {
+    if (quotesError && isFiatOnRampApiError(quotesError)) {
+      if (isInvalidRequestAmountTooLow(quotesError)) {
+        const formattedAmount = formatFiatOnRampFiatAmount(
+          (quotesError as InvalidRequestAmountTooLow).data.context.minimumAllowed,
+          meldSupportedFiatCurrency,
+        )
+        return new BuyFormError(t(`fiatOnRamp.error.min`, { amount: formattedAmount }))
+      }
+      if (isInvalidRequestAmountTooHigh(quotesError)) {
+        const formattedAmount = formatFiatOnRampFiatAmount(
+          quotesError.data.context.maximumAllowed,
+          meldSupportedFiatCurrency,
+        )
+        return new BuyFormError(t(`fiatOnRamp.error.max`, { amount: formattedAmount }))
+      }
+      return new BuyFormError(t('common.somethingWentWrong.error'))
+    }
+    return undefined
+  }, [meldSupportedFiatCurrency, quotesError])
 
   return useMemo(
     () => ({
-      amountOutFiat,
+      amountOut,
+      amountOutLoading,
       notAvailableInThisRegion,
       meldSupportedFiatCurrency,
       supportedTokens,
       countryOptionsResult,
       quotes,
       fetchingQuotes,
+      error,
     }),
     [
-      amountOutFiat,
+      amountOut,
+      amountOutLoading,
       countryOptionsResult,
+      error,
       fetchingQuotes,
       meldSupportedFiatCurrency,
       notAvailableInThisRegion,
       quotes,
       supportedTokens,
-    ]
+    ],
   )
 }
 
@@ -139,7 +187,7 @@ export function BuyFormContextProvider({ children }: PropsWithChildren) {
       setBuyFormState,
       derivedBuyFormInfo,
     }),
-    [buyFormState, derivedBuyFormInfo]
+    [buyFormState, derivedBuyFormInfo],
   )
 
   return <BuyFormContext.Provider value={value}>{children}</BuyFormContext.Provider>

@@ -2,7 +2,7 @@ import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@uni
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
-import { L2_CHAIN_IDS, SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useGasPrice from 'hooks/useGasPrice'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
@@ -11,6 +11,7 @@ import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_AUTO_SLIPPAGE = new Percent(5, 1000) // 0.5%
@@ -75,7 +76,7 @@ const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 100) // 5%
  */
 export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): Percent {
   const { chainId } = useAccount()
-  const onL2 = chainId && L2_CHAIN_IDS.includes(chainId)
+  const onL2 = isL2ChainId(chainId)
   const outputUSD = useUSDPrice(trade?.outputAmount)
   const outputDollarValue = useStablecoinAmountFromFiatValue(outputUSD.data)
 
@@ -94,7 +95,7 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
       ? JSBI.multiply(nativeGasPrice, JSBI.BigInt(gasEstimate))
       : undefined
   const gasCostUSD = useUSDPrice(
-    nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined
+    nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined,
   )
   const gasCostStablecoinAmount = useStablecoinAmountFromFiatValue(gasCostUSD.data)
 

@@ -109,7 +109,7 @@ export function useERC20Permit(
   currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
   transactionDeadline: BigNumber | undefined,
-  overridePermitInfo: PermitInfo | undefined | null
+  overridePermitInfo: PermitInfo | undefined | null,
 ): {
   signatureData: SignatureData | null
   state: UseERC20PermitState

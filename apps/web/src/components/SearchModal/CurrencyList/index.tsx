@@ -13,12 +13,12 @@ import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalanc
 import { useIsUserAddedToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
+import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { TokenFromList } from 'state/lists/tokenFromList'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -126,6 +126,13 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
+const getDisplayName = (name: string | undefined) => {
+  if (name === 'USD//C') {
+    return 'USD Coin'
+  }
+  return name
+}
+
 const RowWrapper = styled(Row)`
   height: 60px;
 `
@@ -164,6 +171,7 @@ export function CurrencyRow({
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
+  const currencyName = getDisplayName(currency.name)
 
   // only show add or remove buttons if not on selected list
   return (
@@ -197,7 +205,7 @@ export function CurrencyRow({
           </Column>
           <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="xs">
             <Row>
-              <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+              <CurrencyName title={currencyName}>{currencyName}</CurrencyName>
               <WarningContainer>
                 <TokenSafetyIcon warning={warning} />
               </WarningContainer>
@@ -238,7 +246,7 @@ export const formatAnalyticsEventProperties = (
   index: number,
   data: any[],
   searchQuery: string,
-  isAddressSearch: string | false
+  isAddressSearch: string | false,
 ) => ({
   token_symbol: token?.symbol,
   token_address: token?.isToken ? token?.address : undefined,
@@ -270,7 +278,7 @@ export class CurrencyListRow {
       disabled?: boolean
       showAddress?: boolean
       tooltip?: string
-    }
+    },
   ) {}
 }
 
@@ -370,7 +378,7 @@ export default function CurrencyList({
       searchQuery,
       isAddressSearch,
       balances,
-    ]
+    ],
   )
 
   const itemKey = useCallback((index: number, data: typeof currencies) => {

@@ -1,6 +1,7 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { t } from 'i18n'
+import styled from 'lib/styled-components'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
@@ -10,8 +11,8 @@ import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useParams } from 'react-router-dom'
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
-import styled from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isIFramed } from 'utils/isIFramed'
 
 const AssetContainer = styled.div`
   display: flex;
@@ -55,11 +56,13 @@ const AssetPage = () => {
         collection.collectionDescription ??
         'View traits, trading activity, descriptions, and other details on your NFTs.',
     }),
-    [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId]
+    [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId],
   )
   const metaTags = useDynamicMetatags(metaTagProperties)
 
-  if (blocklistedCollections.includes(contractAddress)) {
+  // Don't allow iFraming of this page. isIFramed(true) busts out of the iFrame by redirecting main page to current iFrame url
+  // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
+  if (blocklistedCollections.includes(contractAddress) || isIFramed(true)) {
     return <Navigate to="/nfts" replace />
   }
 

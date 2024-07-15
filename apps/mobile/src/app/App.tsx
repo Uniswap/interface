@@ -12,9 +12,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
+import { useDispatch } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
@@ -36,11 +37,7 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import {
-  getSentryEnvironment,
-  getSentryTracesSamplingRate,
-  getStatsigEnvironmentTier,
-} from 'src/utils/version'
+import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -48,19 +45,14 @@ import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/featur
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
-import {
-  Statsig,
-  StatsigOptions,
-  StatsigProvider,
-  StatsigUser,
-} from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { isDetoxBuild } from 'utilities/src/environment'
+import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -173,7 +165,8 @@ function App(): JSX.Element | null {
                 <SharedProvider reduxStore={store}>
                   <AnalyticsNavigationContextProvider
                     shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
+                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                  >
                     <AppOuter />
                   </AnalyticsNavigationContextProvider>
                 </SharedProvider>
@@ -195,7 +188,7 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
     for (const experiment of Object.values(Experiments)) {
       Sentry.setTag(
         `experiment.${experiment}`,
-        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName()
+        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       )
     }
   }, [])
@@ -237,7 +230,8 @@ function AppOuter(): JSX.Element | null {
                         <NavigationContainer
                           onReady={(navigationRef): void => {
                             routingInstrumentation.registerNavigationContainer(navigationRef)
-                          }}>
+                          }}
+                        >
                           <MobileWalletNavigationProvider>
                             <BottomSheetModalProvider>
                               <AppModals />
@@ -262,7 +256,7 @@ function AppOuter(): JSX.Element | null {
 }
 
 function AppInner(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
   const allowAnalytics = useAppSelector(selectAllowAnalytics)
@@ -276,11 +270,7 @@ function AppInner(): JSX.Element {
         if (typeof res === 'string' && res === 'Success') {
           logger.debug('AppsFlyer', 'status', 'stopped')
         } else {
-          logger.warn(
-            'AppsFlyer',
-            'stop',
-            `Got an error when trying to stop the AppsFlyer SDK: ${res}`
-          )
+          logger.warn('AppsFlyer', 'stop', `Got an error when trying to stop the AppsFlyer SDK: ${res}`)
         }
       })
     }
@@ -301,11 +291,7 @@ function AppInner(): JSX.Element {
     <>
       <OfflineBanner />
       <AppStackNavigator />
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-      />
+      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </>
   )
 }

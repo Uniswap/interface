@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -14,10 +15,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import {
-  ExtensionOnboardingState,
-  setExtensionOnboardingState,
-} from 'wallet/src/features/behaviorHistory/slice'
+import { ExtensionOnboardingState, setExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -38,11 +36,11 @@ interface OtpStateApiResponse {
 export function ScantasticModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   // Use the first mnemonic account because zero-balance mnemonic accounts will fail to retrieve the mnemonic from rnEthers
   const account = useSignerAccounts().sort(
-    (account1, account2) => account1.derivationIndex - account2.derivationIndex
+    (account1, account2) => account1.derivationIndex - account2.derivationIndex,
   )[0]
 
   if (!account) {
@@ -54,9 +52,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
-  const [expirationTimestamp, setExpirationTimestamp] = useState<number>(
-    Date.now() + 6 * ONE_MINUTE_MS
-  )
+  const [expirationTimestamp, setExpirationTimestamp] = useState<number>(Date.now() + 6 * ONE_MINUTE_MS)
   const pubKey = params?.publicKey
   const uuid = params?.uuid
   const device = `${params?.vendor || ''} ${params?.model || ''}`.trim()
@@ -81,7 +77,7 @@ export function ScantasticModal(): JSX.Element | null {
       pushNotification({
         type: AppNotificationType.ScantasticComplete,
         hideDelay: 6 * ONE_SECOND_MS,
-      })
+      }),
     )
     dispatch(setExtensionOnboardingState(ExtensionOnboardingState.Completed))
     dispatch(closeAllModals())
@@ -172,8 +168,7 @@ export function ScantasticModal(): JSX.Element | null {
     requiredForAppAccess: biometricAuthRequiredForAppAccess,
     requiredForTransactions: biometricAuthRequiredForTransactions,
   } = useBiometricAppSettings()
-  const requiresBiometricAuth =
-    biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions
+  const requiresBiometricAuth = biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions
 
   const onConfirmSync = async (): Promise<void> => {
     if (requiresBiometricAuth) {
@@ -227,10 +222,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   if (showIPWarning) {
     return (
-      <BottomSheetModal
-        backgroundColor={colors.surface1.get()}
-        name={ModalName.OtpInputExpired}
-        onClose={onClose}>
+      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <Wifi color="$neutral2" size={iconSizes.icon24} />
@@ -251,10 +243,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   if (expired) {
     return (
-      <BottomSheetModal
-        backgroundColor={colors.surface1.get()}
-        name={ModalName.OtpInputExpired}
-        onClose={onClose}>
+      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
@@ -273,10 +262,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   if (OTP) {
     return (
-      <BottomSheetModal
-        backgroundColor={colors.surface1.get()}
-        name={ModalName.OtpScanInput}
-        onClose={onClose}>
+      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <Laptop color="$accent1" size={iconSizes.icon24} />
@@ -299,10 +285,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   if (error) {
     return (
-      <BottomSheetModal
-        backgroundColor={colors.surface1.get()}
-        name={ModalName.OtpScanInput}
-        onClose={onClose}>
+      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
@@ -324,10 +307,7 @@ export function ScantasticModal(): JSX.Element | null {
   const renderDeviceDetails = Boolean(device || browser)
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface1.get()}
-      name={ModalName.Scantastic}
-      onClose={onClose}>
+    <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.Scantastic} onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
           <Laptop color="$accent1" size={iconSizes.icon24} />
@@ -343,7 +323,8 @@ export function ScantasticModal(): JSX.Element | null {
             borderWidth={1}
             gap="$spacing12"
             p="$spacing16"
-            width="100%">
+            width="100%"
+          >
             {device && (
               <Flex row px="$spacing8">
                 <Text color="$neutral2" flex={1} variant="body3">
@@ -369,7 +350,8 @@ export function ScantasticModal(): JSX.Element | null {
           borderRadius="$rounded16"
           gap="$spacing8"
           p="$spacing16"
-          width="100%">
+          width="100%"
+        >
           <AlertTriangle color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" variant="body4">
             {t('scantastic.confirmation.warning')}
@@ -380,7 +362,8 @@ export function ScantasticModal(): JSX.Element | null {
             icon={requiresBiometricAuth ? <Faceid size={iconSizes.icon16} /> : undefined}
             mb="$spacing4"
             theme="primary"
-            onPress={onConfirmSync}>
+            onPress={onConfirmSync}
+          >
             {t('scantastic.confirmation.button.continue')}
           </Button>
           <TouchableArea alignItems="center" onPress={onClose}>

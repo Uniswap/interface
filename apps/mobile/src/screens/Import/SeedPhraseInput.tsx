@@ -1,12 +1,6 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { forwardRef, RefObject, useEffect, useState } from 'react'
-import {
-  findNodeHandle,
-  NativeSyntheticEvent,
-  requireNativeComponent,
-  StyleSheet,
-  UIManager,
-} from 'react-native'
+import { findNodeHandle, NativeSyntheticEvent, requireNativeComponent, StyleSheet, UIManager } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -32,6 +26,7 @@ export enum StringKey {
 }
 interface NativeSeedPhraseInputProps {
   targetMnemonicId?: string
+  testID?: string
   strings: Record<StringKey, string>
   onInputValidated: (e: NativeSyntheticEvent<InputValidatedEvent>) => void
   onMnemonicStored: (e: NativeSyntheticEvent<MnemonicStoredEvent>) => void
@@ -89,6 +84,6 @@ export const SeedPhraseInput = forwardRef<NativeSeedPhraseInputRef, SeedPhraseIn
         }}
       />
     )
-  }
+  },
 )
 SeedPhraseInput.displayName = 'NativeSeedPhraseInput'

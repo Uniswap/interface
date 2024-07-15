@@ -11,9 +11,7 @@ const generateRandomId = (): string => {
 const generateRandomDate = (): number => {
   const start = new Date(2023, 4, 12)
   const end = new Date()
-  return Math.floor(
-    new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).getTime() / 1000
-  )
+  return Math.floor(new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).getTime() / 1000)
 }
 
 export const useMockCloudBackups = (numberOfBackups?: number): CloudStorageMnemonicBackup[] => {

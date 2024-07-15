@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
-import { isNumber } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -16,10 +15,11 @@ import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
@@ -44,16 +44,14 @@ export function OnDeviceRecoveryScreen({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
-  const recoveryLoadingTimeoutMs = useDynamicConfig(DynamicConfigs.OnDeviceRecovery).get(
-    'recoveryLoadingTimeoutMs',
+  const recoveryLoadingTimeoutMs = useDynamicConfigValue(
+    DynamicConfigs.OnDeviceRecovery,
+    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
     FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
-    isNumber
   )
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()
-  const [selectedRecoveryWalletInfos, setSelectedRecoveryWalletInfos] = useState<
-    RecoveryWalletInfo[]
-  >([])
+  const [selectedRecoveryWalletInfos, setSelectedRecoveryWalletInfos] = useState<RecoveryWalletInfo[]>([])
 
   const [hasAnySignificantWallets, setHasAnySignificantWallets] = useState(false)
   const [loadedWallets, setLoadedWallets] = useState(0)
@@ -73,7 +71,7 @@ export function OnDeviceRecoveryScreen({
         if (mnemonicId !== selectedMnemonicId) {
           return Keyring.removeMnemonic(mnemonicId)
         }
-      })
+      }),
     )
   }
 
@@ -84,7 +82,7 @@ export function OnDeviceRecoveryScreen({
         if (!selectedRecoveryWalletInfos.find((walletInfo) => walletInfo.address === address)) {
           return Keyring.removePrivateKey(address)
         }
-      })
+      }),
     )
   }
 
@@ -92,11 +90,7 @@ export function OnDeviceRecoveryScreen({
     (significantWalletCount: number) => {
       setLoadedWallets((prev) => {
         const loaded = prev + 1
-        logger.debug(
-          'OnDeviceRecoveryScreen',
-          'onLoadComplete',
-          `${loaded} of ${mnemonicIds.length} loaded`
-        )
+        logger.debug('OnDeviceRecoveryScreen', 'onLoadComplete', `${loaded} of ${mnemonicIds.length} loaded`)
         return loaded
       })
 
@@ -104,7 +98,7 @@ export function OnDeviceRecoveryScreen({
         setHasAnySignificantWallets(true)
       }
     },
-    [mnemonicIds.length]
+    [mnemonicIds.length],
   )
 
   const onPressClose = (): void => {
@@ -129,7 +123,7 @@ export function OnDeviceRecoveryScreen({
             derivationIndex: walletInfo.derivationIndex,
             timeImportedMs: dayjs().valueOf(),
           }
-        })
+        }),
       )
       navigation.navigate(OnboardingScreens.Notifications, {
         importType: ImportType.OnDeviceRecovery,
@@ -159,7 +153,7 @@ export function OnDeviceRecoveryScreen({
         logger.warn(
           'OnDeviceRecoveryScreen',
           'useTimeout',
-          `Loading timeout triggered after ${recoveryLoadingTimeoutMs}ms`
+          `Loading timeout triggered after ${recoveryLoadingTimeoutMs}ms`,
         )
       }
     }, recoveryLoadingTimeoutMs)
@@ -170,10 +164,7 @@ export function OnDeviceRecoveryScreen({
   const showAllWallets = !screenLoading && !hasAnySignificantWallets
 
   return (
-    <Trace
-      logImpression
-      properties={{ mnemonicCount: mnemonicIds.length }}
-      screen={OnboardingScreens.OnDeviceRecovery}>
+    <Trace logImpression properties={{ mnemonicCount: mnemonicIds.length }} screen={OnboardingScreens.OnDeviceRecovery}>
       <Screen>
         <Flex grow p="$spacing24">
           <Flex alignItems="flex-start" gap="$spacing16">
@@ -211,10 +202,7 @@ export function OnDeviceRecoveryScreen({
                     .fill(0)
                     .map((_, index) => (
                       <Flex key={`loading-${index}`}>
-                        <OnDeviceRecoveryWalletCardLoader
-                          index={index}
-                          totalCount={LOADING_COUNT}
-                        />
+                        <OnDeviceRecoveryWalletCardLoader index={index} totalCount={LOADING_COUNT} />
                       </Flex>
                     ))
                 : null}
@@ -226,11 +214,7 @@ export function OnDeviceRecoveryScreen({
               <Text color="$neutral3" variant="body3" onPress={onPressOtherWallet}>
                 {t('onboarding.import.onDeviceRecovery.other_options.label')}
               </Text>
-              <TouchableArea
-                alignItems="center"
-                hitSlop={16}
-                mb="$spacing12"
-                testID={ElementName.WatchWallet}>
+              <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
                 <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
                   {t('onboarding.import.onDeviceRecovery.other_options')}
                 </Text>

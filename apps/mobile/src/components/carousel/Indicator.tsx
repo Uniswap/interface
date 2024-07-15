@@ -4,23 +4,12 @@ import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 
-export function Indicator({
-  stepCount,
-  currentStep,
-}: {
-  stepCount: number
-  currentStep: number
-}): JSX.Element {
+export function Indicator({ stepCount, currentStep }: { stepCount: number; currentStep: number }): JSX.Element {
   const { fullWidth } = useDeviceDimensions()
   const indicatorWidth = (200 / 375) * fullWidth
 
   return (
-    <Flex
-      row
-      alignItems="center"
-      gap="$spacing8"
-      justifyContent="space-evenly"
-      width={indicatorWidth}>
+    <Flex row alignItems="center" gap="$spacing8" justifyContent="space-evenly" width={indicatorWidth}>
       {[...Array(stepCount)].map((_, i) => (
         <Flex
           key={`indicator-${i}`}
@@ -51,13 +40,7 @@ export function AnimatedIndicator({
   )
 }
 
-function AnimatedIndicatorPill({
-  index,
-  scroll,
-}: {
-  index: number
-  scroll: SharedValue<number>
-}): JSX.Element {
+function AnimatedIndicatorPill({ index, scroll }: { index: number; scroll: SharedValue<number> }): JSX.Element {
   const { fullWidth } = useDeviceDimensions()
   const style = useAnimatedStyle(() => {
     const inputRange = [(index - 1) * fullWidth, index * fullWidth, (index + 1) * fullWidth]

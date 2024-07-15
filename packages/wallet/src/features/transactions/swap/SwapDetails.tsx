@@ -6,6 +6,7 @@ import { InfoCircleFilled } from 'ui/src/components/icons'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -15,14 +16,14 @@ import { TransactionDetails } from 'wallet/src/features/transactions/Transaction
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const getFeeAmountUsd = (
   trade: Trade<Currency, Currency, TradeType>,
-  outputCurrencyPricePerUnitExact?: string
+  outputCurrencyPricePerUnitExact?: string,
 ): number | undefined => {
   if (!trade.swapFee || !outputCurrencyPricePerUnitExact) {
     return
@@ -101,9 +102,7 @@ export function SwapDetails({
     : undefined
 
   // Make text the warning color if user is setting custom slippage higher than auto slippage value
-  const showSlippageWarning = autoSlippageTolerance
-    ? acceptedTrade.slippageTolerance > autoSlippageTolerance
-    : false
+  const showSlippageWarning = autoSlippageTolerance ? acceptedTrade.slippageTolerance > autoSlippageTolerance : false
 
   const feeOnTransferProps: FeeOnTransferFeeGroupProps = useMemo(
     () => ({
@@ -121,8 +120,10 @@ export function SwapDetails({
       acceptedTrade.inputTax,
       acceptedTrade.outputAmount.currency.symbol,
       acceptedTrade.outputTax,
-    ]
+    ],
   )
+
+  const preUniswapXGasFeeUSD = isUniswapX(trade) ? trade.quote.quote.classicGasUseEstimateUSD : undefined
 
   return (
     <TransactionDetails
@@ -139,12 +140,14 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
+      preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
       warning={warning}
-      onShowWarning={onShowWarning}>
+      onShowWarning={onShowWarning}
+    >
       <Flex row alignItems="center" justifyContent="space-between">
         <Text color="$neutral2" variant="body3">
           {t('swap.details.rate')}
@@ -164,12 +167,7 @@ export function SwapDetails({
         </TouchableArea>
         <Flex centered row gap="$spacing8">
           {!customSlippageTolerance ? (
-            <Flex
-              centered
-              backgroundColor="$surface3"
-              borderRadius="$roundedFull"
-              px="$spacing4"
-              py="$spacing2">
+            <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" px="$spacing4" py="$spacing2">
               <Text color="$neutral2" variant="buttonLabel4">
                 {t('swap.settings.slippage.control.auto')}
               </Text>
@@ -197,14 +195,10 @@ function AcceptNewQuoteRow({
   const { formatCurrencyAmount } = useLocalizationContext()
 
   const derivedCurrencyField =
-    derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
-      ? CurrencyField.OUTPUT
-      : CurrencyField.INPUT
+    derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   const derivedAmount = derivedSwapInfo.currencyAmounts[derivedCurrencyField]
-  const derivedSymbol = getSymbolDisplayText(
-    derivedSwapInfo.currencies[derivedCurrencyField]?.currency.symbol
-  )
+  const derivedSymbol = getSymbolDisplayText(derivedSwapInfo.currencies[derivedCurrencyField]?.currency.symbol)
   const formattedDerivedAmount = formatCurrencyAmount({
     value: derivedAmount,
     type: NumberType.TokenTx,
@@ -227,7 +221,8 @@ function AcceptNewQuoteRow({
       justifyContent="space-between"
       pl="$spacing12"
       pr="$spacing8"
-      py="$spacing8">
+      py="$spacing8"
+    >
       <Flex fill>
         <Text color="$neutral2" variant="body3">
           {derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
@@ -235,14 +230,8 @@ function AcceptNewQuoteRow({
             : t('swap.details.newQuote.input')}
         </Text>
         <Flex row alignItems="center">
-          <Text
-            adjustsFontSizeToFit
-            color="$neutral1"
-            numberOfLines={1}
-            textAlign="center"
-            variant="body3">
-            {formattedDerivedAmount} {derivedSymbol}{' '}
-            <Text color="$neutral2">({percentageDifference}%)</Text>
+          <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} textAlign="center" variant="body3">
+            {formattedDerivedAmount} {derivedSymbol} <Text color="$neutral2">({percentageDifference}%)</Text>
           </Text>
         </Flex>
       </Flex>
@@ -253,7 +242,8 @@ function AcceptNewQuoteRow({
             borderRadius="$rounded12"
             px="$spacing8"
             py="$spacing4"
-            onPress={onAcceptTrade}>
+            onPress={onAcceptTrade}
+          >
             <Text color="$accent1" variant="buttonLabel3">
               {t('common.button.accept')}
             </Text>
@@ -272,9 +262,7 @@ function calculatePercentageDifference({
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
 }): string | null {
   const derivedCurrencyField =
-    derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
-      ? CurrencyField.OUTPUT
-      : CurrencyField.INPUT
+    derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   // It's important to convert these to fractions before doing math on them in order to preserve full precision on each step.
   const newAmount = derivedSwapInfo.currencyAmounts[derivedCurrencyField]?.asFraction

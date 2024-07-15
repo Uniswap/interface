@@ -1,6 +1,7 @@
 import { BigNumber, providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import i18n from 'uniswap/src/i18n/i18n'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -11,19 +12,15 @@ import {
   TransactionDetails,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
-import {
-  createTransactionId,
-  getSerializableTransactionRequest,
-} from 'wallet/src/features/transactions/utils'
+import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { appSelect } from 'wallet/src/state'
-import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export function* attemptReplaceTransaction(
   transaction: ClassicTransactionDetails,
   newTxRequest: providers.TransactionRequest,
-  isCancellation = false
+  isCancellation = false,
 ) {
   const { chainId, hash, options } = transaction
   logger.debug('replaceTransaction', '', 'Attempting tx replacement', hash)
@@ -59,7 +56,7 @@ export function* attemptReplaceTransaction(
       request,
       account,
       provider,
-      signerManager
+      signerManager,
     )
     logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
 
@@ -92,7 +89,7 @@ export function* attemptReplaceTransaction(
         address: transaction.from,
         id: replacementTxnId,
         chainId: transaction.chainId,
-      })
+      }),
     )
 
     yield* put(
@@ -102,7 +99,7 @@ export function* attemptReplaceTransaction(
         errorMessage: isCancellation
           ? i18n.t('transaction.notification.error.cancel')
           : i18n.t('transaction.notification.error.replace'),
-      })
+      }),
     )
   }
 }

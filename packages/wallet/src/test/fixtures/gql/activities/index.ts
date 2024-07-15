@@ -6,6 +6,8 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 import {
   erc20ApproveAssetChange,
   erc20TokenTransferOut,
@@ -13,8 +15,7 @@ import {
 } from 'wallet/src/test/fixtures/gql/activities/tokens'
 import { GQL_CHAINS } from 'wallet/src/test/fixtures/gql/misc'
 import { gqlTransaction, gqlTransactionDetails } from 'wallet/src/test/fixtures/gql/transactions'
-import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 export * from './nfts'
 export * from './swap'
 export * from './tokens'
@@ -50,7 +51,7 @@ export const approveAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20ApproveAssetChange()],
     }),
-  })
+  }),
 )
 
 export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
@@ -63,7 +64,7 @@ export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn(), erc20TokenTransferOut()],
     }),
-  })
+  }),
 )
 
 export const erc20ReceiveAssetActivity = createFixture<AssetActivity>()(() =>
@@ -76,5 +77,5 @@ export const erc20ReceiveAssetActivity = createFixture<AssetActivity>()(() =>
       transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn()],
     }),
-  })
+  }),
 )

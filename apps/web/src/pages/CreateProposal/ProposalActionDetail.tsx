@@ -3,8 +3,8 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ProposalAction } from 'pages/CreateProposal/ProposalActionSelector'
-import styled from 'styled-components'
 
 enum ProposalActionDetailField {
   ADDRESS,
@@ -87,7 +87,7 @@ export const ProposalActionDetail = ({
             id="currency-input"
             currencySearchFilters={CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS}
           />
-        ) : null
+        ) : null,
       )}
     </ProposalActionDetailContainer>
   )

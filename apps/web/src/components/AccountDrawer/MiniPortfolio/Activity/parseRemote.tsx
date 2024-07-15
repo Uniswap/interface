@@ -24,6 +24,8 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
+  OnRampTransactionDetailsPartsFragment,
+  OnRampTransferPartsFragment,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -90,7 +92,7 @@ const SPAMMABLE_ACTIVITY_TYPES = [TransactionType.Receive, TransactionType.Mint,
 function isSpam(
   { NftTransfer, TokenTransfer }: TransactionChanges,
   details: TransactionDetailsPartsFragment,
-  account: string
+  account: string,
 ): boolean {
   if (!SPAMMABLE_ACTIVITY_TYPES.includes(details.type) || details.from === account) {
     return false
@@ -108,13 +110,16 @@ function callsPositionManagerContract(assetActivity: TransactionActivity) {
 
 // Gets counts for number of NFTs in each collection present
 function getCollectionCounts(nftTransfers: NftTransferPartsFragment[]): { [key: string]: number | undefined } {
-  return nftTransfers.reduce((acc, NFTChange) => {
-    const key = NFTChange.asset.collection?.name ?? NFTChange.asset.name
-    if (key) {
-      acc[key] = (acc?.[key] ?? 0) + 1
-    }
-    return acc
-  }, {} as { [key: string]: number | undefined })
+  return nftTransfers.reduce(
+    (acc, NFTChange) => {
+      const key = NFTChange.asset.collection?.name ?? NFTChange.asset.name
+      if (key) {
+        acc[key] = (acc?.[key] ?? 0) + 1
+      }
+      return acc
+    },
+    {} as { [key: string]: number | undefined },
+  )
 }
 
 function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferPartsFragment): string | undefined {
@@ -187,12 +192,12 @@ type SwapAmounts = {
 // eslint-disable-next-line import/no-unused-modules
 export function parseSwapAmounts(
   changes: TransactionChanges,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): SwapAmounts | undefined {
   const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
   // Any leftover native token is refunded on exact_out swaps where the input token is native
   const refund = changes.TokenTransfer.find(
-    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID
+    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID,
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
   if (!sent || !received) {
@@ -271,12 +276,12 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
 function parseSwapOrder(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   const offchainOrderDetails = offchainOrderDetailsFromGraphQLTransactionActivity(
     assetActivity,
     changes,
-    formatNumberOrString
+    formatNumberOrString,
   )
   return {
     ...parseSwap(changes, formatNumberOrString),
@@ -288,7 +293,7 @@ function parseSwapOrder(
 export function offchainOrderDetailsFromGraphQLTransactionActivity(
   activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
   changes: TransactionChanges,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): UniswapXOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
   if (!activity || !activity.details || !chainId) {
@@ -353,11 +358,12 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
+type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
@@ -415,7 +421,7 @@ function parseSendReceive(
 function parseMint(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   const collectionMap = getCollectionCounts(changes.NftTransfer)
   if (Object.keys(collectionMap).length === 1) {
@@ -433,7 +439,7 @@ function parseMint(
 function parseUnknown(
   _changes: TransactionChanges,
   _formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) {
   return { title: t('common.contractInteraction'), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
@@ -441,7 +447,7 @@ function parseUnknown(
 type TransactionTypeParser = (
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType,
-  assetActivity: TransactionActivity
+  assetActivity: TransactionActivity,
 ) => Partial<Activity>
 const ActivityParserByType: { [key: string]: TransactionTypeParser | undefined } = {
   [TransactionType.Swap]: parseSwap,
@@ -500,10 +506,87 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 }
 
+function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampActivity): Activity {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
+    const error = new Error('Invalid activity from unsupported chain received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseRemote',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+  if (activity.details.__typename === 'OnRampTransactionDetails') {
+    const onRampTransfer = activity.details.onRampTransfer
+    return {
+      from: activity.details.receiverAddress,
+      hash: activity.id,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else if (activity.details.__typename === 'TransactionDetails') {
+    const assetChange = activity.details.assetChanges[0]
+    if (assetChange?.__typename !== 'OnRampTransfer') {
+      logger.error('Unexpected asset change type, expected OnRampTransfer', {
+        tags: {
+          file: 'parseRemote',
+          function: 'parseRemote',
+        },
+      })
+    }
+    const onRampTransfer = assetChange as OnRampTransferPartsFragment
+    return {
+      from: activity.details.from,
+      hash: activity.details.hash,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else {
+    const error = new Error('Invalid Fiat On Ramp activity type received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseFiatOnRampTransaction',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+}
+
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ): Activity | undefined {
   try {
     if (!assetActivity) {
@@ -515,8 +598,12 @@ function parseRemoteActivity(
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    if (assetActivity.details.__typename === 'OnRampTransactionDetails') {
-      return undefined // TODO(WEB-4187): support onramp transactions
+    if (
+      assetActivity.details.__typename === 'OnRampTransactionDetails' ||
+      (assetActivity.details.__typename === 'TransactionDetails' &&
+        assetActivity.details.type === TransactionType.OnRamp)
+    ) {
+      return parseFiatOnRampTransaction(assetActivity as TransactionActivity)
     }
 
     const changes = assetActivity.details.assetChanges.reduce(
@@ -535,7 +622,7 @@ function parseRemoteActivity(
 
         return acc
       },
-      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] }
+      { NftTransfer: [], TokenTransfer: [], TokenApproval: [], NftApproval: [], NftApproveForAll: [] },
     )
 
     const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
@@ -566,7 +653,7 @@ function parseRemoteActivity(
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(
       changes,
       formatNumberOrString,
-      assetActivity as TransactionActivity
+      assetActivity as TransactionActivity,
     )
     return { ...defaultFields, ...parsedFields }
   } catch (e) {
@@ -581,7 +668,7 @@ function parseRemoteActivity(
 export function parseRemoteActivities(
   assetActivities: (AssetActivityPartsFragment | undefined)[] | undefined,
   account: string,
-  formatNumberOrString: FormatNumberOrStringFunctionType
+  formatNumberOrString: FormatNumberOrStringFunctionType,
 ) {
   return assetActivities?.reduce((acc: { [hash: string]: Activity }, assetActivity) => {
     const activity = parseRemoteActivity(assetActivity, account, formatNumberOrString)

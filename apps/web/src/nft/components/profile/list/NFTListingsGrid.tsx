@@ -2,6 +2,7 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { Dropdown } from 'nft/components/profile/list/Dropdown'
 import { NFTListRow } from 'nft/components/profile/list/NFTListRow'
 import { SetPriceMethod } from 'nft/components/profile/list/shared'
@@ -9,7 +10,6 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 const TableHeader = styled.div`
@@ -186,7 +186,7 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
         },
       },
     ],
-    [globalPriceMethod]
+    [globalPriceMethod],
   )
 
   let prompt

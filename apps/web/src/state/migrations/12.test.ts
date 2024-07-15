@@ -124,7 +124,7 @@ describe('migration to v12', () => {
         11: migration11,
         12: migration12,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousState, 12)
     expect(result.transactions).toMatchObject(newTransactionState)

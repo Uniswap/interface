@@ -1,7 +1,7 @@
 import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const StyledArrowWrapper = styled(ArrowWrapper)`

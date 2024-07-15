@@ -17,13 +17,15 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       alignItems="center"
       backgroundColor="$neutral3"
       borderRadius="$roundedFull"
+      disabled={!visible}
       height={imageSizes.image24}
       justifyContent="center"
       style={animatedVisibilityStyle}
       testID="explore/remove-button"
       width={imageSizes.image24}
       zIndex="$tooltip"
-      {...rest}>
+      {...rest}
+    >
       <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
     </AnimatedTouchableArea>
   )

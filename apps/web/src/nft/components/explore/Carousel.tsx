@@ -1,8 +1,8 @@
+import styled from 'lib/styled-components'
 import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { a, useSprings } from 'react-spring'
-import styled from 'styled-components'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -66,7 +66,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
   const idx = useCallback((x: number, l = children.length) => calculateCardIndex(x, l), [children])
   const getPos = useCallback(
     (i: number, firstVis: number, firstVisIdx: number) => calculateFirstCardIndex(i, firstVis, firstVisIdx, idx),
-    [idx]
+    [idx],
   )
   const [springs, set] = useSprings(children.length, (i) => ({
     x: (i < children.length - 1 ? i : -1) * MAX_CARD_WIDTH,
@@ -89,7 +89,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
       })
       prev.current = [firstVis, firstVisIdx]
     },
-    [idx, getPos, set, children.length]
+    [idx, getPos, set, children.length],
   )
 
   const direction = useRef(0)
@@ -103,7 +103,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
       direction.current = next
       toggleNextSlide(next)
     },
-    [toggleNextSlide]
+    [toggleNextSlide],
   )
 
   useEffect(() => {

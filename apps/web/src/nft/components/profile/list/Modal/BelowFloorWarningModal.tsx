@@ -1,12 +1,12 @@
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import { Plural, Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
 import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -107,7 +107,7 @@ export const BelowFloorWarningModal = ({
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
             one={t('nft.oneListedDelta', {
               delta: formatDelta(
-                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
+                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100,
               ),
             })}
             other={t('nft.listedSignificantly', {

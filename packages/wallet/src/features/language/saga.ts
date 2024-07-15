@@ -14,11 +14,7 @@ import {
   mapLocaleToLanguage,
 } from 'wallet/src/features/language/constants'
 import { getLocale } from 'wallet/src/features/language/hooks'
-import {
-  selectCurrentLanguage,
-  setCurrentLanguage,
-  updateLanguage,
-} from 'wallet/src/features/language/slice'
+import { selectCurrentLanguage, setCurrentLanguage, updateLanguage } from 'wallet/src/features/language/slice'
 
 export function* appLanguageWatcherSaga() {
   yield* takeLatest(updateLanguage.type, appLanguageSaga)
@@ -46,11 +42,7 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
   try {
     yield* call([i18n, i18n.changeLanguage], localeToSet)
   } catch (error) {
-    logger.warn(
-      'language/saga',
-      'appLanguageSaga',
-      'Sync of language setting state and i18n instance failed'
-    )
+    logger.warn('language/saga', 'appLanguageSaga', 'Sync of language setting state and i18n instance failed')
   }
 
   yield* call(restartAppIfRTL, localeToSet)
@@ -82,11 +74,7 @@ function getDeviceLanguage(): Language {
 function restartAppIfRTL(currentLocale: Locale) {
   const isRtl = i18n.dir(currentLocale) === 'rtl'
   if (isRtl !== I18nManager.isRTL) {
-    logger.debug(
-      'saga.ts',
-      'restartAppIfRTL',
-      `Changing RTL to ${isRtl} for locale ${currentLocale}`
-    )
+    logger.debug('saga.ts', 'restartAppIfRTL', `Changing RTL to ${isRtl} for locale ${currentLocale}`)
     I18nManager.forceRTL(isRtl)
 
     // Need to restart to apply RTL changes

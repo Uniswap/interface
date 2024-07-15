@@ -2,72 +2,13 @@
 
 exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  width: 100%;
-}
-
-.c2 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: left;
-  -webkit-justify-content: left;
-  -ms-flex-pack: left;
-  justify-content: left;
-}
-
-.c6 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: right;
-  -webkit-justify-content: right;
-  -ms-flex-pack: right;
-  justify-content: right;
-  gap: 10px;
-}
-
-.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -85,28 +26,25 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   gap: 4px;
 }
 
-.c5 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c4 {
-  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
-  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
-  animation: iCPeaJ 250ms ease-in-out forwards;
+  color: #222222;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
 }
 
-.c4.exiting {
-  -webkit-animation: bbnGid 250ms ease-in-out;
-  animation: bbnGid 250ms ease-in-out;
+.c4:hover {
+  opacity: 0.6;
 }
 
-.c7 {
+.c4:active {
+  opacity: 0.4;
+}
+
+.c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -117,15 +55,15 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   font-weight: 500;
 }
 
-.c7:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c0:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c1 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -139,32 +77,14 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   stroke: none;
 }
 
-.c8:hover {
+.c1:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c8:hover path {
+.c1:hover path {
   fill: #222222;
-}
-
-.c10 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c10:hover {
-  opacity: 0.6;
-}
-
-.c10:active {
-  opacity: 0.4;
 }
 
 <span
@@ -174,33 +94,29 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
-        width="100%"
+        class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037"
       >
         <div
-          class="c2 c3"
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
         >
-          <div
-            class="c4"
+          <span
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+            data-disable-theme="true"
           >
-            <div
-              class="c5 css-n8z49y"
-            >
-              Review limit
-            </div>
-          </div>
+            Review limit
+          </span>
         </div>
         <div
-          class="c2 c6"
+          class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
         >
           <a
-            class="c7 c8"
+            class="c0 c1"
             href="https://support.uniswap.org/hc/en-us"
             rel="noopener noreferrer"
             target="_blank"
           >
             <div
-              class="c2 c9"
+              class="c2 c3"
             >
               <svg
                 fill="none"
@@ -218,7 +134,7 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
             </div>
           </a>
           <svg
-            class="c10"
+            class="c4"
             data-testid="confirmation-close-icon"
             fill="none"
             height="24"
@@ -252,72 +168,13 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
 
 exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-  width: 100%;
-}
-
-.c2 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: left;
-  -webkit-justify-content: left;
-  -ms-flex-pack: left;
-  justify-content: left;
-}
-
-.c6 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: right;
-  -webkit-justify-content: right;
-  -ms-flex-pack: right;
-  justify-content: right;
-  gap: 10px;
-}
-
-.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -335,28 +192,25 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   gap: 4px;
 }
 
-.c5 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c4 {
-  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
-  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
-  animation: iCPeaJ 250ms ease-in-out forwards;
+  color: #222222;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
 }
 
-.c4.exiting {
-  -webkit-animation: bbnGid 250ms ease-in-out;
-  animation: bbnGid 250ms ease-in-out;
+.c4:hover {
+  opacity: 0.6;
 }
 
-.c7 {
+.c4:active {
+  opacity: 0.4;
+}
+
+.c0 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -367,15 +221,15 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   font-weight: 500;
 }
 
-.c7:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c0:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c1 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -389,32 +243,14 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   stroke: none;
 }
 
-.c8:hover {
+.c1:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c8:hover path {
+.c1:hover path {
   fill: #222222;
-}
-
-.c10 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c10:hover {
-  opacity: 0.6;
-}
-
-.c10:active {
-  opacity: 0.4;
 }
 
 <span
@@ -424,33 +260,29 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
-        width="100%"
+        class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037"
       >
         <div
-          class="c2 c3"
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
         >
-          <div
-            class="c4"
+          <span
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+            data-disable-theme="true"
           >
-            <div
-              class="c5 css-n8z49y"
-            >
-              Review swap
-            </div>
-          </div>
+            Review swap
+          </span>
         </div>
         <div
-          class="c2 c6"
+          class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
         >
           <a
-            class="c7 c8"
+            class="c0 c1"
             href="https://support.uniswap.org/hc/en-us"
             rel="noopener noreferrer"
             target="_blank"
           >
             <div
-              class="c2 c9"
+              class="c2 c3"
             >
               <svg
                 fill="none"
@@ -468,7 +300,7 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
             </div>
           </a>
           <svg
-            class="c10"
+            class="c4"
             data-testid="confirmation-close-icon"
             fill="none"
             height="24"

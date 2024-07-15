@@ -13,16 +13,12 @@ export const getUniconsDeterministicHash = (address: string): bigint => {
 const ETH_ADDRESS_LENGTH = 42 // Ethereum addresses are 42 characters long including '0x'
 // TODO: move to a shared location in utilities or wallet package
 export const isValidEthAddress = (address: string): boolean => {
-  return Boolean(
-    address.startsWith('0x') &&
-      isAddress(address.toLowerCase()) &&
-      address.length === ETH_ADDRESS_LENGTH
-  )
+  return Boolean(address.startsWith('0x') && isAddress(address.toLowerCase()) && address.length === ETH_ADDRESS_LENGTH)
 }
 
 export const getUniconColors = (
   activeAddress: string,
-  isDark: boolean
+  isDark: boolean,
 ): {
   color: string
 } => {

@@ -10,6 +10,7 @@ import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import AppBody from 'pages/App/AppBody'
 import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
@@ -33,7 +34,6 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
@@ -82,7 +82,7 @@ const CreateProposalButton = ({
   const formattedProposalThreshold = proposalThreshold
     ? JSBI.divide(
         proposalThreshold.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals)),
       ).toLocaleString()
     : undefined
 
@@ -151,7 +151,7 @@ export default function CreateProposal() {
     (proposalAction: ProposalAction) => {
       setProposalAction(proposalAction)
     },
-    [setProposalAction]
+    [setProposalAction],
   )
 
   const handleDismissActionSelector = useCallback(() => {
@@ -167,35 +167,35 @@ export default function CreateProposal() {
     (toAddress: string) => {
       setToAddressValue(toAddress)
     },
-    [setToAddressValue]
+    [setToAddressValue],
   )
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       setCurrencyValue(currency)
     },
-    [setCurrencyValue]
+    [setCurrencyValue],
   )
 
   const handleAmountInput = useCallback(
     (amount: string) => {
       setAmountValue(amount)
     },
-    [setAmountValue]
+    [setAmountValue],
   )
 
   const handleTitleInput = useCallback(
     (title: string) => {
       setTitleValue(title)
     },
-    [setTitleValue]
+    [setTitleValue],
   )
 
   const handleBodyInput = useCallback(
     (body: string) => {
       setBodyValue(body)
     },
-    [setBodyValue]
+    [setBodyValue],
   )
 
   const isFormInvalid = useMemo(
@@ -206,13 +206,13 @@ export default function CreateProposal() {
           !currencyValue?.isToken ||
           amountValue === '' ||
           titleValue === '' ||
-          bodyValue === ''
+          bodyValue === '',
       ),
-    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue]
+    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue],
   )
 
   const hasEnoughVote = Boolean(
-    availableVotes && proposalThreshold && JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient)
+    availableVotes && proposalThreshold && JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient),
   )
 
   const createProposalCallback = useCreateProposalCallback()

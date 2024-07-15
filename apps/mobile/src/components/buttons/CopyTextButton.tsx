@@ -4,8 +4,8 @@ import { Button, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { useTimeout } from 'utilities/src/time/timing'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 interface Props {
   copyText?: string
@@ -21,9 +21,7 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   const [isCopied, setIsCopied] = useState(false)
 
   const copyIcon = <CopySheets color={colors.neutral1.get()} height={ICON_SIZE} width={ICON_SIZE} />
-  const copiedIcon = (
-    <CheckCircle color={colors.statusSuccess.val} height={ICON_SIZE} width={ICON_SIZE} />
-  )
+  const copiedIcon = <CheckCircle color={colors.statusSuccess.val} height={ICON_SIZE} width={ICON_SIZE} />
 
   const onPress = async (): Promise<void> => {
     if (copyText) {

@@ -47,7 +47,7 @@ describe(BackupScreen, () => {
       <TamaguiProvider>
         <BackupScreen navigation={navigationProp} route={routeProp} />
       </TamaguiProvider>,
-      { preloadedState: preloadedSharedState({ account: ACCOUNT }) }
+      { preloadedState: preloadedSharedState({ account: ACCOUNT }) },
     )
 
     await act(async () => {
