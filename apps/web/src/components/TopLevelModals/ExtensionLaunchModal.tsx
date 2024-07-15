@@ -26,6 +26,9 @@ const ModalWrapper = styled.div`
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     flex-direction: column;
   }
+  * {
+    outline: none;
+  }
 `
 
 const PromoImage = styled.img`
